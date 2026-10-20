@@ -1,0 +1,21 @@
+---
+// Document end bar, doc.css §3: the way back, the end mark, the next
+// document. Labels carry no arrow of their own; the glyph sits in an
+// aria-hidden span.
+import type { Lang } from '../lib/i18n';
+import { t } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  prev?: { href: string; label: string };
+  next?: { href: string; label: string };
+  end?: string;
+}
+
+const { lang, prev, next, end } = Astro.props;
+---
+<footer class="doc-end">
+  {prev && <a href={prev.href}><span class="glyph" aria-hidden="true">←</span>{prev.label}</a>}
+  <span>{end ?? t(lang, 'doc.end')}</span>
+  {next && <a href={next.href}>{next.label}<span class="glyph" aria-hidden="true">→</span></a>}
+</footer>

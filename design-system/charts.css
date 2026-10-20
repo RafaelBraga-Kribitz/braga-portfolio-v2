@@ -1,0 +1,120 @@
+/* ============================================================
+   CHARTS — Braga design system v2
+   1 the evidence figure (Site 05): kicker, finding-as-heading, bars
+     on a mid baseline, caption with n, scale and source
+   2 chart SVG text and strokes (the bench figure and any inline chart)
+   3 IBCS roles (D-015, D-016 amended by D-033) and categorical fills
+   Colour lives in marks, never in type: every chart label is --ink
+   or --ink-2. The only inline style allowed on a page is the custom
+   property that positions a mark: style="--x: 50%; --w: 34%".
+   Loads after components.css.
+   ============================================================ */
+
+/* ---------- 1 · EVIDENCE FIGURE (Site 05) ----------
+     <figure class="evidence col-6">
+       <p class="label">Figure 02 · Region</p>
+       <p class="evidence-heading display">54 postings assigned to Styria.</p>
+       <div class="ev-bars">
+         <div class="ev-bar"><span class="ev-label">Styria</span>
+           <span class="ev-track"><span class="ev-fill" style="--w: 7.5%"></span></span>
+           <span class="ev-value">54</span></div>
+       </div>
+       <figcaption>n = 720. Primary-state basis.<br><b>Source:</b> project snapshot, 16 Sep 2026.</figcaption>
+     </figure>
+   A centred figure (Figure 03) adds <span class="ev-mid"></span> to the
+   track and positions each fill with --x. */
+figure.evidence, .evidence { margin: 0; border-top: var(--hairline); padding-top: 16px; min-width: 0; }
+.evidence > .label { margin: 0; }
+.evidence-heading, .evidence > .display {
+  margin: 12px 0 0; font: var(--w-display) 21px / 1.3 var(--font-display);
+  letter-spacing: var(--tracking-tight); text-wrap: balance;
+}
+.ev-bars { margin-top: 24px; display: flex; flex-direction: column; gap: 16px; }
+.ev-bar {
+  display: grid; grid-template-columns: 112px minmax(0, 1fr) 64px; gap: 16px; align-items: center;
+  font: 400 var(--t-mono) / 1.4 var(--font-mono); font-variant-numeric: var(--num);
+  min-width: 0;
+}
+.ev-label { color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ev-track { position: relative; display: block; height: 18px; border-bottom: 1px solid var(--mid); }
+.ev-fill {
+  position: absolute; top: 0; bottom: 0;
+  left: var(--x, 0%); width: var(--w, 0%);
+  background: var(--mark, var(--ink));
+}
+.ev-mid { position: absolute; top: -4px; bottom: -4px; left: var(--x, 50%); width: 1px; background: var(--mid); }
+.ev-value { text-align: right; color: var(--ink); }
+.evidence figcaption, .evidence > .ev-caption {
+  margin-top: 16px; font: 400 var(--t-mono-sm) / 1.7 var(--font-mono); color: var(--ink-2);
+  font-variant-numeric: var(--num);
+}
+.evidence figcaption b, .evidence .ev-source { font-weight: 400; color: var(--ink); }
+/* the one earned bar of a figure takes the accent (owner, 20 Oct 2026) */
+.ev-bar[data-accent] .ev-fill, .ev-fill[data-accent] { --mark: var(--accent-01); }
+
+/* ---------- 2 · CHART SVG: text and strokes ----------
+   Text in a chart is CSS 12px mono, --ink-2 (axis, ticks, notes) or
+   --ink (values). Give the SVG a fixed CSS height or draw it without
+   a scaling viewBox so the 12px floor holds (A-04, G-01).
+     axis      .axis      1px --mid
+     gridline  .gridline  1px --rule-c
+     ceiling   .cap       1px --ink-2, dashed
+     curve     .curve     1.75px --ink, no fill
+     cursor    .cursor    1px accent, dashed
+     marker    .marker    accent fill (one per chart) */
+:is(.bench, .evidence, .fig, .chart) svg { display: block; width: 100%; height: auto; overflow: visible; }
+:is(.bench, .evidence, .fig, .chart) svg text {
+  font-family: var(--font-mono); font-size: 12px; fill: var(--ink-2);
+  font-variant-numeric: var(--num);
+}
+:is(.bench, .evidence, .fig, .chart) svg text.ink, :is(.bench, .evidence, .fig, .chart) svg .ink text { fill: var(--ink); }
+:is(.bench, .evidence, .fig, .chart) svg .axis { stroke: var(--mid); stroke-width: 1; }
+:is(.bench, .evidence, .fig, .chart) svg .gridline { stroke: var(--rule-c); stroke-width: 1; }
+:is(.bench, .evidence, .fig, .chart) svg .cap { stroke: var(--ink-2); stroke-width: 1; stroke-dasharray: 3 3; }
+:is(.bench, .evidence, .fig, .chart) svg .curve { stroke: var(--ink); stroke-width: 1.75; fill: none; }
+:is(.bench, .evidence, .fig, .chart) svg .cursor { stroke: var(--accent-01); stroke-width: 1; stroke-dasharray: 2 3; }
+:is(.bench, .evidence, .fig, .chart) svg .marker { fill: var(--accent-01); }
+/* chart legend: a swatch line and a mono label, ink-2 */
+.chart-legend { display: flex; flex-wrap: wrap; gap: 8px 24px; font: 400 var(--t-mono-sm) / 1.4 var(--font-mono); color: var(--ink-2); }
+.chart-legend > * { display: flex; align-items: center; gap: 8px; }
+.chart-legend .swatch { width: 20px; height: 2px; background: var(--mark, var(--ink)); flex: none; }
+
+/* ---------- 3 · IBCS ROLES AND CATEGORICAL FILLS ----------
+   A role class sets --mark (and --on-mark for text on the fill); a
+   mark element consumes it. Roles never colour type: a label with
+   .var-neg stays ink and gains the mandatory ▲ (D-016).
+     marks  .ev-fill  .mark  .mark-tint  svg [class] (fill)
+     roles  .sc-ac .sc-py .sc-pl · .var-pos .var-neg · .hl ·
+            .cat-1 … .cat-5 .cat-other · .catg-1 … .catg-4 */
+.sc-ac   { --mark: var(--sc-ac); }
+.sc-py   { --mark: var(--sc-py); }
+.sc-pl   { --mark: transparent; --mark-edge: var(--sc-pl); }
+.var-pos { --mark: var(--var-pos); --mark-tint: var(--var-pos-tint); }
+.var-neg { --mark: var(--var-neg); --mark-tint: var(--var-neg-tint); }
+.hl      { --mark: var(--hl); --on-mark: var(--on-accent); }
+.cat-1 { --mark: var(--chart-cat-1); --on-mark: var(--on-cat-1); }
+.cat-2 { --mark: var(--chart-cat-2); --on-mark: var(--on-cat-2); }
+.cat-3 { --mark: var(--chart-cat-3); --on-mark: var(--on-cat-3); }
+.cat-4 { --mark: var(--chart-cat-4); --on-mark: var(--on-cat-4); }
+.cat-5 { --mark: var(--chart-cat-5); --on-mark: var(--on-cat-5); }
+.cat-other { --mark: var(--chart-cat-other); }
+.catg-1 { --mark: var(--chart-catg-1); } .catg-2 { --mark: var(--chart-catg-2); }
+.catg-3 { --mark: var(--chart-catg-3); } .catg-4 { --mark: var(--chart-catg-4); }
+
+/* HTML marks */
+.mark { background: var(--mark, var(--ink)); color: var(--on-mark, var(--surface)); }
+.mark-tint { background: var(--mark-tint, var(--surface-3)); }
+.sc-pl.mark, .mark.sc-pl { background: transparent; box-shadow: none; outline: 1px solid var(--mark-edge, var(--ink-2)); outline-offset: -1px; }
+/* SVG marks: the same role classes on rect, path, circle, polygon */
+svg :is(rect, path, circle, polygon, line):is(.sc-ac, .sc-py, .var-pos, .var-neg, .hl, .cat-1, .cat-2, .cat-3, .cat-4, .cat-5, .cat-other, .catg-1, .catg-2, .catg-3, .catg-4) { fill: var(--mark); }
+svg :is(rect, path, circle, polygon).sc-pl { fill: none; stroke: var(--mark-edge); stroke-width: 1; }
+svg :is(rect, path, circle, polygon):is(.var-pos-tint, .var-neg-tint) { fill: var(--mark-tint); }
+svg .var-pos-tint { --mark-tint: var(--var-pos-tint); }
+svg .var-neg-tint { --mark-tint: var(--var-neg-tint); }
+svg text.on-mark { fill: var(--on-mark, var(--on-accent)); }
+
+/* the alert glyph: a bad variance is never colour alone — every label,
+   value or cell that carries .var-neg is prefixed with ▲ */
+.var-neg::before { content: "▲"; margin-inline-end: 0.35em; }
+.ev-fill::before, .mark::before, .mark-tint::before, .swatch::before { content: none; }
+.alert::before { content: "▲"; margin-inline-end: 0.35em; }

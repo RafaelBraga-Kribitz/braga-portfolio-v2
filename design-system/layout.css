@@ -1,0 +1,361 @@
+/* ============================================================
+   LAYOUT — Braga design system v2
+   1 the 12-column grid and hairline rules (grid.css v2, verbatim)
+   2 the shell (shell.css P-04, verbatim: container queries, D-028)
+   3 the site footer (Site 01, D-013)
+   4 the cover (Site 02)
+   5 the section heading (Site 03)
+   6 the document opener, trail, lead, meta and end bar
+     (doc.css P-08 section 3 + Site 04)
+   7 the contents rail (Site 04)
+   8 the metric strip (Site 04, D-025)
+   9 utility pages: the 404 numeral (Templates 01)
+   Loads after base.css. Spacing values are the specimen's own
+   (BUILD-BRIEF rule 10).
+   ============================================================ */
+
+/* ---------- 1 · 12-COLUMN GRID + HAIRLINE RULES (grid.css v2) ----------
+   1. Horizontal rules start on a column start line and end on a
+      column end line. They never run into the outer page margin.
+   2. A rule belongs to the item it sits on: put border-top on the
+      grid item, so it spans exactly that item's columns. Gutters
+      break rules between independent items.
+   3. Vertical rules sit on a column start line (.vrule); content
+      insets one step (16px) from the rule.
+   4. Section rules span all 12 columns — .section lives INSIDE
+      .grid-container, so its border equals the content width. */
+.grid-container { width: 100%; max-width: var(--page-max); margin-inline: auto; padding-inline: var(--gutter); box-sizing: border-box; }
+
+.page-grid { width: 100%; max-width: var(--page-max); margin-inline: auto; padding-inline: var(--gutter); box-sizing: border-box; display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--grid-gutter); row-gap: 0; align-content: start; }
+.page-grid > * { grid-column: 1 / -1; }
+
+.grid { display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--grid-gutter); row-gap: var(--space-4); }
+
+.col-1{grid-column:span 1}.col-2{grid-column:span 2}.col-3{grid-column:span 3}.col-4{grid-column:span 4}.col-5{grid-column:span 5}.col-6{grid-column:span 6}.col-7{grid-column:span 7}.col-8{grid-column:span 8}.col-9{grid-column:span 9}.col-10{grid-column:span 10}.col-11{grid-column:span 11}.col-12{grid-column:span 12}
+.col-start-1{grid-column-start:1}.col-start-2{grid-column-start:2}.col-start-3{grid-column-start:3}.col-start-4{grid-column-start:4}.col-start-5{grid-column-start:5}.col-start-6{grid-column-start:6}.col-start-7{grid-column-start:7}.col-start-8{grid-column-start:8}.col-start-9{grid-column-start:9}.col-start-10{grid-column-start:10}.col-start-11{grid-column-start:11}.col-start-12{grid-column-start:12}
+
+.section     { padding-block: var(--section-pad); border-top: var(--hairline); }
+.rule-t      { border-top: var(--rule); }
+.rule-strong { border-top: var(--hairline); }
+.vrule       { border-left: var(--rule); padding-left: var(--space-2); }
+
+@media (max-width: 767px) {
+  .grid, .page-grid { grid-template-columns: minmax(0, 1fr); }
+  .grid > [class*="col-"], .page-grid > [class*="col-"] { grid-column: 1 / -1; }
+  .vrule { border-left: 0; padding-left: 0; border-top: var(--rule); padding-top: var(--space-2); }
+}
+
+/* ---------- 2 · SHELL (shell.css P-04) ----------
+   The site header at 320 / 390 / 768+ without a hamburger (D-028).
+   One DOM, self-responsive through a container query on .shell.
+     ≥ 768   one row, 80px: wordmark · doors (code + word) · EN/DE · theme
+     < 768   two rows: 56px wordmark + cluster, then a 44px door strip
+             under a hairline — four numbered doors, mono, edge to edge.
+     < 360   compact strip for German (its labels need 331px): every code,
+             only the current door's label. English (277px) keeps all four
+             labels down to 300. */
+.shell {
+  container-type: inline-size; container-name: shell;
+  background: var(--surface); color: var(--ink);
+  border-bottom: var(--hairline);
+}
+.shell-bar {
+  display: flex; align-items: center; gap: 16px 32px;
+  min-height: 80px; padding-inline: var(--gutter);
+}
+/* BRAGA is always uppercase, everywhere (D-009a): 800, −0.07em */
+.shell-mark {
+  font: var(--w-wordmark) 24px / 1 var(--font-display);
+  letter-spacing: -0.07em; text-transform: uppercase; color: var(--ink); text-decoration: none;
+}
+.shell-doors { display: flex; gap: 0 32px; margin-left: auto; }
+.door {
+  position: relative; display: inline-flex; align-items: center; gap: 8px;
+  min-height: 44px; color: var(--ink); text-decoration: none;
+  font: 400 17px / 1 var(--font-body);
+}
+/* buttons used as doors reset their own font; the door size wins */
+button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; background: transparent; }
+.door-code {
+  font: 400 var(--t-mono) / 1 var(--font-mono); color: var(--ink-2);
+  font-variant-numeric: var(--num);
+}
+.door[aria-current="page"]::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 8px;
+  height: 1px; background: var(--ink);
+}
+.shell-cluster { display: flex; align-items: center; gap: 4px; }
+.shell-lang {
+  display: inline-flex; align-items: center; min-height: 44px; padding-inline: 8px;
+  font: 400 var(--t-mono-sm) / 1 var(--font-mono); color: var(--ink); text-decoration: none;
+  font-variant-numeric: var(--num);
+}
+.shell-lang span { color: var(--ink-2); padding-left: 8px; }
+/* theme square: half-filled on the diagonal, drawn with clip-path (no gradient) */
+.shell-theme {
+  width: 44px; height: 44px; padding: 0; border: 0; background: transparent;
+  display: grid; place-items: center; cursor: pointer; color: var(--ink);
+}
+.shell-theme > span {
+  display: block; position: relative; width: 15px; height: 15px; box-sizing: border-box;
+  border: 1px solid currentColor; overflow: hidden;
+}
+.shell-theme > span::before {
+  content: ""; position: absolute; inset: -1px; background: currentColor;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+@container shell (max-width: 767px) {
+  .shell-bar { flex-wrap: wrap; min-height: 0; gap: 0; padding-inline: 0; }
+  .shell-mark { order: 1; display: inline-flex; align-items: center; min-height: 56px; padding-inline: var(--gutter); }
+  .shell-cluster { order: 2; margin-left: auto; padding-inline: calc(var(--gutter) - 8px); }
+  .shell-doors {
+    order: 3; flex-basis: 100%; margin: 0; gap: 0 8px; justify-content: space-between;
+    border-top: var(--rule); padding-inline: var(--gutter);
+  }
+  .door {
+    font: 400 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: 0.04em;
+    text-transform: uppercase; gap: 6px; min-height: 44px;
+  }
+  button.door { font: 400 var(--t-mono-sm) / 1 var(--font-mono); }
+  .door-code { font-size: var(--t-mono-sm); }
+  .door[aria-current="page"]::after { bottom: 0; }
+}
+/* compact strip: every code, only the current label. German's four labels
+   need 331px, so German goes compact below 360; English (277px) holds to
+   300. Below 300 every language is compact. */
+@container shell (max-width: 359px) {
+  .shell:lang(de) .door:not([aria-current="page"]) .door-label { display: none; }
+  .shell:lang(de) .door:not([aria-current="page"]) { min-width: 32px; justify-content: center; }
+}
+@container shell (max-width: 299px) {
+  .door:not([aria-current="page"]) .door-label { display: none; }
+  .door:not([aria-current="page"]) { min-width: 32px; justify-content: center; }  /* a code alone is 15px wide; the target stays ≥ 24 */
+}
+
+/* ---------- 3 · SITE FOOTER (Site 01 · D-013) ----------
+   Place inside a .grid-container (the rule must end on the column
+   lines). Four groups on a .grid, each col-3: a .label title, 24px,
+   then the links. Below: the wordmark bar.
+     <footer class="grid-container"><div class="site-footer">
+       <div class="grid">
+         <div class="col-3 site-footer-group"><div class="label">Index</div>
+           <ul class="site-footer-links"><li><a>…</a></li></ul></div> ×4
+       </div>
+       <div class="site-footer-bar"><span class="site-footer-mark">BRAGA</span>
+         <p class="site-footer-colophon">…<br>…</p></div>
+     </div></footer> */
+.site-footer { border-top: var(--rule-open); padding-top: 48px; padding-bottom: 48px; }
+.site-footer-group { min-width: 0; }
+.site-footer-links,
+.site-footer-group > .label + * { margin-top: 24px; display: flex; flex-direction: column; gap: 8px; list-style: none; padding: 0; }
+.site-footer-links a,
+.site-footer-group a { font-size: var(--t-small); line-height: 1.4; color: var(--ink); text-decoration: none; }
+.site-footer-bar {
+  margin-top: 48px; border-top: var(--rule); padding-top: 24px;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px;
+}
+.site-footer-mark {
+  font: var(--w-wordmark) 28.8px / 1 var(--font-display);
+  letter-spacing: -0.07em; text-transform: uppercase; color: var(--ink); text-decoration: none;
+}
+.site-footer-colophon {
+  margin: 0; text-align: right;
+  font: 400 var(--t-mono-sm) / 1.8 var(--font-mono); color: var(--ink-2);
+  text-transform: uppercase; letter-spacing: var(--tracking-label);
+  font-variant-numeric: var(--num);
+}
+
+/* ---------- 4 · COVER (Site 02) ----------
+   A title page on the 12-column grid: a spec-sheet rail on 3, the
+   name with its one accent mark, the role, one sentence and a ruled
+   footer that ends in the only call to action on 9. A complete block
+   with its own hairline and 64px top padding: use it directly in
+   <main>, not inside .section.
+     <section class="cover">
+       <div class="cover-rail"><span class="label cover-index">00 / Portfolio</span>
+         <dl><div><dt class="label">Based in</dt><dd>Greater Graz, Austria</dd></div>…</dl></div>
+       <div class="cover-body">
+         <p class="label cover-name">Rafael Braga-Kribitz</p>
+         <h1 class="cover-role">Marketing<br>Data Analyst</h1>
+         <p class="prose cover-lead">…</p>
+         <div class="cover-foot"><span class="label">Evidence before claims</span>
+           <span class="label">Independent portfolio</span>
+           <a class="label cover-cta" href="…">Get in touch <span class="glyph">↗</span></a></div>
+       </div>
+     </section> */
+.cover {
+  display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
+  column-gap: var(--grid-gutter); row-gap: var(--space-4);
+  border-top: var(--hairline); padding-top: 64px;
+}
+.cover-rail {
+  grid-column: span 3; min-width: 0;
+  display: flex; flex-direction: column; justify-content: space-between; gap: 32px; padding-bottom: 16px;
+}
+.cover-index { color: var(--ink); }
+.cover-rail dl { margin: 0; display: flex; flex-direction: column; gap: 16px; }
+.cover-rail dd { margin: 4px 0 0; font-size: var(--t-small); }
+.cover-body { grid-column: span 9; min-width: 0; }
+.cover-name { margin: 0; display: flex; align-items: center; gap: 12px; color: var(--ink); }
+.cover-name::before { content: ""; display: inline-block; width: 8px; height: 8px; background: var(--accent-01); flex: none; }
+.cover-role, .cover-body > h1 {
+  margin: 24px 0 0;
+  font: var(--w-display) var(--t-display) / var(--lh-none) var(--font-display);
+  letter-spacing: var(--tracking-tight); text-wrap: balance;
+}
+.cover-lead { margin: 32px 0 0; font-size: var(--t-lead); line-height: 1.5; }
+.cover-foot {
+  margin-top: 32px; border-top: var(--rule); padding-block: 16px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 32px;
+}
+.cover-foot .label { color: var(--ink); }
+.cover-cta { margin-left: auto; display: inline-flex; gap: 8px; align-items: center; min-height: 24px; color: var(--ink); text-decoration: none; }
+.cover-cta .glyph { color: var(--accent-01); }
+@media (max-width: 767px) {
+  .cover { grid-template-columns: minmax(0, 1fr); }
+  .cover-rail, .cover-body { grid-column: 1 / -1; }
+}
+
+/* ---------- 5 · SECTION HEADING (Site 03) ----------
+   Opens on an ink rule: kicker on 3, claim on 7, forward link on 2.
+     <div class="section-heading">
+       <p class="section-heading-kicker label"><span>01</span><span>Work</span></p>
+       <div class="section-heading-claim"><h2 class="display">A decision. Its evidence.</h2>
+         <p class="prose">Selected analytical projects…</p></div>
+       <a class="section-heading-link label" href="…">All 5 projects <span class="glyph">→</span></a>
+     </div> */
+.section-heading {
+  display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
+  column-gap: var(--grid-gutter); row-gap: var(--space-4);
+  border-top: var(--rule-open); padding-top: 16px;
+}
+.section-heading-kicker, .section-heading > .col-3 {
+  grid-column: span 3; margin: 0; color: var(--ink); display: flex; gap: 16px; min-width: 0;
+  font-family: var(--font-mono); font-weight: 400; font-size: var(--t-mono-sm);
+  letter-spacing: var(--tracking-label); text-transform: uppercase; font-variant-numeric: var(--num);
+}
+.section-heading-claim, .section-heading > .col-7 { grid-column: span 7; min-width: 0; }
+.section-heading-claim > :is(h1, h2, h3, .display) {
+  margin: 0; font: var(--w-display) var(--t-h3) / var(--lh-snug) var(--font-display);
+  letter-spacing: var(--tracking-tight); text-wrap: balance;
+}
+.section-heading-claim > p { margin: 16px 0 0; color: var(--ink-2); max-width: var(--measure); text-wrap: pretty; }
+.section-heading-link, .section-heading > .col-2 {
+  grid-column: span 2; justify-self: end; align-self: start;
+  display: inline-flex; gap: 12px; align-items: center; min-height: 24px; white-space: nowrap;
+  color: var(--ink); text-decoration: none;
+  font-family: var(--font-mono); font-weight: 400; font-size: var(--t-mono-sm);
+  letter-spacing: var(--tracking-label); text-transform: uppercase; font-variant-numeric: var(--num);
+}
+.section-heading-link .glyph { color: var(--ink-2); }
+.section-heading-link:hover .glyph { color: var(--accent-01); }
+.section-heading + .listing { margin-top: 32px; }
+@media (max-width: 767px) {
+  .section-heading { grid-template-columns: minmax(0, 1fr); }
+  .section-heading > * { grid-column: 1 / -1; justify-self: start; }
+}
+
+/* ---------- 6 · DOCUMENT OPENER, TRAIL, LEAD, META, END (P-08 · 3 + Site 04) ----------
+   Two placements share one look:
+   a) on the page grid (project pages): trail on 3, title + lead + meta on 9.
+        <header class="doc-opener grid"><div class="col-3"><p class="doc-trail">…</p></div>
+          <div class="col-9"><h1>…</h1><p class="doc-lead">…</p><div class="doc-meta">…</div></div></header>
+   b) stacked inside article.doc (utility pages): trail, title, lead, meta in flow. */
+.doc-opener { padding-block: 64px 48px; }
+.doc > .doc-opener { grid-column: wide; display: grid; gap: 24px; }
+.doc-opener > [class*="col-"] { min-width: 0; }
+.doc-opener :is(h1, h2, h3) {
+  margin: 0; font: var(--w-display) var(--t-h1) / var(--lh-tight) var(--font-display);
+  letter-spacing: var(--tracking-tight); text-wrap: balance;
+}
+.doc-opener :is(h1, h2, h3) + .doc-lead, .doc-opener .doc-lead + .doc-meta,
+.doc-opener :is(h1, h2, h3) + .doc-meta { margin-top: 24px; }
+.doc > .doc-opener > * + * { margin-top: 0; }   /* the stacked variant spaces by gap */
+.doc-trail {
+  margin: 0; display: flex; flex-wrap: wrap; gap: 8px 12px;
+  font: 400 var(--t-mono-sm) / 1.6 var(--font-mono);
+  letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2);
+  font-variant-numeric: var(--num);
+}
+.doc-trail a { color: var(--ink-2); text-decoration: none; min-height: 24px; display: inline-flex; align-items: center; }
+.doc-trail a:hover { color: var(--ink); }
+.doc-trail b { font-weight: 400; color: var(--ink); }
+.doc-trail .glyph { color: var(--ink-3); }
+.doc-lead { margin: 0; font-size: var(--t-lead); line-height: 1.5; max-width: 720px; text-wrap: pretty; }
+.doc-meta {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px;
+  font: 400 var(--t-mono-sm) / 1.4 var(--font-mono);
+  letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2);
+  font-variant-numeric: var(--num);
+}
+.doc-meta a { color: var(--ink-2); text-decoration: none; }
+.doc-meta a:hover { color: var(--ink); }
+.doc-meta .status { color: var(--ink); }
+
+.doc-end {
+  border-top: var(--hairline); padding-top: 24px;
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px;
+  font: 400 var(--t-mono-sm) / 1 var(--font-mono);
+  letter-spacing: var(--tracking-label); text-transform: uppercase;
+  font-variant-numeric: var(--num);
+}
+.doc-end:not(:first-child) { margin-top: var(--flow-group); }
+.doc > .doc-end { grid-column: wide; }
+.doc-end a { color: var(--ink); text-decoration: none; min-height: 24px; display: inline-flex; align-items: center; gap: 8px; }
+.doc-end .glyph { color: var(--ink-2); }
+.doc-end a:hover .glyph { color: var(--accent-01); }
+
+/* ---------- 7 · CONTENTS RAIL (Site 04) ----------
+   A nav on 3 beside the document on 9. Active item: title in ink,
+   number in the accent (the one cue; A-11). Inactive: title ink-2,
+   number ink-3. Mark the active item with aria-current.
+     <nav class="toc col-3" aria-label="Contents"><p class="label">Contents</p>
+       <ol><li><a href="#q" aria-current="true"><span class="toc-num">01</span><span>Question</span></a></li>…</ol></nav> */
+.toc { min-width: 0; }
+.toc ol { list-style: none; margin: 16px 0 0; padding: 0; }
+.toc li { padding-block: 6px; }
+.toc a {
+  display: flex; gap: 12px; align-items: baseline; text-align: left;
+  font: 400 var(--t-small) / 1.5 var(--font-body); color: var(--ink-2); text-decoration: none;
+}
+.toc-num, .toc a > span:first-child {
+  flex: none; font: 400 var(--t-mono-sm) / 1 var(--font-mono); color: var(--ink-3);
+  font-variant-numeric: var(--num);
+}
+.toc a:hover { color: var(--ink); }
+.toc a[aria-current], .toc li[aria-current] > a { color: var(--ink); }
+.toc a[aria-current] :is(.toc-num, span:first-child), .toc li[aria-current] :is(.toc-num, a > span:first-child) { color: var(--accent-01); }
+
+/* ---------- 8 · METRIC STRIP (Site 04 · D-025) ----------
+   Three figures between an ink rule and a hairline; the one earned
+   figure takes the accent (data-accent on its .metric).
+     <div class="metric-strip">
+       <div class="metric" data-accent><div class="metric-value">€453k</div>
+         <div class="metric-label label">Lowest five-year present cost</div></div> ×3
+     </div> */
+.metric-strip {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px;
+  border-top: var(--rule-open); border-bottom: var(--hairline); padding-block: 24px;
+}
+.metric { min-width: 0; }
+.metric-value {
+  display: flex; align-items: center; gap: 12px;
+  font: var(--w-display) clamp(30px, 4vw, 50px) / 1.2 var(--font-display);
+  letter-spacing: -0.04em; font-variant-numeric: var(--num); color: var(--ink);
+}
+.metric-label { margin-top: 12px; }
+.metric[data-accent] .metric-value, .metric-value[data-accent] { color: var(--accent-01); }
+.doc > .metric-strip { grid-column: wide; }
+
+/* ---------- 9 · UTILITY PAGES: the 404 numeral (Templates 01) ----------
+   The number is set in the mono face next to the h1; aria-hidden.
+     <header class="doc-opener"><p class="doc-trail">…</p>
+       <div class="doc-numeral-row"><span class="doc-numeral" aria-hidden="true">404</span>
+         <h1>No such page.</h1></div><p class="doc-lead">…</p></header> */
+.doc-numeral-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 40px; }
+.doc-opener .doc-numeral {
+  font: var(--w-display) clamp(96px, 16vw, 200px) / 0.9 var(--font-mono);
+  letter-spacing: -0.05em; font-variant-numeric: var(--num);
+}
+.doc-opener .doc-numeral + :is(h1, h2, h3) { font-size: var(--t-h2); max-width: 14em; }

@@ -1,0 +1,48 @@
+---
+// Evidence figure, Site specimen s05: kicker, the finding as the heading,
+// ink bars on a mid baseline, and a caption that gives n, scale and the
+// mandatory source. Bar geometry is the one permitted inline form: custom
+// properties --x / --w on .ev-fill (BUILD-BRIEF §6 rule 1).
+import type { Lang } from '../lib/i18n';
+import { t } from '../lib/i18n';
+
+interface Bar {
+  label: string;
+  /** The printed value, already formatted for the page language. */
+  value: string;
+  /** Left edge of the fill as a percentage of the track; default 0%. */
+  x?: string;
+  /** Width of the fill as a percentage of the track. */
+  w: string;
+  /** Draw the centre line (diverging bars around zero). */
+  mid?: boolean;
+}
+
+interface Props {
+  lang: Lang;
+  kicker: string;
+  heading: string;
+  bars: Bar[];
+  caption: string;
+  source: string;
+  /** Twelve columns instead of six. */
+  wide?: boolean;
+  id?: string;
+}
+
+const { lang, kicker, heading, bars, caption, source, wide = false, id } = Astro.props;
+---
+<figure class:list={['evidence', 'rule-strong', wide ? 'col-12' : 'col-6']} id={id}>
+  <div class="label">{kicker}</div>
+  <div class="display">{heading}</div>
+  <div class="ev-bars">
+    {bars.map((b) => (
+      <div class="ev-bar">
+        <span>{b.label}</span>
+        <span class="ev-track"><span class="ev-fill" style={`--x: ${b.x ?? '0%'}; --w: ${b.w}`}></span>{b.mid && <span class="ev-mid"></span>}</span>
+        <span>{b.value}</span>
+      </div>
+    ))}
+  </div>
+  <figcaption>{caption}<br><b>{t(lang, 'source')}:</b> {source}</figcaption>
+</figure>

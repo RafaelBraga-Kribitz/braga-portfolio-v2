@@ -1,0 +1,15 @@
+---
+// Listing wrapper, Site specimen s03: the head row names the four tab
+// stops (index · title · meta · trail); rows come through the slot as
+// <ListingRow>.
+interface Props {
+  head: { index: string; title: string; meta: string; trail: string };
+  class?: string;
+}
+
+const { head, class: className } = Astro.props;
+---
+<div class:list={['listing', className]}>
+  <div class="listing-head"><span class="lr-index">{head.index}</span><span class="lr-title">{head.title}</span><span class="lr-meta">{head.meta}</span><span class="lr-trail">{head.trail}</span></div>
+  <slot />
+</div>

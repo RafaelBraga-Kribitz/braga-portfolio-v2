@@ -1,0 +1,17 @@
+---
+// Status mark (D-029): one 7px square per state, drawn by CSS from
+// data-state; the text label always sits beside it. `label` overrides the
+// vocabulary label (the DE draft mark: in-build + "Entwurf · Freigabe
+// ausstehend").
+import type { Lang, StatusState } from '../lib/i18n';
+import { t } from '../lib/i18n';
+
+interface Props {
+  state: StatusState;
+  lang: Lang;
+  label?: string;
+}
+
+const { state, lang, label } = Astro.props;
+---
+<span class="status" data-state={state}>{label ?? t(lang, `status.${state}`)}</span>

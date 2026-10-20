@@ -1,0 +1,37 @@
+---
+// Site footer, Site specimen s01: four link groups (D-013) over a
+// wordmark bar. The bar's right block is NAME · LOCATION · EUR and the
+// copyright line (not the specimen's "private review" line).
+import { site } from '../lib/site';
+import type { Lang } from '../lib/i18n';
+import { footerGroups } from '../lib/routes';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const groups = footerGroups(lang);
+const year = new Date().getFullYear();
+const upper = (s: string) => s.toLocaleUpperCase(lang === 'de' ? 'de-AT' : 'en-GB');
+---
+<div class="grid-container">
+  <footer class="site-footer">
+    <div class="grid">
+      {groups.map((g) => (
+        <nav class="col-3" aria-label={g.title}>
+          <div class="label">{g.title}</div>
+          <ul>
+            {g.links.map((l) => (
+              <li><a href={l.href} hreflang={l.hreflang} lang={l.lang}>{l.label}{l.external && <Fragment> <span class="glyph" aria-hidden="true">↗</span></Fragment>}</a></li>
+            ))}
+          </ul>
+        </nav>
+      ))}
+    </div>
+    <div class="rule-t">
+      <span>{site.wordmark}</span>
+      <p>{upper(site.name)}<br>{upper(site.location[lang])} · EUR<br>© {year}</p>
+    </div>
+  </footer>
+</div>

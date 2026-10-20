@@ -1,0 +1,25 @@
+---
+// Metric strip, Site specimen s04: figures between an ink rule and a
+// hairline; one takes the accent (D-025, `accent`). The DOM is the
+// metrics callout of doc.css (ul > li > b + span, li.key for the accent
+// figure): inside article.doc the document rules style it and give it
+// its flow (metric strip → h2 = --flow-group); outside a document the
+// unscoped .callout[data-callout="metrics"] rules apply. The brief's
+// `.metric-strip` hook is not emitted: design-system/layout.css defines
+// it for a different child DOM (.metric/.metric-value), and both classes
+// on one root would lay the figures out twice.
+interface Props {
+  metrics: { value: string; label: string; accent?: boolean }[];
+  title?: string;
+}
+
+const { metrics, title } = Astro.props;
+---
+<div class="callout" data-callout="metrics">
+  {title && <div class="callout-title">{title}</div>}
+  <div class="callout-content">
+    <ul>
+      {metrics.map((m) => <li class:list={{ key: m.accent === true }}><b>{m.value}</b><span>{m.label}</span></li>)}
+    </ul>
+  </div>
+</div>

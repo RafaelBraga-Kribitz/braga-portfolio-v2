@@ -1,0 +1,42 @@
+---
+// Home cover, Site specimen s02: a spec-sheet rail on three columns
+// (kicker, then place · focus · edition), the body on nine: the name with
+// its one accent mark, the role as the page's h1, one sentence, and a
+// ruled footer that ends in the only call to action.
+import { site } from '../lib/site';
+import type { Lang } from '../lib/i18n';
+import { t } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  /** Rail rows, e.g. [{ k: 'Based in', v: 'Greater Graz, Austria' }]. */
+  spec: { k: string; v: string }[];
+  kicker?: string;
+  /** Lines of the role title; the specimen breaks after "Marketing". */
+  titleLines?: string[];
+  lead: string;
+  cta?: { href: string; label: string; external?: boolean };
+}
+
+const { lang, spec, kicker, titleLines, lead, cta } = Astro.props;
+const lines = titleLines ?? [site.role[lang]];
+const action = cta ?? { href: `mailto:${site.email}`, label: t(lang, 'contact.cta'), external: true };
+---
+<div class="cover grid">
+  <div class="cover-rail col-3">
+    <span class="label">{kicker ?? t(lang, 'cover.kicker')}</span>
+    <dl>
+      {spec.map((s) => <div><dt class="label">{s.k}</dt><dd>{s.v}</dd></div>)}
+    </dl>
+  </div>
+  <div class="cover-body col-9">
+    <p class="label"><span aria-hidden="true"></span>{site.name}</p>
+    <h1 class="display">{lines.map((line, i) => <Fragment>{i > 0 && <br />}{line}</Fragment>)}</h1>
+    <p class="prose">{lead}</p>
+    <div class="rule-t">
+      <span class="label">{t(lang, 'cover.evidence')}</span>
+      <span class="label">{t(lang, 'cover.independent')}</span>
+      <a href={action.href} class="label">{action.label} <span class="glyph" aria-hidden="true">{action.external === false ? '→' : '↗'}</span></a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,28 @@
+---
+// One listing row, Site specimen s03: code, title with a sub line, meta
+// lines (mono) with an optional status mark, and the trail text with its
+// arrow. The whole row is the link. ↗ marks a link that leaves the site
+// (D-030); internal rows carry →.
+import type { Lang, StatusState } from '../lib/i18n';
+import StatusMark from './StatusMark.astro';
+
+interface Props {
+  code: string;
+  title: string;
+  sub?: string;
+  meta?: string[];
+  status?: StatusState;
+  lang: Lang;
+  trail?: string;
+  href: string;
+  external?: boolean;
+}
+
+const { code, title, sub, meta = [], status, lang, trail, href, external = false } = Astro.props;
+---
+<a class="listing-row" href={href}>
+  <span class="lr-index lr-code">{code}</span>
+  <span class="lr-title"><span class="lr-title-main">{title}</span>{sub && <span class="lr-title-sub">{sub}</span>}</span>
+  <span class="lr-meta">{meta.map((m) => <span class="lr-mono">{m}</span>)}{status && <StatusMark state={status} lang={lang} />}</span>
+  <span class="lr-trail lr-year">{trail} <span class="lr-arrow" aria-hidden="true">{external ? '↗' : '→'}</span></span>
+</a>

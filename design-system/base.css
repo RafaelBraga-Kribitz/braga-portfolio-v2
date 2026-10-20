@@ -1,0 +1,267 @@
+/* ============================================================
+   BASE — Braga design system v2
+   Element defaults, the four type roles, the global rules of the
+   foundations proposal (P-02, rules 1–11, rewritten for our own
+   markup: no !important hacks aimed at a compiled bundle), and the
+   rendered document (doc.css P-08 sections 1, 2 and 5: article.doc
+   grid, elements, FLOW). Loads after tokens.css.
+
+   Vertical space is never set by an element on itself: the FLOW
+   section at the end is the only place a margin between siblings
+   is written (D-020).
+   ============================================================ */
+
+/* ---------- 0 · reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: 96px;        /* P-02 rule 4: anchors land below the 80px header + 16 (WCAG 2.4.11) */
+}
+body {
+  margin: 0;
+  min-height: 100vh;
+  font: 400 var(--t-body) / var(--lh-body) var(--font-body);
+  background: var(--surface);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+/* a moment block paints its own inverted canvas (D-024: `.dark` per element) */
+.dark { background: var(--surface); color: var(--ink); }
+
+/* every block starts at zero: FLOW sets the space between siblings */
+h1, h2, h3, h4, h5, h6, p, figure, figcaption, blockquote, dl, dd, ul, ol, pre, hr, fieldset { margin: 0; }
+ul, ol { padding-left: 24px; }
+fieldset { padding: 0; border: 0; min-width: 0; }
+img, svg, video { display: block; max-width: 100%; height: auto; }
+table { border-collapse: collapse; border-spacing: 0; }
+button, input, select, textarea { font: inherit; color: inherit; letter-spacing: inherit; border-radius: 0; }
+button { cursor: pointer; }
+/* P-02 rule 2 · --edge is the boundary of a control (3:1); low-specificity
+   default so the tool stylesheet can refine it */
+:where(input, select, textarea, [role="switch"], [role="tablist"]) { border-color: var(--edge); }
+a { color: inherit; text-decoration: none; }
+strong, b { font-weight: 700; }
+small { font-size: var(--t-small); }
+sup, sub { line-height: 0; }
+
+/* ---------- 1 · headings (D-008: one weight, 700) ---------- */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: var(--w-display);
+  letter-spacing: var(--tracking-tight);
+  text-wrap: balance;
+  font-variant-numeric: var(--num);
+}
+h1 { font-size: var(--t-h1); line-height: var(--lh-tight); }
+h2 { font-size: var(--t-h2); line-height: var(--lh-tight); }
+h3 { font-size: var(--t-h3); line-height: var(--lh-snug); }
+h4, h5, h6 { font-family: var(--font-body); font-size: var(--t-body); line-height: 1.4; letter-spacing: 0; }
+p { text-wrap: pretty; }
+
+/* ---------- 2 · the four type roles (typography.css v2) ---------- */
+.display {
+  font-family: var(--font-display);
+  font-weight: var(--w-display);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--lh-tight);
+  font-variant-numeric: var(--num);
+  text-wrap: balance;
+}
+.label {                              /* system labels: the uppercase machine layer */
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: var(--t-mono-sm);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--ink-2);
+  font-variant-numeric: var(--num);
+}
+.index {                              /* numbering: recessive wayfinding, ink-3 never mid (D-007) */
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: var(--t-mono);
+  color: var(--ink-3);
+  font-variant-numeric: var(--num);
+}
+.prose {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  color: var(--ink);
+  max-width: var(--measure);
+  text-wrap: pretty;
+}
+
+/* ---------- 3 · foundations (P-02) ---------- */
+
+/* 1 · motion is comprehension-only, and none under reduced motion.
+      Every transition reads --dur, so one line (HANDOFF 15). */
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur: var(--dur-reduced); }
+}
+
+/* 3 · focus: one ink ring for every control, on every surface (D-026).
+      The 2px offset leaves a surface-coloured gap, so the ring reads
+      even on an ink control. */
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+:focus:not(:focus-visible) { outline: none; }
+
+/* 5 · skip link: the first focusable element on every page; hidden
+      until keyboard focus; flat, hairline-bordered mono label. */
+.skip {
+  position: absolute; left: var(--gutter); top: 8px; z-index: 100;
+  padding: 14px 16px; background: var(--surface); color: var(--ink);
+  border: 1px solid var(--ink); text-decoration: none;
+  font: 400 var(--t-mono-sm) / 1 var(--font-mono);
+  letter-spacing: var(--tracking-label); text-transform: uppercase;
+  transform: translateY(-200%);
+}
+.skip:focus-visible { transform: none; }
+
+/* 6 · links (D-032). In running text a link needs an affordance that is
+      not colour: a hairline underline, offset so it does not cut
+      descenders; hover moves the underline to ink. Block links (rows,
+      doors, buttons) carry no underline. The accent is never spent on
+      every link: it belongs to the trailing arrow, which takes it on
+      hover of its row. */
+a:hover { color: var(--ink); }
+.prose a, .doc a, p a, li a, dd a, figcaption a, td a {
+  text-decoration: underline; text-decoration-thickness: 1px;
+  text-decoration-color: var(--mid); text-underline-offset: 0.18em;
+}
+.prose a:hover, .doc a:hover, p a:hover, li a:hover, dd a:hover, figcaption a:hover, td a:hover { text-decoration-color: var(--ink); }
+.listing-row:hover .lr-arrow, .door:hover .door-arrow, .lr-year:hover .lr-arrow { color: var(--accent-01); }
+
+/* 7 · targets: at least 24 × 24 CSS px everywhere (2.5.8), 44 below 768
+      (HANDOFF 10). Nav and footer links get block height; text inside
+      them does not move. */
+nav a, footer a, .door, .shell-lang { min-height: 24px; display: inline-flex; align-items: center; }
+@media (max-width: 767px) {
+  nav a, footer a, .door, .shell-lang { min-height: 44px; }
+}
+
+/* 9 · hyphenation only in running text, never in titles; `lang` on the
+      page decides the dictionary (HANDOFF 12: German compounds at 320). */
+.prose, .doc p, .doc li, .doc dd { hyphens: auto; -webkit-hyphens: auto; overflow-wrap: anywhere; }
+h1, h2, h3, h4, .display { hyphens: manual; -webkit-hyphens: manual; }
+
+/* 10 · numbers: tabular, lining, slashed zero wherever a figure appears,
+       including form values and table cells. */
+td, th, dd, output, input, .num { font-variant-numeric: var(--num); }
+
+/* 11 · status mark (D-029): five 7px squares, one design per state; the
+       mark alone tells them apart, the text label always sits beside it.
+         complete        ■  filled
+         functional      ▣  filled centre inside an outline
+         under-revision  ▤  half filled (bottom)
+         in-build        □  outline
+         archived        ⊡  dotted outline */
+.status { display: inline-flex; align-items: center; gap: 8px; color: var(--ink); }
+.status::before {
+  content: ""; width: 7px; height: 7px; box-sizing: border-box; flex: none;
+  border: 1px solid currentColor; background: currentColor;
+}
+.status[data-state="functional"]::before { background: currentColor; background-clip: content-box; padding: 1px; }
+.status[data-state="under-revision"]::before { background: transparent; border-bottom-width: 4px; }
+.status[data-state="in-build"]::before { background: transparent; }
+.status[data-state="archived"]::before { background: transparent; border-style: dotted; }
+
+/* ---------- 4 · the rendered document (P-08 · 1 grid) ----------
+   One <article class="doc"> of flat flow: no wrapper divs, no
+   per-element attributes. Two named tracks: content (the measure)
+   and wide (the rest of the column). */
+.doc {
+  display: grid;
+  grid-template-columns:
+    [wide-start content-start] minmax(0, var(--measure-doc))
+    [content-end] minmax(0, 1fr) [wide-end];
+  column-gap: 0; row-gap: 0;
+  font: 400 var(--t-body) / var(--lh-body) var(--font-body);
+  color: var(--ink);
+  counter-reset: sec;
+  min-width: 0;
+}
+.doc > * { grid-column: content; margin: 0; min-width: 0; }
+.doc > [data-width="wide"],
+.doc > .table-scroll,
+.doc > pre,
+.doc > .code,
+.doc > hr,
+.doc > h2,
+.doc > .callout[data-callout-metadata~="wide"],
+.doc > .callout[data-callout="metrics"],
+.doc > .callout[data-callout="summary"],
+.doc > .callout[data-callout="quote"],
+.doc > .footnotes { grid-column: wide; }
+
+/* ---------- 5 · document elements (P-08 · 2) ---------- */
+.doc > h2 {
+  counter-increment: sec;
+  font: var(--w-display) var(--t-h3) / var(--lh-snug) var(--font-display);
+  letter-spacing: var(--tracking-tight); text-wrap: balance;
+  border-top: var(--hairline); padding-top: 16px;
+}
+/* the in-page section number is derived from order, never typed */
+.doc > h2::before {
+  content: counter(sec, decimal-leading-zero);
+  display: block; margin-bottom: 8px;
+  font: 400 var(--t-mono) / 1 var(--font-mono);
+  letter-spacing: var(--tracking-label); color: var(--ink-3);
+  font-variant-numeric: var(--num);
+}
+.doc > h3 {
+  font: var(--w-display) 1.25rem / 1.3 var(--font-display);
+  letter-spacing: var(--tracking-tight); text-wrap: balance;
+}
+.doc > h4 { font: 700 var(--t-body) / 1.4 var(--font-body); letter-spacing: 0; }
+.doc > p { text-wrap: pretty; }
+.doc > ul, .doc > ol { padding-left: 24px; display: grid; gap: var(--flow-related); }
+.doc > ol { list-style: decimal-leading-zero; }
+.doc li::marker { color: var(--ink-3); font-variant-numeric: var(--num); }
+.doc strong { font-weight: 700; }
+.doc code {
+  font: 400 0.9em / 1 var(--font-mono); background: var(--surface-2);
+  padding: 1px 4px; font-variant-numeric: var(--num);
+}
+.doc > hr { border: 0; border-top: var(--hairline); height: 0; }
+.doc mark { background: none; color: inherit; }
+.doc sup { font-size: 0.75em; line-height: 0; vertical-align: super; }   /* 12px at the 16px body: the floor holds for footnote refs */
+.doc sup a { font-family: var(--font-mono); color: var(--ink-2); text-decoration: none; padding-inline: 2px; }
+.doc img { display: block; max-width: 100%; height: auto; }
+/* ==text== in prose: the earned figure, accent text, at most one per section (D-025) */
+.doc p mark, .doc li mark { color: var(--accent-01); font-variant-numeric: var(--num); }
+/* blockquote outside a callout: surface-2 wash on a rhythm rule (no side rules in v2) */
+.doc > blockquote { background: var(--surface-2); border-top: var(--rule); padding: 24px; }
+.doc > blockquote > * + * { margin-top: var(--flow-element); }
+
+/* code palette · D-035: six tokens from the dark set, ink and weight only */
+.tok-kw  { color: var(--code-kw); }
+.tok-fn  { color: var(--code-fn); }
+.tok-str { color: var(--code-str); }
+.tok-num { color: var(--code-num); }
+.tok-cm  { color: var(--code-ink-3); font-style: italic; }
+.tok-op  { color: var(--code-ink-2); }
+
+/* ---------- 6 · FLOW (P-08 · 5): the only place vertical space is set ----------
+   Space belongs to the relationship between two siblings. Tokens:
+   related 8 · element 16 · block 32 · lead 48 · group 64 · section 96
+   (lead 32 · group 48 · section 64 below 768). Headings get at least
+   twice above what they give below. */
+.doc > * + * { margin-top: var(--flow-element); }                                        /* p → p · h3 → text */
+.doc > p + ul, .doc > p + ol { margin-top: var(--flow-related); }                        /* a list under the paragraph that introduces it */
+.doc > * + :where(figure, .table-scroll, pre, .code, blockquote, .callout, hr, .math),
+.doc > :where(figure, .table-scroll, pre, .code, blockquote, .callout, hr, .math) + * { margin-top: var(--flow-block); }  /* anything ↔ figure · table · code · callout · rule */
+.doc > h2 + * { margin-top: var(--flow-block); }                                         /* h2 → its first element */
+.doc > h3 + *, .doc > h4 + * { margin-top: var(--flow-element); }                        /* h3 → its first element */
+.doc > * + h3 { margin-top: var(--flow-lead); }                                          /* text → h3 */
+.doc > * + h2 { margin-top: var(--flow-section); }                                       /* text → h2 */
+.doc > .callout[data-callout="metrics"] + h2, .doc > .metric-strip + h2 { margin-top: var(--flow-group); }  /* metric strip → first h2 */
+.doc > .doc-opener + * { margin-top: 0; }                                                /* the opener carries its own padding */
+.doc > .callout[data-callout="summary"] + * { margin-top: var(--flow-group); }            /* abstract → body */
+.doc > .callout[data-callout="summary"] + .callout[data-callout="metrics"] { margin-top: var(--flow-block); }  /* abstract → metric strip */
+.doc > * + .footnotes, .doc > * + .doc-end { margin-top: var(--flow-group); }             /* document → notes · end bar */
+.doc > .footnotes + .doc-end { margin-top: var(--flow-block); }

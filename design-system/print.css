@@ -1,0 +1,37 @@
+/* ============================================================
+   PRINT — Braga design system v2 (P-11, A-29)
+   A4; the light palette forced onto paper (the --paper-* tokens in
+   tokens.css); hairlines kept; site chrome dropped; figures and rows
+   unbroken; no URL printed after links. Loads last so it overrides
+   every other sheet, including bench.css.
+   ============================================================ */
+@media print {
+  @page { size: A4; margin: 18mm 16mm 20mm; }
+
+  /* paper is the surface, whatever the page theme was */
+  :root, :root:not([data-theme="light"]), :root[data-theme="dark"], .dark {
+    --surface: var(--paper); --surface-2: var(--paper-2); --surface-3: var(--paper-3);
+    --ink: var(--paper-ink); --ink-2: var(--paper-ink-2); --ink-3: var(--paper-ink-2);
+    --mid: var(--paper-mid); --rule-c: var(--paper-rule);
+    --hairline: 1px solid var(--mid); --rule: 1px solid var(--rule-c); --rule-open: 1px solid var(--ink);
+    --edge: var(--ink-2);
+    color-scheme: light;
+  }
+  html, body { background: var(--paper); color: var(--paper-ink); }
+
+  /* chrome off: header, skip link, footer, navigation, anything marked */
+  .shell, .skip, .site-footer, nav, .toc, .no-print, .code-tools, .shell-theme { display: none !important; }
+  .grid-container, .page-grid { max-width: none; padding-inline: 0; }
+  .section { padding-block: 12mm; }
+  .doc-opener { padding-block: 0 12mm; }
+
+  .doc, .prose { max-width: none; }
+  h1, h2, h3, h4 { break-after: avoid; }
+  figure, table, .table-scroll, .callout, pre, .code, blockquote, .listing-row,
+  .metric-strip, .evidence, .math, .cover, .section-heading { break-inside: avoid; }
+
+  a { color: inherit; text-decoration: none; }
+  a[href]::after { content: none; }
+  .lr-arrow, .door-arrow { display: none; }
+  .listing-row, tbody tr { transition: none; }
+}

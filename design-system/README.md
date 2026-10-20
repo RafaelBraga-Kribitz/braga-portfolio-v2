@@ -1,0 +1,48 @@
+# design-system/ — Braga design system v2, as stylesheets
+
+Plain CSS, no build step, no dependencies. Every page loads `src/styles/global.css`, which imports these files in order. The values come from `handoff/_ds/tokens` (v1 base) merged with `handoff/ds-update/tokens` (v2, wins) and the adopted proposals in `handoff/ds-update/proposals`; the patterns come from `handoff/specimens/Design System v2 - Site.dc.html` with its spacing kept to the pixel (BUILD-BRIEF rule 10).
+
+## Load order
+
+| # | File | Holds | Decisions |
+|---|---|---|---|
+| 1 | `tokens.css` | Every colour, size, weight and duration. One `:root` block of light values; the responsive steps; the dark values **twice** (`:root[data-theme="dark"], .dark` and `@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) }`); `color-scheme`; the painted canvas; the ten `@font-face` rules for BKribitz and BKribitz Mono (`/fonts/`). The print palette (`--paper-*`) and the code palette (`--code-*`) live here too, so no other file carries a hex. | D-003 fonts · D-004 accent · D-005 accent-02 retired · D-006 neutrals · D-007 mid never text · D-008 one heading weight · D-009a BRAGA 800 · D-010 1320 · D-015–D-019, D-033 charts · D-020 spacing and flow · D-024 theme · D-027 `--edge` · D-035 code · O-02 measure 60ch (assumption) |
+| 2 | `base.css` | Reset; `html`/`body`; headings and paragraphs at margin 0; `.display` `.label` `.index` `.prose`; the foundations (reduced motion, `--edge`, ink focus ring, scroll-padding 96px, `.skip`, underlined prose links and the arrow-turns-accent rule, 24/44px targets, hyphenation, numeric features, the five status squares); `article.doc` (grid on `--measure-doc`, every element, the FLOW rules); the `.tok-*` code palette. | P-02 · P-08 §1, 2, 5 · D-026 · D-029 · D-030 · D-032 |
+| 3 | `layout.css` | The 12-column grid and hairline rules (grid.css v2 verbatim); the shell (shell.css verbatim, container queries); `.site-footer`; `.cover`; `.section-heading`; `.doc-opener` `.doc-trail` `.doc-lead` `.doc-meta` `.doc-end`; `.toc`; `.metric-strip`; the 404 numeral. | P-04 · P-08 §3 · D-013 · D-025 · D-028 · Site 01–04 |
+| 4 | `components.css` | The listing (listing.css corrected to v2); the status mark in listings and meta rows; callouts (the Obsidian callout DOM); `.cta`; the code block; `figure.fig`; `.table-scroll` and tables; footnotes; `.math`. | P-08 §4 · D-029 · D-035 |
+| 5 | `charts.css` | The evidence figure (Site 05); chart SVG text and strokes; IBCS roles and categorical fills. | D-015 · D-016 · D-033 · Site 05 |
+| 6 | `bench.css` | **Agent D's file**: `.bench*`, `.segmented`, `.range`, `.button`. Imported by global.css after charts.css. | D-027 · Site 06 |
+| 7 | `print.css` | A4, the light palette on paper, chrome dropped, no breaks inside figures. Last, so it overrides everything. | P-11 |
+| — | `obsidian-snippet.css` | The document elements and callouts scoped to `.markdown-reading-view`. Generated from base.css + components.css (see the file header); install with tokens.css in `.obsidian/snippets/`. | P-08 |
+
+`npm run lint:css` (`scripts/lint/css-rules.mjs`) fails on a hex outside tokens.css or anywhere under `src/`, on a font size below 12px / 0.75rem, on a missing contract class, on a token pair below its contrast threshold, and prints the contrast table. The two dark copies in tokens.css must stay identical; the lint checks that too.
+
+## Rules the stylesheets assume
+
+- No inline `style=` except the custom property that positions a mark: `style="--x: 50%; --w: 34%"` on `.ev-fill` / `.ev-mid` and chart marks.
+- No hex outside tokens.css; every colour is a `var(--…)`.
+- No font size below 12px (`--t-mono-sm`); chart SVG text is CSS 12px, so give an SVG a CSS height rather than a scaling viewBox (A-04).
+- Vertical space between document siblings is set only by the FLOW section of base.css; no element carries its own margin.
+- Colour lives in marks, never in type. The accent is text only for the one earned figure per view (`data-accent` on a `.metric`, `<mark>` in prose, the active `.toc` number).
+
+## The class contract (BUILD-BRIEF §5)
+
+Layout `.grid-container .page-grid .grid .col-1…12 .col-start-N .section .rule-t .rule-strong .vrule .skip` · Type `.display .label .index .prose` · Shell `.shell .shell-bar .shell-mark .shell-doors .door .door-code .door-label .shell-cluster .shell-lang .shell-theme` · Listing `.listing .listing-head .listing-row .lr-index .lr-title .lr-title-main .lr-title-sub .lr-meta .lr-trail .lr-code .lr-mono .lr-dim .lr-year .lr-arrow` · Status `.status[data-state="complete|functional|under-revision|in-build|archived"]` · Document `article.doc .doc-opener .doc-trail .doc-lead .doc-meta .doc-end .glyph .table-scroll figure.fig .fig-label .fig-title .fig-source .code .code-bar .code-copy .code-wrap .math .eq-no .footnotes .callout[data-callout="note|aside|warning|tool|summary|definition|quote|spec|metrics|faq|bookmark|cta"] .callout-title .callout-content .cta` · Site patterns `.cover .cover-rail .cover-body .section-heading .metric-strip .toc .evidence .ev-bars .ev-bar .ev-track .ev-fill .ev-mid` · Bench (bench.css) `.bench .bench-head .bench-controls .bench-output .bench-verdict .bench-kpis .bench-limit .segmented .range .button`.
+
+### Sub-classes the patterns use (not in the contract; documented here for Agent B)
+
+- Footer: `.site-footer` goes **inside** a `.grid-container` (`<footer class="grid-container"><div class="site-footer">`); four `.col-3.site-footer-group` on a `.grid`, each `.label` + `ul.site-footer-links`; then `.site-footer-bar` with `.site-footer-mark` (BRAGA) and `p.site-footer-colophon`.
+- Cover: `.cover` is its own grid with a hairline and 64px top padding — place it directly in `<main>`, not inside `.section`. Children: `.cover-rail` (`.label.cover-index`, a `<dl>` of `.label` dt / dd), `.cover-body` (`p.label.cover-name` with the accent square drawn by CSS, `h1.cover-role`, `p.prose.cover-lead`, `.cover-foot` with `.label` spans and `a.label.cover-cta` + `.glyph`).
+- Section heading: `.section-heading` is its own grid; `p.section-heading-kicker` (two spans: number, word), `.section-heading-claim` (h2.display + p.prose), `a.section-heading-link` (+ `.glyph`). `.section-heading + .listing` gets 32px.
+- Document opener: either `header.doc-opener.grid` with `.col-3` (trail) and `.col-9` (title, `.doc-lead`, `.doc-meta`), or stacked inside `article.doc`. The title may be h1–h3; it renders at `--t-h1`.
+- Contents: `nav.toc` with `p.label`, `ol > li > a` holding `span.toc-num` + `span`. Mark the active item with `aria-current` on the `<a>` (title to ink, number to accent).
+- Metric strip: `.metric-strip > .metric > .metric-value + .metric-label.label`; `data-accent` on the earned `.metric`.
+- Evidence: `figure.evidence` with `p.label`, `p.evidence-heading`, `.ev-bars > .ev-bar > .ev-label + .ev-track (> .ev-fill [+ .ev-mid]) + .ev-value`, then `figcaption` with `<b>Source:</b>`. `data-accent` on the winning `.ev-bar`.
+- Status vocabulary: `.status-list > div > .status + .status-use`.
+- 404: `.doc-opener > .doc-numeral-row > span.doc-numeral + h1`.
+- Chart SVG classes: `.axis .gridline .cap .curve .cursor .marker`, text in `.ink` for values. Roles for marks: `.sc-ac .sc-py .sc-pl .var-pos .var-neg .hl .cat-1…5 .cat-other .catg-1…4` on `.ev-fill`, `.mark`, `.swatch` or any SVG shape; a label carrying `.var-neg` gains the ▲ and stays ink.
+- Code block: `.code[data-lang][data-wrap="on|off"] > .code-bar (> span + .code-tools > button.code-wrap + button.code-copy) + pre > code` with `.tok-kw .tok-fn .tok-str .tok-num .tok-cm .tok-op`.
+
+## Theme
+
+`<html data-theme="light|dark">` is the stored override (the 158-byte pre-paint script in Base.astro); no attribute follows the OS; `.dark` on any element inverts that element alone and paints its own canvas. Theme-color metas: `#E4E6EA` light, `#191A1D` dark (Base.astro).

@@ -1,0 +1,337 @@
+/* ============================================================
+   COMPONENTS — Braga design system v2
+   1 the listing (listing.css v1, corrected to v2: ink-3 never mid,
+     one heading weight, the status mark inside the meta slot)
+   2 the status mark in listings and meta rows (D-029)
+   3 callouts (doc.css P-08 section 4, the Obsidian callout DOM)
+   4 the call to action (.cta)
+   5 the code block (D-035) and plain pre
+   6 the figure (figure.fig), the table, footnotes, math
+   Loads after layout.css. The bench, segmented control, range and
+   button live in bench.css (Agent D).
+   ============================================================ */
+
+/* ---------- 1 · LISTING ----------
+   ONE row rhythm for every list (Work, Writing, Tools, Home index).
+   Built on the 12-column grid so every list shares the same four tab
+   stops: index col 1 · title 2–7 · meta 8–10 · trail 11–12 (flush right).
+   Full-width hairlines are the structure. */
+.listing { grid-column: 1 / -1; border-top: var(--hairline); }
+
+/* head and rows share one column template, so labels sit above their values */
+.listing-head,
+.listing-row {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
+  column-gap: var(--grid-gutter);
+  align-items: baseline;
+  border-bottom: var(--rule);
+}
+.listing-head {
+  padding-block: var(--space-1);
+  font-family: var(--font-mono);
+  font-size: var(--t-mono);
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+}
+.listing-row {
+  padding-block: var(--space-3);
+  text-decoration: none;
+  color: var(--ink);
+  transition: background var(--dur) var(--ease);
+}
+a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
+
+/* the four canonical slots (identical in head and row) */
+.lr-index { grid-column: 1 / span 1; }
+.lr-title { grid-column: 2 / span 6; min-width: 0; }
+.lr-meta  { grid-column: 8 / span 3; min-width: 0; }
+.lr-trail { grid-column: 11 / span 2; justify-self: end; text-align: right; white-space: nowrap; }
+/* wide-title variant: title runs to the meta edge (lists with no middle column) */
+.listing-row.lr-wide .lr-title,
+.listing-head.lr-wide .lr-title { grid-column: 2 / span 8; }
+/* the meta slot stacks discipline and status (Site 03) */
+.listing-row .lr-meta { display: flex; flex-direction: column; gap: 8px; }
+
+/* typographic helpers used inside slots */
+.lr-code {
+  font-family: var(--font-mono); font-size: var(--t-mono);
+  color: var(--ink-3); font-variant-numeric: var(--num);
+  letter-spacing: 0.02em; white-space: nowrap;
+}
+.lr-title-main {
+  display: block;
+  font-family: var(--font-display); font-weight: var(--w-display);
+  font-size: var(--t-h3); letter-spacing: var(--tracking-tight);
+  line-height: 1.14; color: var(--ink); text-wrap: pretty;
+}
+.lr-title-sub {
+  display: block;
+  font-family: var(--font-body); font-size: var(--t-body);
+  color: var(--ink-2); line-height: 1.35; margin-top: 4px;
+}
+.lr-mono {
+  font-family: var(--font-mono); font-size: var(--t-mono);
+  color: var(--ink-2); font-variant-numeric: var(--num);
+  letter-spacing: 0.02em;
+}
+.lr-mono.lr-dim, .lr-dim { color: var(--ink-3); }
+/* stacked mono lines inside a slot (method lists, created/updated) */
+.lr-stack { display: flex; flex-direction: column; gap: 4px; }
+.lr-label {
+  text-transform: uppercase; letter-spacing: var(--tracking-label);
+  color: var(--ink-3); font-family: var(--font-mono); font-size: var(--t-mono);
+}
+/* trailing year with the arrow: ink-2 at rest, accent only on row hover */
+.lr-year { display: inline-flex; gap: 10px; align-items: baseline; color: var(--ink-2); font-variant-numeric: var(--num); }
+.lr-arrow { color: var(--ink-2); transition: color var(--dur) var(--ease); }
+.listing-row:hover .lr-arrow { color: var(--accent-01); }
+/* nested index (site map): indent the title without breaking the grid */
+.listing-row.lr-child .lr-title { padding-left: var(--space-4); }
+
+/* responsive: collapse to a stacked, left-aligned card */
+@media (max-width: 720px) {
+  .listing-head { display: none; }
+  .listing-row { grid-template-columns: 64px 1fr; row-gap: 6px; padding-block: var(--space-3); }
+  .lr-index { grid-column: 1; }
+  .lr-title { grid-column: 2; }
+  .lr-meta  { grid-column: 2; }
+  .lr-trail { grid-column: 2; justify-self: start; text-align: left; }
+  .listing-row.lr-child .lr-title { padding-left: var(--space-3); }
+}
+
+/* ---------- 2 · STATUS in listings and meta rows (D-029) ----------
+   The mark itself is in base.css; here its label typography where it
+   appears beside data. */
+.lr-meta .status, .doc-meta .status, .status-list .status {
+  font-family: var(--font-mono); font-size: var(--t-mono-sm);
+  letter-spacing: var(--tracking-label); text-transform: uppercase;
+}
+/* status vocabulary (Site 03): one ruled cell per state */
+.status-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0 32px; }
+.status-list > * { border-top: var(--rule); padding-block: 12px; display: flex; flex-direction: column; gap: 4px; }
+.status-list .status-use { font-size: var(--t-small); color: var(--ink-2); line-height: 1.4; }
+
+/* ---------- 3 · CALLOUTS (P-08 · 4, the Obsidian callout DOM) ----------
+   <div class="callout" data-callout="note"><div class="callout-title">…</div>
+     <div class="callout-content">…</div></div> */
+.callout { display: grid; gap: 12px; min-width: 0; }
+.callout .callout-icon, .callout .callout-fold { display: none; }
+.callout-title {
+  display: flex; align-items: center; gap: 8px;
+  font: 400 var(--t-mono-sm) / 1.4 var(--font-mono);
+  letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2);
+}
+.callout-content > * { margin: 0; }
+.callout-content > * + * { margin-top: var(--flow-element); }
+.callout-content > p + ul, .callout-content > p + ol { margin-top: var(--flow-related); }
+.callout-content ul, .callout-content ol { padding-left: 24px; }
+
+/* note · aside · warning · tool — a surface-2 wash on a hairline. No side
+   rule: v2 has no side-accent containers. */
+.callout:is([data-callout="note"], [data-callout="aside"], [data-callout="warning"], [data-callout="tool"]) {
+  background: var(--surface-2); border-top: var(--rule); padding: 24px;
+}
+.callout[data-callout="warning"] .callout-title::before { content: "▲"; }
+
+/* summary — the abstract under the opener */
+.callout[data-callout="summary"] { border-top: var(--rule-open); border-bottom: var(--hairline); padding-block: 16px 24px; }
+.callout[data-callout="summary"] .callout-content { font-size: var(--t-lead); line-height: 1.5; max-width: var(--measure-doc); text-wrap: pretty; }
+
+/* definition — term as a small display title over an ink opening rule */
+.callout[data-callout="definition"] { border-top: var(--rule-open); padding-top: 12px; }
+.callout[data-callout="definition"] .callout-title {
+  font: var(--w-display) var(--t-body) / 1.3 var(--font-display);
+  letter-spacing: var(--tracking-tight); text-transform: none; color: var(--ink);
+}
+
+/* quote — pull quote; the source line follows the quotation */
+.callout[data-callout="quote"] { border-top: var(--hairline); padding-top: 16px; }
+.callout[data-callout="quote"] .callout-content {
+  font: var(--w-display) var(--t-h3) / var(--lh-snug) var(--font-display);
+  letter-spacing: var(--tracking-tight); text-wrap: balance; max-width: 30em;
+}
+.callout[data-callout="quote"] .callout-title { order: 2; }
+
+/* spec — key/value rows (renderer: "Term — value" list items → dl) */
+.callout[data-callout="spec"] dl {
+  margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr);
+  column-gap: 32px; border-top: var(--rule-open);
+}
+.callout[data-callout="spec"] dt, .callout[data-callout="spec"] dd { margin: 0; padding-block: 10px; border-bottom: var(--rule); }
+.callout[data-callout="spec"] dt {
+  font: 400 var(--t-mono-sm) / 1.5 var(--font-mono);
+  letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2);
+}
+.callout[data-callout="spec"] dd { font-size: var(--t-small); line-height: 1.5; font-variant-numeric: var(--num); }
+
+/* metrics — tiles between an ink rule and a hairline. Renderer: the run
+   before " — " becomes <b>, the rest <span>; ==value== keeps its <mark>.
+   The key value is set in the accent (D-025); siblings ink-2. */
+.callout[data-callout="metrics"] { border-top: var(--rule-open); border-bottom: var(--hairline); padding-block: 24px; }
+.callout[data-callout="metrics"] ul {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 24px 32px;
+}
+.callout[data-callout="metrics"] li { display: grid; gap: 12px; min-width: 0; }
+.callout[data-callout="metrics"] li > b {
+  display: flex; align-items: center; gap: 12px;
+  font: var(--w-display) clamp(30px, 4vw, 50px) / 1.1 var(--font-display);
+  letter-spacing: -0.04em; font-variant-numeric: var(--num); color: var(--ink-2);
+}
+.callout[data-callout="metrics"] li > b:has(mark), .callout[data-callout="metrics"] li.key > b { color: var(--accent-01); }
+.callout[data-callout="metrics"] li > span {
+  font: 400 var(--t-mono-sm) / 1.5 var(--font-mono);
+  letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2);
+}
+
+/* faq — a native <details>, no script */
+details.callout { display: block; border-top: var(--rule); border-bottom: var(--rule); }
+details.callout > summary {
+  list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+  gap: 16px; min-height: 48px; padding-block: 12px;
+  font: 400 var(--t-body) / 1.4 var(--font-body); color: var(--ink); text-transform: none; letter-spacing: 0;
+}
+details.callout > summary::-webkit-details-marker { display: none; }
+details.callout > summary::after { content: "+"; font: 400 var(--t-mono) / 1 var(--font-mono); color: var(--ink-2); }
+details.callout[open] > summary::after { content: "−"; }
+details.callout > .callout-content { padding-block: 0 24px; max-width: var(--measure-doc); }
+
+/* bookmark — a link card: title, one line, arrow; the whole card is the link */
+.callout[data-callout="bookmark"] .callout-content a {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 24px; align-items: center;
+  padding: 16px 0; border-top: var(--rule); border-bottom: var(--rule);
+  color: var(--ink); text-decoration: none; transition: background var(--dur) var(--ease);
+}
+.callout[data-callout="bookmark"] .callout-content a:hover { background: var(--surface-2); }
+.callout[data-callout="bookmark"] a b { font: var(--w-display) 1.125rem / 1.3 var(--font-display); letter-spacing: var(--tracking-tight); }
+.callout[data-callout="bookmark"] a .sub { grid-column: 1; color: var(--ink-2); font-size: var(--t-small); line-height: 1.4; }
+.callout[data-callout="bookmark"] a .glyph { grid-column: 2; grid-row: 1 / span 2; font-family: var(--font-mono); color: var(--ink-2); }
+.callout[data-callout="bookmark"] a:hover .glyph { color: var(--accent-01); }
+
+/* tool — the no-script and Obsidian fallback: a static result and a
+   note, never a blank panel. The island replaces this block when it mounts. */
+.callout[data-callout="tool"] .callout-content { font-size: var(--t-small); line-height: 1.5; }
+.callout[data-callout="tool"] .callout-content b { font-variant-numeric: var(--num); }
+
+/* ---------- 4 · CTA — the single primary link-button of a page ---------- */
+.callout[data-callout="cta"] .callout-title { display: none; }
+.callout[data-callout="cta"] .callout-content a, .cta {
+  display: inline-flex; align-items: center; gap: 12px; min-height: 48px; padding-inline: 20px;
+  border: 1px solid var(--ink); color: var(--ink); text-decoration: none;
+  font: 400 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: var(--tracking-label); text-transform: uppercase;
+  transition: background var(--dur) var(--ease);
+}
+.callout[data-callout="cta"] .callout-content a:hover, .cta:hover { background: var(--surface-2); }
+.callout[data-callout="cta"] .glyph, .cta .glyph { color: var(--ink-2); }
+.callout[data-callout="cta"] a:hover .glyph, .cta:hover .glyph { color: var(--accent-01); }
+
+/* the glyph (D-030): a recessive arrow or separator beside a label */
+.glyph { color: var(--ink-2); }
+
+/* ---------- 5 · CODE BLOCK (D-035) ----------
+   Always a dark panel, distinct from the page in both themes, with
+   the six-token palette (base.css), a copy button and a wrap toggle
+   (wrap on by default). code.js (~1 KB, progressive) adds the
+   buttons; without it the block is static and wrapped.
+     <div class="code" data-lang="python" data-wrap="on">
+       <div class="code-bar"><span>python · listing 04-01-1</span>
+         <span class="code-tools"><button class="code-wrap" aria-pressed="true">Wrap · on</button>
+           <button class="code-copy">Copy</button></span></div>
+       <pre><code>…</code></pre></div> */
+.code { background: var(--code-bg); color: var(--code-ink); border: 1px solid var(--code-edge); min-width: 0; color-scheme: dark; }
+.code-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  padding: 8px 8px 8px 20px; border-bottom: 1px solid var(--code-edge);
+  font: 400 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--code-ink-3);
+}
+.code-bar .code-tools { display: flex; gap: 4px; }
+.code-bar button, .code-copy, .code-wrap {
+  min-height: 28px; padding: 0 12px; border: 1px solid var(--code-edge); background: transparent; color: var(--code-ink-2);
+  font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.code-bar button:hover, .code-copy:hover, .code-wrap:hover { background: var(--code-edge); color: var(--code-ink); }
+.code-bar button:focus-visible, .code-copy:focus-visible, .code-wrap:focus-visible { outline: 2px solid var(--code-ink); outline-offset: 2px; }
+.code pre { background: transparent; border: 0; color: var(--code-ink); margin: 0; }
+.code[data-wrap="off"] pre { white-space: pre; overflow-x: auto; overflow-wrap: normal; }
+/* code wraps to its column by default; a bare pre (no .code wrapper) sits on a surface-2 wash */
+.doc pre, .code pre {
+  font: 400 var(--t-mono) / 1.7 var(--font-mono);
+  padding: 24px; margin: 0;
+  white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 2; min-width: 0; max-width: 100%;
+  font-variant-numeric: var(--num);
+}
+.doc > pre { background: var(--surface-2); border-top: var(--rule); }
+.doc pre code, .code pre code { background: none; padding: 0; font: inherit; }
+figure.fig > .code, figure.fig > pre { grid-column: auto; }
+
+/* ---------- 6 · FIGURE, TABLE, FOOTNOTES, MATH (P-08 · 2) ---------- */
+
+/* figure: label + finding as caption, the chart, then source and n */
+figure.fig { display: grid; gap: 16px; border-top: var(--hairline); padding-top: 16px; min-width: 0; }
+.fig figcaption { display: grid; gap: 6px; }
+.fig-label {
+  font: 400 var(--t-mono-sm) / 1.4 var(--font-mono);
+  letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-3);
+  font-variant-numeric: var(--num);
+}
+.fig-title {
+  font: var(--w-display) 1.3125rem / 1.3 var(--font-display);
+  letter-spacing: var(--tracking-tight); color: var(--ink); text-wrap: balance;
+}
+.fig-source {
+  margin: 0; font: 400 var(--t-mono-sm) / 1.7 var(--font-mono); color: var(--ink-2);
+  font-variant-numeric: var(--num);
+}
+.fig-source b { font-weight: 400; color: var(--ink); }
+/* diagram: build-time SVG; nodes are hairline boxes, radius 0; edges 1px ink-2 */
+figure.fig[data-kind="diagram"] svg { display: block; max-width: 100%; height: auto; }
+figure.fig[data-kind="diagram"] .node rect, figure.fig[data-kind="diagram"] .node polygon { fill: var(--surface-2); stroke: var(--ink); stroke-width: 1; rx: 0; ry: 0; }
+figure.fig[data-kind="diagram"] .edgePath path { stroke: var(--ink-2); stroke-width: 1; fill: none; }
+figure.fig[data-kind="diagram"] .nodeLabel, figure.fig[data-kind="diagram"] .edgeLabel { font-family: var(--font-body); font-size: 14px; fill: var(--ink); color: var(--ink); }
+
+/* tables scroll inside their wrapper, and only there */
+.table-scroll { overflow-x: auto; min-width: 0; }
+.doc table, .table-scroll table { border-collapse: collapse; width: 100%; font-size: var(--t-small); line-height: 1.4; }
+.doc th, .table-scroll th {
+  text-align: left; vertical-align: bottom;
+  font: 400 var(--t-mono-sm) / 1.4 var(--font-mono);
+  letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2);
+  border-top: var(--rule-open); border-bottom: var(--rule); padding: 12px 16px 12px 0;
+}
+.doc td, .table-scroll td { padding: 12px 16px 12px 0; border-bottom: var(--rule); vertical-align: top; font-variant-numeric: var(--num); }
+.doc th:last-child, .doc td:last-child, .table-scroll th:last-child, .table-scroll td:last-child { padding-right: 0; }
+.doc th[align="right"], .doc td[align="right"], .table-scroll th[align="right"], .table-scroll td[align="right"],
+.doc :is(th, td).num-cell, .table-scroll :is(th, td).num-cell {
+  text-align: right; font-family: var(--font-mono); font-size: var(--t-mono);
+}
+.doc tbody tr, .table-scroll tbody tr { transition: background var(--dur) var(--ease); }
+.doc tbody tr:hover, .table-scroll tbody tr:hover { background: var(--surface-2); }
+
+/* footnotes: endnotes under a hairline */
+.footnotes { border-top: var(--hairline); padding-top: 16px; font-size: var(--t-small); color: var(--ink-2); display: grid; gap: 8px; }
+.footnotes > h2 {
+  all: unset; display: block;
+  font: 400 var(--t-mono-sm) / 1 var(--font-mono);
+  letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2);
+}
+.footnotes ol { margin: 0; padding-left: 24px; display: grid; gap: 8px; }
+.footnotes a[data-footnote-backref] { font-family: var(--font-mono); text-decoration: none; color: var(--ink-3); }
+
+/* math: KaTeX at build (HTML + MathML); the block is numbered from the document code */
+.math {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: center;
+  padding-block: 16px; border-top: var(--rule); border-bottom: var(--rule);
+  font-variant-numeric: var(--num);
+}
+/* MathML neither wraps nor shrinks: the cell scrolls, the number never overprints */
+.math .math-body { min-width: 0; overflow: auto hidden; padding-block: 6px; display: grid; gap: 8px; }
+.math math { font-size: 1.2em; display: block math; max-width: 100%; }
+.math .katex-display { margin: 0; }
+.eq-no {
+  font: 400 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: var(--tracking-label);
+  color: var(--ink-3); font-variant-numeric: var(--num); white-space: nowrap;
+}
+.doc p math { font-size: 1.05em; }

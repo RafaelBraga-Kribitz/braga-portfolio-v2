@@ -1,0 +1,25 @@
+---
+// Section heading, Site specimen s03: opens on an ink rule; kicker
+// (number · word) on three columns, claim on seven, forward link on two.
+interface Props {
+  number: string;
+  word: string;
+  claim: string;
+  prose?: string;
+  link?: { href: string; label: string };
+  /** Heading level of the claim; h2 on a page with its own h1. */
+  as?: 'h2' | 'h3';
+  id?: string;
+}
+
+const { number, word, claim, prose, link, as, id } = Astro.props;
+const Tag = as ?? 'h2';
+---
+<header class="section-heading grid" id={id}>
+  <p class="col-3 label"><span>{number}</span><span>{word}</span></p>
+  <div class="col-7">
+    <Tag class="display">{claim}</Tag>
+    {prose && <p class="prose">{prose}</p>}
+  </div>
+  {link && <a href={link.href} class="col-2 label">{link.label} <span class="glyph" aria-hidden="true">→</span></a>}
+</header>

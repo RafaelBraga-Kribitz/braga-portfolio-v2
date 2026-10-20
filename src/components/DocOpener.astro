@@ -1,0 +1,65 @@
+---
+// Document opener, doc.css §3 and the Site specimen s04 / Templates 404:
+// trail, title (with an optional large numeral beside it), lead, and the
+// meta row. DE pages pass `draft` to carry the in-build mark with the
+// "Entwurf · Freigabe ausstehend" label until the owner approves.
+import type { Lang, StatusState } from '../lib/i18n';
+import { t } from '../lib/i18n';
+import StatusMark from './StatusMark.astro';
+
+interface Crumb {
+  label: string;
+  href?: string;
+  /** The current item, set in ink. */
+  current?: boolean;
+  /** Glyph before this crumb; → by default, · for a qualifier. */
+  sep?: '→' | '·';
+}
+
+type MetaItem =
+  | { text: string; href?: string; external?: boolean }
+  | { status: StatusState; label?: string };
+
+interface Props {
+  lang: Lang;
+  trail: Crumb[];
+  numeral?: string;
+  title: string;
+  lead?: string;
+  meta?: MetaItem[];
+  draft?: boolean;
+}
+
+const { lang, trail, numeral, title, lead, meta = [], draft = false } = Astro.props;
+const hasMeta = meta.length > 0 || draft;
+---
+<header class="doc-opener">
+  <div class="doc-trail">
+    {trail.map((c, i) => (
+      <Fragment>
+        {i > 0 && <span class="glyph" aria-hidden="true">{c.sep ?? '→'}</span>}
+        {c.href ? <a href={c.href}>{c.label}</a> : c.current ? <b>{c.label}</b> : <span>{c.label}</span>}
+      </Fragment>
+    ))}
+  </div>
+  {numeral ? (
+    <div><span aria-hidden="true">{numeral}</span><h1>{title}</h1></div>
+  ) : (
+    <h1>{title}</h1>
+  )}
+  {lead && <p class="doc-lead">{lead}</p>}
+  {hasMeta && (
+    <div class="doc-meta">
+      {meta.map((m) =>
+        'status' in m ? (
+          <StatusMark state={m.status} lang={lang} label={m.label} />
+        ) : m.href ? (
+          <a href={m.href}>{m.text}{m.external && <Fragment> <span class="glyph" aria-hidden="true">↗</span></Fragment>}</a>
+        ) : (
+          <span>{m.text}</span>
+        ),
+      )}
+      {draft && <StatusMark state="in-build" lang={lang} label={t(lang, 'draft')} />}
+    </div>
+  )}
+</header>

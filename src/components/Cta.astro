@@ -1,0 +1,11 @@
+---
+// The single primary link-button of a page, doc.css §4 (.cta).
+interface Props {
+  href: string;
+  label: string;
+  external?: boolean;
+}
+
+const { href, label, external = false } = Astro.props;
+---
+<a class="cta" href={href}>{label}<span class="glyph" aria-hidden="true">{external ? '↗' : '→'}</span></a>

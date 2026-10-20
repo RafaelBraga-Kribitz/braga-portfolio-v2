@@ -1,0 +1,52 @@
+---
+// Base layout: the contract of BUILD-BRIEF §9. Every page gets the head
+// (pre-paint theme script first), the skip link, the shell, one
+// <main id="main">, the footer, the inline theme toggle, and – only when
+// hasCode — code.js. Nothing else runs on a content page.
+import '../styles/global.css';
+import Shell from '../components/Shell.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../lib/site';
+import type { Lang } from '../lib/i18n';
+import { t } from '../lib/i18n';
+import { route, alternates, absolute, type PageId, type DoorCode } from '../lib/routes';
+
+interface Props {
+  lang: Lang;
+  page: PageId;
+  title: string;
+  description: string;
+  current?: DoorCode;
+  hasCode?: boolean;
+  noindex?: boolean;
+}
+
+const { lang, page, title, description, current, hasCode = false, noindex = false } = Astro.props;
+const canonical = absolute(route(page, lang));
+const alts = alternates(page);
+const feed = absolute('/feed.xml');
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script is:inline>(function(){try{var t=localStorage.getItem('bk-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}})()</script>
+    <title>{title} · {site.name}</title>
+    <meta name="description" content={description}>
+    <link rel="canonical" href={canonical}>
+    {alts.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#E4E6EA">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#191A1D">
+    {noindex && <meta name="robots" content="noindex">}
+    <link rel="alternate" type="application/rss+xml" title={`${site.name} · RSS`} href={feed}>
+  </head>
+  <body>
+    <a class="skip" href="#main">{t(lang, 'skip')}</a>
+    <Shell lang={lang} page={page} current={current} />
+    <main id="main" class="grid-container"><slot /></main>
+    <Footer lang={lang} />
+    <script is:inline>(function(){var b=document.querySelector('.shell-theme');if(!b)return;var d=document.documentElement;var ml=document.querySelector('meta[name="theme-color"][media*="light"]');var md=document.querySelector('meta[name="theme-color"][media*="dark"]');var colors={light:ml?ml.getAttribute('content'):'',dark:md?md.getAttribute('content'):''};function current(){return d.dataset.theme||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}function label(theme){b.setAttribute('aria-label',b.getAttribute('data-label')+' · '+(theme==='dark'?b.getAttribute('data-dark'):b.getAttribute('data-light')))}label(current());b.addEventListener('click',function(){var next=current()==='dark'?'light':'dark';d.dataset.theme=next;try{localStorage.setItem('bk-theme',next)}catch(e){}if(ml)ml.setAttribute('content',colors[next]);if(md)md.setAttribute('content',colors[next]);label(next)})})()</script>
+    {hasCode && <script is:inline src="/scripts/code.js" defer></script>}
+  </body>
+</html>

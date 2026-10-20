@@ -1,0 +1,30 @@
+---
+// Callout, doc.css §4: the Obsidian callout DOM (.callout[data-callout]
+// > .callout-title + .callout-content). `faq` renders a native <details>
+// with the title as its summary; `cta` hides its title by CSS.
+type CalloutType =
+  | 'note' | 'aside' | 'warning' | 'tool' | 'summary' | 'definition'
+  | 'quote' | 'spec' | 'metrics' | 'faq' | 'bookmark' | 'cta';
+
+interface Props {
+  type: CalloutType;
+  title?: string;
+  /** faq only: start open. */
+  open?: boolean;
+  /** Span the wide column inside article.doc. */
+  wide?: boolean;
+}
+
+const { type, title, open = false, wide = false } = Astro.props;
+---
+{type === 'faq' ? (
+  <details class="callout" data-callout="faq" open={open}>
+    <summary class="callout-title">{title}</summary>
+    <div class="callout-content"><slot /></div>
+  </details>
+) : (
+  <div class="callout" data-callout={type} data-callout-metadata={wide ? 'wide' : undefined}>
+    {title && <div class="callout-title">{title}</div>}
+    <div class="callout-content"><slot /></div>
+  </div>
+)}

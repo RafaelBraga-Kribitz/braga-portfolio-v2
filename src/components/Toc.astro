@@ -1,0 +1,26 @@
+---
+// Contents rail, Site specimen s04: a label and a numbered list of the
+// document's sections; the active item is marked with aria-current.
+import type { Lang } from '../lib/i18n';
+import { t } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  items: { n: string; title: string; href: string }[];
+  /** The `n` of the active item. */
+  active?: string;
+  title?: string;
+  class?: string;
+}
+
+const { lang, items, active, title, class: className } = Astro.props;
+const label = title ?? t(lang, 'contents');
+---
+<nav class:list={['toc', className]} aria-label={label}>
+  <div class="label">{label}</div>
+  <ol>
+    {items.map((i) => (
+      <li><a href={i.href} aria-current={i.n === active ? 'location' : undefined}><span>{i.n}</span><span>{i.title}</span></a></li>
+    ))}
+  </ol>
+</nav>

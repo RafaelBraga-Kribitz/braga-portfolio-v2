@@ -1,0 +1,34 @@
+---
+// Site header, Site specimen s01: wordmark, four numbered doors, the
+// language link and the theme square. One DOM at every width (shell.css
+// handles 320 / 390 / 768+ without a hamburger, D-028).
+import { site } from '../lib/site';
+import type { Lang } from '../lib/i18n';
+import { t, otherLang } from '../lib/i18n';
+import { doors, doorLabel, route, type PageId, type DoorCode } from '../lib/routes';
+
+interface Props {
+  lang: Lang;
+  page: PageId;
+  /** Door code that receives aria-current="page". */
+  current?: DoorCode;
+}
+
+const { lang, page, current } = Astro.props;
+const other = otherLang(lang);
+const codes: Record<Lang, string> = { en: 'EN', de: 'DE' };
+---
+<header class="shell" lang={lang}>
+  <div class="shell-bar">
+    <a class="shell-mark" href={route('home', lang)}>{site.wordmark}</a>
+    <nav class="shell-doors" aria-label={t(lang, 'index')}>
+      {doors.map((d) => (
+        <a class="door" href={route(d.id, lang)} aria-current={d.code === current ? 'page' : undefined}><span class="door-code">{d.code}</span><span class="door-label">{doorLabel(d, lang)}</span></a>
+      ))}
+    </nav>
+    <div class="shell-cluster">
+      <a class="shell-lang" href={route(page, other)} hreflang={other} lang={other}>{codes[lang]}<span>/ {codes[other]}</span></a>
+      <button class="shell-theme" type="button" aria-label={t(lang, 'theme.toggle')} data-label={t(lang, 'theme.toggle')} data-light={t(lang, 'theme.light')} data-dark={t(lang, 'theme.dark')}><span></span></button>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,360 @@
+/* ============================================================
+   TOKENS — Braga design system v2 (portfolio attempt 2)
+   The single home of every colour, size, weight and duration.
+   Built from handoff/_ds/tokens (v1 base) merged with
+   handoff/ds-update/tokens (v2 overrides, which win) and the
+   theme proposal (P-01, D-024). Every other stylesheet reads
+   these names; no other file carries a hex value (lint:css).
+
+   Order: 1 light values (one :root block) · 2 responsive steps ·
+   3 dark values, twice (stored override + per-element .dark;
+   OS preference without override) · 4 colour-scheme · 5 canvas ·
+   6 @font-face (BKribitz, BKribitz Mono).
+   ============================================================ */
+
+/* ---------- 1 · LIGHT (the default) ---------- */
+:root {
+  /* raw palette · D-006 neutrals, cool tint toward ultramarine
+     (OKLCH hue 265). --c-orange / --c-blue of v1 are retired (D-005). */
+  --c-off-white: #E4E6EA;
+  --c-paper:     #DCDEE2;
+  --c-light:     #D4D6DA;
+  --c-mid:       #9EA0A5;
+  --c-dark-grey: #5A5C61;
+  --c-off-black: #26282C;
+  --c-black:     #26282C;
+
+  /* semantic neutrals · D-006. ink-3 = ink-2 on light (no room for a
+     third grey at 4.5:1); --mid is hairlines only, never text (D-007). */
+  --surface:   #E4E6EA;   /* page canvas */
+  --surface-2: #DCDEE2;   /* raised / hover wash */
+  --surface-3: #D4D6DA;   /* diverging midpoint, borders of raised blocks */
+  --ink:       #26282C;   /* primary text, 11.8:1 */
+  --ink-2:     #5A5C61;   /* secondary text, 5.4:1 */
+  --ink-3:     #5A5C61;   /* numbering, recessive text */
+  --mid:       #9EA0A5;   /* hairlines only */
+  --rule-c:    #C2C4CA;   /* rhythm rule colour */
+
+  /* rules · D-020 (two hairline weights, both 1px) and the opening rule */
+  --hairline:  1px solid var(--mid);     /* structural: sections, tool frames */
+  --rule:      1px solid var(--rule-c);  /* rhythm: rows, items, cells */
+  --rule-open: 1px solid var(--ink);     /* opens a block; never between rows */
+
+  /* control boundary · D-027 (WCAG 1.4.11: 3:1; --mid is 2.1:1) */
+  --edge: var(--ink-2);
+
+  /* accent · D-004 ultramarine, one hue, two values. Text only for the
+     one earned figure per view (D-025). --accent-02 retired (D-005). */
+  --accent-01: #2F4BE0;
+  --on-accent: #FFFFFF;
+
+  /* chart scales · D-017 (seven scales), D-033 (marks clear 3:1 on
+     every surface). Stop 1 = darkest, N = lightest. */
+  /* sequential · ultramarine (9) */
+  --chart-seq-1: #0E0084;
+  --chart-seq-2: #1711B1;
+  --chart-seq-3: #2F4BE0;
+  --chart-seq-4: #486CF1;
+  --chart-seq-5: #688DFE;
+  --chart-seq-6: #8CAAFE;
+  --chart-seq-7: #B0C6FE;
+  --chart-seq-8: #D0DEFF;
+  --chart-seq-9: #EAF0FF;
+  /* diverging · good / bad (13); arms match --var-pos / --var-neg */
+  --chart-div-1:  #00505C;
+  --chart-div-2:  #04706B;
+  --chart-div-3:  #007A66;
+  --chart-div-4:  #59A895;
+  --chart-div-5:  #8CBFB1;
+  --chart-div-6:  #BCD5CE;
+  --chart-div-7:  #D4D6DA;   /* midpoint = surface-3 */
+  --chart-div-8:  #F5C4B5;
+  --chart-div-9:  #F79D81;
+  --chart-div-10: #F2734E;
+  --chart-div-11: #CC3710;
+  --chart-div-12: #B83315;
+  --chart-div-13: #8A2410;
+  /* diverging · two-sided, ultramarine ↔ ochre (13); neither side good */
+  --chart-two-1:  #13009D;
+  --chart-two-2:  #202FC5;
+  --chart-two-3:  #3555E5;
+  --chart-two-4:  #5C82FB;
+  --chart-two-5:  #90AEFF;
+  --chart-two-6:  #C7D7FE;
+  --chart-two-7:  #D4D6DA;   /* midpoint = surface-3 */
+  --chart-two-8:  #FECD9D;
+  --chart-two-9:  #ECA760;
+  --chart-two-10: #D38321;
+  --chart-two-11: #AE6700;
+  --chart-two-12: #864E00;
+  --chart-two-13: #613700;
+  /* interpolation · long, blue → teal → green → yellow (8) */
+  --chart-long-1: #002891;
+  --chart-long-2: #004B9B;
+  --chart-long-3: #006E91;
+  --chart-long-4: #0F8C7D;
+  --chart-long-5: #00A578;
+  --chart-long-6: #00C300;
+  --chart-long-7: #A0D700;
+  --chart-long-8: #F5E600;
+  /* interpolation · short, blue → violet → magenta → amber (8) */
+  --chart-short-1: #100090;
+  --chart-short-2: #4300B1;
+  --chart-short-3: #7F00B6;
+  --chart-short-4: #BE01A8;
+  --chart-short-5: #F72FA7;
+  --chart-short-6: #FE898B;
+  --chart-short-7: #FFB481;
+  --chart-short-8: #FFD79B;
+  /* categorical · hue (5), fixed slots used in order; 6+ = Other.
+     D-018 amended by D-033: ochre and teal replace amber and sky on light. */
+  --chart-cat-1: #2F4BE0;   /* ultramarine = accent */
+  --chart-cat-2: #966400;   /* ochre */
+  --chart-cat-3: #0A7399;   /* teal */
+  --chart-cat-4: #C4278F;   /* magenta */
+  --chart-cat-5: #7A4A1E;   /* umber */
+  --chart-cat-other: var(--mid);
+  /* text on fills · D-019 */
+  --on-cat-1: #FFFFFF;
+  --on-cat-2: #FFFFFF;
+  --on-cat-3: #FFFFFF;
+  --on-cat-4: #FFFFFF;
+  --on-cat-5: #FFFFFF;
+  /* categorical · grey (4), parts of a whole (IBCS) */
+  --chart-catg-1: #282828;
+  --chart-catg-2: #5E5E5E;
+  --chart-catg-3: #949494;
+  --chart-catg-4: #D4D4D4;
+
+  /* IBCS roles · D-015 (the only notation), D-016 amended by D-033.
+     Variance labels sit outside the bar; bad variance always with ▲. */
+  --sc-ac: var(--ink-2);          /* actual: solid */
+  --sc-py: var(--mid);            /* previous year: solid mid */
+  --sc-pl: var(--ink-2);          /* plan: outline */
+  --var-pos: #007A66;             /* jade: good variance */
+  --var-neg: #CC3710;             /* vermilion: bad variance, alert */
+  --var-pos-tint: #B3E3D7;
+  --var-neg-tint: #F9C3AD;
+  --alert: #CC3710;
+  --hl: var(--accent-01);         /* highlight, one per chart */
+  --hl-6: var(--chart-seq-6);
+  --hl-7: var(--chart-seq-7);
+  --hl-8: var(--chart-seq-8);
+
+  /* code panel · D-035: always a dark panel, six-token palette from
+     the dark set. Every token clears 4.5:1 on the panel. */
+  --code-bg:    #202226;
+  --code-edge:  #3A3C41;
+  --code-ink:   #F3F5F9;
+  --code-ink-2: #CED0D4;
+  --code-ink-3: #97999D;
+  --code-kw:    #7C93FF;
+  --code-fn:    #F0B400;
+  --code-str:   #00C69F;
+  --code-num:   #54C0F0;
+
+  /* paper · P-11 print: the light palette forced onto white. Read only
+     by print.css, so the hex values stay in this file. */
+  --paper:       #FFFFFF;
+  --paper-2:     #F2F3F5;
+  --paper-3:     #E4E6EA;
+  --paper-ink:   #000000;
+  --paper-ink-2: #333333;
+  --paper-mid:   #8A8C90;
+  --paper-rule:  #C2C4CA;
+
+  /* spacing · D-020. 8px base, 4px half-step. */
+  --space-0:  0;
+  --space-h:  4px;
+  --space-1:  8px;
+  --space-2:  16px;
+  --space-3:  24px;
+  --space-4:  32px;
+  --space-5:  40px;
+  --space-6:  48px;
+  --space-8:  64px;
+  --space-10: 80px;
+  --space-12: 96px;
+  --space-16: 128px;
+  --space-20: 160px;
+
+  /* layout · D-010 page max 1320; gutter and column gap 16 → 32 at md;
+     section padding 64 → 96 → 128 (mobile → md → lg). */
+  --page-max:    1320px;
+  --gutter:      16px;    /* outer page padding */
+  --grid-cols:   12;
+  --grid-gutter: 16px;    /* column gap */
+  --section-pad: 64px;
+  --section-gap: var(--section-pad);
+  --block-gap:   48px;    /* section header → content */
+
+  /* corners · square everywhere (v2) */
+  --radius-0: 0;
+  --radius-1: 0;
+
+  /* flow · D-020 relationship spacing (flow.css):
+     related 8 · element 16 · block 32 · lead 48 · group 64 · section 96 */
+  --flow-related: 8px;
+  --flow-element: 16px;
+  --flow-block:   32px;
+  --flow-lead:    48px;
+  --flow-group:   64px;
+  --flow-section: 96px;
+
+  /* type · D-003 BKribitz + BKribitz Mono; D-008 one heading weight;
+     D-009a the wordmark alone is 800. */
+  --font-display: 'BKribitz', system-ui, sans-serif;
+  --font-body:    'BKribitz', system-ui, sans-serif;
+  --font-mono:    'BKribitz Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --w-light:      300;
+  --w-regular:    400;
+  --w-medium:     500;
+  --w-semibold:   600;
+  --w-bold:       700;
+  --w-display:    700;              /* every heading */
+  --w-black:      var(--w-display); /* legacy alias: titles follow display weight */
+  --w-extrablack: 900;              /* retired for headings (D-008); resolves legacy references only */
+  --w-wordmark:   800;              /* BRAGA only */
+
+  /* scale · v2, mobile first. Floor 12px (D · no size below 12px). */
+  --t-display: clamp(3rem, 7vw, 6rem);
+  --t-h1:      clamp(2.5rem, 5vw, 3.75rem);
+  --t-h2:      clamp(1.875rem, 3.2vw, 3rem);
+  --t-h3:      clamp(1.375rem, 2vw, 1.875rem);
+  --t-lead:    clamp(1.125rem, 1.4vw, 1.25rem);
+  --t-body:    clamp(1rem, 1.1vw, 1.125rem);
+  --t-small:   0.9375rem;   /* 15px */
+  --t-mono:    0.8125rem;   /* 13px */
+  --t-mono-sm: 0.75rem;     /* 12px, the floor */
+  /* legacy aliases (v1 names) */
+  --t-hero:    var(--t-display);
+  --t-section: var(--t-h2);
+  --t-project: var(--t-h3);
+
+  --lh-none:  1;
+  --lh-tight: 1.05;
+  --lh-snug:  1.2;
+  --lh-body:  1.6;
+
+  --tracking-label: 0.08em;
+  --tracking-tight: -0.025em;
+
+  /* reading width · O-02 resolved to the recommended default: one
+     value, 60ch, for prose and for the document (assumption, recorded). */
+  --measure:     60ch;
+  --measure-doc: 60ch;
+
+  /* figures · tabular, lining, slashed zero everywhere */
+  --num: tabular-nums lining-nums slashed-zero;
+
+  /* motion · the row-wash and the arrow shift only; 0 under reduced motion */
+  --dur:         140ms;
+  --dur-reduced: 0ms;
+  --ease:        cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* ---------- 2 · responsive steps (spacing.css, flow.css) ---------- */
+@media (min-width: 768px) {
+  :root { --gutter: 32px; --grid-gutter: 32px; --section-pad: 96px; --block-gap: 64px; }
+}
+@media (min-width: 1024px) {
+  :root { --section-pad: 128px; }
+}
+@media (max-width: 767px) {
+  :root { --flow-lead: 32px; --flow-group: 48px; --flow-section: 64px; }
+}
+
+/* ---------- 3 · DARK · D-024 theme model ----------
+   Resolution: <html data-theme="light|dark"> is the stored override
+   (pre-paint script); no attribute follows the OS; light is the
+   default. `.dark` on any element inverts that element alone (moment
+   blocks). Two copies are unavoidable (attribute + media query); keep
+   them identical. */
+
+/* copy 1: stored override + per-element .dark */
+:root[data-theme="dark"],
+.dark {
+  --surface:   #191A1D;
+  --surface-2: #2C2D30;
+  --surface-3: #484A4D;
+  --ink:       #F3F5F9;
+  --ink-2:     #CED0D4;
+  --ink-3:     #97999D;
+  --mid:       #7E8084;
+  --rule-c:    #393A3D;
+  --accent-01: #7C93FF;
+  --hairline:  1px solid var(--mid);
+  --rule:      1px solid var(--rule-c);
+  --rule-open: 1px solid var(--ink);
+  --edge:      var(--ink-3);
+
+  --chart-cat-1: #7C93FF; --chart-cat-2: #F0B400; --chart-cat-3: #54C0F0;
+  --chart-cat-4: #F57AC4; --chart-cat-5: #C9986A;
+  --on-accent: #1A1A1A; --on-cat-1: #1A1A1A; --on-cat-2: #1A1A1A;
+  --on-cat-3: #1A1A1A; --on-cat-4: #1A1A1A; --on-cat-5: #1A1A1A;
+  --chart-catg-1: #F5F5F5; --chart-catg-2: #BDBDBD; --chart-catg-3: #858585; --chart-catg-4: #4F4F4F;
+  --chart-div-7: #484A4D; --chart-two-7: #484A4D;
+  --chart-seq-8: #C2D2FF; --chart-seq-9: #DCE5FF;
+  --var-pos: #00C69F; --var-neg: #F57A5A; --alert: #F57A5A; --var-pos-tint: #0B4A3E; --var-neg-tint: #6A2311;
+
+  --code-bg: #26282C; --code-edge: #484A4D;
+}
+
+/* copy 2: OS preference with no override */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --surface:   #191A1D;
+    --surface-2: #2C2D30;
+    --surface-3: #484A4D;
+    --ink:       #F3F5F9;
+    --ink-2:     #CED0D4;
+    --ink-3:     #97999D;
+    --mid:       #7E8084;
+    --rule-c:    #393A3D;
+    --accent-01: #7C93FF;
+    --hairline:  1px solid var(--mid);
+    --rule:      1px solid var(--rule-c);
+    --rule-open: 1px solid var(--ink);
+    --edge:      var(--ink-3);
+
+    --chart-cat-1: #7C93FF; --chart-cat-2: #F0B400; --chart-cat-3: #54C0F0;
+    --chart-cat-4: #F57AC4; --chart-cat-5: #C9986A;
+    --on-accent: #1A1A1A; --on-cat-1: #1A1A1A; --on-cat-2: #1A1A1A;
+    --on-cat-3: #1A1A1A; --on-cat-4: #1A1A1A; --on-cat-5: #1A1A1A;
+    --chart-catg-1: #F5F5F5; --chart-catg-2: #BDBDBD; --chart-catg-3: #858585; --chart-catg-4: #4F4F4F;
+    --chart-div-7: #484A4D; --chart-two-7: #484A4D;
+    --chart-seq-8: #C2D2FF; --chart-seq-9: #DCE5FF;
+    --var-pos: #00C69F; --var-neg: #F57A5A; --alert: #F57A5A; --var-pos-tint: #0B4A3E; --var-neg-tint: #6A2311;
+
+    --code-bg: #26282C; --code-edge: #484A4D;
+  }
+}
+
+/* ---------- 4 · colour-scheme follows the PAGE theme, not the OS ---------- */
+:root { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { color-scheme: dark; }
+}
+.dark { color-scheme: dark; }
+
+/* ---------- 5 · the canvas is always painted ----------
+   (attempt-1 lesson: an unpainted light canvas went black under a dark OS) */
+html, body { background: var(--surface); color: var(--ink); }
+
+/* ---------- 6 · FONTS · D-003 ----------
+   BKribitz and BKribitz Mono 1.000: modified Geist / Geist Mono under
+   SIL OFL 1.1, self-hosted from /fonts/ (licence text in
+   /fonts/licenses/). Ten faces: sans 400, 400 italic, 500, 600, 700,
+   800, 900; mono 400, 500, 700. No alias to any other family name. */
+@font-face { font-family: 'BKribitz'; font-weight: 400; font-style: normal; font-display: swap; src: url('/fonts/BKribitz-400.woff2') format('woff2'); }
+@font-face { font-family: 'BKribitz'; font-weight: 400; font-style: italic; font-display: swap; src: url('/fonts/BKribitz-400-Italic.woff2') format('woff2'); }
+@font-face { font-family: 'BKribitz'; font-weight: 500; font-style: normal; font-display: swap; src: url('/fonts/BKribitz-500.woff2') format('woff2'); }
+@font-face { font-family: 'BKribitz'; font-weight: 600; font-style: normal; font-display: swap; src: url('/fonts/BKribitz-600.woff2') format('woff2'); }
+@font-face { font-family: 'BKribitz'; font-weight: 700; font-style: normal; font-display: swap; src: url('/fonts/BKribitz-700.woff2') format('woff2'); }
+@font-face { font-family: 'BKribitz'; font-weight: 800; font-style: normal; font-display: swap; src: url('/fonts/BKribitz-800.woff2') format('woff2'); }
+@font-face { font-family: 'BKribitz'; font-weight: 900; font-style: normal; font-display: swap; src: url('/fonts/BKribitz-900.woff2') format('woff2'); }
+@font-face { font-family: 'BKribitz Mono'; font-weight: 400; font-style: normal; font-display: swap; src: url('/fonts/BKribitzMono-400.woff2') format('woff2'); }
+@font-face { font-family: 'BKribitz Mono'; font-weight: 500; font-style: normal; font-display: swap; src: url('/fonts/BKribitzMono-500.woff2') format('woff2'); }
+@font-face { font-family: 'BKribitz Mono'; font-weight: 700; font-style: normal; font-display: swap; src: url('/fonts/BKribitzMono-700.woff2') format('woff2'); }
