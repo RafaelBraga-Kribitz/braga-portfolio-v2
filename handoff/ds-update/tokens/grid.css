@@ -1,0 +1,33 @@
+/* ============================================================
+   12-COLUMN GRID + HAIRLINE RULES — v2
+   Hairline rules (the fix):
+   1. Horizontal rules start on a column start line and end on a
+      column end line. They never run into the outer page margin.
+   2. A rule belongs to the item it sits on: put border-top on the
+      grid item, so it spans exactly that item's columns. Gutters
+      break rules between independent items.
+   3. Vertical rules sit on a column start line (.vrule); content
+      insets one step (16px) from the rule.
+   4. Section rules span all 12 columns — .section lives INSIDE
+      .grid-container, so its border equals the content width.
+   ============================================================ */
+.grid-container { width: 100%; max-width: var(--page-max); margin-inline: auto; padding-inline: var(--gutter); box-sizing: border-box; }
+
+.page-grid { width: 100%; max-width: var(--page-max); margin-inline: auto; padding-inline: var(--gutter); box-sizing: border-box; display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--grid-gutter); row-gap: 0; align-content: start; }
+.page-grid > * { grid-column: 1 / -1; }
+
+.grid { display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--grid-gutter); row-gap: var(--space-4); }
+
+.col-1{grid-column:span 1}.col-2{grid-column:span 2}.col-3{grid-column:span 3}.col-4{grid-column:span 4}.col-5{grid-column:span 5}.col-6{grid-column:span 6}.col-7{grid-column:span 7}.col-8{grid-column:span 8}.col-9{grid-column:span 9}.col-10{grid-column:span 10}.col-11{grid-column:span 11}.col-12{grid-column:span 12}
+.col-start-1{grid-column-start:1}.col-start-2{grid-column-start:2}.col-start-3{grid-column-start:3}.col-start-4{grid-column-start:4}.col-start-5{grid-column-start:5}.col-start-6{grid-column-start:6}.col-start-7{grid-column-start:7}.col-start-8{grid-column-start:8}.col-start-9{grid-column-start:9}.col-start-10{grid-column-start:10}.col-start-11{grid-column-start:11}.col-start-12{grid-column-start:12}
+
+.section     { padding-block: var(--section-pad); border-top: var(--hairline); }
+.rule-t      { border-top: var(--rule); }
+.rule-strong { border-top: var(--hairline); }
+.vrule       { border-left: var(--rule); padding-left: var(--space-2); }
+
+@media (max-width: 767px) {
+  .grid, .page-grid { grid-template-columns: minmax(0, 1fr); }
+  .grid > [class*="col-"], .page-grid > [class*="col-"] { grid-column: 1 / -1; }
+  .vrule { border-left: 0; padding-left: 0; border-top: var(--rule); padding-top: var(--space-2); }
+}

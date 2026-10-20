@@ -1,0 +1,83 @@
+---
+title: Decision Analytics Reconstruction
+date: 2026-06-18
+kind: case
+code: 01-91
+summary: Rebuilding a national-scale allocation system so spend follows expected outcome rather than precedent.
+homeNote: A national allocation system that had drifted into precedent. Rebuilt so the money follows expected outcome — segmentation, forecast, and reallocation each shown at working length.
+status: under-revision
+draft: true
+tags:
+  - Population Segmentation
+  - Resource Allocation
+  - Forecasting
+locale: en
+---
+
+<Lead>
+Rebuilding a national-scale allocation system so spend follows expected outcome rather than
+precedent.
+</Lead>
+
+The incumbent system allocated budget by historical share — a process that compounded
+last year's decisions into this year's baseline. The mandate was to reconstruct the
+allocation logic end to end, making every unit of spend traceable to an expected
+outcome rather than an inherited line item.
+
+<Marker num="01" label="Context" id="sec-01" />
+
+The program distributes a fixed annual budget across fifty thousand entities,
+evaluated over a rolling fourteen-week window. Outcomes are the share of entities
+reaching a defined threshold — the outcome margin. The baseline system delivered
+42.73%.
+
+<MetricGrid metrics={[
+  { value: "+3.70 pp", label: "OUTCOME MARGIN", note: "46.43% vs 42.73% baseline", accent: true },
+  { value: "61.25%", label: "PARTICIPATION" },
+  { value: "50,000", label: "SCALE", note: "entities · 14-week window" }
+]} />
+
+<Marker num="02" label="Process" id="sec-02" />
+
+Formally: allocate a fixed budget across segments to maximize expected aggregate
+outcome, subject to a binding cap and non-negativity. The objective is linear in
+spend once per-segment elasticities are estimated.
+
+<MathBlock display tex="\max_{x}\; \sum_{i=1}^{8} w_i\, x_i \quad \text{s.t.} \quad \sum_{i=1}^{8} x_i = B,\; x_i \ge 0" />
+
+Elasticities are estimated with a partially-pooled Bayesian model; the allocator that
+consumes them is a MILP solved under the cap:
+
+```py
+from allocator import solve_milp
+
+def reconstruct(weights, budget=1_250_000.0):
+    """Return the optimal allocation under a binding cap."""
+    plan = solve_milp(weights, cap=budget, floor=0.0)
+    assert abs(plan.spend.sum() - budget) < 1e-6  # cap is binding
+    return plan
+```
+
+<Callout variant="note">
+  Roughly a third of the prior allocation logic existed only as undocumented
+  convention. Making it explicit was the precondition for any optimization to be
+  trustworthy.
+</Callout>
+
+<Marker num="03" label="Results" id="sec-03" />
+
+Deployed across the full fifty-thousand-entity population, the reconstructed system
+lifted the outcome margin from 42.73% to 46.43% — a +3.70 pp improvement on the metric
+that matters, achieved within the same fixed budget.
+
+<FigRow id="01-91-1" rows={4} register="storytelling" caption="outcome margin, baseline (grey) vs reconstructed. The orange increment is pure reallocation gain.">
+  <svg viewBox="0 0 320 140" preserveAspectRatio="xMinYMid meet" style={{ width: '100%', display: 'block' }} role="img" aria-label="Outcome margin, baseline vs reconstructed">
+    <rect x="0" y="30" width="80" height="90" fill="var(--mid)" />
+    <rect x="120" y="30" width="80" height="90" fill="var(--mid)" />
+    <rect x="120" y="14" width="80" height="16" fill="var(--accent-01)" />
+  </svg>
+</FigRow>
+
+At this scale, +3.70 pp represents roughly eighteen hundred additional entities
+crossing the threshold each window. Because the cap is binding, the gain came from
+placement, not spend.

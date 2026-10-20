@@ -1,0 +1,98 @@
+---
+title: DSX · Data Science, eXamined
+date: 2026-07-27
+kind: case
+code: 01-04
+summary: "A gate for analytical work done with coding agents: leakage, underpowered experiments and overclaimed results become blocking errors, checked by code rather than left to advice in a prompt."
+homeNote: "A coding agent is competent at software and indifferent to statistics. DSX turns power, leakage and overclaiming checks into exit codes that stop the work."
+status: live
+tags:
+  - Analytics Tooling
+  - Experiment Design
+  - Statistical Validation
+locale: en
+---
+
+<Lead>
+A gate for analytical work done with coding agents: leakage, underpowered experiments and
+overclaimed results become blocking errors, checked by code rather than left to advice in a
+prompt.
+</Lead>
+
+A coding agent does not know that a random train/test split on time-ordered data invalidates a
+model, that three metrics tested at α = 0.05 carry a 14% family-wise error rate, or that a bar
+chart starting at 40 exaggerates whatever it shows. DSX supplies that knowledge as deterministic
+checks that stop the work, not as instructions an agent can reason its way around.
+
+<Marker num="01" label="Context" id="sec-01" />
+
+The design rests on one split. Framing the question, choosing the design, defining the metric
+and writing the claim need context and a conversation with a person, so the agent does them.
+Checking that the spec is coherent and that the produced artifacts satisfy it is decidable, and a
+decidable check should not be delegated to a model, so code does it.
+
+The order of work is in the name. **Declare** the analysis in an `ANALYSIS-SPEC.yaml` before the
+data is touched: the decision, the question type, the design, the metric and the claim.
+**Substantiate** it with the pipeline, figures and results the spec named. **Explain** only what
+the evidence supports, with magnitude, interval and limitation. A spec written after the analysis
+is a rationalisation; the gate exists to make that order hard to skip.
+
+<Marker num="02" label="Process" id="sec-02" />
+
+`dsx audit` runs 22 check families against the spec and its artifacts, among them experiment
+design, causal identification, statistics, ML integrity, metrics and SQL, claims, visualisation
+and reproducibility. Each finding has a stable code, a severity, its evidence in numbers and a
+concrete fix. The exit code is the contract: 0 passes, 1 blocks, 2 means the gate could not run.
+A gate that could not run has verified nothing, so both 1 and 2 block.
+
+What a blocking finding looks like, from the repository's known-bad example:
+
+```text
+$ dsx audit --spec examples/bad-ANALYSIS-SPEC.yaml
+
+[CRITICAL] DSX-EXP-006  Experiment is underpowered: 1,200 per arm vs 47,528 required
+    where:  spec.design.planned_n_per_arm
+    detail: At baseline=0.08, MDE=0.005, alpha=0.05, the target power of 0.80
+            needs 47,528 per arm. The plan is 97% short, delivering only 0.06
+            power. The smallest effect actually detectable at 1,200 per arm is
+            0.03382, which is 6.8x the declared MDE.
+    fix:    Raise planned_n_per_arm to 47,528, raise the MDE to 0.03382, or
+            extend the run until the sample is reached. Do not proceed and
+            reinterpret a null as evidence of no effect.
+```
+
+The number is computed, not asserted, and so are the sample-ratio-mismatch chi-square, the
+peeking-inflated α and the Benjamini-Hochberg adjustment. The statistics kernel (normal
+quantiles, chi-square, power functions, multiplicity corrections) is about 400 lines of
+standard-library Python, tested against published reference values. Depending on SciPy inside a
+blocking gate would trade a little code for a lot of environment fragility, and a gate that
+breaks on a missing package is a gate that gets switched off.
+
+The same engine runs in four places: a Stop hook that refuses to end an agent session on a
+blocking finding, a CI job on every push, the phase gates of the GSD Core workflow, and a
+standalone command line. A directory without a spec passes through, so the gate is safe in a
+mixed repository.
+
+<Marker num="03" label="Results" id="sec-03" />
+
+Released and maintained at version 2.6.1, in use as a Claude Code plugin, in CI, standalone and as
+a GSD capability. Known-good and known-bad fixtures double as the installer's self-test, and a
+unit-test suite covers every check family. The finding-code catalogue is generated from the
+source, so it cannot drift from what the code emits.
+
+One external test of the approach: the six-subagent pipeline from *The AI Data Scientist*
+(arXiv:2508.18113) was transcribed stage by stage into the known-bad corpus. It passed the gate
+with zero findings until four new codes shipped that now block it.
+
+What this does not establish:
+
+- That a spec is true. The gate checks declarations against declarations, so a frame that lies
+  passes. The protection against a bad question is still a person who knows the domain reading
+  the spec before the data is touched; DSX makes that review cheap, structured and repeatable.
+- Every overclaim. A recommendation typed as descriptive and phrased without a causal verb
+  evades both the type ceiling and the causal-verb check.
+- A leak-free pipeline. A clean entrypoint scan means particular shapes were not found in one
+  declared file, not that the file does not leak.
+
+Code, the check catalogue and the documented limits:
+[github.com/RafaelBraga-Kribitz/DSX](https://github.com/RafaelBraga-Kribitz/DSX).

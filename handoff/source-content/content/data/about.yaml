@@ -1,0 +1,80 @@
+# About-page content (D-01/D-02) — feeds src/app/about/page.tsx via
+# getAboutData(). COPY-01 (D-111, D-124): no invented employers,
+# universities, or social URLs. Bracket-prefixed D-20 markers are
+# gone. The current role names BioSynCare. Earlier organisation
+# names stay withheld until the CV file is attached. Experience and
+# education years and role titles stay as they shipped.
+#
+# Identity (name, location, email, GitHub, LinkedIn, CV href) is not
+# here — /about reads content/data/profile.yaml alongside this file.
+#
+# Narrative paragraph footnote markers ([^1]) resolve through
+# src/lib/prose.tsx's formatProse; a marker's number is authored to
+# match its section's sidenotes array position, not re-derived from
+# the digit itself. Length bounds on skills/CV/statement fields are
+# settled in 01-09-PLAN.md's Open Decision 3 table.
+
+lead: "Marketing Data Scientist building the measurement and decision systems behind where marketing budget goes. The domain knowledge comes from having run the campaigns, not just modeled them."
+
+sections:
+  - id: background
+    title: Background
+    paragraphs:
+      - "I work as a Marketing Data Scientist, currently at BioSynCare, on the questions every marketing team eventually faces: what actually worked, and where the next euro should go. My way into a question is to take the system apart, find the mechanism behind the number, test the explanation before trusting it, then build whatever is needed to make the answer repeatable."
+      - "That habit predates the job title. My career is in marketing, and the technical work was never a detour from it; it was how the marketing got done. When a question outgrew the available tools, I built the tool: scrapers where the data was not offered, automation where a process did not deserve manual hours, text and sentiment analysis on what customers said, ad copy generated programmatically and tested in experiments. The same pattern ran through the startups I founded and through my work as part of the campaign that helped elect Mario Abdo Benítez president of Paraguay.[^1]"
+      - "The tendency was probably there all along: my mother is a mathematician, my father an engineer, and treating problems as systems to be taken apart was the default at home. Marketing is where that habit proved its worth. Marketing Data Science is the same combination, working under its proper name."
+    sidenotes:
+      - "Paraguay elected Mario Abdo Benítez in April 2018, by a margin of 3.9 percentage points."
+  - id: expertise
+    title: Expertise & Approach
+    paragraphs:
+      - "The approach is consistent across domains: frame the decision first, estimate honestly with uncertainty attached, then optimize against the metric that actually matters. The toolbox below serves that sequence. Not the other way around."
+      - "What the marketing career adds is the domain half of the job: knowing how campaigns are planned, run, and reported on. That is where most measurement goes wrong before any statistics are involved."
+
+skills:
+  - cat: Domains
+    items:
+      - Marketing Data Science
+      - Quantitative Marketing
+      - Marketing Science
+  - cat: Methods
+    items:
+      - Causal Inference
+      - Bayesian Methods
+      - Forecasting
+      - Optimization
+  - cat: Toolbox
+    items:
+      - "Python · PyMC"
+      - "DuckDB · dbt"
+      - "DVC · Git"
+      - "SQL · Spark"
+  - cat: Practice
+    items:
+      - Experiment design
+      - Decision systems
+      - Measurement & attribution
+
+experience:
+  - date: "2023 — now"
+    role: Marketing Data Scientist
+    org: "BioSynCare — marketing measurement, experimentation, and decision support"
+  - date: "2021 — 2023"
+    role: Data Scientist
+    org: Named employer lands when the CV file is attached.
+  - date: "2019 — 2021"
+    role: Analyst
+    org: Named employer lands when the CV file is attached.
+
+education:
+  - date: "2017 — 2019"
+    role: MSc
+    org: Named institution lands when the CV file is attached.
+  - date: "2014 — 2017"
+    role: BSc
+    org: Named institution lands when the CV file is attached.
+
+contact:
+  statement: "Open to Marketing Data Science roles — and to second opinions on hard measurement problems."
+  directLine: Direct line
+  closer: "§ 04 — END OF CONTACT"

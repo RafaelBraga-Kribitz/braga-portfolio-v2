@@ -1,0 +1,55 @@
+/* ============================================================
+   GRID MASTER SWITCH — reversible, one attribute, three states.
+   Set on <html> as data-grid-layout (managed by grid-overlay.js,
+   persisted in localStorage). Nothing is removed — switch freely.
+
+     • "flow"  (default) — the pre-grid look: page mains collapse to
+        a centered reading column, chrome goes full-bleed, the
+        listing grid relaxes into simple flowing rows.
+     • "boxed"           — the 12-column grid centered at --page-max.
+     • "full"            — the 12-column grid spanning the viewport
+        with a constant edge margin EQUAL to the gap between columns
+        (no centered cap, no squashed middle). This is a pure token
+        override, so every grid consumer widens in lockstep.
+   ============================================================ */
+
+/* ---------- FLOW ---------- */
+html[data-grid-layout="flow"] .page-grid {
+  display: block;
+  max-width: 1080px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+html[data-grid-layout="flow"] .page-grid > * { grid-column: auto; }
+html[data-grid-layout="flow"] [class*="col-"] { grid-column: auto; }
+html[data-grid-layout="flow"] .grid { display: block; }
+html[data-grid-layout="flow"] .grid-container { max-width: none; }
+
+html[data-grid-layout="flow"] .listing { border-top: 1px solid var(--mid); }
+html[data-grid-layout="flow"] .listing-head,
+html[data-grid-layout="flow"] .listing-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  grid-template-columns: none;
+  column-gap: 0;
+}
+html[data-grid-layout="flow"] .lr-index { flex: 0 0 56px; }
+html[data-grid-layout="flow"] .lr-title { flex: 1 1 auto; min-width: 0; }
+html[data-grid-layout="flow"] .lr-meta  { flex: 0 0 200px; }
+html[data-grid-layout="flow"] .lr-trail { flex: 0 0 96px; margin-left: 0; text-align: right; }
+
+html[data-grid-layout="flow"] #bk-grid-overlay { display: none !important; }
+
+/* ---------- FULL (token override only — clean [data-*] scope) ----------
+   Uncap the grid AND pin the edge margin to the column gap (not the other
+   way round): thin, uniform gutters with wide columns that fill the
+   viewport edge-to-edge — the classic column-grid look. Because --page-max
+   is only ever a max-width and --gutter is the edge padding used by every
+   grid container + doc shell, this single override widens the framed nav &
+   footer, every page's content, the listing rows, and the doc-page shells
+   onto the same spacious grid, all inset by one consistent gutter. */
+[data-grid-layout="full"] {
+  --page-max: none; /* @kind spacing */
+  --gutter: var(--grid-gutter); /* @kind spacing */ /* edge margin == column gap (thin) */
+}

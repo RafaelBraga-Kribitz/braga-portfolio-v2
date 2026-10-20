@@ -1,0 +1,367 @@
+# Artifact port queue (PORT-01) — the editorial layer over the raw scan.
+#
+# `scripts/artifact-port/ledger.mjs` scans assets/artifacts/*.html for facts
+# (size, controls, canvases, tables, duplicates) and cross-references
+# tools.yaml for what already shipped. Facts are generated. What cannot be
+# generated is JUDGEMENT: whether an artifact deserves its own route, belongs
+# folded into another, or should not ship at all. That judgement lives here.
+#
+# The central finding of the first triage: these are not 23 independent
+# artifacts, they are SEVEN FAMILIES. Inside a family the artifacts share a
+# shape — the same controls, the same chart choices, the same panel
+# composition — so the first port of a family is expensive and establishes a
+# recipe, and every later port in that family is near-mechanical. Port by
+# family, never by arrival order. `anchor: true` marks the one that pays the
+# design cost; its PORT-PLAN becomes the template for its followers.
+#
+# disposition:
+#   port          ships as its own /tools route
+#   merge:<slug>  folded into that tool as an added mode or panel
+#   fold:writing  becomes a Figure inside an essay, not a route
+#   drop          duplicate or fully superseded; never ships
+#
+# confidence: how firm the disposition is. `low` entries are the ones worth
+# a human minute before their family is started — they are the only places
+# where this file guesses rather than reads.
+#
+# status: queued | planned | building | shipped
+
+families:
+  - id: sql
+    name: Query semantics
+    recipe: >-
+      Two or more small tables in, one result table out, with the statement
+      that produced it. Table + CodeBlock + ScenarioSelector; no chart unless
+      a quantity genuinely varies. Established by sql-joins (04-14).
+    artifacts:
+      - slug: sql-joins
+        source: sql_join_simulator.html
+        disposition: port
+        anchor: true
+        status: shipped
+        code: "04-14"
+        confidence: high
+      - slug: group-by
+        source: groupby_simulator.html
+        disposition: port
+        status: shipped
+        code: "04-15"
+        confidence: high
+        note: Aggregation and the grain trap — one row per group, and what HAVING removes.
+      - slug: window-functions
+        source: window_functions_simulator.html
+        disposition: port
+        status: queued
+        code: "04-17"
+        confidence: high
+        note: OVER/PARTITION BY against GROUP BY — the row survives the aggregate.
+      - slug: ranking-functions
+        source: ranking_functions_simulator.html
+        disposition: merge:window-functions
+        status: queued
+        confidence: low
+        note: >-
+          ROW_NUMBER / RANK / DENSE_RANK are window functions. Likely one panel
+          inside window-functions rather than a fourth SQL route. Confirm before
+          starting the family's second port.
+
+  - id: classifier
+    name: Classifier thresholds
+    recipe: >-
+      One population, one moving threshold, several metrics that disagree.
+      ConfusionMatrixChart + MetricGrid + MetricBarChart. Established by
+      confusion-matrix (04-01).
+    artifacts:
+      - slug: confusion-matrix
+        source: confusion_matrix.html
+        disposition: port
+        anchor: true
+        status: shipped
+        code: "04-01"
+        confidence: high
+      - slug: roc-curve
+        source: roc_curve.html
+        disposition: port
+        status: queued
+        code: "04-18"
+        confidence: medium
+        note: >-
+          ROC and precision-recall are the same threshold sweep plotted on two
+          axis pairs. One route carrying both curves, cross-linked to the
+          confusion matrix, beats two routes that restate it.
+      - slug: precision-recall
+        source: precision_recall.html
+        disposition: merge:roc-curve
+        status: queued
+        confidence: medium
+        note: Second curve on the same sweep. Decide with roc-curve, not separately.
+
+  - id: model-fit
+    name: Model fit and generalisation
+    recipe: >-
+      Fit a function to points, show residuals, show what happens off the
+      training set. ScatterChart + LineChart. No anchor shipped yet — the
+      first port here pays the design cost for four followers.
+    artifacts:
+      - slug: linear-regression
+        source: linear_regression.html
+        disposition: port
+        anchor: true
+        status: queued
+        code: "04-19"
+        confidence: high
+        note: Anchor. Establishes residual plotting and the fit-line convention.
+      - slug: logistic-regression
+        source: logistic_regression.html
+        disposition: port
+        status: queued
+        code: "04-20"
+        confidence: high
+      - slug: gradient-descent
+        source: gradient_descent.html
+        disposition: port
+        status: queued
+        code: "04-21"
+        confidence: medium
+        note: >-
+          Iterative, and the source animates. Motion is comprehension-only here,
+          so steps advance on a control, never on a timer.
+      - slug: overfitting
+        source: overfitting.html
+        disposition: port
+        status: queued
+        code: "04-22"
+        confidence: medium
+      - slug: bias-variance
+        source: bias_variance.html
+        disposition: merge:overfitting
+        status: queued
+        confidence: low
+        note: >-
+          Bias-variance is the decomposition overfitting demonstrates. Probably
+          one route with a decomposition panel. Confirm before porting either.
+
+  - id: sampling
+    name: Sampling laws
+    recipe: >-
+      Draw samples, watch a statistic converge. LineChart + repeated draws on
+      an explicit control, never on a timer. Shares the no-RNG-in-route rule
+      with sampling-bias (04-09), which established it.
+    artifacts:
+      - slug: sampling-bias
+        source: sampling_bias.html
+        disposition: port
+        anchor: true
+        status: shipped
+        code: "04-09"
+        confidence: high
+      - slug: central-limit-theorem
+        source: central_limit_theorem.html
+        disposition: port
+        status: queued
+        code: "04-23"
+        confidence: high
+      - slug: law-of-large-numbers
+        source: law_of_large_numbers.html
+        disposition: port
+        status: queued
+        code: "04-24"
+        confidence: medium
+        note: Two near-identical sources; the 34kB copy is the later one.
+      - slug: law-of-large-numbers-dup
+        source: law_of_large_numbers (1).html
+        disposition: drop
+        status: queued
+        confidence: high
+        note: Earlier copy of law_of_large_numbers.html, 2kB smaller. Never ships.
+
+  - id: probability
+    name: Conditional probability
+    recipe: >-
+      A prior, a likelihood, a posterior that surprises. base-rate-fallacy
+      (04-08) already ships one application of it.
+    artifacts:
+      - slug: base-rate-fallacy
+        source: base_rate_fallacy.html
+        disposition: port
+        anchor: true
+        status: shipped
+        code: "04-08"
+        confidence: high
+      - slug: bayes-theorem
+        source: bayes_theorem.html
+        disposition: port
+        status: queued
+        code: "04-25"
+        confidence: medium
+        note: >-
+          Must earn its place next to base-rate-fallacy: that tool is one
+          application of this theorem. The split worth keeping is the general
+          rule here, the business trap there, each linking to the other.
+      - slug: conditional-probability
+        source: conditional_probability.html
+        disposition: merge:bayes-theorem
+        status: queued
+        confidence: medium
+        note: P(A|B) is the theorem's left-hand side. One route, two panels.
+
+  - id: time-series
+    name: Smoothing and trend
+    recipe: >-
+      A noisy series, a smoothing parameter, the lag it costs. LineChart with
+      two series. No anchor shipped yet.
+    artifacts:
+      - slug: moving-average
+        source: moving_average_simulator.html
+        disposition: port
+        anchor: true
+        status: queued
+        code: "04-26"
+        confidence: high
+      - slug: exponential-smoothing
+        source: exponential_smoothing_simulator.html
+        disposition: port
+        status: queued
+        code: "04-27"
+        confidence: high
+        note: Same shape as moving-average; alpha replaces the window.
+
+  - id: trees
+    name: Tree models
+    recipe: >-
+      Recursive splits over a small labelled set. The tree itself is a
+      diagram, and the closed chart set has no tree primitive — so it is a
+      hairline table of splits, or a MermaidDiagram, never a tenth chart.
+    artifacts:
+      - slug: decision-trees
+        source: decision_trees_simulator.html
+        disposition: port
+        anchor: true
+        status: queued
+        code: "04-28"
+        confidence: low
+        note: >-
+          The highest-uncertainty port in the queue. Settle the tree rendering
+          question in this PORT-PLAN before writing code; random-forest inherits
+          whatever is decided.
+      - slug: random-forest
+        source: random_forest_simulator.html
+        disposition: port
+        status: queued
+        code: "04-29"
+        confidence: low
+
+
+  - id: inference
+    name: Significance and error
+    recipe: >-
+      A test statistic, an error rate, and the sample size that buys it. Four
+      shipped tools already carry this argument between them, which is exactly
+      why a fifth needs to justify itself.
+    artifacts:
+      - slug: ab-testing
+        source: ab_testing.html
+        disposition: port
+        status: shipped
+        code: "04-03"
+        confidence: high
+      - slug: power-analysis
+        source: power_analysis.html
+        disposition: port
+        status: shipped
+        code: "04-04"
+        confidence: high
+      - slug: confidence-intervals
+        source: confidence_intervals.html
+        disposition: port
+        status: shipped
+        code: "04-05"
+        confidence: high
+      - slug: type-1-type-2-errors
+        source: type1_type2_errors.html
+        disposition: port
+        anchor: true
+        status: shipped
+        code: "04-06"
+        confidence: high
+      - slug: hypothesis-testing
+        source: hypothesis_testing.html
+        disposition: merge:type-1-type-2-errors
+        status: queued
+        confidence: low
+        note: >-
+          Overlaps three shipped tools at once — type-1-type-2-errors, power-analysis and confidence-intervals. A fourth route restating them would dilute all four. Needs a human call.
+
+  - id: business
+    name: Marketing and revenue models
+    recipe: >-
+      Spend or cohorts in, a money number out, with the assumption that moves
+      it exposed as a control. Five shipped tools; the family is closed unless
+      a genuinely new mechanism appears.
+    artifacts:
+      - slug: attribution-models
+        source: attribution_models.html
+        disposition: port
+        status: shipped
+        code: "04-02"
+        confidence: high
+      - slug: mmm-simulator
+        source: mmm_simulator.html
+        disposition: port
+        anchor: true
+        status: shipped
+        code: "04-10"
+        confidence: high
+      - slug: cac-ltv-simulator
+        source: cac_ltv_simulator.html
+        disposition: port
+        status: shipped
+        code: "04-11"
+        confidence: high
+      - slug: cohort-retention-simulator
+        source: cohort_retention_simulator.html
+        disposition: port
+        status: shipped
+        code: "04-12"
+        confidence: high
+      - slug: funnel-analysis-simulator
+        source: funnel_analysis_simulator.html
+        disposition: port
+        status: shipped
+        code: "04-13"
+        confidence: high
+      - slug: customer-ltv
+        source: customer_ltv.html
+        disposition: drop
+        status: queued
+        confidence: medium
+        note: >-
+          Superseded by cac-ltv-simulator (04-11), which carries the discounting, payback and CAC ratio this one lacks.
+
+  - id: interpretation
+    name: Reading a number wrongly
+    recipe: >-
+      A figure that is true and misleading at once. Tables and small multiples
+      carry these; they rarely need a chart the closed set lacks.
+    artifacts:
+      - slug: simpsons-paradox
+        source: simpsons_paradox.html
+        disposition: port
+        anchor: true
+        status: shipped
+        code: "04-07"
+        confidence: high
+      - slug: tableau-wireframe
+        source: tableau_dashboard_wireframe_tco.html
+        disposition: fold:writing
+        status: queued
+        confidence: medium
+        note: >-
+          No controls, no computation — a static wireframe with two tables. It is an essay figure, not an instrument.
+      - slug: tableau-wireframe-dup
+        source: tableau_dashboard_wireframe_tco (1).html
+        disposition: drop
+        status: queued
+        confidence: high
+        note: >-
+          Byte-identical duplicate. Never ships.

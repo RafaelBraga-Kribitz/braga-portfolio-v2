@@ -1,0 +1,148 @@
+# BUILD BRIEF — Braga portfolio v2 (Astro static site)
+
+This file is the working brief for every agent on this build. Read it fully. The
+authority order is: the owner's decisions recorded in `handoff/HANDOFF.md` §2 and §7
+and `handoff/AUDIT.md` > this brief > the specimens in `handoff/specimens/`.
+
+## 1. What is being built
+
+The second attempt at Rafael Braga-Kribitz's portfolio, built from the v2 design
+system handoff in `handoff/`. A static Astro 7 site: plain HTML + CSS, two built
+route trees (`/en/`, `/de/`), no JavaScript on content pages except (a) the 158-byte
+pre-paint theme script, (b) the theme toggle, (c) `code.js` on pages with code
+blocks. The two tools are Preact islands with a server-rendered static fallback.
+
+Stack (already installed, do not run `npm install`): astro 7.4.1, @astrojs/preact,
+preact 11, @astrojs/mdx, @astrojs/rss, remark-math, rehype-katex, katex,
+@playwright/test 1.61 (Chromium binary: `/opt/pw-browsers/chromium`; never run
+`playwright install`), @axe-core/playwright, typescript 5.
+
+Project root: `/home/user/braga-portfolio-v2`. Everything under `handoff/` is read-only
+source material: never edit it.
+
+## 2. Source material (paths relative to the project root)
+
+- `handoff/README.md`, `handoff/HANDOFF.md`, `handoff/AUDIT.md` — the decisions.
+- `handoff/_ds/tokens/*.css` — the v1 base tokens (load first); `handoff/_ds/readme.md` — the v1 brand book (voice, rules).
+- `handoff/ds-update/tokens/*.css` — the v2 token overrides (load second): colors, fonts, typography, spacing, grid, flow, chart-palettes, ibcs, component-fixes.
+- `handoff/ds-update/proposals/` — adopted: theme.css, foundations.css, shell.css, doc.css, print.css, format.js, code.js, checks.js (the gates).
+- `handoff/specimens/Design System v2 - Site.dc.html` — the six site patterns with real content: 01 Shell, 02 Cover, 03 Index, 04 Document, 05 Evidence, 06 Bench. **The pattern source of truth.** Its `<script data-dc-script>` block holds the data (projects, metrics, figures, footer groups, status vocabulary, the A/B maths).
+- `handoff/specimens/Design System v2 - Templates.dc.html` — 404 (EN + DE line), Impressum, Datenschutz, Barrierefreiheit (German drafts), the code block, math, diagram, CV.
+- `handoff/specimens/Design System v2.dc.html` — core tokens and components; `… - Charts.dc.html` (needs rebuild; palette there is stale, use the token files); `… - Audit.dc.html`.
+- `handoff/source-content/content/` — the owner's real content from the Next.js site: `projects/*.mdx` (7 projects), `data/about.yaml`, `data/home.yaml`, `data/profile.yaml`, `data/tools.yaml`, `writing/blog/ai-prospecting-vendor-3x-lift.mdx` (the one published essay). `handoff/source-content/chrome.ts` — the existing EN/DE chrome strings.
+- `public/fonts/BKribitz-*.woff2`, `public/fonts/BKribitzMono-*.woff2` — the ten web faces (sans 400, 400 italic, 500, 600, 700, 800, 900; mono 400, 500, 700). Licence files in `public/fonts/licenses/`.
+- `public/fonts/katex/katex.min.css` + `public/fonts/katex/fonts/` — KaTeX, self-hosted.
+
+## 3. Settled decisions (summary; the full text is in handoff/HANDOFF.md)
+
+- Role: **Marketing Data Analyst**. Wordmark **BRAGA**, uppercase everywhere, weight 800, letter-spacing −0.07em. The name "Rafael Braga-Kribitz" is title case with the hyphen.
+- Accent: ultramarine, `--accent-01` = #2F4BE0 light / #7C93FF dark. It may be text only for the one earned figure per view (D-025). `--accent-02` is retired. Blue "moment" blocks use the `.dark` inversion.
+- Neutrals (light): surface #E4E6EA, surface-2 #DCDEE2, surface-3 #D4D6DA, ink #26282C, ink-2 = ink-3 #5A5C61, mid #9EA0A5 (hairlines only, never text), rule #C2C4CA. Dark: #191A1D / #2C2D30 / #484A4D / ink #F3F5F9 / ink-2 #CED0D4 / ink-3 #97999D / mid #7E8084 / rule #393A3D.
+- Headings: weight 700 (`--w-display`); 900 is retired. No font size below 12px anywhere (SVG text included). `--t-mono-sm` 12px, `--t-mono` 13px.
+- Spacing: 8px base; flow tokens related 8 / element 16 / block 32 / lead 48 / group 64 / section 96 (64 below 768). `--rule-open: 1px solid var(--ink)` opens a block. Page max 1320px, gutter 16 (outer) / 32 at md+ per spacing.css.
+- Reading width: **60ch** (`--measure` and `--measure-doc` both 60ch; open item O-02 resolved to the recommended default — record as an assumption).
+- Corners 0, no shadows, no gradients, no blur. Header is opaque surface + hairline. Motion: only the row-wash and arrow shift at `--dur` 140ms `cubic-bezier(.2,0,0,1)`, 0 under reduced motion.
+- Status marks (D-029): five 7px squares, one per state: complete ■ filled · functional ▣ filled centre in outline · under-revision ▤ half filled · in-build □ outline · archived ⊡ dotted outline. Always with a text label.
+- Glyph inventory (D-030): → ↗ ← § · ▲ + − – … and the squares. No icons, no icon font, no emoji, no SVG files (inline SVG for charts is fine).
+- Separator (D-034): the middle dot. "01 · Work", "Fig. 04-01 · …".
+- Links in text are underlined with a hairline (D-032); hover moves the underline to ink; block links carry no underline; the trailing arrow turns accent on row hover.
+- Focus: 2px ink outline, 2px offset (D-026). Controls: boundary `--edge` (ink-2 light, ink-3 dark), switch 44×24, range 24px tall (D-027). Targets ≥ 24px, ≥ 44px below 768.
+- Header below 768 (D-028): two rows, no hamburger; 44px door strip; compact (codes + current label) below 360 for German.
+- Theme (D-024): `data-theme` on `<html>`; OS default when no attribute; stored override `bk-theme` applied by the pre-paint script (first in head); `color-scheme` follows; `<meta name="theme-color">` per theme; `.dark` per element stays for moment blocks.
+- Languages (D-011): EN + DE as two built route trees joined by plain links, `hreflang` alternates and `lang` on every page. British English. Legal pages in German (primary), with an English version. German chrome and German long-form are **agent drafts for owner approval**: mark every DE page with the status mark "in-build" + label "Entwurf · Freigabe ausstehend" in its meta row until approved.
+- Footer (D-013): four groups — Index / Site / Elsewhere / Others (Sitemap, RSS, Impressum, Privacy, Accessibility). DE drafts: Index / Seite / Anderswo / Sonstiges.
+- Impressum (D-014): Rafael Braga-Kribitz · 8054 Seiersberg, Styria, Austria · rafaelbragakribitz@gmail.com · non-commercial. No street address. Not legal advice.
+- Charts: IBCS only (D-015). Roles: ultramarine = highlight; jade #007A66 (dark #00C69F) = good variance; vermilion #CC3710 (dark #F57A5A) = bad variance, always with ▲; ochre #966400 = other side of a neutral split; teal #0A7399 replaces sky on light. Colour lives in marks, never in type: every chart label is `--ink` or `--ink-2`.
+- Numbers and dates by page language (`src/lib/format.ts`, ported from `handoff/ds-update/proposals/format.js`): EN €453,000 · 0.05 · 16 Sep 2026 · 35% · 38 s; DE € 453.000 · 0,05 · 16. Sep. 2026 · 35 % · 38 s; NBSP inside figures; real minus; en dash for ranges (spaced en dash as the English dash, O-03); one ellipsis character; quotes “ ” in EN, „ “ in DE.
+- Email: the Gmail address is used as given (open item 3 is the owner's choice; note it in the report).
+- Voice: declarative, factual, measured. First person singular only in genuine prose; never "we", never marketing "you". Numbers carry the argument. No hype, no exclamation marks. Status is honest.
+
+## 4. Site map
+
+Root `/` is a static redirect page to `/en/`. Every page exists under both `/en/` and `/de/` with the same path except the German legal slugs.
+
+| Page | EN route | DE route | Pattern |
+|---|---|---|---|
+| Home | `/en/` | `/de/` | 02 Cover + 03 Index sections (01 Work listing of 5, 02 Writing, 03 About, 04 Tools) |
+| Work index | `/en/work/` | `/de/work/` | 03 Index: section heading + listing + status vocabulary |
+| Project ×5 | `/en/work/<slug>/` | `/de/work/<slug>/` | 04 Document: opener, metric strip, contents rail on 3, doc on 9, evidence figures (05), end bar |
+| About / CV | `/en/about/` | `/de/about/` | 04 Document variant: opener, spec callout, skills, CV table, contact; "Download CV" link only if a PDF exists (none yet: omit the link) |
+| Writing index | `/en/writing/` | `/de/writing/` | 03 Index listing (essays, notes) |
+| Essay | `/en/writing/ai-prospecting-vendor-3x-lift/` | `/de/writing/…/` | 04 Document |
+| Tools index | `/en/tools/` | `/de/tools/` | 03 Index listing |
+| Tool: Confusion matrix | `/en/tools/confusion-matrix/` | `/de/tools/confusion-matrix/` | 06 Bench |
+| Tool: A/B sample size | `/en/tools/ab-sample-size/` | `/de/tools/ab-sample-size/` | 06 Bench (the specimen's bench, exactly) |
+| Impressum | `/en/impressum/` | `/de/impressum/` | utility document (Templates 02) |
+| Privacy | `/en/privacy/` | `/de/datenschutz/` | utility document |
+| Accessibility | `/en/accessibility/` | `/de/barrierefreiheit/` | utility document |
+| Kitchen sink (noindex) | `/en/system/` | `/de/system/` | every authoring element, both themes |
+| 404 | `/404.html` (EN with the DE line) | — | Templates 01 |
+| Sitemap, RSS, robots | `/sitemap.xml`, `/feed.xml`, `/robots.txt` | — | — |
+
+Project slugs, codes and statuses (the Site specimen's order; dates from the source MDX):
+
+| Code | Slug | Title | Domain | Status |
+|---|---|---|---|---|
+| 01-01 | `austria-data-job-market-intelligence` | Austria data-job market intelligence | Labour market | complete |
+| 01-02 | `austrian-mmm-budget-optimizer` | Austrian MMM and budget optimiser | Marketing | under-revision |
+| 01-03 | `decision-analytics-reconstruction` | Decision analytics reconstruction | Decision science | functional |
+| 01-04 | `warehouse-humanoid-tco` | Warehouse humanoid TCO | Operations | complete |
+| 01-05 | `energy-procurement-risk-analyzer` | Energy procurement risk analyser | Energy | in-build |
+
+Header doors: 01 Work · 02 Writing · 03 About · 04 Tools (DE: Arbeit · Schreiben · Über · Werkzeuge). Tool codes: 04-01 Confusion matrix, 04-02 A/B sample size. Writing codes: 02-01 the essay.
+
+## 5. Class contract (names come from the specimens and proposals; invent nothing)
+
+Layout: `.grid-container`, `.page-grid`, `.grid`, `.col-1 … .col-12`, `.col-start-N`, `.section`, `.rule-t`, `.rule-strong`, `.vrule`, `.skip`.
+Type: `.display`, `.label`, `.index`, `.prose`.
+Shell: `.shell`, `.shell-bar`, `.shell-mark`, `.shell-doors`, `.door`, `.door-code`, `.door-label`, `.shell-cluster`, `.shell-lang`, `.shell-theme`.
+Listing: `.listing`, `.listing-head`, `.listing-row`, `.lr-index`, `.lr-title`, `.lr-title-main`, `.lr-title-sub`, `.lr-meta`, `.lr-trail`, `.lr-code`, `.lr-mono`, `.lr-dim`, `.lr-year`, `.lr-arrow`.
+Status: `.status[data-state="complete|functional|under-revision|in-build|archived"]`.
+Document: `article.doc`, `.doc-opener`, `.doc-trail`, `.doc-lead`, `.doc-meta`, `.doc-end`, `.glyph`, `.table-scroll`, `figure.fig`, `.fig-label`, `.fig-title`, `.fig-source`, `.code`, `.code-bar`, `.code-copy`, `.code-wrap`, `.math`, `.eq-no`, `.footnotes`, `.callout[data-callout="note|aside|warning|tool|summary|definition|quote|spec|metrics|faq|bookmark|cta"]`, `.callout-title`, `.callout-content`, `.cta`.
+Site patterns (new, from the Site specimen; define them in layout.css/components.css): `.cover`, `.cover-rail`, `.cover-body`, `.section-heading` (kicker 3 / claim 7 / forward link 2), `.metric-strip`, `.toc`, `.evidence` (figure with bars: `.ev-bars`, `.ev-bar`, `.ev-track`, `.ev-fill`, `.ev-mid`), `.bench`, `.bench-head`, `.bench-controls`, `.bench-output`, `.bench-verdict`, `.bench-kpis`, `.bench-limit`, `.segmented`, `.range`, `.button`.
+
+## 6. Rules every agent enforces
+
+1. **No inline `style=` attributes** anywhere in `src/` (a lint script fails the build). Dynamic values go through a CSS custom property set via `style={{'--x': …}}` only inside the Preact tools, never in content pages. Width of an evidence bar is a custom property on the element (`style="--w: 40%"` is the ONE permitted inline form, and only for `.ev-fill`/`.ev-mid` and chart marks).
+2. **Tokens only.** No new hex values in `src/`; every colour is a `var(--…)` from `design-system/tokens.css`.
+3. **No icons, no emoji, no SVG files, no images.** Glyphs from D-030 only.
+4. **No font size below 12px.** Mono labels are `--t-mono-sm` (12px) at the smallest.
+5. **No JavaScript on content pages** beyond the three allowed scripts. Tools are Preact islands (`client:load`) that render their default scenario server-side so the page is complete without JS, plus a `.callout[data-callout="tool"]` note.
+6. **Every page** has: `<html lang>`, `data-theme` handling, `<link rel="alternate" hreflang>` for en, de and x-default, `<meta name="theme-color">` ×2, the skip link as the first focusable element, one `<main id="main">`, one `<h1>`, the shell and the footer, `<title>` and `<meta name="description">`.
+7. **Numbers in copy** use NBSP between value and unit, real minus, en dash ranges, the language's separators. Use `src/lib/format.ts`.
+8. British English. Dates like "16 Sep 2026" (EN) and "16. Sep. 2026" (DE).
+9. Keep the authored copy from `handoff/source-content/` where it exists; restructure, do not invent facts or numbers. Where the handoff provides copy (Site specimen, Templates), use it verbatim.
+10. Keep the specimen's spacing exactly (the Site specimen's inline styles tell you the values: translate them into classes with the same numbers).
+
+## 7. Verification
+
+- `npm run build` must pass. Parallel agents build into their own folder: `npx astro build --outDir /tmp/claude-0/-home-user/f1008afd-cfe9-512b-95a9-f11714fce75e/scratchpad/builds/<your-label>` — never the shared `dist/`.
+- `npm run lint:style` (no inline style), `npm run test:unit` (format cases, tool maths reference cases), `npm run test:gates` (Playwright: the thirteen gates from `handoff/ds-update/proposals/checks.js` at 320 / 390 / 768 / 1024 / 1280 / 1440, both themes, every page in the build; plus axe WCAG 2 AA, internal links, hreflang pairs, no horizontal overflow).
+
+## 8. Ownership map (foundation phase; agents write only their files)
+
+| Agent | Writes | Verifies with |
+|---|---|---|
+| A design-system | `design-system/{tokens,base,layout,components,charts,print,obsidian-snippet}.css`, `design-system/README.md`, `src/styles/global.css` (imports in order) | a node script that checks: no hex outside tokens.css, no font-size below 12px, every contract class present, contrast ratios of the token pairs |
+| B chrome | `src/layouts/Base.astro`, `src/components/{Shell,Footer,StatusMark,Listing,ListingRow,SectionHeading,Cover,MetricStrip,EvidenceFigure,DocOpener,DocEnd,Toc,Callout,Cta}.astro`, `src/lib/{i18n,routes,site}.ts`, `public/scripts/theme-toggle.js` is NOT a file: the toggle is inline in Base.astro | `npx astro check`; a temporary `src/pages/zz-smoke.astro` built with `--outDir` into the scratchpad, then deleted |
+| C pipeline | `astro.config.mjs` (markdown block only), `src/lib/remark/*.mjs`, `src/lib/rehype/*.mjs`, `src/content.config.ts`, `src/lib/format.mjs` (+ `format.d.ts` if needed), `tests/unit/format.test.mjs`, `scripts/lint/no-inline-style.mjs`, `public/scripts/code.js`, `src/content/README.md` (authoring guide: frontmatter, callout syntax) | `npm run test:unit`, `npm run lint:style`, a temporary markdown fixture page built with `--outDir` into the scratchpad, DOM checked, then deleted |
+| D tools | `src/lib/tools/{confusion-matrix,ab-sample-size}.mjs`, `tests/unit/tools.test.mjs`, `src/components/tools/{AbSampleSizeBench,ConfusionMatrixBench}.tsx`, `design-system/bench.css` (bench, segmented, range, button — A does not write these), `src/pages/[lang]/tools/{index,ab-sample-size,confusion-matrix}.astro` | `npm run test:unit`; `npx astro check` on the islands; pages are built in the integration step (Base.astro arrives from B) |
+| E gates | `scripts/gates/{run,checks,server}.mjs`, `tests/gates/README.md`, `tests/gates/fixtures/` (a tiny dist with deliberate violations the runner must catch) | the fixture run: every deliberate violation is reported, the clean page passes |
+
+## 9. Base layout contract (B implements, everyone else consumes)
+
+```astro
+---
+import Base from '@/layouts/Base.astro';
+---
+<Base lang="en" page="tools.ab-sample-size" title="A/B sample size" description="…" current="04" hasCode={false} noindex={false}>
+  …page content; Base already renders the skip link, <header class="shell">, <main id="main" class="grid-container"> wrapper, and the footer…
+</Base>
+```
+
+- `lang`: `'en' | 'de'`. `page`: a page id from `src/lib/routes.ts`: `home`, `work`, `work.<slug>`, `about`, `writing`, `writing.<slug>`, `tools`, `tools.confusion-matrix`, `tools.ab-sample-size`, `impressum`, `privacy`, `accessibility`, `system`, `notfound`. `routes.ts` exports `routes[pageId] = { en: '/en/…/', de: '/de/…/' }` and `alternates(pageId)`; project and essay routes are generated from slugs.
+- `current`: the door code to mark `aria-current="page"` (`'01'` Work, `'02'` Writing, `'03'` About, `'04'` Tools).
+- `hasCode`: adds `<script src="/scripts/code.js">` (deferred) — the only per-page script switch.
+- Base renders `<main id="main" class="grid-container">` around the slot. Pages place `.section` blocks and `.grid` rows inside it, as the Site specimen does.
+- `src/lib/i18n.ts` exports `t(lang, key)` and the dictionaries; `src/lib/site.ts` exports `site = { name, wordmark: 'BRAGA', email, location: { en: 'Greater Graz, Austria', de: 'Großraum Graz, Österreich' }, url }`.
+- The theme toggle script (inline in Base, no framework): reads the resolved theme, flips `document.documentElement.dataset.theme`, writes `localStorage['bk-theme']` only after the click, updates the two `theme-color` metas, and updates the button's `aria-label`.

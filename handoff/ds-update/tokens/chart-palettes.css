@@ -1,0 +1,127 @@
+/* ============================================================
+   CHART PALETTES — v2 · D-00x · 20 Oct 2026 · ultramarine anchor
+   Amended 20 Oct 2026 (audit, owner comment on P-07): every mark
+   colour now clears 3:1 on all three surfaces in both themes, so no
+   categorical colour needs a label-plus-edge exception any more.
+   Light marks sit at relative luminance ≤ 0.175 (surface-3 is 0.67);
+   dark marks at ≥ 0.33 (surface-3 is 0.068). Previous values are in
+   _parked/pre-audit/tokens/.
+   Every colour has one meaning:
+     ultramarine  highlight, the series that matters (= --accent-01)
+     jade / verm. good / bad variance — IBCS only (see ibcs.css)
+     ochre        "the other side" of a neutral two-sided split
+   Retired: sequential vermilion, sequential #5B7FFF blue, political
+   blue/pink, accent-02. Stop 1 = darkest, N = lightest.
+   ============================================================ */
+:root {
+  /* Sequential · ultramarine — ordered magnitude. L* 14 → 95. */
+  --chart-seq-1: #0E0084;
+  --chart-seq-2: #1711B1;
+  --chart-seq-3: #2F4BE0;
+  --chart-seq-4: #486CF1;
+  --chart-seq-5: #688DFE;
+  --chart-seq-6: #8CAAFE;
+  --chart-seq-7: #B0C6FE;
+  --chart-seq-8: #D0DEFF;
+  --chart-seq-9: #EAF0FF;
+
+  /* Diverging · good / bad — signed deviation where sides carry
+     business meaning. Arms match --var-pos / --var-neg. */
+  --chart-div-1: #00505C;
+  --chart-div-2: #04706B;
+  --chart-div-3: #007A66;
+  --chart-div-4: #59A895;
+  --chart-div-5: #8CBFB1;
+  --chart-div-6: #BCD5CE;
+  --chart-div-7: #D4D6DA;  /* midpoint = surface-3: visible on the canvas (was #EBEBEB, 1.05:1) */
+  --chart-div-8: #F5C4B5;
+  --chart-div-9: #F79D81;
+  --chart-div-10: #F2734E;
+  --chart-div-11: #CC3710;
+  --chart-div-12: #B83315;
+  --chart-div-13: #8A2410;
+
+  /* Diverging · two-sided — A vs B, share of voice; neither side good.
+     Ultramarine ↔ ochre: ends ≥ 116 ΔE apart in protan + deutan. */
+  --chart-two-1: #13009D;
+  --chart-two-2: #202FC5;
+  --chart-two-3: #3555E5;
+  --chart-two-4: #5C82FB;
+  --chart-two-5: #90AEFF;
+  --chart-two-6: #C7D7FE;
+  --chart-two-7: #D4D6DA;
+  --chart-two-8: #FECD9D;
+  --chart-two-9: #ECA760;
+  --chart-two-10: #D38321;
+  --chart-two-11: #AE6700;
+  --chart-two-12: #864E00;
+  --chart-two-13: #613700;
+
+  /* Interpolation · long — blue → teal → green → yellow. Unchanged. */
+  --chart-long-1: #002891;
+  --chart-long-2: #004B9B;
+  --chart-long-3: #006E91;
+  --chart-long-4: #0F8C7D;
+  --chart-long-5: #00A578;
+  --chart-long-6: #00C300;
+  --chart-long-7: #A0D700;
+  --chart-long-8: #F5E600;
+
+  /* Interpolation · short — blue → violet → magenta → amber.
+     Re-derived in OKLCH; lightness rises every step. */
+  --chart-short-1: #100090;
+  --chart-short-2: #4300B1;
+  --chart-short-3: #7F00B6;
+  --chart-short-4: #BE01A8;
+  --chart-short-5: #F72FA7;
+  --chart-short-6: #FE898B;
+  --chart-short-7: #FFB481;
+  --chart-short-8: #FFD79B;
+
+  /* Categorical · hue — storytelling, outside IBCS figures. Fixed
+     slots, used in order; 6+ = Other. Slot 1 = accent. All five clear
+     3:1 on every light surface (ochre 3.5, teal 3.7 on surface-3), so
+     they need no edge; direct labels are still the rule. */
+  --chart-cat-1: #2F4BE0;  /* ultramarine */
+  --chart-cat-2: #966400;  /* ochre  (was amber #E0A100, 1.8:1) */
+  --chart-cat-3: #0A7399;  /* teal   (was sky #3FA9D9, 2.1:1) */
+  --chart-cat-4: #C4278F;  /* magenta */
+  --chart-cat-5: #7A4A1E;  /* umber */
+  --chart-cat-other: var(--mid);
+
+  /* Text on fills */
+  --on-accent: #FFFFFF;
+  --on-cat-1: #FFFFFF;
+  --on-cat-2: #FFFFFF;
+  --on-cat-3: #FFFFFF;
+  --on-cat-4: #FFFFFF;
+  --on-cat-5: #FFFFFF;
+
+  /* Categorical · grey — parts of a whole (IBCS). Unchanged. */
+  --chart-catg-1: #282828;
+  --chart-catg-2: #5E5E5E;
+  --chart-catg-3: #949494;
+  --chart-catg-4: #D4D4D4;
+}
+
+.dark {
+  --chart-cat-1: #7C93FF;
+  --chart-cat-2: #F0B400;  /* amber on dark */
+  --chart-cat-3: #54C0F0;  /* sky on dark */
+  --chart-cat-4: #F57AC4;  /* was #F060B8, 2.99:1 on surface-3 */
+  --chart-cat-5: #C9986A;  /* was #B88555, 2.8:1 on surface-3 */
+  --on-accent: #1A1A1A;
+  --on-cat-1: #1A1A1A;
+  --on-cat-2: #1A1A1A;
+  --on-cat-3: #1A1A1A;
+  --on-cat-4: #1A1A1A;
+  --on-cat-5: #1A1A1A;
+  --chart-catg-1: #F5F5F5;
+  --chart-catg-2: #BDBDBD;
+  --chart-catg-3: #858585;
+  --chart-catg-4: #4F4F4F;
+  --chart-div-7: #484A4D;
+  --chart-two-7: #484A4D;
+  --chart-seq-8: #C2D2FF;
+  --chart-seq-9: #DCE5FF;
+}

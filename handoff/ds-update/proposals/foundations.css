@@ -1,0 +1,117 @@
+/* ============================================================
+   FOUNDATIONS — proposal P-02 (Audit · 20 Oct 2026)
+   Global rules the brief requires that no token file carried. Each
+   numbered block is independent: delete the ones you reject.
+   On adoption this folds into design-system/base.css.
+   Revert: delete the file and its <link>.
+   ============================================================ */
+
+/* 1 · Motion is comprehension-only, and none under reduced motion
+      (04-F; HANDOFF 15). Every transition reads --dur, so one line. */
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur: 0ms; }
+}
+
+/* 2 · Edge: the boundary of a control must reach 3:1 (WCAG 1.4.11).
+      --mid measures 2.1:1 on the light surface, so it stays a decorative
+      hairline. Controls take --edge: ink-2 on light (5.4:1), ink-3 on
+      dark (6.1:1). The !important lines reach the compiled components'
+      inline styles until their source is updated (same device as
+      component-fixes.css). */
+:root { --edge: var(--ink-2); }
+.dark { --edge: var(--ink-3); }
+[role="tablist"] { border-color: var(--edge) !important; }
+[role="tablist"] > [role="tab"] { border-left-color: var(--edge) !important; }
+button[role="switch"][aria-checked="false"] { border-color: var(--edge) !important; }
+button[role="switch"][aria-checked="false"] > span { background: var(--edge) !important; }
+.bk-range::-webkit-slider-runnable-track { background: var(--edge) !important; }
+.bk-range::-moz-range-track { background: var(--edge) !important; }
+
+/* 3 · Focus: one indicator for every control, visible on every surface.
+      Ink, not accent — the accent is spent on one number per section,
+      and attempt 1's orange ring measured 2.44:1. The 2px offset leaves
+      a surface-coloured gap, so the ring reads even on an ink control. */
+:focus-visible { outline: 2px solid var(--ink) !important; outline-offset: 2px !important; }
+/* (!important because the compiled Button sets outline: none inline and
+    the range injects .bk-range:focus { outline: none }) */
+
+/* 4 · Anchors land below sticky chrome (WCAG 2.4.11): 80px header + 16. */
+html { scroll-padding-top: 96px; }
+
+/* 5 · Skip link: the first focusable element on every page (S-01).
+      Hidden until keyboard focus; flat, hairline-bordered mono label. */
+.skip {
+  position: absolute; left: var(--gutter); top: 8px; z-index: 100;
+  padding: 14px 16px; background: var(--surface); color: var(--ink);
+  border: 1px solid var(--ink); text-decoration: none;
+  font: 400 var(--t-mono-sm) / 1 var(--font-mono);
+  letter-spacing: var(--tracking-label); text-transform: uppercase;
+  transform: translateY(-200%);
+}
+.skip:focus-visible { transform: none; }
+
+/* 6 · Links. In running text a link needs an affordance that is not
+      colour (WCAG 1.4.1): a hairline underline, offset so it does not
+      cut descenders. Hover moves the underline to ink. Hover does not
+      spend the accent on every link — the accent belongs to the one
+      earned figure per view (D-025) and to the trailing arrow glyph,
+      which takes it on hover of its row. Block links (rows, nav doors,
+      buttons) carry no underline. */
+a:hover { color: var(--ink); }
+.prose a, .doc a, p a, li a, dd a, figcaption a {
+  text-decoration: underline; text-decoration-thickness: 1px;
+  text-decoration-color: var(--mid); text-underline-offset: 0.18em;
+}
+.prose a:hover, .doc a:hover, p a:hover, li a:hover, dd a:hover, figcaption a:hover { text-decoration-color: var(--ink); }
+.listing-row:hover .lr-arrow, .door:hover .door-arrow, .lr-year:hover .lr-arrow { color: var(--accent-01); }
+
+/* 7 · Targets: at least 24 × 24 CSS px everywhere (2.5.8), 44 below
+      768 (HANDOFF 10). Nav and footer links get block height; text
+      inside them does not move. */
+nav a, footer a, .door, .shell-lang { min-height: 24px; display: inline-flex; align-items: center; }
+@media (max-width: 767px) {
+  nav a, footer a, .door, .shell-lang { min-height: 44px; }
+}
+/* compiled controls, until their source is updated: the switch grows from
+   40×20 to 44×24 (knob 14px, 4px inset), the range input from 16 to 24px,
+   and the Button — 11px label, --mid border, no class, 26/24px tall by
+   variant — moves to the 12px floor, the --edge boundary and ONE height
+   (28px) for both variants, so default and ghost line up. The Button is
+   matched by the inline font-size it ships with, so no other button is
+   touched. */
+button[role="switch"] { width: 44px !important; height: 24px !important; }
+button[role="switch"] > span { width: 14px !important; height: 14px !important; top: 4px !important; left: 4px !important; }
+button[role="switch"][aria-checked="true"] > span { left: 24px !important; }
+.bk-range { height: 24px !important; }
+button[style*="font-size: 11px"] { font-size: var(--t-mono-sm) !important; height: 28px !important; padding-block: 0 !important; display: inline-flex; align-items: center; border-color: var(--edge) !important; transition-duration: var(--dur) !important; }
+
+/* 8 · Listing: mid grey is a hairline, never text (D-007). listing.css
+      in the bound bundle still sets it; this wins by load order. */
+.listing-head, .lr-code, .lr-label, .lr-mono.lr-dim { color: var(--ink-3); }
+
+/* 9 · Hyphenation only in running text, never in titles; `lang` on the
+      page decides the dictionary (HANDOFF 12: German compounds at 320). */
+.prose, .doc p, .doc li, .doc dd { hyphens: auto; -webkit-hyphens: auto; overflow-wrap: anywhere; }
+h1, h2, h3, h4, .display { hyphens: manual; -webkit-hyphens: manual; }
+
+/* 10 · Numbers: tabular, lining, slashed zero wherever a figure appears,
+       including form values and table cells. */
+td, th, dd, output, input, .num { font-variant-numeric: var(--num); }
+
+/* 11 · Status mark (D-023, amended 20 Oct 2026 by owner comment): five
+       7px squares, one design per state — the mark alone tells them
+       apart; the text label always sits beside it.
+         complete        ■  filled
+         functional      ▣  filled centre inside an outline
+         under-revision  ▤  half filled (bottom)
+         in-build        □  outline
+         archived        ⊡  dotted outline */
+.status { display: inline-flex; align-items: center; gap: 8px; color: var(--ink); }
+.status::before {
+  content: ""; width: 7px; height: 7px; box-sizing: border-box; flex: none;
+  border: 1px solid currentColor; background: currentColor;
+}
+.status[data-state="functional"]::before { background: currentColor; background-clip: content-box; padding: 1px; }
+.status[data-state="under-revision"]::before { background: transparent; border-bottom-width: 4px; }
+.status[data-state="in-build"]::before { background: transparent; }
+.status[data-state="archived"]::before { background: transparent; border-style: dotted; }

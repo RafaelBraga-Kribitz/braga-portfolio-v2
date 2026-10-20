@@ -1,0 +1,109 @@
+/* ============================================================
+   12-COLUMN GRID
+   The structural spine of every page. Tokens live in spacing.css
+   (--grid-cols, --grid-gutter, --gutter, --page-max). These
+   utilities turn any element into a grid container and let
+   children span a number of columns.
+   ============================================================ */
+
+/* Page container: max width + responsive outer margins.
+   Navbar, every page <main>, and the Footer all sit inside one
+   of these so their left/right edges land on the same lines. */
+.grid-container {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  box-sizing: border-box;
+}
+
+/* Page main as a 12-column grid: the container frame PLUS the
+   column track. Vertical rhythm stays on the children's margins
+   (row-gap:0), so existing spacing is untouched. */
+.page-grid {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
+  column-gap: var(--grid-gutter);
+  row-gap: 0;
+  align-content: start;
+}
+/* Direct children default to the full 12 columns; add a .col-N to
+   pull one in to a narrower span (always starting at line 1). */
+.page-grid > * { grid-column: 1 / -1; }
+.page-grid > .col-1  { grid-column: 1 / span 1; }
+.page-grid > .col-2  { grid-column: 1 / span 2; }
+.page-grid > .col-3  { grid-column: 1 / span 3; }
+.page-grid > .col-4  { grid-column: 1 / span 4; }
+.page-grid > .col-5  { grid-column: 1 / span 5; }
+.page-grid > .col-6  { grid-column: 1 / span 6; }
+.page-grid > .col-7  { grid-column: 1 / span 7; }
+.page-grid > .col-8  { grid-column: 1 / span 8; }
+.page-grid > .col-9  { grid-column: 1 / span 9; }
+.page-grid > .col-10 { grid-column: 1 / span 10; }
+.page-grid > .col-11 { grid-column: 1 / span 11; }
+.page-grid > .col-12 { grid-column: 1 / span 12; }
+
+/* The 12-column track. Put column children directly inside. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
+  gap: var(--grid-gutter);
+}
+
+/* Column spans. Default child spans 1 column. */
+.col-1  { grid-column: span 1; }
+.col-2  { grid-column: span 2; }
+.col-3  { grid-column: span 3; }
+.col-4  { grid-column: span 4; }
+.col-5  { grid-column: span 5; }
+.col-6  { grid-column: span 6; }
+.col-7  { grid-column: span 7; }
+.col-8  { grid-column: span 8; }
+.col-9  { grid-column: span 9; }
+.col-10 { grid-column: span 10; }
+.col-11 { grid-column: span 11; }
+.col-12 { grid-column: span 12; }
+
+/* .grid.stack — children start at column 1 and keep their col-N width,
+   so siblings stack vertically (each snapped) instead of packing into
+   the same row. Use for document sections where reading order is top-down. */
+.grid.stack > .col-1  { grid-column: 1 / span 1; }
+.grid.stack > .col-2  { grid-column: 1 / span 2; }
+.grid.stack > .col-3  { grid-column: 1 / span 3; }
+.grid.stack > .col-4  { grid-column: 1 / span 4; }
+.grid.stack > .col-5  { grid-column: 1 / span 5; }
+.grid.stack > .col-6  { grid-column: 1 / span 6; }
+.grid.stack > .col-7  { grid-column: 1 / span 7; }
+.grid.stack > .col-8  { grid-column: 1 / span 8; }
+.grid.stack > .col-9  { grid-column: 1 / span 9; }
+.grid.stack > .col-10 { grid-column: 1 / span 10; }
+.grid.stack > .col-11 { grid-column: 1 / span 11; }
+.grid.stack > .col-12 { grid-column: 1 / span 12; }
+
+/* Explicit start lines (1–12). Use with a span for offsets. */
+.col-start-1  { grid-column-start: 1; }
+.col-start-2  { grid-column-start: 2; }
+.col-start-3  { grid-column-start: 3; }
+.col-start-4  { grid-column-start: 4; }
+.col-start-5  { grid-column-start: 5; }
+.col-start-6  { grid-column-start: 6; }
+.col-start-7  { grid-column-start: 7; }
+.col-start-8  { grid-column-start: 8; }
+.col-start-9  { grid-column-start: 9; }
+.col-start-10 { grid-column-start: 10; }
+.col-start-11 { grid-column-start: 11; }
+.col-start-12 { grid-column-start: 12; }
+
+/* Responsive: collapse to a single readable column on narrow
+   viewports. Children fall back to full width. */
+@media (max-width: 720px) {
+  .grid { grid-template-columns: 1fr; }
+  .page-grid { grid-template-columns: 1fr; }
+  .grid [class*="col-"],
+  .page-grid > [class*="col-"] { grid-column: 1 / -1; }
+}

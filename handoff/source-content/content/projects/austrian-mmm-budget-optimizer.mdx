@@ -1,0 +1,113 @@
+---
+title: Austrian MMM and Budget Optimizer
+date: 2026-08-04
+kind: case
+code: 01-01
+summary: "A Bayesian marketing-mix model that estimates what each channel adds, tests platform-reported attribution against a known truth, and moves budget only where the evidence clears a breakeven rule."
+homeNote: "Ad platforms credit themselves for demand that would have arrived anyway. This model tests those claims first, then moves budget only where the interval clears breakeven."
+status: live
+tags:
+  - Marketing
+  - Media Mix Modeling
+  - Budget Optimisation
+locale: en
+---
+
+<Lead>
+A Bayesian marketing-mix model that estimates what each channel adds, tests platform-reported
+attribution against a known truth, and moves budget only where the evidence clears a
+breakeven rule.
+</Lead>
+
+The question is the one every advertiser asks of its media plan: which channels contributed
+incrementally, how far off were the platform-reported numbers, and what does moving the same
+budget actually gain? The working measure is contribution profit, not revenue. A channel that
+returns less than its breakeven return on ad spend destroys margin, however large its reported
+revenue looks.
+
+<Marker num="01" label="Context" id="sec-01" />
+
+"Austrian" names the setting the model is built for, not the data behind it: weekly grain,
+the Austrian public-holiday calendar as a control, euro and contribution-margin logic. No
+Austrian client data was used. The model runs in three layers, and the first has to pass
+before the second counts.
+
+- **Layer P**, a generated advertiser with disclosed true parameters: 156 weeks, five channels
+  (TV, radio, print, paid search, paid social).
+- **Layer R**, Meta's public Robyn demo file (MIT licence): simulated weekly data for five named
+  channels, revenue in the file's own money units, competitor sales as the control.
+- **Layer D**, the Layer R posterior handed to a budget optimiser under a written decision rule.
+
+<Marker num="02" label="Process" id="sec-02" />
+
+Each channel gets geometric adstock, so this week's spend keeps working at an estimated decay,
+and a Hill saturation curve on the adstocked spend, so returns diminish as spend grows. A linear
+trend, two yearly Fourier pairs and one control complete the baseline. Priors are weakly
+informative and identical across channels, so the estimates come from the data rather than
+from a prior that already knows the answer.
+
+The model is fitted in PyMC and sampled with NUTS (nutpie): two chains of 1,000 tuning steps and
+1,000 draws, target acceptance 0.9, raised to 0.99 by a recorded ladder after divergences. A fit
+counts only with R-hat below 1.01, effective sample size above 400 and zero divergences, and
+every fit writes those diagnostics next to itself.
+
+Validation comes before any decision. On Layer P the sampler has to recover a truth it was
+handed, and the platform-style attribution is scored against the same truth:
+
+<MetricGrid metrics={[
+  { value: "91%", label: "CURVE COVERAGE", note: "true response curves inside the posterior band, observed spend range" },
+  { value: "26 of 28", label: "PARAMETERS RECOVERED", note: "true values inside their 90% intervals" },
+  { value: "+45%", label: "PLATFORM OVER-CREDIT", note: "paid search: platform-reported vs true incremental revenue" }
+]} />
+
+The misses follow a known trade-off rather than a bug. All five effect sizes and all five
+half-saturation points have medians above the truth, because a curve that rises higher but
+saturates later fits the same weeks. Recovery is therefore judged on curves and shares, which
+are what a budget decision uses. The platform-style report, meanwhile, gives the offline
+channels no credit at all.
+
+The decision rule is fixed before the optimiser runs: shift budget toward a channel only while
+the lower bound of its marginal-ROAS 90% interval stays above breakeven, and only if the 10th
+percentile of the reallocation gain is positive. At an assumed contribution margin of 40%,
+breakeven ROAS is 2.50.
+
+<Marker num="03" label="Results" id="sec-03" />
+
+On the public dataset, the same total weekly budget reallocated under that rule gains a median
+15.1% of current media contribution. The 10th percentile is 8.8%, and none of the 500 posterior
+draws used shows a loss.
+
+| Channel | Weekly spend now | Recommended | Marginal ROAS now (90% interval) |
+|---|---|---|---|
+| TV | 14,844 | 22,266 (+50%) | 7.26 (4.38–10.72) |
+| Out-of-home | 43,218 | 34,723 (−20%) | 0.75 (0.10–1.68) |
+| Print | 3,729 | held | 7.81 (1.22–16.01) |
+| Facebook | 2,146 | 3,218 (+50%) | 20.53 (4.76–45.52) |
+| Search | 5,916 | held | 7.68 (0.89–25.55) |
+
+The breakeven gate is what holds print and search. Their medians are high, but the lower bounds
+of their intervals fall below 2.50, so no budget moves toward them. Amounts are in the dataset's
+own money units, not euros; shares, ROAS ratios and the breakeven test are the quantities that
+carry over.
+
+On a 26-week holdout against two baselines, the model had the lowest error on Layer P (MAPE 3.0%,
+against 4.7% for ridge regression and 9.6% for a seasonal naive forecast) and lost on Layer R
+(7.9% against ridge regression's 5.1%). That is reported as it came out. The case for the MMM is
+that it says which channel earned the revenue, with intervals, which the baselines cannot. On
+Layer P its 90% intervals covered 85% of holdout weeks: slightly too narrow, so the model is a
+little overconfident.
+
+What this does not establish:
+
+- Layer R is a simulated public dataset in unnamed money units. A swap-in of real advertiser
+  data is planned, not done.
+- One model form is assumed (geometric adstock, Hill saturation, additive baseline). Recovery on
+  Layer P shows the sampler recovers that form, not that reality has it.
+- Weekly national data cannot separate channels whose spend moves together; the intervals widen
+  accordingly.
+- The optimiser assumes response curves hold at new spend levels and that competitors do not
+  react.
+
+Complete, last validated 2026-09-16. The numbers in the repository README are rendered from
+the report files, and a test checks that the two agree. Code, reports and the decision memo:
+[github.com/RafaelBraga-Kribitz/austrian-mmm-budget-optimizer](https://github.com/RafaelBraga-Kribitz/austrian-mmm-budget-optimizer).

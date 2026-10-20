@@ -1,0 +1,201 @@
+---
+title: Funnel optimisation in leverage order
+date: "2026-10-01"
+---
+
+The dashboard above is a working instrument and a worked example. This essay is its manual. It explains why the dashboard reads the funnel in the order it does, what each page measures, which numbers move together and what that combination means, where each number must come from, and how to build the same thing on real data. Every number quoted below is computed by the model the dashboard renders, and every situation named can be opened in it.
+
+## 00 · The order is the method
+
+Funnel optimisation starts at the top of the funnel. Without volume at the top, optimisations further down are mathematically irrelevant: a conversion-rate improvement compounds only when there is enough input for it to act on.
+
+Revenue is a product. Every stage multiplies the one before it:
+
+$$
+\begin{aligned}
+\text{Revenue} = {} & \text{Impressions} \times \text{CTR} \times \text{CVR}_{\text{session}\rightarrow\text{lead}} \\
+& \times \text{MQL rate} \times \text{SQL rate} \times \text{Close rate} \times \text{ACV}
+\end{aligned}
+$$
+
+Read literally, the identity says a 10% gain anywhere is a 10% gain in revenue, so the order should not matter. It matters for two reasons the identity hides.
+
+**Headroom.** Rates are bounded and saturate; volume scales with budget and audience. On the healthy company in the dashboard, 20% more budget buys <FdNum k="scale.budgetCustomers" /> more customers while seven-day frequency rises from <FdNum k="healthy.frequency" /> to <FdNum k="scale.budgetFrequency" />. A close rate does not have that kind of room.
+
+**Detectability.** Each stage's rate is read on a smaller denominator than the stage above it, so the smallest change a test can see grows down the funnel. The healthy company runs <FdNum k="healthy.impressions" /> impressions and <FdNum k="healthy.sqls" /> SQLs in 28 days. A four-week test on CTR detects a lift of <FdNum k="mde.ctr" />. The same test on SQL → customer detects only lifts above <FdNum k="mde.close" />, and a 10% close-rate improvement takes <FdNum k="weeks.close" /> weeks to confirm.
+
+<FdDetect />
+
+<FdDetectFigure />
+
+That is the arithmetic behind the slogan. Improving a conversion rate by 100% sounds like growth; going from 1 lead to 2 is noise. In <DashboardLink situation="low-volume">situation S03</DashboardLink> a €400-a-week programme rebuilt its landing page and reports a 100% lift in customers: <FdNum k="low.customersPrev" /> became <FdNum k="low.customers" />. With <FdNum k="low.sqls" /> SQLs a month, a four-week close-rate test detects only lifts above <FdNum k="low.mdeClose" />. The dashboard puts a volume gate in front of every BOF reading for exactly this case.
+
+<Callout variant="note" label="The order">
+  Optimising the bottom of the funnel before the top is not a strategy. Celebrating a conversion rate with no volume behind it is self-deception. Funnel optimisation is about leverage order, not preference.
+</Callout>
+
+## 01 · Three stages, three jobs
+
+Each stage has one job, and each job is measured by different numbers. The top of the funnel creates qualified, scalable volume. The middle converts attention into intent. The bottom converts intent into revenue.
+
+<FdStages />
+
+The rule that follows is short. TOF is volume efficiency, MOF is intent quality, BOF is revenue extraction. If BOF metrics are tracked while TOF is broken, the work optimises illusions. A metric that appears on the wrong stage's page misleads whoever reads it, which is why the dashboard gives each stage its own page and lets no metric leak into another.
+
+## 02 · How the dashboard reads
+
+The dashboard models a fictional mid-market B2B SaaS company: <FdNum k="model.budget" /> a week across LinkedIn, Google and Meta, a <FdNum k="model.acv" /> average contract, <FdNum k="model.days" /> days of data. On the healthy baseline it turns <FdNum k="healthy.spend" /> of spend into <FdNum k="healthy.leads" /> leads, <FdNum k="healthy.mqls" /> MQLs, <FdNum k="healthy.sqls" /> SQLs and <FdNum k="healthy.customers" /> customers every 28 days: <FdNum k="healthy.revenue" /> of revenue at a CAC of <FdNum k="healthy.cac" />.
+
+**Pages.** *Overview* is the executive page — throughput, stage conversion and the cost stack. It is for direction only: if something looks wrong there, it is not fixed there; the reader drills down to the stage that owns it. *TOF*, *MOF* and *BOF* each carry that stage's leading indicators and nothing else. *Data* holds the sources of truth, the event spec and the SQL. Every tile and panel opens a drill-down with the metric's trend, its breakdown, its dictionary entry, the findings that read it and the view that computes it. Each stage page also switches to its *SOP levers*: the checklist for that stage, with the items the current numbers implicate lit.
+
+**Windows.** Every comparison is the last 28 days against the 28 before. Top-of-funnel charts are daily on a 7-day rolling window; middle and bottom are weekly. Each situation's fault starts on Monday of week 10, the first day of the current window, so the prior window is always a clean baseline.
+
+**Colour.** A healthy series is blue. A series turns orange from the day it broke, and a tile at ACT carries an orange rule. Data that cannot be trusted is dashed and grey, and labelled UNRELIABLE. A value whose denominator is zero prints NULL, not 0. The one orange number on the page is the verdict's: the change that justifies acting first. With nothing broken, the dashboard is monochrome.
+
+**Reading order.** The verdict strip says where to act first, why, and who owns it. The diagnosis rail lists every finding in leverage order: gates first, then TOF, MOF and BOF, ACT before WATCH, and inside a stage the SOP's own lever order. Each finding opens into evidence built from the numbers, what it means, what to investigate, what must and can be done, which number should move first if the fix works, and the trap to avoid. Findings that fired but were overruled stay visible under *Set aside*, with the reason.
+
+**Controls.** *Situation* loads one of <FdNum k="kb.situations" />. *Severity* scales the fault from 0% (the healthy company) to 100% (the situation as written), so thresholds can be watched as they trip. *Budget* changes weekly spend, so saturation and the volume gate can be pushed in either direction. *Dashboard only* gives the dashboard the whole screen.
+
+<FdSituations />
+
+## 03 · Top of the funnel
+
+The primary goal is qualified, scalable volume. This is where the leverage is, and the thirteen levers below are where it is won or lost — from market and ICP selection down to the tracking that makes every other number readable.
+
+<FdLevers stage="tof" />
+
+### CPM up, CTR flat
+
+A CPM spike is rarely a creative problem. In <DashboardLink situation="auction-pressure" page="tof">S04</DashboardLink> two competitors start bidding on the same job-title targeting: CPM rises <FdNum k="auction.cpmDelta" /> while CTR moves <FdNum k="auction.ctrDelta" />, and leads fall <FdNum k="auction.leadsDelta" /> because the same budget buys fewer impressions. The combination says the market got more expensive, not the ads worse. The first check is CPM by audience and placement; refreshing creative would change the one thing that is working.
+
+### Spend up, delivery flat
+
+In <DashboardLink situation="budget-structure" page="tof">S05</DashboardLink> budget rises and is split across fourteen new ad sets. Spend moves <FdNum k="structure.spendDelta" /> and impressions <FdNum k="structure.imprDelta" />. Ad sets that never leave the learning phase cannot buy delivery efficiently, and CPA spreads between them. The fix is consolidation; more money makes it worse.
+
+### Frequency up, CTR down
+
+In <DashboardLink situation="creative-fatigue" page="tof">S06</DashboardLink> the same four creatives have run for thirteen weeks. Frequency climbs from <FdNum k="fatigue.freqPrev" /> to <FdNum k="fatigue.freq" /> and CTR falls <FdNum k="fatigue.ctrDelta" />. That pairing is fatigue: the message is worn, not the targeting. The fatigue curve on the TOF page plots it directly, one point a day. Pushing the budget slider to <FdNum k="scale.saturatedBudget" /> a week on the healthy company shows the related case, the diminishing-returns threshold: frequency reaches <FdNum k="scale.saturatedFrequency" /> before CTR has had time to fall, and every extra euro buys the same people again.
+
+### Audiences that overlap
+
+In <DashboardLink situation="audience-overlap" page="tof">S07</DashboardLink> a new interest audience shares <FdNum k="overlap.cur" /> of its users with an existing lookalike. Above 30% the two ad sets bid against each other and their CTRs stop being independent — any comparison between them reads one audience twice.
+
+### ROAS that rises for the wrong reason
+
+In <DashboardLink situation="roas-illusion" page="tof">S15</DashboardLink> prospecting budget moves to brand search and retargeting. Platform ROAS rises <FdNum k="roas.delta" /> while prospecting reach falls <FdNum k="roas.reachDelta" />, and one channel now carries <FdNum k="roas.share" /> of revenue. ROAS is lagging. It rose because demand creation stopped, and the pipeline that feeds the next quarter is the price. Lagging indicators are never optimised directly.
+
+### Tracking is a gate
+
+If tracking is broken, the rest of the dashboard cannot be read. In <DashboardLink situation="tracking-broken" page="data">S02</DashboardLink> a consent release blocks GA4 tags and removes the demo page's form triggers. Attribution coverage falls from <FdNum k="tracking.coveragePrev" /> to <FdNum k="tracking.coverage" />, and GA4 records <FdNum k="tracking.gap" /> fewer paid sessions than the platforms report clicks. Cost per lead appears to rise <FdNum k="tracking.cplDelta" /> — a number computed on a broken join. CPM moves <FdNum k="tracking.cpmDelta" />: ad-platform delivery is still truthful, so it is the one thing left to read. Form completion prints NULL, because no form_start events arrive to divide by. The dashboard sets aside every finding that reads GA4 or UTMs until the gate clears.
+
+## 04 · Middle of the funnel
+
+The primary goal is to convert attention into intent. This is where most funnels bleed: people see, click and do not progress.
+
+<FdLevers stage="mof" />
+
+### Leads up, intent down
+
+In <DashboardLink situation="junk-leads" page="mof">S09</DashboardLink> a free checklist replaces the demo request as the main offer. Leads rise <FdNum k="junk.leadsDelta" /> and cost per lead falls <FdNum k="junk.cplDelta" />. MQL rate falls to <FdNum k="junk.mqlRate" />, the junk ratio reaches <FdNum k="junk.ratio" />, and cost per MQL rises <FdNum k="junk.costPerMqlDelta" />. The cheaper CPL is the trap. The source × MQL heatmap shows where the fall concentrates; the lead-score distribution shows the second, low hump that an average would hide.
+
+### The promise breaks after the click
+
+In <DashboardLink situation="message-mismatch" page="mof">S08</DashboardLink> a new ad angle earns <FdNum k="mismatch.ctrDelta" /> more CTR, but progression from landing page to form falls <FdNum k="mismatch.stepDelta" />. The ad promises one outcome and the page opens on another. This is message consistency, not landing-page design: the narrative resets after the click. Any step that falls more than 25% is a message drop until proven otherwise.
+
+### More email, less attention
+
+In <DashboardLink situation="nurture-exhaustion" page="mof">S10</DashboardLink> nurture cadence triples. Opens move <FdNum k="nurture.openDelta" /> and unsubscribes <FdNum k="nurture.unsubDelta" />. The education retargeting pool shows the same pattern in another channel: rising frequency with flat engagement is message exhaustion. Adding volume to recover engagement repeats the cause.
+
+## 05 · Bottom of the funnel
+
+The primary goal is to convert intent into revenue. Only once the top produces volume does an improvement here move revenue in a way that can be measured.
+
+<FdLevers stage="bof" />
+
+### Speed to lead is a gate
+
+If speed to lead exceeds five minutes, marketing optimisation is wasted. In <DashboardLink situation="slow-speed-to-lead" page="bof">S12</DashboardLink> the inbound SDR leaves and the median first touch moves from <FdNum k="speed.prev" /> to <FdNum k="speed.cur" />. Close rate falls <FdNum k="speed.closeDelta" />. Every extra euro spent upstream buys a lead that decays while it waits, so the dashboard ranks this above every TOF finding: it is a precondition, not an optimisation.
+
+### Load time before fields
+
+In <DashboardLink situation="form-friction" page="bof">S11</DashboardLink> a new eleven-field form ships with a script that slows mobile load to <FdNum k="friction.load" />. Form completion falls <FdNum k="friction.completionDelta" />. Two BOF findings fire. The SOP's lever order breaks the tie: site speed before forms, because load time taxes every step after it and any test run on a slow page measures the load time.
+
+### Retargeting past its pool
+
+In <DashboardLink situation="retargeting-overspend" page="bof">S13</DashboardLink> retargeting budget doubles against a pool that did not grow. Frequency reaches <FdNum k="rt.freq" /> and retargeting ROAS moves <FdNum k="rt.roasDelta" />. CPA rising faster than conversions, with frequency above threshold, is aggressive frequency; the surplus belongs in prospecting.
+
+### Deals that stop closing
+
+In <DashboardLink situation="deal-confusion" page="bof">S14</DashboardLink> a cheaper competitor launches. SQLs hold while win rate moves <FdNum k="deal.winDelta" /> and the sales cycle stretches to <FdNum k="deal.cycle" />. Pipeline volume is fine; decisions are not. The fix is a proposition built on concrete outcomes and the competitive difference — not more SQLs into a pipeline that now closes less often.
+
+## 06 · The rule matrix
+
+Every finding the dashboard can produce, as a pattern. None reads one metric alone; each reads what moved beside it, because the same movement means different things in different company. These are the patterns, in the order the engine evaluates them.
+
+<FdRules />
+
+## 07 · Leading and lagging
+
+Leading indicators move first and can be acted on: CTR, MQL rate, speed to lead, engagement rates. Lagging indicators report the result: CAC, ROAS, revenue. Lagging indicators are read, never optimised directly — optimising ROAS while CTR is broken is the most common way a funnel is steered by its rear-view mirror.
+
+<FdIndicators />
+
+## 08 · Sources of truth
+
+Every metric has one primary source. If a metric is tracked without its primary source, the data is compromised. The four hard rules settle every case; a metric that violates one is deleted, not reconciled.
+
+<FdHardRules />
+
+Three consequences are worth stating. Impressions never come from GA4: analytics impressions are not paid impressions. Click-to-lead uses sessions as its denominator, not clicks, so landing-page performance is included. And attribution coverage — the share of conversions with a source and medium — is the gate in front of every source-level cost metric. The Data page lists all <FdNum k="kb.metrics" /> metrics with their primary and secondary sources, and greys out the ones the current situation makes unreadable.
+
+## 09 · The metric dictionary
+
+One definition per metric, written down, so that every report divides the same numbers. The conventions come first, because they are where teams quietly diverge.
+
+<FdConventions />
+
+<FdDictionary stage="tof" />
+
+<FdDictionary stage="mof" />
+
+<FdDictionary stage="bof" />
+
+## 10 · The minimum data model
+
+Five normalised tables are enough to compute every number on the dashboard: platform spend and delivery, GA4 events, and three CRM tables for leads, deals and activities.
+
+<FdTables />
+
+If these GA4 events are missing, half of the bottom-of-funnel metrics are fantasy. Each needs its parameters, or the events cannot tell two buttons, two forms or two offers apart.
+
+<FdEvents />
+
+The views below compute the dashboard. The first is platform truth for delivery and cost; the second turns GA4 sessions into paid and qualified sessions with one fixed rule; the third joins everything into the executive page. If the raw GA4 data is the native BigQuery export, with nested parameters, a flattening view into ga4_events comes first — without it the session rollup is garbage.
+
+<FdSql view="vw_tof_paid_media_daily" />
+
+<FdSql view="vw_tof_ga_paid_sessions_daily" />
+
+<FdSql view="vw_bof_speed_to_lead_daily" />
+
+<FdSql view="vw_funnel_daily" />
+
+Every view divides with SAFE_DIVIDE and NULLIF, so a missing denominator returns NULL and stays visible. The stage feeds — the TOF, MOF and BOF dashboard views — are thin wrappers that select only their stage's columns, which is how "no metric leaks into the wrong stage" is enforced in the data rather than in a style guide. All <FdNum k="kb.views" /> views are in the Data page's SQL browser.
+
+## 11 · Cadence and ownership
+
+Each stage has an owner, and each is reviewed at the grain its numbers move at. The top of the funnel moves daily; the bottom moves at the speed of a sales cycle, and reading it daily invites reactions to noise.
+
+<FdCadence />
+
+Ad-platform metrics belong to Growth and Paid Media; GA4 engagement and conversion mechanics to Marketing Ops and Analytics; CRM stage metrics and speed to lead to RevOps and Sales Ops. The CAC and ROAS definitions belong to the analytics lead and are enforced in the BI semantic layer. If ownership is unclear, performance will be too.
+
+## 12 · When a dashboard is a storytelling device
+
+A dashboard that does any of the following is not a dashboard:
+
+- it mixes TOF, MOF and BOF metrics on one page;
+- it optimises ROAS while CTR is broken;
+- it celebrates a conversion rate with no volume behind it.
+
+The test of the one above is the five-minute rule: from a cold start, the reader should know where to act within five minutes. The verdict says it in one line; the rail says why, what to check and what to leave alone; the drill-down says where every number came from. The order of the reading is the order of the work.

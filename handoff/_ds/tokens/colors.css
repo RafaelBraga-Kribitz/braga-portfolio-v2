@@ -1,0 +1,43 @@
+/* ============================================================
+   COLOR — semantic, role-based.
+   Every element renders LIGHT by default. Add `.dark` to any
+   element/subtree to invert it independently — "dark" is a
+   property an element carries, not a special page type.
+   ============================================================ */
+:root {
+  /* base palette (raw values) */
+  --c-off-white:  #E6E6E6;
+  --c-paper:      #DEDEDE;
+  --c-light:      #D6D6D6;
+  --c-mid:        #A0A0A0;
+  --c-dark-grey:  #646464;
+  --c-off-black:  #282828;
+  --c-black:      #282828;
+  --c-orange:     #FA6400;
+  --c-blue:       #5B7FFF;
+
+  /* semantic tokens — LIGHT */
+  --surface:    var(--c-off-white); /* page background */
+  --surface-2:  var(--c-paper);     /* raised / hover wash */
+  --surface-3:  var(--c-light);     /* borders of raised blocks */
+  --ink:        var(--c-off-black); /* primary text */
+  --ink-2:      var(--c-dark-grey); /* secondary text */
+  --mid:        var(--c-mid);       /* numbering, labels, hairlines */
+  --accent-01:  var(--c-orange);    /* primary accent — impact, arrows, status, math */
+  --accent-02:  var(--c-blue);      /* secondary accent — theme-shift moments only */
+
+  /* hairline — primary structural device */
+  --hairline: 1px solid var(--mid);
+}
+
+/* ---- DARK (inverted) ---- */
+.dark {
+  --surface:    #1A1A1A;  /* very dark */
+  --surface-2:  #2D2D2D;  /* dark grey */
+  --surface-3:  #4A4A4A;  /* mid grey */
+  --ink:        #F5F5F5;  /* near white */
+  --ink-2:      #D0D0D0;  /* light grey */
+  --mid:        #808080;  /* medium grey */
+  --accent-01:  var(--c-orange);
+  --accent-02:  var(--c-blue);
+}

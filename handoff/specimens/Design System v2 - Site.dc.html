@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/braga-kribitz-design-system-remix-5791f94c-126d-46ea-bd68-9d0531f6f37b/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/braga-kribitz-design-system-remix-5791f94c-126d-46ea-bd68-9d0531f6f37b/tokens/listing.css">
+  <link rel="stylesheet" href="ds-update/tokens/colors.css">
+  <link rel="stylesheet" href="ds-update/tokens/fonts.css">
+  <link rel="stylesheet" href="ds-update/tokens/typography.css">
+  <link rel="stylesheet" href="ds-update/tokens/spacing.css">
+  <link rel="stylesheet" href="ds-update/tokens/grid.css">
+  <link rel="stylesheet" href="ds-update/tokens/flow.css">
+  <link rel="stylesheet" href="ds-update/tokens/component-fixes.css">
+  <link rel="stylesheet" href="ds-update/proposals/theme.css">
+  <link rel="stylesheet" href="ds-update/proposals/foundations.css">
+  <link rel="stylesheet" href="ds-update/proposals/shell.css">
+  <link rel="stylesheet" href="ds-update/proposals/print.css">
+  <script src="_ds/braga-kribitz-design-system-remix-5791f94c-126d-46ea-bd68-9d0531f6f37b/_ds_bundle.js"></script>
+  <style>
+    body { margin: 0; background: var(--surface); color: var(--ink); font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+    a { color: var(--ink); text-decoration: none; }
+  </style>
+</helmet>
+
+<a class="skip" href="#main">Skip to content</a>
+<div style="min-height: 100vh; background: var(--surface); color: var(--ink); position: relative;">
+
+  <sc-if value="{{ showGrid }}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; inset: 0; pointer-events: none; z-index: 50; overflow: hidden;">
+      <div class="grid-container" style="height: 100%;">
+        <div class="grid" style="height: 100%;">
+          <sc-for list="{{ cols }}" as="c" hint-placeholder-count="12">
+            <div class="col-1" style="height: 100%; background: color-mix(in srgb, var(--accent-01) 7%, transparent); box-shadow: inset 1px 0 0 color-mix(in srgb, var(--accent-01) 40%, transparent), inset -1px 0 0 color-mix(in srgb, var(--accent-01) 40%, transparent);"></div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <header class="grid-container">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; min-height: 64px; padding-block: 16px;">
+      <a href="Design System v2.dc.html" style="font-family: var(--font-display); font-weight: var(--w-display); font-size: 18px; letter-spacing: -0.01em; white-space: nowrap;">Rafael Braga-Kribitz</a>
+      <nav style="display: flex; flex-wrap: wrap; gap: 4px 24px; font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase;">
+        <a href="Design System v2.dc.html" style="color: var(--ink-3); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">← Core</a>
+        <a href="#s01" style="color: var(--ink-2); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">01 Shell</a>
+        <a href="#s02" style="color: var(--ink-2); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">02 Cover</a>
+        <a href="#s03" style="color: var(--ink-2); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">03 Index</a>
+        <a href="#s04" style="color: var(--ink-2); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">04 Document</a>
+        <a href="#s05" style="color: var(--ink-2); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">05 Evidence</a>
+        <a href="#s06" style="color: var(--ink-2); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">06 Bench</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="grid-container">
+
+    <!-- 00 SITE -->
+    <section id="s00" class="section">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">00 · SITE</div>
+        <div class="col-9">
+          <div class="label" style="margin-bottom: 24px;">ABSORBED FROM BRAGA. PORTFOLIO · PRIVATE REVIEW RELEASE · 17 OCT 2026</div>
+          <h1 class="display" style="margin: 0; font-size: var(--t-h1); line-height: var(--lh-tight);">The first output, folded back into the system.</h1>
+          <p class="prose" style="margin: 32px 0 0; font-size: var(--t-lead); color: var(--ink-2);">The portfolio site was built from the v2 export and invented eight page-level patterns along the way. Each is now a v2 pattern, rebuilt on v2 tokens. Where the site drifted from v2 rules, v2 wins and the change is recorded below.</p>
+        </div>
+      </div>
+
+      <div class="listing" style="margin-top: var(--block-gap);">
+        <div class="listing-head"><span class="lr-index">§</span><span class="lr-title">Pattern</span><span class="lr-meta">Site source</span><span class="lr-trail">v2 home</span></div>
+        <sc-for list="{{ ledger }}" as="l" hint-placeholder-count="8">
+          <a class="listing-row" href="{{ l.href }}"><span class="lr-index lr-code">{{ l.n }}</span><span class="lr-title"><span class="lr-title-main">{{ l.title }}</span><span class="lr-title-sub">{{ l.sub }}</span></span><span class="lr-meta lr-mono">{{ l.src }}</span><span class="lr-trail lr-mono lr-dim">{{ l.home }}</span></a>
+        </sc-for>
+      </div>
+
+      <div class="grid" style="margin-top: var(--block-gap);">
+        <div class="col-3 label">Reconciliation</div>
+        <div class="col-9">
+          <div class="rule-t" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.4fr); gap: 16px; padding-block: 8px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2); text-transform: uppercase; letter-spacing: var(--tracking-label);"><span>Site</span><span>v2</span><span>Reason</span></div>
+          <sc-for list="{{ deltas }}" as="d" hint-placeholder-count="9">
+            <div class="rule-t" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.4fr); gap: 16px; padding-block: 12px; align-items: baseline;">
+              <span style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-2); font-variant-numeric: var(--num); overflow-wrap: anywhere;">{{ d.site }}</span>
+              <span style="font-family: var(--font-mono); font-size: var(--t-mono); font-variant-numeric: var(--num); overflow-wrap: anywhere;">{{ d.v2 }}</span>
+              <span style="font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">{{ d.why }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01 SHELL -->
+    <section id="s01" class="section">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">01 · SHELL</div>
+        <div class="col-9">
+          <h2 class="display" style="margin: 0; font-size: var(--t-h2);">A wordmark, four numbered doors, two switches.</h2>
+          <p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">The header carries the IA tree’s first level and nothing else. The current page gets a 1px ink underline. Locale and theme sit to the right as text and a square. The specimen below is live: pick a door, flip the square.</p>
+        </div>
+      </div>
+
+      <div class="{{ shellClass }}" style="margin-top: var(--block-gap); background: var(--surface); color: var(--ink); border-top: var(--hairline);">
+        <div class="shell" lang="en">
+          <div class="shell-bar">
+            <a class="shell-mark" href="#s01">BRAGA</a>
+            <nav class="shell-doors" aria-label="Sections">
+              <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="4">
+                <button class="door" onClick="{{ n.go }}" aria-current="{{ n.current }}" style="padding: 0; border: 0; background: transparent; cursor: pointer;"><span class="door-code">{{ n.code }}</span><span class="door-label">{{ n.label }}</span></button>
+              </sc-for>
+            </nav>
+            <div class="shell-cluster">
+              <a class="shell-lang" href="#s01" hreflang="de">EN<span>/ DE</span></a>
+              <button class="shell-theme" onClick="{{ flipShell }}" type="button" aria-label="Toggle light and dark theme"><span></span></button>
+            </div>
+          </div>
+        </div>
+        <div style="border-top: var(--rule); padding: 24px 16px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px;">
+          <span class="label">Current · {{ navCurrent }}</span>
+          <span class="label" style="color: var(--ink-3);">Header · 80px · opaque surface · hairline below · two rows under 768</span>
+        </div>
+      </div>
+
+      <div class="grid" style="margin-top: var(--block-gap);">
+        <div class="col-3 rule-t" style="padding-top: 12px;"><div class="index">01-01</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: var(--lh-body); color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Wordmark.</span> BRAGA, always uppercase, in the 800 cut (--w-wordmark), −0.07em. The only 800 in the system (D-009, amended 20 Oct 2026).</p></div>
+        <div class="col-3 rule-t" style="padding-top: 12px;"><div class="index">01-02</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: var(--lh-body); color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Doors.</span> Mono code + the section word, sentence case; uppercase mono in the mobile strip. Codes match the home Index.</p></div>
+        <div class="col-3 rule-t" style="padding-top: 12px;"><div class="index">01-03</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: var(--lh-body); color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Theme square.</span> Half-filled on the diagonal, drawn with clip-path. Stored per reader after a click; defaults to the OS.</p></div>
+        <div class="col-3 rule-t" style="padding-top: 12px;"><div class="index">01-04</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: var(--lh-body); color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Below 768.</span> The doors move to a second 44px row under a hairline; below 360 every code, only the current label. No menu, no hamburger (D-028).</p></div>
+      </div>
+
+      <footer style="margin-top: var(--block-gap); border-top: var(--rule-open); padding-top: 48px;">
+        <div class="grid">
+          <sc-for list="{{ footerGroups }}" as="g" hint-placeholder-count="4">
+            <div class="col-3">
+              <div class="label">{{ g.h }}</div>
+              <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 8px;">
+                <sc-for list="{{ g.links }}" as="fl" hint-placeholder-count="3">
+                  <a href="#s01" style="font-size: var(--t-small); line-height: 1.4;">{{ fl }}</a>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="margin-top: 48px; border-top: var(--rule); padding-top: 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px;">
+          <span style="font-family: var(--font-display); font-weight: var(--w-wordmark); font-size: 28.8px; letter-spacing: -0.07em;">BRAGA</span>
+          <p style="margin: 0; text-align: right; font-family: var(--font-mono); font-size: var(--t-mono-sm); line-height: 1.8; color: var(--ink-2);">RAFAEL BRAGA-KRIBITZ<br>GREATER GRAZ, AUSTRIA · EUR<br>PRIVATE REVIEW · COPY AWAITING APPROVAL · 2026</p>
+        </div>
+      </footer>
+    </section>
+
+    <!-- 02 COVER -->
+    <section id="s02" class="section">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">02 · COVER</div>
+        <div class="col-9">
+          <h2 class="display" style="margin: 0; font-size: var(--t-h2);">Index on three columns, claim on nine.</h2>
+          <p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">The home cover is a title page. The left rail is a spec sheet — place, focus, edition. The right holds the name with its one accent mark, the role, one sentence, and a ruled footer that ends in the only call to action.</p>
+        </div>
+      </div>
+
+      <div class="grid" style="margin-top: var(--block-gap); border-top: var(--hairline); padding-top: 64px;">
+        <div class="col-3" style="display: flex; flex-direction: column; justify-content: space-between; gap: 32px; padding-bottom: 16px;">
+          <span class="label" style="color: var(--ink);">00 / Portfolio</span>
+          <dl style="margin: 0; display: flex; flex-direction: column; gap: 16px;">
+            <sc-for list="{{ coverSpec }}" as="cs" hint-placeholder-count="3">
+              <div><dt class="label">{{ cs.k }}</dt><dd style="margin: 4px 0 0; font-size: var(--t-small);">{{ cs.v }}</dd></div>
+            </sc-for>
+          </dl>
+        </div>
+        <div class="col-9" style="min-width: 0;">
+          <p class="label" style="margin: 0; display: flex; align-items: center; gap: 12px; color: var(--ink);"><span style="display: inline-block; width: 8px; height: 8px; background: var(--accent-01); flex-shrink: 0;"></span>Rafael Braga-Kribitz</p>
+          <h3 class="display" style="margin: 24px 0 0; font-size: var(--t-display); line-height: var(--lh-none);">Marketing<br>Data Analyst</h3>
+          <p class="prose" style="margin: 32px 0 0; font-size: var(--t-lead); line-height: 1.5;">Marketing experience, translated into analytical work. Questions about demand, allocation and cost, answered with data and explicit limits.</p>
+          <div style="margin-top: 32px; border-top: var(--rule); padding-block: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 32px;">
+            <span class="label" style="color: var(--ink);">Evidence before claims</span>
+            <span class="label" style="color: var(--ink);">Independent portfolio</span>
+            <a href="#s02" class="label" style="margin-left: auto; color: var(--ink); display: flex; gap: 8px; align-items: center;">Get in touch <span style="color: var(--accent-01);">↗</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 INDEX -->
+    <section id="s03" class="section">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">03 · INDEX</div>
+        <div class="col-9">
+          <h2 class="display" style="margin: 0; font-size: var(--t-h2);">A decision. Its evidence.</h2>
+          <p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">Section heading and listing, as the home page uses them. The heading opens on an ink rule: kicker on three columns, claim on seven, a forward link on two. Rows carry their status as a 7px square, one design per state, always with its label.</p>
+        </div>
+      </div>
+
+      <div class="grid" style="margin-top: var(--block-gap); border-top: var(--rule-open); padding-top: 16px;">
+        <p class="col-3 label" style="margin: 0; color: var(--ink); display: flex; gap: 16px;"><span>01</span><span>Work</span></p>
+        <div class="col-7">
+          <div class="display" style="font-size: var(--t-h3); line-height: var(--lh-snug);">A decision. Its evidence.</div>
+          <p class="prose" style="margin: 16px 0 0; color: var(--ink-2);">Selected analytical projects, with the question, result and limits kept together.</p>
+        </div>
+        <a href="#s03" class="col-2 label" style="color: var(--ink); justify-self: end; align-self: start; display: flex; gap: 12px; white-space: nowrap;">All 5 projects <span>→</span></a>
+      </div>
+
+      <div class="listing" style="margin-top: 32px;">
+        <div class="listing-head"><span class="lr-index">Index</span><span class="lr-title">Project</span><span class="lr-meta">Discipline / status</span><span class="lr-trail">Year</span></div>
+        <sc-for list="{{ projects }}" as="p" hint-placeholder-count="5">
+          <a class="listing-row" href="#s04"><span class="lr-index lr-code">{{ p.code }}</span><span class="lr-title"><span class="lr-title-main">{{ p.title }}</span><span class="lr-title-sub">{{ p.note }}</span></span><span class="lr-meta" style="display: flex; flex-direction: column; gap: 8px;"><span class="lr-mono">{{ p.domain }}</span><span class="status" data-state="{{ p.state }}" style="font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase;">{{ p.status }}</span></span><span class="lr-trail lr-year">2026 <span class="lr-arrow">↗</span></span></a>
+        </sc-for>
+      </div>
+
+      <div class="grid" style="margin-top: var(--block-gap);">
+        <div class="col-3 label">Status vocabulary</div>
+        <div class="col-9" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0 32px;">
+          <sc-for list="{{ statuses }}" as="st" hint-placeholder-count="6">
+            <div class="rule-t" style="padding-block: 12px; display: flex; flex-direction: column; gap: 4px;">
+              <span class="status" data-state="{{ st.state }}" style="font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase;">{{ st.name }}</span>
+              <span style="font-size: var(--t-small); color: var(--ink-2); line-height: 1.4;">{{ st.use }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 DOCUMENT -->
+    <section id="s04" class="section">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">04 · DOCUMENT</div>
+        <div class="col-9">
+          <h2 class="display" style="margin: 0; font-size: var(--t-h2);">Spacing follows the relationship.</h2>
+          <p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">Project and essay pages are flat Markdown. No element sets its own margin; the gap between two siblings comes from how they relate. Six flow tokens cover every pair.</p>
+        </div>
+      </div>
+
+      <div class="grid" style="margin-top: var(--block-gap);">
+        <div class="col-3 label">Flow tokens</div>
+        <div class="col-9">
+          <sc-for list="{{ flows }}" as="f" hint-placeholder-count="6">
+            <div class="rule-t" style="display: grid; grid-template-columns: 128px 40px minmax(0, 1fr) minmax(0, 1.2fr); gap: 16px; align-items: center; padding-block: 10px; font-family: var(--font-mono); font-size: var(--t-mono); font-variant-numeric: var(--num);">
+              <span style="color: var(--ink-2);">{{ f.token }}</span><span>{{ f.px }}</span>
+              <span style="display: block; height: 8px; width: {{ f.w }}; background: var(--ink);"></span>
+              <span style="font-size: var(--t-mono-sm); color: var(--ink-2); overflow-wrap: anywhere;">{{ f.pair }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="margin-top: var(--block-gap); border-top: var(--hairline);">
+        <div class="grid" style="padding-block: 64px 48px;">
+          <div class="col-3"><span class="label" style="display: flex; flex-wrap: wrap; gap: 8px 12px;"><a href="#s03" style="color: var(--ink-2);">01 Work</a><span style="color: var(--ink-3);">→</span><span style="color: var(--ink);">01-04</span></span></div>
+          <div class="col-9" style="min-width: 0;">
+            <h3 class="display" style="margin: 0; font-size: var(--t-h1);">Warehouse humanoid TCO</h3>
+            <p class="prose" style="margin: 24px 0 0; font-size: var(--t-lead); line-height: 1.5; max-width: 720px;">At the modelled demand, humanoids do not yet beat the lean hybrid. A five-year cost model for warehouse pick, move and place work.</p>
+            <div class="label" style="margin-top: 24px; display: flex; flex-wrap: wrap; gap: 8px 16px;"><span>Operations</span><span>Complete</span><span>16 Sep 2026</span><a href="#s04" style="color: var(--ink-2);">Repository ↗</a></div>
+          </div>
+        </div>
+
+        <div class="grid" style="padding-bottom: 64px;">
+          <nav class="col-3" style="min-width: 0;">
+            <div class="label">Contents</div>
+            <ol style="list-style: none; margin: 16px 0 0; padding: 0;">
+              <sc-for list="{{ toc }}" as="t" hint-placeholder-count="6">
+                <li style="padding-block: 6px;">
+                  <button onClick="{{ t.go }}" style="display: flex; gap: 12px; align-items: baseline; padding: 0; border: 0; background: transparent; font: inherit; font-size: var(--t-small); line-height: 1.5; color: {{ t.ink }}; cursor: pointer; text-align: left;">
+                    <span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: {{ t.num }}; font-variant-numeric: var(--num);">{{ t.n }}</span><span>{{ t.title }}</span>
+                  </button>
+                </li>
+              </sc-for>
+            </ol>
+          </nav>
+
+          <article class="col-9" style="min-width: 0;">
+            <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; border-top: var(--rule-open); border-bottom: var(--hairline); padding-block: 24px;">
+              <sc-for list="{{ metrics }}" as="m" hint-placeholder-count="3">
+                <div style="min-width: 0;">
+                  <div style="display: flex; align-items: center; gap: 12px; font-family: var(--font-display); font-weight: var(--w-display); font-size: clamp(30px, 4vw, 50px); letter-spacing: -0.04em; line-height: 1.2; font-variant-numeric: var(--num); color: {{ m.ink }};">{{ m.value }}</div>
+                  <div class="label" style="margin-top: 12px;">{{ m.label }}</div>
+                </div>
+              </sc-for>
+            </div>
+
+            <h4 class="display" style="margin: var(--flow-group) 0 0; font-size: 30px; border-top: var(--hairline); padding-top: 16px;">{{ docSection.title }}</h4>
+            <p class="prose" style="margin: var(--flow-block) 0 0; max-width: var(--measure-doc); line-height: 1.7;">{{ docSection.p1 }}</p>
+            <sc-if value="{{ docSection.hasTable }}" hint-placeholder-val="{{ true }}">
+              <div style="margin-top: var(--flow-block); overflow-x: auto;">
+                <div role="table" aria-label="Five-year present cost by scenario" style="display: flex; flex-direction: column; font-size: var(--t-small);">
+                  <div role="row" style="display: grid; grid-template-columns: minmax(0, 1fr) max-content;">
+                    <div role="columnheader" style="text-align: left; padding: 16px 12px 16px 0; border-top: var(--rule-open); border-bottom: var(--rule);"><span class="label">Scenario</span></div>
+                    <div role="columnheader" style="text-align: right; padding: 16px 0 16px 12px; border-top: var(--rule-open); border-bottom: var(--rule);"><span class="label">Five-year present cost</span></div>
+                  </div>
+                    <sc-for list="{{ tcoRows }}" as="row" hint-placeholder-count="4">
+                      <div role="row" style="display: grid; grid-template-columns: minmax(0, 1fr) max-content;"><div role="cell" style="padding: 16px 12px 16px 0; border-bottom: var(--rule);">{{ row.k }}</div><div role="cell" style="padding: 16px 0 16px 12px; border-bottom: var(--rule); text-align: right; font-family: var(--font-mono); font-size: var(--t-mono); font-variant-numeric: var(--num); color: {{ row.ink }};">{{ row.v }}</div></div>
+                    </sc-for>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ docSection.hasList }}" hint-placeholder-val="{{ false }}">
+              <ul style="margin: var(--flow-related) 0 0; padding-left: 24px; max-width: var(--measure-doc); display: flex; flex-direction: column; gap: 8px; line-height: 1.6;">
+                <sc-for list="{{ docSection.list }}" as="li" hint-placeholder-count="4"><li>{{ li }}</li></sc-for>
+              </ul>
+            </sc-if>
+            <blockquote style="margin: var(--flow-block) 0 0; padding: 24px; background: var(--surface-2); border-top: var(--rule);">
+              <p class="prose" style="margin: 0;">{{ docSection.quote }}</p>
+            </blockquote>
+            <div style="margin-top: var(--flow-group); border-top: var(--hairline); padding-top: 24px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase;">
+              <a href="#s03">← All projects</a><a href="#s04">01-05 Energy procurement →</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 EVIDENCE -->
+    <section id="s05" class="section">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">05 · EVIDENCE</div>
+        <div class="col-9">
+          <h2 class="display" style="margin: 0; font-size: var(--t-h2);">The heading states the finding.</h2>
+          <p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">An evidence figure is a kicker, a sentence that says what the chart shows, the chart, and a caption that gives n, scale and source. Bars are ink on a mid baseline. The source line is mandatory.</p>
+        </div>
+      </div>
+
+      <div class="grid" style="margin-top: var(--block-gap); row-gap: 64px;">
+        <sc-for list="{{ figures }}" as="fg" hint-placeholder-count="3">
+          <figure class="{{ fg.cls }} rule-strong" style="margin: 0; padding-top: 16px; min-width: 0;">
+            <div class="label">{{ fg.kicker }}</div>
+            <div class="display" style="margin-top: 12px; font-size: 21px; line-height: 1.3;">{{ fg.heading }}</div>
+            <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 16px;">
+              <sc-for list="{{ fg.bars }}" as="bar" hint-placeholder-count="4">
+                <div style="display: grid; grid-template-columns: 112px minmax(0, 1fr) 64px; gap: 16px; align-items: center; font-family: var(--font-mono); font-size: var(--t-mono); font-variant-numeric: var(--num);">
+                  <span style="color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ bar.label }}</span>
+                  <span style="position: relative; display: block; height: 18px; border-bottom: 1px solid var(--mid);">
+                    <span style="position: absolute; top: 0; bottom: 0; left: {{ bar.x }}; width: {{ bar.w }}; background: {{ bar.fill }};"></span>
+                    <sc-if value="{{ bar.mid }}" hint-placeholder-val="{{ false }}"><span style="position: absolute; top: -4px; bottom: -4px; left: 50%; width: 1px; background: var(--mid);"></span></sc-if>
+                  </span>
+                  <span style="text-align: right;">{{ bar.v }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <figcaption style="margin-top: 16px; font-family: var(--font-mono); font-size: var(--t-mono-sm); line-height: 1.7; color: var(--ink-2);">{{ fg.cap }}<br><span style="color: var(--ink);">Source:</span> {{ fg.src }}</figcaption>
+          </figure>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- 06 BENCH -->
+    <section id="s06" class="section">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">06 · BENCH</div>
+        <div class="col-9">
+          <h2 class="display" style="margin: 0; font-size: var(--t-h2);">Change an assumption.</h2>
+          <p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">The site’s tool page wraps the v2 tool pattern in a bench: an ink-ruled heading bar, a control column on three, output on nine, and a verdict sentence above the readouts. Disclosed presets, bounded inputs, one stated limit.</p>
+        </div>
+      </div>
+
+      <div style="margin-top: var(--block-gap); border-top: var(--rule-open); border-bottom: var(--hairline); padding-block: 16px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px;">
+        <span class="label" style="color: var(--ink);">04-01 · A/B testing · sample size</span>
+        <span class="label">Two-sided · <span style="text-transform: none;">α</span> = 0.05 · equal arms</span>
+      </div>
+
+      <div class="grid">
+        <div class="col-4" style="padding-top: 24px; display: flex; flex-direction: column; gap: 16px; min-width: 0;">
+          <div class="label">Preset</div>
+          <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.SegmentedControl" items="{{ presetItems }}" active="{{ preset }}" on-change="{{ setPreset }}" hint-size="100%,40px"></x-import>
+          <div class="label rule-t" style="padding-top: 16px;">Inputs</div>
+          <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.RangeSlider" label="Baseline" min="0.5" max="20" step="0.1" unit="%" value="{{ base }}" on-change="{{ setBase }}" label-width="72px" style="width: 100%; display: block;" hint-size="100%,32px"></x-import>
+          <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.RangeSlider" label="Lift" min="2" max="50" step="1" unit="%" value="{{ lift }}" on-change="{{ setLift }}" label-width="72px" style="width: 100%; display: block;" hint-size="100%,32px"></x-import>
+          <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.RangeSlider" label="Visitors/d" min="200" max="20000" step="100" value="{{ traffic }}" on-change="{{ setTraffic }}" label-width="72px" style="width: 100%; display: block;" hint-size="100%,32px"></x-import>
+          <div class="label rule-t" style="padding-top: 16px;">Power</div>
+          <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.SegmentedControl" items="{{ powerItems }}" active="{{ power }}" on-change="{{ setPower }}" hint-size="100%,40px"></x-import>
+          <div style="white-space: nowrap;"><x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.Button" variant="ghost" on-click="{{ resetAb }}" hint-size="64px,32px">Reset</x-import></div>
+          <p class="rule-t" style="margin: 0; padding-top: 16px; font-family: var(--font-mono); font-size: var(--t-mono-sm); line-height: 1.7; color: var(--ink-2);">Limit: normal approximation for two proportions. Does not cover sequential peeking or more than two arms.</p>
+        </div>
+
+        <div class="col-8 vrule" style="padding-top: 24px; min-width: 0;">
+          <p class="display" style="margin: 0; font-size: 21px; line-height: 1.35; text-wrap: pretty;">{{ ab.verdict }}</p>
+          <div style="margin-top: 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px 24px; border-top: var(--rule); border-bottom: var(--rule); padding-block: 16px;">
+            <sc-for list="{{ ab.kpis }}" as="k" hint-placeholder-count="4">
+              <div style="min-width: 0;">
+                <div class="label" style="white-space: nowrap;">{{ k.k }}</div>
+                <div style="margin-top: 12px; font-family: var(--font-mono); font-size: clamp(24px, 2.4vw, 30px); line-height: 1; font-variant-numeric: var(--num); color: {{ k.color }}; white-space: nowrap;">{{ k.v }}</div>
+                <div style="margin-top: 8px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3); overflow-wrap: anywhere;">{{ k.note }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="margin-top: 24px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px;"><span class="label">Fig. 04-01 · Sample per arm against lift</span><span class="label" style="color: var(--ink-3);">log scale · lift 2–50%</span></div>
+          <svg viewBox="0 0 640 260" style="width: 100%; height: auto; display: block; margin-top: 16px; overflow: visible;">
+            <sc-for list="{{ ab.yTicks }}" as="yt" hint-placeholder-count="5">
+              <line x1="48" y1="{{ yt.y }}" x2="612" y2="{{ yt.y }}" stroke="var(--rule-c)" stroke-width="1"></line>
+              <text x="40" y="{{ yt.ty }}" text-anchor="end" style="font-family: var(--font-mono); font-size: 12px; fill: var(--ink-2);">{{ yt.label }}</text>
+            </sc-for>
+            <line x1="48" y1="232" x2="612" y2="232" stroke="var(--mid)" stroke-width="1"></line>
+            <sc-for list="{{ ab.xTicks }}" as="xt" hint-placeholder-count="5">
+              <line x1="{{ xt.x }}" y1="232" x2="{{ xt.x }}" y2="238" stroke="var(--mid)" stroke-width="1"></line>
+              <text x="{{ xt.x }}" y="254" text-anchor="middle" style="font-family: var(--font-mono); font-size: 12px; fill: var(--ink-2);">{{ xt.label }}</text>
+            </sc-for>
+            <line x1="48" y1="{{ ab.capY }}" x2="612" y2="{{ ab.capY }}" stroke="var(--ink-2)" stroke-width="1" stroke-dasharray="3 3"></line>
+            <text x="612" y="{{ ab.capTy }}" text-anchor="end" style="font-family: var(--font-mono); font-size: 12px; fill: var(--ink-2);">8-week ceiling at this traffic</text>
+            <path d="{{ ab.curve }}" fill="none" stroke="var(--ink)" stroke-width="1.75"></path>
+            <line x1="{{ ab.cx }}" y1="{{ ab.cy }}" x2="{{ ab.cx }}" y2="232" stroke="var(--accent-01)" stroke-width="1" stroke-dasharray="2 3"></line>
+            <rect x="{{ ab.rx }}" y="{{ ab.ry }}" width="10" height="10" fill="var(--accent-01)"></rect>
+          </svg>
+        </div>
+      </div>
+
+      <div class="grid rule-t" style="margin-top: 32px; padding-top: 16px; align-items: baseline;">
+        <div class="col-4 label">Rule</div>
+        <div class="col-8" style="min-width: 0;">
+          <div style="font-family: var(--font-mono); font-size: var(--t-mono); font-variant-numeric: var(--num); line-height: 1.9; overflow-wrap: anywhere;">n = (z₁₋α/₂ + z₁₋β)² · [p₁(1−p₁) + p₂(1−p₂)] / (p₂ − p₁)²</div>
+          <div style="font-family: var(--font-mono); font-size: var(--t-mono); font-variant-numeric: var(--num); line-height: 1.9; color: var(--ink-2); overflow-wrap: anywhere;">{{ ab.eqLive }}</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="grid-container">
+    <div class="grid rule-strong" style="padding-block: 32px 48px;">
+      <div class="col-6" style="font-family: var(--font-display); font-weight: var(--w-display); font-size: 18px;">Rafael Braga-Kribitz</div>
+      <div class="col-3 label">Design System · v2.1 · Site</div>
+      <div class="col-3 label" style="text-align: right;">flow.css · new</div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showGrid&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Structure&quot;},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;dark&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;}}">
+const AB_DEF = { base: 4, lift: 10, traffic: 2000, power: '80', preset: 'Checkout' };
+const PRESETS = { Checkout: { base: 4, lift: 10, traffic: 2000 }, Signup: { base: 12, lift: 15, traffic: 600 }, Pricing: { base: 1.5, lift: 20, traffic: 8000 } };
+const Z_A = 1.959964, Z_B = { '80': 0.841621, '90': 1.281552 };
+const r1 = n => Math.round(n * 10) / 10;
+const fmtN = n => !isFinite(n) ? '—' : n >= 1e6 ? (n / 1e6).toFixed(2) + 'M' : Math.round(n).toLocaleString('en-US');
+
+const SECTIONS = [
+  { title: 'Question', p1: 'At what price, demand and staffing level would a humanoid fleet become the cheaper way to run pick, move and place work in a warehouse?', quote: 'At the modelled demand, it does not yet. One person with three autonomous mobile robots has the lowest five-year present cost.' },
+  { title: 'Data', p1: 'Capability assumptions use 2,359 episodes from five public UnifoLM datasets pinned by hash — household demonstrations used as a warehouse proxy.', quote: 'They are not measurements from a deployed warehouse fleet.' },
+  { title: 'Method', p1: 'Discrete-event simulation across seven scenarios and 15 replicas each, at 120 orders per hour, then 10,000 Monte Carlo draws per scenario:', hasList: true, list: ['Extract capability and timing assumptions.', 'Simulate seven scenarios, utilisation capped at 0.85.', 'Propagate uncertainty through the draws.', 'Sobol sensitivity and a capital-price breakeven search.'], quote: 'An earlier unequal-crew comparison was corrected through a tracked finding.' },
+  { title: 'Result', p1: 'These are the four scenario totals supplied in the brief; the other three are not invented. The lean hybrid’s capital requirement is €195,000.', hasTable: true, quote: 'The lean hybrid wins 99.8% of the evaluated draws.' },
+  { title: 'Limitations', p1: 'The ranking holds only under the stated assumptions:', hasList: true, list: ['Household tasks are an imperfect proxy for warehouse operations.', 'Public capital-cost assumptions are not binding supplier quotes.', 'Collective-agreement labour rates may understate real local costs.'], quote: 'The model does not establish a universal ranking for all warehouses.' },
+  { title: 'Decision', p1: 'Under these assumptions, deploy the lean hybrid and defer humanoids. Revisit under higher demand, labour scarcity or multiple shifts.', quote: 'Evidence record: supplied project inventory, 16 September 2026. Currency: EUR throughout.' }
+];
+
+class Component extends DCLogic {
+  state = { nav: '01', shellDark: false, sec: 3, ...AB_DEF };
+
+  componentDidMount() { this.apply(); }
+  componentDidUpdate() { this.apply(); }
+  apply() {
+    const theme = (this.props.theme ?? 'light') === 'dark' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+    document.body.classList.toggle('dark', theme === 'dark');
+    document.documentElement.setAttribute('data-accent', this.props.accent ?? 'ultramarine');
+  }
+
+  ab() {
+    const s = this.state, zb = Z_B[s.power];
+    const n = (b, l) => { const p1 = b / 100, p2 = p1 * (1 + l / 100); if (p2 >= 1) return Infinity; return Math.ceil((Z_A + zb) ** 2 * (p1 * (1 - p1) + p2 * (1 - p2)) / (p2 - p1) ** 2); };
+    const per = n(s.base, s.lift), total = per * 2, days = Math.ceil(total / s.traffic), weeks = Math.ceil(days / 7);
+    const cap = s.traffic * 56 / 2;
+    const L0 = 2, L1 = 50, Y0 = 2, Y1 = 7;
+    const sx = l => 48 + (l - L0) / (L1 - L0) * 564;
+    const sy = v => { const lv = Math.log10(Math.max(10 ** Y0, Math.min(10 ** Y1, v))); return 232 - (lv - Y0) / (Y1 - Y0) * 220; };
+    let curve = '';
+    for (let l = L0; l <= L1; l += 0.5) curve += (l === L0 ? 'M' : 'L') + r1(sx(l)) + ' ' + r1(sy(n(s.base, l))) + ' ';
+    const cx = r1(sx(s.lift)), cy = r1(sy(per)), capY = r1(sy(cap));
+    const ok = days <= 56;
+    const p1 = s.base / 100, p2 = p1 * (1 + s.lift / 100);
+    return {
+      verdict: ok
+        ? 'Testable. ' + fmtN(per) + ' visitors per arm reach a ' + s.lift + '% lift in ' + days + ' days — run ' + weeks + ' full week' + (weeks > 1 ? 's' : '') + '.'
+        : 'Not testable at this traffic. ' + days + ' days exceeds the eight-week ceiling; accept a larger lift or add traffic.',
+      kpis: [
+        { k: 'Per arm', v: fmtN(per), note: 'visitors', color: 'var(--ink)' },
+        { k: 'Total', v: fmtN(total), note: 'two arms', color: 'var(--ink)' },
+        { k: 'Duration', v: days + ' d', note: ok ? weeks + ' full week' + (weeks > 1 ? 's' : '') + ' · within the 8-week ceiling' : 'over the 8-week ceiling', color: 'var(--ink)' },
+        { k: 'Absolute MDE', v: (p2 * 100 - s.base).toFixed(2) + ' pp', note: s.base.toFixed(1) + '% → ' + (p2 * 100).toFixed(2) + '%', color: 'var(--ink)' }
+      ],
+      curve, cx, cy, rx: cx - 5, ry: cy - 5, capY, capTy: capY - 6,
+      yTicks: [2, 3, 4, 5, 6, 7].map(e => ({ y: r1(sy(10 ** e)), ty: r1(sy(10 ** e) + 4), label: e >= 6 ? (10 ** (e - 6)) + 'M' : (10 ** (e - 3)) + 'k' })).map(t => t.label === '0.1k' ? { ...t, label: '100' } : t),
+      xTicks: [10, 20, 30, 40, 50].map(l => ({ x: r1(sx(l)), label: l + '%' })),
+      eqLive: 'n = (1.960 + ' + zb.toFixed(3) + ')² · [' + p1.toFixed(4) + '·' + (1 - p1).toFixed(4) + ' + ' + p2.toFixed(4) + '·' + (1 - p2).toFixed(4) + '] / ' + (p2 - p1).toFixed(4) + '² = ' + fmtN(per)
+    };
+  }
+
+  renderVals() {
+    const s = this.state;
+    const set = (k, lo, hi) => v => this.setState({ [k]: Math.max(lo, Math.min(hi, v)), preset: null });
+    const NAV = [['01', 'Work'], ['02', 'Writing'], ['03', 'About'], ['04', 'Tools']];
+    const sec = SECTIONS[s.sec];
+    const ledgerSrc = [
+      ['01', 'Site header + footer', 'Wordmark, numbered doors, locale, theme square; four link groups over a wordmark bar.', 'Shell.astro', '#s01', '01 Shell'],
+      ['02', 'Cover', 'Spec-sheet rail on 3, name + role + one sentence on 9, ruled CTA footer.', 'index · .cover', '#s02', '02 Cover'],
+      ['03', 'Section heading', 'Ink opening rule; kicker 3 / claim 7 / forward link 2.', 'index · .section-heading', '#s03', '03 Index'],
+      ['04', 'Listing + status marks', 'Project, essay and tool rows on one four-stop grid; square status mark.', 'Listing.astro', '#s03', 'listing.css'],
+      ['05', 'Page opener + document', 'Trail, title, lead, meta; contents rail on 3, flat Markdown on 9.', 'base.css · .doc', '#s04', 'flow.css · new'],
+      ['06', 'Metric strip', 'Three figures between an ink rule and a hairline; one takes the accent.', 'base.css · .metric-strip', '#s04', '04 Document'],
+      ['07', 'Evidence figure', 'Kicker, finding-as-heading, bars, caption with n, scale and source.', 'Evidence.astro', '#s05', '05 Evidence'],
+      ['08', 'Tool bench', 'Heading bar, controls 3 / output 9, verdict sentence, stated limit.', 'tools.css · ToolBench.tsx', '#s06', 'Core 06 Tools']
+    ];
+    return {
+      showGrid: this.props.showGrid ?? false,
+      cols: Array.from({ length: 12 }, () => ({})),
+      ledger: ledgerSrc.map(([n, title, sub, src, href, home]) => ({ n, title, sub, src, href, home })),
+      deltas: [
+        { site: '--accent #E8431A', v2: 'accent-01 · ultramarine', why: 'Decided 20 Oct 2026. #2F4BE0 light · #7C93FF dark, 5.3:1 and 6.2:1. Colour-blind safe against IBCS red/green.' },
+        { site: 'mono 8–11px', v2: 't-mono-sm 12 · t-mono 13', why: 'Below the v2 floor. Labels, captions and footer notes move up one step.' },
+        { site: 'header 88% + blur(16px)', v2: 'opaque surface', why: 'v2 is flat and opaque. The sticky header keeps its hairline instead.' },
+        { site: 'h1 cover 900, −0.055em', v2: 'w-display · t-display', why: 'One heading weight. 900 survives only in the BRAGA wordmark (--w-wordmark).' },
+        { site: '1px solid ink (unnamed)', v2: '--rule-open · new', why: 'Opens a block: section heading, metric strip, table head, footer. Never between rows.' },
+        { site: 'blockquote 2px left rule', v2: 'surface-2 wash + rule-t', why: 'Rules are 1px only, and v2 has no side-accent containers.' },
+        { site: '--s1 … --s10', v2: 'space-h … space-16', why: 'Same 8px values under v2 names. --s3 (12px) maps to the 4px half-step pair.' },
+        { site: '--related … --section', v2: '--flow-* · new', why: 'Relationship spacing becomes a token set. Mobile steps down the same way.' },
+        { site: 'TOC active = bold 700', v2: 'ink + accent number', why: 'Emphasis by weight would add a second heading weight. Colour moves one step instead.' }
+      ],
+
+      navItems: NAV.map(([code, label]) => ({ code, label, current: s.nav === code ? 'page' : 'false', go: () => this.setState({ nav: code }) })),
+      navCurrent: NAV.find(n => n[0] === s.nav).join(' '),
+      shellClass: s.shellDark ? 'dark' : '',
+      flipShell: () => this.setState(st => ({ shellDark: !st.shellDark })),
+      footerGroups: [
+        { h: 'Index', links: ['01 work', '02 writing', '03 about', '04 tools'] },
+        { h: 'Site', links: ['Home', 'Contact', 'Language'] },
+        { h: 'Elsewhere', links: ['GitHub ↗', 'LinkedIn ↗', 'Kaggle ↗'] },
+        { h: 'Others', links: ['Sitemap', 'RSS', 'Impressum', 'Privacy', 'Accessibility'] }
+      ],
+
+      coverSpec: [{ k: 'Based in', v: 'Greater Graz, Austria' }, { k: 'Focus', v: 'Marketing · Data · Decisions' }, { k: 'Edition', v: 'October 2026' }],
+
+      projects: [
+        { code: '01-01', title: 'Austria data-job market intelligence', note: '720 core postings. A dated view of titles, skills and regional demand.', domain: 'Labour market', status: 'Complete', state: 'complete' },
+        { code: '01-02', title: 'Austrian MMM and budget optimiser', note: 'Bayesian media-mix modelling. A budget decision with a downside check.', domain: 'Marketing', status: 'Under revision', state: 'under-revision' },
+        { code: '01-03', title: 'Decision analytics reconstruction', note: 'A three-module reconstruction. Allocation gains are proxies, not campaign effects.', domain: 'Decision science', status: 'Functional', state: 'functional' },
+        { code: '01-04', title: 'Warehouse humanoid TCO', note: '€453,000 over five years. One person and three mobile robots lead the model.', domain: 'Operations', status: 'Complete', state: 'complete' },
+        { code: '01-05', title: 'Energy procurement risk analyser', note: 'From electricity-price records to a cost-risk decision. In build.', domain: 'Energy', status: 'In build', state: 'in-build' }
+      ],
+      /* D-029: five states, one square each (complete ■ · functional ▣ · under-revision ▤ · in-build □ · archived ⊡) */
+      statuses: [
+        { name: 'Complete', use: 'Shipped; the result stands. Filled.', state: 'complete' },
+        { name: 'Functional', use: 'Works end to end; the scope is stated. Filled centre in an outline.', state: 'functional' },
+        { name: 'Under revision', use: 'A flaw was found and is being fixed — said plainly. Half filled.', state: 'under-revision' },
+        { name: 'In build', use: 'Not yet a result. Outline.', state: 'in-build' },
+        { name: 'Archived', use: 'Kept for the record; no longer maintained. Dotted outline.', state: 'archived' }
+      ],
+
+      flows: [['--flow-related', 8, 'p → ul directly under it'], ['--flow-element', 16, 'p → p · h3 → text'], ['--flow-block', 32, 'h2 → text · ↔ figure, table, quote'], ['--flow-lead', 48, 'text → h3'], ['--flow-group', 64, 'metric strip → h2 · → end bar'], ['--flow-section', 96, 'text → h2']]
+        .map(([token, px, pair]) => ({ token, px: String(px), w: (px / 96 * 100) + '%', pair })),
+      toc: SECTIONS.map((x, i) => ({ n: String(i + 1).padStart(2, '0'), title: x.title, ink: i === s.sec ? 'var(--ink)' : 'var(--ink-2)', num: i === s.sec ? 'var(--accent-01)' : 'var(--ink-3)', go: () => this.setState({ sec: i }) })),
+      docSection: { title: sec.title, p1: sec.p1, quote: sec.quote, hasTable: !!sec.hasTable, hasList: !!sec.hasList, list: sec.list || [] },
+      metrics: [{ value: '€453k', label: 'Lowest five-year present cost', ink: 'var(--accent-01)' }, { value: '€0.374', label: 'Cost per order', ink: 'var(--ink)' }, { value: '99.8%', label: 'Draws won by lean hybrid', ink: 'var(--ink)' }],
+      tcoRows: [{ k: 'One person + three AMRs', v: '€453,000', ink: 'var(--accent-01)' }, { k: 'Human-only operation', v: '€647,000', ink: 'var(--ink)' }, { k: 'Best humanoid case', v: '€2,533,000', ink: 'var(--ink)' }, { k: 'Pure humanoid operation', v: '€2,878,000', ink: 'var(--ink)' }],
+
+      figures: [
+        { cls: 'col-12', kicker: 'Figure 01 · Skill mentions', heading: 'SQL and Python lead the snapshot.', cap: 'Share of 720 core postings. Scale: 0–100%. Multiple mentions allowed.', src: 'supplied project record, 16 Sep 2026. Shares rounded; incomplete coverage.',
+          bars: [['SQL', 40], ['Python', 35], ['Azure', 19], ['Power BI', 18], ['Tableau', 3]].map(([label, v]) => ({ label, v: v + '%', x: '0%', w: v + '%', fill: 'var(--ink)', mid: false })) },
+        { cls: 'col-6', kicker: 'Figure 02 · Region', heading: '54 postings assigned to Styria.', cap: 'n = 720. Primary-state basis; tentative regional cell. Other = 720 − 54.', src: 'project snapshot, 16 Sep 2026.',
+          bars: [['Styria', 54], ['Other', 666]].map(([label, v]) => ({ label, v: String(v), x: '0%', w: (v / 720 * 100).toFixed(2) + '%', fill: 'var(--ink)', mid: false })) },
+        { cls: 'col-6', kicker: 'Figure 03 · Annual flow', heading: 'Styria moves against the national trend.', cap: 'Change, 2020–2025; centre line = zero; range −50% to +50%.', src: 'AMS Data Scientist class, as reported in the brief.',
+          bars: [['Austria', -28], ['Styria', 34]].map(([label, v]) => ({ label, v: (v < 0 ? '−' : '+') + Math.abs(v) + '%', x: (v < 0 ? 50 + v : 50) + '%', w: Math.abs(v) + '%', fill: 'var(--ink)', mid: true })) }
+      ],
+
+      presetItems: Object.keys(PRESETS), preset: s.preset,
+      setPreset: v => this.setState({ ...PRESETS[v], preset: v }),
+      powerItems: [{ id: '80', label: '80%' }, { id: '90', label: '90%' }], power: s.power, setPower: v => this.setState({ power: v }),
+      base: s.base, lift: s.lift, traffic: s.traffic,
+      setBase: set('base', 0.5, 20), setLift: set('lift', 2, 50), setTraffic: set('traffic', 200, 20000),
+      resetAb: () => this.setState({ ...AB_DEF }),
+      ab: this.ab()
+    };
+  }
+}
+</script>
+</body>
+</html>

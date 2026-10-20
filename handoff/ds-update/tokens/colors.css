@@ -1,0 +1,53 @@
+/* ============================================================
+   COLOR — v2 accent (load after the base colors.css)
+   D-00x · 2026-10-20 · Ultramarine is the single accent.
+   One hue, two values — lifted on dark so both reach text contrast:
+
+     light  #2F4BE0   5.3:1 on #E6E6E6
+     dark   #7C93FF   6.2:1 on #1A1A1A
+
+   Chosen over emerald / vermilion / cobalt / Austrian red / violet /
+   petrol: stays distinct from IBCS red and green under deuteranopia
+   and protanopia, so the accent never reads as a variance.
+   Low contrast against ink (~2:1) — sit it on surface, never on ink.
+   ============================================================ */
+:root { --accent-01: #2F4BE0; }
+:root .dark,
+.dark { --accent-01: #7C93FF; }
+
+/* ============================================================
+   NEUTRALS — v2 · 20 Oct 2026 · cool tint toward ultramarine
+   (OKLCH hue 265, chroma 0.005–0.008), same lightness as v1.
+   Text greys: two on light (no room for a third at 4.5:1), so
+   --ink-3 = --ink-2 there. --mid is hairlines only, never text.
+
+   light  ink 11.8 · ink-2/3 5.4 on surface, 5.0 on surface-2
+   dark   ink 15.9 · ink-2 11.3 · ink-3 6.1 on surface, 4.8 on s-2
+   ============================================================ */
+:root {
+  --c-off-white: #E4E6EA;
+  --c-paper:     #DCDEE2;
+  --c-light:     #D4D6DA;
+  --c-mid:       #9EA0A5;
+  --c-dark-grey: #5A5C61;
+  --c-off-black: #26282C;
+  --c-black:     #26282C;
+  --surface:   #E4E6EA;
+  --surface-2: #DCDEE2;
+  --surface-3: #D4D6DA;
+  --ink:       #26282C;
+  --ink-2:     #5A5C61;
+  --ink-3:     #5A5C61;  /* numbering, recessive text */
+  --mid:       #9EA0A5;  /* hairlines only */
+  --rule-c:    #C2C4CA;
+}
+.dark {
+  --surface:   #191A1D;
+  --surface-2: #2C2D30;
+  --surface-3: #484A4D;
+  --ink:       #F3F5F9;
+  --ink-2:     #CED0D4;
+  --ink-3:     #97999D;
+  --mid:       #7E8084;
+  --rule-c:    #393A3D;
+}

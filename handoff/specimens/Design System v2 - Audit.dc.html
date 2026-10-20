@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#E4E6EA">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#191A1D">
+  <link rel="stylesheet" href="_ds/braga-kribitz-design-system-remix-5791f94c-126d-46ea-bd68-9d0531f6f37b/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/braga-kribitz-design-system-remix-5791f94c-126d-46ea-bd68-9d0531f6f37b/tokens/listing.css">
+  <link rel="stylesheet" href="_ds/braga-kribitz-design-system-remix-5791f94c-126d-46ea-bd68-9d0531f6f37b/tokens/chart-palettes.css">
+  <link rel="stylesheet" href="ds-update/tokens/colors.css">
+  <link rel="stylesheet" href="ds-update/tokens/chart-palettes.css">
+  <link rel="stylesheet" href="ds-update/tokens/ibcs.css">
+  <link rel="stylesheet" href="ds-update/tokens/fonts.css">
+  <link rel="stylesheet" href="ds-update/tokens/typography.css">
+  <link rel="stylesheet" href="ds-update/tokens/spacing.css">
+  <link rel="stylesheet" href="ds-update/tokens/grid.css">
+  <link rel="stylesheet" href="ds-update/tokens/flow.css">
+  <link rel="stylesheet" href="ds-update/tokens/component-fixes.css">
+  <link rel="stylesheet" href="ds-update/proposals/theme.css" data-proposal="theme">
+  <link rel="stylesheet" href="ds-update/proposals/foundations.css" data-proposal="foundations">
+  <link rel="stylesheet" href="ds-update/proposals/shell.css" data-proposal="shell">
+  <link rel="stylesheet" href="ds-update/proposals/doc.css" data-proposal="doc">
+  <link rel="stylesheet" href="ds-update/proposals/print.css">
+  <script src="_ds/braga-kribitz-design-system-remix-5791f94c-126d-46ea-bd68-9d0531f6f37b/_ds_bundle.js"></script>
+  <style>
+    body { margin: 0; background: var(--surface); color: var(--ink); font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+    a { color: var(--ink); text-decoration: none; }
+    a:hover { color: var(--ink); }
+  </style>
+</helmet>
+
+<a class="skip" href="#main">Skip to content</a>
+<div style="min-height: 100vh; background: var(--surface); color: var(--ink); position: relative;">
+
+  <sc-if value="{{ showGrid }}" hint-placeholder-val="{{ false }}">
+    <div data-gate-skip style="position: fixed; inset: 0; pointer-events: none; z-index: 50; overflow: hidden;">
+      <div class="grid-container" style="height: 100%;">
+        <div class="grid" style="height: 100%;">
+          <sc-for list="{{ cols }}" as="c" hint-placeholder-count="12">
+            <div class="col-1" style="height: 100%; background: color-mix(in srgb, var(--accent-01) 7%, transparent); outline: 1px solid color-mix(in srgb, var(--accent-01) 40%, transparent); outline-offset: -1px;"></div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <header class="grid-container">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; min-height: 64px; padding-block: 16px;">
+      <a href="Design System v2.dc.html" style="font-family: var(--font-display); font-weight: var(--w-display); font-size: 18px; letter-spacing: -0.01em; white-space: nowrap; min-height: 32px; display: inline-flex; align-items: center;">Rafael Braga-Kribitz</a>
+      <nav aria-label="Audit sections" style="display: flex; flex-wrap: wrap; gap: 4px 24px; font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase;">
+        <a href="Design System v2.dc.html" style="color: var(--ink-3); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">← Core</a>
+        <a href="Design System v2 - Site.dc.html" style="color: var(--ink-3); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">Site</a>
+        <a href="#s01" style="color: var(--ink-2); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">01 Gates</a>
+        <a href="#s02" style="color: var(--ink-2); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">02 Findings</a>
+        <a href="#s03" style="color: var(--ink-2); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">03 Proposals</a>
+        <a href="#s04" style="color: var(--ink-2); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">04 Records</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="grid-container">
+
+    <!-- 00 AUDIT -->
+    <section id="s00" class="section" data-screen-label="00 Audit">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">00 · AUDIT</div>
+        <div class="col-9">
+          <div class="label" style="margin-bottom: 24px;">BRAGA KRIBITZ DESIGN SYSTEM · V2.1 · AUDIT · 20 OCT 2026 · EVERY CHANGE REVERSIBLE</div>
+          <h1 class="display" style="margin: 0; font-size: var(--t-h1); line-height: var(--lh-tight);">What the system says, measured against what it does.</h1>
+          <p class="prose" style="margin: 32px 0 0; font-size: var(--t-lead); color: var(--ink-2);">Three specimen pages and nine token files were read against CLAUDE.md, the restart brief and the handoff list. {{ nFindings }} findings follow, then eleven proposals. After the owner’s review the proposals are adopted into every specimen with his corrections — BRAGA uppercase, the accent as text, five status squares, chart marks that clear 3:1 — and the switches stay here for before and after. Originals are backed up; section 04 is the record.</p>
+        </div>
+      </div>
+
+      <div class="grid" style="margin-top: var(--block-gap);">
+        <div class="col-3 label">By class</div>
+        <div class="col-9" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 24px 32px; border-top: var(--rule-open); border-bottom: var(--hairline); padding-block: 24px;">
+          <sc-for list="{{ classCounts }}" as="cc" hint-placeholder-count="4">
+            <div style="min-width: 0;">
+              <div style="font-family: var(--font-display); font-weight: var(--w-display); font-size: clamp(30px, 4vw, 50px); letter-spacing: -0.04em; line-height: 1.1; font-variant-numeric: var(--num);">{{ cc.n }}</div>
+              <div class="label" style="margin-top: 12px; color: var(--ink);">{{ cc.name }}</div>
+              <div style="margin-top: 4px; font-size: var(--t-small); color: var(--ink-2); line-height: 1.4; text-wrap: pretty;">{{ cc.def }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div class="grid" style="margin-top: var(--block-gap);">
+        <div class="col-3 label">How to cherry-pick</div>
+        <div class="col-9">
+          <div class="rule-t" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 16px 32px; padding-block: 12px; font-size: var(--t-small); line-height: 1.5;"><span style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-2);">Keep a proposal</span><span>Keep its file under <code style="font-family: var(--font-mono); font-size: 0.9em;">ds-update/proposals/</code>. Each file says what it answers and where it folds into the handover tree.</span></div>
+          <div class="rule-t" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 16px 32px; padding-block: 12px; font-size: var(--t-small); line-height: 1.5;"><span style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-2);">Drop a proposal</span><span>Delete the file and its link in this page’s head. Nothing else references it.</span></div>
+          <div class="rule-t" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 16px 32px; padding-block: 12px; font-size: var(--t-small); line-height: 1.5;"><span style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-2);">Try before deciding</span><span>Tweaks carries one switch per stylesheet proposal (theme, foundations, shell, document). Off shows the page as it was.</span></div>
+          <div class="rule-t rule-b" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 16px 32px; padding-block: 12px; font-size: var(--t-small); line-height: 1.5; border-bottom: var(--rule);"><span style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-2);">Undo an applied fix</span><span>Copy the page back from <code style="font-family: var(--font-mono); font-size: 0.9em;">_parked/pre-audit/</code>. Section 04 lists every applied change.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01 GATES -->
+    <section id="s01" class="section" data-screen-label="01 Gates">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">01 · GATES</div>
+        <div class="col-9">
+          <h2 class="display" style="margin: 0; font-size: var(--t-h2);">A rule you have not seen fail is not a gate.</h2>
+          <p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">Thirteen checks run against the rendered page, not its source: computed colours, rendered font sizes, target boxes, overflow, heading order, stylesheet rules, loaded fonts, and every resource’s origin. Run them on this page, or on the other specimens at three widths. Failures there are expected — they are what the proposals answer. Scaled previews on this page are excluded and say so.</p>
+        </div>
+      </div>
+
+      <div class="rule-t" style="margin-top: var(--block-gap); padding-top: 16px; display: flex; flex-wrap: wrap; gap: 16px 32px; align-items: flex-end;">
+        <div><div class="label" style="margin-bottom: 8px;">Page</div><x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.SegmentedControl" items="{{ gatePages }}" active="{{ gateTarget }}" on-change="{{ setGateTarget }}" hint-size="280px,40px"></x-import></div>
+        <div><div class="label" style="margin-bottom: 8px;">Frame width</div><x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.SegmentedControl" items="{{ gateWidths }}" active="{{ gateWidth }}" on-change="{{ setGateWidth }}" hint-size="200px,40px"></x-import></div>
+        <div style="white-space: nowrap; padding-bottom: 2px;"><x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.Button" on-click="{{ runGates }}" hint-size="96px,32px">Run gates</x-import></div>
+        <div style="flex: 1 1 220px; min-width: 0; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2); line-height: 1.6; overflow-wrap: anywhere; padding-bottom: 6px;">{{ gateNote }}</div>
+      </div>
+
+      <sc-if value="{{ hasGates }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top: 32px; border-top: var(--rule-open); padding-block: 16px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px;">
+          <span class="label" style="color: var(--ink);">{{ gatePass }} pass · {{ gateFail }} fail</span>
+          <span class="label">{{ gateNote }}</span>
+        </div>
+        <div style="border-top: var(--rule);">
+          <sc-for list="{{ gates }}" as="g" hint-placeholder-count="12">
+            <div class="rule-t" style="display: grid; grid-template-columns: 56px minmax(0, 1fr) 80px; gap: 16px; padding-block: 14px; align-items: start;">
+              <span class="index">{{ g.id }}</span>
+              <div style="min-width: 0;">
+                <div style="display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline;"><span style="font-weight: 700; font-size: var(--t-small);">{{ g.name }}</span><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">{{ g.summary }}</span></div>
+                <sc-if value="{{ g.hasOffenders }}" hint-placeholder-val="{{ false }}">
+                  <ul style="margin: 8px 0 0; padding: 0; list-style: none; display: grid; gap: 4px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2); overflow-wrap: anywhere;">
+                    <sc-for list="{{ g.offenders }}" as="o" hint-placeholder-count="0"><li>{{ o }}</li></sc-for>
+                  </ul>
+                </sc-if>
+              </div>
+              <span style="justify-self: end; font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase; color: {{ g.ink }}; white-space: nowrap;">{{ g.glyph }} {{ g.word }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+      <sc-if value="{{ noGates }}" hint-placeholder-val="{{ true }}">
+        <div class="rule-t" style="margin-top: 32px; padding-top: 16px; font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-2);">{{ gateNote }}</div>
+      </sc-if>
+    </section>
+
+    <!-- 02 FINDINGS -->
+    <section id="s02" class="section" data-screen-label="02 Findings">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">02 · FINDINGS</div>
+        <div class="col-9">
+          <h2 class="display" style="margin: 0; font-size: var(--t-h2);">{{ nFindings }} items, ranked by what they break.</h2>
+          <p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">Fail breaks a stated rule or a WCAG criterion. Drift contradicts a settled decision. Missing is a plan item with no design yet. Polish is finish. The last column names the proposal that answers the item, or the fix already applied.</p>
+        </div>
+      </div>
+
+      <div style="margin-top: var(--block-gap); display: flex; flex-wrap: wrap; align-items: center; gap: 16px 32px;">
+        <div class="label">Show</div>
+        <div><x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.SegmentedControl" items="{{ filterItems }}" active="{{ filter }}" on-change="{{ setFilter }}" hint-size="360px,40px"></x-import></div>
+      </div>
+
+      <div class="listing" style="margin-top: 32px;">
+        <div class="listing-head"><span class="lr-index">§</span><span class="lr-title">Finding</span><span class="lr-meta">Where · class</span><span class="lr-trail">Answer</span></div>
+        <sc-for list="{{ findings }}" as="f" hint-placeholder-count="12">
+          <a class="listing-row" href="{{ f.href }}">
+            <span class="lr-index lr-code">{{ f.id }}</span>
+            <span class="lr-title"><span class="lr-title-main" style="font-size: 1.0625rem; line-height: 1.3;">{{ f.title }}</span><span class="lr-title-sub" style="font-size: var(--t-small); line-height: 1.45; margin-top: 6px;">{{ f.sub }}</span></span>
+            <span class="lr-meta" style="display: flex; flex-direction: column; gap: 6px;"><span class="lr-mono" style="overflow-wrap: anywhere;">{{ f.where }}</span><span class="label" style="color: var(--ink);">{{ f.cls }}</span></span>
+            <span class="lr-trail lr-mono" style="white-space: normal; max-width: 100%;">{{ f.answer }}</span>
+          </a>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- 03 PROPOSALS -->
+    <section id="s03" class="section" data-screen-label="03 Proposals">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">03 · PROPOSALS</div>
+        <div class="col-9">
+          <h2 class="display" style="margin: 0; font-size: var(--t-h2);">Eleven changes, adopted. One file or one switch each.</h2>
+          <p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">Ordered from the model down to finish: how the page gets its theme, the global rules every page inherits, what the accent is allowed to do, the header at 320, the glyphs and states the system is permitted to use, proofs that the type does what the rules claim, the contrast matrix, the rendered markdown document, formatting by language, the share card, print.</p>
+        </div>
+      </div>
+
+      <!-- P-01 THEME -->
+      <div id="p01" class="grid rule-strong" style="margin-top: var(--block-gap); padding-top: 16px; row-gap: 24px;">
+        <div class="col-3">
+          <div class="index">P-01</div>
+          <h3 class="display" style="margin: 8px 0 0; font-size: var(--t-h3); line-height: var(--lh-snug);">Theme model</h3>
+          <p style="margin: 12px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">The page reads its theme from <code style="font-family: var(--font-mono); font-size: 0.9em;">data-theme</code> on the root, falls back to the OS, and defaults to light. A 158-byte pre-paint script applies a stored choice before first paint; the toggle writes storage only after a click. Every dark value lives in one file, and form controls follow the page, not the OS.</p>
+          <div class="rule-t" style="margin-top: 16px; padding-top: 12px; display: grid; gap: 6px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);"><span>Answers A-18 · A-19</span><span>proposals/theme.css</span><span style="color: var(--ink);">{{ pThemeState }}</span></div>
+        </div>
+        <div class="col-9" style="min-width: 0;">
+          <div class="grid" style="row-gap: 24px;">
+            <div class="col-5" style="min-width: 0;">
+              <div class="label" style="margin-bottom: 8px;">Set the page theme</div>
+              <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.SegmentedControl" items="{{ themeItems }}" active="{{ themeChoice }}" on-change="{{ setThemeChoice }}" hint-size="100%,40px"></x-import>
+              <div class="rule-t" style="margin-top: 16px; display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 8px 24px; padding-block: 12px; font-family: var(--font-mono); font-size: var(--t-mono); font-variant-numeric: var(--num); overflow-wrap: anywhere;">
+                <span style="color: var(--ink-2);">html[data-theme]</span><span>{{ themeAttr }}</span>
+                <span style="color: var(--ink-2);">prefers-color-scheme</span><span>{{ osScheme }}</span>
+                <span style="color: var(--ink-2);">resolved</span><span>{{ themeResolved }}</span>
+                <span style="color: var(--ink-2);">color-scheme, computed</span><span>{{ csComputed }}</span>
+              </div>
+              <div class="dark" style="margin-top: 16px; padding: 20px 24px; background: var(--surface); color: var(--ink); border-top: var(--hairline);">
+                <div class="label" style="display: flex; align-items: center; gap: 12px; color: var(--ink);"><span style="display: inline-block; width: 7px; height: 7px; background: var(--accent-01);"></span>Moment block</div>
+                <p style="margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">An element with <code style="font-family: var(--font-mono); font-size: 0.9em;">.dark</code> still inverts alone. Its accent, rules and chart scales resolve inside it, whatever the page is doing.</p>
+              </div>
+            </div>
+            <div class="col-7" style="min-width: 0;">
+              <div class="label" style="margin-bottom: 8px;">Pre-paint script · first in head · hashed for the CSP</div>
+              <pre style="margin: 0; padding: 16px 20px; background: var(--surface-2); border-top: var(--rule); font-family: var(--font-mono); font-size: var(--t-mono-sm); line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink);">&lt;script&gt;(function(){try{var t=localStorage.getItem('bk-theme');
+if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}
+catch(e){}})()&lt;/script&gt;
+&lt;meta name="theme-color" media="(prefers-color-scheme: light)" content="#E4E6EA"&gt;
+&lt;meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#191A1D"&gt;</pre>
+              <div class="label" style="margin: 24px 0 8px;">Resolution · theme.css</div>
+              <pre style="margin: 0; padding: 16px 20px; background: var(--surface-2); border-top: var(--rule); font-family: var(--font-mono); font-size: var(--t-mono-sm); line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink);">:root                      { color-scheme: light; }
+:root[data-theme="dark"]   { color-scheme: dark; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { color-scheme: dark; }
+}
+:root[data-theme="dark"], .dark { --surface: #191A1D; … }   /* copy 1 */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --surface: #191A1D; … } /* copy 2 */
+}</pre>
+              <p style="margin: 16px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">Two copies of the dark block are unavoidable (attribute and media query); the build’s token-mirror test keeps them equal. The toggle flips the resolved theme, sets the attribute, then writes <code style="font-family: var(--font-mono); font-size: 0.9em;">bk-theme</code> and updates the theme-color meta. On adoption the five <code style="font-family: var(--font-mono); font-size: 0.9em;">.dark</code> blocks in the token files are deleted; theme.css is their one home.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P-02 FOUNDATIONS -->
+      <div id="p02" class="grid rule-strong" style="margin-top: var(--block-gap); padding-top: 16px; row-gap: 24px;">
+        <div class="col-3">
+          <div class="index">P-02</div>
+          <h3 class="display" style="margin: 8px 0 0; font-size: var(--t-h3); line-height: var(--lh-snug);">Foundations</h3>
+          <p style="margin: 12px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">Ten global rules the brief requires and no token file carried. Each is an independent block in the file; reject them one at a time.</p>
+          <div class="rule-t" style="margin-top: 16px; padding-top: 12px; display: grid; gap: 6px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);"><span>Answers A-01 · A-02 · A-03 · A-05 · A-06 · A-07 · A-08 · A-21 · A-37</span><span>proposals/foundations.css</span><span style="color: var(--ink);">{{ pFoundState }}</span></div>
+        </div>
+        <div class="col-9" style="min-width: 0;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); column-gap: 32px; row-gap: 0;">
+            <div class="rule-t" style="padding-block: 16px 24px; min-width: 0;">
+              <div class="index">02-01</div>
+              <p style="margin: 8px 0 12px; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Focus is an ink ring.</span> 2px outline, 2px gap, every control. Both Button variants share one height, 28px. Tab through these.</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+                <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.Button" hint-size="96px,32px">Default</x-import>
+                <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.Button" variant="ghost" hint-size="96px,32px">Ghost</x-import>
+                <a href="#p02" class="label" style="color: var(--ink); min-height: 32px; display: inline-flex; align-items: center; gap: 8px;">Row link <span aria-hidden="true">→</span></a>
+              </div>
+            </div>
+            <div class="rule-t" style="padding-block: 16px 24px; min-width: 0;">
+              <div class="index">02-02</div>
+              <p style="margin: 8px 0 12px; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Control edges reach 3:1.</span> <code style="font-family: var(--font-mono); font-size: 0.9em;">--edge</code> replaces <code style="font-family: var(--font-mono); font-size: 0.9em;">--mid</code> on boundaries; switch and range grow to 24px.</p>
+              <div style="display: grid; gap: 12px;">
+                <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.SegmentedControl" items="{{ demoSegItems }}" active="{{ demoSeg }}" on-change="{{ setDemoSeg }}" hint-size="100%,40px"></x-import>
+                <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.Toggle" checked="{{ demoToggle }}" on-change="{{ setDemoToggle }}" label="Confidence band" hint-size="200px,24px"></x-import>
+                <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.RangeSlider" label="Holdout" min="0" max="50" step="1" unit="%" value="{{ demoRange }}" on-change="{{ setDemoRange }}" label-width="64px" style="width: 100%; display: block;" hint-size="100%,24px"></x-import>
+              </div>
+            </div>
+            <div class="rule-t" style="padding-block: 16px 24px; min-width: 0;">
+              <div class="index">02-03</div>
+              <p style="margin: 8px 0 12px; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Links in text are underlined.</span> A hairline, offset below the descenders; hover moves it to ink and does not spend the accent on every link.</p>
+              <p class="prose" style="margin: 0; font-size: var(--t-small);">The model resolved 1,240,991 rows in 38&nbsp;s; the method is in the <a href="#p08">project record</a>, the data in the <a href="#p08">repository</a>.</p>
+            </div>
+            <div class="rule-t" style="padding-block: 16px 24px; min-width: 0;">
+              <div class="index">02-04</div>
+              <p style="margin: 8px 0 12px; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Mid grey is never text.</span> Listing heads, codes and dimmed meta move to <code style="font-family: var(--font-mono); font-size: 0.9em;">--ink-3</code>: 5.4:1 instead of 2.1:1.</p>
+              <div style="display: flex; gap: 24px; font-family: var(--font-mono); font-size: var(--t-mono);"><span class="lr-code">01-04</span><span class="lr-mono lr-dim">Operations</span><span class="lr-label">Index</span></div>
+            </div>
+            <div class="rule-t" style="padding-block: 16px 24px; min-width: 0;">
+              <div class="index">02-05</div>
+              <p style="margin: 8px 0 12px; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Targets.</span> 24px everywhere, 44px below 768. Nav and footer links take block height; the text does not move.</p>
+              <div style="display: flex; flex-direction: column; gap: 0; font-size: var(--t-small);"><a href="#p02" style="min-height: 24px; display: inline-flex; align-items: center;">Impressum</a><a href="#p02" style="min-height: 24px; display: inline-flex; align-items: center;">Privacy</a><a href="#p02" style="min-height: 24px; display: inline-flex; align-items: center;">Accessibility</a></div>
+            </div>
+            <div class="rule-t" style="padding-block: 16px 24px; min-width: 0;">
+              <div class="index">02-06</div>
+              <p style="margin: 8px 0 12px; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">The rest is one line each.</span></p>
+              <div style="display: grid; gap: 6px; font-family: var(--font-mono); font-size: var(--t-mono-sm); line-height: 1.5; color: var(--ink-2); overflow-wrap: anywhere;">
+                <span>@media (prefers-reduced-motion) → --dur: 0ms</span>
+                <span>html → scroll-padding-top: 96px</span>
+                <span>.skip → first tab stop (press Tab now)</span>
+                <span>.prose, .doc → hyphens: auto; titles manual</span>
+                <span>td, dd, input → font-variant-numeric: var(--num)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P-03 ACCENT AS A MARK -->
+      <div id="p03" class="grid rule-strong" style="margin-top: var(--block-gap); padding-top: 16px; row-gap: 24px;">
+        <div class="col-3">
+          <div class="index">P-03</div>
+          <h3 class="display" style="margin: 8px 0 0; font-size: var(--t-h3); line-height: var(--lh-snug);">The accent, decided</h3>
+          <p style="margin: 12px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">Owner decision, 20 Oct 2026: the accent may be text. Its two values were chosen for exactly that — 5.3:1 on the light surface, 6.2:1 on dark — so the one figure a view earns is set in the accent, as the site did. The 7px square stays the mark beside a name or a code. What does not change: at most one earned figure per section, siblings in ink-2, and no judgement by colour — a verdict is a word. Gate G-04 now checks that accent text clears 4.5:1 where it sits; on the raised dark surface it does not (3.2:1), so accent text stays on the page surface and the wash. The “never a text colour” sentence is removed from CLAUDE.md so nothing regresses.</p>
+          <div class="rule-t" style="margin-top: 16px; padding-top: 12px; display: grid; gap: 6px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);"><span>Answers A-09 · A-10 · A-11</span><span>decision D-025 · CLAUDE.md amended · G-04</span><span style="color: var(--ink);">Decided · the mark-only form is kept for the record</span></div>
+        </div>
+        <div class="col-9" style="min-width: 0;">
+          <div class="grid" style="row-gap: 32px;">
+            <div class="col-6" style="min-width: 0;">
+              <div class="label" style="margin-bottom: 12px; color: var(--ink);">Decided · the earned figure in the accent · verdicts in words</div>
+              <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; border-top: var(--rule-open); border-bottom: var(--hairline); padding-block: 20px;">
+                <div><div style="font-family: var(--font-display); font-weight: var(--w-display); font-size: clamp(26px, 3vw, 40px); letter-spacing: -0.04em; line-height: 1.1; font-variant-numeric: var(--num); color: var(--accent-01);">€453k</div><div class="label" style="margin-top: 10px;">Lowest cost</div></div>
+                <div><div style="font-family: var(--font-display); font-weight: var(--w-display); font-size: clamp(26px, 3vw, 40px); letter-spacing: -0.04em; line-height: 1.1; font-variant-numeric: var(--num);">€0.374</div><div class="label" style="margin-top: 10px;">Per order</div></div>
+                <div><div style="font-family: var(--font-display); font-weight: var(--w-display); font-size: clamp(26px, 3vw, 40px); letter-spacing: -0.04em; line-height: 1.1; font-variant-numeric: var(--num);">99.8%</div><div class="label" style="margin-top: 10px;">Draws won</div></div>
+              </div>
+              <div style="margin-top: 16px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; border-top: var(--rule); border-bottom: var(--rule); padding-block: 12px;">
+                <div><div class="label">Duration</div><div style="margin-top: 8px; font-family: var(--font-mono); font-size: 24px; line-height: 1; font-variant-numeric: var(--num); color: var(--ink);">40 d</div><div style="margin-top: 6px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">6 full weeks · within the 8-week ceiling</div></div>
+                <div><div class="label">Contents</div><div style="margin-top: 8px; display: grid; gap: 4px; font-size: var(--t-small);"><span style="display: flex; gap: 10px; color: var(--ink-2);"><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3);">01</span>Question</span><span style="display: flex; gap: 10px;"><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--accent-01);">02</span>Data</span><span style="display: flex; gap: 10px; color: var(--ink-2);"><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3);">03</span>Method</span></div></div>
+              </div>
+              <p style="margin: 12px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">The earned value and the active contents code are accent text; the Duration verdict was accent-when-feasible and is now ink with the verdict spelt out, because the accent carries no judgement.</p>
+            </div>
+            <div class="col-6" style="min-width: 0;">
+              <div class="label" style="margin-bottom: 12px;">Kept for the record · mark only · not adopted</div>
+              <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; border-top: var(--rule-open); border-bottom: var(--hairline); padding-block: 20px;">
+                <div><div style="display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: var(--w-display); font-size: clamp(26px, 3vw, 40px); letter-spacing: -0.04em; line-height: 1.1; font-variant-numeric: var(--num); color: var(--ink);"><span style="display: inline-block; width: 7px; height: 7px; flex: none; background: var(--accent-01);"></span>€453k</div><div class="label" style="margin-top: 10px;">Lowest cost</div></div>
+                <div><div style="font-family: var(--font-display); font-weight: var(--w-display); font-size: clamp(26px, 3vw, 40px); letter-spacing: -0.04em; line-height: 1.1; font-variant-numeric: var(--num); color: var(--ink-2);">€0.374</div><div class="label" style="margin-top: 10px;">Per order</div></div>
+                <div><div style="font-family: var(--font-display); font-weight: var(--w-display); font-size: clamp(26px, 3vw, 40px); letter-spacing: -0.04em; line-height: 1.1; font-variant-numeric: var(--num); color: var(--ink-2);">99.8%</div><div class="label" style="margin-top: 10px;">Draws won</div></div>
+              </div>
+              <div style="margin-top: 16px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; border-top: var(--rule); border-bottom: var(--rule); padding-block: 12px;">
+                <div><div class="label">Duration</div><div style="margin-top: 8px; font-family: var(--font-mono); font-size: 24px; line-height: 1; font-variant-numeric: var(--num); color: var(--ink);">40 d</div><div style="margin-top: 6px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">6 full weeks · within the 8-week ceiling</div></div>
+                <div><div class="label">Contents</div><div style="margin-top: 8px; display: grid; gap: 4px; font-size: var(--t-small);"><span style="display: flex; gap: 10px; align-items: center; color: var(--ink-2);"><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3);">01</span>Question</span><span style="display: flex; gap: 10px; align-items: center; position: relative;"><span style="position: absolute; left: -15px; width: 7px; height: 7px; background: var(--accent-01);"></span><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink);">02</span>Data</span><span style="display: flex; gap: 10px; align-items: center; color: var(--ink-2);"><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3);">03</span>Method</span></div></div>
+              </div>
+              <p style="margin: 12px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">The alternative the audit first proposed: value in ink, a 7px square saying which one earned it. Not adopted; it stays here so the choice is visible.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P-04 SHELL -->
+      <div id="p04" class="grid rule-strong" style="margin-top: var(--block-gap); padding-top: 16px; row-gap: 24px;">
+        <div class="col-3">
+          <div class="index">P-04</div>
+          <h3 class="display" style="margin: 8px 0 0; font-size: var(--t-h3); line-height: var(--lh-snug);">Shell at 320, 390, 768</h3>
+          <p style="margin: 12px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">No hamburger. Below 768 the header becomes two rows: the wordmark with the two switches, then the four numbered doors spread edge to edge under a hairline, each 44px tall. German’s four labels need 331px, so below 360 its strip goes compact — every code, only the current label — while English (277px) keeps all four down to 300. One DOM, responsive through a container query, so the frames here are the real header at those widths.</p>
+          <div class="rule-t" style="margin-top: 16px; padding-top: 12px; display: grid; gap: 6px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);"><span>Answers A-08 · A-20 · A-21 · A-22</span><span>proposals/shell.css</span><span style="color: var(--ink);">{{ pShellState }}</span></div>
+        </div>
+        <div class="col-9" style="min-width: 0;">
+          <div style="display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start;">
+            <div style="width: 320px; max-width: 100%; --gutter: 16px;">
+              <div class="label" style="margin-bottom: 8px;">320 · EN · two rows</div>
+              <div class="shell" lang="en" style="border: var(--rule);">
+                <div class="shell-bar">
+                  <a class="shell-mark" href="#p04">BRAGA</a>
+                  <nav class="shell-doors" aria-label="Sections">
+                    <a class="door" href="#p04" aria-current="page"><span class="door-code">01</span><span class="door-label">Work</span></a>
+                    <a class="door" href="#p04"><span class="door-code">02</span><span class="door-label">Writing</span></a>
+                    <a class="door" href="#p04"><span class="door-code">03</span><span class="door-label">About</span></a>
+                    <a class="door" href="#p04"><span class="door-code">04</span><span class="door-label">Tools</span></a>
+                  </nav>
+                  <div class="shell-cluster">
+                    <a class="shell-lang" href="#p04" hreflang="de">EN<span>/ DE</span></a>
+                    <button class="shell-theme" type="button" aria-label="Switch theme"><span></span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style="width: 320px; max-width: 100%; --gutter: 16px;">
+              <div class="label" style="margin-bottom: 8px;">320 · DE · compact strip</div>
+              <div class="shell" lang="de" style="border: var(--rule);">
+                <div class="shell-bar">
+                  <a class="shell-mark" href="#p04">BRAGA</a>
+                  <nav class="shell-doors" aria-label="Bereiche">
+                    <a class="door" href="#p04"><span class="door-code">01</span><span class="door-label">Arbeit</span></a>
+                    <a class="door" href="#p04" aria-current="page"><span class="door-code">02</span><span class="door-label">Schreiben</span></a>
+                    <a class="door" href="#p04"><span class="door-code">03</span><span class="door-label">Über</span></a>
+                    <a class="door" href="#p04"><span class="door-code">04</span><span class="door-label">Werkzeuge</span></a>
+                  </nav>
+                  <div class="shell-cluster">
+                    <a class="shell-lang" href="#p04" hreflang="en">DE<span>/ EN</span></a>
+                    <button class="shell-theme" type="button" aria-label="Thema wechseln"><span></span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style="width: 390px; max-width: 100%; --gutter: 16px;">
+              <div class="label" style="margin-bottom: 8px;">390 · DE · all four labels fit</div>
+              <div class="shell" lang="de" style="border: var(--rule);">
+                <div class="shell-bar">
+                  <a class="shell-mark" href="#p04">BRAGA</a>
+                  <nav class="shell-doors" aria-label="Bereiche">
+                    <a class="door" href="#p04"><span class="door-code">01</span><span class="door-label">Arbeit</span></a>
+                    <a class="door" href="#p04"><span class="door-code">02</span><span class="door-label">Schreiben</span></a>
+                    <a class="door" href="#p04" aria-current="page"><span class="door-code">03</span><span class="door-label">Über</span></a>
+                    <a class="door" href="#p04"><span class="door-code">04</span><span class="door-label">Werkzeuge</span></a>
+                  </nav>
+                  <div class="shell-cluster">
+                    <a class="shell-lang" href="#p04" hreflang="en">DE<span>/ EN</span></a>
+                    <button class="shell-theme" type="button" aria-label="Thema wechseln"><span></span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top: 32px; overflow-x: auto;">
+            <div class="label" style="margin-bottom: 8px;">768 and up · one row, 80px · scrolls sideways in a narrow preview</div>
+            <div class="shell" lang="en" style="border: var(--rule); width: 768px; --gutter: 32px;">
+              <div class="shell-bar">
+                <a class="shell-mark" href="#p04">BRAGA</a>
+                <nav class="shell-doors" aria-label="Sections">
+                  <a class="door" href="#p04"><span class="door-code">01</span><span class="door-label">Work</span></a>
+                  <a class="door" href="#p04"><span class="door-code">02</span><span class="door-label">Writing</span></a>
+                  <a class="door" href="#p04" aria-current="page"><span class="door-code">03</span><span class="door-label">About</span></a>
+                  <a class="door" href="#p04"><span class="door-code">04</span><span class="door-label">Tools</span></a>
+                </nav>
+                <div class="shell-cluster">
+                  <a class="shell-lang" href="#p04" hreflang="de">EN<span>/ DE</span></a>
+                  <button class="shell-theme" type="button" aria-label="Switch theme"><span></span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="grid" style="margin-top: 24px;">
+            <div class="col-4 rule-t" style="padding-top: 12px;"><div class="index">04-01</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Wordmark.</span> BRAGA — always uppercase, in every case, everywhere (owner, 20 Oct 2026, amending D-009). 800, −0.07em.</p></div>
+            <div class="col-4 rule-t" style="padding-top: 12px;"><div class="index">04-02</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Theme square.</span> Drawn with clip-path, not a gradient. Half ink on the diagonal; the halves swap with the theme. 44px target.</p></div>
+            <div class="col-4 rule-t" style="padding-top: 12px;"><div class="index">04-03</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Language.</span> A link to the mirrored page, with hreflang — not a toggle. The current language is ink, the other ink-2.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P-05 GLYPHS · STATUS · GERMAN -->
+      <div id="p05" class="grid rule-strong" style="margin-top: var(--block-gap); padding-top: 16px; row-gap: 24px;">
+        <div class="col-3">
+          <div class="index">P-05</div>
+          <h3 class="display" style="margin: 8px 0 0; font-size: var(--t-h3); line-height: var(--lh-snug);">Glyphs, states, German</h3>
+          <p style="margin: 12px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">Attempt 1 listed the glyph set as two in one file and nine in another. Here it is written once. The status vocabulary closes to five frontmatter values, each with its own square — the mark alone tells them apart, the label confirms it; “interactive” is a kind of page, “copy review” a workflow flag that never reaches the public build. German chrome labels are drafted so 320 could be tested — they stay draft until approved.</p>
+          <div class="rule-t" style="margin-top: 16px; padding-top: 12px; display: grid; gap: 6px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);"><span>Answers A-17 · HANDOFF open items</span><span>decision · DECISIONS.md</span><span style="color: var(--ink);">Tables · no switch</span></div>
+        </div>
+        <div class="col-9" style="min-width: 0;">
+          <div class="grid" style="row-gap: 32px;">
+            <div class="col-6" style="min-width: 0;">
+              <div class="label" style="margin-bottom: 8px; color: var(--ink);">Glyph inventory · the whole set</div>
+              <div style="border-top: var(--rule-open);">
+                <div class="rule-t" style="display: grid; grid-template-columns: 40px minmax(0, 1fr) minmax(0, 1.2fr); gap: 16px; padding-block: 10px; font-size: var(--t-small); line-height: 1.4;"><span style="font-family: var(--font-mono);">→</span><span>Forward, internal link, footnote back</span><span style="color: var(--ink-2);">Grey; accent on hover of its row</span></div>
+                <div class="rule-t" style="display: grid; grid-template-columns: 40px minmax(0, 1fr) minmax(0, 1.2fr); gap: 16px; padding-block: 10px; font-size: var(--t-small); line-height: 1.4;"><span style="font-family: var(--font-mono);">↗</span><span>External or deployed link</span><span style="color: var(--ink-2);">Same behaviour</span></div>
+                <div class="rule-t" style="display: grid; grid-template-columns: 40px minmax(0, 1fr) minmax(0, 1.2fr); gap: 16px; padding-block: 10px; font-size: var(--t-small); line-height: 1.4;"><span style="font-family: var(--font-mono);">←</span><span>Back to the parent index</span><span style="color: var(--ink-2);">End bar, trail</span></div>
+                <div class="rule-t" style="display: grid; grid-template-columns: 40px minmax(0, 1fr) minmax(0, 1.2fr); gap: 16px; padding-block: 10px; font-size: var(--t-small); line-height: 1.4;"><span style="font-family: var(--font-mono);">§</span><span>Index prefix and the end mark</span><span style="color: var(--ink-2);">§ END · home index only</span></div>
+                <div class="rule-t" style="display: grid; grid-template-columns: 40px minmax(0, 1fr) minmax(0, 1.2fr); gap: 16px; padding-block: 10px; font-size: var(--t-small); line-height: 1.4;"><span style="font-family: var(--font-mono);">·</span><span>Separator inside a mono line</span><span style="color: var(--ink-2);">Meta rows, figure labels</span></div>
+                <div class="rule-t" style="display: grid; grid-template-columns: 40px minmax(0, 1fr) minmax(0, 1.2fr); gap: 16px; padding-block: 10px; font-size: var(--t-small); line-height: 1.4;"><span style="font-family: var(--font-mono);">▲</span><span>Alert — with vermilion in charts, ink in a warning callout</span><span style="color: var(--ink-2);">Never colour alone</span></div>
+                <div class="rule-t" style="display: grid; grid-template-columns: 40px minmax(0, 1fr) minmax(0, 1.2fr); gap: 16px; padding-block: 10px; font-size: var(--t-small); line-height: 1.4;"><span style="display: inline-block; width: 7px; height: 7px; background: var(--accent-01); margin-top: 6px;"></span><span>Accent: the one earned figure per view as text, the active code, and the 7px square beside a name</span><span style="color: var(--ink-2);">At most one figure per section · ≥ 4.5:1 where it sits</span></div>
+                <div class="rule-t" style="display: grid; grid-template-columns: 40px minmax(0, 1fr) minmax(0, 1.2fr); gap: 16px; padding-block: 10px; font-size: var(--t-small); line-height: 1.4;"><span style="display: flex; gap: 5px; margin-top: 6px;"><span class="status" data-state="complete"></span><span class="status" data-state="functional"></span><span class="status" data-state="under-revision"></span><span class="status" data-state="in-build"></span><span class="status" data-state="archived"></span></span><span>Status squares, 7px: filled · centred · half · outline · dotted — one design per state</span><span style="color: var(--ink-2);">Always with its text label</span></div>
+                <div class="rule-t" style="display: grid; grid-template-columns: 40px minmax(0, 1fr) minmax(0, 1.2fr); gap: 16px; padding-block: 10px; font-size: var(--t-small); line-height: 1.4;"><span style="font-family: var(--font-mono);">+ −</span><span>Fold state of a details block</span><span style="color: var(--ink-2);">Plain signs, mono</span></div>
+                <div class="rule-t" style="display: grid; grid-template-columns: 40px minmax(0, 1fr) minmax(0, 1.2fr); gap: 16px; padding-block: 10px; font-size: var(--t-small); line-height: 1.4; border-bottom: var(--rule);"><span style="font-family: var(--font-mono);">− – …</span><span>Minus, range dash, ellipsis</span><span style="color: var(--ink-2);">Typographic, never -, -- or ...</span></div>
+              </div>
+              <p style="margin: 12px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">Not in the set: ↑ ↓ ▾ ✕, any icon, any emoji. The vermilion ▲ exists only inside charts.</p>
+            </div>
+            <div class="col-6" style="min-width: 0;">
+              <div class="label" style="margin-bottom: 8px; color: var(--ink);">Status · closed enum · one square per state · frontmatter value → label</div>
+              <div style="border-top: var(--rule-open);">
+                <div class="rule-t" style="display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 16px; padding-block: 10px; font-size: var(--t-small); line-height: 1.4;"><span class="status" data-state="complete" style="font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase;">Complete</span><span><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">complete</span> · Shipped; the result stands.</span></div>
+                <div class="rule-t" style="display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 16px; padding-block: 10px; font-size: var(--t-small); line-height: 1.4;"><span class="status" data-state="functional" style="font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase;">Functional</span><span><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">functional</span> · Works end to end; the scope is stated.</span></div>
+                <div class="rule-t" style="display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 16px; padding-block: 10px; font-size: var(--t-small); line-height: 1.4;"><span class="status" data-state="under-revision" style="font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase;">Under revision</span><span><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">under-revision</span> · A flaw was found and is being fixed; said plainly.</span></div>
+                <div class="rule-t" style="display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 16px; padding-block: 10px; font-size: var(--t-small); line-height: 1.4;"><span class="status" data-state="in-build" style="font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase;">In build</span><span><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">in-build</span> · Not yet a result. The plain outline.</span></div>
+                <div class="rule-t" style="display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 16px; padding-block: 10px; font-size: var(--t-small); line-height: 1.4; border-bottom: var(--rule);"><span class="status" data-state="archived" style="font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase;">Archived</span><span><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">archived</span> · Kept for the record; no longer maintained.</span></div>
+              </div>
+              <p style="margin: 12px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">Dropped from the vocabulary: “Interactive” (a page type) and “Copy review” (drafts are never built, so the public site cannot show one). Decision for Rafael.</p>
+
+              <div class="label" style="margin: 32px 0 8px; color: var(--ink);">German chrome · draft, awaiting approval</div>
+              <div style="border-top: var(--rule-open); font-size: var(--t-small); line-height: 1.4;">
+                <div class="rule-t" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding-block: 8px;"><span>01 Work · 02 Writing · 03 About · 04 Tools</span><span lang="de">01 Arbeit · 02 Schreiben · 03 Über · 04 Werkzeuge</span></div>
+                <div class="rule-t" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding-block: 8px;"><span>Index · Site · Elsewhere · Others</span><span lang="de">Index · Seite · Anderswo · Sonstiges</span></div>
+                <div class="rule-t" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding-block: 8px;"><span>Skip to content · Contents · Source · § END</span><span lang="de">Zum Inhalt springen · Inhalt · Quelle · § ENDE</span></div>
+                <div class="rule-t" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding-block: 8px;"><span>Complete · Functional · Under revision · In build · Archived</span><span lang="de">Abgeschlossen · Funktionsfähig · In Überarbeitung · Im Aufbau · Archiviert</span></div>
+                <div class="rule-t" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding-block: 8px; border-bottom: var(--rule);"><span>Long-form documents remain in English.</span><span lang="de">Langtexte bleiben auf Englisch.</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P-06 TYPE PROOFS -->
+      <div id="p06" class="grid rule-strong" style="margin-top: var(--block-gap); padding-top: 16px; row-gap: 24px;">
+        <div class="col-3">
+          <div class="index">P-06</div>
+          <h3 class="display" style="margin: 8px 0 0; font-size: var(--t-h3); line-height: var(--lh-snug);">Type, proven</h3>
+          <p style="margin: 12px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">Attempt 1 wrote “tabular lining figures and slashed zero everywhere” and shipped neither for eleven weeks. This block measures: equal advance widths for 1111 and 0000 under tabular-nums, ink at the centre of a rendered zero, and the loaded faces. The large figures below are where the BKribitz cut shows itself — the slashed zero and the 800 wordmark — so the type never reads as stock Geist.</p>
+          <div class="rule-t" style="margin-top: 16px; padding-top: 12px; display: grid; gap: 6px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);"><span>Answers A-26 · HANDOFF 17</span><span>proposals/checks.js · typeProofs()</span><span style="color: var(--ink);">Live · measured on load</span></div>
+        </div>
+        <div class="col-9" style="min-width: 0;">
+          <div style="border-top: var(--rule-open); border-bottom: var(--hairline); padding-block: 24px; display: flex; flex-wrap: wrap; gap: 16px 48px; align-items: baseline;">
+            <span style="font-family: var(--font-display); font-weight: var(--w-display); font-size: clamp(48px, 7vw, 96px); line-height: 1; letter-spacing: -0.04em; font-variant-numeric: var(--num);">0123456789</span>
+            <span style="font-family: var(--font-display); font-weight: var(--w-wordmark); font-size: clamp(40px, 5vw, 64px); line-height: 1; letter-spacing: -0.04em;">BRAGA</span>
+          </div>
+          <div style="margin-top: 16px; display: flex; flex-wrap: wrap; gap: 16px 48px; align-items: baseline; font-size: 40px; line-height: 1;">
+            <span style="font-family: var(--font-display); font-variant-numeric: var(--num);">0 O <span style="font-size: 13px; color: var(--ink-2); font-family: var(--font-mono);">BKribitz · zero against capital O</span></span>
+            <span style="font-family: var(--font-mono); font-variant-numeric: var(--num);">0 O 1,240,991 <span style="font-size: 13px; color: var(--ink-2);">BKribitz Mono</span></span>
+          </div>
+          <div style="margin-top: 24px; border-top: var(--rule-open);">
+            <sc-for list="{{ proofRows }}" as="pr" hint-placeholder-count="7">
+              <div class="rule-t" style="display: grid; grid-template-columns: 24px minmax(0, 1fr) minmax(0, 1.6fr); gap: 16px; padding-block: 10px; align-items: baseline; font-size: var(--t-small); line-height: 1.4;">
+                <span style="font-family: var(--font-mono); color: {{ pr.ink }};">{{ pr.glyph }}</span>
+                <span>{{ pr.name }}</span>
+                <span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2); overflow-wrap: anywhere;">{{ pr.note }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <!-- P-07 CONTRAST MATRIX -->
+      <div id="p07" class="grid rule-strong" style="margin-top: var(--block-gap); padding-top: 16px; row-gap: 24px;">
+        <div class="col-3">
+          <div class="index">P-07</div>
+          <h3 class="display" style="margin: 8px 0 0; font-size: var(--t-h3); line-height: var(--lh-snug);">Contrast matrix, computed</h3>
+          <p style="margin: 12px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">Every text and mark token on every surface, both themes, read from the loaded stylesheets at run time — so the table cannot go stale when a hex changes. Text needs 4.5:1; marks and control edges 3:1; hairlines are reported, not judged. The on-fill pairs check the text that sits inside accent and categorical fills.</p>
+          <div class="rule-t" style="margin-top: 16px; padding-top: 12px; display: grid; gap: 6px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);"><span>Answers A-23 · HANDOFF B6</span><span>proposals/checks.js · readTokens() · matrix()</span><span style="color: var(--ink);">● passes · ◐ 3:1 only · ○ fails</span></div>
+        </div>
+        <div class="col-9" style="min-width: 0;">
+          <div class="grid" style="row-gap: 32px;">
+            <sc-for list="{{ matrix }}" as="mx" hint-placeholder-count="2">
+              <div class="col-6" style="min-width: 0;">
+                <div style="display: flex; justify-content: space-between; gap: 16px; margin-bottom: 8px;"><span class="label" style="color: var(--ink);">{{ mx.theme }}</span><span class="label">{{ mx.fails }} failing pairs</span></div>
+                <div style="border-top: var(--rule-open);">
+                  <div class="rule-t" style="display: grid; grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr)); gap: 8px; padding-block: 8px; font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2);">
+                    <span>token</span>
+                    <sc-for list="{{ mx.surfaces }}" as="sf" hint-placeholder-count="3"><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ sf.name }}</span></sc-for>
+                  </div>
+                  <sc-for list="{{ mx.rows }}" as="row" hint-placeholder-count="14">
+                    <div class="rule-t" style="display: grid; grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr)); gap: 8px; padding-block: 7px; font-family: var(--font-mono); font-size: var(--t-mono-sm); font-variant-numeric: var(--num); align-items: center;">
+                      <span style="display: flex; align-items: center; gap: 8px; min-width: 0;"><span style="display: inline-block; width: 10px; height: 10px; flex: none; background: {{ row.hex }}; outline: 1px solid var(--rule-c); outline-offset: -1px;"></span><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ row.name }}</span></span>
+                      <sc-for list="{{ row.cells }}" as="cell" hint-placeholder-count="3"><span style="color: var(--ink);">{{ cell.ratio }} <span style="color: var(--ink-2);">{{ cell.glyph }}</span></span></sc-for>
+                    </div>
+                  </sc-for>
+                  <div class="rule-t" style="padding-block: 8px; font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2);">text on fills</div>
+                  <sc-for list="{{ mx.fills }}" as="fl" hint-placeholder-count="6">
+                    <div class="rule-t" style="display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 3fr); gap: 8px; padding-block: 7px; font-family: var(--font-mono); font-size: var(--t-mono-sm); font-variant-numeric: var(--num);">
+                      <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ fl.name }}</span>
+                      <span>{{ fl.ratio }} <span style="color: var(--ink-2);">{{ fl.glyph }}</span> <span style="color: var(--ink-2);">{{ fl.hex }}</span></span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <p style="margin: 16px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">Reading it: ink-2 and ink-3 are one grey on light (there is no room for a third at 4.5:1); mid sits at 2.1:1 on light and so is never text or a control edge there, which is what --edge is for. The mark colours were re-derived on the owner’s instruction so that every one clears 3:1 on every surface in both themes: jade #007A66 and vermilion #CC3710 deepened on light; amber and sky, which could never reach 3:1 on a light canvas, replaced by ochre #966400 and teal #0A7399; magenta #F57AC4, umber #C9986A and vermilion #F57A5A lifted on dark; the diverging midpoints moved from a near-white to surface-3. Accent text (D-025) passes on the page surface and the wash in both themes and on every light surface; on the raised dark surface it does not, which G-04 enforces. Export: the same function writes <code style="font-family: var(--font-mono); font-size: 0.9em;">contrast-matrix.md</code> at build.</p>
+        </div>
+      </div>
+
+      <!-- P-08 DOCUMENT -->
+      <div id="p08" class="grid rule-strong" style="margin-top: var(--block-gap); padding-top: 16px; row-gap: 24px;">
+        <div class="col-3">
+          <div class="index">P-08</div>
+          <h3 class="display" style="margin: 8px 0 0; font-size: var(--t-h3); line-height: var(--lh-snug);">The rendered document</h3>
+          <p style="margin: 12px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">The core rule of the architecture brief, in production form: one article of flat flow, Obsidian’s callout DOM, no wrapper for spacing, and every vertical gap set in one FLOW section as a relationship between two siblings. Nineteen vocabulary items, filled with the TCO case. Below it, the spacing-pairs table — measured from this rendering, not typed.</p>
+          <div class="rule-t" style="margin-top: 16px; padding-top: 12px; display: grid; gap: 6px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2); overflow-wrap: anywhere;"><span>Answers A-24 · A-25 · 03-arch §2–§6</span><span>proposals/doc.css</span><span style="color: var(--ink);">{{ pDocState }}</span></div>
+          <div class="rule-t" style="margin-top: 16px; padding-top: 12px;">
+            <div class="label" style="margin-bottom: 8px;">Items shown</div>
+            <p style="margin: 0; font-family: var(--font-mono); font-size: var(--t-mono-sm); line-height: 1.7; color: var(--ink-2); overflow-wrap: anywhere;">opener · summary · metrics · h2 (numbered by counter) · p · aside · spec · ol · definition · code · figure wide · table · quote · ul · footnote · faq · tool fallback · bookmark · cta · end</p>
+            <p style="margin: 12px 0 0; font-family: var(--font-mono); font-size: var(--t-mono-sm); line-height: 1.7; color: var(--ink-2); overflow-wrap: anywhere;">Next: gallery · columns · video facade · sidenotes on wide screens · math · mermaid · image with alt.</p>
+          </div>
+        </div>
+        <div class="col-9" style="min-width: 0;">
+          <article class="doc" id="ks" lang="en" style="border-top: var(--hairline);">
+            <header class="doc-opener">
+              <div class="doc-trail"><a href="#p08">01 Work</a><span class="glyph">→</span><b>01-04</b></div>
+              <h1 data-gate-skip>Warehouse humanoid TCO</h1>
+              <p class="doc-lead">At the modelled demand, humanoids do not yet beat the lean hybrid. A five-year cost model for warehouse pick, move and place work.</p>
+              <div class="doc-meta"><span>Operations</span><span class="status" data-state="complete">Complete</span><span>Published 21&nbsp;May&nbsp;2026</span><span>Updated 16&nbsp;Sep&nbsp;2026</span><a href="https://github.com/RafaelBraga-Kribitz/warehouse_humanoid_tco" style="min-height: 24px; display: inline-flex; align-items: center;">Repository ↗</a></div>
+            </header>
+            <div class="callout" data-callout="summary"><div class="callout-title">Summary</div><div class="callout-content"><p>One person with three autonomous mobile robots has the lowest five-year present cost, €453,000, and wins 99.8% of the evaluated draws. Humanoids are deferred until demand, labour supply or shift patterns change.</p></div></div>
+            <div class="callout" data-callout="metrics"><div class="callout-title">Key figures</div><div class="callout-content"><ul>
+              <li class="key"><b><mark>€453,000</mark></b><span>Lowest five-year present cost</span></li>
+              <li><b>€0.374</b><span>Cost per order</span></li>
+              <li><b>99.8%</b><span>Draws won by the lean hybrid</span></li>
+              <li><b>€195,000</b><span>Capital requirement</span></li>
+            </ul></div></div>
+            <h2 id="ks-question">Question</h2>
+            <p>At what price, demand and staffing level would a humanoid fleet become the cheaper way to run pick, move and place work in a warehouse? The unit of comparison is five-year present cost at an 8% discount rate.</p>
+            <h2 id="ks-data">Data</h2>
+            <p>Capability assumptions use 2,359 episodes from five public UnifoLM datasets, pinned by hash. Household demonstrations stand in for warehouse work, with a speed-transfer factor between 0.50 and 0.90.</p>
+            <div class="callout" data-callout="aside"><div class="callout-title">Aside</div><div class="callout-content"><p>These are not measurements from a deployed warehouse fleet. The proxy is the first limitation listed below.</p></div></div>
+            <div class="callout" data-callout="spec"><div class="callout-title">Model inputs</div><div class="callout-content"><dl>
+              <dt>Episodes</dt><dd>2,359 · five public datasets</dd>
+              <dt>Scenarios</dt><dd>7 · 15 replicas each</dd>
+              <dt>Throughput</dt><dd>120 orders per hour · utilisation at most 0.85</dd>
+              <dt>Uncertainty</dt><dd>10,000 Monte Carlo draws per scenario</dd>
+              <dt>Discount rate</dt><dd>8% a year over five years</dd>
+            </dl></div></div>
+            <h2 id="ks-method">Method</h2>
+            <p>Four steps, each reproducible from the repository:</p>
+            <ol>
+              <li>Extract capability and timing assumptions from the episodes.</li>
+              <li>Simulate seven staffing scenarios with discrete events, utilisation capped at 0.85.</li>
+              <li>Propagate uncertainty through 10,000 draws per scenario.</li>
+              <li>Run a Sobol sensitivity analysis and a capital-price breakeven search.</li>
+            </ol>
+            <div class="callout" data-callout="definition"><div class="callout-title">Present cost</div><div class="callout-content"><p>Future cash flows discounted to today at the stated rate, so that costs falling in different years can be added. Here 8% a year over five years.</p></div></div>
+            <pre><code class="language-python">def present_cost(cash_flows, rate=0.08):
+    """Sum of yearly costs discounted to year 0 (listing for the specimen)."""
+    return sum(c / (1 + rate) ** t for t, c in enumerate(cash_flows))</code></pre>
+            <h2 id="ks-result">Result</h2>
+            <p>Four of the seven scenario totals were supplied with the brief; the other three are not invented here. The lean hybrid’s capital requirement is €195,000.</p>
+            <figure class="fig" data-width="wide">
+              <figcaption><span class="fig-label">Fig. 01-04-1 · Five-year present cost by scenario</span><span class="fig-title">The lean hybrid costs 30% less than people alone and less than a fifth of the best humanoid case.</span></figcaption>
+              <div style="display: grid; gap: 12px;">
+                <div style="display: grid; grid-template-columns: minmax(96px, 160px) minmax(0, 1fr) 88px; gap: 16px; align-items: center; font-family: var(--font-mono); font-size: var(--t-mono); font-variant-numeric: var(--num);"><span style="color: var(--ink); overflow-wrap: anywhere;">One person + 3 AMRs</span><span style="position: relative; display: block; height: 18px; border-bottom: 1px solid var(--mid);"><span style="position: absolute; top: 0; bottom: 0; left: 0; width: 15.74%; background: var(--accent-01);"></span></span><span style="text-align: right; color: var(--accent-01);">€453,000</span></div>
+                <div style="display: grid; grid-template-columns: minmax(96px, 160px) minmax(0, 1fr) 88px; gap: 16px; align-items: center; font-family: var(--font-mono); font-size: var(--t-mono); font-variant-numeric: var(--num);"><span style="color: var(--ink-2); overflow-wrap: anywhere;">Human-only</span><span style="position: relative; display: block; height: 18px; border-bottom: 1px solid var(--mid);"><span style="position: absolute; top: 0; bottom: 0; left: 0; width: 22.48%; background: var(--ink-2);"></span></span><span style="text-align: right;">€647,000</span></div>
+                <div style="display: grid; grid-template-columns: minmax(96px, 160px) minmax(0, 1fr) 88px; gap: 16px; align-items: center; font-family: var(--font-mono); font-size: var(--t-mono); font-variant-numeric: var(--num);"><span style="color: var(--ink-2); overflow-wrap: anywhere;">Best humanoid case</span><span style="position: relative; display: block; height: 18px; border-bottom: 1px solid var(--mid);"><span style="position: absolute; top: 0; bottom: 0; left: 0; width: 88.01%; background: var(--ink-2);"></span></span><span style="text-align: right;">€2,533,000</span></div>
+                <div style="display: grid; grid-template-columns: minmax(96px, 160px) minmax(0, 1fr) 88px; gap: 16px; align-items: center; font-family: var(--font-mono); font-size: var(--t-mono); font-variant-numeric: var(--num);"><span style="color: var(--ink-2); overflow-wrap: anywhere;">Pure humanoid</span><span style="position: relative; display: block; height: 18px; border-bottom: 1px solid var(--mid);"><span style="position: absolute; top: 0; bottom: 0; left: 0; width: 100%; background: var(--ink-2);"></span></span><span style="text-align: right;">€2,878,000</span></div>
+              </div>
+              <p class="fig-source"><b>Source:</b> supplied project inventory, 16&nbsp;Sep&nbsp;2026. Present value at 8%, EUR. Scale 0 to €2,878,000. n = 4 of 7 scenarios.</p>
+            </figure>
+            <div class="table-scroll"><table>
+              <thead><tr><th>Scenario</th><th align="right">Five-year present cost</th><th align="right">Relative to winner</th></tr></thead>
+              <tbody>
+                <tr><td>One person + three AMRs</td><td align="right">€453,000</td><td align="right">1.00×</td></tr>
+                <tr><td>Human-only operation</td><td align="right">€647,000</td><td align="right">1.43×</td></tr>
+                <tr><td>Best humanoid case</td><td align="right">€2,533,000</td><td align="right">5.59×</td></tr>
+                <tr><td>Pure humanoid operation</td><td align="right">€2,878,000</td><td align="right">6.35×</td></tr>
+              </tbody>
+            </table></div>
+            <div class="callout" data-callout="quote"><div class="callout-title">Result · 10,000 draws per scenario</div><div class="callout-content"><p>The lean hybrid wins 99.8% of the evaluated draws.</p></div></div>
+            <h2 id="ks-limitations">Limitations</h2>
+            <p>The ranking holds only under the stated assumptions:</p>
+            <ul>
+              <li>Household tasks are an imperfect proxy for warehouse operations.</li>
+              <li>Public capital-cost assumptions are not binding supplier quotes.</li>
+              <li>Collective-agreement labour rates may understate real local costs.<sup><a href="#ks-fn1" id="ks-fnref1">1</a></sup></li>
+            </ul>
+            <h2 id="ks-decision">Decision</h2>
+            <p>Under these assumptions, deploy the lean hybrid and defer humanoids.</p>
+            <details class="callout" data-callout="faq"><summary class="callout-title">What would reverse the decision?</summary><div class="callout-content"><p>Higher demand, labour scarcity or multiple shifts. Each moves the breakeven capital price; the model is re-run when one of them changes.</p></div></details>
+            <div class="callout" data-callout="tool"><div class="callout-title">04-01 · A/B sample size · interactive</div><div class="callout-content"><p>The bench needs JavaScript. Without it the default scenario stands: at a 4% baseline, a 10% relative lift and 80% power, the test needs <b>{{ abPerArm }}</b> visitors per arm — {{ abDays }} days at 2,000 visitors a day. (A vocabulary demonstration; the tool belongs to 04 Tools.)</p></div></div>
+            <div class="callout" data-callout="bookmark"><div class="callout-title">Next</div><div class="callout-content"><a href="#p08"><b>01-05 Energy procurement risk analyser</b><span class="sub">From electricity-price records to a cost-risk decision. In build.</span><span class="glyph" aria-hidden="true">→</span></a></div></div>
+            <div class="callout" data-callout="cta"><div class="callout-title">Call to action</div><div class="callout-content"><a href="https://github.com/RafaelBraga-Kribitz/warehouse_humanoid_tco">Open the repository <span class="glyph" aria-hidden="true">↗</span></a></div></div>
+            <section class="footnotes"><h2>Notes</h2><ol><li id="ks-fn1">Austrian collective-agreement wage rates were used for the labour cost; local rates can run higher. <a href="#ks-fnref1" data-footnote-backref="" aria-label="Back to the reference">→</a></li></ol></section>
+            <div class="doc-end"><span>§ END</span><a href="#p08"><span class="glyph">←</span> All projects</a></div>
+          </article>
+
+          <div class="grid" style="margin-top: 48px; row-gap: 32px;">
+            <div class="col-7" style="min-width: 0;">
+              <div style="display: flex; justify-content: space-between; gap: 16px; margin-bottom: 8px;"><span class="label" style="color: var(--ink);">Spacing pairs · measured from the article above</span><span class="label">{{ pairsUnnamed }} unnamed</span></div>
+              <div style="border-top: var(--rule-open);">
+                <div class="rule-t" style="display: grid; grid-template-columns: minmax(0, 2fr) 48px minmax(0, 1fr) 32px; gap: 12px; padding-block: 8px; font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2);"><span>pair</span><span>px</span><span>token</span><span>n</span></div>
+                <sc-for list="{{ pairRows }}" as="pq" hint-placeholder-count="20">
+                  <div class="rule-t" style="display: grid; grid-template-columns: minmax(0, 2fr) 48px minmax(0, 1fr) 32px; gap: 12px; padding-block: 7px; font-family: var(--font-mono); font-size: var(--t-mono-sm); font-variant-numeric: var(--num); align-items: baseline;"><span style="overflow-wrap: anywhere; color: var(--ink);">{{ pq.pair }}</span><span>{{ pq.px }}</span><span style="color: var(--ink-2);">{{ pq.token }}</span><span style="color: var(--ink-2);">{{ pq.n }}</span></div>
+                </sc-for>
+              </div>
+            </div>
+            <div class="col-5" style="min-width: 0;">
+              <div class="label" style="margin-bottom: 8px; color: var(--ink);">R2 · a heading gets at least twice above what it gives below</div>
+              <div style="border-top: var(--rule-open);">
+                <sc-for list="{{ headingRows }}" as="hr" hint-placeholder-count="7">
+                  <div class="rule-t" style="display: grid; grid-template-columns: 20px minmax(0, 1fr) 72px; gap: 12px; padding-block: 7px; font-family: var(--font-mono); font-size: var(--t-mono-sm); font-variant-numeric: var(--num); align-items: baseline;"><span>{{ hr.glyph }}</span><span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink);">{{ hr.heading }}</span><span style="color: var(--ink-2);">{{ hr.above }} / {{ hr.below }}</span></div>
+                </sc-for>
+              </div>
+              <p style="margin: 16px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">The in-page section numbers are CSS counters: derived from order, never typed. The table and the figure take the wide track; prose keeps the measure (<code style="font-family: var(--font-mono); font-size: 0.9em;">--measure-doc</code>, open decision 60 or 64ch). Switch the document proposal off in Tweaks to see the same markup unstyled.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P-09 FORMATTING -->
+      <div id="p09" class="grid rule-strong" style="margin-top: var(--block-gap); padding-top: 16px; row-gap: 24px;">
+        <div class="col-3">
+          <div class="index">P-09</div>
+          <h3 class="display" style="margin: 8px 0 0; font-size: var(--t-h3); line-height: var(--lh-snug);">Figures by language</h3>
+          <p style="margin: 12px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">One pure module formats numbers, currency, dates and units for en-GB and de-AT, with non-breaking spaces inside every figure, the real minus and the en dash. It ships with hand-written expected strings that run as a test on load — the tools rule applied to typography. The build calls the same functions for charts and tables.</p>
+          <div class="rule-t" style="margin-top: 16px; padding-top: 12px; display: grid; gap: 6px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);"><span>Answers A-27 · HANDOFF 13–14</span><span>proposals/format.js</span><span style="color: var(--ink);">{{ casesSummary }}</span></div>
+        </div>
+        <div class="col-9" style="min-width: 0;">
+          <div class="grid" style="row-gap: 32px;">
+            <div class="col-7" style="min-width: 0;">
+              <div style="border-top: var(--rule-open);">
+                <div class="rule-t" style="display: grid; grid-template-columns: 20px minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr); gap: 12px; padding-block: 8px; font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2);"><span></span><span>case</span><span>EN</span><span>DE</span></div>
+                <sc-for list="{{ caseRows }}" as="cr" hint-placeholder-count="10">
+                  <div class="rule-t" style="display: grid; grid-template-columns: 20px minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr); gap: 12px; padding-block: 7px; font-family: var(--font-mono); font-size: var(--t-mono-sm); font-variant-numeric: var(--num); align-items: baseline;"><span>{{ cr.glyph }}</span><span style="color: var(--ink-2); overflow-wrap: anywhere;">{{ cr.name }}</span><span style="overflow-wrap: anywhere;">{{ cr.en }}</span><span lang="de" style="overflow-wrap: anywhere;">{{ cr.de }}</span></div>
+                </sc-for>
+              </div>
+              <p style="margin: 12px 0 0; font-family: var(--font-mono); font-size: var(--t-mono-sm); line-height: 1.6; color: var(--ink-2);">⎵ marks a non-breaking space. Austrian German: Jänner, not Januar.</p>
+            </div>
+            <div class="col-5" style="min-width: 0;">
+              <div class="label" style="margin-bottom: 8px; color: var(--ink);">Typographic rules · both languages</div>
+              <div style="border-top: var(--rule-open); font-size: var(--t-small); line-height: 1.45;">
+                <div class="rule-t" style="display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 12px; padding-block: 8px;"><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">quotes</span><span>EN “ ” and ‘ ’ · DE „ “ and ‚ ‘</span></div>
+                <div class="rule-t" style="display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 12px; padding-block: 8px;"><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">dashes</span><span>– for ranges and, spaced, for asides in EN; the specimens use a spaced — today: pick one</span></div>
+                <div class="rule-t" style="display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 12px; padding-block: 8px;"><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">signs</span><span>− for minus, × for times, … for three dots</span></div>
+                <div class="rule-t" style="display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 12px; padding-block: 8px;"><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">spaces</span><span>Non-breaking between value and unit, symbol and figure, day and month, around = in an equation</span></div>
+                <div class="rule-t" style="display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 12px; padding-block: 8px; border-bottom: var(--rule);"><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">percent</span><span>EN 35% tight · DE 35 % with a non-breaking space</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P-10 SHARE CARD · FAVICON -->
+      <div id="p10" class="grid rule-strong" style="margin-top: var(--block-gap); padding-top: 16px; row-gap: 24px;">
+        <div class="col-3">
+          <div class="index">P-10</div>
+          <h3 class="display" style="margin: 8px 0 0; font-size: var(--t-h3); line-height: var(--lh-snug);">Share card and favicon</h3>
+          <p style="margin: 12px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">Type only, 1200 × 630. The build fills wordmark, code, status, title and the one number the document earned; a page without a number shows the title alone. The favicon is the letter B in the 800 cut on an ink square, with an inverted variant for dark tab bars. No drawn mark anywhere.</p>
+          <div class="rule-t" style="margin-top: 16px; padding-top: 12px; display: grid; gap: 6px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);"><span>Answers A-28 · HANDOFF 24 · P-21</span><span>template · build renders PNG / SVG / ICO</span><span style="color: var(--ink);">Scaled preview · excluded from the gates</span></div>
+        </div>
+        <div class="col-9" style="min-width: 0;">
+          <div class="grid" style="row-gap: 32px; align-items: start;">
+            <div class="col-8" data-gate-skip style="min-width: 0;">
+              <div class="label" style="margin-bottom: 8px;">og:image · 1200 × 630 · document card</div>
+              <div style="container-type: inline-size; aspect-ratio: 1200 / 630; background: var(--surface); border: var(--rule); position: relative; overflow: hidden;">
+                <div style="position: absolute; inset: 5cqw 5cqw 4.5cqw; display: grid; grid-template-rows: auto 1fr auto;">
+                  <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 2cqw;">
+                    <span style="font-family: var(--font-display); font-weight: var(--w-wordmark); font-size: 3.2cqw; letter-spacing: -0.04em; line-height: 1;">BRAGA</span>
+                    <span style="font-family: var(--font-mono); font-size: 1.5cqw; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); font-variant-numeric: var(--num);">01-04 · Work · Complete</span>
+                  </div>
+                  <div style="align-self: center; min-width: 0;">
+                    <div style="font-family: var(--font-display); font-weight: var(--w-display); font-size: 7.6cqw; line-height: 1.02; letter-spacing: -0.03em; text-wrap: balance; max-width: 82%;">Warehouse humanoid TCO</div>
+                    <div style="margin-top: 3cqw; display: flex; align-items: center; flex-wrap: wrap; gap: 1.2cqw; font-family: var(--font-display); font-weight: var(--w-display); font-size: 4.4cqw; line-height: 1; letter-spacing: -0.04em; font-variant-numeric: var(--num);"><span style="width: 0.6cqw; height: 0.6cqw; background: var(--accent-01);"></span><span>€453,000</span><span style="font-family: var(--font-mono); font-weight: 400; font-size: 1.5cqw; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); margin-left: 1cqw;">lowest five-year present cost</span></div>
+                  </div>
+                  <div style="border-top: 1px solid var(--ink); padding-top: 1.5cqw; display: flex; justify-content: space-between; gap: 2cqw; font-family: var(--font-mono); font-size: 1.5cqw; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2);"><span>Rafael Braga-Kribitz · Marketing Data Analyst</span><span>Operations · 2026</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-4" data-gate-skip style="min-width: 0;">
+              <div class="label" style="margin-bottom: 8px;">Favicon · 16 · 32 · 180 touch</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end;">
+                <span style="display: grid; place-items: center; width: 16px; height: 16px; background: var(--ink); color: var(--surface); font-family: var(--font-display); font-weight: var(--w-wordmark); font-size: 13px; line-height: 1;">B</span>
+                <span style="display: grid; place-items: center; width: 32px; height: 32px; background: var(--ink); color: var(--surface); font-family: var(--font-display); font-weight: var(--w-wordmark); font-size: 26px; line-height: 1;">B</span>
+                <span style="display: grid; place-items: center; width: 180px; height: 180px; background: var(--ink); color: var(--surface); font-family: var(--font-display); font-weight: var(--w-wordmark); font-size: 148px; line-height: 1; letter-spacing: -0.02em;">B</span>
+              </div>
+              <div style="margin-top: 16px; display: flex; gap: 16px; align-items: flex-end;">
+                <span style="display: grid; place-items: center; flex: none; width: 32px; height: 32px; background: var(--surface); color: var(--ink); outline: 1px solid var(--ink); outline-offset: -1px; font-family: var(--font-display); font-weight: var(--w-wordmark); font-size: 26px; line-height: 1;">B</span>
+                <span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2); line-height: 1.5;">inverted variant for dark tab bars<br>(SVG favicon with a prefers-color-scheme rule)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P-11 PRINT -->
+      <div id="p11" class="grid rule-strong" style="margin-top: var(--block-gap); padding-top: 16px; row-gap: 24px;">
+        <div class="col-3">
+          <div class="index">P-11</div>
+          <h3 class="display" style="margin: 8px 0 0; font-size: var(--t-h3); line-height: var(--lh-snug);">Print</h3>
+          <p style="margin: 12px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">A4 with 16–20mm margins. Paper is the surface, so the light palette is forced on white and pure black ink; hairlines stay; site chrome goes; figures, tables, callouts and rows do not break across pages; no URL is printed after a link. The About/CV page prints as a CV without touching its markup. This page carries the file — print it to see.</p>
+          <div class="rule-t" style="margin-top: 16px; padding-top: 12px; display: grid; gap: 6px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);"><span>Answers A-29 · 03-arch §12</span><span>proposals/print.css</span><span style="color: var(--ink);">Print media only · always loaded</span></div>
+        </div>
+        <div class="col-9" style="min-width: 0;">
+          <pre style="margin: 0; padding: 16px 20px; background: var(--surface-2); border-top: var(--rule); font-family: var(--font-mono); font-size: var(--t-mono-sm); line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink);">@media print {
+  @page { size: A4; margin: 18mm 16mm 20mm; }
+  :root, .dark, :root[data-theme="dark"] { --surface: #FFFFFF; --ink: #000000; … color-scheme: light; }
+  header.grid-container, footer.grid-container, .shell, .skip, nav { display: none !important; }
+  h1, h2, h3, h4 { break-after: avoid; }
+  figure, table, .callout, pre, blockquote, .listing-row { break-inside: avoid; }
+  a { color: inherit; text-decoration: none; }  a[href]::after { content: none; }
+}</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 RECORDS -->
+    <section id="s04" class="section" data-screen-label="04 Records">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">04 · RECORDS</div>
+        <div class="col-9">
+          <h2 class="display" style="margin: 0; font-size: var(--t-h2);">What was changed in place, and what is yours to decide.</h2>
+          <p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">The applied fixes are pure defects: a specimen contradicting a settled decision, a stale value, a broken link, a rule the gates fail. Each is one copy away from undone. Everything that needed judgement is a proposal above or a decision below. AUDIT.md repeats this section for the record.</p>
+        </div>
+      </div>
+
+      <div class="listing" style="margin-top: var(--block-gap);">
+        <div class="listing-head"><span class="lr-index">§</span><span class="lr-title">Applied fix</span><span class="lr-meta">File</span><span class="lr-trail">Undo</span></div>
+        <sc-for list="{{ applied }}" as="ap" hint-placeholder-count="10">
+          <div class="listing-row"><span class="lr-index lr-code">{{ ap.n }}</span><span class="lr-title"><span class="lr-title-main" style="font-size: 1.0625rem; line-height: 1.3;">{{ ap.what }}</span><span class="lr-title-sub" style="font-size: var(--t-small); line-height: 1.45; margin-top: 6px;">{{ ap.why }}</span></span><span class="lr-meta lr-mono">{{ ap.file }}</span><span class="lr-trail lr-mono" style="white-space: normal;">_parked/pre-audit/</span></div>
+        </sc-for>
+      </div>
+
+      <div class="grid" style="margin-top: var(--block-gap);">
+        <div class="col-3 label">Decisions proposed · for DECISIONS.md</div>
+        <div class="col-9">
+          <sc-for list="{{ decisions }}" as="dc" hint-placeholder-count="9">
+            <div class="rule-t" style="display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 16px; padding-block: 12px; font-size: var(--t-small); line-height: 1.5;"><span class="index">{{ dc.id }}</span><span><span style="color: var(--ink);">{{ dc.title }}</span> <span style="color: var(--ink-2);">{{ dc.text }}</span></span></div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div class="grid" style="margin-top: var(--block-gap);">
+        <div class="col-3 label">Open · Rafael decides</div>
+        <div class="col-9">
+          <sc-for list="{{ open }}" as="op" hint-placeholder-count="6">
+            <div class="rule-t" style="display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 16px; padding-block: 12px; font-size: var(--t-small); line-height: 1.5;"><span class="index">{{ op.id }}</span><span><span style="color: var(--ink);">{{ op.q }}</span> <span style="color: var(--ink-2);">{{ op.rec }}</span></span></div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="grid-container">
+    <div class="grid rule-strong" style="padding-block: 32px 48px;">
+      <div class="col-6" style="font-family: var(--font-display); font-weight: var(--w-display); font-size: 18px;">Rafael Braga-Kribitz</div>
+      <div class="col-3 label">Design System · v2.1 · Audit</div>
+      <div class="col-3 label" style="text-align: right;">20 Oct 2026 · reversible</div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;system&quot;,&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;},&quot;pTheme&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Proposals&quot;},&quot;pFoundations&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Proposals&quot;},&quot;pShell&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Proposals&quot;},&quot;pDoc&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Proposals&quot;},&quot;showGrid&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Structure&quot;}}">
+const FINDINGS = [
+  ['A-01', 'Fail', 'listing.css · Core · Site · Charts', 'Mid grey is set as text', '.listing-head, .lr-code, .lr-dim, SVG axis labels and module numbers use --mid: 2.1:1 on the light surface. D-007 reserves it for hairlines.', 'applied · foundations', '#p02'],
+  ['A-02', 'Fail', 'Bundle controls', 'Control boundaries at 2.1:1', 'SegmentedControl border, Toggle track and knob, Range track are --mid. WCAG 1.4.11 asks 3:1 for a control’s boundary.', 'applied · --edge', '#p02'],
+  ['A-03', 'Fail', 'Bundle controls', 'Toggle and range below 24px', 'The switch is 40×20 and the range input 16px tall; 04-F asks 24×24 for every control and names the toggles.', 'applied · 44×24 · 24', '#p02'],
+  ['A-04', 'Fail', 'Site 06 · Core 06', 'Chart text at 11px, and it scales down', 'SVG tick labels are 11px inside a viewBox that shrinks with the column: about 7px at 390. The floor is 12px; chart text belongs in CSS pixels.', 'applied 12px · CSS-px text in the rebuild', '#s04'],
+  ['A-05', 'Fail', 'All pages', 'Prose links have no affordance', 'a { text-decoration: none } with a hover colour only: in running text a link is invisible until hovered (WCAG 1.4.1).', 'applied', '#p02'],
+  ['A-06', 'Fail', 'All pages', 'Hover turns link text accent', 'a:hover set the accent on every link. Hover is now a wash plus the arrow’s grey-to-accent shift; the accent is spent on the earned figure.', 'applied', '#p02'],
+  ['A-07', 'Fail', 'All pages', 'No reduced-motion rule', '--dur stayed at 140ms for readers who asked for none (04-F; HANDOFF 15).', 'applied', '#p02'],
+  ['A-08', 'Fail', 'Header · footer', 'Targets below 24 and 44px', 'Header links were 32px tall, footer links about 21px with 8px gaps; HANDOFF 10 asks 44 on mobile.', 'applied', '#p04'],
+  ['A-09', 'Drift', 'Site 04 · 06 · Core 02 · 06', 'The accent is used as text', 'CLAUDE.md said “never a text colour”; the specimens and D-004’s contrast-ready values said otherwise. Owner decision: the accent may be text (D-025); the sentence is removed from CLAUDE.md.', 'decided · D-025', '#p03'],
+  ['A-10', 'Drift', 'Site 06', 'The accent carries a judgement', 'Duration turned accent when the test was feasible, so accent read as good. The accent carries no judgement; the verdict is now a word.', 'applied', '#p03'],
+  ['A-11', 'Drift', 'Site 00 · ledger row 9', 'Two you-are-here cues', 'The site decided “ink + accent number” for the contents list; S-22 had code-to-ink plus a square. With D-025 the accent code is the one cue for both.', 'decided · one cue', '#p03'],
+  ['A-12', 'Drift', 'Core 03', 'Swatch hexes are v1 values', '#E6E6E6 … #282828 were typed by hand; the tokens are #E4E6EA … #26282C (D-006). accent-02 was still shown (retired, D-005).', 'applied · live tokens', '#s04'],
+  ['A-13', 'Drift', 'Core 01', '“1280px maximum”', 'D-010 set the page at 1320.', 'applied', '#s04'],
+  ['A-14', 'Drift', 'Site 01', '“BRAGA in the 900 cut”', 'The note cited 900; the wordmark is 800 (D-008). Owner: BRAGA is always uppercase, everywhere — D-009 amended, the audit’s title-case change reverted.', 'applied · owner', '#p04'],
+  ['A-15', 'Drift', 'All headers', '“RAFAEL BRAGA KRIBITZ”', 'The name is title case with its hyphen; uppercase is the machine layer and the wordmark.', 'applied', '#s04'],
+  ['A-16', 'Drift', 'Core 02', 'Display specimen set at weight 500', 'An inline override against D-008, one heading weight.', 'applied', '#s04'],
+  ['A-17', 'Drift', 'Site 03', 'Status vocabulary is open', 'Six labels on two marks; the inherited enum is live · in-build · under-revision · archived. Owner: every state gets its own square.', 'applied · five squares', '#p05'],
+  ['A-18', 'Missing', 'Theme', 'No page-level theme model', 'Pages toggled .dark on body from a tweak. D-020 asks for data-theme on the root, the OS as default, a pre-paint script and theme-color per theme.', 'applied · theme.css everywhere', '#p01'],
+  ['A-19', 'Polish', 'All pages', 'color-scheme follows the OS, not the page', 'color-scheme: light dark let scrollbars and form controls flip with the OS while the page stayed light.', 'applied', '#p01'],
+  ['A-20', 'Missing', 'Shell', 'Header at 320 is undesigned', 'Note 01-04 promised a MENU disclosure; HANDOFF 11 says flat, no hamburger. The German labels need 331px.', 'applied · shell.css', '#p04'],
+  ['A-21', 'Missing', 'Shell', 'No skip link, no scroll-padding', 'The first tab stop was the wordmark; anchors landed under the 80px header (WCAG 2.4.11).', 'applied', '#p04'],
+  ['A-22', 'Polish', 'Site 01', 'Theme square drawn with a gradient', 'A hard-stop linear-gradient; the stylelint gate bans gradients. clip-path draws the same square.', 'applied', '#p04'],
+  ['A-23', 'Missing', 'Records', 'Contrast matrix not delivered', 'HANDOFF B6 and 03-arch §11: every text and surface pair, both themes.', 'P-07 · live', '#p07'],
+  ['A-24', 'Missing', 'Records', 'Spacing-pairs table not delivered', 'HANDOFF B7. It is measured from the rendered document instead of typed.', 'P-08 · live', '#p08'],
+  ['A-25', 'Missing', 'Document', 'Markdown output not designed in production form', 'The core rule of 03-arch §2–§6: flat flow, Obsidian callout DOM, flow in one section, about thirty vocabulary items.', 'P-08 · 19 of ~30 items', '#p08'],
+  ['A-26', 'Missing', 'Type', 'OpenType features asserted, not proven', 'Tabular figures and the slashed zero were inert for eleven weeks in attempt 1; HANDOFF 17.', 'P-06 · live', '#p06'],
+  ['A-27', 'Missing', 'Format', 'No number and date formatting by language', 'HANDOFF 13–14: EN €453,000 · 16 Sep 2026; DE € 453.000 · 16. Sep. 2026, with non-breaking spaces inside figures.', 'P-09 · format.js', '#p09'],
+  ['A-28', 'Missing', 'Share', 'Share card and favicon', 'HANDOFF 24, P-21: type only, 1200 × 630, a typographic favicon in both polarities.', 'P-10', '#p10'],
+  ['A-29', 'Missing', 'Print', 'No print stylesheet', '03-arch §12: A4, light palette, hairlines kept, no chrome.', 'applied · print.css everywhere', '#p11'],
+  ['A-30', 'Polish', 'Charts tokens', 'Diverging midpoint lighter than the canvas', '--chart-div-7 and --chart-two-7 (#EBEBEB) sat at 1.05:1 on #E4E6EA. The midpoint is now surface-3 in both themes.', 'applied', '#p07'],
+  ['A-31', 'Polish', 'Charts page', 'Draft-3 leftovers', 'PAL and HEX arrays still vermilion and #5B7FFF; 10px hex labels; status dots drawn round; “Roboto Mono 11” in the anatomy copy; a notation tweak.', 'squares, 12px, ink-3 applied · rebuild pending', '#s04'],
+  ['A-32', 'Drift', 'Charts nav', 'Link to a parked page', '“Dashboards →” pointed at a file now in _parked/.', 'applied', '#s04'],
+  ['A-33', 'Polish', 'Core 03', 'Swatch rings drawn with box-shadow', 'inset 0 0 0 1px used as a border; the gate bans shadows. outline draws the same ring.', 'applied', '#s04'],
+  ['A-34', 'Polish', 'Site 06 · Core 06', 'Readouts clip with an ellipsis', 'white-space: nowrap with overflow hidden on fourteen spots; HANDOFF 12 wants wrapping at 320.', 'applied · wraps', '#s04'],
+  ['A-35', 'Polish', 'Site 00 · Core', 'displayWeight tweak offers 300–500', 'D-008 settled 700; the tweak invited drift.', 'applied · removed', '#s04'],
+  ['A-36', 'Polish', 'Numbering', 'Two separators', 'Section openers read “01 — GRID”; labels and figures read “Fig. 04-01 · …”. One separator, the middle dot.', 'applied', '#s04'],
+  ['A-37', 'Fail', 'Bundle Button', 'The Button breaks four rules at once', 'Label 11px (floor 12), border --mid (2.1:1), outline: none inline (no focus ring), a hard-coded 120ms. foundations.css overrides what it can reach; Button.jsx needs the source fix.', 'applied · foundations', '#p02'],
+  ['A-38', 'Fail', 'Chart tokens', 'Marks below 3:1 on some surfaces', 'Jade 2.9 and vermilion 3.0 on the light wash; amber 1.8 and sky 2.1 everywhere on light; magenta 2.99 and umber 2.8 on the raised dark surface. 04-F asks 3:1 for graphics on every surface.', 'applied · re-derived', '#p07'],
+  ['A-39', 'Polish', 'Bundle Button', 'Default and ghost differ in height', 'Padding 6/14 against 5/10 gave 26px and 24px; the two variants did not line up in a row.', 'applied · one height, 28px', '#p02']
+];
+const CLASS_DEF = { Fail: 'Breaks a stated rule or a WCAG criterion.', Drift: 'Contradicts a settled decision.', Missing: 'A plan item with no design yet.', Polish: 'Finish; nothing breaks.' };
+const PAGES = { self: ['This page', null], core: ['Core', 'Design System v2.dc.html'], site: ['Site', 'Design System v2 - Site.dc.html'], charts: ['Charts', 'Design System v2 - Charts.dc.html'] };
+const APPLIED = [
+  ['01', 'Swatches read the live tokens', 'Hexes were v1 values typed by hand; accent-02 (retired) is gone; roles rewritten; the accent gets its own row with both values.', 'Design System v2.dc.html'],
+  ['02', '“1320px maximum”', 'D-010.', 'Design System v2.dc.html'],
+  ['03', 'Display specimen back to the one heading weight', 'An inline font-weight: 500 override removed (D-008).', 'Design System v2.dc.html'],
+  ['04', 'SVG text 11px → 12px; axis labels and module numbers --mid → --ink-3', 'Type floor and D-007.', 'Core · Site'],
+  ['05', 'Swatch rings: box-shadow → outline', 'Same 1px ring, no shadow.', 'Design System v2.dc.html'],
+  ['06', 'Stale data-accent="emerald" line removed', 'Dead code from the accent exploration.', 'Design System v2.dc.html'],
+  ['07', 'Header name set in title case: Rafael Braga-Kribitz', 'Casing rule; the hyphen restored.', 'Core · Site · Charts'],
+  ['08', 'Wordmark BRAGA — uppercase, everywhere', 'Owner comment amends D-009; the audit’s title-case change is reverted; 800, −0.07em; notes 01-01 and 01-04 rewritten.', 'Site · shell.css · Audit'],
+  ['09', 'Contents numbers --mid → --ink-3', 'D-007.', 'Design System v2 - Site.dc.html'],
+  ['10', '“Dashboards →” link removed', 'Target lives in _parked/.', 'Design System v2 - Charts.dc.html'],
+  ['11', 'Proposals adopted on every specimen', 'theme.css, foundations.css and print.css load in Core, Site and Charts; shell.css in Site. The Audit page keeps a switch per file for before and after.', 'all pages'],
+  ['12', 'Site shell rebuilt on the header pattern', 'Two rows below 768, compact strip below 360, clip-path theme square, skip link first, main landmark.', 'Design System v2 - Site.dc.html'],
+  ['13', 'Status enum with five squares', 'complete · functional · under-revision · in-build · archived; the Site listing and its vocabulary use .status.', 'Site · doc.css'],
+  ['14', 'Chart marks re-derived to clear 3:1 on every surface', 'jade #007A66, vermilion #CC3710, ochre #966400, teal #0A7399 on light; magenta #F57AC4, umber #C9986A, vermilion #F57A5A on dark; diverging midpoints on surface-3; on-fill text white on light.', 'chart-palettes.css · ibcs.css · theme.css'],
+  ['15', 'The accent may be text (D-025)', 'The “never a text colour” sentence removed from CLAUDE.md; G-04 now checks accent text contrast; doc.css sets ==mark== in the accent; the Site’s Duration verdict reads as words.', 'uploads/CLAUDE.md · checks.js · doc.css · Site'],
+  ['16', 'Readouts wrap; displayWeight tweak removed; one separator', 'nowrap plus ellipsis replaced by overflow-wrap; D-008 leaves no weight to explore; section labels read “01 · GRID”.', 'Core · Site · Charts · Audit'],
+  ['17', 'Charts: squares, 12px, ink-3', 'Status circles squared (owner comment); 10px hex labels to 12px; mid text to ink-3; “Roboto Mono 11” corrected. The rebuild (HANDOFF A2) is still pending.', 'Design System v2 - Charts.dc.html']
+];
+const DECISIONS = [
+  ['D-009a', 'Wordmark amended.', 'BRAGA is always uppercase, in every case, everywhere; 800, −0.07em (owner, 20 Oct 2026).'],
+  ['D-024', 'Theme model.', 'data-theme on the root; OS default; stored override via a 158-byte pre-paint script; color-scheme follows the page; all dark values in one file; .dark per element stays.'],
+  ['D-025', 'The accent may be text.', 'The one earned figure per view is set in the accent (5.3:1 light, 6.2:1 dark on the surface) and so is the active code; the 7px square stays the mark beside a name. Siblings ink-2. No judgement by colour. Accent text never sits on the raised dark surface (3.2:1).'],
+  ['D-026', 'Focus is an ink ring.', '2px outline, 2px offset, every control, both themes. Not the accent.'],
+  ['D-027', '--edge for control boundaries.', 'ink-2 on light, ink-3 on dark; --mid stays decorative. Switch 44×24, range 24px tall, Button 28px in both variants.'],
+  ['D-028', 'Header below 768.', 'Two rows, no hamburger; door strip 44px; compact (codes + current label) below 360 for German, below 300 for every language.'],
+  ['D-029', 'Status enum and squares.', 'complete ■ · functional ▣ · under-revision ▤ · in-build □ · archived ⊡; one 7px square per state, label always.'],
+  ['D-030', 'Glyph inventory.', '→ ↗ ← § · ▲ + − – … and the squares; written once (P-05).'],
+  ['D-031', 'Figures by language.', 'format.js rules: NBSP inside figures, real minus, en dash, en-GB / de-AT separators, Jänner.'],
+  ['D-032', 'Links in text are underlined.', 'Hairline underline, offset; hover to ink; block links exempt; hover never spends the accent on every link.'],
+  ['D-033', 'Chart marks clear 3:1 on every surface.', 'Light marks at relative luminance ≤ 0.175, dark marks ≥ 0.33; amber and sky replaced by ochre and teal on light; the label-plus-edge exception is retired (amends D-016, D-018).'],
+  ['D-034', 'One separator.', 'The middle dot: “01 · GRID”, “Fig. 04-01 · …”.']
+];
+const OPEN = [
+  ['O-01', 'Status enum adopted on the Site specimen (P-05). Say so if the six labels should return.', 'Recommended: keep; “Interactive” becomes a page kind, “Copy review” a draft flag.'],
+  ['O-02', 'Reading measure: 60ch or 64ch?', 'Recommended: one token, 60ch, for prose and documents alike; delete --measure-doc. doc.css reads --measure-doc, so flipping is one line in flow.css.'],
+  ['O-03', 'Dashes in English prose: spaced en dash or unspaced em dash?', 'Recommended: spaced en dash (British); the specimens currently use a spaced em dash.'],
+  ['O-04', 'Footer group “Others”.', 'Recommended: “Notices” (Sitemap, RSS, Impressum, Privacy, Accessibility); DE “Hinweise”. D-013 names it; your call.'],
+  ['O-05', 'German chrome labels (P-05).', 'Agent-drafted; nothing ships until approved.'],
+  ['O-06', 'Charts page rebuild (HANDOFF A2) on the re-derived palette.', 'Next session; the vision check should be re-run on the new categorical set.']
+];
+const Z_A = 1.959964, Z_B80 = 0.841621;
+const abPerArm = (b, l) => { const p1 = b / 100, p2 = p1 * (1 + l / 100); return Math.ceil((Z_A + Z_B80) ** 2 * (p1 * (1 - p1) + p2 * (1 - p2)) / (p2 - p1) ** 2); };
+
+class Component extends DCLogic {
+  state = { filter: 'All', gateTarget: 'self', gateWidth: '1280', gates: null, gateNote: 'Loading the gate module…', running: false, themeLocal: null, tokens: null, proofs: null, pairs: null, cases: null, osDark: false, csComputed: '—', demoSeg: 'Weekly', demoToggle: false, demoRange: 20 };
+
+  componentDidMount() {
+    this.mq = window.matchMedia('(prefers-color-scheme: dark)');
+    this.onMq = () => this.setState({ osDark: this.mq.matches });
+    try { this.mq.addEventListener('change', this.onMq); } catch (e) { /* older engines */ }
+    this.setState({ osDark: this.mq.matches });
+    this.apply();
+    this.boot();
+  }
+  componentDidUpdate() { this.apply(); }
+  componentWillUnmount() { try { this.mq.removeEventListener('change', this.onMq); } catch (e) { /* noop */ } }
+
+  choice() { return this.state.themeLocal ?? this.props.theme ?? 'light'; }
+  resolved() { const c = this.choice(); return c === 'system' ? (this.state.osDark ? 'dark' : 'light') : c; }
+  apply() {
+    const html = document.documentElement, c = this.choice();
+    if (c === 'system') html.removeAttribute('data-theme'); else html.setAttribute('data-theme', c);
+    document.body.classList.toggle('dark', this.resolved() === 'dark');
+    const toggles = [['theme', this.props.pTheme ?? true], ['foundations', this.props.pFoundations ?? true], ['shell', this.props.pShell ?? true], ['doc', this.props.pDoc ?? true]];
+    for (const [k, on] of toggles) document.querySelectorAll(`link[data-proposal="${k}"]`).forEach(l => { l.disabled = !on; });
+    const cs = getComputedStyle(html).colorScheme || 'normal';
+    if (cs !== this.state.csComputed) this.setState({ csComputed: cs });
+  }
+
+  async boot() {
+    try {
+      const base = document.baseURI;
+      const [C, F] = await Promise.all([import(new URL('ds-update/proposals/checks.js', base).href), import(new URL('ds-update/proposals/format.js', base).href)]);
+      this.C = C; this.F = F;
+      await document.fonts.ready;
+      this.setState({ tokens: C.readTokens(document), cases: F.runCases(), gateNote: 'Ready. Run the gates on this page or pick another specimen.' });
+      const proofs = await C.typeProofs(document);
+      this.setState({ proofs });
+      // the frame may still have no width right after mount: wait for layout before measuring anything
+      const whenLaidOut = (tries = 0) => {
+        if (window.innerWidth > 0 && document.body.getBoundingClientRect().width > 0) { this.measure(); this.runGates(); return; }
+        if (tries < 40) setTimeout(() => whenLaidOut(tries + 1), 250);
+        else this.setState({ gateNote: 'The frame reported no width; press Run gates once it is visible.' });
+      };
+      setTimeout(() => whenLaidOut(), 700);
+    } catch (e) { this.setState({ gateNote: 'The gate module did not load: ' + (e && e.message ? e.message : e) }); }
+  }
+  measure() { const art = document.getElementById('ks'); if (art && this.C) this.setState({ pairs: this.C.measurePairs(art, window) }); }
+  async runGates() {
+    if (!this.C || this.state.running) return;
+    const { gateTarget, gateWidth } = this.state;
+    this.setState({ running: true, gateNote: 'Running…' });
+    if (gateTarget === 'self') {
+      if (!(window.innerWidth > 0)) { this.setState({ running: false, gateNote: 'The frame has no width yet; try again once it is visible.' }); return; }
+      const results = this.C.runChecks(window, document);
+      this.setState({ gates: results, running: false, gateNote: `This page at ${window.innerWidth}px (the frame width applies to the other specimens)` });
+      return;
+    }
+    const r = await this.C.runInFrame(document, PAGES[gateTarget][1], +gateWidth);
+    if (r.error) this.setState({ running: false, gates: null, gateNote: r.error });
+    else this.setState({ gates: r.results, running: false, gateNote: `${PAGES[gateTarget][0]} at ${gateWidth}px, read in an off-screen frame` });
+  }
+
+  renderVals() {
+    const s = this.state;
+    const findings = FINDINGS.map(([id, cls, where, title, sub, answer, href]) => ({ id, cls, where, title, sub, answer, href }));
+    const counts = ['Fail', 'Drift', 'Missing', 'Polish'].map(name => ({ name, n: String(findings.filter(f => f.cls === name).length), def: CLASS_DEF[name] }));
+    const gates = (s.gates || []).map(g => ({ ...g, hasOffenders: g.offenders.length > 0, glyph: g.status === 'pass' ? '●' : '○', word: g.status === 'pass' ? 'pass' : 'fail', ink: g.status === 'pass' ? 'var(--ink-2)' : 'var(--ink)' }));
+    const proofs = s.proofs;
+    const yn = v => v === true ? ['●', 'var(--ink-2)'] : v === false ? ['○', 'var(--ink)'] : ['·', 'var(--ink-3)'];
+    const proofRows = proofs ? [
+      ...proofs.fonts.map(f => { const [glyph, ink] = yn(f.loaded); return { glyph, ink, name: f.name, note: f.loaded ? 'loaded from ds-update/fonts' : 'not loaded — rendering in a fallback face' }; }),
+      (() => { const [glyph, ink] = yn(proofs.tabular); return { glyph, ink, name: 'Tabular figures render', note: proofs.tabularNote }; })(),
+      (() => { const [glyph, ink] = yn(proofs.zeroBody); return { glyph, ink, name: 'Slashed zero · BKribitz', note: proofs.zeroBody ? 'ink found at the centre of a rendered 0' : proofs.zeroBody === false ? 'the rendered 0 is hollow at its centre' : 'canvas unavailable' }; })(),
+      (() => { const [glyph, ink] = yn(proofs.zeroMono); return { glyph, ink, name: 'Slashed zero · BKribitz Mono', note: proofs.zeroMono ? 'ink found at the centre of a rendered 0' : proofs.zeroMono === false ? 'the rendered 0 is hollow at its centre' : 'canvas unavailable' }; })()
+    ] : [{ glyph: '·', ink: 'var(--ink-3)', name: 'Measuring…', note: 'waits for document.fonts.ready' }];
+    const matrix = s.tokens && this.C ? this.C.matrix(s.tokens) : [];
+    const pairs = s.pairs || { rows: [], headings: [], unnamed: '—' };
+    const cases = s.cases || [];
+    const casesOk = cases.filter(c => c.ok).length;
+    const per = abPerArm(4, 10), days = Math.ceil(per * 2 / 2000);
+    const state = on => on ? 'ON · switch in Tweaks' : 'OFF · switch in Tweaks';
+    return {
+      showGrid: this.props.showGrid ?? false,
+      cols: Array.from({ length: 12 }, () => ({})),
+      nFindings: String(findings.length),
+      classCounts: counts,
+      filterItems: ['All', 'Fail', 'Drift', 'Missing', 'Polish'], filter: s.filter, setFilter: v => this.setState({ filter: v }),
+      findings: s.filter === 'All' ? findings : findings.filter(f => f.cls === s.filter),
+
+      gatePages: Object.keys(PAGES).map(id => ({ id, label: PAGES[id][0] })), gateTarget: s.gateTarget, setGateTarget: v => this.setState({ gateTarget: v }),
+      gateWidths: ['390', '768', '1280'], gateWidth: s.gateWidth, setGateWidth: v => this.setState({ gateWidth: v }),
+      runGates: () => this.runGates(),
+      gateNote: s.gateNote, gates, hasGates: gates.length > 0, noGates: gates.length === 0,
+      gatePass: String(gates.filter(g => g.status === 'pass').length), gateFail: String(gates.filter(g => g.status === 'fail').length),
+
+      themeItems: [{ id: 'system', label: 'System' }, { id: 'light', label: 'Light' }, { id: 'dark', label: 'Dark' }],
+      themeChoice: this.choice(), setThemeChoice: v => this.setState({ themeLocal: v }),
+      themeAttr: this.choice() === 'system' ? '(absent)' : this.choice(), osScheme: s.osDark ? 'dark' : 'light', themeResolved: this.resolved(), csComputed: s.csComputed,
+      pThemeState: state(this.props.pTheme ?? true), pFoundState: state(this.props.pFoundations ?? true), pShellState: state(this.props.pShell ?? true), pDocState: state(this.props.pDoc ?? true),
+
+      demoSegItems: ['Daily', 'Weekly', 'Monthly'], demoSeg: s.demoSeg, setDemoSeg: v => this.setState({ demoSeg: v }),
+      demoToggle: s.demoToggle, setDemoToggle: v => this.setState({ demoToggle: typeof v === 'boolean' ? v : !s.demoToggle }),
+      demoRange: s.demoRange, setDemoRange: v => this.setState({ demoRange: v }),
+
+      proofRows, matrix,
+      pairRows: pairs.rows, pairsUnnamed: pairs.unnamed,
+      headingRows: pairs.headings.map(h => ({ ...h, glyph: h.ok ? '●' : '○' })),
+      caseRows: cases.map(c => ({ ...c, glyph: c.ok ? '●' : '○' })), casesSummary: cases.length ? `${casesOk} of ${cases.length} reference cases pass` : 'Running reference cases…',
+      abPerArm: per.toLocaleString('en-GB'), abDays: String(days),
+
+      applied: APPLIED.map(([n, what, why, file]) => ({ n, what, why, file })),
+      decisions: DECISIONS.map(([id, title, text]) => ({ id, title, text })),
+      open: OPEN.map(([id, q, rec]) => ({ id, q, rec }))
+    };
+  }
+}
+</script>
+</body>
+</html>

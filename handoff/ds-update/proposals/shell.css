@@ -1,0 +1,97 @@
+/* ============================================================
+   SHELL — proposal P-04 (Audit · 20 Oct 2026)
+   The site header at 320 / 390 / 768+ without a hamburger (HANDOFF 11).
+   One DOM, self-responsive through a container query on .shell, so the
+   same header renders correctly in the 320px frames of the specimen
+   and in production (where the header is as wide as the viewport).
+
+     ≥ 768   one row, 80px: wordmark · doors (code + word) · EN/DE · theme
+     < 768   two rows: 56px wordmark + cluster, then a 44px door strip
+             under a hairline — four numbered doors, mono, spread edge
+             to edge. No menu to open, nothing hidden.
+     < 360   compact strip for German (its labels need 331px): every code,
+             only the current door's label (the section bar's own compact
+             rule). English (277px) keeps all four labels down to 300.
+
+   Adopt: keep this file; the mobile rule set becomes @media (max-width:
+   767px) in layout.css if container queries are not wanted.
+   Revert: delete the file and its <link>.
+   ============================================================ */
+.shell {
+  container-type: inline-size; container-name: shell;
+  background: var(--surface); color: var(--ink);
+  border-bottom: var(--hairline);
+}
+.shell-bar {
+  display: flex; align-items: center; gap: 16px 32px;
+  min-height: 80px; padding-inline: var(--gutter);
+}
+.shell-mark {
+  font: var(--w-wordmark) 24px / 1 var(--font-display);
+  letter-spacing: -0.07em; text-transform: uppercase; color: var(--ink); text-decoration: none;
+}
+/* BRAGA is always uppercase, everywhere (owner, 20 Oct 2026; amends D-009) */
+.shell-doors { display: flex; gap: 0 32px; margin-left: auto; }
+.door {
+  position: relative; display: inline-flex; align-items: center; gap: 8px;
+  min-height: 44px; color: var(--ink); text-decoration: none;
+  font: 400 17px / 1 var(--font-body);
+}
+/* buttons used as doors (specimens) reset their own font; the door size wins */
+button.door { font: 400 17px / 1 var(--font-body); }
+.door-code {
+  font: 400 var(--t-mono) / 1 var(--font-mono); color: var(--ink-2);
+  font-variant-numeric: var(--num);
+}
+.door[aria-current="page"]::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 8px;
+  height: 1px; background: var(--ink);
+}
+.shell-cluster { display: flex; align-items: center; gap: 4px; }
+.shell-lang {
+  display: inline-flex; align-items: center; min-height: 44px; padding-inline: 8px;
+  font: 400 var(--t-mono-sm) / 1 var(--font-mono); color: var(--ink); text-decoration: none;
+  font-variant-numeric: var(--num);
+}
+.shell-lang span { color: var(--ink-2); padding-left: 8px; }
+/* theme square: half-filled on the diagonal, drawn with clip-path — the
+   previous gradient was the one gradient in the system */
+.shell-theme {
+  width: 44px; height: 44px; padding: 0; border: 0; background: transparent;
+  display: grid; place-items: center; cursor: pointer; color: var(--ink);
+}
+.shell-theme > span {
+  display: block; position: relative; width: 15px; height: 15px; box-sizing: border-box;
+  border: 1px solid currentColor; overflow: hidden;
+}
+.shell-theme > span::before {
+  content: ""; position: absolute; inset: -1px; background: currentColor;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+@container shell (max-width: 767px) {
+  .shell-bar { flex-wrap: wrap; min-height: 0; gap: 0; padding-inline: 0; }
+  .shell-mark { order: 1; display: inline-flex; align-items: center; min-height: 56px; padding-inline: var(--gutter); }
+  .shell-cluster { order: 2; margin-left: auto; padding-inline: calc(var(--gutter) - 8px); }
+  .shell-doors {
+    order: 3; flex-basis: 100%; margin: 0; gap: 0 8px; justify-content: space-between;
+    border-top: var(--rule); padding-inline: var(--gutter);
+  }
+  .door {
+    font: 400 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: 0.04em;
+    text-transform: uppercase; gap: 6px; min-height: 44px;
+  }
+  .door-code { font-size: var(--t-mono-sm); }
+  .door[aria-current="page"]::after { bottom: 0; }
+}
+/* compact strip: every code, only the current label. German's four labels
+   need 331px, so German goes compact below 360; English (277px) holds to
+   300. Below 300 every language is compact. */
+@container shell (max-width: 359px) {
+  .shell:lang(de) .door:not([aria-current="page"]) .door-label { display: none; }
+  .shell:lang(de) .door:not([aria-current="page"]) { min-width: 32px; justify-content: center; }
+}
+@container shell (max-width: 299px) {
+  .door:not([aria-current="page"]) .door-label { display: none; }
+  .door:not([aria-current="page"]) { min-width: 32px; justify-content: center; }  /* a code alone is 15px wide; the target stays ≥ 24 */
+}

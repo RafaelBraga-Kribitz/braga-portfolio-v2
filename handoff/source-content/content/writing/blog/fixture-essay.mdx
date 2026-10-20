@@ -1,0 +1,67 @@
+---
+title: Why DTC Ecommerce Needs Marketing Data Science
+date: 2026-06-19
+kind: essay
+code: 02-01-01
+summary: Direct-to-consumer brands don't need more dashboards; they need incrementality, optimization, and honest uncertainty.
+status: under-revision
+draft: true
+tags:
+  - dtc
+  - measurement
+locale: en
+---
+
+Direct-to-consumer brands live and die by a single question that last-click
+attribution quietly gets wrong: did this spend actually cause that revenue? The
+platforms that sell the ads also grade their own homework, and the grade is generous.
+
+The argument is narrow. DTC ecommerce does not need more dashboards. It needs
+measurement built on incrementality, decisions built on optimization, and a
+willingness to attach an honest interval to both.
+
+## The measurement problem
+
+Reported ROAS counts revenue the brand would have earned anyway. Incremental ROAS
+counts only what the spend caused, measured against a holdout — a different number,
+and usually a smaller one.
+
+```py
+def incremental_roas(spend, holdout_lift, baseline):
+    """ROAS measured against a holdout, not attribution."""
+    incremental_revenue = baseline * holdout_lift
+    return incremental_revenue / spend
+```
+
+Across the last three campaigns on file, reported ROAS overstated incremental ROAS
+by 38% on average — enough to reverse two of six budget decisions.
+
+<FigRow id="02-01-01-1" rows={4} register="storytelling" caption="reported ROAS (grey) against incremental ROAS (orange) across six campaigns.">
+  <svg viewBox="0 0 320 120" preserveAspectRatio="xMidYMid meet" style={{ width: '100%', height: '100%', display: 'block' }} role="img" aria-label="Reported vs incremental ROAS">
+    <rect x="20" y="24" width="30" height="76" fill="var(--mid)" />
+    <rect x="54" y="52" width="30" height="48" fill="var(--accent-01)" />
+    <rect x="120" y="36" width="30" height="64" fill="var(--mid)" />
+    <rect x="154" y="64" width="30" height="36" fill="var(--accent-01)" />
+    <rect x="220" y="30" width="30" height="70" fill="var(--mid)" />
+    <rect x="254" y="58" width="30" height="42" fill="var(--accent-01)" />
+  </svg>
+</FigRow>
+
+<Callout>
+  Incrementality is not a metric you buy; it is a design you commit to. A holdout is
+  cheaper than a wrong reallocation.
+</Callout>
+
+## Allocation under a budget cap
+
+Measuring incrementality is only half the work. Once each channel's true
+contribution is known with an interval around it, allocation becomes an optimization
+under a budget cap — the same shape of problem whether the budget is five figures or
+eight. The mix-model reconstruction behind that allocation question is in
+[Reconstructing an MMM from First Principles](/writing/notes/fixture-note).
+
+<MetricGrid metrics={[
+  { value: "38%", label: "OVERSTATEMENT", note: "reported vs incremental ROAS", accent: true },
+  { value: "6", label: "CAMPAIGNS", note: "on file" },
+  { value: "2", label: "DECISIONS REVERSED", note: "after correction" }
+]} />

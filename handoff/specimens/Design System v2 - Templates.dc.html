@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#E4E6EA">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#191A1D">
+  <link rel="stylesheet" href="_ds/braga-kribitz-design-system-remix-5791f94c-126d-46ea-bd68-9d0531f6f37b/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/braga-kribitz-design-system-remix-5791f94c-126d-46ea-bd68-9d0531f6f37b/tokens/listing.css">
+  <link rel="stylesheet" href="_ds/braga-kribitz-design-system-remix-5791f94c-126d-46ea-bd68-9d0531f6f37b/tokens/chart-palettes.css">
+  <link rel="stylesheet" href="ds-update/tokens/colors.css">
+  <link rel="stylesheet" href="ds-update/tokens/chart-palettes.css">
+  <link rel="stylesheet" href="ds-update/tokens/ibcs.css">
+  <link rel="stylesheet" href="ds-update/tokens/fonts.css">
+  <link rel="stylesheet" href="ds-update/tokens/typography.css">
+  <link rel="stylesheet" href="ds-update/tokens/spacing.css">
+  <link rel="stylesheet" href="ds-update/tokens/grid.css">
+  <link rel="stylesheet" href="ds-update/tokens/flow.css">
+  <link rel="stylesheet" href="ds-update/tokens/component-fixes.css">
+  <link rel="stylesheet" href="ds-update/proposals/theme.css">
+  <link rel="stylesheet" href="ds-update/proposals/foundations.css">
+  <link rel="stylesheet" href="ds-update/proposals/shell.css">
+  <link rel="stylesheet" href="ds-update/proposals/doc.css">
+  <link rel="stylesheet" href="ds-update/proposals/print.css">
+  <script src="ds-update/proposals/code.js"></script>
+  <script src="_ds/braga-kribitz-design-system-remix-5791f94c-126d-46ea-bd68-9d0531f6f37b/_ds_bundle.js"></script>
+  <style>
+    body { margin: 0; background: var(--surface); color: var(--ink); font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+    a { color: var(--ink); text-decoration: none; }
+  </style>
+</helmet>
+
+<a class="skip" href="#main">Skip to content</a>
+<div style="min-height: 100vh; background: var(--surface); color: var(--ink); position: relative;">
+
+  <header class="grid-container">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; min-height: 64px; padding-block: 16px;">
+      <a href="Design System v2.dc.html" style="font-family: var(--font-display); font-weight: var(--w-display); font-size: 18px; letter-spacing: -0.01em; white-space: nowrap; min-height: 32px; display: inline-flex; align-items: center;">Rafael Braga-Kribitz</a>
+      <nav aria-label="Template sections" style="display: flex; flex-wrap: wrap; gap: 4px 24px; font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase;">
+        <a href="Design System v2.dc.html" style="color: var(--ink-3); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">← Core</a>
+        <a href="Design System v2 - Site.dc.html" style="color: var(--ink-3); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">Site</a>
+        <a href="Design System v2 - Audit.dc.html" style="color: var(--ink-3); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">Audit</a>
+        <a href="#s01" style="color: var(--ink-2); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">01 Not found</a>
+        <a href="#s02" style="color: var(--ink-2); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">02 Legal</a>
+        <a href="#s03" style="color: var(--ink-2); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">03 Code</a>
+        <a href="#s04" style="color: var(--ink-2); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">04 Math</a>
+        <a href="#s05" style="color: var(--ink-2); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">05 Diagram</a>
+        <a href="#s06" style="color: var(--ink-2); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">06 CV</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="grid-container">
+
+    <!-- 00 TEMPLATES -->
+    <section id="s00" class="section" data-screen-label="00 Templates">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">00 · TEMPLATES</div>
+        <div class="col-9">
+          <div class="label" style="margin-bottom: 24px;">BRAGA KRIBITZ DESIGN SYSTEM · V2.1 · TEMPLATES · 20 OCT 2026</div>
+          <h1 class="display" style="margin: 0; font-size: var(--t-h1); line-height: var(--lh-tight);">The pages the plan still owed.</h1>
+          <p class="prose" style="margin: 32px 0 0; font-size: var(--t-lead); color: var(--ink-2);">The not-found page, the three legal pages in German, and the three content constructs the vocabulary lacked — code, mathematics, diagrams — all rendered at build time with nothing fetched from anyone else’s server. Then a CV, designed here and built with LaTeX from the same tokens. German copy and the legal texts are agent drafts: nothing ships until approved, and none of it is legal advice.</p>
+        </div>
+      </div>
+      <div class="grid" style="margin-top: var(--block-gap);">
+        <div class="col-3 label">Rule carried throughout</div>
+        <div class="col-9">
+          <div class="rule-t" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 16px 32px; padding-block: 12px; font-size: var(--t-small); line-height: 1.5;"><span style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-2);">No third-party request</span><span>KaTeX and Mermaid stay; their address changes. Math renders at build to HTML and MathML, with the KaTeX stylesheet and fonts served from this origin. Diagrams render at build to inline SVG. A content page ships no script, so a visitor’s IP never reaches a CDN. Gate G-13 on the Audit page fails on any foreign origin.</span></div>
+          <div class="rule-t" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 16px 32px; padding-block: 12px; font-size: var(--t-small); line-height: 1.5; border-bottom: var(--rule);"><span style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-2);">Astro, not Next</span><span>The recipe you pasted is written for Next.js. The equivalents here: <code style="font-family: var(--font-mono); font-size: 0.9em;">remark-math</code> + <code style="font-family: var(--font-mono); font-size: 0.9em;">rehype-katex</code> (output <code style="font-family: var(--font-mono); font-size: 0.9em;">htmlAndMathml</code>), <code style="font-family: var(--font-mono); font-size: 0.9em;">rehype-mermaid</code> with a headless browser in CI, <code style="font-family: var(--font-mono); font-size: 0.9em;">katex/dist/fonts</code> copied to <code style="font-family: var(--font-mono); font-size: 0.9em;">/fonts/katex/</code>, and a Playwright guard that fails on any request off the origin — with one math page and one diagram page in its list, or it proves nothing.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01 NOT FOUND -->
+    <section id="s01" class="section" data-screen-label="01 Not found">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">01 · NOT FOUND</div>
+        <div class="col-9">
+          <h2 class="display" style="margin: 0; font-size: var(--t-h2);">An error, treated as data.</h2>
+          <p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">GitHub Pages serves a plain <code style="font-family: var(--font-mono); font-size: 0.9em;">404.html</code>. It keeps the header and the footer and offers one way back — but it reads the way everything else here reads: as an observation with n = 1, classified in the house instrument. A request expected a page and none exists: one false positive, by the reader or by a link that moved; the precision of the index stays at 100%. The three zeros are the only decoration, and they are the typeface’s. No illustration, no apology, no search box.</p>
+        </div>
+      </div>
+      <div style="margin-top: var(--block-gap); border: var(--rule);">
+        <div class="shell" lang="en">
+          <div class="shell-bar">
+            <a class="shell-mark" href="#s01">BRAGA</a>
+            <nav class="shell-doors" aria-label="Sections">
+              <a class="door" href="#s01"><span class="door-code">01</span><span class="door-label">Work</span></a>
+              <a class="door" href="#s01"><span class="door-code">02</span><span class="door-label">Writing</span></a>
+              <a class="door" href="#s01"><span class="door-code">03</span><span class="door-label">About</span></a>
+              <a class="door" href="#s01"><span class="door-code">04</span><span class="door-label">Tools</span></a>
+            </nav>
+            <div class="shell-cluster">
+              <a class="shell-lang" href="#s01" hreflang="de">EN<span>/ DE</span></a>
+              <button class="shell-theme" type="button" aria-label="Switch theme"><span></span></button>
+            </div>
+          </div>
+        </div>
+        <div style="padding: 0 var(--gutter);">
+          <article class="doc" lang="en">
+            <header class="doc-opener" style="padding-bottom: 32px;">
+              <div class="doc-trail"><a href="#s01">§ Index</a><span class="glyph">→</span><b>404</b><span class="glyph">·</span><span>Observation · n = 1</span></div>
+              <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 40px;">
+                <span aria-hidden="true" style="font-family: var(--font-display); font-weight: var(--w-display); font-size: clamp(96px, 16vw, 200px); line-height: 0.9; letter-spacing: -0.05em; font-variant-numeric: var(--num);">404</span>
+                <h1 data-gate-skip style="font-size: var(--t-h2); max-width: 14em;">No such page.</h1>
+              </div>
+              <p class="doc-lead">The address resolves to nothing in this document. The index lists everything that exists, and it is short enough to read.</p>
+            </header>
+            <div class="callout" data-callout="metrics"><div class="callout-title">Readings</div><div class="callout-content"><ul>
+              <li><b>0</b><span>Pages at this address</span></li>
+              <li><b>100%</b><span>Indexed addresses that resolve</span></li>
+              <li><b>1</b><span>Request recorded, in the host’s log only</span></li>
+            </ul></div></div>
+            <figure class="fig" data-width="wide">
+              <figcaption><span class="fig-label">Fig. 404-1 · classification of this request</span><span class="fig-title">One false positive: a page was expected where none exists.</span></figcaption>
+              <div role="img" aria-label="Two by two matrix: you expected a page and it exists, all indexed pages; you expected a page and it does not exist, one, this request; you did not expect a page and it exists, zero; you did not expect a page and none exists, the rest of the web" style="display: grid; grid-template-columns: minmax(96px, 160px) repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--rule-c); border: 1px solid var(--rule-c); font-variant-numeric: var(--num);">
+                <div style="background: var(--surface); padding: 12px;"></div>
+                <div style="background: var(--surface); padding: 12px; font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2);">Page exists</div>
+                <div style="background: var(--surface); padding: 12px; font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2);">No page exists</div>
+                <div style="background: var(--surface); padding: 12px; font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2); display: flex; align-items: center;">You expected a page</div>
+                <div style="background: var(--surface-2); padding: 16px 12px; min-height: 96px; display: grid; align-content: space-between; gap: 8px;"><span style="font-family: var(--font-display); font-weight: var(--w-display); font-size: 1.25rem; letter-spacing: var(--tracking-tight); color: var(--ink-2);">All indexed pages</span><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2);">True positive</span></div>
+                <div style="background: var(--surface-2); padding: 16px 12px; min-height: 96px; display: grid; align-content: space-between; gap: 8px;"><span style="font-family: var(--font-display); font-weight: var(--w-display); font-size: clamp(32px, 4vw, 48px); line-height: 1; letter-spacing: -0.04em; color: var(--accent-01);">1</span><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink);">False positive · this request</span></div>
+                <div style="background: var(--surface); padding: 12px; font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2); display: flex; align-items: center;">You did not</div>
+                <div style="background: var(--surface-2); padding: 16px 12px; min-height: 96px; display: grid; align-content: space-between; gap: 8px;"><span style="font-family: var(--font-display); font-weight: var(--w-display); font-size: clamp(32px, 4vw, 48px); line-height: 1; letter-spacing: -0.04em; color: var(--ink-2);">0</span><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2);">False negative · nothing is hidden</span></div>
+                <div style="background: var(--surface-2); padding: 16px 12px; min-height: 96px; display: grid; align-content: space-between; gap: 8px;"><span style="font-family: var(--font-display); font-weight: var(--w-display); font-size: 1.25rem; letter-spacing: var(--tracking-tight); color: var(--ink-2);">The rest of the web</span><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2);">True negative</span></div>
+              </div>
+              <p class="fig-source"><b>Source:</b> this request, now. Precision of the index: 100% — every address it lists resolves. Recall: 100% — nothing that exists is missing from it.</p>
+            </figure>
+            <div class="callout" data-callout="aside"><div class="callout-title">Limitations</div><div class="callout-content"><p>This page cannot tell where the address came from: a typo, an old link, or a page that moved. It records nothing about you beyond the host’s standard log. One missing page is not a trend; n = 1.</p></div></div>
+            <h2 id="nf-decision">Decision</h2>
+            <p>Return to the index. If a link on this site brought you here, the link is the error, not you — say so and it will be fixed.</p>
+            <div class="callout" data-callout="cta"><div class="callout-title">Way back</div><div class="callout-content"><a href="#s01">Back to the index <span class="glyph" aria-hidden="true">→</span></a></div></div>
+            <p><a href="mailto:rafaelbragakribitz@gmail.com?subject=Broken%20link">Report the broken link ↗</a></p>
+            <div class="doc-end"><span>§ END</span><a href="#s01"><span class="glyph">←</span> Index</a></div>
+          </article>
+        </div>
+        <div style="border-top: var(--hairline); padding: 24px var(--gutter); display: grid; gap: 8px;">
+          <span class="label">Footer and navigation remain · the page is a static file · the “1” is the page’s one accent figure (D-025)</span>
+          <span class="label" style="color: var(--ink-3);" lang="de">DE · Beobachtung · n = 1 · Keine solche Seite. · Die Adresse führt zu nichts in diesem Dokument. Der Index listet alles, was es gibt, und er ist kurz genug zum Lesen. · Abb. 404-1 · Ein falsch Positives: eine Seite wurde erwartet, wo keine ist. · Zurück zum Index →</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 LEGAL -->
+    <section id="s02" class="section" data-screen-label="02 Legal">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">02 · LEGAL</div>
+        <div class="col-9">
+          <h2 class="display" style="margin: 0; font-size: var(--t-h2);">Three short pages, in German, before launch.</h2>
+          <p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">Impressum and Offenlegung (§ 25 MedienG, § 5 ECG), the privacy notice (GDPR) and an accessibility statement — the <code style="font-family: var(--font-mono); font-size: 0.9em;">utility</code> template: opener, flat prose, a spec list for the facts, an end bar. The texts use the facts settled in the handoff (D-014) and name the host and its logs, as the privacy checklist asks. They are drafts for review by the owner and, as the brief itself says, a WKO or lawyer check — not legal advice.</p>
+        </div>
+      </div>
+
+      <div class="grid" style="margin-top: var(--block-gap); row-gap: 48px;">
+        <div class="col-6" style="min-width: 0;">
+          <article class="doc" lang="de" style="border-top: var(--hairline);">
+            <header class="doc-opener" style="padding-block: 32px 24px;">
+              <div class="doc-trail"><a href="#s02">Sonstiges</a><span class="glyph">→</span><b>Impressum</b></div>
+              <h1 data-gate-skip style="font-size: var(--t-h2);">Impressum und Offenlegung</h1>
+              <div class="doc-meta"><span class="status" data-state="in-build">Entwurf · Freigabe ausstehend</span><span>Stand 20. Okt. 2026</span></div>
+            </header>
+            <p>Offenlegung gemäß § 25 Mediengesetz und Informationen gemäß § 5 E-Commerce-Gesetz.</p>
+            <div class="callout" data-callout="spec"><div class="callout-title">Medieninhaber und Herausgeber</div><div class="callout-content"><dl>
+              <dt>Name</dt><dd>Rafael Braga-Kribitz</dd>
+              <dt>Wohnort</dt><dd>8054 Seiersberg, Steiermark, Österreich</dd>
+              <dt>E-Mail</dt><dd><a href="mailto:rafaelbragakribitz@gmail.com">rafaelbragakribitz@gmail.com</a></dd>
+              <dt>Unternehmensgegenstand</dt><dd>Keiner. Private, nicht kommerzielle Website; es werden keine Waren oder Dienstleistungen angeboten.</dd>
+              <dt>Grundlegende Richtung</dt><dd>Dokumentation eigener Analysearbeiten in Marketing- und Entscheidungsanalyse.</dd>
+            </dl></div></div>
+            <p>Für Inhalte verlinkter Seiten Dritter wird keine Haftung übernommen; sie wurden zum Zeitpunkt der Verlinkung geprüft.</p>
+            <div class="callout" data-callout="note"><div class="callout-title">Hinweis</div><div class="callout-content"><p>Entwurf. Vor Veröffentlichung Prüfung der Offenlegungspflichten (WKO) empfohlen. Keine Rechtsberatung.</p></div></div>
+            <div class="doc-end"><span>§ Ende</span><a href="#s02"><span class="glyph">←</span> Zum Index</a></div>
+          </article>
+        </div>
+
+        <div class="col-6" style="min-width: 0;">
+          <article class="doc" lang="de" style="border-top: var(--hairline);">
+            <header class="doc-opener" style="padding-block: 32px 24px;">
+              <div class="doc-trail"><a href="#s02">Sonstiges</a><span class="glyph">→</span><b>Barrierefreiheit</b></div>
+              <h1 data-gate-skip style="font-size: var(--t-h2);">Erklärung zur Barrierefreiheit</h1>
+              <div class="doc-meta"><span class="status" data-state="in-build">Entwurf · Freigabe ausstehend</span><span>Stand 20. Okt. 2026</span></div>
+            </header>
+            <p>Diese Website soll den Web Content Accessibility Guidelines 2.2, Stufe AA, entsprechen. Die Erklärung ist freiwillig: das Barrierefreiheitsgesetz erfasst diese private Seite nicht.</p>
+            <div class="callout" data-callout="spec"><div class="callout-title">Prüfung</div><div class="callout-content"><dl>
+              <dt>Automatisiert</dt><dd>axe, beide Farbschemata, 320 bis 1280 px, bei jeder Änderung</dd>
+              <dt>Manuell</dt><dd>Tastaturbedienung aller Werkzeuge; Zoom 200 %</dd>
+              <dt>Vorgesehen</dt><dd>Ein Durchgang mit Screenreader (NVDA) vor Veröffentlichung</dd>
+            </dl></div></div>
+            <p>Bekannte Einschränkung: Die interaktiven Werkzeuge benötigen JavaScript. Ohne JavaScript wird das Standardszenario als Text und Tabelle angezeigt.</p>
+            <p>Rückmeldungen zu Barrieren an <a href="mailto:rafaelbragakribitz@gmail.com">rafaelbragakribitz@gmail.com</a>. Erstellt am 20. Okt. 2026.</p>
+            <div class="doc-end"><span>§ Ende</span><a href="#s02"><span class="glyph">←</span> Zum Index</a></div>
+          </article>
+        </div>
+
+        <div class="col-12" style="min-width: 0;">
+          <article class="doc" lang="de" style="border-top: var(--hairline);">
+            <header class="doc-opener" style="padding-block: 32px 24px;">
+              <div class="doc-trail"><a href="#s02">Sonstiges</a><span class="glyph">→</span><b>Datenschutz</b></div>
+              <h1 data-gate-skip style="font-size: var(--t-h2);">Datenschutzerklärung</h1>
+              <p class="doc-lead">Keine Cookies, kein Tracking, keine Inhalte Dritter. Was beim Abruf dieser Seite dennoch verarbeitet wird, steht hier.</p>
+              <div class="doc-meta"><span class="status" data-state="in-build">Entwurf · Freigabe ausstehend</span><span>Stand 20. Okt. 2026</span></div>
+            </header>
+            <h2 id="ds-verantwortlich">Verantwortlicher</h2>
+            <p>Rafael Braga-Kribitz, 8054 Seiersberg, Österreich, <a href="mailto:rafaelbragakribitz@gmail.com">rafaelbragakribitz@gmail.com</a>.</p>
+            <h2 id="ds-hosting">Hosting und Server-Protokolle</h2>
+            <p>Die Website wird über GitHub Pages ausgeliefert (GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA). Beim Abruf verarbeitet GitHub technisch notwendige Daten in Server-Protokollen: IP-Adresse, Zeitpunkt, abgerufene Adresse und Browserkennung. Rechtsgrundlage ist das berechtigte Interesse am sicheren Betrieb (Art. 6 Abs. 1 lit. f DSGVO). Speicherdauer und Übermittlung in die USA richten sich nach der <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">Datenschutzerklärung von GitHub</a>; die Zertifizierung unter dem EU-US Data Privacy Framework wird vor Veröffentlichung geprüft.</p>
+            <h2 id="ds-keine">Keine Cookies, kein Tracking</h2>
+            <p>Die Website setzt keine Cookies, verwendet keine Analyse- oder Werbedienste und bindet keine Schriften, Skripte oder Inhalte von Dritten ein. Alle Dateien werden vom eigenen Ursprung geladen.</p>
+            <h2 id="ds-lokal">Lokale Einstellung</h2>
+            <p>Die Wahl des Farbschemas wird erst nach einem Klick im Browser gespeichert (<code>localStorage</code>, Schlüssel <code>bk-theme</code>). Sie enthält keine personenbezogenen Daten und verlässt das Gerät nicht.</p>
+            <h2 id="ds-kontakt">Kontakt</h2>
+            <p>Bei einer E-Mail werden die übermittelten Daten zur Beantwortung verarbeitet (Art. 6 Abs. 1 lit. b und f DSGVO) und danach gelöscht, sofern keine gesetzliche Aufbewahrungspflicht besteht.</p>
+            <h2 id="ds-rechte">Ihre Rechte</h2>
+            <p>Auskunft, Berichtigung, Löschung, Einschränkung, Datenübertragbarkeit und Widerspruch (Art. 15 bis 21 DSGVO) sowie Beschwerde bei der Österreichischen Datenschutzbehörde, Barichgasse 40–42, 1030 Wien, <a href="https://www.dsb.gv.at">dsb.gv.at</a>.</p>
+            <div class="callout" data-callout="note"><div class="callout-title">Hinweis</div><div class="callout-content"><p>Entwurf, keine Rechtsberatung. Offen (Punkt 5 der Checkliste): ein EU-Host oder ein Auftragsverarbeitungsvertrag mit dem Host; die Formulierung zur Drittlandübermittlung folgt dieser Entscheidung.</p></div></div>
+            <div class="doc-end"><span>§ Ende</span><a href="#s02"><span class="glyph">←</span> Zum Index</a></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 CODE -->
+    <section id="s03" class="section" data-screen-label="03 Code">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">03 · CODE</div>
+        <div class="col-9">
+          <h2 class="display" style="margin: 0; font-size: var(--t-h2);">A dark panel, in both themes.</h2>
+          <p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">Owner decision D-035: code sits on a dark panel that is never the page’s own dark, with a six-token palette taken from the dark colour set — so every token clears 4.5:1 on the panel — a copy button and a wrap toggle. Wrap is on by default; the two buttons come from a 1 KB progressive module and the block is complete without it. The highlighter runs at build (shiki mapped to the six classes). A caption makes it a listing with a number from the document code.</p>
+        </div>
+      </div>
+      <div class="grid" style="margin-top: var(--block-gap); row-gap: 32px;">
+        <div class="col-8" style="min-width: 0;">
+          <article class="doc" lang="en">
+            <figure class="fig" data-width="wide" style="border-top: 0; padding-top: 0;">
+              <figcaption><span class="fig-label">Listing 04-01-1 · sample size per arm</span><span class="fig-title">Two proportions, two-sided, equal arms — the rule the A/B bench runs.</span></figcaption>
+<div class="code" data-lang="python" data-wrap="on">
+<div class="code-bar"><span>python · listing 04-01-1</span><span class="code-tools"><button type="button" class="code-wrap" aria-pressed="true">Wrap · on</button><button type="button" class="code-copy">Copy</button></span></div>
+<pre><code class="language-python"><span class="tok-cm"># Normal approximation; z-values for α = 0.05 (two-sided) and power 0.80
+</span><span class="tok-kw">from</span> math <span class="tok-kw">import</span> ceil
+
+Z_ALPHA, Z_BETA <span class="tok-op">=</span> <span class="tok-num">1.959964</span>, <span class="tok-num">0.841621</span>
+
+<span class="tok-kw">def</span> <span class="tok-fn">per_arm</span>(baseline: float, relative_lift: float) <span class="tok-op">-&gt;</span> int:
+    <span class="tok-str">"""Visitors per arm to detect `relative_lift` on `baseline` (both as fractions)."""
+</span>    p1 <span class="tok-op">=</span> baseline
+    p2 <span class="tok-op">=</span> p1 <span class="tok-op">*</span> (<span class="tok-num">1</span> <span class="tok-op">+</span> relative_lift)
+    variance <span class="tok-op">=</span> p1 <span class="tok-op">*</span> (<span class="tok-num">1</span> <span class="tok-op">-</span> p1) <span class="tok-op">+</span> p2 <span class="tok-op">*</span> (<span class="tok-num">1</span> <span class="tok-op">-</span> p2)
+    <span class="tok-kw">return</span> ceil((Z_ALPHA <span class="tok-op">+</span> Z_BETA) <span class="tok-op">**</span> <span class="tok-num">2</span> <span class="tok-op">*</span> variance <span class="tok-op">/</span> (p2 <span class="tok-op">-</span> p1) <span class="tok-op">**</span> <span class="tok-num">2</span>)
+
+<span class="tok-fn">per_arm</span>(<span class="tok-num">0.04</span>, <span class="tok-num">0.10</span>)  <span class="tok-cm"># 39473</span></code></pre>
+</div>
+              <p class="fig-source"><b>Source:</b> the same arithmetic as the Site page bench and the tool fallback; reference case 4% · 10% · 80% → 39,473.</p>
+            </figure>
+          </article>
+        </div>
+        <div class="col-4" style="min-width: 0;">
+          <div class="label" style="margin-bottom: 8px; color: var(--ink);">Token classes · the whole palette · on #202226 / #26282C</div>
+          <div style="border-top: var(--rule-open); font-size: var(--t-small); line-height: 1.45;">
+            <div class="rule-t" style="display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 12px; padding-block: 8px;"><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">tok-kw</span><span>Keywords · ultramarine #7C93FF · 5.0:1</span></div>
+            <div class="rule-t" style="display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 12px; padding-block: 8px;"><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">tok-fn</span><span>Function and type names · amber #F0B400 · 7.5:1</span></div>
+            <div class="rule-t" style="display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 12px; padding-block: 8px;"><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">tok-str</span><span>Strings · jade #00C69F · 6.4:1</span></div>
+            <div class="rule-t" style="display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 12px; padding-block: 8px;"><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">tok-num</span><span>Numbers · sky #54C0F0 · 6.8:1</span></div>
+            <div class="rule-t" style="display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 12px; padding-block: 8px;"><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">tok-cm</span><span>Comments · ink-3 #97999D, italic · 4.9:1</span></div>
+            <div class="rule-t" style="display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 12px; padding-block: 8px; border-bottom: var(--rule);"><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">tok-op</span><span>Operators and punctuation · ink-2 #CED0D4. Identifiers stay #F3F5F9.</span></div>
+          </div>
+          <p style="margin: 16px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">The bar names the language and the listing; Wrap toggles pre-wrap against a horizontal scroll inside the panel; Copy takes the plain text. Inline <code style="font-family: var(--font-mono); font-size: 0.9em; background: var(--surface-2); padding: 1px 4px;">code</code> keeps the light wash at 0.9em. Nothing inside a fence is rewritten by any build pass; an unbalanced fence fails the build. The module is the one script a content page with code carries — an exception to the zero-JS rule, recorded with the decision.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 MATH -->
+    <section id="s04" class="section" data-screen-label="04 Math">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">04 · MATH</div>
+        <div class="col-9">
+          <h2 class="display" style="margin: 0; font-size: var(--t-h2);">Set at build, numbered from the code.</h2>
+          <p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">Display mathematics sits between two hairlines with its number at the right margin; inline mathematics runs in the sentence. Both come out of KaTeX at build as HTML plus MathML, so a reader gets finished markup and a screen reader gets a tree; the page ships no math script and the KaTeX fonts come from this origin. The specimen below is the MathML half, as browsers now render it natively.</p>
+        </div>
+      </div>
+      <div class="grid" style="margin-top: var(--block-gap); row-gap: 32px;">
+        <div class="col-8" style="min-width: 0;">
+          <article class="doc" lang="en">
+            <p>For two proportions with baseline <math><mi>p</mi><mn>1</mn></math> and a relative lift <math><mi>λ</mi></math>, the sample per arm at power <math><mn>1</mn><mo>−</mo><mi>β</mi></math> is</p>
+            <div class="math">
+              <div class="math-body">
+                <math display="block">
+                  <mrow>
+                    <mi>n</mi><mo>=</mo>
+                    <mfrac>
+                      <mrow><msup><mrow><mo>(</mo><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mi>α</mi><mo>/</mo><mn>2</mn></mrow></msub><mo>+</mo><msub><mi>z</mi><mrow><mn>1</mn><mo>−</mo><mi>β</mi></mrow></msub><mo>)</mo></mrow><mn>2</mn></msup><mo>·</mo><mo>[</mo><msub><mi>p</mi><mn>1</mn></msub><mo>(</mo><mn>1</mn><mo>−</mo><msub><mi>p</mi><mn>1</mn></msub><mo>)</mo><mo>+</mo><msub><mi>p</mi><mn>2</mn></msub><mo>(</mo><mn>1</mn><mo>−</mo><msub><mi>p</mi><mn>2</mn></msub><mo>)</mo><mo>]</mo></mrow>
+                      <mrow><msup><mrow><mo>(</mo><msub><mi>p</mi><mn>2</mn></msub><mo>−</mo><msub><mi>p</mi><mn>1</mn></msub><mo>)</mo></mrow><mn>2</mn></msup></mrow>
+                    </mfrac>
+                  </mrow>
+                </math>
+                <math display="block">
+                  <mrow><mtext>with</mtext><mspace width="0.5em"></mspace><msub><mi>p</mi><mn>2</mn></msub><mo>=</mo><msub><mi>p</mi><mn>1</mn></msub><mo>(</mo><mn>1</mn><mo>+</mo><mi>λ</mi><mo>)</mo></mrow>
+                </math>
+              </div>
+              <span class="eq-no">(04-01-1)</span>
+            </div>
+            <p>At <math><msub><mi>p</mi><mn>1</mn></msub><mo>=</mo><mn>0.04</mn></math>, <math><mi>λ</mi><mo>=</mo><mn>0.10</mn></math> and 80% power this gives <mark>39,473</mark> visitors per arm — the figure the bench, the fallback text and the listing agree on.</p>
+          </article>
+        </div>
+        <div class="col-4" style="min-width: 0;">
+          <div class="label" style="margin-bottom: 8px; color: var(--ink);">Rules</div>
+          <div style="border-top: var(--rule-open); font-size: var(--t-small); line-height: 1.45;">
+            <div class="rule-t" style="padding-block: 8px;">Authored as <code style="font-family: var(--font-mono); font-size: 0.9em;">$…$</code> and <code style="font-family: var(--font-mono); font-size: 0.9em;">$$…$$</code>; rendered by <code style="font-family: var(--font-mono); font-size: 0.9em;">rehype-katex</code> with <code style="font-family: var(--font-mono); font-size: 0.9em;">output: "htmlAndMathml"</code>, <code style="font-family: var(--font-mono); font-size: 0.9em;">throwOnError: false</code>.</div>
+            <div class="rule-t" style="padding-block: 8px;">Equation numbers derive from the document code and the order of display blocks; never typed.</div>
+            <div class="rule-t" style="padding-block: 8px;">Mathematics is ink. The one earned figure in the sentence may be accent text (D-025); symbols never are.</div>
+            <div class="rule-t" style="padding-block: 8px;">Two <code style="font-family: var(--font-mono); font-size: 0.9em;">$</code> in ordinary prose (prices) are never paired into math — a regression fixture guards it.</div>
+            <div class="rule-t" style="padding-block: 8px; border-bottom: var(--rule);"><code style="font-family: var(--font-mono); font-size: 0.9em;">katex.min.css</code> and its woff2 fonts live under <code style="font-family: var(--font-mono); font-size: 0.9em;">/fonts/katex/</code>, subset to the faces used; they count against the font budget.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 DIAGRAM -->
+    <section id="s05" class="section" data-screen-label="05 Diagram">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">05 · DIAGRAM</div>
+        <div class="col-9">
+          <h2 class="display" style="margin: 0; font-size: var(--t-h2);">Boxes, hairlines, one arrow glyph.</h2>
+          <p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">A <code style="font-family: var(--font-mono); font-size: 0.9em;">mermaid</code> fence renders at build to inline SVG; a post-pass swaps the theme’s hexes for tokens so the diagram follows light and dark. Nodes are surface-2 boxes with a 1px ink edge and no radius, edges are 1px ink-2, labels are the body face at 14px. Below, the target rendering of the project order, drawn in HTML so its type never scales.</p>
+        </div>
+      </div>
+      <div class="grid" style="margin-top: var(--block-gap); row-gap: 32px;">
+        <div class="col-8" style="min-width: 0;">
+          <article class="doc" lang="en">
+            <figure class="fig" data-kind="diagram" data-width="wide" style="border-top: 0; padding-top: 0;">
+              <figcaption><span class="fig-label">Fig. 01-00-1 · project page order</span><span class="fig-title">Six sections, one direction; limitations hang off the result.</span></figcaption>
+              <div role="img" aria-label="Flowchart: question, data, method, result, decision in a row; limitations attached below result" style="display: grid; gap: 0; font-size: 14px; line-height: 1.3;">
+                <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 0;">
+                  <span style="border: 1px solid var(--ink); background: var(--surface-2); padding: 10px 14px;">Question</span><span style="font-family: var(--font-mono); color: var(--ink-2); padding: 0 8px;">→</span>
+                  <span style="border: 1px solid var(--ink); background: var(--surface-2); padding: 10px 14px;">Data</span><span style="font-family: var(--font-mono); color: var(--ink-2); padding: 0 8px;">→</span>
+                  <span style="border: 1px solid var(--ink); background: var(--surface-2); padding: 10px 14px;">Method</span><span style="font-family: var(--font-mono); color: var(--ink-2); padding: 0 8px;">→</span>
+                  <span style="position: relative; border: 1px solid var(--ink); background: var(--surface-2); padding: 10px 14px;">Result<span style="position: absolute; left: 50%; top: 100%; width: 1px; height: 24px; background: var(--ink-2);"></span></span><span style="font-family: var(--font-mono); color: var(--ink-2); padding: 0 8px;">→</span>
+                  <span style="border: 1px solid var(--ink); background: var(--surface-2); padding: 10px 14px;">Decision</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px; margin-top: 24px; padding-left: 0;">
+                  <span style="border: 1px dotted var(--ink); background: var(--surface); padding: 10px 14px;">Limitations</span><span style="font-family: var(--font-mono); font-size: 13px; color: var(--ink-2);">stated before the decision, never after it</span>
+                </div>
+              </div>
+              <p class="fig-source"><b>Source:</b> CLAUDE.md content model; the body order every project page follows.</p>
+            </figure>
+          </article>
+        </div>
+        <div class="col-4" style="min-width: 0;">
+          <div class="label" style="margin-bottom: 8px; color: var(--ink);">Mermaid theme · themeVariables → tokens</div>
+          <div style="border-top: var(--rule-open); font-family: var(--font-mono); font-size: var(--t-mono-sm); line-height: 1.5; font-variant-numeric: var(--num);">
+            <div class="rule-t" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; padding-block: 7px;"><span style="color: var(--ink-2);">fontFamily</span><span>BKribitz</span></div>
+            <div class="rule-t" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; padding-block: 7px;"><span style="color: var(--ink-2);">fontSize</span><span>14px</span></div>
+            <div class="rule-t" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; padding-block: 7px;"><span style="color: var(--ink-2);">primaryColor</span><span>--surface-2</span></div>
+            <div class="rule-t" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; padding-block: 7px;"><span style="color: var(--ink-2);">primaryBorderColor · nodeBorder</span><span>--ink</span></div>
+            <div class="rule-t" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; padding-block: 7px;"><span style="color: var(--ink-2);">primaryTextColor</span><span>--ink</span></div>
+            <div class="rule-t" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; padding-block: 7px;"><span style="color: var(--ink-2);">lineColor</span><span>--ink-2</span></div>
+            <div class="rule-t" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; padding-block: 7px;"><span style="color: var(--ink-2);">edgeLabelBackground · background</span><span>--surface</span></div>
+            <div class="rule-t" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; padding-block: 7px;"><span style="color: var(--ink-2);">flowchart.curve</span><span>linear</span></div>
+            <div class="rule-t" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; padding-block: 7px;"><span style="color: var(--ink-2);">htmlLabels</span><span>false</span></div>
+            <div class="rule-t" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; padding-block: 7px; border-bottom: var(--rule);"><span style="color: var(--ink-2);">themeCSS</span><span>.node rect { rx: 0; ry: 0 }</span></div>
+          </div>
+          <p style="margin: 16px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">An unparseable diagram fails the build naming the note. In Obsidian the fence previews with Mermaid’s default theme; the snippet does not restyle it.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 CV -->
+    <section id="s06" class="section" data-screen-label="06 CV">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">06 · CV</div>
+        <div class="col-9">
+          <h2 class="display" style="margin: 0; font-size: var(--t-h2);">One A4 page, built with LaTeX from the same tokens.</h2>
+          <p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">The CV is the About page in print: name and role, one line of contact, then numbered sections on hairlines — profile, selected work, experience, education, skills. Dates and codes sit in a 32mm mono column; the body hangs on one line to the right. One accent figure per page. <code style="font-family: var(--font-mono); font-size: 0.9em;">ds-update/cv/braga-cv.tex</code> implements it with fontspec and the BKribitz files; employers, roles and dates are fields the build fills from the CV data — none is typed here.</p>
+        </div>
+      </div>
+      <div class="grid" style="margin-top: var(--block-gap); row-gap: 32px; align-items: start;">
+        <div class="col-8" data-gate-skip style="min-width: 0;">
+          <div class="label" style="margin-bottom: 8px;">A4 · 210 × 297 mm · margins 18 / 16 / 20 mm · preview at page scale</div>
+          <div style="container-type: inline-size; width: 100%; max-width: 794px; aspect-ratio: 210 / 297; overflow: hidden; border: 1px solid var(--rule-c);">
+          <div lang="en" style="width: 794px; height: 1123px; transform: scale(calc(100cqw / 794px)); transform-origin: top left; box-sizing: border-box; background: #FFFFFF; color: #000000; padding: 68px 60px 76px; display: grid; grid-template-rows: auto 1fr auto; font-family: var(--font-body); font-size: 14px; line-height: 1.45; overflow: hidden;">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 24px; flex-wrap: wrap;">
+                <div style="font-family: var(--font-display); font-weight: 700; font-size: 34px; letter-spacing: -0.03em; line-height: 1;">Rafael Braga-Kribitz</div>
+                <div style="font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #5A5C61;">Marketing Data Analyst</div>
+              </div>
+              <div style="margin-top: 12px; border-top: 1px solid #000000; padding-top: 10px; display: flex; flex-wrap: wrap; gap: 6px 24px; font-family: var(--font-mono); font-size: 12px; color: #5A5C61; font-variant-numeric: var(--num);"><span>Seiersberg · Graz · Austria</span><span>rafaelbragakribitz@gmail.com</span><span>github.com/RafaelBraga-Kribitz ↗</span></div>
+            </div>
+            <div style="display: grid; gap: 22px; margin-top: 28px; align-content: start;">
+              <div>
+                <div style="display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 16px; border-top: 1px solid #9EA0A5; padding-top: 8px;"><span style="font-family: var(--font-mono); font-size: 12px; color: #5A5C61; letter-spacing: 0.08em;">01</span><span style="font-family: var(--font-display); font-weight: 700; font-size: 16px; letter-spacing: -0.02em;">Profile</span></div>
+                <div style="display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 16px; margin-top: 8px;"><span></span><p style="margin: 0; max-width: 60ch; text-wrap: pretty;">Marketing experience, translated into analytical work. Questions about demand, allocation and cost, answered with data and explicit limits — five projects built end to end, each with its question, method, result and limitations stated.</p></div>
+              </div>
+              <div>
+                <div style="display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 16px; border-top: 1px solid #9EA0A5; padding-top: 8px;"><span style="font-family: var(--font-mono); font-size: 12px; color: #5A5C61; letter-spacing: 0.08em;">02</span><span style="font-family: var(--font-display); font-weight: 700; font-size: 16px; letter-spacing: -0.02em;">Selected work</span></div>
+                <div style="display: grid; gap: 6px; margin-top: 8px; font-variant-numeric: var(--num);">
+                  <div style="display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 16px;"><span style="font-family: var(--font-mono); font-size: 12px; color: #5A5C61;">02-01 · 2026</span><span><b style="font-weight: 700;">Austria data-job market intelligence</b> — 720 core postings; SQL in 40% and Python in 35% of ads; Styria <span style="color: #2F4BE0;">+34%</span> against Austria −28%, 2020–2025.</span></div>
+                  <div style="display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 16px;"><span style="font-family: var(--font-mono); font-size: 12px; color: #5A5C61;">02-02 · 2026</span><span><b style="font-weight: 700;">Austrian MMM and budget optimiser</b> — Bayesian media-mix model; a budget decision with a downside check. Under revision.</span></div>
+                  <div style="display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 16px;"><span style="font-family: var(--font-mono); font-size: 12px; color: #5A5C61;">02-03 · 2026</span><span><b style="font-weight: 700;">Decision analytics reconstruction</b> — three modules; allocation gains reported as proxies, not campaign effects.</span></div>
+                  <div style="display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 16px;"><span style="font-family: var(--font-mono); font-size: 12px; color: #5A5C61;">02-04 · 2026</span><span><b style="font-weight: 700;">Warehouse humanoid TCO</b> — discrete-event simulation and 10,000 Monte Carlo draws per scenario; the lean hybrid at €453,000 over five years wins 99.8% of draws.</span></div>
+                  <div style="display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 16px;"><span style="font-family: var(--font-mono); font-size: 12px; color: #5A5C61;">02-05 · 2026</span><span><b style="font-weight: 700;">Energy procurement risk analyser</b> — ENTSO-E prices to a cost-risk decision; dbt-modelled DuckDB warehouse. In build.</span></div>
+                </div>
+              </div>
+              <div>
+                <div style="display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 16px; border-top: 1px solid #9EA0A5; padding-top: 8px;"><span style="font-family: var(--font-mono); font-size: 12px; color: #5A5C61; letter-spacing: 0.08em;">03</span><span style="font-family: var(--font-display); font-weight: 700; font-size: 16px; letter-spacing: -0.02em;">Experience</span></div>
+                <div style="display: grid; gap: 6px; margin-top: 8px;">
+                  <div style="display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 16px;"><span style="font-family: var(--font-mono); font-size: 12px; color: #5A5C61;">⟨from⟩–⟨to⟩</span><span><b style="font-weight: 700;">⟨role⟩</b> · ⟨employer⟩, ⟨place⟩ — ⟨one line on scope and result⟩</span></div>
+                  <div style="display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 16px;"><span style="font-family: var(--font-mono); font-size: 12px; color: #5A5C61;">⟨from⟩–⟨to⟩</span><span><b style="font-weight: 700;">⟨role⟩</b> · ⟨employer⟩, ⟨place⟩ — ⟨one line on scope and result⟩</span></div>
+                </div>
+              </div>
+              <div>
+                <div style="display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 16px; border-top: 1px solid #9EA0A5; padding-top: 8px;"><span style="font-family: var(--font-mono); font-size: 12px; color: #5A5C61; letter-spacing: 0.08em;">04</span><span style="font-family: var(--font-display); font-weight: 700; font-size: 16px; letter-spacing: -0.02em;">Education</span></div>
+                <div style="display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 16px; margin-top: 8px;"><span style="font-family: var(--font-mono); font-size: 12px; color: #5A5C61;">⟨year⟩</span><span><b style="font-weight: 700;">⟨degree⟩</b> · ⟨institution⟩, ⟨place⟩</span></div>
+              </div>
+              <div>
+                <div style="display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 16px; border-top: 1px solid #9EA0A5; padding-top: 8px;"><span style="font-family: var(--font-mono); font-size: 12px; color: #5A5C61; letter-spacing: 0.08em;">05</span><span style="font-family: var(--font-display); font-weight: 700; font-size: 16px; letter-spacing: -0.02em;">Skills</span></div>
+                <div style="display: grid; gap: 4px; margin-top: 8px;">
+                  <div style="display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 16px;"><span style="font-family: var(--font-mono); font-size: 12px; color: #5A5C61; letter-spacing: 0.08em; text-transform: uppercase;">Domains</span><span>Marketing analytics · market intelligence · decision analysis · operations modelling</span></div>
+                  <div style="display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 16px;"><span style="font-family: var(--font-mono); font-size: 12px; color: #5A5C61; letter-spacing: 0.08em; text-transform: uppercase;">Methods</span><span>Bayesian MMM · discrete-event simulation · Monte Carlo · A/B testing and power analysis · classifier diagnostics</span></div>
+                  <div style="display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 16px;"><span style="font-family: var(--font-mono); font-size: 12px; color: #5A5C61; letter-spacing: 0.08em; text-transform: uppercase;">Toolbox</span><span>Python · SQL · PyMC · DuckDB · dbt · Power BI · Git</span></div>
+                  <div style="display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 16px;"><span style="font-family: var(--font-mono); font-size: 12px; color: #5A5C61; letter-spacing: 0.08em; text-transform: uppercase;">Languages</span><span>⟨language · level⟩ · ⟨language · level⟩ · German ⟨level⟩</span></div>
+                </div>
+              </div>
+            </div>
+            <div style="border-top: 1px solid #9EA0A5; padding-top: 8px; display: flex; justify-content: space-between; gap: 16px; font-family: var(--font-mono); font-size: 12px; color: #5A5C61; letter-spacing: 0.08em; text-transform: uppercase;"><span>CV · Rafael Braga-Kribitz</span><span>Updated 20 Oct 2026 · 1 / 1</span></div>
+          </div>
+          </div>
+        </div>
+        <div class="col-4" style="min-width: 0;">
+          <div class="label" style="margin-bottom: 8px; color: var(--ink);">LaTeX · what the file does</div>
+          <div style="border-top: var(--rule-open); font-size: var(--t-small); line-height: 1.45;">
+            <div class="rule-t" style="display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 12px; padding-block: 8px;"><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">engine</span><span>XeLaTeX or LuaLaTeX; <code style="font-family: var(--font-mono); font-size: 0.9em;">fontspec</code> loads the BKribitz and BKribitz Mono files from <code style="font-family: var(--font-mono); font-size: 0.9em;">ds-update/fonts/</code> with lining, tabular figures and the slashed zero.</span></div>
+            <div class="rule-t" style="display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 12px; padding-block: 8px;"><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">tokens</span><span>ink, ink-2, mid, rule and accent as named colours from colors.css; hairlines 0.4pt; the single accent macro <code style="font-family: var(--font-mono); font-size: 0.9em;">\key{…}</code>.</span></div>
+            <div class="rule-t" style="display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 12px; padding-block: 8px;"><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">macros</span><span><code style="font-family: var(--font-mono); font-size: 0.9em;">\cvsection{01}{Profile}</code>, <code style="font-family: var(--font-mono); font-size: 0.9em;">\cvrow{dates}{body}</code>, <code style="font-family: var(--font-mono); font-size: 0.9em;">\cvskill{Domains}{…}</code>; the 32mm column and the 4mm gutter are lengths.</span></div>
+            <div class="rule-t" style="display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 12px; padding-block: 8px;"><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">data</span><span>Experience, education and languages are macros filled from the owner’s CV data; the PDF is the About page’s “Download CV”.</span></div>
+            <div class="rule-t" style="display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 12px; padding-block: 8px; border-bottom: var(--rule);"><span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">print</span><span>Black ink on white; 10.5pt body, 9pt mono labels, 26pt name; no colour but the one accent figure; no icons, no photo unless the About page earns one.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="grid-container">
+    <div class="grid rule-strong" style="padding-block: 32px 48px;">
+      <div class="col-6" style="font-family: var(--font-display); font-weight: var(--w-display); font-size: 18px;">Rafael Braga-Kribitz</div>
+      <div class="col-3 label">Design System · v2.1 · Templates</div>
+      <div class="col-3 label" style="text-align: right;">Drafts awaiting approval</div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;dark&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;}}">
+class Component extends DCLogic {
+  componentDidMount() { this.apply(); }
+  componentDidUpdate() { this.apply(); }
+  apply() {
+    const theme = (this.props.theme ?? 'light') === 'dark' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+    document.body.classList.toggle('dark', theme === 'dark');
+  }
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

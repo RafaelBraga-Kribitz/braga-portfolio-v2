@@ -1,0 +1,14 @@
+/* ============================================================
+   COMPONENT FIXES — v2 (load after the bundle's stylesheets)
+   Patches for compiled components until their source is updated.
+   ============================================================ */
+
+/* Listing header: finer vertical rhythm (was 16px top/bottom). */
+.listing-head { padding-block: var(--space-1); }
+
+/* Toggle: the knob sat 2px low — `top: 3px` ignored the 1px border
+   of a border-box 20px track (inner height 18). Knob is now 12px with
+   an even 3px inset on all sides. Source fix in Toggle.jsx:
+   knob = h - 2 - pad*2; top = pad; on-left = w - 2 - knob - pad. */
+button[role="switch"] > span { top: 3px !important; width: 12px !important; height: 12px !important; left: 3px !important; }
+button[role="switch"][aria-checked="true"] > span { left: 23px !important; }

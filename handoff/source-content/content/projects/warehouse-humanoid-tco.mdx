@@ -1,0 +1,101 @@
+---
+title: Warehouse Humanoid TCO
+date: 2026-05-21
+kind: case
+code: 01-03
+summary: "When do humanoid robots beat human labour in warehouse economics? A discrete-event simulation and Monte Carlo total-cost-of-ownership model on 2,359 real robot episodes and Austrian wage rates."
+homeNote: "Humanoid robots against people and AMRs, priced over five years. The cheapest crew was one person and three AMRs, and no humanoid price in the searched range caught up."
+status: live
+tags:
+  - Intralogistics
+  - Total Cost of Ownership
+  - Simulation
+locale: en
+---
+
+<Lead>
+When do humanoid robots beat human labour in warehouse economics? A discrete-event simulation
+and Monte Carlo total-cost-of-ownership model on 2,359 real robot episodes and Austrian wage
+rates. At the modelled demand, <strong>they do not yet</strong>.
+</Lead>
+
+The question is unit economics, not capability: at what price, demand and staffing does a
+humanoid fleet become the cheaper way to run pick-move-place work in a warehouse? The model
+prices seven staffing scenarios over five years at an 8% discount rate, from human-only crews
+through AMR hybrids to pure-humanoid fleets.
+
+<Marker num="01" label="Context" id="sec-01" />
+
+The robot evidence is 2,359 episodes from five public UnifoLM datasets, pinned by hash. They are
+household demonstrations (plates into a dishwasher, pillow pickup, clothes into a washing
+machine, single- and dual-arm manipulation), not warehouse tasks. The model uses their
+pick-move-place primitives as a proxy and applies a transfer factor of 0.50–0.90 to their speed.
+That transfer is the largest threat to external validity, and it is stated before any result.
+
+Labour is priced at Austrian collective-agreement (KV) wage rates; robot and AMR capex uses
+public price assumptions. Integration cost and availability derating are part of the model.
+
+<Marker num="02" label="Process" id="sec-02" />
+
+Four modules run in order from one command:
+
+1. **Capability extraction.** Cycle times and a rule-based task taxonomy from the episodes.
+2. **Discrete-event simulation.** Seven scenarios × 15 replicas (105 runs), demand-bound at
+   120 orders an hour, each scenario sized to a utilisation of at most 0.85.
+3. **Five-year TCO with Monte Carlo.** 10,000 draws per scenario, one-at-a-time and Sobol
+   sensitivity, and a binary search for the humanoid price at which the fleet breaks even.
+4. **Reporting.** Executive charts, CSV exports, an executive summary in German and English,
+   and a Tableau Public workbook.
+
+The build runs under a CI-enforced governance protocol: every change closes a tracked finding
+with a named verification script, and CI re-runs the script of every closed finding on each pull
+request. One finding changed the headline. An earlier version compared fixed crews of
+different sizes, eight people against six AMR-hybrid units, so its "cheapest option" mixed a
+smaller crew with a technology choice. Every non-legacy scenario is now sized by the same
+optimiser to minimum five-year cost under the utilisation cap, and the eight-person crew stays
+only as a labelled reference for the cost of overstaffing.
+
+<Marker num="03" label="Results" id="sec-03" />
+
+<MetricGrid metrics={[
+  { value: "€0.453M", label: "CHEAPEST · 5 YEARS", note: "1 human + 3 AMRs, present value", accent: true },
+  { value: "€0.647M", label: "HUMAN-ONLY", note: "lean crew of three" },
+  { value: "€2.533M", label: "BEST HUMANOID CASE", note: "S-future-2028" },
+  { value: "99.8%", label: "MONTE CARLO WINS", note: "share of 10,000 draws won by 1 human + 3 AMRs" }
+]} />
+
+| Scenario | Five-year cost (PV) | Capex | Cost per order |
+|---|---|---|---|
+| S-lean-hybrid-amr | €452,706 | €195,000 | €0.374 |
+| S-lean-human | €647,401 | €0 | €0.543 |
+| S-baseline-human (legacy) | €1,726,403 | €0 | €1.444 |
+| S-future-2028 | €2,532,753 | €1,365,349 | €2.120 |
+| S-pure-humanoid | €2,877,837 | €2,051,609 | €2.407 |
+| S-hybrid-amr | €3,841,113 | €2,311,609 | €3.244 |
+| S-hybrid-5050 | €5,251,641 | €2,051,609 | €4.411 |
+
+The model's recommendation is to deploy the lean hybrid now and defer humanoid procurement. The
+breakeven search ran humanoid capex from €10,000 to €500,000 per unit and found no price at
+which a pure-humanoid fleet matches the lean hybrid's cost per order at 120 orders an hour. Even
+near-free humanoids lose, so capex is not the binding constraint. The call is worth revisiting
+under demand growth, labour scarcity or multi-shift operation.
+
+For the leading scenario, the Monte Carlo cost has a mean of €461,414 with a standard deviation of
+€43,755, and a 90% interval from €394,658 to €537,549.
+
+One assumption cuts against the robots. The model assumes labour is available at KV rates. In
+Austrian intralogistics the practical driver of automation is unfilled vacancies rather than
+wage arbitrage, so robot value is understated wherever vacancies stay open.
+
+What this does not establish:
+
+- A site-specific procurement case. There are no warehouse-native cycle times and no signed
+  humanoid quotes.
+- Warehouse performance. Household demonstrations remain a proxy for warehouse tasks.
+- Local prices. Public list prices and estimated KV wages can move the cost either way.
+- Independent reproduction. The committed reproduction log was produced by an agent, not by a
+  third party cloning the repository cold.
+
+Complete, last updated 2026-09-16. Code, charts, the executive summaries and the governance
+record:
+[github.com/RafaelBraga-Kribitz/warehouse_humanoid_tco](https://github.com/RafaelBraga-Kribitz/warehouse_humanoid_tco).

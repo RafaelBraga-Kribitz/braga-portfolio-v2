@@ -1,0 +1,30 @@
+/* ============================================================
+   FLOW — v2 (absorbed from the portfolio site, Oct 2026)
+   Relationship spacing: the gap between two siblings is set by
+   how closely they relate, not by the element type alone.
+   related  8  — a list directly under the paragraph that introduces it
+   element 16  — paragraph → paragraph, h3 → text
+   block   32  — h2 → text; anything ↔ figure, table, quote
+   lead    48  — text → h3
+   group   64  — metric strip → first h2; document → end bar
+   section 96  — text → h2 (64 below 768px)
+   ============================================================ */
+:root {
+  --flow-related: 8px;
+  --flow-element: 16px;
+  --flow-block:   32px;
+  --flow-lead:    48px;
+  --flow-group:   64px;
+  --flow-section: 96px;
+
+  /* opening rule — 1px ink. Opens a block (section heading, metric
+     strip, table head, footer). Never between rows. */
+  --rule-open: 1px solid var(--ink);
+
+  --measure-doc: 64ch; /* @kind spacing — document paragraphs */
+  --w-wordmark: 800;   /* @kind font — the Braga wordmark only (D · 20 Oct 2026) */
+}
+@media (max-width: 767px) {
+  :root { --flow-lead: 32px; --flow-group: 48px; --flow-section: 64px; }
+}
+.dark { --rule-open: 1px solid var(--ink); }

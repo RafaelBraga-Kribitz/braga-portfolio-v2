@@ -1,0 +1,106 @@
+/* ============================================================
+   LISTING — the canonical index / list row.
+   ONE row rhythm used by every list in the system (Work, Writing,
+   Home index, References). Built on the 12-column grid so every
+   list shares the SAME four tab stops:
+
+     ┌ index ┌ title ──────────┌ meta ──────┌ trail ┐
+     │ col 1 │ col 2–7          │ col 8–10   │ 11–12 │
+                                              (flush right)
+
+   Full-width hairlines are the structure. Trailing indicators
+   (year, status, tags) always flush to the last column.
+   ============================================================ */
+
+/* Wrapper: anchors the list with a strong full-width top hairline.
+   Place directly inside .page-grid (it spans the whole frame). */
+.listing {
+  grid-column: 1 / -1;
+  border-top: var(--hairline);            /* strong anchor rule */
+}
+
+/* Header row and content rows share ONE column template, so labels
+   sit exactly above their values. */
+.listing-head,
+.listing-row {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
+  column-gap: var(--grid-gutter);
+  align-items: baseline;
+  border-bottom: 1px solid var(--surface-3); /* row rhythm hairline */
+}
+
+.listing-head {
+  padding-block: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--t-mono);
+  color: var(--mid);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+}
+
+.listing-row {
+  padding-block: var(--space-3);
+  text-decoration: none;
+  color: var(--ink);
+  transition: background var(--dur) var(--ease);
+}
+a.listing-row:hover { background: var(--surface-2); }
+
+/* ---- the four canonical slots (identical in head + row) ---- */
+.lr-index { grid-column: 1 / span 1; }
+.lr-title { grid-column: 2 / span 6; min-width: 0; }
+.lr-meta  { grid-column: 8 / span 3; min-width: 0; }
+.lr-trail { grid-column: 11 / span 2; justify-self: end; text-align: right; white-space: nowrap; }
+
+/* Wide-title variant: title runs to the meta edge (for lists with no
+   middle column — e.g. a site index). */
+.listing-row.lr-wide .lr-title,
+.listing-head.lr-wide .lr-title { grid-column: 2 / span 8; }
+
+/* ---- typographic helpers used inside slots ---- */
+.lr-code {
+  font-family: var(--font-mono); font-size: var(--t-mono);
+  color: var(--mid); font-variant-numeric: tabular-nums lining-nums slashed-zero;
+  letter-spacing: .02em; white-space: nowrap;
+}
+.lr-title-main {
+  display: block;
+  font-family: var(--font-display); font-weight: var(--w-black);
+  font-size: var(--t-project); letter-spacing: var(--tracking-tight);
+  line-height: 1.14; color: var(--ink); text-wrap: pretty;
+}
+.lr-title-sub {
+  display: block;
+  font-family: var(--font-body); font-size: var(--t-body);
+  color: var(--ink-2); line-height: 1.35; margin-top: 4px;
+}
+.lr-mono {
+  font-family: var(--font-mono); font-size: var(--t-mono);
+  color: var(--ink-2); font-variant-numeric: tabular-nums lining-nums slashed-zero;
+  letter-spacing: .02em;
+}
+.lr-mono.lr-dim { color: var(--mid); }
+/* stacked mono lines inside a slot (method lists, created/updated) */
+.lr-stack { display: flex; flex-direction: column; gap: 4px; }
+.lr-label {
+  text-transform: uppercase; letter-spacing: var(--tracking-label);
+  color: var(--mid); font-family: var(--font-mono); font-size: var(--t-mono);
+}
+/* trailing year/value with accent arrow */
+.lr-year { display: inline-flex; gap: 10px; align-items: baseline; color: var(--ink-2); }
+.lr-year .lr-arrow { color: var(--accent-01); }
+
+/* nested index (site map): indent the title without breaking the grid */
+.listing-row.lr-child .lr-title { padding-left: var(--space-4); }
+
+/* ---- responsive: collapse to a stacked, left-aligned card ---- */
+@media (max-width: 720px) {
+  .listing-head { display: none; }
+  .listing-row { grid-template-columns: 64px 1fr; row-gap: 6px; padding-block: var(--space-3); }
+  .lr-index { grid-column: 1; }
+  .lr-title { grid-column: 2; }
+  .lr-meta  { grid-column: 2; }
+  .lr-trail { grid-column: 2; justify-self: start; text-align: left; }
+  .listing-row.lr-child .lr-title { padding-left: var(--space-3); }
+}

@@ -1,0 +1,35 @@
+/* ============================================================
+   IBCS NOTATION — v2 · D-00x · 20 Oct 2026 · the only notation
+   (classic notation retired; no data-notation switch).
+
+   Scenarios    AC solid ink-2 · PY solid mid · PL outline ink-2 ·
+                FC hatch 45° (url(#hatch-fc))
+   Variances    good = jade · bad = vermilion. Never used for anything
+                else. Labels sit outside the bar (jade/white < 4.5:1).
+                Amended 20 Oct 2026 (audit): both deepened on light and
+                vermilion lifted on dark so every mark clears 3:1 on all
+                three surfaces. Previous values in _parked/pre-audit/tokens/.
+   Alert        vermilion + mandatory ▲ glyph. Highlight ≠ alert.
+   Highlight    ultramarine (= --accent-01). One per chart.
+   ============================================================ */
+:root {
+  --sc-ac: var(--ink-2);
+  --sc-py: var(--mid);
+  --sc-pl: var(--ink-2);
+  --var-pos: #007A66;
+  --var-neg: #CC3710;
+  --var-pos-tint: #B3E3D7;
+  --var-neg-tint: #F9C3AD;
+  --alert: #CC3710;
+  --hl: var(--accent-01);
+  --hl-6: var(--chart-seq-6);
+  --hl-7: var(--chart-seq-7);
+  --hl-8: var(--chart-seq-8);
+}
+.dark {
+  --var-pos: #00C69F;
+  --var-neg: #F57A5A;
+  --alert: #F57A5A;
+  --var-pos-tint: #0B4A3E;
+  --var-neg-tint: #6A2311;
+}

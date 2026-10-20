@@ -1,0 +1,70 @@
+/* ============================================================
+   FONTS — full Söhne family (Klim Type Foundry)
+   ------------------------------------------------------------
+   display + body : Söhne
+   mono           : Söhne Mono   (the system's single typeface family;
+                    JetBrains Mono is NOT used — Söhne Mono carries all
+                    numbering, code, data labels, tags, timestamps)
+
+   Weight map (Söhne German naming → numeric):
+     Buch 400 · Kräftig 500 · Halbfett 600 ·
+     Dreiviertelfett 700 · Fett 800 · Extrafett 900
+
+   NOTE: files are Klim's TRIAL ("Test") weights — for evaluation
+   only. Before production, replace binaries in assets/fonts/ with
+   licensed retail Söhne (filenames map 1:1, no CSS change needed).
+   ============================================================ */
+
+/* — Söhne — */
+@font-face {
+  font-family: 'Söhne';
+  font-weight: 400; font-style: normal; font-display: swap;
+  src: url('../assets/fonts/Sohne-Buch.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Söhne';
+  font-weight: 400; font-style: italic; font-display: swap;
+  src: url('../assets/fonts/Sohne-BuchKursiv.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Söhne';
+  font-weight: 500; font-style: normal; font-display: swap;
+  src: url('../assets/fonts/Sohne-Kraftig.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Söhne';
+  font-weight: 600; font-style: normal; font-display: swap;
+  src: url('../assets/fonts/Sohne-Halbfett.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Söhne';
+  font-weight: 700; font-style: normal; font-display: swap;
+  src: url('../assets/fonts/Sohne-Dreiviertelfett.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Söhne';
+  font-weight: 800; font-style: normal; font-display: swap;
+  src: url('../assets/fonts/Sohne-Fett.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Söhne';
+  font-weight: 900; font-style: normal; font-display: swap;
+  src: url('../assets/fonts/Sohne-Extrafett.otf') format('opentype');
+}
+
+/* — Söhne Mono — */
+@font-face {
+  font-family: 'Söhne Mono';
+  font-weight: 400; font-style: normal; font-display: swap;
+  src: url('../assets/fonts/SohneMono-Buch.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Söhne Mono';
+  font-weight: 500; font-style: normal; font-display: swap;
+  src: url('../assets/fonts/SohneMono-Kraftig.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Söhne Mono';
+  font-weight: 600; font-style: normal; font-display: swap;
+  src: url('../assets/fonts/SohneMono-Halbfett.otf') format('opentype');
+}

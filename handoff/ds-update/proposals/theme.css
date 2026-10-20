@@ -1,0 +1,99 @@
+/* ============================================================
+   THEME MODEL — proposal P-01 (Audit · 20 Oct 2026)
+   Target from D-020 / HANDOFF 20: `data-theme` on <html>. No attribute
+   follows the OS; `light` or `dark` is a stored override. `.dark` on
+   any element still inverts that element alone (moment blocks).
+
+   Resolution order
+     1. <html data-theme="light|dark">   stored override (pre-paint script)
+     2. @media (prefers-color-scheme)    OS, when no attribute is set
+     3. light                            default
+
+   This file is the single home of every DARK value (colour, rules,
+   chart scales, IBCS). On adoption, delete the `.dark { … }` blocks in
+   colors.css, spacing.css, flow.css, chart-palettes.css and ibcs.css —
+   they are repeated here under one selector list. Two copies of the
+   block are unavoidable (attribute + media query); the build's token
+   mirror test keeps them equal.
+
+   Pre-paint script (inline, first in <head>, 158 bytes, hashed for CSP):
+     <script>(function(){try{var t=localStorage.getItem('bk-theme');
+     if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}
+     catch(e){}})()</script>
+
+   Toggle (the only other JS on a content page): flip the resolved theme,
+   set data-theme, write localStorage ONLY after the click (GDPR note in
+   04-F), and update <meta name="theme-color">.
+
+   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#E4E6EA">
+   <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#191A1D">
+
+   Adopt: keep this file. Revert: delete it and its <link>.
+   ============================================================ */
+
+/* form controls, scrollbars and the canvas follow the PAGE theme, not the OS */
+:root { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { color-scheme: dark; }
+}
+.dark { color-scheme: dark; }
+
+/* ---- dark values · copy 1: stored override + per-element .dark ---- */
+:root[data-theme="dark"],
+.dark {
+  --surface:   #191A1D;
+  --surface-2: #2C2D30;
+  --surface-3: #484A4D;
+  --ink:       #F3F5F9;
+  --ink-2:     #CED0D4;
+  --ink-3:     #97999D;
+  --mid:       #7E8084;
+  --rule-c:    #393A3D;
+  --accent-01: #7C93FF;
+  --hairline:  1px solid var(--mid);
+  --rule:      1px solid var(--rule-c);
+  --rule-open: 1px solid var(--ink);
+  --edge:      var(--ink-3);
+
+  --chart-cat-1: #7C93FF; --chart-cat-2: #F0B400; --chart-cat-3: #54C0F0;
+  --chart-cat-4: #F57AC4; --chart-cat-5: #C9986A;
+  --on-accent: #1A1A1A; --on-cat-1: #1A1A1A; --on-cat-2: #1A1A1A;
+  --on-cat-3: #1A1A1A; --on-cat-4: #1A1A1A; --on-cat-5: #1A1A1A;
+  --chart-catg-1: #F5F5F5; --chart-catg-2: #BDBDBD; --chart-catg-3: #858585; --chart-catg-4: #4F4F4F;
+  --chart-div-7: #484A4D; --chart-two-7: #484A4D;
+  --chart-seq-8: #C2D2FF; --chart-seq-9: #DCE5FF;
+  --var-pos: #00C69F; --var-neg: #F57A5A; --alert: #F57A5A; --var-pos-tint: #0B4A3E; --var-neg-tint: #6A2311;
+}
+
+/* ---- dark values · copy 2: OS preference with no override ---- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --surface:   #191A1D;
+    --surface-2: #2C2D30;
+    --surface-3: #484A4D;
+    --ink:       #F3F5F9;
+    --ink-2:     #CED0D4;
+    --ink-3:     #97999D;
+    --mid:       #7E8084;
+    --rule-c:    #393A3D;
+    --accent-01: #7C93FF;
+    --hairline:  1px solid var(--mid);
+    --rule:      1px solid var(--rule-c);
+    --rule-open: 1px solid var(--ink);
+    --edge:      var(--ink-3);
+
+    --chart-cat-1: #7C93FF; --chart-cat-2: #F0B400; --chart-cat-3: #54C0F0;
+    --chart-cat-4: #F57AC4; --chart-cat-5: #C9986A;
+    --on-accent: #1A1A1A; --on-cat-1: #1A1A1A; --on-cat-2: #1A1A1A;
+    --on-cat-3: #1A1A1A; --on-cat-4: #1A1A1A; --on-cat-5: #1A1A1A;
+    --chart-catg-1: #F5F5F5; --chart-catg-2: #BDBDBD; --chart-catg-3: #858585; --chart-catg-4: #4F4F4F;
+    --chart-div-7: #484A4D; --chart-two-7: #484A4D;
+    --chart-seq-8: #C2D2FF; --chart-seq-9: #DCE5FF;
+    --var-pos: #00C69F; --var-neg: #F57A5A; --alert: #F57A5A; --var-pos-tint: #0B4A3E; --var-neg-tint: #6A2311;
+  }
+}
+
+/* the canvas is always painted (attempt-1 lesson: an unpainted light
+   canvas went black under a dark OS) */
+html, body { background: var(--surface); color: var(--ink); }

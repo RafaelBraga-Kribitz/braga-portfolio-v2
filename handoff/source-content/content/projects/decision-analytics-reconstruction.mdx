@@ -1,0 +1,95 @@
+---
+title: Decision Analytics Reconstruction
+heading: Decision Analytics Reconstruction · Paraguay 2018
+date: 2026-05-07
+kind: case
+code: 01-02
+summary: "The 2018 Paraguay presidential election, reconstructed as three connected decision modules (voter segmentation, budget allocation and poll tracking) from what a campaign could see in early 2018."
+homeNote: "Eight public polls, census aggregates and a fixed budget. Segmentation, a MILP allocator and Bayesian poll tracking, each labelled with what it can and cannot claim."
+status: live
+tags:
+  - Election Campaigns
+  - Segmentation
+  - Optimisation
+  - Bayesian Tracking
+locale: en
+---
+
+<Lead>
+The 2018 Paraguay presidential election, reconstructed as three connected decision modules
+(voter segmentation, budget allocation and poll tracking) from what a campaign could see in
+early 2018.
+</Lead>
+
+Given only eight public polls, census aggregates and a fixed budget, how do you track a national
+race, allocate money across the country, and stay honest about what you actually know? The
+verified result the reconstruction reasons toward is public: Mario Abdo Benítez won by 3.70
+percentage points (46.43% against 42.73%) on 61.25% turnout, according to the electoral
+tribunal's (TSJE) final results.
+
+<Marker num="01" label="Context" id="sec-01" />
+
+The public anchors are verified: the TSJE returns, DGEEC census aggregates, the INE 2018
+household survey on internet and WhatsApp use, and eight published tracking polls. Every
+individual voter is synthetic. A 50,000-record voter file is raked to the verified
+department-level anchors (turnout, gender, rural share, language), so no real person is
+represented while the aggregates still hold.
+
+<MetricGrid metrics={[
+  { value: "+3.70 pp", label: "VERIFIED MARGIN", note: "46.43% vs 42.73% · TSJE" },
+  { value: "61.25%", label: "TURNOUT", note: "TSJE final results" },
+  { value: "50,000", label: "SYNTHETIC VOTERS", note: "14-week window · seed 42" }
+]} />
+
+Each artifact carries an epistemic tag (verified, calibrated, simulated or illustrative), and
+the register of those tags is part of the repository. The tag travels with the number.
+
+<Marker num="02" label="Process" id="sec-02" />
+
+**Module A: segmentation and turnout.** K-means with six segments on the synthetic population,
+plus a Platt-calibrated turnout propensity. Silhouette 0.2562 against a gate of 0.22, bootstrap
+ARI 0.4304 against a gate of 0.40, Brier score 0.1185 on a 15,000-voter holdout. The model also
+reaches an AUC of about 0.89, which is deliberately not headlined: the propensity features share
+calibration anchors with the target, so the AUC measures how well the raking was recovered, not
+how well the model generalises.
+
+**Module B: allocation.** A mixed-integer linear program (PuLP with CBC) over 2,772 rows:
+18 departments × 11 channels × 14 weeks, under a budget, reach caps, an exchange-rate layer
+and an 80% coverage floor. It maximises a linearised persuasion proxy and is served through a
+FastAPI application.
+
+**Module C: poll tracking.** A Gaussian random walk with house effects, fitted in PyMC to the
+eight polls, then stratified Monte Carlo scenarios (10,000 draws by default). The tracking curve
+is a retrodiction: it conditions on the verified outcome, so it cannot be read as a forecast.
+
+The three modules run as one pipeline, A to B to C, with an enforced handoff of the allocation
+between them.
+
+<Marker num="03" label="Results" id="sec-03" />
+
+On a USD 6M envelope, the MILP produces about 54.77% more linearised persuasion-proxy contacts
+than a department-uniform allocation. That is a solver comparison on synthetic reach, not a
+historical effect of the 2018 campaign.
+
+The one true out-of-sample check is reported unflattered. Refitting the tracker with each real
+poll wave held out, and the election result provably excluded, the 95% band caught the held-out
+poll in 3 of 6 tested waves, with a Brier score of 0.31 on the sign of the margin. Eight polls
+are far too few to claim forecasting skill, and the project does not claim it.
+
+The reconstruction does not claim that analytics caused the 3.70-point margin. The public result
+is the anchor; showing what the model can and cannot support is the point of the work.
+
+What this does not establish:
+
+- A causal effect. A with-and-without-analytics counterfactual cannot be verified here.
+- Individual behaviour. Aggregate calibration of synthetic voters does not mean real behaviour
+  was recovered.
+- Campaign economics. Module B optimises linearised contacts, not audited 2018 campaign
+  accounting or fitted response curves.
+- Full scale. The pipeline runs 50,000 voters over 14 weeks; the 4.26M-voter roll is a design
+  reference.
+
+Functional: the three modules run end to end, and every headline number lives in one numeric
+source-of-truth table that CI checks. It is a portfolio reconstruction, not a production campaign
+system. Code, the case study and the validation gates:
+[github.com/RafaelBraga-Kribitz/decision-analytics-reconstruction](https://github.com/RafaelBraga-Kribitz/decision-analytics-reconstruction).

@@ -1,0 +1,112 @@
+% braga-cv.tex — one-page CV in the Braga Kribitz design system (v2.1)
+% Build: xelatex braga-cv.tex   (or lualatex). Fonts load from ../fonts/.
+% Design: Design System v2 - Templates.dc.html · 06 CV. Tokens from ds-update/tokens/colors.css.
+% Rules: ink on white; hairlines 0.4pt; one accent figure per page (\key); tabular lining figures and the
+% slashed zero everywhere; mono uppercase labels; no icons, no photo; nothing below 9pt.
+\documentclass[10.5pt,a4paper]{article}
+
+\usepackage[a4paper,top=18mm,bottom=20mm,left=16mm,right=16mm]{geometry}
+\usepackage{fontspec}
+\usepackage{xcolor}
+\usepackage{array,tabularx,calc}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{microtype}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\raggedright
+\hyphenpenalty=10000 \exhyphenpenalty=10000
+
+% ---- tokens (colors.css, light set; paper is the surface) ----
+\definecolor{ink}{HTML}{000000}      % print: pure black (print.css)
+\definecolor{inktwo}{HTML}{5A5C61}   % --ink-2 / --ink-3
+\definecolor{mid}{HTML}{9EA0A5}      % --mid, hairlines only
+\definecolor{rulec}{HTML}{C2C4CA}    % --rule-c
+\definecolor{accent}{HTML}{2F4BE0}   % --accent-01, one figure per page
+\color{ink}
+
+% ---- faces: BKribitz (display + body), BKribitz Mono (labels, codes, dates) ----
+\setmainfont{BKribitz}[
+  Path=../fonts/BKribitz/, Extension=.ttf,
+  UprightFont=*-400, BoldFont=*-700, ItalicFont=*-400-Italic, BoldItalicFont=*-700-Italic,
+  Numbers={Lining,Monospaced}, RawFeature={+zero}]
+\setmonofont{BKribitz Mono}[
+  Path=../fonts/BKribitzMono/, Extension=.ttf,
+  UprightFont=*-400, BoldFont=*-700,
+  Numbers={Lining,Monospaced}, RawFeature={+zero}, Scale=MatchLowercase]
+\newfontfamily\displayface{BKribitz}[Path=../fonts/BKribitz/, Extension=.ttf, UprightFont=*-700, LetterSpace=-2.5]
+
+% ---- lengths (8px grid in points: 8px = 6pt) ----
+\newlength{\datecol}\setlength{\datecol}{32mm}   % mono column
+\newlength{\gutter}\setlength{\gutter}{4mm}
+\newlength{\bodycol}\setlength{\bodycol}{\textwidth-\datecol-\gutter}
+\newcommand{\hairline}[1]{{\color{#1}\rule{\textwidth}{0.4pt}}}
+
+% ---- type roles ----
+\newcommand{\labelfont}{\ttfamily\fontsize{9pt}{11pt}\selectfont\color{inktwo}\addfontfeature{LetterSpace=8}}
+\newcommand{\lbl}[1]{{\labelfont\MakeUppercase{#1}}}          % UPPERCASE mono label
+\newcommand{\code}[1]{{\ttfamily\fontsize{9pt}{11pt}\selectfont\color{inktwo}#1}}  % codes, dates: mono, not shouting
+\newcommand{\key}[1]{{\color{accent}#1}}                        % the one earned figure (D-025)
+
+% ---- structure ----
+% \cvsection{01}{Experience}: number in the mono column, hairline above, display title
+\newcommand{\cvsection}[2]{%
+  \vspace{14pt}\hairline{mid}\vspace{3pt}\par
+  \noindent\makebox[\datecol][l]{\code{#1}}\hspace{\gutter}%
+  \parbox[t]{\bodycol}{\displayface\fontsize{12pt}{14pt}\selectfont #2}\par\vspace{5pt}}
+% \cvrow{dates or code}{body}: date left, body hangs right; body may wrap
+\newcommand{\cvrow}[2]{%
+  \noindent\parbox[t]{\datecol}{\code{#1}}\hspace{\gutter}\parbox[t]{\bodycol}{#2}\par\vspace{4pt}}
+% \cvskill{Domains}{...}: label left, list right
+\newcommand{\cvskill}[2]{%
+  \noindent\parbox[t]{\datecol}{\lbl{#1}}\hspace{\gutter}\parbox[t]{\bodycol}{#2}\par\vspace{3pt}}
+\newcommand{\sep}{\,·\,}
+
+\begin{document}
+
+% ---- head: name, role, contact ----
+\noindent\begin{minipage}[b]{0.62\textwidth}{\displayface\fontsize{26pt}{26pt}\selectfont Rafael Braga-Kribitz}\end{minipage}%
+\hfill\begin{minipage}[b]{0.36\textwidth}\raggedleft\lbl{Marketing Data Analyst}\end{minipage}
+\par\vspace{8pt}\hairline{ink}\vspace{6pt}
+\code{Seiersberg\sep Graz\sep Austria}\hspace{18pt}\code{\href{mailto:rafaelbragakribitz@gmail.com}{rafaelbragakribitz@gmail.com}}\hspace{18pt}\code{\href{https://github.com/RafaelBraga-Kribitz}{github.com/RafaelBraga-Kribitz ↗}}
+
+% ---- 01 profile ----
+\cvsection{01}{Profile}
+\cvrow{}{Marketing experience, translated into analytical work. Questions about demand, allocation and cost, answered with data and explicit limits — five projects built end to end, each with its question, method, result and limitations stated.}
+
+% ---- 02 selected work (real, from the project record; codes follow the CV section: 02-01 …) ----
+\cvsection{02}{Selected work}
+\cvrow{02-01\sep 2026}{\textbf{Austria data-job market intelligence} — 720 core postings; SQL in 40\,\% and Python in 35\,\% of ads; Styria \key{+34\,\%} against Austria −28\,\%, 2020–2025.}
+\cvrow{02-02\sep 2026}{\textbf{Austrian MMM and budget optimiser} — Bayesian media-mix model; a budget decision with a downside check. Under revision.}
+\cvrow{02-03\sep 2026}{\textbf{Decision analytics reconstruction} — three modules; allocation gains reported as proxies, not campaign effects.}
+\cvrow{02-04\sep 2026}{\textbf{Warehouse humanoid TCO} — discrete-event simulation and 10\,000 Monte Carlo draws per scenario; the lean hybrid at €453\,000 over five years wins 99.8\,\% of draws.}
+\cvrow{02-05\sep 2026}{\textbf{Energy procurement risk analyser} — ENTSO-E prices to a cost-risk decision; dbt-modelled DuckDB warehouse. In build.}
+
+% ---- 03 experience: FIELDS, filled from the owner's CV data; nothing is typed here ----
+\cvsection{03}{Experience}
+\cvrow{\cvFromA–\cvToA}{\textbf{\cvRoleA}\sep\cvEmployerA, \cvPlaceA\ — \cvLineA}
+\cvrow{\cvFromB–\cvToB}{\textbf{\cvRoleB}\sep\cvEmployerB, \cvPlaceB\ — \cvLineB}
+
+% ---- 04 education ----
+\cvsection{04}{Education}
+\cvrow{\cvEduYear}{\textbf{\cvDegree}\sep\cvInstitution, \cvEduPlace}
+
+% ---- 05 skills (evidenced by the projects) ----
+\cvsection{05}{Skills}
+\cvskill{Domains}{Marketing analytics\sep market intelligence\sep decision analysis\sep operations modelling}
+\cvskill{Methods}{Bayesian MMM\sep discrete-event simulation\sep Monte Carlo\sep A/B testing and power analysis\sep classifier diagnostics}
+\cvskill{Toolbox}{Python\sep SQL\sep PyMC\sep DuckDB\sep dbt\sep Power BI\sep Git}
+\cvskill{Languages}{\cvLanguages}
+
+% ---- foot ----
+\vfill\hairline{mid}\vspace{4pt}
+\noindent\lbl{CV\sep Rafael Braga-Kribitz}\hfill\lbl{Updated 20 Oct 2026\sep 1 / 1}
+
+\end{document}
+
+% ---- cv-data.tex (kept beside this file, owner-maintained; \input before \begin{document} once filled) ----
+% \newcommand{\cvFromA}{2021}\newcommand{\cvToA}{2024}\newcommand{\cvRoleA}{…}\newcommand{\cvEmployerA}{…}\newcommand{\cvPlaceA}{…}\newcommand{\cvLineA}{…}
+% \newcommand{\cvFromB}{…}\newcommand{\cvToB}{…}\newcommand{\cvRoleB}{…}\newcommand{\cvEmployerB}{…}\newcommand{\cvPlaceB}{…}\newcommand{\cvLineB}{…}
+% \newcommand{\cvEduYear}{…}\newcommand{\cvDegree}{…}\newcommand{\cvInstitution}{…}\newcommand{\cvEduPlace}{…}
+% \newcommand{\cvLanguages}{…\sep …\sep German (…)}

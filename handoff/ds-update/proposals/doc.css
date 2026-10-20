@@ -1,0 +1,359 @@
+/* ============================================================
+   DOC — proposal P-08 (Audit · 20 Oct 2026)
+   The rendered output of markdown, in production form (03-architecture
+   §2–§6). One <article class="doc"> of flat flow: no wrapper divs, no
+   per-element attributes, Obsidian's own callout DOM. Everything a
+   markdown construct can produce is styled here; everything else is a
+   generated part (.doc-opener, .doc-end).
+
+   Sections: 1 grid · 2 elements · 3 generated parts · 4 vocabulary
+   (callouts) · 5 FLOW (the only place vertical space is set).
+
+   On adoption this splits into base.css (1–2), layout.css (3),
+   components.css (4) and the flow section of base.css (5); the
+   Obsidian snippet is 2 + 4 with `.markdown-reading-view` prefixes.
+   Revert: delete the file and its <link>.
+   ============================================================ */
+
+/* ---------- 1 · article grid: content (measure) | wide ---------- */
+.doc {
+  display: grid;
+  grid-template-columns:
+    [wide-start content-start] minmax(0, var(--measure-doc, 64ch))
+    [content-end] minmax(0, 1fr) [wide-end];
+  column-gap: 0; row-gap: 0;
+  font: 400 var(--t-body) / var(--lh-body) var(--font-body);
+  color: var(--ink);
+  counter-reset: sec;
+}
+.doc > * { grid-column: content; margin: 0; min-width: 0; }
+.doc > [data-width="wide"],
+.doc > .table-scroll,
+.doc > pre,
+.doc > hr,
+.doc > h2,
+.doc > .callout[data-callout-metadata~="wide"],
+.doc > .callout[data-callout="metrics"],
+.doc > .callout[data-callout="summary"],
+.doc > .callout[data-callout="quote"],
+.doc > .footnotes { grid-column: wide; }
+
+/* ---------- 2 · elements ---------- */
+.doc > h2 {
+  counter-increment: sec;
+  font: var(--w-display) var(--t-h3) / var(--lh-snug) var(--font-display);
+  letter-spacing: var(--tracking-tight); text-wrap: balance;
+  border-top: var(--hairline); padding-top: 16px;
+}
+/* the in-page section number is derived from order, never typed */
+.doc > h2::before {
+  content: counter(sec, decimal-leading-zero);
+  display: block; margin-bottom: 8px;
+  font: 400 var(--t-mono) / 1 var(--font-mono);
+  letter-spacing: var(--tracking-label); color: var(--ink-3);
+  font-variant-numeric: var(--num);
+}
+.doc > h3 {
+  font: var(--w-display) 1.25rem / 1.3 var(--font-display);
+  letter-spacing: var(--tracking-tight); text-wrap: balance;
+}
+.doc > h4 { font: 700 var(--t-body) / 1.4 var(--font-body); }
+.doc > p { text-wrap: pretty; }
+.doc > ul, .doc > ol { padding-left: 24px; display: grid; gap: var(--flow-related); }
+.doc > ol { list-style: decimal-leading-zero; }
+.doc li::marker { color: var(--ink-3); font-variant-numeric: var(--num); }
+.doc strong { font-weight: 700; }
+.doc code {
+  font: 400 0.9em / 1 var(--font-mono); background: var(--surface-2);
+  padding: 1px 4px; font-variant-numeric: var(--num);
+}
+/* code (owner decision D-035, 20 Oct 2026): always a dark panel — distinct
+   from the page in both themes — with a coloured syntax palette taken from
+   the dark token set, a copy button and a wrap toggle (wrap on by default).
+   Renderer output: <div class="code" data-lang><div class="code-bar">…</div><pre><code>…</code></pre></div>.
+   The buttons come from code.js (~1 KB, progressive); without it the block is
+   static and wrapped. Every token clears 4.5:1 on the panel. */
+:root { --code-bg: #202226; --code-edge: #3A3C41; --code-ink: #F3F5F9; --code-ink-2: #CED0D4; --code-ink-3: #97999D; --code-kw: #7C93FF; --code-fn: #F0B400; --code-str: #00C69F; --code-num: #54C0F0; }
+.dark, :root[data-theme="dark"] { --code-bg: #26282C; --code-edge: #484A4D; }
+.doc .code { background: var(--code-bg); color: var(--code-ink); border: 1px solid var(--code-edge); min-width: 0; color-scheme: dark; }
+.doc .code-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  padding: 8px 8px 8px 20px; border-bottom: 1px solid var(--code-edge);
+  font: 400 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--code-ink-3);
+}
+.doc .code-bar .code-tools { display: flex; gap: 4px; }
+.doc .code-bar button {
+  min-height: 28px; padding: 0 12px; border: 1px solid var(--code-edge); background: transparent; color: var(--code-ink-2);
+  font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.doc .code-bar button:hover { background: var(--code-edge); color: var(--code-ink); }
+.doc .code-bar button:focus-visible { outline: 2px solid var(--code-ink) !important; outline-offset: 2px !important; }
+.doc .code pre { background: transparent; border: 0; color: var(--code-ink); margin: 0; }
+.doc .code[data-wrap="off"] pre { white-space: pre; overflow-x: auto; overflow-wrap: normal; }
+/* code wraps to its column by default; also inside a figure */
+.doc pre {
+  font: 400 var(--t-mono) / 1.7 var(--font-mono);
+  background: var(--surface-2); border-top: var(--rule); padding: 24px; margin: 0;
+  white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 2; min-width: 0; max-width: 100%;
+  font-variant-numeric: var(--num);
+}
+.doc pre code { background: none; padding: 0; font: inherit; }
+/* syntax palette: six tokens from the dark set (D-035) */
+.doc pre .tok-kw { color: var(--code-kw); }
+.doc pre .tok-fn { color: var(--code-fn); }
+.doc pre .tok-str { color: var(--code-str); }
+.doc pre .tok-num { color: var(--code-num); }
+.doc pre .tok-cm { color: var(--code-ink-3); font-style: italic; }
+.doc pre .tok-op { color: var(--code-ink-2); }
+.doc figure.fig > .code, .doc figure.fig > pre { grid-column: auto; }
+
+/* math: KaTeX runs at build (remark-math + rehype-katex, output HTML and
+   MathML); the page ships no math script; KaTeX CSS and fonts are served
+   from this origin. The block is numbered from the document code. */
+.doc .math {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: center;
+  padding-block: 16px; border-top: var(--rule); border-bottom: var(--rule);
+  font-variant-numeric: var(--num);
+}
+/* MathML neither wraps nor shrinks: the cell scrolls, the number never overprints */
+.doc .math .math-body { min-width: 0; overflow: auto hidden; padding-block: 6px; display: grid; gap: 8px; }
+.doc .math math { font-size: 1.2em; display: block math; max-width: 100%; }
+.doc .math .katex-display { margin: 0; }
+.doc .math .eq-no {
+  font: 400 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: var(--tracking-label);
+  color: var(--ink-3); font-variant-numeric: var(--num); white-space: nowrap;
+}
+.doc p math { font-size: 1.05em; }
+
+/* diagram: Mermaid renders at build to inline SVG (rehype-mermaid), then a
+   post-pass replaces the theme hexes with tokens so the diagram follows the
+   page theme. Nodes are hairline boxes, radius 0; edges are 1px ink-2. */
+.doc figure.fig[data-kind="diagram"] svg { display: block; max-width: 100%; height: auto; }
+.doc figure.fig[data-kind="diagram"] .node rect, .doc figure.fig[data-kind="diagram"] .node polygon { fill: var(--surface-2); stroke: var(--ink); stroke-width: 1; rx: 0; ry: 0; }
+.doc figure.fig[data-kind="diagram"] .edgePath path { stroke: var(--ink-2); stroke-width: 1; fill: none; }
+.doc figure.fig[data-kind="diagram"] .nodeLabel, .doc figure.fig[data-kind="diagram"] .edgeLabel { font-family: var(--font-body); font-size: 14px; fill: var(--ink); color: var(--ink); }
+.doc > hr { border: 0; border-top: var(--hairline); height: 0; }
+.doc mark { background: none; color: inherit; }
+.doc sup { font-size: 0.75em; line-height: 0; vertical-align: super; } /* 12px at the 16px body: the floor holds for footnote refs */
+.doc sup a { font-family: var(--font-mono); color: var(--ink-2); text-decoration: none; padding-inline: 2px; }
+.doc img { display: block; max-width: 100%; height: auto; }
+
+/* tables scroll inside their wrapper, and only there */
+.doc > .table-scroll { overflow-x: auto; }
+.doc table { border-collapse: collapse; width: 100%; font-size: var(--t-small); line-height: 1.4; }
+.doc th {
+  text-align: left; vertical-align: bottom;
+  font: 400 var(--t-mono-sm) / 1.4 var(--font-mono);
+  letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2);
+  border-top: var(--rule-open); border-bottom: var(--rule); padding: 12px 16px 12px 0;
+}
+.doc td { padding: 12px 16px 12px 0; border-bottom: var(--rule); vertical-align: top; font-variant-numeric: var(--num); }
+.doc th:last-child, .doc td:last-child { padding-right: 0; }
+.doc th[align="right"], .doc td[align="right"],
+.doc [style*="text-align:right"], .doc [style*="text-align: right"] {
+  text-align: right; font-family: var(--font-mono); font-size: var(--t-mono);
+}
+.doc tbody tr { transition: background var(--dur) var(--ease); }
+.doc tbody tr:hover { background: var(--surface-2); }
+
+/* figure: label + finding as caption, the chart, then source and n */
+.doc > figure.fig { display: grid; gap: 16px; border-top: var(--hairline); padding-top: 16px; }
+.doc .fig figcaption { display: grid; gap: 6px; }
+.doc .fig .fig-label {
+  font: 400 var(--t-mono-sm) / 1.4 var(--font-mono);
+  letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-3);
+  font-variant-numeric: var(--num);
+}
+.doc .fig .fig-title {
+  font: var(--w-display) 1.3125rem / 1.3 var(--font-display);
+  letter-spacing: var(--tracking-tight); color: var(--ink); text-wrap: balance;
+}
+.doc .fig .fig-source {
+  margin: 0; font: 400 var(--t-mono-sm) / 1.7 var(--font-mono); color: var(--ink-2);
+  font-variant-numeric: var(--num);
+}
+.doc .fig .fig-source b { font-weight: 400; color: var(--ink); }
+
+/* footnotes: endnotes under a hairline (sidenotes on wide screens are
+   the next step; see AUDIT.md) */
+.doc > .footnotes { border-top: var(--hairline); padding-top: 16px; font-size: var(--t-small); color: var(--ink-2); display: grid; gap: 8px; }
+.doc > .footnotes > h2 {
+  all: unset; display: block;
+  font: 400 var(--t-mono-sm) / 1 var(--font-mono);
+  letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2);
+}
+.doc > .footnotes ol { margin: 0; padding-left: 24px; display: grid; gap: 8px; }
+.doc > .footnotes a[data-footnote-backref] { font-family: var(--font-mono); text-decoration: none; color: var(--ink-3); }
+
+/* ---------- 3 · generated parts ---------- */
+.doc > .doc-opener { grid-column: wide; display: grid; gap: 24px; padding-block: 64px 48px; }
+.doc-trail {
+  display: flex; flex-wrap: wrap; gap: 8px 12px;
+  font: 400 var(--t-mono-sm) / 1.6 var(--font-mono);
+  letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2);
+  font-variant-numeric: var(--num);
+}
+.doc-trail a { color: var(--ink-2); text-decoration: none; min-height: 24px; display: inline-flex; align-items: center; }
+.doc-trail b { font-weight: 400; color: var(--ink); }
+.doc-trail .glyph { color: var(--ink-3); }
+.doc-opener h1 {
+  margin: 0; font: var(--w-display) var(--t-h1) / var(--lh-tight) var(--font-display);
+  letter-spacing: var(--tracking-tight); text-wrap: balance;
+}
+.doc-lead { margin: 0; font-size: var(--t-lead); line-height: 1.5; max-width: 40em; text-wrap: pretty; }
+.doc-meta {
+  display: flex; flex-wrap: wrap; gap: 8px 16px;
+  font: 400 var(--t-mono-sm) / 1.4 var(--font-mono);
+  letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2);
+  font-variant-numeric: var(--num);
+}
+.doc-meta a { color: var(--ink-2); text-decoration: none; }
+.doc-meta a:hover { color: var(--ink); }
+
+/* status mark: lives in foundations.css (every page lists statuses) */
+
+.doc > .doc-end {
+  grid-column: wide; border-top: var(--hairline); padding-top: 24px;
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px;
+  font: 400 var(--t-mono-sm) / 1 var(--font-mono);
+  letter-spacing: var(--tracking-label); text-transform: uppercase;
+}
+.doc > .doc-end a { color: var(--ink); text-decoration: none; min-height: 24px; display: inline-flex; align-items: center; gap: 8px; }
+.doc > .doc-end .glyph { color: var(--ink-2); }
+.doc > .doc-end a:hover .glyph { color: var(--accent-01); }
+
+/* ---------- 4 · vocabulary: Obsidian callout DOM ---------- */
+.doc .callout { display: grid; gap: 12px; }
+.doc .callout .callout-icon, .doc .callout .callout-fold { display: none; }
+.doc .callout-title {
+  display: flex; align-items: center; gap: 8px;
+  font: 400 var(--t-mono-sm) / 1.4 var(--font-mono);
+  letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2);
+}
+.doc .callout-content > * { margin: 0; }
+.doc .callout-content > * + * { margin-top: var(--flow-element); }
+.doc .callout-content > p + ul, .doc .callout-content > p + ol { margin-top: var(--flow-related); }
+.doc .callout-content ul, .doc .callout-content ol { padding-left: 24px; }
+
+/* note · aside · warning · tool — a surface-2 wash on a hairline. No side
+   rule: v2 has no side-accent containers. */
+.doc .callout:is([data-callout="note"], [data-callout="aside"], [data-callout="warning"], [data-callout="tool"]) {
+  background: var(--surface-2); border-top: var(--rule); padding: 24px;
+}
+.doc .callout[data-callout="warning"] .callout-title::before { content: "▲"; }
+
+/* summary — the abstract under the opener */
+.doc .callout[data-callout="summary"] { border-top: var(--rule-open); border-bottom: var(--hairline); padding-block: 16px 24px; }
+.doc .callout[data-callout="summary"] .callout-content { font-size: var(--t-lead); line-height: 1.5; max-width: var(--measure-doc); text-wrap: pretty; }
+
+/* definition — term as a small display title over an ink opening rule */
+.doc .callout[data-callout="definition"] { border-top: var(--rule-open); padding-top: 12px; }
+.doc .callout[data-callout="definition"] .callout-title {
+  font: var(--w-display) var(--t-body) / 1.3 var(--font-display);
+  letter-spacing: var(--tracking-tight); text-transform: none; color: var(--ink);
+}
+
+/* quote — pull quote; the source line follows the quotation */
+.doc .callout[data-callout="quote"] { border-top: var(--hairline); padding-top: 16px; }
+.doc .callout[data-callout="quote"] .callout-content {
+  font: var(--w-display) var(--t-h3) / var(--lh-snug) var(--font-display);
+  letter-spacing: var(--tracking-tight); text-wrap: balance; max-width: 30em;
+}
+.doc .callout[data-callout="quote"] .callout-title { order: 2; }
+
+/* spec — key/value rows (renderer: "Term — value" list items → dl) */
+.doc .callout[data-callout="spec"] dl {
+  margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr);
+  column-gap: 32px; border-top: var(--rule-open);
+}
+.doc .callout[data-callout="spec"] dt, .doc .callout[data-callout="spec"] dd { margin: 0; padding-block: 10px; border-bottom: var(--rule); }
+.doc .callout[data-callout="spec"] dt {
+  font: 400 var(--t-mono-sm) / 1.5 var(--font-mono);
+  letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2);
+}
+.doc .callout[data-callout="spec"] dd { font-size: var(--t-small); line-height: 1.5; font-variant-numeric: var(--num); }
+
+/* metrics — tiles between an ink rule and a hairline. Renderer: the run
+   before " — " becomes <b>, the rest <span>; ==value== keeps its <mark>.
+   The key value is set in the accent (D-025: the one earned figure per
+   view may be accent text; 5.3:1 light, 6.2:1 dark on the surface);
+   siblings are ink-2 (CLAUDE.md: importance is contrast). */
+.doc .callout[data-callout="metrics"] { border-top: var(--rule-open); border-bottom: var(--hairline); padding-block: 24px; }
+.doc .callout[data-callout="metrics"] ul {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 24px 32px;
+}
+.doc .callout[data-callout="metrics"] li { display: grid; gap: 12px; min-width: 0; }
+.doc .callout[data-callout="metrics"] li > b {
+  display: flex; align-items: center; gap: 12px;
+  font: var(--w-display) clamp(30px, 4vw, 50px) / 1.1 var(--font-display);
+  letter-spacing: -0.04em; font-variant-numeric: var(--num); color: var(--ink-2);
+}
+.doc .callout[data-callout="metrics"] li > b:has(mark), .doc .callout[data-callout="metrics"] li.key > b { color: var(--accent-01); }
+.doc .callout[data-callout="metrics"] li > span {
+  font: 400 var(--t-mono-sm) / 1.5 var(--font-mono);
+  letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2);
+}
+/* ==text== anywhere else in prose: the earned figure, accent text, at most one per section */
+.doc p mark, .doc li mark { color: var(--accent-01); font-variant-numeric: var(--num); }
+
+/* faq — a native <details>, no script */
+.doc details.callout { display: block; border-top: var(--rule); border-bottom: var(--rule); }
+.doc details.callout > summary {
+  list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+  gap: 16px; min-height: 48px; padding-block: 12px;
+  font: 400 var(--t-body) / 1.4 var(--font-body); color: var(--ink); text-transform: none; letter-spacing: 0;
+}
+.doc details.callout > summary::-webkit-details-marker { display: none; }
+.doc details.callout > summary::after { content: "+"; font: 400 var(--t-mono) / 1 var(--font-mono); color: var(--ink-2); }
+.doc details.callout[open] > summary::after { content: "−"; }
+.doc details.callout > .callout-content { padding-block: 0 24px; max-width: var(--measure-doc); }
+
+/* bookmark — a link card: title, one line, arrow; the whole card is the link */
+.doc .callout[data-callout="bookmark"] .callout-content a {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 24px; align-items: center;
+  padding: 16px 0; border-top: var(--rule); border-bottom: var(--rule);
+  color: var(--ink); text-decoration: none; transition: background var(--dur) var(--ease);
+}
+.doc .callout[data-callout="bookmark"] .callout-content a:hover { background: var(--surface-2); }
+.doc .callout[data-callout="bookmark"] a b { font: var(--w-display) 1.125rem / 1.3 var(--font-display); letter-spacing: var(--tracking-tight); }
+.doc .callout[data-callout="bookmark"] a .sub { grid-column: 1; color: var(--ink-2); font-size: var(--t-small); line-height: 1.4; }
+.doc .callout[data-callout="bookmark"] a .glyph { grid-column: 2; grid-row: 1 / span 2; font-family: var(--font-mono); color: var(--ink-2); }
+.doc .callout[data-callout="bookmark"] a:hover .glyph { color: var(--accent-01); }
+
+/* cta — the single primary link-button of a page */
+.doc .callout[data-callout="cta"] .callout-title { display: none; }
+.doc .callout[data-callout="cta"] .callout-content a, .cta {
+  display: inline-flex; align-items: center; gap: 12px; min-height: 48px; padding-inline: 20px;
+  border: 1px solid var(--ink); color: var(--ink); text-decoration: none;
+  font: 400 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: var(--tracking-label); text-transform: uppercase;
+  transition: background var(--dur) var(--ease);
+}
+.doc .callout[data-callout="cta"] .callout-content a:hover, .cta:hover { background: var(--surface-2); }
+.doc .callout[data-callout="cta"] .glyph, .cta .glyph { color: var(--ink-2); }
+.doc .callout[data-callout="cta"] a:hover .glyph, .cta:hover .glyph { color: var(--accent-01); }
+
+/* tool — the no-script and Obsidian fallback: a static result and a
+   note, never a blank panel. The island replaces this block when it mounts. */
+.doc .callout[data-callout="tool"] .callout-content { font-size: var(--t-small); line-height: 1.5; }
+.doc .callout[data-callout="tool"] .callout-content b { font-variant-numeric: var(--num); }
+
+/* ---------- 5 · FLOW — the only place vertical space is set ----------
+   Space belongs to the relationship between two siblings. Tokens from
+   flow.css: related 8 · element 16 · block 32 · lead 48 · group 64 ·
+   section 96 (lead 32 · group 48 · section 64 below 768). Headings get
+   at least twice above what they give below (S-21 rule, R2). */
+.doc > * + * { margin-top: var(--flow-element); }                                   /* p → p · h3 → text */
+.doc > p + ul, .doc > p + ol { margin-top: var(--flow-related); }                   /* a list under the paragraph that introduces it */
+.doc > * + :where(figure, .table-scroll, pre, blockquote, .callout, hr),
+.doc > :where(figure, .table-scroll, pre, blockquote, .callout, hr) + * { margin-top: var(--flow-block); }  /* anything ↔ figure · table · code · callout · rule */
+.doc > h2 + * { margin-top: var(--flow-block); }                                    /* h2 → its first element */
+.doc > h3 + *, .doc > h4 + * { margin-top: var(--flow-element); }                   /* h3 → its first element */
+.doc > * + h3 { margin-top: var(--flow-lead); }                                     /* text → h3 */
+.doc > * + h2 { margin-top: var(--flow-section); }                                  /* text → h2 */
+.doc > .callout[data-callout="metrics"] + h2 { margin-top: var(--flow-group); }      /* metric strip → first h2 */
+.doc > .doc-opener + * { margin-top: 0; }                                           /* the opener carries its own padding */
+.doc > .callout[data-callout="summary"] + * { margin-top: var(--flow-group); }       /* abstract → body */
+.doc > .callout[data-callout="summary"] + .callout[data-callout="metrics"] { margin-top: var(--flow-block); } /* abstract → metric strip */
+.doc > * + .footnotes, .doc > * + .doc-end { margin-top: var(--flow-group); }        /* document → notes · end bar */
+.doc > .footnotes + .doc-end { margin-top: var(--flow-block); }

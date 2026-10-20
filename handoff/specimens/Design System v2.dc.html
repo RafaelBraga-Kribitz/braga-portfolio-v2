@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/braga-kribitz-design-system-remix-5791f94c-126d-46ea-bd68-9d0531f6f37b/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/braga-kribitz-design-system-remix-5791f94c-126d-46ea-bd68-9d0531f6f37b/tokens/listing.css">
+  <link rel="stylesheet" href="_ds/braga-kribitz-design-system-remix-5791f94c-126d-46ea-bd68-9d0531f6f37b/tokens/chart-palettes.css">
+  <link rel="stylesheet" href="ds-update/tokens/colors.css">
+  <link rel="stylesheet" href="ds-update/tokens/fonts.css">
+  <link rel="stylesheet" href="ds-update/tokens/typography.css">
+  <link rel="stylesheet" href="ds-update/tokens/spacing.css">
+  <link rel="stylesheet" href="ds-update/tokens/grid.css">
+  <link rel="stylesheet" href="ds-update/tokens/component-fixes.css">
+  <link rel="stylesheet" href="ds-update/proposals/theme.css">
+  <link rel="stylesheet" href="ds-update/proposals/foundations.css">
+  <link rel="stylesheet" href="ds-update/proposals/print.css">
+  <script src="_ds/braga-kribitz-design-system-remix-5791f94c-126d-46ea-bd68-9d0531f6f37b/_ds_bundle.js"></script>
+  <style>
+    body { margin: 0; background: var(--surface); color: var(--ink); font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+    a { color: var(--ink); text-decoration: none; }
+  </style>
+</helmet>
+
+<a class="skip" href="#main">Skip to content</a>
+<div style="min-height: 100vh; background: var(--surface); color: var(--ink); position: relative;">
+
+  <sc-if value="{{ showGrid }}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; inset: 0; pointer-events: none; z-index: 50; overflow: hidden;">
+      <div class="grid-container" style="height: 100%;">
+        <div class="grid" style="height: 100%;">
+          <sc-for list="{{ cols }}" as="c" hint-placeholder-count="12">
+            <div class="col-1" style="height: 100%; background: color-mix(in srgb, var(--accent-01) 7%, transparent); box-shadow: inset 1px 0 0 color-mix(in srgb, var(--accent-01) 40%, transparent), inset -1px 0 0 color-mix(in srgb, var(--accent-01) 40%, transparent);"></div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <header class="grid-container">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; min-height: 64px; padding-block: 16px;">
+      <a href="#s00" style="font-family: var(--font-display); font-weight: var(--w-display); font-size: 18px; letter-spacing: -0.01em; white-space: nowrap; flex-shrink: 0;">Rafael Braga-Kribitz</a>
+      <nav style="display: flex; flex-wrap: wrap; gap: 4px 24px; font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase;">
+        <a href="#s01" style="color: var(--ink-2); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">01 Grid</a>
+        <a href="#s02" style="color: var(--ink-2); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">02 Type</a>
+        <a href="#s03" style="color: var(--ink-2); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">03 Color</a>
+        <a href="#s04" style="color: var(--ink-2); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">04 Spacing</a>
+        <a href="#s05" style="color: var(--ink-2); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">05 Components</a>
+        <a href="#s06" style="color: var(--ink-2); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">06 Tools</a>
+        <a href="Design System v2 - Charts.dc.html" style="color: var(--ink); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">Charts →</a>
+        <a href="Dashboards 1 - Principles.dc.html" style="color: var(--ink); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">Dashboards →</a>
+        <a href="Design System v2 - Site.dc.html" style="color: var(--ink); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">Site →</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="grid-container">
+
+    <!-- 00 SYSTEM -->
+    <section id="s00" class="section">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3); font-variant-numeric: var(--num);">00 · SYSTEM</div>
+        <div class="col-9">
+          <div class="label" style="margin-bottom: 24px;">BRAGA KRIBITZ DESIGN SYSTEM · V2.0 · OCTOBER 2026</div>
+          <h1 class="display" style="margin: 0; font-size: var(--t-display); line-height: var(--lh-none);">A system,<br>not a website.</h1>
+          <p class="prose" style="margin: 32px 0 0; font-size: var(--t-lead); color: var(--ink-2);">Version 2.0 resets the structure on Swiss International Style rules. Type moves to BKribitz and BKribitz Mono. Every hairline now lands on a column line. Spacing runs on an 8px unit with a 64 / 96 / 128 section rhythm. Interactive tools become a first-class pattern.</p>
+        </div>
+      </div>
+      <div class="listing" style="margin-top: var(--block-gap);">
+        <div class="listing-head"><span class="lr-index">§</span><span class="lr-title">Change</span><span class="lr-meta">Replaces</span><span class="lr-trail">Token file</span></div>
+        <a class="listing-row" href="#s02"><span class="lr-index lr-code">01</span><span class="lr-title"><span class="lr-title-main">BKribitz + BKribitz Mono</span><span class="lr-title-sub">Display weight drops to one calm heading weight.</span></span><span class="lr-meta lr-mono">Söhne 800 / Söhne Mono</span><span class="lr-trail lr-mono lr-dim">fonts.css · typography.css</span></a>
+        <a class="listing-row" href="#s01"><span class="lr-index lr-code">02</span><span class="lr-title"><span class="lr-title-main">Hairlines snap to columns</span><span class="lr-title-sub">Rules start and end on column lines; vertical rules sit on column starts.</span></span><span class="lr-meta lr-mono">Free-floating borders</span><span class="lr-trail lr-mono lr-dim">grid.css</span></a>
+        <a class="listing-row" href="#s04"><span class="lr-index lr-code">03</span><span class="lr-title"><span class="lr-title-main">Swiss spacing rhythm</span><span class="lr-title-sub">16 → 32 page padding and gutter; 64 → 96 → 128 section padding.</span></span><span class="lr-meta lr-mono">Fluid clamp() spacing</span><span class="lr-trail lr-mono lr-dim">spacing.css</span></a>
+        <a class="listing-row" href="#s06"><span class="lr-index lr-code">04</span><span class="lr-title"><span class="lr-title-main">Tool pattern</span><span class="lr-title-sub">Controls · figure · readouts · update rule — on one ruled row.</span></span><span class="lr-meta lr-mono">New</span><span class="lr-trail lr-mono lr-dim">pattern</span></a>
+      </div>
+    </section>
+
+    <!-- 01 GRID -->
+    <section id="s01" class="section">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">01 · GRID</div>
+        <div class="col-9">
+          <h2 class="display" style="margin: 0; font-size: var(--t-h2);">Hairlines live on column lines.</h2>
+          <p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">Twelve columns, 32px gutters, 1320px maximum. A rule belongs to the item it sits on, so it spans exactly that item’s columns. Gutters break rules between independent items; an unbroken rule means one shared object.</p>
+        </div>
+      </div>
+
+      <div style="margin-top: var(--block-gap);">
+        <div class="grid" style="row-gap: 0;">
+          <sc-for list="{{ cols }}" as="c" hint-placeholder-count="12">
+            <div class="col-1" style="background: var(--surface-2); height: 72px; padding: 8px; box-sizing: border-box; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3); font-variant-numeric: var(--num);">{{ c.n }}</div>
+          </sc-for>
+        </div>
+
+        <div class="grid" style="margin-top: 48px; row-gap: 40px;">
+          <div class="col-12 rule-strong" style="padding-top: 12px; display: flex; justify-content: space-between; gap: 16px;"><span class="label">Span 12 · section rule</span><span class="label" style="color: var(--ink-3);">hairline · mid</span></div>
+          <div class="col-3 rule-t" style="padding-top: 12px;"><span class="label">Span 3 · index</span></div>
+          <div class="col-9 rule-t" style="padding-top: 12px;"><span class="label">Span 9 · content</span></div>
+          <div class="col-4 rule-t" style="padding-top: 12px;"><span class="label">Span 4</span></div>
+          <div class="col-4 rule-t" style="padding-top: 12px;"><span class="label">Span 4</span></div>
+          <div class="col-4 rule-t" style="padding-top: 12px;"><span class="label">Span 4</span></div>
+          <div class="col-3 rule-t" style="padding-top: 12px;"><span class="label">Span 3</span></div>
+          <div class="col-6 vrule rule-t" style="padding-top: 12px;"><span class="label">Span 6 · vertical rule on col 4 start</span></div>
+          <div class="col-3 vrule rule-t" style="padding-top: 12px;"><span class="label">Span 3 · col 10 start</span></div>
+        </div>
+
+        <div class="grid" style="margin-top: var(--block-gap);">
+          <div class="col-3 rule-t" style="padding-top: 16px;"><div class="index">01-01</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: var(--lh-body); text-wrap: pretty;">Horizontal rules start on a column start line and end on a column end line.</p></div>
+          <div class="col-3 rule-t" style="padding-top: 16px;"><div class="index">01-02</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: var(--lh-body); text-wrap: pretty;">Section rules span all twelve columns — never into the outer margin.</p></div>
+          <div class="col-3 rule-t" style="padding-top: 16px;"><div class="index">01-03</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: var(--lh-body); text-wrap: pretty;">Vertical rules sit on a column start line; content insets 16px.</p></div>
+          <div class="col-3 rule-t" style="padding-top: 16px;"><div class="index">01-04</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: var(--lh-body); text-wrap: pretty;">Two weights only: mid for structure, soft for rhythm. Both 1px.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 TYPE -->
+    <section id="s02" class="section">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">02 · TYPE</div>
+        <div class="col-9">
+          <h2 class="display" style="margin: 0; font-size: var(--t-h2);">BKribitz for mass. BKribitz Mono for spec.</h2>
+          <p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">One heading weight, tight tracking, balanced lines. The mono layer carries numbering, labels, data and code — tabular, lining, slashed zero.</p>
+        </div>
+      </div>
+      <div style="margin-top: var(--block-gap);">
+        <div class="grid rule-t" style="padding-block: 24px;">
+          <div class="col-3"><div class="label">Display</div><div class="index" style="margin-top: 4px;">48–96 · 1.0 · BK</div></div>
+          <div class="col-9 display" style="font-size: var(--t-display); line-height: var(--lh-none);">Exactness</div>
+        </div>
+        <div class="grid rule-t" style="padding-block: 24px;">
+          <div class="col-3"><div class="label">H1</div><div class="index" style="margin-top: 4px;">40–60 · 1.05 · BK</div></div>
+          <div class="col-9 display" style="font-size: var(--t-h1);">Selected work, end to end</div>
+        </div>
+        <div class="grid rule-t" style="padding-block: 24px;">
+          <div class="col-3"><div class="label">H2</div><div class="index" style="margin-top: 4px;">30–48 · 1.05 · BK</div></div>
+          <div class="col-9 display" style="font-size: var(--t-h2);">Attribution under uncertainty</div>
+        </div>
+        <div class="grid rule-t" style="padding-block: 24px;">
+          <div class="col-3"><div class="label">H3</div><div class="index" style="margin-top: 4px;">22–30 · 1.2 · BK</div></div>
+          <div class="col-9 display" style="font-size: var(--t-h3); line-height: var(--lh-snug);">Media-mix model, rebuilt in a week</div>
+        </div>
+        <div class="grid rule-t" style="padding-block: 24px;">
+          <div class="col-3"><div class="label">Body</div><div class="index" style="margin-top: 4px;">16–18 · 1.6 · 60ch</div></div>
+          <p class="col-9 prose" style="margin: 0;">I rebuilt the attribution pipeline from raw event logs. The new model resolved 1,240,991 rows in 38&nbsp;s, down from 9 minutes, and its channel estimates held within 4% of the holdout test.</p>
+        </div>
+        <div class="grid rule-t" style="padding-block: 24px;">
+          <div class="col-3"><div class="label">Label</div><div class="index" style="margin-top: 4px;">12 · +0.08em · BKribitz Mono</div></div>
+          <div class="col-9 label" style="color: var(--ink);">Context · Method · Result · Under-revision</div>
+        </div>
+        <div class="grid rule-t" style="padding-block: 24px;">
+          <div class="col-3"><div class="label">Data</div><div class="index" style="margin-top: 4px;">13 · tabular · BKribitz Mono</div></div>
+          <div class="col-9" style="font-family: var(--font-mono); font-size: var(--t-mono); font-variant-numeric: var(--num); display: grid; grid-template-columns: repeat(3, max-content); gap: 4px 48px;">
+            <span style="color: var(--ink-2);">ROWS</span><span style="color: var(--ink-2);">TIME</span><span style="color: var(--ink-2);">ERROR</span>
+            <span>1,240,991</span><span>38.0 s</span><span>0.040</span>
+            <span>  310,008</span><span style="color: var(--accent-01);">09.4 s</span><span>0.012</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 COLOR -->
+    <section id="s03" class="section">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">03 · COLOR</div>
+        <div class="col-9">
+          <h2 class="display" style="margin: 0; font-size: var(--t-h2);">Near-monochrome until a number earns the accent.</h2>
+          <p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">Roles, not values. Any element can carry <span style="font-family: var(--font-mono); font-size: 0.9em;">.dark</span> and render inverted on its own. There is no second accent: a theme-shifted block is a dark element, not a colour.</p>
+        </div>
+      </div>
+      <div class="grid" style="margin-top: var(--block-gap);">
+        <sc-for list="{{ swatches }}" as="s" hint-placeholder-count="8">
+          <div class="col-3">
+            <div style="height: 96px; background: {{ s.bg }}; outline: 1px solid var(--rule-c); outline-offset: -1px;"></div>
+            <div class="rule-t" style="margin-top: 12px; padding-top: 8px; display: flex; justify-content: space-between; gap: 8px; font-family: var(--font-mono); font-size: var(--t-mono-sm);">
+              <span style="white-space: nowrap;">{{ s.name }}</span><span style="color: var(--ink-2); white-space: nowrap;">{{ s.hex }}</span>
+            </div>
+            <div style="margin-top: 4px; font-size: var(--t-small); color: var(--ink-2); line-height: 1.4;">{{ s.role }}</div>
+          </div>
+        </sc-for>
+        <div class="col-12 rule-t" style="padding-top: 16px; display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 16px 32px; align-items: start;">
+          <div style="height: 96px; background: var(--accent-01); outline: 1px solid var(--rule-c); outline-offset: -1px;"></div>
+          <div style="min-width: 0;">
+            <div style="display: flex; flex-wrap: wrap; gap: 8px 24px; font-family: var(--font-mono); font-size: var(--t-mono-sm); font-variant-numeric: var(--num);"><span>accent-01</span><span style="color: var(--ink-2);">{{ accHexLight }} light · {{ accHexDark }} dark</span><span style="color: var(--ink-2);">{{ accRatio }} on this surface</span></div>
+            <p style="margin: 8px 0 0; font-size: var(--t-small); color: var(--ink-2); line-height: 1.5; max-width: 60ch; text-wrap: pretty;">Ultramarine. One hue, two values; the mark colour — a 7px square, an arrow, an active state, one earned figure per view. Every value on this page is read from the live tokens, so the swatches cannot go stale.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 SPACING -->
+    <section id="s04" class="section">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">04 · SPACING</div>
+        <div class="col-9">
+          <h2 class="display" style="margin: 0; font-size: var(--t-h2);">Whitespace is structure.</h2>
+          <p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">Every value is a multiple of 8. Sections breathe at 64, 96 and 128 as the viewport widens; the page and the gutter step from 16 to 32 together.</p>
+        </div>
+      </div>
+      <div class="grid" style="margin-top: var(--block-gap);">
+        <div class="col-6">
+          <div class="label" style="margin-bottom: 16px;">Scale</div>
+          <sc-for list="{{ spaces }}" as="sp" hint-placeholder-count="12">
+            <div class="rule-t" style="display: grid; grid-template-columns: 96px 48px minmax(0, 1fr); gap: 16px; align-items: center; padding-block: 8px; font-family: var(--font-mono); font-size: var(--t-mono); font-variant-numeric: var(--num);">
+              <span style="color: var(--ink-2);">{{ sp.token }}</span><span>{{ sp.px }}</span>
+              <span style="display: block; height: 8px; width: {{ sp.w }}; background: var(--ink);"></span>
+            </div>
+          </sc-for>
+        </div>
+        <div class="col-6 vrule">
+          <div class="label" style="margin-bottom: 16px;">Rhythm by breakpoint</div>
+          <div class="rule-t" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; padding-block: 8px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2); text-transform: uppercase; letter-spacing: var(--tracking-label);"><span>Viewport</span><span>Page</span><span>Gutter</span><span>Section</span></div>
+          <div class="rule-t" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; padding-block: 12px; font-family: var(--font-mono); font-size: var(--t-mono); font-variant-numeric: var(--num);"><span>0+</span><span>16</span><span>16</span><span>64</span></div>
+          <div class="rule-t" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; padding-block: 12px; font-family: var(--font-mono); font-size: var(--t-mono); font-variant-numeric: var(--num);"><span>768+</span><span>32</span><span>32</span><span>96</span></div>
+          <div class="rule-t" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; padding-block: 12px; font-family: var(--font-mono); font-size: var(--t-mono); font-variant-numeric: var(--num);"><span>1024+</span><span>32</span><span>32</span><span style="color: var(--accent-01);">128</span></div>
+          <div class="rule-t" style="padding-top: 16px; margin-top: 32px;">
+            <div class="label">Live</div>
+            <div style="margin-top: 8px; font-family: var(--font-mono); font-size: var(--t-mono); font-variant-numeric: var(--num);">This page is at {{ vw }} px — section padding {{ secPad }} px.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 COMPONENTS -->
+    <section id="s05" class="section">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">05 · COMPONENTS</div>
+        <div class="col-9">
+          <h2 class="display" style="margin: 0; font-size: var(--t-h2);">Square, ruled, quiet.</h2>
+          <p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">Radius 0 on every control. Hover is a surface wash; active is orange. Existing components inherit v2 type and spacing through the tokens.</p>
+        </div>
+      </div>
+      <div style="margin-top: var(--block-gap);">
+        <div class="grid rule-t" style="padding-block: 24px; align-items: center;">
+          <div class="col-3 label">Button</div>
+          <div class="col-9" style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.Button" hint-size="96px,32px">Default</x-import>
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.Button" active="{{ true }}" hint-size="96px,32px">Active</x-import>
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.Button" variant="ghost" hint-size="96px,32px">Ghost</x-import>
+          </div>
+        </div>
+        <div class="grid rule-t" style="padding-block: 24px; align-items: center;">
+          <div class="col-3 label">Tag</div>
+          <div class="col-9" style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.Tag" hint-size="80px,24px">Python</x-import>
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.Tag" hint-size="80px,24px">Bayesian MMM</x-import>
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.Tag" variant="accent" hint-size="80px,24px">Shipped</x-import>
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.Tag" variant="solid" hint-size="80px,24px">Case</x-import>
+          </div>
+        </div>
+        <div class="grid rule-t" style="padding-block: 24px; align-items: center;">
+          <div class="col-3 label">Segmented</div>
+          <div class="col-6">
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.SegmentedControl" items="{{ segItems }}" active="{{ seg }}" on-change="{{ setSeg }}" hint-size="100%,40px"></x-import>
+          </div>
+        </div>
+        <div class="grid rule-t" style="padding-block: 24px; align-items: center;">
+          <div class="col-3 label">Range</div>
+          <div class="col-6">
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.RangeSlider" label="Holdout share" min="0" max="50" step="1" unit="%" value="{{ holdout }}" on-change="{{ setHoldout }}" label-width="104px" style="width: 100%; display: block;" hint-size="100%,32px"></x-import>
+          </div>
+        </div>
+        <div class="grid rule-t" style="padding-block: 24px; align-items: center;">
+          <div class="col-3 label">Toggle</div>
+          <div class="col-9">
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.Toggle" checked="{{ toggle }}" on-change="{{ flipToggle }}" label="Show confidence band" hint-size="200px,24px"></x-import>
+          </div>
+        </div>
+        <div class="grid rule-t" style="padding-top: 24px;">
+          <div class="col-12 label">Listing · four tab stops on the page grid</div>
+        </div>
+        <div class="listing" style="margin-top: 16px;">
+          <div class="listing-head"><span class="lr-index">No.</span><span class="lr-title">Project</span><span class="lr-meta">Method</span><span class="lr-trail">Year</span></div>
+          <a class="listing-row" href="#s06"><span class="lr-index lr-code">02-01</span><span class="lr-title"><span class="lr-title-main">Attribution rebuilt from event logs</span><span class="lr-title-sub">9 minutes → 38 s on 1.2M rows.</span></span><span class="lr-meta lr-mono">Markov chains · SQL</span><span class="lr-trail lr-year">2026 <span class="lr-arrow">→</span></span></a>
+          <a class="listing-row" href="#s06"><span class="lr-index lr-code">02-02</span><span class="lr-title"><span class="lr-title-main">Media-mix model with priors</span><span class="lr-title-sub">Channel estimates within 4% of holdout.</span></span><span class="lr-meta lr-mono">Bayesian MMM · PyMC</span><span class="lr-trail lr-year">2025 <span class="lr-arrow">→</span></span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 TOOLS -->
+    <section id="s06" class="section">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">06 · TOOLS</div>
+        <div class="col-9">
+          <h2 class="display" style="margin: 0; font-size: var(--t-h2);">Instruments, not illustrations.</h2>
+          <p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">Four modules, one anatomy. Every state is reached by a control and every figure is computed live — no animation, no decoration.</p>
+        </div>
+      </div>
+
+      <div class="grid" style="margin-top: var(--block-gap);">
+        <div class="col-3 rule-t" style="padding-top: 12px;"><div class="index">06-A</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Module rail.</span> One tab per instrument, numbered, four columns each.</p></div>
+        <div class="col-3 rule-t" style="padding-top: 12px;"><div class="index">06-B</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Readouts.</span> Four live figures in mono; the one that matters takes the accent.</p></div>
+        <div class="col-3 rule-t" style="padding-top: 12px;"><div class="index">06-C</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Controls + figure.</span> Inputs on columns 1–4, the figure on 5–12.</p></div>
+        <div class="col-3 rule-t" style="padding-top: 12px;"><div class="index">06-D</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Rule.</span> The formula, then the same formula with live numbers substituted.</p></div>
+      </div>
+
+      <div class="grid" style="margin-top: var(--block-gap); row-gap: 0; border-top: var(--hairline); border-bottom: var(--rule); border-right: {{ railR }}; overflow: hidden;">
+        <sc-for list="{{ modules }}" as="m" hint-placeholder-count="4">
+          <button class="col-3 vrule" onClick="{{ m.go }}" style="grid-column: span 3; margin-right: calc(-1 * var(--grid-gutter)); background: {{ m.bg }}; border: 0; border-left: var(--rule); font: inherit; color: inherit; text-align: left; padding: 16px 16px 20px; cursor: pointer; display: flex; flex-direction: column; gap: 8px; box-sizing: border-box; box-shadow: inset 0 2px 0 {{ m.bar }};" style-hover="background: var(--surface-2);">
+            <span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: {{ m.num }}; font-variant-numeric: var(--num);">{{ m.num_ }}</span>
+            <span style="font-family: var(--font-display); font-weight: var(--w-display); font-size: 18px; line-height: 1.2; color: {{ m.ink }};">{{ m.name }}</span>
+            <span style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3); overflow-wrap: anywhere;">{{ m.sig }}</span>
+          </button>
+        </sc-for>
+      </div>
+
+      <div class="grid" style="row-gap: 0; border-bottom: var(--rule); border-right: {{ railR }};">
+        <sc-for list="{{ tool.kpis }}" as="k" hint-placeholder-count="4">
+          <div class="col-3 vrule" style="padding-block: 20px; min-width: 0;">
+            <div class="label" style="white-space: nowrap;">{{ k.k }}</div>
+            <div style="margin-top: 12px; font-family: var(--font-mono); font-size: clamp(24px, 2.6vw, 36px); line-height: 1; font-variant-numeric: var(--num); color: {{ k.color }}; white-space: nowrap;">{{ k.v }}</div>
+            <div style="margin-top: 8px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3); overflow-wrap: anywhere;">{{ k.note }}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div class="grid" style="padding-top: 32px;">
+        <div class="col-4" style="display: flex; flex-direction: column; gap: 16px;">
+          <sc-if value="{{ isNeuron }}" hint-placeholder-val="{{ true }}">
+            <div class="label">Inputs</div>
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.RangeSlider" label="x₁" min="-1" max="1" step="0.05" value="{{ x1 }}" on-change="{{ setX1 }}" label-width="40px" style="width: 100%; display: block;" hint-size="100%,32px"></x-import>
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.RangeSlider" label="x₂" min="-1" max="1" step="0.05" value="{{ x2 }}" on-change="{{ setX2 }}" label-width="40px" style="width: 100%; display: block;" hint-size="100%,32px"></x-import>
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.RangeSlider" label="x₃" min="-1" max="1" step="0.05" value="{{ x3 }}" on-change="{{ setX3 }}" label-width="40px" style="width: 100%; display: block;" hint-size="100%,32px"></x-import>
+            <div class="label rule-t" style="padding-top: 16px;">Weights + bias</div>
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.RangeSlider" label="w₁" min="-2" max="2" step="0.1" value="{{ w1 }}" on-change="{{ setW1 }}" label-width="40px" style="width: 100%; display: block;" hint-size="100%,32px"></x-import>
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.RangeSlider" label="w₂" min="-2" max="2" step="0.1" value="{{ w2 }}" on-change="{{ setW2 }}" label-width="40px" style="width: 100%; display: block;" hint-size="100%,32px"></x-import>
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.RangeSlider" label="w₃" min="-2" max="2" step="0.1" value="{{ w3 }}" on-change="{{ setW3 }}" label-width="40px" style="width: 100%; display: block;" hint-size="100%,32px"></x-import>
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.RangeSlider" label="b" min="-2" max="2" step="0.1" value="{{ b }}" on-change="{{ setB }}" label-width="40px" style="width: 100%; display: block;" hint-size="100%,32px"></x-import>
+            <div class="label rule-t" style="padding-top: 16px;">Activation</div>
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.SegmentedControl" items="{{ actShort }}" active="{{ nAct }}" on-change="{{ setNAct }}" hint-size="100%,40px"></x-import>
+            <div style="white-space: nowrap;"><x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.Button" variant="ghost" on-click="{{ resetN }}" hint-size="64px,32px">Reset</x-import></div>
+          </sc-if>
+          <sc-if value="{{ isAct }}" hint-placeholder-val="{{ false }}">
+            <div class="label">Function</div>
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.SegmentedControl" items="{{ actShort }}" active="{{ act }}" on-change="{{ setAct }}" hint-size="100%,40px"></x-import>
+            <div class="label rule-t" style="padding-top: 16px;">Input</div>
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.RangeSlider" label="z" min="-5" max="5" step="0.1" value="{{ z }}" on-change="{{ setZ }}" label-width="40px" style="width: 100%; display: block;" hint-size="100%,32px"></x-import>
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.Toggle" checked="{{ showDeriv }}" on-change="{{ flipDeriv }}" label="Show derivative f′(z)" hint-size="200px,24px"></x-import>
+          </sc-if>
+          <sc-if value="{{ isLoss }}" hint-placeholder-val="{{ false }}">
+            <div class="label">Loss</div>
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.SegmentedControl" items="{{ lossShort }}" active="{{ loss }}" on-change="{{ setLoss }}" hint-size="100%,40px"></x-import>
+            <div class="label rule-t" style="padding-top: 16px;">Prediction</div>
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.RangeSlider" label="ŷ" min="-2" max="4" step="0.05" value="{{ yhat }}" on-change="{{ setYhat }}" label-width="40px" style="width: 100%; display: block;" hint-size="100%,32px"></x-import>
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.RangeSlider" label="δ" min="0.25" max="2" step="0.05" value="{{ delta }}" on-change="{{ setDelta }}" label-width="40px" style="width: 100%; display: block;" hint-size="100%,32px"></x-import>
+            <div style="font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3);">δ applies to Huber only · target y = 1.00</div>
+          </sc-if>
+          <sc-if value="{{ isGd }}" hint-placeholder-val="{{ false }}">
+            <div class="label">Optimiser</div>
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.RangeSlider" label="η" min="0.01" max="0.5" step="0.01" value="{{ lr }}" on-change="{{ setLr }}" label-width="40px" style="width: 100%; display: block;" hint-size="100%,32px"></x-import>
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.RangeSlider" label="β" min="0" max="0.95" step="0.05" value="{{ beta }}" on-change="{{ setBeta }}" label-width="40px" style="width: 100%; display: block;" hint-size="100%,32px"></x-import>
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.RangeSlider" label="w₀" min="-3" max="3" step="0.1" value="{{ w0 }}" on-change="{{ setW0 }}" label-width="40px" style="width: 100%; display: block;" hint-size="100%,32px"></x-import>
+            <div class="label rule-t" style="padding-top: 16px;">Iteration</div>
+            <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.RangeSlider" label="t" min="0" max="80" step="1" value="{{ iters }}" on-change="{{ setIters }}" label-width="40px" style="width: 100%; display: block;" hint-size="100%,32px"></x-import>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; white-space: nowrap;">
+              <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.Button" on-click="{{ stepBack }}" hint-size="72px,32px">← Step</x-import>
+              <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.Button" on-click="{{ stepFwd }}" hint-size="72px,32px">Step →</x-import>
+              <x-import component-from-global-scope="BragaKribitzDesignSystem_9bf979.Button" variant="ghost" on-click="{{ resetGd }}" hint-size="64px,32px">Reset</x-import>
+            </div>
+          </sc-if>
+        </div>
+
+        <div class="col-8 vrule" style="min-width: 0;">
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px;"><span class="label" style="white-space: nowrap;">{{ tool.figTitle }}</span><span class="label" style="color: var(--ink-3); white-space: nowrap;">{{ tool.figMeta }}</span></div>
+
+          <sc-if value="{{ isNeuron }}" hint-placeholder-val="{{ true }}">
+            <svg viewBox="0 0 640 300" style="width: 100%; height: auto; display: block; margin-top: 16px; overflow: visible;">
+              <line x1="340" y1="56" x2="340" y2="122" stroke="var(--ink-2)" stroke-width="1"></line>
+              <rect x="330" y="36" width="20" height="20" fill="var(--surface-2)" stroke="var(--ink-2)" stroke-width="1"></rect>
+              <text x="362" y="50" style="font-family: var(--font-mono); font-size: 12px; fill: var(--ink-2);">b = {{ neuron.bTxt }}</text>
+              <sc-for list="{{ neuron.edges }}" as="e" hint-placeholder-count="3">
+                <line x1="108" y1="{{ e.y }}" x2="312" y2="150" stroke="var(--ink)" stroke-width="{{ e.sw }}" stroke-dasharray="{{ e.dash }}"></line>
+                <text x="{{ e.lx }}" y="{{ e.ly }}" text-anchor="middle" style="font-family: var(--font-mono); font-size: 12px; fill: var(--ink-2);">{{ e.lw }}</text>
+                <rect x="80" y="{{ e.ry }}" width="28" height="28" fill="var(--surface-2)" stroke="var(--ink)" stroke-width="1"></rect>
+                <text x="94" y="{{ e.ty }}" text-anchor="middle" style="font-family: var(--font-mono); font-size: 12px; fill: var(--ink);">{{ e.name }}</text>
+                <text x="68" y="{{ e.ty }}" text-anchor="end" style="font-family: var(--font-mono); font-size: 12px; fill: var(--ink-2);">{{ e.xv }}</text>
+              </sc-for>
+              <rect x="312" y="122" width="56" height="56" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"></rect>
+              <text x="340" y="157" text-anchor="middle" style="font-family: var(--font-mono); font-size: 20px; fill: var(--ink);">Σ</text>
+              <text x="340" y="204" text-anchor="middle" style="font-family: var(--font-mono); font-size: 12px; fill: var(--ink-2);">z = {{ neuron.zTxt }}</text>
+              <line x1="368" y1="150" x2="432" y2="150" stroke="var(--ink)" stroke-width="1.5"></line>
+              <rect x="432" y="122" width="56" height="56" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"></rect>
+              <path d="{{ neuron.thumb }}" fill="none" stroke="var(--ink)" stroke-width="1.25"></path>
+              <text x="460" y="204" text-anchor="middle" style="font-family: var(--font-mono); font-size: 12px; fill: var(--ink-2);">{{ neuron.fName }}</text>
+              <line x1="488" y1="150" x2="560" y2="150" stroke="var(--ink)" stroke-width="1.5"></line>
+              <rect x="560" y="136" width="28" height="28" fill="var(--accent-01)"></rect>
+              <text x="574" y="204" text-anchor="middle" style="font-family: var(--font-mono); font-size: 12px; fill: var(--ink);">a = {{ neuron.aTxt }}</text>
+              <line x1="28" y1="260" x2="612" y2="260" stroke="var(--rule-c)" stroke-width="1"></line>
+              <text x="28" y="284" style="font-family: var(--font-mono); font-size: 12px; fill: var(--ink-3);">INPUT</text>
+              <text x="340" y="284" text-anchor="middle" style="font-family: var(--font-mono); font-size: 12px; fill: var(--ink-3);">SUM</text>
+              <text x="460" y="284" text-anchor="middle" style="font-family: var(--font-mono); font-size: 12px; fill: var(--ink-3);">ACTIVATION</text>
+              <text x="612" y="284" text-anchor="end" style="font-family: var(--font-mono); font-size: 12px; fill: var(--ink-3);">OUTPUT</text>
+            </svg>
+            <div class="rule-t" style="margin-top: 16px; padding-top: 12px;">
+              <div class="label">Contribution |wᵢxᵢ| / Σ|wx|</div>
+              <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
+                <sc-for list="{{ neuron.bars }}" as="br" hint-placeholder-count="3">
+                  <div style="display: grid; grid-template-columns: 40px minmax(0, 1fr) 56px; gap: 12px; align-items: center; font-family: var(--font-mono); font-size: var(--t-mono); font-variant-numeric: var(--num);">
+                    <span style="color: var(--ink-2);">{{ br.name }}</span>
+                    <span style="display: block; height: 8px; background: var(--surface-2);"><span style="display: block; height: 100%; width: {{ br.w }}; background: {{ br.color }};"></span></span>
+                    <span style="text-align: right;">{{ br.pct }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isAct }}" hint-placeholder-val="{{ false }}">
+            <svg viewBox="0 0 640 340" style="width: 100%; height: auto; display: block; margin-top: 16px; overflow: visible;">
+              <defs><clipPath id="actclip"><rect x="28" y="12" width="584" height="300"></rect></clipPath></defs>
+              <line x1="28" y1="{{ actFig.y0 }}" x2="612" y2="{{ actFig.y0 }}" stroke="var(--rule-c)" stroke-width="1"></line>
+              <line x1="320" y1="12" x2="320" y2="312" stroke="var(--rule-c)" stroke-width="1"></line>
+              <line x1="28" y1="312" x2="612" y2="312" stroke="var(--mid)" stroke-width="1"></line>
+              <sc-for list="{{ actFig.ticks }}" as="tk" hint-placeholder-count="5">
+                <line x1="{{ tk.x }}" y1="312" x2="{{ tk.x }}" y2="318" stroke="var(--mid)" stroke-width="1"></line>
+                <text x="{{ tk.x }}" y="334" text-anchor="middle" style="font-family: var(--font-mono); font-size: 12px; fill: var(--ink-2);">{{ tk.label }}</text>
+              </sc-for>
+              <g clip-path="url(#actclip)">
+                <sc-if value="{{ showDeriv }}" hint-placeholder-val="{{ true }}">
+                  <path d="{{ actFig.dPath }}" fill="none" stroke="var(--mid)" stroke-width="1.25" stroke-dasharray="4 4"></path>
+                </sc-if>
+                <path d="{{ actFig.fPath }}" fill="none" stroke="var(--ink)" stroke-width="1.75"></path>
+              </g>
+              <line x1="{{ actFig.zx }}" y1="12" x2="{{ actFig.zx }}" y2="312" stroke="var(--accent-01)" stroke-width="1" stroke-dasharray="2 3"></line>
+              <rect x="{{ actFig.px }}" y="{{ actFig.py }}" width="10" height="10" fill="var(--accent-01)"></rect>
+            </svg>
+            <div style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px 24px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">
+              <span style="display: flex; align-items: center; gap: 8px;"><span style="width: 20px; height: 2px; background: var(--ink);"></span>f(z)</span>
+              <span style="display: flex; align-items: center; gap: 8px;"><span style="width: 20px; border-top: 1px dashed var(--mid);"></span>f′(z)</span>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isLoss }}" hint-placeholder-val="{{ false }}">
+            <svg viewBox="0 0 640 300" style="width: 100%; height: auto; display: block; margin-top: 16px; overflow: visible;">
+              <defs><clipPath id="lossclip"><rect x="28" y="12" width="584" height="260"></rect></clipPath></defs>
+              <line x1="320" y1="12" x2="320" y2="272" stroke="var(--rule-c)" stroke-width="1"></line>
+              <line x1="28" y1="272" x2="612" y2="272" stroke="var(--mid)" stroke-width="1"></line>
+              <sc-for list="{{ lossFig.ticks }}" as="tk" hint-placeholder-count="7">
+                <line x1="{{ tk.x }}" y1="272" x2="{{ tk.x }}" y2="278" stroke="var(--mid)" stroke-width="1"></line>
+                <text x="{{ tk.x }}" y="294" text-anchor="middle" style="font-family: var(--font-mono); font-size: 12px; fill: var(--ink-2);">{{ tk.label }}</text>
+              </sc-for>
+              <g clip-path="url(#lossclip)">
+                <sc-for list="{{ lossFig.curves }}" as="c" hint-placeholder-count="4">
+                  <path d="{{ c.d }}" fill="none" stroke="{{ c.stroke }}" stroke-width="{{ c.sw }}" stroke-dasharray="{{ c.dash }}"></path>
+                </sc-for>
+              </g>
+              <line x1="{{ lossFig.px }}" y1="{{ lossFig.py }}" x2="{{ lossFig.px }}" y2="272" stroke="var(--accent-01)" stroke-width="1" stroke-dasharray="2 3"></line>
+              <rect x="{{ lossFig.rx }}" y="{{ lossFig.ry }}" width="10" height="10" fill="var(--accent-01)"></rect>
+            </svg>
+            <div style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px 24px; font-family: var(--font-mono); font-size: var(--t-mono-sm);">
+              <sc-for list="{{ lossFig.legend }}" as="lg" hint-placeholder-count="4">
+                <span style="display: flex; align-items: center; gap: 8px; color: {{ lg.ink }};"><span style="width: 20px; border-top: {{ lg.line }};"></span>{{ lg.name }}</span>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isGd }}" hint-placeholder-val="{{ false }}">
+            <svg viewBox="0 0 640 300" style="width: 100%; height: auto; display: block; margin-top: 16px; overflow: visible;">
+              <line x1="28" y1="272" x2="612" y2="272" stroke="var(--mid)" stroke-width="1"></line>
+              <sc-for list="{{ gd.ticks }}" as="tk" hint-placeholder-count="7">
+                <line x1="{{ tk.x }}" y1="272" x2="{{ tk.x }}" y2="278" stroke="var(--mid)" stroke-width="1"></line>
+                <text x="{{ tk.x }}" y="294" text-anchor="middle" style="font-family: var(--font-mono); font-size: 12px; fill: var(--ink-2);">{{ tk.label }}</text>
+              </sc-for>
+              <path d="{{ gd.curve }}" fill="none" stroke="var(--ink)" stroke-width="1.5"></path>
+              <path d="{{ gd.trail }}" fill="none" stroke="var(--mid)" stroke-width="1"></path>
+              <sc-for list="{{ gd.dots }}" as="d" hint-placeholder-count="0">
+                <rect x="{{ d.x }}" y="{{ d.y }}" width="5" height="5" fill="var(--surface)" stroke="var(--ink-2)" stroke-width="1"></rect>
+              </sc-for>
+              <line x1="{{ gd.cur.cx }}" y1="{{ gd.cur.cy }}" x2="{{ gd.cur.cx }}" y2="272" stroke="var(--accent-01)" stroke-width="1" stroke-dasharray="2 3"></line>
+              <rect x="{{ gd.cur.x }}" y="{{ gd.cur.y }}" width="10" height="10" fill="var(--accent-01)"></rect>
+            </svg>
+            <div class="rule-t" style="margin-top: 16px; padding-top: 12px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px;"><span class="label" style="white-space: nowrap;">Loss by iteration</span><span class="label" style="color: var(--ink-3); white-space: nowrap;">t = 0 … 80</span></div>
+            <svg viewBox="0 0 640 120" style="width: 100%; height: auto; display: block; margin-top: 12px; overflow: visible;">
+              <line x1="0" y1="112" x2="640" y2="112" stroke="var(--mid)" stroke-width="1"></line>
+              <path d="{{ gd.lossPath }}" fill="none" stroke="var(--ink)" stroke-width="1.5"></path>
+              <rect x="{{ gd.lossCur.x }}" y="{{ gd.lossCur.y }}" width="8" height="8" fill="var(--accent-01)"></rect>
+            </svg>
+          </sc-if>
+        </div>
+      </div>
+
+      <div class="grid rule-t" style="margin-top: 32px; padding-top: 16px; align-items: baseline;">
+        <div class="col-4 label">{{ tool.eqLabel }}</div>
+        <div class="col-8" style="min-width: 0;">
+          <div style="font-family: var(--font-mono); font-size: var(--t-mono); font-variant-numeric: var(--num); line-height: 1.9; overflow-wrap: anywhere;">{{ tool.formula }}</div>
+          <div style="font-family: var(--font-mono); font-size: var(--t-mono); font-variant-numeric: var(--num); line-height: 1.9; color: var(--ink-2); overflow-wrap: anywhere;">{{ tool.eqLive }}</div>
+          <p class="prose" style="margin: 12px 0 0; font-size: var(--t-small); color: var(--ink-2);">{{ tool.note }}</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="grid-container">
+    <div class="grid rule-strong" style="padding-block: 32px 48px;">
+      <div class="col-6" style="font-family: var(--font-display); font-weight: var(--w-display); font-size: 18px;">Rafael Braga-Kribitz</div>
+      <div class="col-3 label">Design System · v2.0</div>
+      <div class="col-3 label" style="text-align: right;">BKribitz · BKribitz Mono</div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showGrid&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Structure&quot;},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;}}">
+const GD_DEF = { lr: 0.08, beta: 0, w0: 2.8, iters: 30 };
+const N_DEF = { x1: 0.5, x2: -0.3, x3: 0.8, w1: 1.2, w2: -0.8, w3: 0.6, b: -0.2, nAct: 'Sigmoid' };
+const fmt = (n, d = 3) => (n < 0 ? '−' : '') + Math.abs(n).toFixed(d);
+const r1 = n => Math.round(n * 10) / 10;
+const INK = 'var(--ink)', ACC = 'var(--accent-01)';
+
+const ACT = {
+  Sigmoid: { f: z => 1 / (1 + Math.exp(-z)), range: '(0, 1)', formula: 'σ(z) = 1 / (1 + e^−z)', note: 'Saturates at both ends: for |z| > 4 the gradient falls below 0.02 and learning stalls.' },
+  Tanh: { f: z => Math.tanh(z), range: '(−1, 1)', formula: 'tanh(z) = (e^z − e^−z) / (e^z + e^−z)', note: 'Zero-centred, so updates are less biased than sigmoid — but it saturates just the same.' },
+  ReLU: { f: z => Math.max(0, z), range: '[0, ∞)', formula: 'ReLU(z) = max(0, z)', note: 'Gradient is exactly 1 for z > 0 and 0 below. Units stuck at z < 0 stop learning.' },
+  GELU: { f: z => 0.5 * z * (1 + Math.tanh(Math.sqrt(2 / Math.PI) * (z + 0.044715 * z ** 3))), range: '≈ [−0.17, ∞)', formula: 'GELU(z) ≈ ½·z·(1 + tanh(√(2/π)·(z + 0.0447·z³)))', note: 'A smooth ReLU: small negative inputs pass a little signal, so the gradient never snaps to zero.' }
+};
+const LOSS = {
+  MSE: { f: e => e * e, g: e => 2 * e, def: 'L = (ŷ − y)²', note: 'Quadratic: doubling the error quadruples the loss. One outlier can dominate the fit.' },
+  MAE: { f: e => Math.abs(e), g: e => Math.sign(e), def: 'L = |ŷ − y|', note: 'Linear: every unit of error costs the same. Robust to outliers, but the gradient never shrinks near the target.' },
+  Huber: { f: (e, d) => Math.abs(e) <= d ? 0.5 * e * e : d * (Math.abs(e) - 0.5 * d), g: (e, d) => Math.max(-d, Math.min(d, e)), def: 'L = ½e² if |e| ≤ δ, else δ·(|e| − ½δ)', note: 'Quadratic inside ±δ, linear outside — smooth near the target, robust far from it.' },
+  'Log-cosh': { f: e => Math.log(Math.cosh(e)), g: e => Math.tanh(e), def: 'L = log(cosh(ŷ − y))', note: 'Behaves like ½e² for small errors and like |e| for large ones — Huber without a threshold.' }
+};
+const MODULES = [
+  { id: 'neuron', num_: '06-01', name: 'Artificial neuron', sig: 'z = Σ w·x + b' },
+  { id: 'act', num_: '06-02', name: 'Activation functions', sig: 'a = f(z)' },
+  { id: 'loss', num_: '06-03', name: 'Loss functions', sig: 'L(ŷ, y)' },
+  { id: 'gd', num_: '06-04', name: 'Gradient descent', sig: 'w ← w − η·∇L(w)' }
+];
+
+class Component extends DCLogic {
+  state = { tool: 'neuron', act: 'GELU', z: 0.8, showDeriv: true, ...GD_DEF, ...N_DEF, loss: 'Huber', yhat: 2.6, delta: 1, seg: 'Daily', holdout: 20, toggle: true, vw: 0 };
+
+  componentDidMount() {
+    this.apply();
+    this.onResize = () => this.setState({ vw: window.innerWidth });
+    window.addEventListener('resize', this.onResize);
+    this.onResize();
+  }
+  componentDidUpdate() { this.apply(); }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); }
+  apply() {
+    const theme = (this.props.theme ?? 'light') === 'dark' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+    document.body.classList.toggle('dark', theme === 'dark');
+    this.readSwatches();
+  }
+  /* swatch values are read from the live tokens (D-006 drifted when they were typed by hand) */
+  readSwatches() {
+    const cs = getComputedStyle(document.body), root = getComputedStyle(document.documentElement);
+    const sw = {};
+    ['surface', 'surface-2', 'surface-3', 'rule-c', 'mid', 'ink-3', 'ink-2', 'ink'].forEach(n => { sw[n] = cs.getPropertyValue('--' + n).trim().toUpperCase(); });
+    sw.accLight = root.getPropertyValue('--accent-01').trim().toUpperCase();
+    const probe = document.createElement('div'); probe.className = 'dark'; probe.style.display = 'none'; document.body.appendChild(probe);
+    sw.accDark = getComputedStyle(probe).getPropertyValue('--accent-01').trim().toUpperCase(); probe.remove();
+    const lum = h => { const n = parseInt(h.slice(1), 16); const c = [n >> 16 & 255, n >> 8 & 255, n & 255].map(v => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; };
+    const acc = cs.getPropertyValue('--accent-01').trim().toUpperCase();
+    if (/^#[0-9A-F]{6}$/.test(acc) && /^#[0-9A-F]{6}$/.test(sw.surface)) { const a = lum(acc), b = lum(sw.surface); sw.accRatio = ((Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05)).toFixed(1) + ':1'; }
+    const key = JSON.stringify(sw);
+    if (key !== this.state.swKey) this.setState({ swKey: key, sw });
+  }
+
+  neuron() {
+    const s = this.state, A = ACT[s.nAct];
+    const xs = [s.x1, s.x2, s.x3], ws = [s.w1, s.w2, s.w3];
+    const c = xs.map((x, i) => x * ws[i]);
+    const z = c.reduce((t, v) => t + v, 0) + s.b;
+    const a = A.f(z), d = (A.f(z + 1e-4) - A.f(z - 1e-4)) / 2e-4;
+    const tot = c.reduce((t, v) => t + Math.abs(v), 0) || 1;
+    let mi = 0; c.forEach((v, i) => { if (Math.abs(v) > Math.abs(c[mi])) mi = i; });
+    const ys = [60, 150, 240];
+    const edges = ys.map((y, i) => ({
+      y, ry: y - 14, ty: y + 4, name: 'x' + (i + 1), xv: fmt(xs[i], 2),
+      sw: r1(0.75 + Math.abs(ws[i]) * 1.5), dash: ws[i] < 0 ? '5 4' : 'none',
+      lx: 200, ly: r1(y + (150 - y) * 0.45 - 8), lw: 'w' + (i + 1) + ' ' + fmt(ws[i], 1)
+    }));
+    let thumb = '';
+    for (let i = 0; i <= 40; i++) { const zz = -4 + i / 5; const v = Math.max(-1, Math.min(2, A.f(zz))); thumb += (i ? 'L' : 'M') + r1(438 + i / 40 * 44) + ' ' + r1(162 - (v + 1) / 3 * 28) + ' '; }
+    return {
+      edges, thumb, bTxt: fmt(s.b, 1), zTxt: fmt(z, 2), aTxt: fmt(a, 2), fName: s.nAct.toUpperCase(),
+      bars: c.map((v, i) => ({ name: 'x' + (i + 1), w: (Math.abs(v) / tot * 100).toFixed(1) + '%', pct: Math.round(Math.abs(v) / tot * 100) + '%', color: i === mi ? ACC : 'var(--ink-2)' })),
+      kpis: [
+        { k: 'Weighted sum z', v: fmt(z), note: 'Σ wᵢxᵢ + b', color: INK },
+        { k: 'Output a', v: fmt(a), note: s.nAct + '(z)', color: ACC },
+        { k: 'Local gradient', v: fmt(d), note: d < 0.05 ? 'saturated — little signal' : 'f′(z)', color: INK },
+        { k: 'Dominant input', v: 'x' + (mi + 1), note: Math.round(Math.abs(c[mi]) / tot * 100) + '% of Σ|wx|', color: INK }
+      ],
+      figTitle: 'Fig. 06-01 · Single neuron', figMeta: '3 inputs · 1 output', eqLabel: 'Forward pass',
+      formula: 'z = w₁x₁ + w₂x₂ + w₃x₃ + b   ·   a = f(z)',
+      eqLive: 'z = ' + c.map((v, i) => fmt(ws[i], 1) + '×' + fmt(xs[i], 2)).join(' + ') + ' + ' + fmt(s.b, 1) + ' = ' + fmt(z) + '  →  a = ' + fmt(a),
+      note: 'Line weight encodes |w|; dashed lines carry negative weights. Push one weight past ±1.5 and it takes over z.'
+    };
+  }
+
+  activation() {
+    const { act, z } = this.state;
+    const A = ACT[act];
+    const f = A.f, df = x => (f(x + 1e-4) - f(x - 1e-4)) / 2e-4;
+    const P = 28, W = 640, T = 12, B = 312, y0d = -1.25, y1d = 2.25;
+    const sx = x => P + (x + 5) / 10 * (W - 2 * P);
+    const sy = y => B - (y - y0d) / (y1d - y0d) * (B - T);
+    const path = fn => { let s = ''; for (let i = 0; i <= 200; i++) { const x = -5 + i / 20; s += (i ? 'L' : 'M') + r1(sx(x)) + ' ' + r1(sy(Math.max(-3, Math.min(5, fn(x))))) + ' '; } return s; };
+    const fz = f(z), dz = df(z);
+    const pyv = Math.max(y0d, Math.min(y1d, fz));
+    return {
+      fPath: path(f), dPath: path(df),
+      y0: r1(sy(0)), zx: r1(sx(z)), px: r1(sx(z) - 5), py: r1(sy(pyv) - 5),
+      ticks: [-4, -2, 0, 2, 4].map(t => ({ x: r1(sx(t)), label: t < 0 ? '−' + Math.abs(t) : String(t) })),
+      kpis: [
+        { k: 'Input z', v: fmt(z, 2), note: 'pre-activation', color: INK },
+        { k: 'Output f(z)', v: fmt(fz), note: act, color: ACC },
+        { k: 'Gradient f′(z)', v: fmt(dz), note: Math.abs(dz) < 0.05 ? 'saturated' : 'passes signal', color: INK },
+        { k: 'Range', v: A.range, note: 'output interval', color: INK }
+      ],
+      figTitle: 'Fig. 06-02 · ' + act, figMeta: 'z ∈ [−5, 5]', eqLabel: 'Definition',
+      formula: A.formula, note: A.note,
+      eqLive: 'f(' + fmt(z, 2) + ') = ' + fmt(fz) + '   ·   f′(' + fmt(z, 2) + ') = ' + fmt(dz)
+    };
+  }
+
+  lossFn() {
+    const s = this.state, d = s.delta, e = s.yhat - 1, Lf = LOSS[s.loss];
+    const P = 28, W = 640, T = 12, B = 272, e0 = -3, e1 = 3, yMax = 4.5;
+    const sx = x => P + (x - e0) / (e1 - e0) * (W - 2 * P);
+    const sy = v => B - Math.min(v, yMax + 1) / yMax * (B - T);
+    const path = fn => { let p = ''; for (let i = 0; i <= 120; i++) { const x = e0 + i / 20; p += (i ? 'L' : 'M') + r1(sx(x)) + ' ' + r1(sy(fn(x, d))) + ' '; } return p; };
+    const keys = Object.keys(LOSS).sort((a, b) => (a === s.loss) - (b === s.loss));
+    const L = Lf.f(e, d), g = Lf.g(e, d);
+    const ec = Math.max(e0, Math.min(e1, e)), py = r1(sy(Math.min(Lf.f(ec, d), yMax)));
+    return {
+      curves: keys.map(k => ({ d: path(LOSS[k].f), stroke: k === s.loss ? INK : 'var(--mid)', sw: k === s.loss ? 2 : 1, dash: k === s.loss ? 'none' : '3 3' })),
+      legend: Object.keys(LOSS).map(k => ({ name: k, ink: k === s.loss ? INK : 'var(--ink-2)', line: k === s.loss ? '2px solid var(--ink)' : '1px dashed var(--mid)' })),
+      ticks: [-3, -2, -1, 0, 1, 2, 3].map(t => ({ x: r1(sx(t)), label: t < 0 ? '−' + Math.abs(t) : String(t) })),
+      px: r1(sx(ec)), py, rx: r1(sx(ec) - 5), ry: r1(py - 5),
+      kpis: [
+        { k: 'Error e', v: fmt(e, 2), note: 'ŷ − y', color: INK },
+        { k: 'Loss L', v: fmt(L), note: s.loss, color: ACC },
+        { k: 'Gradient ∂L/∂ŷ', v: fmt(g), note: 'push on the prediction', color: INK },
+        { k: 'Versus MSE', v: e === 0 ? '—' : '×' + (L / (e * e)).toFixed(2), note: 'L / e²', color: INK }
+      ],
+      figTitle: 'Fig. 06-03 · Loss against error', figMeta: 'e = ŷ − y ∈ [−3, 3]', eqLabel: 'Definition',
+      formula: Lf.def, note: Lf.note,
+      eqLive: 'e = ' + fmt(s.yhat, 2) + ' − 1.00 = ' + fmt(e, 2) + '  →  L = ' + fmt(L) + '   ·   ∂L/∂ŷ = ' + fmt(g)
+    };
+  }
+
+  gradient() {
+    const { lr, beta, w0, iters } = this.state;
+    const L = w => 0.08 * w ** 4 - 0.6 * w * w + 0.35 * w + 2;
+    const G = w => 0.32 * w ** 3 - 1.2 * w + 0.35;
+    const W = 640, P = 28, B = 272, T = 12, d0 = -3.2, d1 = 3.2;
+    let lo = Infinity, hi = -Infinity;
+    const xs = [];
+    for (let i = 0; i <= 160; i++) { const w = d0 + (d1 - d0) * i / 160; const v = L(w); xs.push([w, v]); lo = Math.min(lo, v); hi = Math.max(hi, v); }
+    const sx = w => P + (w - d0) / (d1 - d0) * (W - 2 * P);
+    const sy = v => B - 8 - (Math.min(v, hi) - lo) / (hi - lo) * (B - 8 - T);
+    const curve = xs.map(([w, v], i) => (i ? 'L' : 'M') + r1(sx(w)) + ' ' + r1(sy(v))).join(' ');
+    let w = w0, v = 0, diverged = false, lastStep = 0;
+    const pts = [w];
+    for (let i = 0; i < iters; i++) {
+      v = beta * v - lr * G(w); lastStep = Math.abs(v); w = w + v;
+      if (!isFinite(w) || Math.abs(w) > 6) { diverged = true; break; }
+      pts.push(w);
+    }
+    const inD = pts.filter(p => p >= d0 && p <= d1);
+    const trail = inD.map((p, i) => (i ? 'L' : 'M') + r1(sx(p)) + ' ' + r1(sy(L(p)))).join(' ');
+    const dots = inD.slice(0, -1).map(p => ({ x: r1(sx(p) - 2.5), y: r1(sy(L(p)) - 2.5) }));
+    const wc = Math.max(d0, Math.min(d1, pts[pts.length - 1]));
+    const cx = r1(sx(wc)), cy = r1(sy(L(wc)));
+    const lossPath = pts.map((p, i) => (i ? 'L' : 'M') + r1(i / 80 * 640) + ' ' + r1(112 - (Math.min(L(p), hi) - lo) / (hi - lo) * 104)).join(' ');
+    const li = pts.length - 1, wf = pts[li], g = G(wf);
+    let status, sColor = INK, note;
+    if (diverged) { status = 'Diverged'; sColor = ACC; note = 'Steps overshoot and grow. Lower η or β.'; }
+    else if (Math.abs(g) < 0.005 && lastStep < 0.001) {
+      status = wf < 0 ? 'Global min' : 'Local min'; sColor = wf < 0 ? ACC : INK;
+      note = wf < 0 ? 'Settled in the deep basin after ' + li + ' steps.' : 'Trapped in the shallow basin. Add momentum β, or start w₀ left of 0.3.';
+    } else { status = 'Descending'; note = '|∇L| = ' + fmt(Math.abs(g)) + '. Advance t to keep stepping.'; }
+    const wPrev = pts[Math.max(0, li - 1)];
+    return {
+      curve, trail, dots, lossPath,
+      ticks: [-3, -2, -1, 0, 1, 2, 3].map(t => ({ x: r1(sx(t)), label: t < 0 ? '−' + Math.abs(t) : String(t) })),
+      cur: { cx, cy, x: cx - 5, y: cy - 5 },
+      lossCur: { x: r1(li / 80 * 640 - 4), y: r1(112 - (Math.min(L(wf), hi) - lo) / (hi - lo) * 104 - 4) },
+      kpis: [
+        { k: 'Iteration t', v: String(li), note: 'of 80', color: INK },
+        { k: 'Weight w', v: fmt(wf), note: '|Δw| ' + fmt(lastStep, 4), color: INK },
+        { k: 'Loss L(w)', v: fmt(L(wf)), note: '∇L ' + fmt(g), color: INK },
+        { k: 'Status', v: status, note: 'tolerance |∇L| < 0.005', color: sColor }
+      ],
+      figTitle: 'Fig. 06-04 · Loss surface', figMeta: 'non-convex · 2 minima', eqLabel: 'Update rule',
+      formula: 'v ← β·v − η·∇L(w)   ·   w ← w + v', note,
+      eqLive: li === 0 ? 't = 0 · w₀ = ' + fmt(w0) + ' · L = ' + fmt(L(w0)) : 't = ' + li + ' · w = ' + fmt(wPrev) + ' − ' + lr.toFixed(2) + ' × ' + fmt(G(wPrev)) + (beta ? ' + β·v' : '') + '  →  ' + fmt(wf)
+    };
+  }
+
+  renderVals() {
+    const s = this.state;
+    const sw = s.sw || {};
+    const roles = { surface: 'Page canvas', 'surface-2': 'Raised block, hover wash', 'surface-3': 'Listing row rule', 'rule-c': 'Rhythm rule — rows, cells', mid: 'Structural hairline — never text', 'ink-3': 'Numbering, recessive text (= ink-2 on light)', 'ink-2': 'Secondary text', ink: 'Primary text, opening rule' };
+    const swatches = Object.keys(roles).map(n => ({ name: n, hex: sw[n] || '…', role: roles[n], bg: 'var(--' + n + ')' }));
+    const spaceList = [['space-h', 4], ['space-1', 8], ['space-2', 16], ['space-3', 24], ['space-4', 32], ['space-5', 40], ['space-6', 48], ['space-8', 64], ['space-10', 80], ['space-12', 96], ['space-16', 128], ['space-20', 160]];
+    const vw = s.vw || 1280;
+    const set = (k, lo, hi) => v => this.setState({ [k]: Math.max(lo, Math.min(hi, v)) });
+    const flip = k => v => this.setState(st => ({ [k]: typeof v === 'boolean' ? v : !st[k] }));
+    const tools = { neuron: this.neuron(), act: this.activation(), loss: this.lossFn(), gd: this.gradient() };
+
+    return {
+      showGrid: this.props.showGrid ?? false,
+      cols: Array.from({ length: 12 }, (_, i) => ({ n: String(i + 1).padStart(2, '0') })),
+      swatches, accHexLight: sw.accLight || '…', accHexDark: sw.accDark || '…', accRatio: sw.accRatio || '…',
+      spaces: spaceList.map(([t, px]) => ({ token: t, px: String(px), w: (px / 160 * 100) + '%' })),
+      vw: String(vw), secPad: vw >= 1024 ? '128' : vw >= 768 ? '96' : '64',
+      segItems: ['Daily', 'Weekly', 'Monthly'], seg: s.seg, setSeg: v => this.setState({ seg: v }),
+      holdout: s.holdout, setHoldout: v => this.setState({ holdout: v }),
+      toggle: s.toggle, flipToggle: flip('toggle'),
+
+      modules: MODULES.map(m => {
+        const on = m.id === s.tool;
+        return { ...m, go: () => this.setState({ tool: m.id }), bar: on ? ACC : 'transparent', bg: on ? 'var(--surface-2)' : 'transparent', num: on ? ACC : 'var(--ink-3)', ink: on ? INK : 'var(--ink-2)' };
+      }),
+      tool: tools[s.tool], railR: vw >= 768 ? 'var(--rule)' : '0',
+      isNeuron: s.tool === 'neuron', isAct: s.tool === 'act', isLoss: s.tool === 'loss', isGd: s.tool === 'gd',
+
+      x1: s.x1, x2: s.x2, x3: s.x3, w1: s.w1, w2: s.w2, w3: s.w3, b: s.b, nAct: s.nAct,
+      setX1: set('x1', -1, 1), setX2: set('x2', -1, 1), setX3: set('x3', -1, 1),
+      setW1: set('w1', -2, 2), setW2: set('w2', -2, 2), setW3: set('w3', -2, 2), setB: set('b', -2, 2),
+      setNAct: v => this.setState({ nAct: v }), resetN: () => this.setState({ ...N_DEF }),
+      neuron: tools.neuron,
+
+      actItems: Object.keys(ACT), actShort: [{ id: 'Sigmoid', label: 'σ' }, { id: 'Tanh', label: 'tanh' }, { id: 'ReLU', label: 'ReLU' }, { id: 'GELU', label: 'GELU' }], act: s.act, setAct: v => this.setState({ act: v }),
+      z: s.z, setZ: set('z', -5, 5), showDeriv: s.showDeriv, flipDeriv: flip('showDeriv'),
+      actFig: tools.act,
+
+      lossItems: Object.keys(LOSS), lossShort: [{ id: 'MSE', label: 'MSE' }, { id: 'MAE', label: 'MAE' }, { id: 'Huber', label: 'Huber' }, { id: 'Log-cosh', label: 'Lcosh' }], loss: s.loss, setLoss: v => this.setState({ loss: v }),
+      yhat: s.yhat, setYhat: set('yhat', -2, 4), delta: s.delta, setDelta: set('delta', 0.25, 2),
+      lossFig: tools.loss,
+
+      lr: s.lr, beta: s.beta, w0: s.w0, iters: s.iters,
+      setLr: set('lr', 0.01, 0.5), setBeta: set('beta', 0, 0.95), setW0: set('w0', -3, 3), setIters: set('iters', 0, 80),
+      stepBack: () => this.setState(st => ({ iters: Math.max(0, st.iters - 1) })),
+      stepFwd: () => this.setState(st => ({ iters: Math.min(80, st.iters + 1) })),
+      resetGd: () => this.setState({ ...GD_DEF }),
+      gd: tools.gd
+    };
+  }
+}
+</script>
+</body>
+</html>

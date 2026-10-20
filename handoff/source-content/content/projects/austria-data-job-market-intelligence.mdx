@@ -1,0 +1,92 @@
+---
+title: Austria Data-Job Market Intelligence
+date: 2026-09-16
+kind: case
+code: 01-05
+summary: "An evidence base for data-career decisions in Austria, with a Styria and Graz focus: a one-day snapshot of 720 core data-role postings from five public sources, the AMS JobBarometer 2020–2025 and Eurostat vacancy seasonality."
+homeNote: "What Austrian data-role ads actually ask for: 720 postings from one day, sorted by transparent rules, every share published with its n and its caveats."
+status: live
+tags:
+  - Job Market
+  - Data Pipeline
+  - Descriptive Statistics
+locale: en
+---
+
+<Lead>
+An evidence base for data-career decisions in Austria, with a Styria and Graz focus: a one-day
+snapshot of 720 core data-role postings from five public sources, the AMS JobBarometer
+2020–2025 and Eurostat vacancy seasonality.
+</Lead>
+
+The questions are practical. Which data titles are advertised in Austria, where, and with which
+technologies, languages, education, pay and work model? How does Styria differ from Vienna? The
+standard set for the answers: a technically competent, sceptical reader should be able to audit
+the method, the provenance, the limitations and the conclusions.
+
+<Marker num="01" label="Context" id="sec-01" />
+
+Postings were collected on 2026-09-16 between 17:00 and 18:40 UTC from EURES, karriere.at,
+LinkedIn's logged-out job pages, willhaben and jobs.at, using 45 title keywords in English and
+German, with no login and no CAPTCHA or paywall bypass. StepStone, Indeed, hokify and Glassdoor
+were blocked and are excluded. The official series are the AMS JobBarometer (online ads per
+occupation class and federal state, 2020–2025) and Eurostat's quarterly job-vacancy data.
+
+<MetricGrid metrics={[
+  { value: "720", label: "CORE POSTINGS", note: "from 12,429 raw rows · 58 in Styria" },
+  { value: "83% / 95%", label: "TITLE PRECISION", note: "strict / lenient · 177 hand-labelled titles" },
+  { value: "24%", label: "DUPLICATE RATE", note: "in-scope postings, merged by union-find" }
+]} />
+
+A terms-of-use audit found that all five posting sources restrict automated extraction. The
+collection therefore stays a one-off private research set. The collectors and the raw ads are
+not published; the public repository holds the code, the rules and the aggregated tables, with
+every text and URL column removed.
+
+<Marker num="02" label="Process" id="sec-02" />
+
+Every step is a script and every rule lives in a config file. Titles are normalised by ordered
+regex rules into eight role families. Geography comes from explicit fields, then NUTS-3 codes,
+then postcodes and place names in the text. Salary figures are parsed from structured fields or
+from text near salary words and annualised at 14 monthly payments. Language requirements are
+read from ±120-character windows around each language mention. Duplicates are grouped by
+union-find over company, title, federal state and a description fingerprint.
+
+Text-derived shares use postings with a description longer than 300 characters as the
+denominator, every table stores its n, and proportions that feed a decision carry Wilson 95%
+intervals. The official series are analysed as their own units and never merged with
+posting-level statistics. A 67-test suite checks rule behaviour and output consistency, and a
+digest script reprints every number quoted in the documents from the tables.
+
+<Marker num="03" label="Results" id="sec-03" />
+
+- Vienna holds 48% of open core postings. Styria is 7.5% of the snapshot but 13.6% of the
+  official yearly flow, and the only large region above its 2020 level (AMS "Data Scientist"
+  class: Austria −28%, Styria +34%).
+- Data engineering and data science are the largest families, at 22% each. Marketing- and
+  product-analytics titles are rare: 25 of 720, none in Styria.
+- SQL (40%) and Python (35%) lead, and the stack is Microsoft-centred: Azure 19%, Power BI 18%,
+  Tableau 3%.
+- 40% of ads state a German requirement. 24% are written in English, but 19% of those still
+  state one.
+- 81% of advertised salary figures are collective-agreement minimums, so the ads show floors,
+  not pay.
+- Seasonality is small against the cycle: within-year amplitude of 5–14% in the Eurostat series,
+  against 255–567% between years.
+
+The findings feed two decision documents that score each role family against a declared skill
+profile, with stated weights and a sensitivity check under alternative weights. There is no
+hidden scoring, and each statement traces to a table id.
+
+What this does not establish:
+
+- Demand over time. It is a one-day stock of ads, not yearly flow, vacancies or hires.
+- Full coverage. StepStone, Indeed and company career pages are missing, and title-based
+  inclusion has measured precision but unmeasured recall.
+- Styrian detail. Styrian cells are small (n = 58), so they are reported as counts and labelled
+  tentative.
+- Anything causal. There are no hiring outcomes, so no requirement is evidence of what gets
+  someone hired.
+
+Complete. Code under MIT, documents and aggregated outputs under CC BY 4.0:
+[github.com/RafaelBraga-Kribitz/austria-data-job-market-intelligence](https://github.com/RafaelBraga-Kribitz/austria-data-job-market-intelligence).

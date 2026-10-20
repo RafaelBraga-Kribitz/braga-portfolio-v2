@@ -1,0 +1,104 @@
+# Home-page content (D-02) — feeds src/app/page.tsx via getHomeData().
+# Every string here moved byte-identically out of the route component
+# (01-10-PLAN.md Task 2), with two structural substitutions and
+# nothing else: a template-literal interpolation becomes a named
+# placeholder (e.g. "{projectCount}"), and a <strong> run becomes
+# **bold** — both resolved at render time by src/lib/prose.tsx's
+# formatProse against params the route computes from
+# getAll()/getToolsData(). See src/lib/schemas/home.schema.ts for the
+# field-by-field rationale.
+#
+# Sections are listed in reading order, and the coordinates follow it
+# (2026-09-26): 01 Work, 02 Writing, 03 About, 04 Tools — the same
+# numbers the navbar, row codes, figure ids and metadata titles use.
+# Every sub-code carries its section's prefix (About 03-0x, Writing
+# 02-0x).
+#
+# Per-project notes (the former WORK_NOTE lookup table) are not here —
+# each project now carries its own homeNote in its frontmatter
+# (src/lib/frontmatter.ts), read alongside this file.
+
+cover:
+  kicker: "Cover"
+  title: "Marketing Data Science"
+  tagline: "Hi, I’m **Rafael Braga-Kribitz**."
+  lead: "I build the measurement and decision systems behind where marketing budget goes: funnels, attribution, retention, and the experiments that settle them. Mostly where digital products meet their markets, from SaaS and e-commerce to account-based B2B. The practice comes from a career inside marketing (startups, campaigns, one presidential election) where solving a problem usually meant building the tool for it. The projects, writing, and instruments here document that method."
+  heroMeta:
+    - term: "Currently"
+      value: "Marketing Data Scientist, BioSynCare"
+    - term: "Based in"
+      value: "Graz, AT"
+    - term: "Sections"
+      value: "01 — 04"
+
+sections:
+  - number: "01"
+    label: "Work"
+    id: work
+    linkLabel: "Open the index"
+    linkHref: "/projects"
+    leadParagraphs:
+      - "{projectCount} {projectVerb} published. Each is written as a document rather than a pitch — context, then process, then results — with the assumptions stated where they can be checked and the numbers left where they fall."
+      - "Status is stated plainly. A **live** project is finished and its figures hold; **in-build** means they are still moving, and the page says so rather than waiting to look complete."
+    marginFacts:
+      - "{liveCount} live · {inBuildCount} in-build"
+
+  - number: "02"
+    label: "Writing"
+    id: writing
+    linkLabel: "Open the writing"
+    linkHref: "/writing"
+    leadParagraphs:
+      - "Two registers, deliberately kept apart. Essays are finished arguments — a position taken, defended, and closed. Notes are the working surface, revised in place as the thinking moves."
+      - "Everything is dated, and every note carries a status, so nothing reads as more settled than it is."
+    marginFacts:
+      - "{essayCount}"
+      - "{noteCount}"
+    subNodes:
+      - code: "02-01"
+        title: "Blog"
+        href: "/writing#blog"
+        body: "Long-form positions on where marketing and data science meet. One argument per piece, carried to a conclusion rather than left open."
+      - code: "02-02"
+        title: "Notes"
+        href: "/writing#notes"
+        body: "Learning in public: shorter, revised in place, and often carrying a chart or a small instrument you can operate yourself."
+
+  - number: "03"
+    label: "About"
+    id: about
+    linkLabel: "Open the profile"
+    linkHref: "/about"
+    leadParagraphs:
+      - "The work sits where a marketing decision meets the evidence for it. Most of it is measurement that has to survive a budget meeting: causal inference where correlation is the convenient answer, uncertainty carried through to the decision rather than rounded away, and models whose reasoning stays auditable by the people who have to act on them."
+      - "The profile page carries the long version: how the practice arrived at that position, the methods it leans on, a CV summary, and the direct line."
+    subNodes:
+      - code: "03-01"
+        title: "Background"
+        href: "/about#background"
+        body: "A marketing career in which the technical work kept moving toward the center, and one conviction: a measurement only counts once it changes an allocation."
+      - code: "03-02"
+        title: "Expertise & Approach"
+        href: "/about#expertise"
+        body: "Frame the decision first, estimate honestly with the uncertainty attached, then optimize the metric that actually matters. The toolbox serves that order, not the reverse."
+      - code: "03-03"
+        title: "CV Summary"
+        href: "/about#cv"
+        body: "Roles and education set as a plain table, newest first."
+      - code: "03-04"
+        title: "Contact"
+        href: "/about#contact"
+        body: "Email is the direct line, and it is answered. Worth writing about: a Marketing Data Science role, a measurement setup that looks misspecified, or a model whose numbers have stopped agreeing with the business."
+
+  - number: "04"
+    label: "Tools"
+    id: tools
+    # {n} = the number of live tools (all of them; home shows the
+    # first four). Resolved by formatProse in src/app/page.tsx.
+    linkLabel: "Open all {n} tools"
+    linkHref: "/tools"
+    leadParagraphs:
+      - "Some arguments are easier to make with a control than with a paragraph. These are small, self-contained instruments — nothing to install, no account, and no data leaving the browser."
+      - "They exist so a claim made in the writing can be tested rather than taken on trust."
+    marginFacts:
+      - "{n} published"

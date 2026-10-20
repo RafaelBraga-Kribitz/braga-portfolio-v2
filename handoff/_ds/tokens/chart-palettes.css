@@ -1,0 +1,104 @@
+/* ============================================================
+   CHART PALETTES
+   Six data-vis scales, anchored to BK design-system accents.
+
+   Anchors:
+     --accent-01  #FA6400  orange  (sequential-orange stop 3, div warm end, short end)
+     --accent-02  #5B7FFF  blue    (sequential-blue  stop 3, pol cool end, long/short start)
+
+   Stop convention: 1 = most saturated / darkest, N = lightest / most muted.
+   Sequential ramps: 9 stops.  Diverging / political: 13 stops.
+   Interpolation scales: 8 stops.
+
+   Dark-mode overrides: near-white stops are pulled back so they remain
+   legible on dark surfaces.
+   ============================================================ */
+
+:root {
+  /* ── Sequential — BK Blue (1 dark → 9 light) ──────────────────────────── */
+  --chart-seq-blue-1: #111D7A;   /* deep navy                                */
+  --chart-seq-blue-2: #2133B0;
+  --chart-seq-blue-3: #5B7FFF;   /* = --accent-02  ← anchor                 */
+  --chart-seq-blue-4: #7A97FF;
+  --chart-seq-blue-5: #97B1FF;
+  --chart-seq-blue-6: #B3C9FF;
+  --chart-seq-blue-7: #CDDCFF;
+  --chart-seq-blue-8: #E2ECFF;
+  --chart-seq-blue-9: #F2F5FF;   /* near-white (avoid on dark bg)            */
+
+  /* ── Sequential — BK Orange (1 dark → 9 light) ────────────────────────── */
+  --chart-seq-orange-1: #6B2A00;  /* dark burnt orange                        */
+  --chart-seq-orange-2: #A83F00;
+  --chart-seq-orange-3: #FA6400;  /* = --accent-01  ← anchor                 */
+  --chart-seq-orange-4: #FF8332;
+  --chart-seq-orange-5: #FF9F60;
+  --chart-seq-orange-6: #FFB98E;
+  --chart-seq-orange-7: #FFD0B3;
+  --chart-seq-orange-8: #FFE4D0;
+  --chart-seq-orange-9: #FFF3EC;  /* near-white (avoid on dark bg)            */
+
+  /* ── Diverging — Warm / Cool                                               */
+  /* Green (cool) ↔ yellow midpoint ↔ BK orange (warm)   13 stops           */
+  --chart-div-1:  #00876C;
+  --chart-div-2:  #449A71;
+  --chart-div-3:  #6CAC78;
+  --chart-div-4:  #91BD80;
+  --chart-div-5:  #B6CF8B;
+  --chart-div-6:  #DAE09A;
+  --chart-div-7:  #FFF0A8;  /* yellow midpoint                              */
+  --chart-div-8:  #FDD880;
+  --chart-div-9:  #FBBE5E;
+  --chart-div-10: #F9A03C;
+  --chart-div-11: #F78220;
+  --chart-div-12: #F56E0A;
+  --chart-div-13: #FA6400;  /* = --accent-01                                 */
+
+  /* ── Diverging — Political                                                 */
+  /* BK blue (left) ↔ neutral grey midpoint ↔ red (right)   13 stops        */
+  --chart-pol-1:  #111D7A;
+  --chart-pol-2:  #2A42B8;
+  --chart-pol-3:  #4D67D4;
+  --chart-pol-4:  #748FE6;
+  --chart-pol-5:  #9DB5F2;
+  --chart-pol-6:  #C6D8FA;
+  --chart-pol-7:  #EBEBEB;  /* neutral midpoint                              */
+  --chart-pol-8:  #F5D2D4;
+  --chart-pol-9:  #EFB2B8;
+  --chart-pol-10: #E5909A;
+  --chart-pol-11: #D86E7E;
+  --chart-pol-12: #C74B62;
+  --chart-pol-13: #B22848;
+
+  /* ── Long Interpolation                                                    */
+  /* BK blue → teal → green → warm gold   8 stops                           */
+  --chart-long-1: #5B7FFF;  /* = --accent-02                                 */
+  --chart-long-2: #1280CC;
+  --chart-long-3: #008FA8;
+  --chart-long-4: #009882;
+  --chart-long-5: #2EA05A;
+  --chart-long-6: #78A028;
+  --chart-long-7: #B89C10;
+  --chart-long-8: #DDA026;
+
+  /* ── Short Interpolation                                                   */
+  /* BK blue → magenta → BK orange   8 stops                                */
+  --chart-short-1: #5B7FFF;  /* = --accent-02                                */
+  --chart-short-2: #9D6FF6;
+  --chart-short-3: #CD5AE0;
+  --chart-short-4: #F041C0;
+  --chart-short-5: #FF2A99;
+  --chart-short-6: #FF2B6F;
+  --chart-short-7: #FF4643;
+  --chart-short-8: #FA6400;  /* = --accent-01                                */
+}
+
+/* ---- Dark-mode overrides ------------------------------------------------ */
+/* Near-white stops are pulled back so they remain visible on dark surfaces. */
+.dark {
+  --chart-seq-blue-8:    #C8DCFF;
+  --chart-seq-blue-9:    #DCEAFF;
+  --chart-seq-orange-8:  #FFD8BF;
+  --chart-seq-orange-9:  #FFEADE;
+  --chart-pol-7:         #909090;  /* visible grey midpoint on dark bg        */
+  --chart-div-7:         #E8D860;  /* more saturated yellow on dark bg        */
+}

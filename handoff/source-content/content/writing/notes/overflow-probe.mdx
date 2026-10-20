@@ -1,0 +1,50 @@
+---
+title: Overflow Containment Probe
+date: 2026-08-20
+kind: note
+summary: A standing page carrying a wide table, a wide display equation, a language-tagged fence and a diagram, kept so the four-column overflow check (G-02-8) can be repeated by anyone, at any time.
+status: in-build
+tags:
+  - diagnostics
+locale: en
+draft: true
+---
+
+This page is a standing instrument, not an article. It is marked as a draft, so the loader excludes it
+from the writing listing and from the feed and still resolves it by its own address — reachable for
+inspection, invisible everywhere else. It exists to be opened at a narrow viewport, and saying so plainly
+is more honest than dressing it up as one.
+
+Before the fix this page verifies, the measurement was blunt. At a 639 pixel viewport the document's scroll
+width read 730 against a 639 pixel client width — the page moved sideways. The table below measured 655
+pixels inside a 408 pixel wrapper whose overflow was visible, so the table's own minimum content width
+expanded the wrapper meant to hold it, not the other way round.
+
+| Channel | Spend | Impressions | Clicks | CTR | Conversions | CPA | ROAS | LTV |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Search | 214,500 | 8,120,400 | 162,408 | 2.00% | 4,872 | 44.02 | 3.61 | 612 |
+| Paid Social | 178,300 | 12,660,900 | 202,574 | 1.60% | 3,038 | 58.69 | 2.71 | 498 |
+| Display | 96,200 | 24,050,000 | 96,200 | 0.40% | 962 | 100.00 | 1.59 | 305 |
+| Video | 132,750 | 9,912,000 | 79,296 | 0.80% | 1,586 | 83.68 | 1.90 | 410 |
+| Affiliate | 61,900 | 3,095,000 | 46,425 | 1.50% | 928 | 66.70 | 2.38 | 355 |
+| Email | 8,400 | 1,050,000 | 31,500 | 3.00% | 630 | 13.33 | 11.90 | 890 |
+
+A display equation, long enough on its own to overrun the reading column at the same width:
+
+$$
+\text{Score}(x) = \frac{\sum_{i=1}^{n} w_i \cdot \phi_i(x) - \mu_{\text{baseline}}}{\sigma_{\text{baseline}} + \epsilon} \quad \text{subject to} \quad \sum_{i=1}^{n} w_i = 1
+$$
+
+A short fenced code block keeps the language-tag observation repeatable, unrelated to either overflow:
+
+```py
+def score(x, weights, baseline_mu, baseline_sigma, eps=1e-6):
+    """Standardized weighted score, guarded against a zero-variance baseline."""
+    raw = sum(w * phi(x, i) for i, w in enumerate(weights))
+    return (raw - baseline_mu) / (baseline_sigma + eps)
+```
+
+The diagram below carries an explicit row count, so the row-span question the previous, headless capture
+left unsettled has somewhere to be settled in a real browser:
+
+<MermaidDiagram chart={"flowchart LR\n  A[Import] --> B[Validate]\n  B --> C[Render]\n  C --> D[Measure]"} rows={6} caption="Import to measurement — the loop this page exists to close." />

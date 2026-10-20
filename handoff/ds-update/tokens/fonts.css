@@ -1,0 +1,82 @@
+/* ============================================================
+   FONTS — v2 (official)
+   display + body : BKribitz       100–900, upright + italic
+   mono           : BKribitz Mono  100–900, upright + italic
+   Modified cuts of Geist / Geist Mono (SIL OFL 1.1 — see
+   ../fonts/OFL.txt). BKribitz uses a slashed zero by default.
+   'Söhne' / 'Söhne Mono' are aliased to the same files so the
+   compiled bundle's canvas charts (which hard-code those names)
+   render in the official face too.
+   ============================================================ */
+@font-face { font-family: 'BKribitz'; font-weight: 100; font-style: normal; font-display: swap; src: url('../fonts/BKribitz/BKribitz-100.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz'; font-weight: 100; font-style: italic; font-display: swap; src: url('../fonts/BKribitz/BKribitz-100-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz'; font-weight: 200; font-style: normal; font-display: swap; src: url('../fonts/BKribitz/BKribitz-200.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz'; font-weight: 200; font-style: italic; font-display: swap; src: url('../fonts/BKribitz/BKribitz-200-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz'; font-weight: 300; font-style: normal; font-display: swap; src: url('../fonts/BKribitz/BKribitz-300.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz'; font-weight: 300; font-style: italic; font-display: swap; src: url('../fonts/BKribitz/BKribitz-300-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz'; font-weight: 400; font-style: normal; font-display: swap; src: url('../fonts/BKribitz/BKribitz-400.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz'; font-weight: 400; font-style: italic; font-display: swap; src: url('../fonts/BKribitz/BKribitz-400-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz'; font-weight: 500; font-style: normal; font-display: swap; src: url('../fonts/BKribitz/BKribitz-500.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz'; font-weight: 500; font-style: italic; font-display: swap; src: url('../fonts/BKribitz/BKribitz-500-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz'; font-weight: 600; font-style: normal; font-display: swap; src: url('../fonts/BKribitz/BKribitz-600.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz'; font-weight: 600; font-style: italic; font-display: swap; src: url('../fonts/BKribitz/BKribitz-600-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz'; font-weight: 700; font-style: normal; font-display: swap; src: url('../fonts/BKribitz/BKribitz-700.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz'; font-weight: 700; font-style: italic; font-display: swap; src: url('../fonts/BKribitz/BKribitz-700-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz'; font-weight: 800; font-style: normal; font-display: swap; src: url('../fonts/BKribitz/BKribitz-800.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz'; font-weight: 800; font-style: italic; font-display: swap; src: url('../fonts/BKribitz/BKribitz-800-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz'; font-weight: 900; font-style: normal; font-display: swap; src: url('../fonts/BKribitz/BKribitz-900.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz'; font-weight: 900; font-style: italic; font-display: swap; src: url('../fonts/BKribitz/BKribitz-900-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne'; font-weight: 100; font-style: normal; font-display: swap; src: url('../fonts/BKribitz/BKribitz-100.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne'; font-weight: 100; font-style: italic; font-display: swap; src: url('../fonts/BKribitz/BKribitz-100-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne'; font-weight: 200; font-style: normal; font-display: swap; src: url('../fonts/BKribitz/BKribitz-200.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne'; font-weight: 200; font-style: italic; font-display: swap; src: url('../fonts/BKribitz/BKribitz-200-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne'; font-weight: 300; font-style: normal; font-display: swap; src: url('../fonts/BKribitz/BKribitz-300.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne'; font-weight: 300; font-style: italic; font-display: swap; src: url('../fonts/BKribitz/BKribitz-300-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne'; font-weight: 400; font-style: normal; font-display: swap; src: url('../fonts/BKribitz/BKribitz-400.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne'; font-weight: 400; font-style: italic; font-display: swap; src: url('../fonts/BKribitz/BKribitz-400-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne'; font-weight: 500; font-style: normal; font-display: swap; src: url('../fonts/BKribitz/BKribitz-500.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne'; font-weight: 500; font-style: italic; font-display: swap; src: url('../fonts/BKribitz/BKribitz-500-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne'; font-weight: 600; font-style: normal; font-display: swap; src: url('../fonts/BKribitz/BKribitz-600.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne'; font-weight: 600; font-style: italic; font-display: swap; src: url('../fonts/BKribitz/BKribitz-600-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne'; font-weight: 700; font-style: normal; font-display: swap; src: url('../fonts/BKribitz/BKribitz-700.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne'; font-weight: 700; font-style: italic; font-display: swap; src: url('../fonts/BKribitz/BKribitz-700-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne'; font-weight: 800; font-style: normal; font-display: swap; src: url('../fonts/BKribitz/BKribitz-800.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne'; font-weight: 800; font-style: italic; font-display: swap; src: url('../fonts/BKribitz/BKribitz-800-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne'; font-weight: 900; font-style: normal; font-display: swap; src: url('../fonts/BKribitz/BKribitz-900.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne'; font-weight: 900; font-style: italic; font-display: swap; src: url('../fonts/BKribitz/BKribitz-900-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz Mono'; font-weight: 100; font-style: normal; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-100.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz Mono'; font-weight: 100; font-style: italic; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-100-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz Mono'; font-weight: 200; font-style: normal; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-200.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz Mono'; font-weight: 200; font-style: italic; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-200-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz Mono'; font-weight: 300; font-style: normal; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-300.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz Mono'; font-weight: 300; font-style: italic; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-300-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz Mono'; font-weight: 400; font-style: normal; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-400.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz Mono'; font-weight: 400; font-style: italic; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-400-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz Mono'; font-weight: 500; font-style: normal; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-500.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz Mono'; font-weight: 500; font-style: italic; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-500-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz Mono'; font-weight: 600; font-style: normal; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-600.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz Mono'; font-weight: 600; font-style: italic; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-600-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz Mono'; font-weight: 700; font-style: normal; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-700.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz Mono'; font-weight: 700; font-style: italic; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-700-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz Mono'; font-weight: 800; font-style: normal; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-800.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz Mono'; font-weight: 800; font-style: italic; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-800-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz Mono'; font-weight: 900; font-style: normal; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-900.ttf') format('truetype'); }
+@font-face { font-family: 'BKribitz Mono'; font-weight: 900; font-style: italic; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-900-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne Mono'; font-weight: 100; font-style: normal; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-100.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne Mono'; font-weight: 100; font-style: italic; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-100-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne Mono'; font-weight: 200; font-style: normal; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-200.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne Mono'; font-weight: 200; font-style: italic; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-200-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne Mono'; font-weight: 300; font-style: normal; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-300.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne Mono'; font-weight: 300; font-style: italic; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-300-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne Mono'; font-weight: 400; font-style: normal; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-400.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne Mono'; font-weight: 400; font-style: italic; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-400-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne Mono'; font-weight: 500; font-style: normal; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-500.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne Mono'; font-weight: 500; font-style: italic; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-500-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne Mono'; font-weight: 600; font-style: normal; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-600.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne Mono'; font-weight: 600; font-style: italic; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-600-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne Mono'; font-weight: 700; font-style: normal; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-700.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne Mono'; font-weight: 700; font-style: italic; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-700-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne Mono'; font-weight: 800; font-style: normal; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-800.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne Mono'; font-weight: 800; font-style: italic; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-800-Italic.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne Mono'; font-weight: 900; font-style: normal; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-900.ttf') format('truetype'); }
+@font-face { font-family: 'Söhne Mono'; font-weight: 900; font-style: italic; font-display: swap; src: url('../fonts/BKribitzMono/BKribitzMono-900-Italic.ttf') format('truetype'); }

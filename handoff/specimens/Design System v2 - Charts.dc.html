@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/braga-kribitz-design-system-remix-5791f94c-126d-46ea-bd68-9d0531f6f37b/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/braga-kribitz-design-system-remix-5791f94c-126d-46ea-bd68-9d0531f6f37b/tokens/listing.css">
+  <link rel="stylesheet" href="_ds/braga-kribitz-design-system-remix-5791f94c-126d-46ea-bd68-9d0531f6f37b/tokens/chart-palettes.css">
+  <link rel="stylesheet" href="ds-update/tokens/colors.css">
+  <link rel="stylesheet" href="ds-update/tokens/chart-palettes.css">
+  <link rel="stylesheet" href="ds-update/tokens/ibcs.css">
+  <link rel="stylesheet" href="ds-update/tokens/fonts.css">
+  <link rel="stylesheet" href="ds-update/tokens/typography.css">
+  <link rel="stylesheet" href="ds-update/tokens/spacing.css">
+  <link rel="stylesheet" href="ds-update/tokens/grid.css">
+  <link rel="stylesheet" href="ds-update/tokens/component-fixes.css">
+  <link rel="stylesheet" href="ds-update/proposals/theme.css">
+  <link rel="stylesheet" href="ds-update/proposals/foundations.css">
+  <link rel="stylesheet" href="ds-update/proposals/print.css">
+  <script src="_ds/braga-kribitz-design-system-remix-5791f94c-126d-46ea-bd68-9d0531f6f37b/_ds_bundle.js"></script>
+  <style>
+    body { margin: 0; background: var(--surface); color: var(--ink); font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+    a { color: var(--ink); text-decoration: none; }
+  </style>
+</helmet>
+
+<a class="skip" href="#main">Skip to content</a>
+<div style="min-height: 100vh; background: var(--surface); color: var(--ink); position: relative; filter: {{ visionFilter }};">
+  {{ hatchDefs }}
+
+  <sc-if value="{{ showGrid }}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; inset: 0; pointer-events: none; z-index: 50; overflow: hidden;">
+      <div class="grid-container" style="height: 100%;">
+        <div class="grid" style="height: 100%;">
+          <sc-for list="{{ cols }}" as="c" hint-placeholder-count="12">
+            <div class="col-1" style="height: 100%; background: color-mix(in srgb, var(--accent-01) 7%, transparent); box-shadow: inset 1px 0 0 color-mix(in srgb, var(--accent-01) 40%, transparent), inset -1px 0 0 color-mix(in srgb, var(--accent-01) 40%, transparent);"></div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <header class="grid-container">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; min-height: 64px; padding-block: 16px;">
+      <a href="Design System v2.dc.html" style="font-family: var(--font-display); font-weight: var(--w-display); font-size: 18px; letter-spacing: -0.01em; white-space: nowrap;">Rafael Braga-Kribitz</a>
+      <nav style="display: flex; flex-wrap: wrap; gap: 4px 24px; font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase;">
+        <a href="Design System v2.dc.html" style="color: var(--ink-3); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">← Core</a>
+        <a href="#s01" style="color: var(--ink-2); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">01 Palettes</a>
+        <a href="#s02" style="color: var(--ink-2); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">02 Anatomy</a>
+        <a href="#s03" style="color: var(--ink-2); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">03 Basic charts</a>
+        <a href="#s04" style="color: var(--ink-2); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">04 Dictionary</a>
+        <a href="Dashboards 1 - Principles.dc.html" style="color: var(--ink); min-height: 32px; display: flex; align-items: center; white-space: nowrap;">Dashboards →</a>
+        <sc-if value="{{ visionOn }}" hint-placeholder-val="{{ false }}"><span style="min-height: 32px; display: flex; align-items: center; padding: 0 8px; background: var(--ink); color: var(--surface); white-space: nowrap;">Simulating · {{ visionName }}</span></sc-if>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="grid-container">
+
+    <section id="s00" class="section">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">00 · EXTENSION</div>
+        <div class="col-9">
+          <div class="label" style="margin-bottom: 24px;">BRAGA KRIBITZ DESIGN SYSTEM · V2.0 · CHARTS · DRAFT 3<sc-if value="{{ ibcs }}" hint-placeholder-val="{{ false }}"> · IBCS NOTATION</sc-if></div>
+          <h1 class="display" style="margin: 0; font-size: var(--t-h1); line-height: var(--lh-tight);">Chart dictionary.</h1>
+          <p class="prose" style="margin: 32px 0 0; font-size: var(--t-lead); color: var(--ink-2);">Charts are the system’s only imagery, so they follow the same rules as type: grey structure, one accent signal, numbers you can read. This page holds the chart palettes, the anatomy every chart shares, six fully specified basic charts and the full dictionary.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 01 PALETTES -->
+    <section id="s01" class="section">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">01 · PALETTES</div>
+        <div class="col-9">
+          <h2 class="display" style="margin: 0; font-size: var(--t-h2);">Eight scales, re-anchored on vermilion.</h2>
+          <p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">Rescued from v1. Orange <span style="font-family: var(--font-mono); font-size: 0.9em;">#FA6400</span> is retired, and every stop that was derived from it now comes from vermilion <span style="font-family: var(--font-mono); font-size: 0.9em;">#E8431A</span>. Scales that never touched orange are unchanged. The thin strip under each re-derived scale shows the v1 values.</p>
+        </div>
+      </div>
+
+      <div style="margin-top: var(--block-gap);">
+        <sc-for list="{{ palettes }}" as="p" hint-placeholder-count="6">
+          <div class="grid rule-t" style="padding-block: 24px; row-gap: 16px;">
+            <div class="col-3">
+              <div class="index">{{ p.idx }}</div>
+              <div style="margin-top: 8px; font-family: var(--font-display); font-weight: var(--w-display); font-size: 18px; line-height: 1.2;">{{ p.name }}</div>
+              <div style="margin-top: 8px; display: flex; gap: 8px; align-items: center; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3);">
+                <span style="width: 8px; height: 8px; background: {{ p.dot }}; flex-shrink: 0;"></span><span style="white-space: nowrap;">{{ p.status }}</span>
+              </div>
+              <p style="margin: 12px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">{{ p.use }}</p>
+            </div>
+            <div class="col-9" style="min-width: 0;">
+              <div style="display: grid; grid-template-columns: repeat({{ p.n }}, minmax(0, 1fr)); gap: 2px;">
+                <sc-for list="{{ p.stops }}" as="s" hint-placeholder-count="9">
+                  <div style="min-width: 0;">
+                    <div style="height: 56px; background: {{ s.v }}; box-shadow: {{ s.ring }};"></div>
+                    <sc-if value="{{ p.hasOld }}" hint-placeholder-val="{{ false }}">
+                      <div style="height: 6px; margin-top: 2px; background: {{ s.old }};"></div>
+                    </sc-if>
+                    <div style="margin-top: 8px; font-family: var(--font-mono); font-size: var(--t-mono-sm); line-height: 1.4; color: var(--ink-2); font-variant-numeric: var(--num); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ s.i }}</div>
+                    <div style="font-family: var(--font-mono); font-size: var(--t-mono-sm); line-height: 1.4; color: {{ s.hc }}; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ s.hex }}</div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="margin-top: 12px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3); overflow-wrap: anywhere;">{{ p.token }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    
+      <div style="margin-top: var(--block-gap);">
+        <div class="grid rule-strong" style="padding-top: 16px; row-gap: 16px;">
+          <div class="col-3"><div class="index">01-B</div><div class="label" style="margin-top: 4px;">Colour roles</div></div>
+          <div class="col-9"><h3 class="display" style="margin: 0; font-size: var(--t-h3); line-height: var(--lh-snug);">Seven roles. A colour has exactly one.</h3><p class="prose" style="margin: 12px 0 0; color: var(--ink-2); font-size: var(--t-small);">A palette is a tool; a role is a meaning. Highlight says look here. Alert says act. Variance says good or bad against a scenario. They never share a mark.</p></div>
+        </div>
+        <div style="margin-top: 24px;">
+
+          <div class="grid rule-t" style="padding-block: 20px; row-gap: 12px; align-items: start;">
+            <div class="col-3"><div class="index">01-B-01</div><div style="margin-top: 6px; font-family: var(--font-display); font-weight: var(--w-display); font-size: 18px; line-height: 1.2;">Sequential</div><p style="margin: 6px 0 0; font-size: var(--t-small); line-height: 1.45; color: var(--ink-2);">Ordered from low to high.</p></div>
+            <div class="col-6" style="min-width: 0;"><div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px;"><div style="height: 40px; background: var(--chart-seq-blue-9); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--chart-seq-blue-8); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--chart-seq-blue-7); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--chart-seq-blue-6); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--chart-seq-blue-5); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--chart-seq-blue-4); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--chart-seq-blue-3); box-shadow: inset 0 0 0 1px var(--rule-c);"></div></div></div>
+            <p class="col-3" style="margin: 0; font-size: var(--t-small); line-height: 1.45; color: var(--ink-2); text-wrap: pretty;">One hue; lightness carries the order. Blue by default, vermilion only when high is bad.</p>
+          </div>
+
+          <div class="grid rule-t" style="padding-block: 20px; row-gap: 12px; align-items: start;">
+            <div class="col-3"><div class="index">01-B-02</div><div style="margin-top: 6px; font-family: var(--font-display); font-weight: var(--w-display); font-size: 18px; line-height: 1.2;">Diverging</div><p style="margin: 6px 0 0; font-size: var(--t-small); line-height: 1.45; color: var(--ink-2);">Two sequential arms around a neutral midpoint.</p></div>
+            <div class="col-6" style="min-width: 0;"><div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px;"><div style="height: 40px; background: var(--chart-div-1); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--chart-div-3); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--chart-div-5); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--chart-div-7); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--chart-div-9); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--chart-div-11); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--chart-div-13); box-shadow: inset 0 0 0 1px var(--rule-c);"></div></div></div>
+            <p class="col-3" style="margin: 0; font-size: var(--t-small); line-height: 1.45; color: var(--ink-2); text-wrap: pretty;">Only when the midpoint means something: zero, target, parity. Both arms ramp in lightness at the same rate.</p>
+          </div>
+
+          <div class="grid rule-t" style="padding-block: 20px; row-gap: 12px; align-items: start;">
+            <div class="col-3"><div class="index">01-B-03</div><div style="margin-top: 6px; font-family: var(--font-display); font-weight: var(--w-display); font-size: 18px; line-height: 1.2;">Categorical · hue</div><p style="margin: 6px 0 0; font-size: var(--t-small); line-height: 1.45; color: var(--ink-2);">Distinct colours for unordered groups.</p></div>
+            <div class="col-6" style="min-width: 0;"><div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px;"><div style="height: 40px; background: var(--chart-cat-1); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--chart-cat-2); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--chart-cat-3); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--chart-cat-4); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--chart-cat-5); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--chart-cat-6); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--chart-cat-other); box-shadow: inset 0 0 0 1px var(--rule-c);"></div></div></div>
+            <p class="col-3" style="margin: 0; font-size: var(--t-small); line-height: 1.45; color: var(--ink-2); text-wrap: pretty;">Storytelling only. Slots in fixed order. 1–3 categories pass all three colour-vision deficiencies but not greyscale, so always label directly. 4–6 are weak for colour-blind readers. 7+ go to Other.</p>
+          </div>
+
+          <div class="grid rule-t" style="padding-block: 20px; row-gap: 12px; align-items: start;">
+            <div class="col-3"><div class="index">01-B-04</div><div style="margin-top: 6px; font-family: var(--font-display); font-weight: var(--w-display); font-size: 18px; line-height: 1.2;">Categorical · grey</div><p style="margin: 6px 0 0; font-size: var(--t-small); line-height: 1.45; color: var(--ink-2);">Parts of a whole in IBCS reports.</p></div>
+            <div class="col-6" style="min-width: 0;"><div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px;"><div style="height: 40px; background: var(--chart-catg-1); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--chart-catg-2); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--chart-catg-3); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--chart-catg-4); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div></div><div></div><div></div></div></div>
+            <p class="col-3" style="margin: 0; font-size: var(--t-small); line-height: 1.45; color: var(--ink-2); text-wrap: pretty;">Four steps at most, dark to light from the baseline, 1px surface gaps. A fifth part goes to Other. Colour stays free for meaning.</p>
+          </div>
+
+          <div class="grid rule-t" style="padding-block: 20px; row-gap: 12px; align-items: start;">
+            <div class="col-3"><div class="index">01-B-05</div><div style="margin-top: 6px; font-family: var(--font-display); font-weight: var(--w-display); font-size: 18px; line-height: 1.2;">Highlight</div><p style="margin: 6px 0 0; font-size: var(--t-small); line-height: 1.45; color: var(--ink-2);">Directs the eye to the message.</p></div>
+            <div class="col-6" style="min-width: 0;"><div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px;"><div style="height: 40px; background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--hl); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--rule-c);"></div></div></div>
+            <p class="col-3" style="margin: 0; font-size: var(--t-small); line-height: 1.45; color: var(--ink-2); text-wrap: pretty;">No judgement, one per chart. Blue in IBCS notation; vermilion in classic, where it collides with alert.</p>
+          </div>
+
+          <div class="grid rule-t" style="padding-block: 20px; row-gap: 12px; align-items: start;">
+            <div class="col-3"><div class="index">01-B-06</div><div style="margin-top: 6px; font-family: var(--font-display); font-weight: var(--w-display); font-size: 18px; line-height: 1.2;">Alert</div><p style="margin: 6px 0 0; font-size: var(--t-small); line-height: 1.45; color: var(--ink-2);">Something is wrong and needs action.</p></div>
+            <div class="col-6" style="min-width: 0;"><div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; margin-bottom: 4px; font-family: var(--font-mono); font-size: 12px; color: var(--alert); text-align: center;"><span></span><span>▲</span></div><div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px;"><div style="height: 40px; background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--alert); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--rule-c);"></div></div></div>
+            <p class="col-3" style="margin: 0; font-size: var(--t-small); line-height: 1.45; color: var(--ink-2); text-wrap: pretty;">Vermilion plus the ▲ glyph, never colour alone. Reserved for thresholds and status, not for an ordinary bad variance.</p>
+          </div>
+
+          <div class="grid rule-t" style="padding-block: 20px; row-gap: 12px; align-items: start;">
+            <div class="col-3"><div class="index">01-B-07</div><div style="margin-top: 6px; font-family: var(--font-display); font-weight: var(--w-display); font-size: 18px; line-height: 1.2;">Variance</div><p style="margin: 6px 0 0; font-size: var(--t-small); line-height: 1.45; color: var(--ink-2);">Good or bad against PY, PL or FC.</p></div>
+            <div class="col-6" style="min-width: 0;"><div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px;"><div style="height: 40px; background: var(--var-pos); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--var-pos-tint); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--var-neg-tint); box-shadow: inset 0 0 0 1px var(--rule-c);"></div><div style="height: 40px; background: var(--var-neg); box-shadow: inset 0 0 0 1px var(--rule-c);"></div></div></div>
+            <p class="col-3" style="margin: 0; font-size: var(--t-small); line-height: 1.45; color: var(--ink-2); text-wrap: pretty;">IBCS only. Jade for good, vermilion for bad, by business meaning. Position and the ± sign carry it too.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: var(--block-gap);">
+        <div class="grid rule-strong" style="padding-top: 16px; row-gap: 16px;">
+          <div class="col-3"><div class="index">01-C</div><div class="label" style="margin-top: 4px;">Vision check</div></div>
+          <div class="col-9"><h3 class="display" style="margin: 0; font-size: var(--t-h3); line-height: var(--lh-snug);">Measured, not assumed.</h3><p class="prose" style="margin: 12px 0 0; color: var(--ink-2); font-size: var(--t-small);">Each cell shows the set after simulation (Machado 2009, full severity) and the smallest colour difference inside it, ΔE CIE76. House thresholds for sets: ● 40+ pass, ◐ 20–39 weak, ○ under 20 fail. Ramp rows measure the smallest step in lightness between neighbours instead: ● 6+, ◐ 3–5, ○ under 3 or inverted. Values follow the current theme, notation and variance setting. The Vision setting in Tweaks applies the same simulation to the whole page.</p></div>
+        </div>
+        <div style="margin-top: 24px; overflow-x: auto;">
+          <div style="min-width: 760px;">
+            <div style="display: grid; grid-template-columns: minmax(180px, 3fr) repeat(5, minmax(0, 1.8fr)); gap: 0 16px; padding-bottom: 8px; border-bottom: var(--hairline);">
+              <span class="label">Set</span><span class="label">Normal</span><span class="label">Protanopia</span><span class="label">Deuteranopia</span><span class="label">Tritanopia</span><span class="label">Greyscale</span>
+            </div>
+            <sc-for list="{{ checks }}" as="ck" hint-placeholder-count="8">
+              <div style="display: grid; grid-template-columns: minmax(180px, 3fr) repeat(5, minmax(0, 1.8fr)); gap: 0 16px; padding-block: 12px; border-bottom: var(--rule); align-items: center;">
+                <div><div style="font-size: var(--t-small); color: var(--ink);">{{ ck.name }}</div><div style="margin-top: 2px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3);">{{ ck.note }}</div></div>
+                <sc-for list="{{ ck.cells }}" as="cl" hint-placeholder-count="5">
+                  <div style="min-width: 0;">
+                    <div style="display: flex; gap: 2px; filter: {{ cl.filter }};">
+                      <sc-for list="{{ ck.sw }}" as="s" hint-placeholder-count="3"><span style="flex: 1; height: 20px; background: {{ s }};"></span></sc-for>
+                    </div>
+                    <div style="margin-top: 6px; font-family: var(--font-mono); font-size: var(--t-mono-sm); font-variant-numeric: var(--num); color: {{ cl.c }}; white-space: nowrap;">{{ cl.g }} {{ cl.v }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 ANATOMY -->
+    <section id="s02" class="section">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">02 · ANATOMY</div>
+        <div class="col-9">
+          <h2 class="display" style="margin: 0; font-size: var(--t-h2);">Every chart, one anatomy.</h2>
+          <p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">Eight rules that hold for every entry below<sc-if value="{{ ibcs }}" hint-placeholder-val="{{ false }}">, plus four from IBCS for scenarios and variances</sc-if>. A chart type only adds rules of its own when these aren’t enough.</p>
+        </div>
+      </div>
+      <div class="grid" style="margin-top: var(--block-gap); row-gap: 40px;">
+        <sc-if value="{{ classic }}" hint-placeholder-val="{{ false }}"><div class="col-3 rule-t" style="padding-top: 12px;"><div class="index">02-01</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Title is the finding.</span> The subtitle names the measure, the unit and the period.</p></div></sc-if><sc-if value="{{ ibcs }}" hint-placeholder-val="{{ true }}"><div class="col-3 rule-t" style="padding-top: 12px;"><div class="index">02-01</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Title block.</span> The message is the title. Below it: entity, then measure, unit, period and scenarios, e.g. AC vs PY.</p></div></sc-if>
+        <sc-if value="{{ classic }}" hint-placeholder-val="{{ false }}"><div class="col-3 rule-t" style="padding-top: 12px;"><div class="index">02-02</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">One accent.</span> It goes on the mark the title is about. All other marks are ink-2 or mid.</p></div></sc-if><sc-if value="{{ ibcs }}" hint-placeholder-val="{{ true }}"><div class="col-3 rule-t" style="padding-top: 12px;"><div class="index">02-02</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Highlight is not a scenario.</span> One highlight colour, blue by default, marks the message. It never stands for AC, PY, PL, FC or a variance.</p></div></sc-if>
+        <div class="col-3 rule-t" style="padding-top: 12px;"><div class="index">02-03</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Label directly.</span> Put names at line ends and values on bars. Use a legend only past three series.</p></div>
+        <sc-if value="{{ classic }}" hint-placeholder-val="{{ false }}"><div class="col-3 rule-t" style="padding-top: 12px;"><div class="index">02-04</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Gridlines recede.</span> Gridlines only on the value axis, 1px surface-3. The zero baseline is ink.</p></div></sc-if><sc-if value="{{ ibcs }}" hint-placeholder-val="{{ true }}"><div class="col-3 rule-t" style="padding-top: 12px;"><div class="index">02-04</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">No gridlines when labelled.</span> If every mark carries its value, drop the gridlines and the value axis. Keep them only for unlabelled lines and scatters.</p></div></sc-if>
+        <sc-if value="{{ classic }}" hint-placeholder-val="{{ false }}"><div class="col-3 rule-t" style="padding-top: 12px;"><div class="index">02-05</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Length starts at zero.</span> Bars, columns and areas include zero. Lines and dots may crop the axis.</p></div></sc-if><sc-if value="{{ ibcs }}" hint-placeholder-val="{{ true }}"><div class="col-3 rule-t" style="padding-top: 12px;"><div class="index">02-05</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Zero, or mark the break.</span> Axes start at zero. A cropped axis shows a break mark at its foot. Charts side by side share one scale.</p></div></sc-if>
+        <div class="col-3 rule-t" style="padding-top: 12px;"><div class="index">02-06</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Ticks are spec.</span> Tick labels are BKribitz Mono 12 in ink-3, with tabular figures, set in CSS pixels so they never scale down. Few ticks, round numbers.</p></div>
+        <div class="col-3 rule-t" style="padding-top: 12px;"><div class="index">02-07</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Sort by value.</span> Categories go in value order unless they have a natural one, such as time, rank or bins.</p></div>
+        <div class="col-3 rule-t" style="padding-top: 12px;"><div class="index">02-08</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Source and n, always.</span> One mono line under the figure gives the source and the sample size.</p></div>
+        <sc-if value="{{ ibcs }}" hint-placeholder-val="{{ true }}">
+          <div class="col-3 rule-t" style="padding-top: 12px;"><div class="index">02-09</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Scenario notation.</span> AC solid ink-2, PY solid mid, PL as an outline, FC hatched at 45°. The same in every chart.</p></div>
+          <div class="col-3 rule-t" style="padding-top: 12px;"><div class="index">02-10</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Variance colour.</span> Emerald for a good variance, vermilion for a bad one, by business meaning, not by sign. Neither is used for anything else.</p></div>
+          <div class="col-3 rule-t" style="padding-top: 12px;"><div class="index">02-11</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Time across, structure down.</span> Periods run left to right as columns or lines. Categories run top to bottom as bars.</p></div>
+          <div class="col-3 rule-t" style="padding-top: 12px;"><div class="index">02-12</div><p style="margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;"><span style="color: var(--ink);">Variances are explicit.</span> Show ΔPY or ΔPL as variance bars or pins, never only as the gap between two marks.</p></div>
+          <div class="col-12 rule-strong" style="padding-top: 16px; display: flex; flex-wrap: wrap; gap: 16px 40px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">
+            <span class="label" style="width: 100%;">Notation key</span>
+            <span style="display: flex; align-items: center; gap: 8px;"><span style="width: 24px; height: 16px; background: var(--sc-ac);"></span>AC · actual</span>
+            <span style="display: flex; align-items: center; gap: 8px;"><span style="width: 24px; height: 16px; background: var(--sc-py);"></span>PY · previous year</span>
+            <span style="display: flex; align-items: center; gap: 8px;"><span style="width: 24px; height: 16px; box-sizing: border-box; border: 1.5px solid var(--sc-pl);"></span>PL · plan</span>
+            <span style="display: flex; align-items: center; gap: 8px;"><span style="width: 24px; height: 16px; box-sizing: border-box; border: 1px solid var(--sc-ac); background: repeating-linear-gradient(45deg, var(--sc-ac) 0 1.5px, var(--surface) 1.5px 4px);"></span>FC · forecast</span>
+            <span style="display: flex; align-items: center; gap: 8px;"><span style="width: 24px; height: 16px; background: var(--var-pos);"></span>Δ good</span>
+            <span style="display: flex; align-items: center; gap: 8px;"><span style="width: 24px; height: 16px; background: var(--var-neg);"></span>Δ bad</span>
+            <span style="display: flex; align-items: center; gap: 8px;"><span style="width: 24px; height: 16px; background: var(--hl);"></span>Highlight</span>
+          </div>
+        </sc-if>
+      </div>
+    </section>
+
+    <!-- 03 BASIC CHARTS -->
+    <section id="s03" class="section">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">03 · BASIC CHARTS</div>
+        <div class="col-9">
+          <h2 class="display" style="margin: 0; font-size: var(--t-h2);">Six charts, fully specified.</h2>
+          <p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">Each entry gives the question the chart answers, when to use it, when not to, and the rules specific to it. They are the reference for the full dictionary in section 04.</p>
+        </div>
+      </div>
+
+      <div style="margin-top: var(--block-gap); border-bottom: var(--rule);">
+
+        <article id="c01" class="grid rule-t" style="padding-block: 32px; row-gap: 24px;">
+          <div class="col-3">
+            <div class="index">03-01 · COMPARISON</div>
+            <sc-if value="{{ ibcs }}" hint-placeholder-val="{{ false }}"><div style="margin-top: 4px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3);">IBCS core</div></sc-if>
+            <h3 class="display" style="margin: 8px 0 0; font-size: var(--t-h3); line-height: var(--lh-snug);">Bar</h3>
+            <p style="margin: 12px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">Which category is biggest, and by how much?</p>
+          </div>
+          <div class="col-6" style="min-width: 0;">
+            <div style="font-family: var(--font-display); font-weight: var(--w-display); font-size: 18px; line-height: 1.25;">Search returns the most per euro spent.</div>
+            <div style="margin-top: 4px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3);">ROAS by channel · revenue ÷ spend · Q3 2026</div>
+            <sc-if value="{{ ibcs }}" hint-placeholder-val="{{ false }}"><div style="margin-top: 2px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">BK Retail GmbH · AC Q3 2026</div></sc-if>
+            <svg viewBox="0 0 560 280" style="display: block; width: 100%; height: auto; margin-top: 16px; overflow: visible;">
+              <sc-for list="{{ bar.grid }}" as="l" hint-placeholder-count="0"><line x1="{{ l.x1 }}" y1="{{ l.y1 }}" x2="{{ l.x2 }}" y2="{{ l.y2 }}" style="stroke: {{ l.s }}; stroke-width: 1;"></line></sc-for>
+              <sc-for list="{{ bar.rects }}" as="r" hint-placeholder-count="0"><rect x="{{ r.x }}" y="{{ r.y }}" width="{{ r.w }}" height="{{ r.h }}" style="fill: {{ r.f }}; stroke: {{ r.s }}; stroke-width: {{ r.sw }};"></rect></sc-for>
+              <sc-for list="{{ bar.lines }}" as="l" hint-placeholder-count="0"><line x1="{{ l.x1 }}" y1="{{ l.y1 }}" x2="{{ l.x2 }}" y2="{{ l.y2 }}" style="stroke: {{ l.s }}; stroke-width: {{ l.w }}; stroke-dasharray: {{ l.da }};"></line></sc-for>
+              {{ bar.textEls }}
+            </svg>
+            <div class="rule-t" style="margin-top: 16px; padding-top: 8px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3);">Source: attribution model v4 · n = 6 channels</div>
+          </div>
+          <dl class="col-3" style="margin: 0; display: flex; flex-direction: column; gap: 16px; font-size: var(--t-small); line-height: 1.5;">
+            <div><dt class="label">Use when</dt><dd style="margin: 4px 0 0; color: var(--ink-2);">Comparing one measure across 3–15 categories, especially when the names are long.</dd></div>
+            <div><dt class="label">Avoid when</dt><dd style="margin: 4px 0 0; color: var(--ink-2);">The categories are time periods (use a column or line chart), or there are more than about 15.</dd></div>
+            <div><dt class="label">Encoding</dt><dd style="margin: 4px 0 0; color: var(--ink-2); font-family: var(--font-mono); font-size: var(--t-mono-sm);">length → value · position y → category</dd></div>
+            <div><dt class="label">Rules</dt><dd style="margin: 4px 0 0; color: var(--ink-2);"><sc-if value="{{ classic }}" hint-placeholder-val="{{ false }}">Sort descending. Bar thickness 60% of the band. Put the value at the bar’s end and drop the axis if every bar is labelled.</sc-if><sc-if value="{{ ibcs }}" hint-placeholder-val="{{ true }}">Structure runs top to bottom, sorted descending. Bars are AC in ink-2 at 60% of the band. Every bar is labelled, so there is no value axis or gridline. The highlight is blue.</sc-if></dd></div>
+          </dl>
+        </article>
+
+        <article id="c02" class="grid rule-t" style="padding-block: 32px; row-gap: 24px;">
+          <div class="col-3">
+            <div class="index">03-02 · CHANGE OVER TIME</div>
+            <sc-if value="{{ ibcs }}" hint-placeholder-val="{{ false }}"><div style="margin-top: 4px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3);">IBCS core</div></sc-if>
+            <h3 class="display" style="margin: 8px 0 0; font-size: var(--t-h3); line-height: var(--lh-snug);">Column</h3>
+            <p style="margin: 12px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">How does a total compare from period to period?</p>
+          </div>
+          <div class="col-6" style="min-width: 0;">
+            <div style="font-family: var(--font-display); font-weight: var(--w-display); font-size: 18px; line-height: 1.25;">December closed 64% above January.</div>
+            <div style="margin-top: 4px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3);">Net revenue · € thousands · monthly · 2026</div>
+            <sc-if value="{{ ibcs }}" hint-placeholder-val="{{ false }}"><div style="margin-top: 2px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">BK Retail GmbH · AC 2026</div></sc-if>
+            <svg viewBox="0 0 560 280" style="display: block; width: 100%; height: auto; margin-top: 16px; overflow: visible;">
+              <sc-for list="{{ col.grid }}" as="l" hint-placeholder-count="0"><line x1="{{ l.x1 }}" y1="{{ l.y1 }}" x2="{{ l.x2 }}" y2="{{ l.y2 }}" style="stroke: {{ l.s }}; stroke-width: 1;"></line></sc-for>
+              <sc-for list="{{ col.rects }}" as="r" hint-placeholder-count="0"><rect x="{{ r.x }}" y="{{ r.y }}" width="{{ r.w }}" height="{{ r.h }}" style="fill: {{ r.f }}; stroke: {{ r.s }}; stroke-width: {{ r.sw }};"></rect></sc-for>
+              <sc-for list="{{ col.lines }}" as="l" hint-placeholder-count="0"><line x1="{{ l.x1 }}" y1="{{ l.y1 }}" x2="{{ l.x2 }}" y2="{{ l.y2 }}" style="stroke: {{ l.s }}; stroke-width: {{ l.w }}; stroke-dasharray: {{ l.da }};"></line></sc-for>
+              {{ col.textEls }}
+            </svg>
+            <div class="rule-t" style="margin-top: 16px; padding-top: 8px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3);">Source: finance ledger · n = 12 months</div>
+          </div>
+          <dl class="col-3" style="margin: 0; display: flex; flex-direction: column; gap: 16px; font-size: var(--t-small); line-height: 1.5;">
+            <div><dt class="label">Use when</dt><dd style="margin: 4px 0 0; color: var(--ink-2);">Comparing totals across up to about 24 discrete periods.</dd></div>
+            <div><dt class="label">Avoid when</dt><dd style="margin: 4px 0 0; color: var(--ink-2);">The trend matters more than each period’s total, or there are many periods. Use a line chart.</dd></div>
+            <div><dt class="label">Encoding</dt><dd style="margin: 4px 0 0; color: var(--ink-2); font-family: var(--font-mono); font-size: var(--t-mono-sm);">height → value · position x → period</dd></div>
+            <div><dt class="label">Rules</dt><dd style="margin: 4px 0 0; color: var(--ink-2);"><sc-if value="{{ classic }}" hint-placeholder-val="{{ false }}">Time runs left to right, never re-sorted. Column width is 64% of the band. Label only the period the title names.</sc-if><sc-if value="{{ ibcs }}" hint-placeholder-val="{{ true }}">Time runs left to right, never re-sorted. Columns are AC in ink-2 at 64% of the band. Every column is labelled, so there is no value axis.</sc-if></dd></div>
+          </dl>
+        </article>
+
+        <article id="c03" class="grid rule-t" style="padding-block: 32px; row-gap: 24px;">
+          <div class="col-3">
+            <div class="index">03-03 · CHANGE OVER TIME</div>
+            <sc-if value="{{ ibcs }}" hint-placeholder-val="{{ false }}"><div style="margin-top: 4px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3);">IBCS core</div></sc-if>
+            <h3 class="display" style="margin: 8px 0 0; font-size: var(--t-h3); line-height: var(--lh-snug);">Line</h3>
+            <p style="margin: 12px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">What is the trend, and how does it compare with a reference?</p>
+          </div>
+          <div class="col-6" style="min-width: 0;">
+            <div style="font-family: var(--font-display); font-weight: var(--w-display); font-size: 18px; line-height: 1.25;">Conversions run ahead of last year in every week.</div>
+            <div style="margin-top: 4px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3);">Weekly conversions · count · weeks 1–26</div>
+            <sc-if value="{{ ibcs }}" hint-placeholder-val="{{ false }}"><div style="margin-top: 2px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">BK Retail GmbH · AC 2026 vs PY 2025</div></sc-if>
+            <svg viewBox="0 0 560 280" style="display: block; width: 100%; height: auto; margin-top: 16px; overflow: visible;">
+              <sc-for list="{{ line.grid }}" as="l" hint-placeholder-count="0"><line x1="{{ l.x1 }}" y1="{{ l.y1 }}" x2="{{ l.x2 }}" y2="{{ l.y2 }}" style="stroke: {{ l.s }}; stroke-width: 1;"></line></sc-for>
+              <sc-for list="{{ line.paths }}" as="p" hint-placeholder-count="0"><path d="{{ p.d }}" style="fill: {{ p.f }}; stroke: {{ p.s }}; stroke-width: {{ p.w }}; stroke-dasharray: {{ p.da }}; stroke-linejoin: round;"></path></sc-for>
+              <sc-for list="{{ line.lines }}" as="l" hint-placeholder-count="0"><line x1="{{ l.x1 }}" y1="{{ l.y1 }}" x2="{{ l.x2 }}" y2="{{ l.y2 }}" style="stroke: {{ l.s }}; stroke-width: {{ l.w }}; stroke-dasharray: {{ l.da }};"></line></sc-for>
+              <sc-for list="{{ line.dots }}" as="d" hint-placeholder-count="0"><circle cx="{{ d.x }}" cy="{{ d.y }}" r="{{ d.r }}" style="fill: {{ d.f }};"></circle></sc-for>
+              {{ line.textEls }}
+            </svg>
+            <div class="rule-t" style="margin-top: 16px; padding-top: 8px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3);">Source: event warehouse · n = 26 weeks × 2 years</div>
+          </div>
+          <dl class="col-3" style="margin: 0; display: flex; flex-direction: column; gap: 16px; font-size: var(--t-small); line-height: 1.5;">
+            <div><dt class="label">Use when</dt><dd style="margin: 4px 0 0; color: var(--ink-2);">Showing a continuous measure over many periods, alone or against a baseline, target or prior year.</dd></div>
+            <div><dt class="label">Avoid when</dt><dd style="margin: 4px 0 0; color: var(--ink-2);">There are more than four series (use small multiples), or the x-axis isn’t ordered.</dd></div>
+            <div><dt class="label">Encoding</dt><dd style="margin: 4px 0 0; color: var(--ink-2); font-family: var(--font-mono); font-size: var(--t-mono-sm);">position y → value · slope → rate</dd></div>
+            <div><dt class="label">Rules</dt><dd style="margin: 4px 0 0; color: var(--ink-2);"><sc-if value="{{ classic }}" hint-placeholder-val="{{ false }}">The current series is a 2px ink line; references are 1.5px mid and dashed. Name each line at its end. The accent goes on the last point.</sc-if><sc-if value="{{ ibcs }}" hint-placeholder-val="{{ true }}">AC is a 2px ink-2 line and PY a solid 1.5px mid line. Dashed is reserved for FC. Name each line at its end with its scenario. The cropped axis shows a break mark. The highlight is blue.</sc-if></dd></div>
+          </dl>
+        </article>
+
+        <article id="c04" class="grid rule-t" style="padding-block: 32px; row-gap: 24px;">
+          <div class="col-3">
+            <div class="index">03-04 · CHANGE OVER TIME</div>
+            <sc-if value="{{ ibcs }}" hint-placeholder-val="{{ false }}"><div style="margin-top: 4px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3);">Outside IBCS · use a column chart in reports</div></sc-if>
+            <h3 class="display" style="margin: 8px 0 0; font-size: var(--t-h3); line-height: var(--lh-snug);">Area</h3>
+            <p style="margin: 12px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">How large is a volume over time, and what moved it?</p>
+          </div>
+          <div class="col-6" style="min-width: 0;">
+            <div style="font-family: var(--font-display); font-weight: var(--w-display); font-size: 18px; line-height: 1.25;">The autumn campaign lifted active users by a fifth.</div>
+            <div style="margin-top: 4px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3);">Weekly active users · thousands · 52 weeks</div>
+            <sc-if value="{{ ibcs }}" hint-placeholder-val="{{ false }}"><div style="margin-top: 2px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">BK Retail GmbH · AC</div></sc-if>
+            <svg viewBox="0 0 560 280" style="display: block; width: 100%; height: auto; margin-top: 16px; overflow: visible;">
+              <sc-for list="{{ area.grid }}" as="l" hint-placeholder-count="0"><line x1="{{ l.x1 }}" y1="{{ l.y1 }}" x2="{{ l.x2 }}" y2="{{ l.y2 }}" style="stroke: {{ l.s }}; stroke-width: 1;"></line></sc-for>
+              <sc-for list="{{ area.paths }}" as="p" hint-placeholder-count="0"><path d="{{ p.d }}" style="fill: {{ p.f }}; stroke: {{ p.s }}; stroke-width: {{ p.w }}; stroke-dasharray: {{ p.da }}; stroke-linejoin: round;"></path></sc-for>
+              <sc-for list="{{ area.lines }}" as="l" hint-placeholder-count="0"><line x1="{{ l.x1 }}" y1="{{ l.y1 }}" x2="{{ l.x2 }}" y2="{{ l.y2 }}" style="stroke: {{ l.s }}; stroke-width: {{ l.w }}; stroke-dasharray: {{ l.da }};"></line></sc-for>
+              {{ area.textEls }}
+            </svg>
+            <div class="rule-t" style="margin-top: 16px; padding-top: 8px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3);">Source: product analytics · n = 52 weeks</div>
+          </div>
+          <dl class="col-3" style="margin: 0; display: flex; flex-direction: column; gap: 16px; font-size: var(--t-small); line-height: 1.5;">
+            <div><dt class="label">Use when</dt><dd style="margin: 4px 0 0; color: var(--ink-2);">A single series where volume matters, not only the trend.</dd></div>
+            <div><dt class="label">Avoid when</dt><dd style="margin: 4px 0 0; color: var(--ink-2);">Comparing overlapping series. The fills hide each other, so use lines.</dd></div>
+            <div><dt class="label">Encoding</dt><dd style="margin: 4px 0 0; color: var(--ink-2); font-family: var(--font-mono); font-size: var(--t-mono-sm);">filled height → value · from zero</dd></div>
+            <div><dt class="label">Rules</dt><dd style="margin: 4px 0 0; color: var(--ink-2);">The fill is solid surface-3 with a 1.5px ink edge. No transparency. Events are marked with accent rules, not shading.</dd></div>
+          </dl>
+        </article>
+
+        <article id="c05" class="grid rule-t" style="padding-block: 32px; row-gap: 24px;">
+          <div class="col-3">
+            <div class="index">03-05 · RELATIONSHIP</div>
+            <sc-if value="{{ ibcs }}" hint-placeholder-val="{{ false }}"><div style="margin-top: 4px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3);">IBCS core</div></sc-if>
+            <h3 class="display" style="margin: 8px 0 0; font-size: var(--t-h3); line-height: var(--lh-snug);">Scatter</h3>
+            <p style="margin: 12px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">Do two measures move together, and what breaks the pattern?</p>
+          </div>
+          <div class="col-6" style="min-width: 0;">
+            <div style="font-family: var(--font-display); font-weight: var(--w-display); font-size: 18px; line-height: 1.25;">Spend predicts conversions, with two exceptions.</div>
+            <div style="margin-top: 4px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3);">Campaign spend (€ k) vs conversions · Q3 2026</div>
+            <sc-if value="{{ ibcs }}" hint-placeholder-val="{{ false }}"><div style="margin-top: 2px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">BK Retail GmbH · AC Q3 2026</div></sc-if>
+            <svg viewBox="0 0 560 280" style="display: block; width: 100%; height: auto; margin-top: 16px; overflow: visible;">
+              <sc-for list="{{ scatter.grid }}" as="l" hint-placeholder-count="0"><line x1="{{ l.x1 }}" y1="{{ l.y1 }}" x2="{{ l.x2 }}" y2="{{ l.y2 }}" style="stroke: {{ l.s }}; stroke-width: 1;"></line></sc-for>
+              <sc-for list="{{ scatter.lines }}" as="l" hint-placeholder-count="0"><line x1="{{ l.x1 }}" y1="{{ l.y1 }}" x2="{{ l.x2 }}" y2="{{ l.y2 }}" style="stroke: {{ l.s }}; stroke-width: {{ l.w }}; stroke-dasharray: {{ l.da }};"></line></sc-for>
+              <sc-for list="{{ scatter.dots }}" as="d" hint-placeholder-count="0"><circle cx="{{ d.x }}" cy="{{ d.y }}" r="{{ d.r }}" style="fill: {{ d.f }};"></circle></sc-for>
+              {{ scatter.textEls }}
+            </svg>
+            <div class="rule-t" style="margin-top: 16px; padding-top: 8px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3);">Source: campaign log · n = 48 campaigns · OLS fit</div>
+          </div>
+          <dl class="col-3" style="margin: 0; display: flex; flex-direction: column; gap: 16px; font-size: var(--t-small); line-height: 1.5;">
+            <div><dt class="label">Use when</dt><dd style="margin: 4px 0 0; color: var(--ink-2);">Testing whether two continuous measures are related, and finding the outliers.</dd></div>
+            <div><dt class="label">Avoid when</dt><dd style="margin: 4px 0 0; color: var(--ink-2);">Points overlap heavily (above about 2,000). Use a hexbin or density chart.</dd></div>
+            <div><dt class="label">Encoding</dt><dd style="margin: 4px 0 0; color: var(--ink-2); font-family: var(--font-mono); font-size: var(--t-mono-sm);">position x, y → two measures</dd></div>
+            <div><dt class="label">Rules</dt><dd style="margin: 4px 0 0; color: var(--ink-2);">Points are 3.5px ink-2 dots. Draw the fit as a 1px ink line and print r² beside it. Only the points the title mentions take the accent.</dd></div>
+          </dl>
+        </article>
+
+        <article id="c06" class="grid rule-t" style="padding-block: 32px; row-gap: 24px;">
+          <div class="col-3">
+            <div class="index">03-06 · DISTRIBUTION</div>
+            <sc-if value="{{ ibcs }}" hint-placeholder-val="{{ false }}"><div style="margin-top: 4px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3);">IBCS-compatible</div></sc-if>
+            <h3 class="display" style="margin: 8px 0 0; font-size: var(--t-h3); line-height: var(--lh-snug);">Histogram</h3>
+            <p style="margin: 12px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty;">What shape do the values take: where is the centre, how wide is the spread?</p>
+          </div>
+          <div class="col-6" style="min-width: 0;">
+            <div style="font-family: var(--font-display); font-weight: var(--w-display); font-size: 18px; line-height: 1.25;">Half of all orders are under {{ hist.medLabel }}.</div>
+            <div style="margin-top: 4px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3);">Order value · € · 10-euro bins · count of orders</div>
+            <sc-if value="{{ ibcs }}" hint-placeholder-val="{{ false }}"><div style="margin-top: 2px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-2);">BK Retail GmbH · AC</div></sc-if>
+            <svg viewBox="0 0 560 280" style="display: block; width: 100%; height: auto; margin-top: 16px; overflow: visible;">
+              <sc-for list="{{ hist.grid }}" as="l" hint-placeholder-count="0"><line x1="{{ l.x1 }}" y1="{{ l.y1 }}" x2="{{ l.x2 }}" y2="{{ l.y2 }}" style="stroke: {{ l.s }}; stroke-width: 1;"></line></sc-for>
+              <sc-for list="{{ hist.rects }}" as="r" hint-placeholder-count="0"><rect x="{{ r.x }}" y="{{ r.y }}" width="{{ r.w }}" height="{{ r.h }}" style="fill: {{ r.f }}; stroke: {{ r.s }}; stroke-width: {{ r.sw }};"></rect></sc-for>
+              <sc-for list="{{ hist.lines }}" as="l" hint-placeholder-count="0"><line x1="{{ l.x1 }}" y1="{{ l.y1 }}" x2="{{ l.x2 }}" y2="{{ l.y2 }}" style="stroke: {{ l.s }}; stroke-width: {{ l.w }}; stroke-dasharray: {{ l.da }};"></line></sc-for>
+              {{ hist.textEls }}
+            </svg>
+            <div class="rule-t" style="margin-top: 16px; padding-top: 8px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3);">Source: order table · n = {{ hist.n }} orders</div>
+          </div>
+          <dl class="col-3" style="margin: 0; display: flex; flex-direction: column; gap: 16px; font-size: var(--t-small); line-height: 1.5;">
+            <div><dt class="label">Use when</dt><dd style="margin: 4px 0 0; color: var(--ink-2);">Showing the shape of one continuous measure, such as its skew, its modes and its tails.</dd></div>
+            <div><dt class="label">Avoid when</dt><dd style="margin: 4px 0 0; color: var(--ink-2);">Comparing several distributions at once. Use a box plot or a strip plot.</dd></div>
+            <div><dt class="label">Encoding</dt><dd style="margin: 4px 0 0; color: var(--ink-2); font-family: var(--font-mono); font-size: var(--t-mono-sm);">height → count · position x → bin</dd></div>
+            <div><dt class="label">Rules</dt><dd style="margin: 4px 0 0; color: var(--ink-2);">Bins touch, with a 1px surface gap and no wider spacing. State the bin width in the subtitle. Mark the median with an accent rule.</dd></div>
+          </dl>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- 04 DICTIONARY -->
+    <section id="s04" class="section">
+      <div class="grid">
+        <div class="col-3" style="font-family: var(--font-mono); font-size: var(--t-mono); color: var(--ink-3);">04 · DICTIONARY</div>
+        <div class="col-9">
+          <h2 class="display" style="margin: 0; font-size: var(--t-h2);">{{ famHeadline }}</h2>
+          <sc-if value="{{ classic }}" hint-placeholder-val="{{ false }}"><p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">Charts are grouped by the question they answer, not by their shape. Choose the family first, then the type. Every entry follows the eight rules in section 02. A filled dot means preferred; an open dot means use with care.</p></sc-if><sc-if value="{{ ibcs }}" hint-placeholder-val="{{ true }}"><p class="prose" style="margin: 24px 0 0; color: var(--ink-2);">Charts are grouped by the question they answer. In IBCS notation the dot gives the tier: filled for IBCS core, an ink ring for IBCS-compatible, a grey ring for outside IBCS. Outside-IBCS types belong on the storytelling page, not in reports or dashboards. The Variance family exists only in this notation.</p></sc-if>
+        </div>
+      </div>
+
+      <div class="grid" style="margin-top: var(--block-gap); row-gap: 0;">
+        <div class="col-12 rule-strong" style="padding-top: 12px; display: flex; flex-wrap: wrap; gap: 4px;">
+          <sc-for list="{{ filters }}" as="fl" hint-placeholder-count="10">
+            <button onClick="{{ fl.go }}" style="display: flex; align-items: center; gap: 8px; min-height: 32px; padding: 0 12px; border: 0; background: {{ fl.bg }}; color: {{ fl.fg }}; font-family: var(--font-mono); font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase; cursor: pointer; white-space: nowrap;" style-hover="background: var(--surface-2);">
+              <span>{{ fl.name }}</span><span style="color: {{ fl.nc }}; font-variant-numeric: var(--num);">{{ fl.n }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+
+      <sc-for list="{{ families }}" as="fam" hint-placeholder-count="2">
+        <div style="margin-top: var(--block-gap);">
+          <div class="grid rule-strong" style="padding-top: 16px; row-gap: 16px;">
+            <div class="col-3">
+              <div class="index">{{ fam.idx }}</div>
+              <div style="margin-top: 4px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3);">{{ fam.count }}</div>
+            </div>
+            <div class="col-6">
+              <h3 class="display" style="margin: 0; font-size: var(--t-h3); line-height: var(--lh-snug);">{{ fam.name }}</h3>
+              <p style="margin: 8px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2);">{{ fam.q }}</p>
+            </div>
+            <div class="col-3" style="display: flex; flex-direction: column; gap: 4px; font-family: var(--font-mono); font-size: var(--t-mono-sm);">
+              <sc-if value="{{ fam.hasAlso }}" hint-placeholder-val="{{ false }}">
+                <span class="label">Also in 03</span>
+                <sc-for list="{{ fam.also }}" as="al" hint-placeholder-count="1">
+                  <a href="{{ al.href }}" style="color: var(--ink-2);">{{ al.label }} →</a>
+                </sc-for>
+              </sc-if>
+            </div>
+          </div>
+
+          <div class="grid" style="margin-top: 32px; row-gap: 48px;">
+            <sc-for list="{{ fam.items }}" as="e" hint-placeholder-count="3">
+              <article class="col-4 rule-t" style="grid-column: span {{ e.span }}; padding-top: 12px; min-width: 0; display: flex; flex-direction: column;">
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+                  <span class="index">{{ e.idx }}</span>
+                  <span style="display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3); white-space: nowrap;"><span style="width: 8px; height: 8px; background: {{ e.vdot }}; box-shadow: {{ e.vring }};"></span>{{ e.verdict }}</span>
+                </div>
+                <div style="margin-top: 8px; font-family: var(--font-display); font-weight: var(--w-display); font-size: 20px; line-height: 1.2;">{{ e.name }}</div>
+                <p style="margin: 6px 0 0; font-size: var(--t-small); line-height: 1.45; color: var(--ink-2); text-wrap: pretty;">{{ e.q }}</p>
+                <svg viewBox="0 0 360 220" style="display: block; width: 100%; height: auto; margin-top: 20px; overflow: visible;">
+                  <sc-for list="{{ e.c.grid }}" as="l" hint-placeholder-count="0"><line x1="{{ l.x1 }}" y1="{{ l.y1 }}" x2="{{ l.x2 }}" y2="{{ l.y2 }}" style="stroke: {{ l.s }}; stroke-width: 1;"></line></sc-for>
+                  <sc-for list="{{ e.c.rects }}" as="r" hint-placeholder-count="0"><rect x="{{ r.x }}" y="{{ r.y }}" width="{{ r.w }}" height="{{ r.h }}" style="fill: {{ r.f }}; stroke: {{ r.s }}; stroke-width: {{ r.sw }};"></rect></sc-for>
+                  <sc-for list="{{ e.c.paths }}" as="p" hint-placeholder-count="0"><path d="{{ p.d }}" style="fill: {{ p.f }}; stroke: {{ p.s }}; stroke-width: {{ p.w }}; stroke-dasharray: {{ p.da }}; stroke-linejoin: round;"></path></sc-for>
+                  <sc-for list="{{ e.c.lines }}" as="l" hint-placeholder-count="0"><line x1="{{ l.x1 }}" y1="{{ l.y1 }}" x2="{{ l.x2 }}" y2="{{ l.y2 }}" style="stroke: {{ l.s }}; stroke-width: {{ l.w }}; stroke-dasharray: {{ l.da }};"></line></sc-for>
+                  <sc-for list="{{ e.c.dots }}" as="d" hint-placeholder-count="0"><circle cx="{{ d.x }}" cy="{{ d.y }}" r="{{ d.r }}" style="fill: {{ d.f }}; stroke: {{ d.s }}; stroke-width: {{ d.sw }};"></circle></sc-for>
+                  {{ e.c.textEls }}
+                </svg>
+                <dl style="margin: 20px 0 0; display: flex; flex-direction: column; gap: 12px; font-size: var(--t-small); line-height: 1.45;">
+                  <div class="rule-t" style="padding-top: 8px;"><dt class="label">Use when</dt><dd style="margin: 4px 0 0; color: var(--ink-2); text-wrap: pretty;">{{ e.use }}</dd></div>
+                  <div><dt class="label">Avoid when</dt><dd style="margin: 4px 0 0; color: var(--ink-2); text-wrap: pretty;">{{ e.avoid }}</dd></div>
+                  <div><dt class="label">Rule</dt><dd style="margin: 4px 0 0; color: var(--ink-2); text-wrap: pretty;">{{ e.rule }}</dd></div>
+                </dl>
+              </article>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </section>
+  </main>
+
+  <footer class="grid-container">
+    <div class="grid rule-strong" style="padding-block: 32px 48px;">
+      <div class="col-6" style="font-family: var(--font-display); font-weight: var(--w-display); font-size: 18px;">Rafael Braga-Kribitz</div>
+      <div class="col-3 label">Design System · v2.0 · Charts</div>
+      <div class="col-3 label" style="text-align: right;">Draft 3</div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;notation&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ibcs&quot;,&quot;classic&quot;],&quot;default&quot;:&quot;ibcs&quot;,&quot;tsType&quot;:&quot;'ibcs'|'classic'&quot;,&quot;section&quot;:&quot;Notation&quot;},&quot;highlight&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;blue&quot;,&quot;none&quot;],&quot;default&quot;:&quot;blue&quot;,&quot;tsType&quot;:&quot;'blue'|'none'&quot;,&quot;section&quot;:&quot;Notation&quot;},&quot;variance&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;jade&quot;,&quot;emerald&quot;],&quot;default&quot;:&quot;jade&quot;,&quot;tsType&quot;:&quot;'jade'|'emerald'&quot;,&quot;section&quot;:&quot;Notation&quot;},&quot;vision&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;normal&quot;,&quot;protanopia&quot;,&quot;deuteranopia&quot;,&quot;tritanopia&quot;,&quot;greyscale&quot;],&quot;default&quot;:&quot;normal&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Accessibility&quot;},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light'|'dark'&quot;,&quot;section&quot;:&quot;Display&quot;},&quot;signal&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Display&quot;},&quot;showGrid&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Display&quot;}}">
+const W = 560, H = 280;
+let IB = false;
+const VP = 'var(--var-pos)', VN = 'var(--var-neg)', AC = 'var(--sc-ac)', PY = 'var(--sc-py)', FC = 'url(#hatch-fc)';
+const ACC = 'var(--hl)', INK = 'var(--ink)', INK2 = 'var(--ink-2)', MID = 'var(--mid)', GRID = 'var(--surface-3)', SURF3 = 'var(--surface-3)';
+const r1 = v => Math.round(v * 10) / 10;
+const C = () => ({ grid: [], rects: [], paths: [], lines: [], dots: [], texts: [] });
+const Ln = (x1, y1, x2, y2, s, w = 1, da = 'none') => ({ x1: r1(x1), y1: r1(y1), x2: r1(x2), y2: r1(y2), s, w, da });
+const Tx = (x, y, t, a, f) => ({ x: r1(x), y: r1(y), t, a, f });
+const Rc = (x, y, w, h, f, s = 'none', sw = 0) => ({ x: r1(x), y: r1(y), w: r1(Math.max(0, w)), h: r1(Math.max(0, h)), f, s, sw });
+const path = pts => pts.map((p, i) => (i ? 'L' : 'M') + r1(p[0]) + ' ' + r1(p[1])).join(' ');
+const lcg = seed => () => (seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296;
+
+function yAxis(c, ticks, sy, x0, x1, fmt) {
+  ticks.forEach(t => {
+    c.grid.push(Ln(x0, sy(t), x1, sy(t), t === 0 ? INK : GRID));
+    c.texts.push(Tx(x0 - 8, sy(t) + 5, fmt(t), 'end', MID));
+  });
+}
+
+function bar(sig) {
+  const d = [['Search', 4.8], ['Email', 4.1], ['Affiliate', 3.2], ['Social', 2.6], ['Display', 1.9], ['Video', 1.4]];
+  const x0 = 112, x1 = W - 56, y0 = 4, y1 = H - 34, sx = v => x0 + v / 5 * (x1 - x0), band = (y1 - y0) / d.length, c = C();
+  if (!IB) [1, 2, 3, 4, 5].forEach(t => c.grid.push(Ln(sx(t), y0, sx(t), y1, GRID)));
+  if (!IB) [0, 1, 2, 3, 4, 5].forEach(t => c.texts.push(Tx(sx(t), y1 + 24, t + '×', 'middle', MID)));
+  d.forEach(([k, v], i) => {
+    const y = y0 + i * band + band * 0.2, h = band * 0.6, hot = sig && i === 0;
+    c.rects.push(Rc(x0, y, sx(v) - x0, h, hot ? ACC : INK2));
+    c.texts.push(Tx(x0 - 10, y + h / 2 + 5, k, 'end', INK2));
+    c.texts.push(Tx(sx(v) + 6, y + h / 2 + 5, v.toFixed(1) + '×', 'start', hot ? ACC : INK));
+  });
+  c.lines.push(Ln(x0, y0, x0, y1, INK));
+  return c;
+}
+
+function column(sig) {
+  const v = [42, 45, 44, 48, 51, 49, 55, 58, 57, 61, 64, 69], m = 'JFMAMJJASOND'.split('');
+  const x0 = 52, x1 = W - 8, y0 = 16, y1 = H - 34, sy = t => y1 - t / 80 * (y1 - y0), band = (x1 - x0) / v.length, c = C();
+  if (!IB) yAxis(c, [0, 20, 40, 60, 80], sy, x0, x1, t => String(t));
+  v.forEach((val, i) => {
+    const w = band * 0.64, x = x0 + i * band + (band - w) / 2, last = i === v.length - 1, hot = sig && last;
+    c.rects.push(Rc(x, sy(val), w, y1 - sy(val), hot ? ACC : INK2));
+    c.texts.push(Tx(x + w / 2, y1 + 24, m[i], 'middle', last ? INK : MID));
+    if (IB || last || i === 0) c.texts.push(Tx(x + w / 2, sy(val) - 8, String(val), 'middle', hot ? ACC : INK));
+  });
+  c.lines.push(Ln(x0, y1, x1, y1, INK));
+  return c;
+}
+
+function line(sig) {
+  const n = 26, a = [], p = [];
+  for (let i = 0; i < n; i++) { a.push(820 + i * 14 + 40 * Math.sin(i / 2.3)); p.push(740 + i * 9 + 34 * Math.sin(i / 2.3 + 0.6)); }
+  const x0 = 60, x1 = W - 84, y0 = 12, y1 = H - 34, sx = i => x0 + i / (n - 1) * (x1 - x0), sy = t => y1 - (t - 600) / 700 * (y1 - y0), c = C();
+  [600, 800, 1000, 1200].forEach(t => { c.grid.push(Ln(x0, sy(t), x1, sy(t), GRID)); c.texts.push(Tx(x0 - 8, sy(t) + 4, t.toLocaleString('en'), 'end', MID)); });
+  [1, 5, 9, 13, 17, 21, 26].forEach(w => c.texts.push(Tx(sx(w - 1), y1 + 24, 'W' + w, 'middle', MID)));
+  c.paths.push({ d: path(p.map((v, i) => [sx(i), sy(v)])), f: 'none', s: IB ? PY : MID, w: 1.5, da: IB ? 'none' : '4 4' });
+  c.paths.push({ d: path(a.map((v, i) => [sx(i), sy(v)])), f: 'none', s: IB ? AC : INK, w: 2, da: 'none' });
+  const la = a[n - 1], lp = p[n - 1];
+  c.dots.push({ x: r1(sx(n - 1)), y: r1(sy(la)), r: 4, f: sig ? ACC : INK });
+  c.texts.push(Tx(x1 + 10, sy(la) - 2, IB ? 'AC 26' : '2026', 'start', INK));
+  c.texts.push(Tx(x1 + 10, sy(la) + 12, Math.round(la).toLocaleString('en'), 'start', sig ? ACC : INK));
+  c.texts.push(Tx(x1 + 10, sy(lp) + 4, IB ? 'PY 25' : '2025', 'start', MID));
+  if (IB) { c.lines.push(Ln(x0, y0, x0, y1, INK)); c.lines.push(Ln(x0, y1 - 14, x0, y1 - 4, 'var(--surface)', 4)); c.lines.push(Ln(x0 - 6, y1 - 9, x0 + 6, y1 - 15, INK, 1.5)); c.lines.push(Ln(x0 - 6, y1 - 3, x0 + 6, y1 - 9, INK, 1.5)); }
+  return c;
+}
+
+function area(sig) {
+  const n = 52, v = [];
+  for (let i = 0; i < n; i++) { const camp = i >= 34 && i <= 44 ? 11 * Math.sin((i - 34) / 10 * Math.PI) : 0; v.push(44 + i * 0.12 + 3 * Math.sin(i / 3.5) + camp); }
+  const x0 = 52, x1 = W - 16, y0 = 16, y1 = H - 34, sx = i => x0 + i / (n - 1) * (x1 - x0), sy = t => y1 - t / 80 * (y1 - y0), c = C();
+  yAxis(c, [0, 20, 40, 60, 80], sy, x0, x1, t => String(t));
+  [1, 13, 26, 39, 52].forEach(w => c.texts.push(Tx(sx(w - 1), y1 + 24, 'W' + w, 'middle', MID)));
+  const pts = v.map((t, i) => [sx(i), sy(t)]);
+  c.paths.push({ d: path(pts) + ' L' + r1(x1) + ' ' + r1(y1) + ' L' + r1(x0) + ' ' + r1(y1) + ' Z', f: SURF3, s: 'none', w: 0, da: 'none' });
+  c.paths.push({ d: path(pts), f: 'none', s: INK, w: 1.5, da: 'none' });
+  const ac = sig ? ACC : INK2;
+  c.lines.push(Ln(sx(34), y0 + 14, sx(34), y1, ac, 1, '3 3'));
+  c.lines.push(Ln(sx(44), y0 + 14, sx(44), y1, ac, 1, '3 3'));
+  c.texts.push(Tx(sx(34), y0 + 6, 'CAMPAIGN W35–45', 'start', ac));
+  c.lines.push(Ln(x0, y1, x1, y1, INK));
+  return c;
+}
+
+function scatter(sig) {
+  const rnd = lcg(7), pts = [];
+  for (let i = 0; i < 48; i++) { const x = 6 + rnd() * 88; let y = 60 + 9.2 * x + (rnd() - 0.5) * 200; if (i === 7 || i === 23) y += 340; pts.push([x, Math.max(20, y)]); }
+  pts[7][0] = 38; pts[23][0] = 62;
+  const x0 = 60, x1 = W - 16, y0 = 12, y1 = H - 34, sx = t => x0 + t / 100 * (x1 - x0), sy = t => y1 - t / 1400 * (y1 - y0), c = C();
+  [0, 350, 700, 1050, 1400].forEach(t => { c.grid.push(Ln(x0, sy(t), x1, sy(t), t ? GRID : INK)); c.texts.push(Tx(x0 - 8, sy(t) + 4, t.toLocaleString('en'), 'end', MID)); });
+  [0, 25, 50, 75, 100].forEach(t => c.texts.push(Tx(sx(t), y1 + 24, String(t), 'middle', MID)));
+  const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]), mx = xs.reduce((a, b) => a + b) / 48, my = ys.reduce((a, b) => a + b) / 48;
+  let sxy = 0, sxx = 0, syy = 0; pts.forEach(([x, y]) => { sxy += (x - mx) * (y - my); sxx += (x - mx) ** 2; syy += (y - my) ** 2; });
+  const b = sxy / sxx, a = my - b * mx, r2 = sxy * sxy / (sxx * syy);
+  c.lines.push(Ln(sx(4), sy(a + b * 4), sx(96), sy(a + b * 96), INK));
+  c.texts.push(Tx(x1, y0 + 12, 'r² = ' + r2.toFixed(2), 'end', INK));
+  pts.forEach(([x, y], i) => { if (i !== 7 && i !== 23) c.dots.push({ x: r1(sx(x)), y: r1(sy(y)), r: 3.5, f: INK2 }); });
+  [7, 23].forEach(i => c.dots.push({ x: r1(sx(pts[i][0])), y: r1(sy(pts[i][1])), r: 4.5, f: sig ? ACC : INK2 }));
+  c.texts.push(Tx(sx(pts[7][0]) - 10, sy(pts[7][1]) + 4, 'C-08', 'end', sig ? ACC : INK));
+  c.texts.push(Tx(sx(pts[23][0]) - 10, sy(pts[23][1]) + 4, 'C-24', 'end', sig ? ACC : INK));
+  return c;
+}
+
+function hist(sig) {
+  const bins = 20, counts = [];
+  for (let i = 0; i < bins; i++) { const x = i * 10 + 5; counts.push(Math.round(320 * Math.exp(-((Math.log(x) - Math.log(48)) ** 2) / 0.32))); }
+  const n = counts.reduce((a, b) => a + b);
+  let acc = 0, med = 0;
+  for (let i = 0; i < bins; i++) { if (acc + counts[i] >= n / 2) { med = i * 10 + (n / 2 - acc) / counts[i] * 10; break; } acc += counts[i]; }
+  const x0 = 52, x1 = W - 16, y0 = 16, y1 = H - 34, sx = t => x0 + t / 200 * (x1 - x0), ymax = 350, sy = t => y1 - t / ymax * (y1 - y0), c = C();
+  yAxis(c, [0, 100, 200, 300], sy, x0, x1, t => String(t));
+  [0, 50, 100, 150, 200].forEach(t => c.texts.push(Tx(sx(t), y1 + 24, '€' + t, 'middle', MID)));
+  counts.forEach((k, i) => c.rects.push(Rc(sx(i * 10) + 0.5, sy(k), sx(10) - sx(0) - 1, y1 - sy(k), INK2)));
+  const ac = sig ? ACC : INK;
+  c.lines.push(Ln(sx(med), y0, sx(med), y1, ac, 1.5, '4 3'));
+  c.texts.push(Tx(sx(med) + 8, y0 + 8, 'MEDIAN €' + Math.round(med), 'start', ac));
+  c.lines.push(Ln(x0, y1, x1, y1, INK));
+  return { ...c, n: n.toLocaleString('en'), medLabel: '€' + Math.round(med) };
+}
+
+const PAL = [
+  { idx: '01-01', name: 'Sequential · vermilion', status: 'Re-derived', key: 'seq-vermilion', anchor: 3, use: 'Ordered magnitude where high is the signal: spend, risk, intensity.',
+    hex: ['#5C1608', '#9A2A0F', '#E8431A', '#EE6540', '#F28462', '#F6A487', '#F9C3AD', '#FCDDD1', '#FEF1EC'],
+    old: ['#6B2A00', '#A83F00', '#FA6400', '#FF8332', '#FF9F60', '#FFB98E', '#FFD0B3', '#FFE4D0', '#FFF3EC'] },
+  { idx: '01-02', name: 'Sequential · blue', status: 'Unchanged', key: 'seq-blue', anchor: 3, use: 'Ordered magnitude that is neutral, such as volume or coverage. This is the default for heatmaps.',
+    hex: ['#111D7A', '#2133B0', '#5B7FFF', '#7A97FF', '#97B1FF', '#B3C9FF', '#CDDCFF', '#E2ECFF', '#F2F5FF'] },
+  { idx: '01-03', name: 'Diverging · teal / vermilion', status: 'Re-derived · CVD-tuned', key: 'div', anchor: 11, use: 'Signed deviation from a meaningful midpoint. Teal is good and vermilion is bad. Lightness is symmetric, so the sign survives colour blindness.',
+    hex: ['#00505C', '#04706B', '#00927A', '#59A895', '#8CBFB1', '#BCD5CE', '#EBEBEB', '#F5C4B5', '#F79D81', '#F2734E', '#E8431A', '#B83315', '#8A2410'],
+    old: ['#00876C', '#449A71', '#6CAC78', '#91BD80', '#B6CF8B', '#DAE09A', '#FFF0A8', '#FDD880', '#FBBE5E', '#F9A03C', '#F78220', '#F56E0A', '#FA6400'] },
+  { idx: '01-04', name: 'Diverging · political', status: 'Unchanged', key: 'pol', anchor: 0, use: 'Two-sided splits where neither side is “good”, such as A vs B or share of voice.',
+    hex: ['#111D7A', '#2A42B8', '#4D67D4', '#748FE6', '#9DB5F2', '#C6D8FA', '#EBEBEB', '#F5D2D4', '#EFB2B8', '#E5909A', '#D86E7E', '#C74B62', '#B22848'] },
+  { idx: '01-05', name: 'Interpolation · long', status: 'CVD-tuned', key: 'long', anchor: 0, use: 'Continuous scales that need many steps: blue → teal → green → yellow. Lightness rises 22 → 90, at least 7 L* per step in normal vision and all three simulations.',
+    hex: ['#002891', '#004B9B', '#006E91', '#0F8C7D', '#00A578', '#00C300', '#A0D700', '#F5E600'],
+    old: ['#5B7FFF', '#1280CC', '#008FA8', '#009882', '#2EA05A', '#78A028', '#B89C10', '#DDA026'] },
+  { idx: '01-06', name: 'Interpolation · short', status: 'Re-derived · CVD-tuned', key: 'short', anchor: 5, use: 'Blue → magenta → vermilion → amber. Every step is at least 6 L* lighter than the last, in normal vision and all three simulations.',
+    hex: ['#121A66', '#192387', '#6E05A5', '#CD0091', '#E8431A', '#F56E32', '#FF8C37', '#FFB464'],
+    old: ['#5B7FFF', '#9D6FF6', '#CD5AE0', '#F041C0', '#FF2A99', '#FF2B6F', '#FF4643', '#FA6400'] },
+  { idx: '01-07', name: 'Categorical · hue', status: 'New · storytelling', key: 'cat', anchor: 5, use: 'Unordered groups outside IBCS. Fixed slot per category, used in order. Slot 7+ is Other in mid. Dark mode swaps in lighter values.',
+    hex: ['#2448E4', '#F0B400', '#54C0F0', '#E4249C', '#E8431A', '#783C18'] },
+  { idx: '01-08', name: 'Categorical · grey', status: 'New · IBCS', key: 'catg', anchor: 0, use: 'Parts of a whole in reports and dashboards. Dark to light from the baseline, so colour stays free for highlight, alert and variance.',
+    hex: ['#282828', '#5E5E5E', '#949494', '#D4D4D4'] }
+];
+
+const withText = c => ({ ...c, textEls: c.texts.map((t, i) => React.createElement('text', { key: i, x: t.x, y: t.y, textAnchor: t.a, style: { fontFamily: 'var(--font-mono)', fontSize: 14, fontVariantNumeric: 'tabular-nums', fill: t.f } }, t.t)) });
+
+const withSize = (c, size) => ({ ...c, dots: (c.dots || []).map(d => ({ s: 'none', sw: 0, ...d })), textEls: c.texts.map((t, i) => React.createElement('text', { key: i, x: t.x, y: t.y, textAnchor: t.a, style: { fontFamily: 'var(--font-mono)', fontSize: t.z || size, fontVariantNumeric: 'tabular-nums', fill: t.f } }, t.t)) });
+
+const TW = 360, TH = 220, TB = TH - 26;
+const cv = (k, i) => 'var(--chart-' + k + '-' + i + ')';
+const Dt = (x, y, r, f, s = 'none', sw = 0) => ({ x: r1(x), y: r1(y), r: r1(r), f, s, sw });
+const Pt = (d, f, s = 'none', w = 0, da = 'none') => ({ d, f, s, w, da });
+const TxZ = (x, y, t, a, f, z) => ({ ...Tx(x, y, t, a, f), z });
+const hot = (sig, on, base) => (on && sig ? ACC : base);
+const closeBand = (hi, lo) => path(hi) + ' ' + lo.slice().reverse().map(p => 'L' + r1(p[0]) + ' ' + r1(p[1])).join(' ') + ' Z';
+const sq = (c, x, y, f, label, tf) => { c.rects.push(Rc(x, y - 10, 10, 10, f)); c.texts.push(Tx(x + 16, y, label, 'start', tf || INK2)); };
+
+const CVD = {
+  prot: [[0.152286, 1.052583, -0.204868], [0.114503, 0.786281, 0.099216], [-0.003882, -0.048116, 1.051998]],
+  deut: [[0.367322, 0.860646, -0.227968], [0.280085, 0.672501, 0.047413], [-0.011820, 0.042940, 0.968881]],
+  trit: [[1.255528, -0.076749, -0.178779], [-0.078411, 0.930809, 0.147602], [0.004733, 0.691367, 0.303900]],
+  grey: [[0.2126, 0.7152, 0.0722], [0.2126, 0.7152, 0.0722], [0.2126, 0.7152, 0.0722]]
+};
+const cvdFilters = Object.keys(CVD).map(k => React.createElement('filter', { key: k, id: 'cvd-' + k, colorInterpolationFilters: 'linearRGB' },
+  React.createElement('feColorMatrix', { type: 'matrix', values: CVD[k].map(r => r.join(' ') + ' 0 0').join(' ') + ' 0 0 0 1 0' })));
+const linC = c => { c /= 255; return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; };
+const labOf = (h, k) => {
+  let rl = [1, 3, 5].map(i => linC(parseInt(h.slice(i, i + 2), 16)));
+  if (k) rl = CVD[k].map(r => Math.min(1, Math.max(0, r[0] * rl[0] + r[1] * rl[1] + r[2] * rl[2])));
+  const X = (0.4124 * rl[0] + 0.3576 * rl[1] + 0.1805 * rl[2]) / 0.95047, Y = 0.2126 * rl[0] + 0.7152 * rl[1] + 0.0722 * rl[2], Z = (0.0193 * rl[0] + 0.1192 * rl[1] + 0.9505 * rl[2]) / 1.08883;
+  const fn = t => (t > 0.008856 ? Math.cbrt(t) : 7.787 * t + 16 / 116);
+  return [116 * fn(Y) - 16, 500 * (fn(X) - fn(Y)), 200 * (fn(Y) - fn(Z))];
+};
+const minDE = (set, k) => { let m = 999; for (let i = 0; i < set.length; i++) for (let j = i + 1; j < set.length; j++) { const a = labOf(set[i], k), b = labOf(set[j], k); m = Math.min(m, Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2])); } return m; };
+const HEX = {
+  pos: { jade: ['#00927A', '#00C69F'], emerald: ['#00895A', '#00895A'] }, neg: '#E8431A', blue: '#5B7FFF', ink2: ['#646464', '#D0D0D0'],
+  cat: [['#2448E4', '#F0B400', '#54C0F0', '#E4249C', '#E8431A', '#783C18'], ['#9078FC', '#F0C000', '#3CCCF0', '#F060A8', '#E8431A', '#A07850']],
+  catg: [['#282828', '#5E5E5E', '#949494', '#D4D4D4'], ['#F5F5F5', '#BDBDBD', '#858585', '#4F4F4F']],
+  div: ['#00927A', '#E8431A'], divV1: ['#6CAC78', '#F07734']
+};
+const VISION = { normal: null, protanopia: 'prot', deuteranopia: 'deut', tritanopia: 'trit', greyscale: 'grey' };
+
+const hlT = n => 'var(--hl-' + n + ')';
+const hatchDefs = React.createElement('svg', { width: 0, height: 0, 'aria-hidden': true, style: { position: 'absolute' } },
+  React.createElement('defs', null, ...cvdFilters, React.createElement('pattern', { id: 'hatch-fc', patternUnits: 'userSpaceOnUse', width: 5, height: 5, patternTransform: 'rotate(45)' },
+    React.createElement('rect', { width: 5, height: 5, style: { fill: 'var(--surface)' } }),
+    React.createElement('line', { x1: 0, y1: 0, x2: 0, y2: 5, style: { stroke: 'var(--sc-ac)', strokeWidth: 2.4 } }))));
+
+
+const G = {
+  varBar() {
+    const d = [['Search', 42], ['Email', 18], ['Affiliate', 6], ['Social', -9], ['Display', -21], ['Video', -35]];
+    const x0 = 72, x1 = 348, zc = (x0 + x1) / 2, hw = (x1 - x0) / 2, sx = v => zc + v / 50 * hw, y0 = 6, band = (TB - y0) / d.length, c = C();
+    d.forEach(([k, v], i) => {
+      const y = y0 + i * band + band * 0.2, h = band * 0.6;
+      c.rects.push(Rc(Math.min(zc, sx(v)), y, Math.abs(sx(v) - zc), h, v > 0 ? VP : VN));
+      c.texts.push(Tx(x0 - 8, y + h / 2 + 4, k, 'end', INK2));
+      c.texts.push(Tx(v > 0 ? sx(v) + 5 : sx(v) - 5, y + h / 2 + 4, (v > 0 ? '+' : '−') + Math.abs(v), v > 0 ? 'start' : 'end', INK));
+    });
+    c.lines.push(Ln(zc, y0 - 4, zc, TB + 4, INK, 2));
+    c.texts.push(Tx(zc, TB + 20, 'ΔPY · € k', 'middle', MID));
+    return c;
+  },
+  pins() {
+    const v = [4, 7, -2, 9, 12, -5, 3, 15, 8, -8, 6, 11], m = 'JFMAMJJASOND'.split(''), x0 = 24, x1 = 352, y0 = 22, zy = (y0 + TB) / 2, sy = t => zy - t / 20 * (TB - y0) / 2, band = (x1 - x0) / 12, c = C();
+    v.forEach((t, i) => {
+      const cx = x0 + i * band + band / 2, col = t > 0 ? VP : VN;
+      c.lines.push(Ln(cx, zy, cx, sy(t), col, 2));
+      c.rects.push(Rc(cx - 4, sy(t) - 4, 8, 8, col));
+      c.texts.push(Tx(cx, t > 0 ? sy(t) - 10 : sy(t) + 18, (t > 0 ? '+' : '−') + Math.abs(t), 'middle', INK));
+      c.texts.push(Tx(cx, TB + 18, m[i], 'middle', MID));
+    });
+    c.lines.push(Ln(x0, zy, x1, zy, INK, 2));
+    c.texts.push(Tx(x0, 10, 'ΔPY %', 'start', MID));
+    return c;
+  },
+  integrated() {
+    const ac = [52, 58, 55, 61, 66, 70], py = [48, 55, 57, 56, 60, 62], m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+    const x0 = 44, x1 = 352, band = (x1 - x0) / 6, top = 34, base = 128, sy = t => base - t / 80 * (base - top), zy = 168, dy = 2.4, c = C();
+    sq(c, x0, 12, PY, 'PY', MID); sq(c, x0 + 50, 12, AC, 'AC');
+    ac.forEach((a, i) => {
+      const w = band * 0.46, x = x0 + i * band + (band - w) / 2 + 3, d = a - py[i];
+      c.rects.push(Rc(x - 6, sy(py[i]), w, base - sy(py[i]), PY));
+      c.rects.push(Rc(x, sy(a), w, base - sy(a), AC));
+      c.texts.push(Tx(x + w / 2, sy(a) - 6, String(a), 'middle', INK));
+      c.rects.push(Rc(x, Math.min(zy, zy - d * dy), w, Math.abs(d * dy), d >= 0 ? VP : VN));
+      c.texts.push(Tx(x + w / 2, d >= 0 ? zy - d * dy - 6 : zy - d * dy + 14, (d >= 0 ? '+' : '−') + Math.abs(d), 'middle', INK));
+      c.texts.push(Tx(x + w / 2, TB + 18, m[i], 'middle', MID));
+    });
+    c.lines.push(Ln(x0 - 4, base, x1, base, INK)); c.lines.push(Ln(x0 - 4, zy, x1, zy, INK));
+    c.texts.push(Tx(x0 - 10, zy + 4, 'ΔPY', 'end', MID));
+    return c;
+  },
+  scenario() {
+    const v = [42, 45, 44, 48, 51, 49, 55, 58, 60, 63, 65, 70], pl = [44, 46, 47, 49, 50, 52, 54, 56, 58, 61, 64, 68], m = 'JFMAMJJASOND'.split('');
+    const x0 = 8, x1 = 352, y0 = 28, sy = t => TB - t / 80 * (TB - y0), band = (x1 - x0) / 12, c = C();
+    sq(c, x0, 12, AC, 'AC');
+    c.rects.push(Rc(x0 + 52, 2, 10, 10, FC, AC, 1)); c.texts.push(Tx(x0 + 68, 12, 'FC', 'start', INK2));
+    c.rects.push(Rc(x0 + 104, 2, 10, 10, 'none', 'var(--sc-pl)', 1.5)); c.texts.push(Tx(x0 + 120, 12, 'PL', 'start', INK2));
+    v.forEach((t, i) => {
+      const w = band * 0.56, x = x0 + i * band + (band - w) / 2 - 2, fc = i >= 8;
+      c.rects.push(Rc(x + 5, sy(pl[i]), w, TB - sy(pl[i]), 'none', 'var(--sc-pl)', 1.5));
+      c.rects.push(Rc(x, sy(t), w, TB - sy(t), fc ? FC : AC, fc ? AC : 'none', fc ? 1 : 0));
+      c.texts.push(Tx(x + w / 2, TB + 18, m[i], 'middle', fc ? MID : INK2));
+    });
+    c.lines.push(Ln(x0, TB, x1, TB, INK));
+    return c;
+  },
+  hWaterfall() {
+    const st = [['Revenue', 1000, 't'], ['COGS', -420], ['Gross profit', 580, 't'], ['Opex', -310], ['Marketing', -120], ['EBIT', 150, 't']];
+    const x0 = 104, x1 = 312, y0 = 4, sx = v => x0 + v / 1000 * (x1 - x0), band = (TB + 14 - y0) / st.length, c = C();
+    let run = 0;
+    st.forEach(([k, v, t], i) => {
+      const y = y0 + i * band + band * 0.2, h = band * 0.6; let a, b;
+      if (t) { a = 0; b = v; run = v; } else { a = run + v; b = run; run += v; }
+      c.rects.push(Rc(sx(a), y, sx(b) - sx(a), h, t ? AC : MID));
+      c.texts.push(Tx(x0 - 8, y + h / 2 + 4, k, 'end', t ? INK : INK2));
+      c.texts.push(Tx(sx(b) + 6, y + h / 2 + 4, (t ? '' : '−') + Math.abs(v), 'start', INK));
+      if (i < st.length - 1) c.lines.push(Ln(sx(run), y + h, sx(run), y + band, MID, 1, '2 2'));
+    });
+    c.lines.push(Ln(x0, y0, x0, TB + 14, INK));
+    return c;
+  },
+  chartTable() {
+    const d = [['Search', 412, 370], ['Email', 188, 170], ['Social', 140, 149], ['Display', 96, 117], ['Video', 64, 58]], c = C(), zc = 250, k = 1.1, rh = 32, y0 = 44;
+    [['CHANNEL', 0, 'start'], ['AC', 124, 'end'], ['PY', 176, 'end'], ['ΔPY', zc, 'middle'], ['ΔPY%', 358, 'end']].forEach(([t, x, a]) => c.texts.push(Tx(x, 14, t, a, MID)));
+    c.lines.push(Ln(0, 24, 360, 24, INK));
+    d.forEach(([n, a, p], i) => {
+      const y = y0 + i * rh, dv = a - p, pc = Math.round(dv / p * 100);
+      c.texts.push(Tx(0, y + 4, n, 'start', INK2)); c.texts.push(Tx(124, y + 4, String(a), 'end', INK)); c.texts.push(Tx(176, y + 4, String(p), 'end', MID));
+      c.rects.push(Rc(Math.min(zc, zc + dv * k), y - 7, Math.abs(dv * k), 14, dv >= 0 ? VP : VN));
+      c.texts.push(Tx(358, y + 4, (pc >= 0 ? '+' : '−') + Math.abs(pc) + '%', 'end', INK));
+      c.grid.push(Ln(0, y + rh / 2, 360, y + rh / 2, GRID));
+    });
+    c.lines.push(Ln(zc, 28, zc, y0 + d.length * rh - rh / 2, INK));
+    return c;
+  },
+  divBar(sig) {
+    const d = [['North', 12], ['West', 8], ['Central', 3], ['East', -2], ['Coast', -6], ['South', -11]];
+    const x0 = 72, x1 = 348, zc = (x0 + x1) / 2, hw = (x1 - x0) / 2, sx = v => zc + v / 15 * hw, y0 = 6, band = (TB - y0) / d.length, c = C();
+    if (!IB) [-10, -5, 5, 10].forEach(t => c.grid.push(Ln(sx(t), y0, sx(t), TB, GRID)));
+    if (!IB) [-10, -5, 0, 5, 10].forEach(t => c.texts.push(Tx(sx(t), TB + 18, t > 0 ? '+' + t : t < 0 ? '−' + -t : '0', 'middle', MID)));
+    d.forEach(([k, v], i) => {
+      const y = y0 + i * band + band * 0.2, h = band * 0.6, on = v === -11;
+      c.rects.push(Rc(Math.min(zc, sx(v)), y, Math.abs(sx(v) - zc), h, IB ? (v > 0 ? VP : VN) : hot(sig, on, INK2)));
+      c.texts.push(Tx(x0 - 8, y + h / 2 + 4, k, 'end', INK2));
+      c.texts.push(Tx(v > 0 ? sx(v) + 5 : sx(v) - 5, y + h / 2 + 4, (v > 0 ? '+' : '−') + Math.abs(v) + '%', v > 0 ? 'start' : 'end', IB ? INK : hot(sig, on, INK)));
+    });
+    c.lines.push(Ln(zc, y0, zc, TB, INK));
+    return c;
+  },
+  likert() {
+    const rows = [['Price', [18, 24, 20, 26, 12]], ['Speed', [12, 20, 22, 30, 16]], ['Service', [8, 14, 18, 38, 22]], ['Quality', [4, 10, 16, 42, 28]]];
+    const cols = [cv('div', 13), cv('div', 10), cv('div', 7), cv('div', 4), cv('div', 1)];
+    const x0 = 72, x1 = 348, zc = (x0 + x1) / 2, k = ((x1 - x0) / 2) / 60, y0 = 22, band = (TB - y0) / rows.length, c = C();
+    [-60, -30, 30, 60].forEach(t => c.grid.push(Ln(zc + t * k, y0, zc + t * k, TB, GRID)));
+    [-60, -30, 0, 30, 60].forEach(t => c.texts.push(Tx(zc + t * k, TB + 18, Math.abs(t) + '%', 'middle', MID)));
+    c.texts.push(Tx(zc - 8, 12, '← DISAGREE', 'end', MID)); c.texts.push(Tx(zc + 8, 12, 'AGREE →', 'start', MID));
+    rows.forEach(([n, s], i) => {
+      const y = y0 + i * band + band * 0.2, h = band * 0.6; let x = zc - (s[0] + s[1] + s[2] / 2) * k;
+      s.forEach((v, j) => { c.rects.push(Rc(x + 0.5, y, v * k - 1, h, cols[j])); x += v * k; });
+      c.texts.push(Tx(x0 - 8, y + h / 2 + 4, n, 'end', INK2));
+    });
+    c.lines.push(Ln(zc, y0, zc, TB, INK));
+    return c;
+  },
+  surplus(sig) {
+    const n = 48, v = [];
+    for (let i = 0; i < n; i++) v.push(6 * Math.sin(i / 5) + 2.5 * Math.sin(i / 1.9) + (i > 32 ? -5 : 0) + 1);
+    const x0 = 36, x1 = 348, y0 = 10, sx = i => x0 + i / (n - 1) * (x1 - x0), sy = t => TB - (t + 12) / 24 * (TB - y0), c = C();
+    [-10, 10].forEach(t => c.grid.push(Ln(x0, sy(t), x1, sy(t), GRID)));
+    [[-10, '−10'], [0, '0'], [10, '+10']].forEach(([t, l]) => c.texts.push(Tx(x0 - 8, sy(t) + 4, l, 'end', MID)));
+    [['W1', 0], ['W24', 23], ['W48', 47]].forEach(([l, i]) => c.texts.push(Tx(sx(i), TB + 18, l, 'middle', MID)));
+    const z = sy(0), ar = f => 'M' + r1(sx(0)) + ' ' + r1(z) + ' ' + v.map((t, i) => 'L' + r1(sx(i)) + ' ' + r1(sy(f(t)))).join(' ') + ' L' + r1(sx(n - 1)) + ' ' + r1(z) + ' Z';
+    c.paths.push(Pt(ar(t => Math.max(t, 0)), IB ? 'var(--var-pos-tint)' : SURF3));
+    c.paths.push(Pt(ar(t => Math.min(t, 0)), IB ? 'var(--var-neg-tint)' : sig ? cv('seq-vermilion', 7) : SURF3));
+    c.paths.push(Pt(path(v.map((t, i) => [sx(i), sy(t)])), 'none', INK, 1.5));
+    c.lines.push(Ln(x0, z, x1, z, INK));
+    c.texts.push(Tx(x1, y0 + 4, 'ABOVE TARGET', 'end', IB ? VP : MID)); c.texts.push(Tx(x1, TB - 6, 'BELOW TARGET', 'end', IB ? VN : sig ? ACC : MID));
+    return c;
+  },
+  bubble(sig) {
+    const rnd = lcg(11), p = [];
+    for (let i = 0; i < 13; i++) p.push([10 + rnd() * 80, 10 + rnd() * 62, 1 + rnd() * 7]);
+    p.push([72, 76, 12]);
+    const x0 = 36, x1 = 348, y0 = 10, sx = t => x0 + t / 100 * (x1 - x0), sy = t => TB - t / 100 * (TB - y0), c = C();
+    [0, 50, 100].forEach(t => { c.grid.push(Ln(x0, sy(t), x1, sy(t), t ? GRID : INK)); c.texts.push(Tx(x0 - 8, sy(t) + 4, String(t), 'end', MID)); });
+    [50, 100].forEach(t => c.texts.push(Tx(sx(t), TB + 18, String(t), 'middle', MID)));
+    p.map((q, i) => ({ q, i })).sort((a, b) => b.q[2] - a.q[2]).forEach(({ q, i }) => c.dots.push(Dt(sx(q[0]), sy(q[1]), 3 + Math.sqrt(q[2]) * 4.5, hot(sig, i === 13, INK2), 'var(--surface)', 1.5)));
+    c.texts.push(Tx(sx(72), sy(76) - 26, 'BRAND A', 'middle', hot(sig, true, INK)));
+    return c;
+  },
+  connected(sig) {
+    const p = [];
+    for (let i = 0; i < 10; i++) p.push([22 + i * 3.8 + Math.sin(i * 1.7) * 4, 1.2 + i * 0.14 + (i > 5 ? 0.35 : 0) + Math.cos(i * 1.3) * 0.12]);
+    const x0 = 44, x1 = 348, y0 = 10, sx = t => x0 + (t - 10) / 60 * (x1 - x0), sy = t => TB - (t - 0.8) / 2.6 * (TB - y0), c = C();
+    [1, 2, 3].forEach(t => { c.grid.push(Ln(x0, sy(t), x1, sy(t), GRID)); c.texts.push(Tx(x0 - 8, sy(t) + 4, t.toFixed(1) + '%', 'end', MID)); });
+    [20, 40, 60].forEach(t => c.texts.push(Tx(sx(t), TB + 18, t + '%', 'middle', MID)));
+    c.paths.push(Pt(path(p.map(q => [sx(q[0]), sy(q[1])])), 'none', INK2, 1.5));
+    p.forEach((q, i) => c.dots.push(Dt(sx(q[0]), sy(q[1]), i === 9 ? 4.5 : 3, i === 9 ? hot(sig, true, INK) : INK2)));
+    c.texts.push(Tx(sx(p[0][0]) + 8, sy(p[0][1]) + 14, '2017', 'start', MID));
+    c.texts.push(Tx(sx(p[9][0]) - 8, sy(p[9][1]) - 8, '2026', 'end', hot(sig, true, INK)));
+    { const y1 = TB; if (IB) { c.lines.push(Ln(x0, y0, x0, y1, INK)); c.lines.push(Ln(x0, y1 - 14, x0, y1 - 4, 'var(--surface)', 4)); c.lines.push(Ln(x0 - 6, y1 - 9, x0 + 6, y1 - 15, INK, 1.5)); c.lines.push(Ln(x0 - 6, y1 - 3, x0 + 6, y1 - 9, INK, 1.5)); } }
+    return c;
+  },
+  corr() {
+    const L = ['SPD', 'IMP', 'CLK', 'CVR', 'REV', 'RET'];
+    const U = { '0,1': .92, '0,2': .81, '0,3': .28, '0,4': .71, '0,5': -.22, '1,2': .86, '1,3': .18, '1,4': .58, '1,5': -.31, '2,3': .44, '2,4': .69, '2,5': .05, '3,4': .63, '3,5': .48, '4,5': .37 };
+    const cs = 30, x0 = 100, y0 = 4, c = C();
+    for (let i = 0; i < 6; i++) {
+      c.texts.push(Tx(x0 - 8, y0 + i * cs + cs / 2 + 4, L[i], 'end', MID));
+      c.texts.push(Tx(x0 + i * cs + cs / 2, y0 + 6 * cs + 16, L[i], 'middle', MID));
+      for (let j = 0; j < 6; j++) {
+        const v = i === j ? 1 : U[Math.min(i, j) + ',' + Math.max(i, j)], st = Math.round((1 - v) / 2 * 12) + 1;
+        c.rects.push(Rc(x0 + j * cs + 1, y0 + i * cs + 1, cs - 2, cs - 2, i === j ? SURF3 : cv('pol', st)));
+        if (i !== j) c.texts.push(TxZ(x0 + j * cs + cs / 2, y0 + i * cs + cs / 2 + 4, (v < 0 ? '−' : '') + Math.abs(v).toFixed(1).replace(/^0/, ''), 'middle', st <= 3 || st >= 12 ? '#FFFFFF' : '#282828', 11));
+      }
+    }
+    for (let k = 1; k <= 13; k++) c.rects.push(Rc(296, y0 + (k - 1) * 13.8, 10, 12.8, cv('pol', k)));
+    c.texts.push(Tx(314, y0 + 10, '+1', 'start', MID)); c.texts.push(Tx(314, y0 + 6 * 13.8 + 10, '0', 'start', MID)); c.texts.push(Tx(314, y0 + 12 * 13.8 + 10, '−1', 'start', MID));
+    return c;
+  },
+  lollipop(sig) {
+    const d = [['Search', 92], ['Email', 81], ['Referral', 74], ['Affiliate', 60], ['Social', 52], ['Display', 41], ['Video', 33], ['Audio', 20]];
+    const x0 = 80, x1 = 326, y0 = 4, sx = v => x0 + v / 100 * (x1 - x0), band = (TB - y0) / d.length, c = C();
+    if (!IB) [25, 50, 75, 100].forEach(t => c.grid.push(Ln(sx(t), y0, sx(t), TB, GRID)));
+    if (!IB) [0, 25, 50, 75, 100].forEach(t => c.texts.push(Tx(sx(t), TB + 18, String(t), 'middle', MID)));
+    d.forEach(([k, v], i) => {
+      const y = y0 + i * band + band / 2, on = i === 0;
+      c.lines.push(Ln(x0, y, sx(v), y, MID, 1.5)); c.dots.push(Dt(sx(v), y, 5, hot(sig, on, INK2)));
+      c.texts.push(Tx(x0 - 8, y + 4, k, 'end', INK2)); c.texts.push(Tx(sx(v) + 10, y + 4, String(v), 'start', hot(sig, on, INK)));
+    });
+    c.lines.push(Ln(x0, y0, x0, TB, INK));
+    return c;
+  },
+  dumbbell(sig) {
+    const d = [['Search', 3.1, 3.6], ['Email', 2.8, 3.0], ['Social', 1.9, 2.9], ['Display', 1.2, 1.1], ['Video', 0.8, 1.0], ['Audio', 0.6, 0.7]];
+    const x0 = 72, x1 = 340, y0 = 22, sx = v => x0 + v / 4 * (x1 - x0), band = (TB - y0) / d.length, c = C();
+    [1, 2, 3, 4].forEach(t => c.grid.push(Ln(sx(t), y0, sx(t), TB, GRID)));
+    [0, 1, 2, 3, 4].forEach(t => c.texts.push(Tx(sx(t), TB + 18, t + '×', 'middle', MID)));
+    c.dots.push(Dt(x0 + 5, 10, 4, MID)); c.texts.push(Tx(x0 + 14, 14, IB ? 'PY 2025' : '2025', 'start', MID));
+    c.dots.push(Dt(x0 + (IB ? 100 : 69), 10, 4, INK)); c.texts.push(Tx(x0 + (IB ? 109 : 78), 14, IB ? 'AC 2026' : '2026', 'start', INK));
+    d.forEach(([k, a, b], i) => {
+      const y = y0 + i * band + band / 2, on = k === 'Social';
+      c.lines.push(Ln(sx(a), y, sx(b), y, on && sig ? hlT(7) : SURF3, 4));
+      c.dots.push(Dt(sx(a), y, 5, MID)); c.dots.push(Dt(sx(b), y, 5, hot(sig, on, INK)));
+      c.texts.push(Tx(x0 - 8, y + 4, k, 'end', INK2));
+    });
+    return c;
+  },
+  slope(sig) {
+    const d = [['Search', 42, 40], ['Email', 30, 27], ['Display', 22, 17], ['Social', 14, 33], ['Video', 9, 12], ['Audio', 4, 6]];
+    const xl = 120, xr = 240, y0 = 26, sy = v => TB + 8 - v / 45 * (TB + 8 - y0), c = C();
+    c.texts.push(Tx(xl, 12, '2025', 'middle', MID)); c.texts.push(Tx(xr, 12, '2026', 'middle', MID));
+    c.lines.push(Ln(xl, y0 - 6, xl, TB + 10, SURF3)); c.lines.push(Ln(xr, y0 - 6, xr, TB + 10, SURF3));
+    d.forEach(([k, a, b]) => {
+      const on = k === 'Social', col = on ? hot(sig, on, INK) : INK2;
+      c.lines.push(Ln(xl, sy(a), xr, sy(b), col, on ? 2.5 : 1.5));
+      c.dots.push(Dt(xl, sy(a), 3.5, col)); c.dots.push(Dt(xr, sy(b), 3.5, col));
+      c.texts.push(Tx(xl - 10, sy(a) + 4, k + ' ' + a, 'end', on ? col : INK2));
+      c.texts.push(Tx(xr + 10, sy(b) + 4, b + ' ' + k, 'start', on ? col : INK2));
+    });
+    return c;
+  },
+  bump(sig) {
+    const P = [['A', 'B', 'C', 'D', 'E'], ['A', 'C', 'B', 'E', 'D'], ['C', 'A', 'E', 'B', 'D'], ['C', 'E', 'A', 'B', 'D'], ['C', 'E', 'A', 'D', 'B'], ['E', 'C', 'A', 'D', 'B']];
+    const names = { A: 'Search', B: 'Display', C: 'Email', D: 'Video', E: 'Social' };
+    const x0 = 40, x1 = 276, y0 = 28, sx = i => x0 + i / 5 * (x1 - x0), sy = r => y0 + r * ((TB - y0) / 4), c = C();
+    for (let r = 0; r < 5; r++) c.texts.push(Tx(x0 - 14, sy(r) + 4, '#' + (r + 1), 'end', MID));
+    P.forEach((_, i) => c.texts.push(Tx(sx(i), 12, 'Q' + (i + 1), 'middle', MID)));
+    ['A', 'B', 'C', 'D', 'E'].forEach(k => {
+      const on = k === 'E', col = on ? hot(sig, on, INK) : MID, pts = P.map((p, i) => [sx(i), sy(p.indexOf(k))]);
+      c.paths.push(Pt(path(pts), 'none', col, on ? 3 : 2));
+      pts.forEach(q => c.dots.push(Dt(q[0], q[1], 4, col)));
+      c.texts.push(Tx(x1 + 12, pts[5][1] + 4, names[k], 'start', on ? col : INK2));
+    });
+    return c;
+  },
+  box(sig) {
+    const d = [['Search', [12, 24, 31, 40, 58]], ['Social', [8, 18, 26, 33, 49]], ['Email', [15, 30, 38, 47, 66]], ['Video', [5, 14, 20, 27, 41]], ['Display', [10, 22, 29, 36, 52]]];
+    const x0 = 40, x1 = 348, y0 = 10, sy = v => TB - v / 70 * (TB - y0), band = (x1 - x0) / d.length, c = C();
+    yAxis(c, [0, 20, 40, 60], sy, x0, x1, t => String(t));
+    d.forEach(([k, s], i) => {
+      const cx = x0 + i * band + band / 2, w = band * 0.44, on = k === 'Email', e = hot(sig, on, INK);
+      c.rects.push(Rc(cx - w / 2, sy(s[3]), w, sy(s[1]) - sy(s[3]), on && sig ? hlT(8) : SURF3));
+      c.lines.push(Ln(cx, sy(s[0]), cx, sy(s[1]), INK)); c.lines.push(Ln(cx, sy(s[3]), cx, sy(s[4]), INK));
+      c.lines.push(Ln(cx - w / 4, sy(s[0]), cx + w / 4, sy(s[0]), INK)); c.lines.push(Ln(cx - w / 4, sy(s[4]), cx + w / 4, sy(s[4]), INK));
+      c.lines.push(Ln(cx - w / 2, sy(s[2]), cx + w / 2, sy(s[2]), e, 2.5));
+      c.texts.push(Tx(cx, TB + 18, k, 'middle', on ? e : MID));
+    });
+    return c;
+  },
+  violin(sig) {
+    const g = [['A', [[30, 8, 1]]], ['B', [[20, 5, 1], [46, 6, 0.8]]], ['C', [[40, 11, 1]]], ['D', [[25, 5, 1]]]];
+    const x0 = 40, x1 = 348, y0 = 10, sy = v => TB - v / 70 * (TB - y0), band = (x1 - x0) / g.length, c = C();
+    yAxis(c, [0, 20, 40, 60], sy, x0, x1, t => String(t));
+    g.forEach(([k, m], i) => {
+      const cx = x0 + i * band + band / 2, ys = [], ds = [];
+      for (let y = 2; y <= 68; y += 2) { ys.push(y); ds.push(m.reduce((a, [mu, sd, w]) => a + w * Math.exp(-((y - mu) ** 2) / (2 * sd * sd)), 0)); }
+      const mx = Math.max(...ds), hw = band * 0.4, on = k === 'B';
+      const right = ys.map((y, j) => [cx + ds[j] / mx * hw, sy(y)]), left = ys.map((y, j) => [cx - ds[j] / mx * hw, sy(y)]);
+      c.paths.push(Pt(closeBand(right, left), on && sig ? hlT(8) : SURF3, hot(sig, on, INK), on ? 1.5 : 1));
+      c.texts.push(Tx(cx, TB + 18, 'Cohort ' + k, 'middle', on ? hot(sig, on, INK) : MID));
+    });
+    return c;
+  },
+  strip(sig) {
+    const rnd = lcg(5), g = [['Search', 34, 8], ['Social', 26, 10], ['Email', 40, 7]], x0 = 40, x1 = 348, y0 = 10, sy = v => TB - v / 80 * (TB - y0), band = (x1 - x0) / 3, c = C();
+    yAxis(c, [0, 20, 40, 60, 80], sy, x0, x1, t => String(t));
+    g.forEach(([k, mu, sd], i) => {
+      const cx = x0 + i * band + band / 2; let sum = 0;
+      for (let j = 0; j < 30; j++) { const v = mu + (rnd() + rnd() + rnd() - 1.5) * sd * 1.4; sum += v; c.dots.push(Dt(cx + (rnd() - 0.5) * band * 0.5, sy(v), 3, INK2)); }
+      c.lines.push(Ln(cx - band * 0.32, sy(sum / 30), cx + band * 0.32, sy(sum / 30), INK, 2));
+      c.texts.push(Tx(cx, TB + 18, k, 'middle', MID));
+    });
+    const ox = x0 + band * 1.5;
+    c.dots.push(Dt(ox + 6, sy(72), 4.5, hot(sig, true, INK)));
+    c.texts.push(Tx(ox + 16, sy(72) + 4, 'OUTLIER · 72', 'start', hot(sig, true, INK)));
+    return c;
+  },
+  ecdf(sig) {
+    const x0 = 44, x1 = 290, y0 = 10, sx = t => x0 + t / 100 * (x1 - x0), sy = v => TB - v * (TB - y0), c = C();
+    [0, 0.5, 1].forEach(t => { c.grid.push(Ln(x0, sy(t), x1, sy(t), t === 0 ? INK : t === 0.5 ? MID : GRID)); c.texts.push(Tx(x0 - 8, sy(t) + 4, (t * 100) + '%', 'end', MID)); });
+    [0, 25, 50, 75, 100].forEach(t => c.texts.push(Tx(sx(t), TB + 18, t + 'd', 'middle', MID)));
+    const step = s => { let d = 'M' + r1(sx(0)) + ' ' + r1(sy(0)); for (let x = 4; x <= 100; x += 4) d += ' H' + r1(sx(x)) + ' V' + r1(sy(1 - Math.exp(-x / s))); return d; };
+    c.paths.push(Pt(step(32), 'none', MID, 1.5, '4 3')); c.paths.push(Pt(step(20), 'none', INK, 2));
+    const mA = 20 * Math.LN2;
+    c.dots.push(Dt(sx(mA), sy(0.5), 4.5, hot(sig, true, INK)));
+    c.texts.push(Tx(sx(mA) + 10, sy(0.5) + 16, 'MEDIAN A · ' + Math.round(mA) + 'd', 'start', hot(sig, true, INK)));
+    c.texts.push(Tx(x1 + 8, sy(1 - Math.exp(-5)) - 2, 'Cohort A', 'start', INK));
+    c.texts.push(Tx(x1 + 8, sy(1 - Math.exp(-100 / 32)) + 14, 'Cohort B', 'start', MID));
+    return c;
+  },
+  pyramid(sig) {
+    const b = ['75+', '65–74', '55–64', '45–54', '35–44', '25–34', '18–24'], m = [3, 6, 9, 12, 14, 16, 10], w = [4, 7, 10, 13, 15, 18, 11];
+    const cx = TW / 2, gap = 28, hw = (TW - 24) / 2 - gap, k = hw / 20, y0 = 22, band = (TB - y0) / b.length, c = C();
+    c.texts.push(Tx(cx - gap, 12, 'MEN', 'end', MID)); c.texts.push(Tx(cx + gap, 12, 'WOMEN', 'start', MID));
+    [10, 20].forEach(t => { c.grid.push(Ln(cx - gap - t * k, y0, cx - gap - t * k, TB, GRID)); c.grid.push(Ln(cx + gap + t * k, y0, cx + gap + t * k, TB, GRID)); });
+    [10, 20].forEach(t => { c.texts.push(Tx(cx - gap - t * k, TB + 18, t + '%', 'middle', MID)); c.texts.push(Tx(cx + gap + t * k, TB + 18, t + '%', 'middle', MID)); });
+    b.forEach((a, i) => {
+      const y = y0 + i * band + band * 0.12, h = band * 0.76, on = i === 5;
+      c.rects.push(Rc(cx - gap - m[i] * k, y, m[i] * k, h, INK2)); c.rects.push(Rc(cx + gap, y, w[i] * k, h, hot(sig, on, MID)));
+      c.texts.push(Tx(cx, y + h / 2 + 4, a, 'middle', INK2));
+    });
+    return c;
+  },
+  stackedArea(sig) {
+    const n = 24, a = [], b = [], s = [];
+    for (let i = 0; i < n; i++) { s.push(12 + 2 * Math.sin(i / 3)); a.push(14 + i * 0.25); b.push(6 + i * 0.7); }
+    const x0 = 36, x1 = TW - 72, y0 = 10, sx = i => x0 + i / (n - 1) * (x1 - x0), sy = t => TB - t / 60 * (TB - y0), c = C();
+    yAxis(c, [0, 20, 40, 60], sy, x0, x1, t => String(t));
+    [['M1', 0], ['M12', 11], ['M24', 23]].forEach(([l, i]) => c.texts.push(Tx(sx(i), TB + 18, l, 'middle', MID)));
+    const L1 = s, L2 = s.map((v, i) => v + a[i]), L3 = L2.map((v, i) => v + b[i]), P = arr => arr.map((v, i) => [sx(i), sy(v)]);
+    c.paths.push(Pt(closeBand(P(L1), P(s.map(() => 0))), SURF3, 'var(--surface)', 1));
+    c.paths.push(Pt(closeBand(P(L2), P(L1)), MID, 'var(--surface)', 1));
+    c.paths.push(Pt(closeBand(P(L3), P(L2)), hot(sig, true, INK2), 'var(--surface)', 1));
+    const e = n - 1;
+    c.texts.push(Tx(x1 + 8, sy((L2[e] + L3[e]) / 2) + 4, 'Social', 'start', hot(sig, true, INK)));
+    c.texts.push(Tx(x1 + 8, sy((L1[e] + L2[e]) / 2) + 4, 'Search', 'start', INK2));
+    c.texts.push(Tx(x1 + 8, sy(L1[e] / 2) + 4, 'Email', 'start', INK2));
+    return c;
+  },
+  stepLine(sig) {
+    const ch = [[0, 9], [5, 12], [14, 15], [20, 19]], x0 = 44, x1 = TW - 40, y0 = 10, sx = m => x0 + m / 24 * (x1 - x0), sy = v => TB - v / 25 * (TB - y0), c = C();
+    yAxis(c, [0, 10, 20], sy, x0, x1, t => '€' + t);
+    [0, 6, 12, 18, 24].forEach(m => c.texts.push(Tx(sx(m), TB + 18, 'M' + m, 'middle', MID)));
+    let d = 'M' + r1(sx(0)) + ' ' + r1(sy(9));
+    ch.slice(1).forEach(([m, v]) => { d += ' H' + r1(sx(m)) + ' V' + r1(sy(v)); });
+    d += ' H' + r1(sx(24));
+    c.paths.push(Pt(d, 'none', INK, 2));
+    ch.forEach(([m, v], i) => { const on = i === 3; c.dots.push(Dt(sx(m), sy(v), on ? 4.5 : 3, hot(sig, on, INK2))); c.texts.push(Tx(sx(m) + 6, sy(v) - 8, '€' + v, 'start', hot(sig, on, INK))); });
+    return c;
+  },
+  fan(sig) {
+    const nh = 18, nf = 12, h = [];
+    for (let i = 0; i < nh; i++) h.push(40 + i * 1.2 + 3 * Math.sin(i / 1.6));
+    const x0 = 36, x1 = TW - 52, y0 = 10, N = nh + nf - 1, sx = i => x0 + i / N * (x1 - x0), sy = v => TB - v / 100 * (TB - y0), c = C();
+    yAxis(c, [0, 25, 50, 75, 100], sy, x0, x1, t => String(t));
+    const last = h[nh - 1], m = [], u95 = [], l95 = [], u80 = [], l80 = [];
+    for (let j = 0; j <= nf; j++) { const mu = last + j * 1.3, sd = j * 1.1; m.push(mu); u95.push(mu + 1.96 * sd); l95.push(mu - 1.96 * sd); u80.push(mu + 1.28 * sd); l80.push(mu - 1.28 * sd); }
+    const P = arr => arr.map((v, j) => [sx(nh - 1 + j), sy(v)]);
+    c.paths.push(Pt(closeBand(P(u95), P(l95)), cv('seq-blue', 8)));
+    c.paths.push(Pt(closeBand(P(u80), P(l80)), cv('seq-blue', 6)));
+    c.paths.push(Pt(path(h.map((v, i) => [sx(i), sy(v)])), 'none', INK, 2));
+    c.paths.push(Pt(path(P(m)), 'none', INK, 1.5, '4 3'));
+    c.lines.push(Ln(sx(nh - 1), y0, sx(nh - 1), TB, MID, 1, '2 3'));
+    c.texts.push(Tx(sx(nh - 1) - 6, y0 + 8, 'TODAY', 'end', MID));
+    const e = m[nf];
+    c.dots.push(Dt(sx(N), sy(e), 4, hot(sig, true, INK)));
+    c.texts.push(Tx(sx(N) + 8, sy(e) + 4, String(Math.round(e)), 'start', hot(sig, true, INK)));
+    c.texts.push(Tx(sx(N) + 8, sy(u80[nf]) + 4, '80%', 'start', MID));
+    c.texts.push(Tx(sx(N) + 8, sy(u95[nf]) + 4, '95%', 'start', MID));
+    return c;
+  },
+  smallMult(sig) {
+    const names = ['Search', 'Social', 'Email', 'Video', 'Display', 'Audio'], sl = [0.6, 1.4, 0.2, -0.4, 1.9, 0.1], c = C(), cols = 3, gx = 14, gy = 16, pw = (TW - gx * (cols - 1)) / cols, ph = (TH - gy) / 2;
+    names.forEach((nm, k) => {
+      const px = (k % cols) * (pw + gx), py = Math.floor(k / cols) * (ph + gy), top = py + 20, bot = py + ph - 4, on = k === 4, v = [];
+      for (let i = 0; i < 20; i++) v.push(40 + sl[k] * i + 4 * Math.sin(i / 2 + k));
+      const sx = i => px + i / 19 * pw, sy = t => bot - t / 100 * (bot - top);
+      c.grid.push(Ln(px, sy(50), px + pw, sy(50), GRID));
+      c.lines.push(Ln(px, bot, px + pw, bot, INK));
+      c.paths.push(Pt(path(v.map((t, i) => [sx(i), sy(t)])), 'none', hot(sig, on, INK2), on ? 2 : 1.5));
+      c.texts.push(Tx(px, py + 10, nm.toUpperCase(), 'start', on ? hot(sig, on, INK) : MID));
+    });
+    return c;
+  },
+  calendar() {
+    const rnd = lcg(21), wk = 20, cs = 15, x0 = 40, y0 = 26, c = C();
+    ['M', 'W', 'F'].forEach((d, j) => c.texts.push(Tx(x0 - 8, y0 + j * 2 * cs + cs / 2 + 3, d, 'end', MID)));
+    ['JUN', 'JUL', 'AUG', 'SEP', 'OCT'].forEach((m, j) => c.texts.push(Tx(x0 + j * 4 * cs, y0 - 8, m, 'start', MID)));
+    for (let w = 0; w < wk; w++) for (let d = 0; d < 7; d++) {
+      const v = Math.min(1, Math.max(0, 0.25 + w * 0.025 + (d > 4 ? -0.2 : 0) + (rnd() - 0.5) * 0.4)), st = 9 - Math.round(v * 7);
+      c.rects.push(Rc(x0 + w * cs, y0 + d * cs, cs - 2, cs - 2, cv('seq-blue', st)));
+    }
+    const ly = y0 + 7 * cs + 24;
+    c.texts.push(Tx(x0, ly + 10, 'LESS', 'start', MID));
+    [8, 6, 4, 2, 1].forEach((st, j) => c.rects.push(Rc(x0 + 40 + j * 15, ly, 13, 13, cv('seq-blue', st))));
+    c.texts.push(Tx(x0 + 40 + 5 * 15 + 6, ly + 10, 'MORE', 'start', MID));
+    return c;
+  },
+  grouped(sig) {
+    const q = ['Q1', 'Q2', 'Q3', 'Q4'], a = [42, 48, 51, 55], b = [47, 53, 58, 66], x0 = 40, x1 = TW - 8, y0 = 28, sy = v => TB - v / 80 * (TB - y0), band = (x1 - x0) / 4, c = C();
+    if (!IB) yAxis(c, [0, 20, 40, 60, 80], sy, x0, x1, t => String(t));
+    sq(c, x0, 14, MID, IB ? 'PY 2025' : '2025', MID); sq(c, x0 + (IB ? 100 : 70), 14, INK2, IB ? 'AC 2026' : '2026');
+    q.forEach((t, i) => {
+      const w = band * 0.3, cx = x0 + i * band + band / 2, on = i === 3;
+      c.rects.push(Rc(cx - w - 1, sy(a[i]), w, TB - sy(a[i]), MID)); c.rects.push(Rc(cx + 1, sy(b[i]), w, TB - sy(b[i]), hot(sig, on, INK2)));
+      c.texts.push(Tx(cx, TB + 18, t, 'middle', MID));
+      if (on || IB) c.texts.push(Tx(cx + 1 + w / 2, sy(b[i]) - 6, String(b[i]), 'middle', hot(sig, on, INK)));
+    });
+    c.lines.push(Ln(x0, TB, x1, TB, INK));
+    return c;
+  },
+  bullet(sig) {
+    const d = [['Revenue', 92], ['Leads', 104], ['Pipeline', 88], ['Retention', 71]], x0 = 80, x1 = TW - 48, y0 = 4, sx = v => x0 + v / 120 * (x1 - x0), band = (TB - y0) / d.length, c = C();
+    [0, 50, 100].forEach(t => c.texts.push(Tx(sx(t), TB + 18, t + '%', 'middle', MID)));
+    d.forEach(([k, v], i) => {
+      const y = y0 + i * band + band * 0.25, h = band * 0.5, on = k === 'Retention';
+      c.rects.push(Rc(x0, y, x1 - x0, h, SURF3)); c.rects.push(Rc(x0, y + h * 0.3, sx(v) - x0, h * 0.4, IB ? AC : hot(sig, on, INK2)));
+      c.lines.push(Ln(sx(100), y - 3, sx(100), y + h + 3, INK, 2));
+      c.texts.push(Tx(x0 - 8, y + h / 2 + 4, k, 'end', INK2)); c.texts.push(Tx(x1 + 8, y + h / 2 + 4, v + '%', 'start', IB ? INK : hot(sig, on, INK)));
+      if (IB) c.rects.push(Rc(x1 + 2, y + 2, 3, h - 4, v >= 100 ? VP : VN));
+    });
+    return c;
+  },
+  stacked100(sig) {
+    const d = [['Social', [62, 24, 14]], ['Video', [55, 30, 15]], ['Search', [46, 38, 16]], ['Email', [18, 70, 12]]];
+    const x0 = 72, x1 = TW - 48, y0 = 24, sx = v => x0 + v / 100 * (x1 - x0), band = (TB - y0) / d.length, cl = [hot(sig, true, INK2), MID, SURF3], c = C();
+    sq(c, x0, 14, cl[0], 'NEW'); sq(c, x0 + 56, 14, MID, 'RETURNING'); sq(c, x0 + 160, 14, SURF3, 'LAPSED');
+    d.forEach(([k, s], i) => {
+      const y = y0 + i * band + band * 0.2, h = band * 0.6; let x = x0;
+      s.forEach((v, j) => { const w = v / 100 * (x1 - x0); c.rects.push(Rc(x + (j ? 1 : 0), y, w - (j ? 1 : 0), h, cl[j])); x += w; });
+      c.texts.push(Tx(x0 - 8, y + h / 2 + 4, k, 'end', INK2)); c.texts.push(Tx(x1 + 8, y + h / 2 + 4, s[0] + '%', 'start', hot(sig, true, INK)));
+    });
+    if (!IB) [0, 50, 100].forEach(t => c.texts.push(Tx(sx(t), TB + 18, t + '%', 'middle', MID)));
+    return c;
+  },
+  donut(sig) {
+    const d = [['Search', 44], ['Social', 26], ['Email', 18], ['Other', 12]], cl = [sig ? ACC : INK, INK2, MID, SURF3];
+    const cx = 100, cy = TH / 2 - 4, R = 84, r = 54, c = C(), P = (a, rr) => [cx + rr * Math.cos(a), cy + rr * Math.sin(a)];
+    let a0 = -Math.PI / 2;
+    d.forEach(([k, v], i) => {
+      const a1 = a0 + v / 100 * 2 * Math.PI, lg = a1 - a0 > Math.PI ? 1 : 0, p1 = P(a0, R), p2 = P(a1, R), p3 = P(a1, r), p4 = P(a0, r);
+      c.paths.push(Pt('M' + r1(p1[0]) + ' ' + r1(p1[1]) + ' A' + R + ' ' + R + ' 0 ' + lg + ' 1 ' + r1(p2[0]) + ' ' + r1(p2[1]) + ' L' + r1(p3[0]) + ' ' + r1(p3[1]) + ' A' + r + ' ' + r + ' 0 ' + lg + ' 0 ' + r1(p4[0]) + ' ' + r1(p4[1]) + ' Z', cl[i], 'var(--surface)', 2));
+      a0 = a1;
+      const ly = 54 + i * 34;
+      c.rects.push(Rc(212, ly - 10, 12, 12, cl[i])); c.texts.push(Tx(232, ly, k, 'start', INK2)); c.texts.push(Tx(TW - 12, ly, v + '%', 'end', i === 0 ? cl[0] : INK));
+    });
+    c.texts.push(TxZ(cx, cy + 9, '44%', 'middle', cl[0], 26));
+    return c;
+  },
+  treemap(sig) {
+    const d = [['Search', 34], ['Social', 22], ['Email', 14], ['Affiliate', 11], ['Display', 9], ['Video', 6], ['Audio', 4]], c = C();
+    const fill = i => (i === 0 ? (sig ? ACC : INK) : i < 3 ? INK2 : i < 5 ? MID : SURF3), tc = i => (i === 0 ? '#FFFFFF' : i < 3 ? 'var(--surface)' : INK);
+    let x = 0, y = 0, w = TW, h = TH, rest = 100;
+    d.forEach(([k, v], i) => {
+      const s = v / rest, last = i === d.length - 1; let rx = x, ry = y, rw, rh;
+      if (last) { rw = w; rh = h; } else if (w >= h) { rw = w * s; rh = h; x += rw; w -= rw; } else { rw = w; rh = h * s; y += rh; h -= rh; }
+      rest -= v;
+      c.rects.push(Rc(rx + 1, ry + 1, rw - 2, rh - 2, fill(i)));
+      if (rw > k.length * 7.2 + 16 && rh > 40) { c.texts.push(Tx(rx + 8, ry + 18, k, 'start', tc(i))); c.texts.push(Tx(rx + 8, ry + 34, v + '%', 'start', tc(i))); }
+    });
+    return c;
+  },
+  waffle(sig) {
+    const cs = 17, x0 = 16, y0 = 16, c = C(), n = 37;
+    for (let i = 0; i < 100; i++) { const col = Math.floor(i / 10), row = 9 - (i % 10); c.rects.push(Rc(x0 + col * cs, y0 + row * cs, cs - 3, cs - 3, i < n ? hot(sig, true, INK) : SURF3)); }
+    c.texts.push(TxZ(216, 92, '37%', 'start', hot(sig, true, INK), 44));
+    c.texts.push(Tx(218, 120, 'OF TRIALS', 'start', INK2)); c.texts.push(Tx(218, 138, 'CONVERT TO PAID', 'start', INK2));
+    c.texts.push(Tx(218, 180, '1 SQUARE = 1%', 'start', MID));
+    return c;
+  },
+  mekko(sig) {
+    const m = [['DE', 40, [30, 45, 25]], ['FR', 25, [22, 40, 38]], ['IT', 20, [35, 30, 35]], ['ES', 15, [18, 52, 30]]], x0 = 12, x1 = TW - 12, y0 = 26, y1 = TB, cl = [hot(sig, true, INK2), MID, SURF3], c = C();
+    sq(c, x0, 14, cl[0], 'US'); sq(c, x0 + 50, 14, MID, 'RIVAL'); sq(c, x0 + 122, 14, SURF3, 'OTHER');
+    let x = x0;
+    m.forEach(([k, wd, s]) => {
+      const w = wd / 100 * (x1 - x0); let y = y0;
+      s.forEach((v, j) => { const h = v / 100 * (y1 - y0); c.rects.push(Rc(x + 1, y + 1, w - 2, h - 2, cl[j])); y += h; });
+      c.texts.push(Tx(x + w / 2, TB + 14, k, 'middle', INK2)); c.texts.push(Tx(x + w / 2, TB + 28, wd + '%', 'middle', MID));
+      x += w;
+    });
+    return c;
+  },
+  waterfall(sig) {
+    const st = [['Q2', 420, 't'], ['New', 120], ['Upsell', 60], ['Churn', -90], ['Price', -30], ['Q3', 480, 't']], x0 = 44, x1 = TW - 8, y0 = 10, sy = v => TB - v / 600 * (TB - y0), band = (x1 - x0) / st.length, c = C();
+    if (!IB) yAxis(c, [0, 200, 400, 600], sy, x0, x1, t => String(t)); else c.lines.push(Ln(x0, TB, x1, TB, INK));
+    let run = 0;
+    st.forEach(([k, v, t], i) => {
+      const w = band * 0.6, x = x0 + i * band + (band - w) / 2; let lo, hi, f, lab;
+      if (t) { lo = 0; hi = v; run = v; f = IB ? AC : INK; lab = String(v); }
+      else { lo = v > 0 ? run : run + v; hi = v > 0 ? run + v : run; run += v; f = IB ? (v > 0 ? VP : VN) : v > 0 ? INK2 : hot(sig, k === 'Churn', MID); lab = (v > 0 ? '+' : '−') + Math.abs(v); }
+      c.rects.push(Rc(x, sy(hi), w, sy(lo) - sy(hi), f));
+      c.texts.push(Tx(x + w / 2, sy(hi) - 6, lab, 'middle', !IB && k === 'Churn' ? hot(sig, true, INK) : INK));
+      c.texts.push(Tx(x + w / 2, TB + 18, k, 'middle', MID));
+      if (i < st.length - 1) c.lines.push(Ln(x + w, sy(run), x + band, sy(run), MID, 1, '2 2'));
+    });
+    return c;
+  },
+  sankey(sig) {
+    const L = [['Paid', 50], ['Organic', 30], ['Referral', 20]], R = [['Converted', 39], ['Dropped', 61]], F = [[0, 0, 15], [0, 1, 35], [1, 0, 12], [1, 1, 18], [2, 0, 12], [2, 1, 8]];
+    const xl = 80, xr = TW - 100, nw = 10, y0 = 6, gap = 12, k = (TB + 14 - y0 - gap * 2) / 100, c = C(), ly = [], ry = [];
+    let y = y0; L.forEach(([, v]) => { ly.push(y); y += v * k + gap; });
+    y = y0; R.forEach(([, v]) => { ry.push(y); y += v * k + gap * 2; });
+    const lo = L.map(() => 0), ro = R.map(() => 0), X1 = xl + nw, X2 = xr, xm = (X1 + X2) / 2;
+    F.forEach(([a, b, v]) => {
+      const h = v * k, ya = ly[a] + lo[a], yb = ry[b] + ro[b], on = a === 2 && b === 0; lo[a] += h; ro[b] += h;
+      c.paths.push(Pt('M' + r1(X1) + ' ' + r1(ya) + ' C' + r1(xm) + ' ' + r1(ya) + ' ' + r1(xm) + ' ' + r1(yb) + ' ' + r1(X2) + ' ' + r1(yb) + ' L' + r1(X2) + ' ' + r1(yb + h) + ' C' + r1(xm) + ' ' + r1(yb + h) + ' ' + r1(xm) + ' ' + r1(ya + h) + ' ' + r1(X1) + ' ' + r1(ya + h) + ' Z', on && sig ? hlT(6) : SURF3, 'var(--surface)', 1));
+    });
+    L.forEach(([n, v], i) => { c.rects.push(Rc(xl, ly[i], nw, v * k, INK)); c.texts.push(Tx(xl - 8, ly[i] + v * k / 2 + 4, n, 'end', INK2)); });
+    R.forEach(([n, v], i) => { c.rects.push(Rc(xr, ry[i], nw, v * k, INK)); c.texts.push(Tx(xr + nw + 8, ry[i] + v * k / 2 - 4, n, 'start', INK2)); c.texts.push(Tx(xr + nw + 8, ry[i] + v * k / 2 + 12, v + '%', 'start', INK)); });
+    return c;
+  },
+  funnel(sig) {
+    const d = [['Visit', 10000], ['Signup', 4200], ['Trial', 2100], ['Paid', 630], ['Retained', 480]], x0 = 78, x1 = TW - 64, cx = (x0 + x1) / 2, y0 = 6, band = (TB + 14 - y0) / d.length, c = C();
+    d.forEach(([k, v], i) => {
+      const w = Math.max(4, v / 10000 * (x1 - x0)), y = y0 + i * band + band * 0.15, h = band * 0.7;
+      c.rects.push(Rc(cx - w / 2, y, w, h, INK2));
+      c.texts.push(Tx(x0 - 8, y + h / 2 + 4, k, 'end', INK2));
+      c.texts.push(Tx(cx + w / 2 + 6, y + h / 2 + 4, v.toLocaleString('en'), 'start', INK));
+      if (i > 0) { const r = Math.round(v / d[i - 1][1] * 100), on = i === 3; c.texts.push(Tx(TW - 4, y - band * 0.15 + 4, '↓ ' + r + '%', 'end', hot(sig, on, MID))); }
+    });
+    return c;
+  },
+  tile() {
+    const T = [['IS', 0, 0], ['NO', 4, 0], ['SE', 5, 0], ['FI', 6, 0], ['IE', 0, 1], ['GB', 1, 1], ['DK', 4, 1], ['EE', 6, 1], ['NL', 3, 2], ['DE', 4, 2], ['PL', 5, 2], ['LV', 6, 2], ['FR', 2, 3], ['BE', 3, 3], ['CZ', 4, 3], ['SK', 5, 3], ['LT', 6, 3], ['PT', 0, 4], ['ES', 1, 4], ['CH', 3, 4], ['AT', 4, 4], ['HU', 5, 4], ['RO', 6, 4], ['IT', 3, 5], ['SI', 4, 5], ['HR', 5, 5], ['BG', 6, 5], ['GR', 7, 5]];
+    const rnd = lcg(9), ts = 30, x0 = 24, y0 = 12, c = C();
+    T.forEach(([k, col, row]) => {
+      const st = 1 + Math.floor(rnd() * 8);
+      c.rects.push(Rc(x0 + col * ts, y0 + row * ts, ts - 3, ts - 3, cv('seq-blue', st)));
+      c.texts.push(TxZ(x0 + col * ts + (ts - 3) / 2, y0 + row * ts + (ts - 3) / 2 + 4, k, 'middle', st <= 3 ? '#FFFFFF' : '#282828', 11));
+    });
+    c.texts.push(Tx(296, y0 + 10, 'HIGH', 'start', MID));
+    [1, 3, 5, 7, 9].forEach((st, j) => c.rects.push(Rc(296, y0 + 20 + j * 24, 14, 22, cv('seq-blue', st))));
+    c.texts.push(Tx(296, y0 + 20 + 5 * 24 + 14, 'LOW', 'start', MID));
+    return c;
+  }
+};
+
+const P_ = 'Preferred', W_ = 'Use with care';
+const TIER_L = { core: 'IBCS core', comp: 'IBCS-compatible', out: 'Outside IBCS' };
+const TIERS = { divBar: 'core', likert: 'comp', surplus: 'comp', bubble: 'comp', connected: 'comp', corr: 'comp', lollipop: 'comp', dumbbell: 'comp', slope: 'out', bump: 'out', box: 'comp', violin: 'out', strip: 'comp', ecdf: 'comp', pyramid: 'comp', stackedArea: 'out', stepLine: 'comp', fan: 'comp', smallMult: 'core', calendar: 'out', grouped: 'comp', bullet: 'comp', stacked100: 'core', donut: 'out', treemap: 'out', waffle: 'out', mekko: 'core', waterfall: 'core', sankey: 'out', funnel: 'comp', tile: 'out', varBar: 'core', pins: 'core', integrated: 'core', scenario: 'core', hWaterfall: 'core', chartTable: 'core' };
+const CAT = [
+  { id: 'variance', ibOnly: true, name: 'Variance', q: 'How far is the actual from plan or prior year, and is that good or bad?', also: [], items: [
+    ['varBar', 'Absolute variance bar', 'How much did each item gain or lose against PY?', 'Comparing ΔPY or ΔPL in units across a structure.', 'The reference is not a scenario such as PY, PL or FC.', 'Green means good and red means bad, by business meaning, not by sign. The axis is a 2px ink rule labelled ΔPY.', P_],
+    ['pins', 'Relative variance pins', 'How large is the change in percent, period by period?', 'ΔPY% or ΔPL% over time, placed beside an absolute chart.', 'Base values are near zero, so the percentages explode.', 'Pins are 2px stems with 8px square heads. Time runs left to right.', P_],
+    ['integrated', 'Integrated variance', 'What happened, and how far is it from PY?', 'AC vs PY per period, with the variance underneath on the same scale.', 'There are more than about 12 periods; the variance band gets too thin.', 'PY sits behind AC, offset left. The ΔPY band uses the value scale of the main chart.', P_],
+    ['scenario', 'Scenario column', 'Where do actuals, forecast and plan stand for the year?', 'Year-to-go views that mix AC, FC and PL.', 'Only one scenario exists.', 'AC solid, FC hatched at 45°, PL as an outline offset right. One legend, top-left.', P_],
+    ['hWaterfall', 'Structure waterfall', 'How does the top line become the bottom line?', 'P&L-style bridges across a structure, read top to bottom.', 'Bridging between periods. Use the vertical waterfall.', 'Totals in AC, deductions in mid. Dashed connectors carry the running total.', P_],
+    ['chartTable', 'Chart table', 'What are the exact numbers, and which ones matter?', 'Reports where readers need exact values next to the variance.', 'There are more than about 15 rows without grouping.', 'Numbers are right-aligned, PY in mid. ΔPY is an embedded variance bar on one shared scale.', P_]] },
+  { id: 'deviation', name: 'Deviation', q: 'How far is each value from a reference point?', also: [], items: [
+    ['divBar', 'Diverging bar', 'Which items sit above or below the reference, and by how much?', 'Signed change vs target, budget or prior period across categories.', 'There is no meaningful zero or reference.', 'Zero is an ink rule in the centre. Only the extreme the title names takes the accent.', P_],
+    ['likert', 'Diverging stacked bar', 'How is sentiment split around neutral?', 'Likert scales and other ordered responses with a neutral middle.', 'The categories have no order. Use a 100% stacked bar.', 'Neutral straddles the centre line. Use the warm/cool diverging palette, never the accent.', P_],
+    ['surplus', 'Surplus / deficit', 'When did a series run above or below its target?', 'One continuous series against a target or break-even line.', 'There are several series, because the fills collide.', 'Fill above the line in surface-3 and below it in vermilion-7. The ink line sits on top.', P_]] },
+  { id: 'correlation', name: 'Correlation', q: 'How do two or more measures relate?', also: [['03-05', 'Scatter', '#c05']], items: [
+    ['bubble', 'Bubble', 'How do three measures relate at once?', 'A scatter where a third measure, shown as size, changes the reading.', 'Sizes must be compared precisely; area is hard to read.', 'Area, not radius, encodes the value. Draw large bubbles first and ring each one in surface.', W_],
+    ['connected', 'Connected scatter', 'How did two measures move together over time?', 'Two linked measures over up to about 15 time steps.', 'The path crosses itself repeatedly.', 'Label the first and last points with their year. The accent goes on the latest point.', W_],
+    ['corr', 'Correlation heatmap', 'Which pairs of measures move together?', 'Screening up to about 12 measures for pairwise correlation.', 'The reader needs the shape of a relationship. Use a scatter.', 'Political diverging scale centred on 0. Print the coefficient in each cell and grey out the diagonal.', P_]] },
+  { id: 'ranking', name: 'Ranking', q: 'Where does each item stand in an ordered list?', also: [['03-01', 'Bar', '#c01']], items: [
+    ['lollipop', 'Lollipop', 'What is the order when every value is high?', 'Many ranked items with similar, large values, where bars would become a wall of ink.', 'There are fewer than five items. A bar chart is clearer.', 'Stems are 1.5px mid and heads are 5px. The value sits after the head.', P_],
+    ['dumbbell', 'Dumbbell', 'How did each item move between two points?', 'Before/after or two-group comparison per item.', 'There are more than two points per item. Use a slope or line chart.', 'The earlier point is mid, the later point ink, and the connector a 4px surface-3 line. Sort by the later value.', P_],
+    ['slope', 'Slope', 'Who rose and who fell between two periods?', 'Change across exactly two periods for up to about 10 items.', 'The labels at either end would collide.', 'Put the name and value at both ends. Only the line that crosses the others takes the accent.', P_],
+    ['bump', 'Bump', 'How did the ranks change over several periods?', 'Rank order over 4–10 periods for up to 8 items.', 'The size of the gap matters more than the rank.', 'Rank #1 is at the top. Other items are in mid; the item of interest is a 3px accent line.', W_]] },
+  { id: 'distribution', name: 'Distribution', q: 'How are the values spread?', also: [['03-06', 'Histogram', '#c06']], items: [
+    ['box', 'Box plot', 'How do several distributions compare in centre and spread?', 'Comparing 3–20 groups on median, quartiles and range.', 'The audience is non-technical, or a distribution has two peaks.', 'Box fill is surface-3, whiskers are 1px ink, and the median is a 2.5px rule. State the whisker rule in the subtitle.', P_],
+    ['violin', 'Violin', 'What shape does each group’s distribution take?', 'Groups where the shape matters, for example two peaks.', 'Samples are small (n < 30), because the smoothing invents shape.', 'Mirror the density and scale each group to its own peak. State the bandwidth.', W_],
+    ['strip', 'Strip plot', 'Where does every observation sit?', 'Small to medium samples (n < 200 per group) where individual points matter.', 'There are thousands of points. Use a histogram or a violin.', 'Jitter only along the category axis. The mean is a 2px ink tick.', P_],
+    ['ecdf', 'Cumulative (ECDF)', 'What share of values falls below any threshold?', 'Comparing distributions precisely, for example time-to-event or percentiles.', 'The audience is general; the cumulative reading needs explaining.', 'The y-axis runs from 0 to 100%. Emphasise the 50% gridline and mark the medians on it.', P_],
+    ['pyramid', 'Population pyramid', 'How does a distribution split between two groups?', 'Age or tenure bands split across two groups.', 'There are more than two groups.', 'The bands share one central label column, and both sides use the same scale.', P_]] },
+  { id: 'time', name: 'Change over time', q: 'How did it move, and when?', also: [['03-02', 'Column', '#c02'], ['03-03', 'Line', '#c03'], ['03-04', 'Area', '#c04']], items: [
+    ['stackedArea', 'Stacked area', 'How do a total and its make-up change?', 'Up to four components of a total over time.', 'The middle layers must be read precisely; only the bottom layer has a flat baseline.', 'Put the most stable layer at the bottom. Separate layers with a 1px surface rule and label them at the right edge.', W_],
+    ['stepLine', 'Step line', 'When did a value change, and to what?', 'Values that change at discrete moments, such as price, plan or headcount.', 'The measure is continuous; steps imply nothing changed in between.', 'Mark each change with a dot and its new value.', P_],
+    ['fan', 'Fan chart', 'Where is the forecast heading, and how sure are we?', 'Forecasts with prediction intervals.', 'There is no uncertainty estimate. Never draw bands by hand.', 'History is solid ink and the forecast dashed. 80% and 95% bands are blue-6 and blue-8. Mark today.', P_],
+    ['smallMult', 'Small multiples', 'How does each of many series trend?', 'More than four series that share a measure and a scale.', 'The series use different units or scales.', 'Every panel uses the same y-scale. Panel names are mono caps, top-left.', P_],
+    ['calendar', 'Calendar heatmap', 'What daily and weekly pattern does activity follow?', 'Daily values over several months, where the weekday rhythm matters.', 'Exact values must be read; colour is imprecise.', 'Weeks run left to right and days top to bottom. Use sequential blue with a legend.', W_]] },
+  { id: 'magnitude', name: 'Magnitude', q: 'How big is each value, compared with the others?', also: [['03-01', 'Bar', '#c01'], ['03-02', 'Column', '#c02']], items: [
+    ['grouped', 'Grouped column', 'How do two series compare within each category?', 'Two, at most three, series across a few categories.', 'There are more than three series. Use small multiples or a dot plot.', 'The prior series is mid and the current one ink-2. A 2px gap separates paired columns.', P_],
+    ['bullet', 'Bullet', 'How does each measure stand against its target?', 'KPIs against targets in dense layouts.', 'There is no target.', 'The track is surface-3 up to the axis maximum, the bar is ink-2 at 40% height, and the target is a 2px ink tick.', P_]] },
+  { id: 'part', name: 'Part-to-whole', q: 'What is the whole made of?', also: [], items: [
+    ['stacked100', '100% stacked bar', 'How does the mix differ across groups?', 'Comparing the share of 2–4 parts across groups.', 'Absolute totals matter. Use stacked or grouped bars.', 'The part of interest sits first, against the baseline, and its share is printed at the end of the bar.', P_],
+    ['donut', 'Donut', 'What share of the whole is one part?', 'One share that matters, with at most four slices.', 'Slices of similar size must be compared; angles are hard to read.', 'Start at 12 o’clock with the largest slice and go clockwise. Print the key share in the centre.', W_],
+    ['treemap', 'Treemap', 'How is a total divided, including the small parts?', 'Many parts, or a hierarchy, where a few large parts dominate.', 'The parts are of similar size, or precise comparison matters.', 'Largest tile top-left, with 2px surface gaps. Label only tiles larger than 56 × 36.', W_],
+    ['waffle', 'Waffle', 'What share is it, in a form anyone can count?', 'A single percentage for a general audience.', 'Several shares need comparing.', 'A 10 × 10 grid, filled in columns from the bottom-left. One square equals 1%.', P_],
+    ['mekko', 'Marimekko', 'How do share and size combine across segments?', 'Market share within markets of different sizes.', 'There are more than five columns or segments.', 'Column width is market size and segment height is share. Label the widths under each column.', W_]] },
+  { id: 'flow', name: 'Flow', q: 'Where does volume go between states?', also: [], items: [
+    ['waterfall', 'Waterfall', 'What moved a total from its start to its end?', 'Bridging two totals through additions and subtractions.', 'The steps aren’t additive.', 'Totals are ink, increases ink-2 and decreases mid. Dashed connectors carry the running total.', P_],
+    ['sankey', 'Sankey', 'Where does volume flow between stages?', 'Two or three stages, with up to about eight nodes per stage.', 'Flows loop back, or there are many small flows.', 'Nodes are 10px ink bars and ribbons are surface-3. Only the flow the title names takes the accent.', W_],
+    ['funnel', 'Funnel', 'Where are people lost between steps?', 'A strictly sequential conversion process.', 'Steps can be skipped or reordered.', 'Centred bars drawn to scale. Print the step conversion at the right; the worst step takes the accent.', P_]] },
+  { id: 'spatial', name: 'Spatial', q: 'Where does it happen?', also: [], items: [
+    ['tile', 'Tile grid map', 'How does a value vary by region, with every region weighted equally?', 'Comparing regions where small ones would vanish on a real map.', 'Shape or distance matters. Use a choropleth on real geography.', 'One equal tile per region, with its code inside. Use sequential blue with a legend.', W_]] }
+];
+
+class Component extends DCLogic {
+  state = { fam: 'all', vw: 1280 };
+  componentDidMount() { this.apply(); this.onResize = () => this.setState({ vw: window.innerWidth }); window.addEventListener('resize', this.onResize); this.onResize(); }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); }
+  componentDidUpdate() { this.apply(); }
+  apply() {
+    const theme = (this.props.theme ?? 'light') === 'dark' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+    document.body.classList.toggle('dark', theme === 'dark');
+    document.documentElement.setAttribute('data-notation', this.props.notation ?? 'ibcs');
+    document.documentElement.setAttribute('data-hl', this.props.highlight ?? 'blue');
+    document.documentElement.setAttribute('data-variance', this.props.variance ?? 'jade');
+  }
+  renderVals() {
+    IB = (this.props.notation ?? 'ibcs') === 'ibcs';
+    const sig = this.props.signal ?? true;
+    const palettes = PAL.map(p => ({
+      ...p, n: String(p.hex.length), hasOld: !!p.old, dot: p.old ? 'var(--accent-01)' : 'var(--mid)',
+      token: '--chart-' + p.key + '-1 … ' + p.hex.length,
+      stops: p.hex.map((h, i) => {
+        const changed = p.old && p.old[i] !== h, anchor = p.anchor === i + 1;
+        return {
+          v: 'var(--chart-' + p.key + '-' + (i + 1) + ')', i: String(i + 1).padStart(2, '0') + (anchor ? ' ●' : ''), hex: h,
+          hc: changed ? 'var(--ink)' : 'var(--mid)', old: p.old ? p.old[i] : 'transparent',
+          ring: 'inset 0 0 0 1px var(--rule-c)'
+        };
+      })
+    }));
+    return {
+      showGrid: this.props.showGrid ?? false,
+      cols: Array.from({ length: 12 }, () => ({})),
+      palettes,
+      bar: withText(bar(sig)), col: withText(column(sig)), line: withText(line(sig)), area: withText(area(sig)), scatter: withText(scatter(sig)), hist: withText(hist(sig)),
+      ibcs: IB, classic: !IB, hatchDefs,
+      visionFilter: VISION[this.props.vision ?? 'normal'] ? 'url(#cvd-' + VISION[this.props.vision] + ')' : 'none',
+      visionOn: (this.props.vision ?? 'normal') !== 'normal', visionName: (this.props.vision ?? 'normal').toUpperCase(),
+      checks: (() => {
+        const dk = (this.props.theme ?? 'light') === 'dark' ? 1 : 0, vo = this.props.variance ?? 'jade';
+        const pos = HEX.pos[vo][dk], hl = IB ? HEX.blue : HEX.neg;
+        const sets = [
+          ['Variance · good vs bad', vo === 'jade' ? 'jade · current' : 'emerald · v1', [pos, HEX.neg]],
+          ['Variance · emerald (v1)', 'for comparison', [HEX.pos.emerald[dk], HEX.neg]],
+          ['Highlight vs alert', IB ? 'blue vs vermilion' : 'classic: same colour', [hl, HEX.neg]],
+          ['Highlight vs AC mark', 'highlight vs ink-2', [hl, HEX.ink2[dk]]],
+          ['Categorical · first 3', 'slots 1–3', HEX.cat[dk].slice(0, 3)],
+          ['Categorical · all 6', 'slots 1–6', HEX.cat[dk]],
+          ['Categorical · grey', 'IBCS · 4 steps', HEX.catg[dk]],
+          ['Diverging · arms', 'stops 3 vs 11', HEX.div],
+          ['Diverging · arms (v1)', 'green vs orange', HEX.divV1]
+        ];
+        const L = (h, k) => labOf(h, k)[0];
+        const ramps = [
+          ['Ramp · sequential blue', 'min adjacent ΔL*', ['#F2F5FF', '#E2ECFF', '#CDDCFF', '#B3C9FF', '#97B1FF', '#7A97FF', '#5B7FFF', '#2133B0', '#111D7A']],
+          ['Ramp · sequential vermilion', 'min adjacent ΔL*', ['#FEF1EC', '#FCDDD1', '#F9C3AD', '#F6A487', '#F28462', '#EE6540', '#E8431A', '#9A2A0F', '#5C1608']],
+          ['Ramp · short interpolation', 'min adjacent ΔL*', ["#FFB464","#FF8C37","#F56E32","#E8431A","#CD0091","#6E05A5","#192387","#121A66"]],
+          ['Ramp · long interpolation', 'min adjacent ΔL*', ['#F5E600', '#A0D700', '#00C300', '#00A578', '#0F8C7D', '#006E91', '#004B9B', '#002891']]
+        ];
+        const rampRows = ramps.map(([name, note, set]) => ({ name, note, sw: set, cells: [null, 'prot', 'deut', 'trit', 'grey'].map(k => {
+          let m = 99; for (let i = 1; i < set.length; i++) m = Math.min(m, L(set[i - 1], k) - L(set[i], k));
+          const v = Math.round(m), g = v >= 6 ? '●' : v >= 3 ? '◐' : '○';
+          return { filter: k ? 'url(#cvd-' + k + ')' : 'none', v: String(v), g, c: v >= 3 ? 'var(--ink)' : 'var(--mid)' };
+        }) }));
+        return rampRows.concat(sets.map(([name, note, set]) => ({ name, note, sw: set, cells: [null, 'prot', 'deut', 'trit', 'grey'].map(k => {
+          const v = Math.round(minDE(set, k)), g = v >= 40 ? '●' : v >= 20 ? '◐' : '○';
+          return { filter: k ? 'url(#cvd-' + k + ')' : 'none', v: String(v), g, c: v >= 20 ? 'var(--ink)' : 'var(--mid)' };
+        }) })));
+      })(), famHeadline: IB ? 'Ten families, one question each.' : 'Nine families, one question each.',
+      filters: [{ id: 'all', name: 'All', n: CAT.filter(f => IB || !f.ibOnly).reduce((a, f) => a + f.items.length, 0) }].concat(CAT.filter(f => IB || !f.ibOnly).map(f => ({ id: f.id, name: f.name, n: f.items.length }))).map(f => {
+        const on = this.state.fam === f.id;
+        return { ...f, n: String(f.n), go: () => this.setState({ fam: f.id }), bg: on ? 'var(--ink)' : 'transparent', fg: on ? 'var(--surface)' : 'var(--ink-2)', nc: on ? 'var(--surface)' : 'var(--mid)' };
+      }),
+      _f: (!IB && this.state.fam === 'variance' && setTimeout(() => this.setState({ fam: 'all' }))) || 0,
+      families: CAT.filter(f => IB || !f.ibOnly).map((f, fi) => ({ f, fi })).filter(({ f }) => this.state.fam === 'all' || this.state.fam === f.id).map(({ f, fi }) => {
+        const fidx = '04-' + String(fi + 1).padStart(2, '0');
+        return {
+          idx: fidx, name: f.name, q: f.q, count: f.items.length + (f.items.length === 1 ? ' entry' : ' entries'),
+          hasAlso: f.also.length > 0, also: f.also.map(([i, n, h]) => ({ label: i + ' ' + n, href: h })),
+          items: f.items.map(([g, name, q, use, avoid, rule, verdict], ii) => ({
+            idx: fidx + '-' + String(ii + 1).padStart(2, '0'), span: String(this.state.vw < 768 ? 12 : this.state.vw < 1100 ? 6 : 4), name, q, use, avoid, rule, verdict,
+            verdict: IB ? TIER_L[TIERS[g]] : verdict,
+            vdot: (IB ? TIERS[g] === 'core' : verdict === P_) ? 'var(--ink)' : 'transparent',
+            vring: (IB ? TIERS[g] === 'core' : verdict === P_) ? 'none' : 'inset 0 0 0 1.5px ' + (IB && TIERS[g] === 'comp' ? 'var(--ink)' : 'var(--mid)'),
+            c: withSize(G[g](sig), 12)
+          }))
+        };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+# Identity and links (D-08) — single source for home, /about, and
+# Footer. COPY-01 (D-124): github/linkedin/cv are empty until real
+# URLs exist. Empty string is valid. '#' is a placeholder and is
+# rejected by collectPlaceholders. Pages omit <a> when the href is
+# empty. Do not invent GitHub, LinkedIn, or CV paths.
+name: Rafael Braga-Kribitz
+location: Graz, AT
+email: rafaelbragakribitz@gmail.com
+github: "https://github.com/RafaelBraga-Kribitz"
+# stub — owner to supply URL
+linkedin: ""
+# stub — owner to supply URL
+kaggle: ""
+cv: ""

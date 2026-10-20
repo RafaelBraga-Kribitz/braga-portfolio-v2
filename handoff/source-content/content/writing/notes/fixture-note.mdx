@@ -1,0 +1,52 @@
+---
+title: Reconstructing an MMM from First Principles
+date: 2026-06-19
+updated: 2026-06-24
+kind: note
+code: 02-02-01
+summary: A working note on rebuilding a media-mix model by hand to see what the libraries hide.
+status: under-revision
+draft: true
+tags:
+  - measurement
+  - bayesian
+locale: en
+---
+
+Building a media-mix model from scratch to understand what the libraries hide. The
+first question, before any fitting, is narrow: what does one unit of spend in each
+channel contribute, net of everything else?
+
+An early, partially-pooled fit gives the contribution shares below. Search carries
+more than its 21% spend share suggests — the highlighted bar is the one to
+interrogate next.
+
+<FigRow id="02-02-01-1" rows={4} register="storytelling" caption="contribution share by channel (interim fit, wide intervals). Search highlighted.">
+  <svg viewBox="0 0 320 120" preserveAspectRatio="xMidYMid meet" style={{ width: '100%', height: '100%', display: 'block' }} role="img" aria-label="Contribution share by channel">
+    <rect x="16" y="20" width="40" height="80" fill="var(--mid)" />
+    <rect x="80" y="44" width="40" height="56" fill="var(--accent-01)" />
+    <rect x="144" y="64" width="40" height="36" fill="var(--mid)" />
+    <rect x="208" y="80" width="40" height="20" fill="var(--mid)" />
+  </svg>
+</FigRow>
+
+The estimator is a partially-pooled regression that shares strength across channels.
+The core of the fit is short:
+
+```py
+import numpy as np
+
+def contribution(spend, beta, adstock):
+    """Return per-channel contribution after adstock decay."""
+    carried = np.convolve(spend, adstock)[: len(spend)]
+    return beta * carried  # net effect, one unit of spend
+```
+
+<Callout variant="revision">
+  The intervals on the two smallest channels are still too wide to publish — this
+  note is under revision until the pooled prior is defended.
+</Callout>
+
+The single number that reframed the debate:
+
+<Stat value="+6 pp" label="Search vs spend share" note="27% contribution on 21% spend" accent weight={500} />

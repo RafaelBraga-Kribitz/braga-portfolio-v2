@@ -1,0 +1,66 @@
+---
+title: Energy Procurement Risk Analyzer
+date: 2026-07-24
+kind: brief
+code: 01-06
+summary: "What did buying electricity the wrong way cost a Styrian manufacturer using 50 GWh a year in 2021–2025, and what is the P95 cost exposure for the next twelve months under each procurement strategy?"
+homeNote: "Full spot, indexed, fixed or partly hedged: four ways to buy electricity for one Styrian manufacturer. The data warehouse is built; the answer in euros is not yet."
+status: in-build
+tags:
+  - Energy Procurement
+  - Risk Analysis
+  - Data Warehouse
+locale: en
+---
+
+<Lead>
+What did buying electricity the wrong way cost a Styrian manufacturer using 50 GWh a year in
+2021–2025, and what is the P95 cost exposure for the next twelve months under each procurement
+strategy? Ingest and warehouse are built; <strong>strategy results do not exist yet</strong>.
+</Lead>
+
+After the 2021–2023 European energy crisis, electricity procurement became a board-level risk for
+Austrian industry. The project compares four strategies on the Austrian day-ahead market (full
+spot, an indexed contract, a fixed annual price and a partial hedge) for one constructed 50 GWh
+industrial load.
+
+<Marker num="01" label="Context" id="sec-01" />
+
+The market data is real: Austrian and German-Luxembourg day-ahead prices and Austrian load and
+generation from the ENTSO-E Transparency Platform, the Austrian Energy Agency's monthly price
+index (ÖSPI, transcribed by hand with double entry), daily mean temperature for Graz from
+GeoSphere Austria, and Austrian and Styrian public holidays. No market price is synthetic. The
+window runs from January 2019 to the latest complete month.
+
+Two inputs are assumptions and are tagged as such. The consumer's load shape is constructed, not
+measured, and ÖSPI stands in for contract and forward prices. Grid fees, taxes and levies are out
+of scope, so the analysis isolates the energy-price lever.
+
+<Marker num="02" label="Process" id="sec-02" />
+
+Built so far: ingestion from all four sources with retries, caching and validation gates, into
+raw Parquet, and a DuckDB warehouse modelled in dbt from staging to marts. The gates exist so a
+plausible-looking file cannot pass silently. They check hour coverage including the 23- and
+25-hour daylight-saving days, price and load plausibility, the Austria–Germany join and the
+presence of negative prices. dbt tests check the mart schema contract, daylight-saving adjacency,
+a price reconciliation for August 2022 and gaps in the month spine. CI runs lint, the tests and a
+network-free dbt build against a fixture warehouse.
+
+Still to build: the load profile, market analytics, four strategy cost engines with a seeded
+block bootstrap for forward risk (P95 and CVaR95), and the reporting layer. No price forecast is
+planned: strategies are scored on realised prices and on resampling them.
+
+<Marker num="03" label="Results" id="sec-03" />
+
+None yet. By the project's own rule, every published number must first appear, with its
+epistemic tag, in an auto-generated numeric source-of-truth file, and that file arrives with the
+strategy simulator. Until then this page quotes no result.
+
+<Callout>
+  Foundation stage: bootstrap, ENTSO-E ingest, the weather, index and calendar sources and the
+  warehouse are implemented. The load profile, analytics, simulator and reporting are not, and
+  their commands fail loudly with the milestone they belong to.
+</Callout>
+
+Charter, specifications and the pipeline so far:
+[github.com/RafaelBraga-Kribitz/energy-procurement-risk-analyzer](https://github.com/RafaelBraga-Kribitz/energy-procurement-risk-analyzer).

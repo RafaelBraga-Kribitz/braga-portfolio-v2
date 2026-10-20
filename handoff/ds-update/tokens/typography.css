@@ -1,0 +1,53 @@
+/* ============================================================
+   TYPOGRAPHY — v2
+   BKribitz carries display + prose; BKribitz Mono the machine
+   layer (numbering, labels, data, code). Headings drop from 800
+   to a calmer display weight (Swiss: light/normal, never bold).
+   Legacy names (--t-hero, --t-section, --t-project, --w-black)
+   are kept as aliases so every existing component inherits v2.
+   ============================================================ */
+:root {
+  --font-display: 'BKribitz', system-ui, sans-serif;
+  --font-body:    'BKribitz', system-ui, sans-serif;
+  --font-mono:    'BKribitz Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --w-light:    300; /* @kind font */
+  --w-regular:  400; /* @kind font */
+  --w-medium:   500; /* @kind font */
+  --w-semibold: 600; /* @kind font */
+  --w-bold:     700; /* @kind font */
+  --w-display:  700; /* @kind font — the single heading weight (D · 20 Oct 2026); wordmark alone is 800 */
+  --w-black:    var(--w-display); /* legacy alias: titles follow display weight */
+  --w-extrablack: 900; /* @kind font */
+
+  /* fluid scale — mobile first */
+  --t-display: clamp(3rem, 7vw, 6rem);         /* @kind font */
+  --t-h1:      clamp(2.5rem, 5vw, 3.75rem);    /* @kind font */
+  --t-h2:      clamp(1.875rem, 3.2vw, 3rem);   /* @kind font */
+  --t-h3:      clamp(1.375rem, 2vw, 1.875rem); /* @kind font */
+  --t-lead:    clamp(1.125rem, 1.4vw, 1.25rem);/* @kind font */
+  --t-body:    clamp(1rem, 1.1vw, 1.125rem);   /* @kind font */
+  --t-small:   0.9375rem;                      /* @kind font */
+  --t-mono:    0.8125rem;                      /* @kind font */
+  --t-mono-sm: 0.75rem;                        /* @kind font */
+
+  --t-hero:    var(--t-display);
+  --t-section: var(--t-h2);
+  --t-project: var(--t-h3);
+
+  --lh-none:  1;    /* @kind font */
+  --lh-tight: 1.05; /* @kind font */
+  --lh-snug:  1.2;  /* @kind font */
+  --lh-body:  1.6;  /* @kind font */
+
+  --tracking-label: 0.08em;   /* @kind font */
+  --tracking-tight: -0.025em; /* @kind font */
+
+  --measure: 60ch; /* @kind spacing — Swiss narrow column */
+  --num: tabular-nums lining-nums slashed-zero; /* @kind other */
+}
+
+.display { font-family: var(--font-display); font-weight: var(--w-display); letter-spacing: var(--tracking-tight); line-height: var(--lh-tight); font-variant-numeric: var(--num); text-wrap: balance; }
+.label   { font-family: var(--font-mono); font-weight: 400; font-size: var(--t-mono-sm); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2); font-variant-numeric: var(--num); }
+.index   { font-family: var(--font-mono); font-weight: 400; font-size: var(--t-mono); color: var(--ink-3); font-variant-numeric: var(--num); }
+.prose   { font-family: var(--font-body); font-weight: 400; font-size: var(--t-body); line-height: var(--lh-body); color: var(--ink); max-width: var(--measure); text-wrap: pretty; }

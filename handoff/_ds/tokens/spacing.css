@@ -1,0 +1,38 @@
+/* ============================================================
+   SPACING & GRID
+   Base unit 8px, 4px half-steps. All spacing is a multiple.
+   ============================================================ */
+:root {
+  --space-0:   0;
+  --space-h:   4px;   /* half step */
+  --space-1:   8px;
+  --space-2:   16px;
+  --space-3:   24px;
+  --space-4:   32px;
+  --space-5:   40px;
+  --space-6:   48px;
+  --space-8:   64px;
+  --space-10:  80px;
+  --space-12:  96px;
+  --space-16:  128px;
+  --space-20:  160px;
+
+  /* layout */
+  --page-max:   1320px;       /* @kind spacing */
+  --gutter:     clamp(20px, 5vw, 64px); /* @kind spacing */
+  --section-gap: clamp(64px, 9vw, 128px); /* @kind spacing */
+
+  /* 12-column grid — the structural spine of every page.
+     Set --grid-cols to subdivide; --grid-gutter is the space
+     between columns. Margins come from --gutter above. */
+  --grid-cols:    12;                    /* @kind spacing */
+  --grid-gutter:  clamp(16px, 2vw, 24px); /* @kind spacing */
+
+  /* radii — technical document: effectively square */
+  --radius-0: 0;
+  --radius-1: 2px;   /* only for the rare control */
+
+  /* the only motion: comprehension-only */
+  --ease: cubic-bezier(0.2, 0, 0, 1); /* @kind other */
+  --dur:  140ms; /* @kind other */
+}
