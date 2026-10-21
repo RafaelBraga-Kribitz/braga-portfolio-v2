@@ -20,7 +20,7 @@ translationStatus: draft
 ---
 
 > [!summary] Zusammenfassung
-> Drei verbundene Module laufen durchgängig auf 50.000 synthetischen Wahlberechtigten, die an die verifizierten Eckdaten von 2018 angepasst sind: Bei einem Budgetrahmen von 6 Mio. USD erzielt der Allokator rund 54,77 % mehr linearisierte Proxy-Kontakte als eine über die Departamentos gleichmäßige Verteilung, und das Unsicherheitsband des Trackers zu 95 % erfasste die zurückgehaltene Umfrage in 3 von 6 getesteten Wellen. Jedes Modul wird nur so weit berichtet, wie seine eigene Prüfung reicht: Der Gewinn gilt als Solver-Vergleich auf synthetischer Reichweite, die Tracking-Kurve als Retrodiktion, und nichts hier behauptet, dass Analytik den verifizierten Vorsprung von 3,70 Prozentpunkten verursacht hat.
+> Drei verbundene Module laufen durchgängig auf 50.000 synthetischen Wahlberechtigten, die an die verifizierten Eckdaten der Departamentos angepasst sind: Bei einem Budgetrahmen von 6 Mio. USD erzielt der Allokator rund 54,77 % mehr linearisierte Proxy-Kontakte als eine über die Departamentos gleichmäßige Verteilung, und das Unsicherheitsband des Trackers zu 95 % erfasste die zurückgehaltene Umfrage in 3 von 6 getesteten Wellen. Jedes Modul wird nur so weit berichtet, wie seine eigene Prüfung reicht: Der Gewinn gilt als Solver-Vergleich auf synthetischer Reichweite, die Tracking-Kurve als Retrodiktion, und nichts hier behauptet, dass Analytik den verifizierten Vorsprung von 3,70 Prozentpunkten verursacht hat.
 
 ## Fragestellung
 
@@ -54,7 +54,7 @@ Bei jedem Modul steht, was es belegen kann und was nicht.
 
 K-Means mit sechs Segmenten auf der synthetischen Population, ergänzt um eine nach Platt kalibrierte Wahlbeteiligungsneigung (Propensity). Die Segmente müssen zwei Schwellen bestehen, den Silhouettenkoeffizienten und den Bootstrap-ARI (Adjusted Rand Index über Bootstrap-Stichproben); die Neigung wird über ihren Brier-Score (den mittleren quadratischen Fehler der vorhergesagten Wahrscheinlichkeiten) auf einer Holdout-Stichprobe (zurückgehaltenen Testmenge) von 15.000 Wahlberechtigten bewertet.
 
-- **Belegbar.** Sechs Segmente, die beide Schwellen bestehen, und eine Wahlbeteiligungsneigung, die an zurückgehaltenen synthetischen Wahlberechtigten kalibriert ist.
+- **Belegbar.** Sechs Segmente, die beide Schwellen bestehen, und eine nach Platt kalibrierte Wahlbeteiligungsneigung, bewertet an 15.000 zurückgehaltenen synthetischen Wahlberechtigten.
 - **Nicht belegbar.** Dass das Modell generalisiert. Es erreicht zudem eine AUC (Fläche unter der ROC-Kurve) von rund 0,89, die bewusst nicht hervorgehoben wird: Die Merkmale der Neigung teilen Kalibrierungsanker mit der Zielgröße, daher misst die AUC, wie gut das Raking wiederhergestellt wurde, nicht, wie gut das Modell generalisiert.
 
 ### Modul B: Allokation
@@ -102,12 +102,12 @@ Die einzige echte Out-of-Sample-Prüfung (Prüfung an Daten, die nicht in die An
 >
 > scale: 0–6
 > caption: Anzahl realer Umfragewellen auf einer Skala von 0–6, jede Welle einzeln zurückgehalten, bei ausgeschlossenem Wahlergebnis; n = 6 getestete Wellen.
-> source: Neuanpassungen von Modul C, Referenztabelle im Projekt-Repository.
+> source: Neuanpassungen von Modul C, Projekt-Repository.
 
 Acht Umfragen sind bei Weitem zu wenige, um Prognosefähigkeit zu beanspruchen, und das Projekt beansprucht sie nicht.
 
-> [!quote] Ergebnis · Referenztabelle
-> Die drei Module laufen durchgängig; der Allokationsgewinn von rund 54,77 % ist ein Solver-Vergleich auf synthetischer Reichweite, und der Tracker erfasste 3 von 6 zurückgehaltenen Umfragen.
+> [!quote] Ergebnis · Solver-Vergleich in Modul B, Neuanpassungen in Modul C
+> Die drei Module laufen durchgängig; der Allokationsgewinn von rund 54,77 % ist ein Solver-Vergleich auf synthetischer Reichweite, und das Band des Trackers zu 95 % erfasste die zurückgehaltene Umfrage in 3 von 6 getesteten Wellen.
 
 ## Grenzen
 

@@ -161,9 +161,13 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
 }
 .callout[data-callout="quote"] .callout-title { order: 2; }
 
-/* spec — key/value rows (renderer: "Term — value" list items → dl) */
+/* spec — key/value rows (renderer: "Term — value" list items → dl).
+   The term column is as wide as its longest term up to 40% of the row, then
+   wraps: a German term ("Unternehmensgegenstand", 180px in capitals) left a
+   76px value column at 320. A one-word term breaks at a soft hyphen
+   (&shy; in the Markdown). */
 .callout[data-callout="spec"] dl {
-  margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr);
+  margin: 0; display: grid; grid-template-columns: fit-content(40%) minmax(0, 1fr);
   column-gap: 32px; border-top: var(--rule-open);
 }
 .callout[data-callout="spec"] dt, .callout[data-callout="spec"] dd { margin: 0; padding-block: 10px; border-bottom: var(--rule); }

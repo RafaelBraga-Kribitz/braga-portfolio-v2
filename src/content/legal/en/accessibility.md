@@ -14,8 +14,8 @@ This website is meant to conform to the Web Content Accessibility Guidelines 2.2
 
 > [!spec] Testing
 > - Automated — axe, both colour schemes, 320 to 1,280 px, on every change
-> - Manual — keyboard operation of every tool; zoom to 200%
-> - Planned — one pass with a screen reader (NVDA) before publication
+> - Manual — Keyboard operation of every tool; zoom to 200%
+> - Planned — One pass with a screen reader (NVDA) before publication
 
 Known limitation: the interactive tools need JavaScript. Without JavaScript, the default scenario is shown as text and a table.
 

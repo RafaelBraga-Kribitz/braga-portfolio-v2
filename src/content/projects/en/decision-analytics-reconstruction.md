@@ -20,7 +20,7 @@ translationStatus: approved
 ---
 
 > [!summary] Summary
-> Three connected modules run end to end on 50,000 synthetic voters raked to the verified 2018 anchors: on a USD 6 million envelope the allocator finds about 54.77% more linearised persuasion-proxy contacts than a department-uniform allocation, and the poll tracker’s 95% band caught the held-out poll in 3 of 6 tested waves. Each module is reported only as far as its own check reaches, so the gain stands as a solver comparison on synthetic reach, the tracking curve as a retrodiction, and nothing here claims that analytics caused the verified margin of 3.70 percentage points.
+> Three connected modules run end to end on 50,000 synthetic voters raked to the verified department-level anchors: on a USD 6 million envelope the allocator finds about 54.77% more linearised persuasion-proxy contacts than a department-uniform allocation, and the poll tracker’s 95% band caught the held-out poll in 3 of 6 tested waves. Each module is reported only as far as its own check reaches, so the gain stands as a solver comparison on synthetic reach, the tracking curve as a retrodiction, and nothing here claims that analytics caused the verified margin of 3.70 percentage points.
 
 ## Question
 
@@ -54,7 +54,7 @@ Each module is labelled with what it can and cannot claim.
 
 K-means with six segments on the synthetic population, plus a Platt-calibrated turnout propensity. The segments are held to two gates, the silhouette score and the bootstrap adjusted Rand index (ARI); the propensity is scored by its Brier score on a 15,000-voter holdout.
 
-- **Can claim.** Six segments that clear both gates, and a turnout propensity calibrated on held-out synthetic voters.
+- **Can claim.** Six segments that clear both gates, and a Platt-calibrated turnout propensity scored on 15,000 held-out synthetic voters.
 - **Cannot claim.** That the model generalises. It also reaches an area under the curve (AUC) of about 0.89, which is deliberately not headlined: the propensity features share calibration anchors with the target, so the AUC measures how well the raking was recovered, not how well the model generalises.
 
 ### Module B: allocation
@@ -102,12 +102,12 @@ The one true out-of-sample check is reported unflattered. Refitting the tracker 
 >
 > scale: 0–6
 > caption: Count of real poll waves on a scale of 0–6, each wave held out in turn with the election result excluded; n = 6 tested waves.
-> source: Module C refits, source-of-truth table in the project repository.
+> source: Module C refits, project repository.
 
 Eight polls are far too few to claim forecasting skill, and the project does not claim it.
 
-> [!quote] Result · source-of-truth table
-> The three modules run end to end; the allocation gain of about 54.77% is a solver comparison on synthetic reach, and the tracker caught 3 of 6 held-out polls.
+> [!quote] Result · Module B solver comparison, Module C refits
+> The three modules run end to end; the allocation gain of about 54.77% is a solver comparison on synthetic reach, and the tracker’s 95% band caught the held-out poll in 3 of 6 tested waves.
 
 ## Limitations
 

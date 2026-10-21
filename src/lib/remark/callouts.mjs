@@ -194,7 +194,13 @@ function specList(content, ctx, node) {
       rows.push(el('dt', {}, inline), el('dd', {}, []));
       continue;
     }
-    rows.push(el('dt', {}, split.before), el('dd', {}, split.after));
+    // A value that is one link and nothing else (an e-mail address in the
+    // Impressum) has no sentence around it, so the inline-target exception
+    // does not apply: `.link-line` gives the link its 24px box (44 below
+    // 768), as it does for a paragraph that is one link (base.css 3.7, G-05).
+    const lone = split.after.filter((n) => !(n.type === 'text' && !n.value.trim()));
+    const dd = lone.length === 1 && lone[0].type === 'link' ? { className: ['link-line'] } : {};
+    rows.push(el('dt', {}, split.before), el('dd', dd, split.after));
   }
   content[i] = el('dl', {}, rows);
 }

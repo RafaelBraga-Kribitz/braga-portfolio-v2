@@ -20,7 +20,7 @@ translationStatus: approved
 ---
 
 > [!summary] Summary
-> SQL and Python lead a one-day snapshot of 720 core data-role postings, the stack is Microsoft-centred, and in the official AMS series Styria is the only large region above its 2020 level. The findings feed two decision documents that score each role family against a declared skill profile; the raw collection stays a private research set.
+> SQL and Python lead a one-day snapshot of 720 core data-role postings, the stack is Microsoft-centred, and in the AMS “Data Scientist” class Styria is the only large region above its 2020 level. The findings feed two decision documents that score each role family against a declared skill profile; the raw collection stays a private research set.
 
 ## Question
 
@@ -53,7 +53,7 @@ Every step is a script, and every rule lives in a config file:
 Every table stores its n, and proportions that feed a decision carry Wilson 95% intervals. The official series are analysed as their own units and never merged with posting-level statistics. A suite of 67 tests checks rule behaviour and output consistency, and a digest script reprints every number quoted in the documents from the tables.
 
 > [!definition] Text-derived share
-> A share read from the ad text, such as a technology or a language requirement. Its denominator is the postings with a description longer than 300 characters.
+> A share read from the ad text, such as a language requirement. Its denominator is the postings with a description longer than 300 characters.
 
 ## Result
 
@@ -72,7 +72,7 @@ SQL and Python lead, and the stack is Microsoft-centred: Azure and Power BI sit 
 > - Tableau — 3
 >
 > scale: 0–100 · unit: % · centre: no
-> caption: Text-derived share of postings that mention each technology; scale 0–100%. Multiple mentions allowed.
+> caption: Share of postings that mention each technology; scale 0–100%. Multiple mentions allowed.
 > source: posting snapshot, 16 Sep 2026. Shares rounded; incomplete coverage.
 
 ### Region
@@ -119,7 +119,7 @@ Data engineering and data science are the largest families. Marketing- and produ
 Seasonality is small against the cycle: the Eurostat series show a within-year amplitude of 5–14%, against 255–567% between years.
 
 > [!quote] Result · snapshot of 16 Sep 2026 and AMS JobBarometer
-> Austrian data-role ads ask for SQL and Python on a Microsoft stack, and in the AMS “Data Scientist” class Styria is the only large region above its 2020 level.
+> SQL and Python lead Austrian data-role ads, on a Microsoft-centred stack, and in the AMS “Data Scientist” class Styria is the only large region above its 2020 level.
 
 ## Limitations
 

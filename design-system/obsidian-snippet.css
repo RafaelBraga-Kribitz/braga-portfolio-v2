@@ -67,7 +67,7 @@
 .markdown-reading-view .callout[data-callout="quote"] { border-top: var(--hairline); padding-top: 16px; }
 .markdown-reading-view .callout[data-callout="quote"] .callout-content { font: var(--w-display) var(--t-h3) / var(--lh-snug) var(--font-display); letter-spacing: var(--tracking-tight); text-wrap: balance; max-width: 30em; }
 .markdown-reading-view .callout[data-callout="quote"] .callout-title { order: 2; }
-.markdown-reading-view .callout[data-callout="spec"] dl { margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: 32px; border-top: var(--rule-open); }
+.markdown-reading-view .callout[data-callout="spec"] dl { margin: 0; display: grid; grid-template-columns: fit-content(40%) minmax(0, 1fr); column-gap: 32px; border-top: var(--rule-open); }
 .markdown-reading-view .callout[data-callout="spec"] dt,
 .markdown-reading-view .callout[data-callout="spec"] dd { margin: 0; padding-block: 10px; border-bottom: var(--rule); }
 .markdown-reading-view .callout[data-callout="spec"] dt { font: 400 var(--t-mono-sm) / 1.5 var(--font-mono); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2); }

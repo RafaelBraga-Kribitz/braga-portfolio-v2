@@ -20,7 +20,7 @@ translationStatus: approved
 ---
 
 > [!summary] Summary
-> The ingest from four sources and a DuckDB warehouse modelled in dbt are built and tested; strategy results do not exist yet. No strategy is recommended, and by the project’s own rule no number is quoted until the strategy simulator writes it to the numeric source-of-truth file.
+> The ingest from four sources and a DuckDB warehouse modelled in dbt are built and tested; strategy results do not exist yet. No strategy is recommended, and by the project’s own rule no result is quoted until it appears in the auto-generated numeric source-of-truth file that arrives with the strategy simulator.
 
 ## Question
 
@@ -92,7 +92,7 @@ What this does not establish:
 
 ## Decision
 
-No strategy is recommended yet. The project leads from electricity-price records to a cost-risk decision between the four strategies, and that decision waits for the strategy cost engines and the source-of-truth file that arrives with them.
+No strategy is recommended yet. The project leads from electricity-price records to a cost-risk decision between the four strategies, and that decision waits for the strategy simulator and the source-of-truth file that arrives with it.
 
 In build: the foundation stage is implemented, and the load profile, analytics, simulator and reporting are not. The repository holds the charter, the specifications and the pipeline so far.
 

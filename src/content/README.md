@@ -264,6 +264,14 @@ spaced) and becomes a `<dl>`
 > - Lift — 10% relative
 > - Power — 0.80
 ```
+- A value that is one link and nothing else (an e-mail address) gets
+  `dd.link-line`, the 24px target box (44 below 768, gate G-05). A bare
+  e-mail address is linked by the parser anyway: write it as a link.
+- The term column takes at most 40% of the row, then wraps. A one-word
+  term longer than that (German: „Unternehmensgegenstand“) needs a break
+  point: write a soft hyphen as `&shy;` (`Unternehmens&shy;gegenstand`).
+  The same holds for a long word in a heading (`hyphens: manual`); in the
+  frontmatter `title`, write `­` inside double quotes.
 
 **metrics** · figure tiles; each item is `value — label`; `==value==` marks
 the key figure (one at most)

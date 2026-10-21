@@ -96,6 +96,9 @@ const en = {
   project: 'Project',
   title: 'Title',
   tool: 'Tool',
+  // the head of the home page's 03 About listing: one row per h2 of the
+  // About document
+  section: 'Section',
   'kind-date': 'Kind / date',
   'kind.essay': 'Essay',
   'kind.note': 'Note',
@@ -178,6 +181,7 @@ const de: Record<ChromeKey, string> = {
   project: 'Projekt',
   title: 'Titel',
   tool: 'Werkzeug',
+  section: 'Abschnitt',
   'kind-date': 'Art / Datum',
   'kind.essay': 'Essay',
   'kind.note': 'Notiz',

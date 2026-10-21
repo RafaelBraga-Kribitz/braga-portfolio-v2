@@ -40,15 +40,15 @@ Labour is priced at Austrian collective-agreement (KV) wage rates; robot and AMR
 > - Episodes — 2,359 · five public UnifoLM datasets, pinned by hash
 > - Speed transfer — factor 0.50–0.90 on the demonstrated speed
 > - Scenarios — 7 · 15 replicas each, 105 runs
-> - Throughput — 120 orders per hour · utilisation at most 0.85
+> - Demand — 120 orders per hour · utilisation at most 0.85
 > - Uncertainty — 10,000 Monte Carlo draws per scenario
 > - Discount rate — 8% a year over five years
 > - Labour — Austrian collective-agreement (KV) wage rates
-> - Capex — public price assumptions · integration cost and availability derating included
+> - Capex — public price assumptions for robots and AMRs
 
 ## Method
 
-Four modules run in order from one command, each reproducible from the repository:
+Four modules run in order from one command:
 
 1. **Capability extraction.** Cycle times and a rule-based task taxonomy from the episodes.
 2. **Discrete-event simulation.** Seven staffing scenarios, 15 replicas each (105 runs), demand-bound at 120 orders an hour; each scenario is sized to a utilisation of at most 0.85.
@@ -110,8 +110,8 @@ The ranking holds only under the stated assumptions. What this does not establis
 
 Under these assumptions, deploy the lean hybrid now and defer humanoid procurement. Capex is not the binding constraint, so a lower humanoid price alone does not change the call.
 
-> [!faq]- What would reverse the decision?
-> Demand growth, labour scarcity or multi-shift operation. At the modelled demand no humanoid price in the searched range breaks even; the call is worth revisiting when one of the three changes.
+> [!faq]- When is the call worth revisiting?
+> Under demand growth, labour scarcity or multi-shift operation. At the modelled demand, no humanoid price in the searched range breaks even.
 
 The repository holds the code, the charts, the executive summaries and the governance record.
 

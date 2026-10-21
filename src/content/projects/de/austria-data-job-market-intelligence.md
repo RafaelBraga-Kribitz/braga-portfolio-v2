@@ -20,7 +20,7 @@ translationStatus: draft
 ---
 
 > [!summary] Zusammenfassung
-> SQL und Python führen eine eintägige Momentaufnahme von 720 Kerninseraten für Datenrollen an, der Stack (die eingesetzten Werkzeuge) ist auf Microsoft ausgerichtet, und in der amtlichen AMS-Reihe ist die Steiermark die einzige große Region über ihrem Niveau von 2020. Die Ergebnisse fließen in zwei Entscheidungsdokumente, die jede Rollenfamilie an einem deklarierten Kompetenzprofil bewerten; die Rohdatensammlung bleibt ein privater Forschungsdatensatz.
+> SQL und Python führen eine eintägige Momentaufnahme von 720 Kerninseraten für Datenrollen an, der Stack (die eingesetzten Werkzeuge) ist auf Microsoft ausgerichtet, und in der AMS-Berufsgruppe „Data Scientist“ ist die Steiermark die einzige große Region über ihrem Niveau von 2020. Die Ergebnisse fließen in zwei Entscheidungsdokumente, die jede Rollenfamilie an einem deklarierten Kompetenzprofil bewerten; die Rohdatensammlung bleibt ein privater Forschungsdatensatz.
 
 ## Fragestellung
 
@@ -53,7 +53,7 @@ Jeder Schritt ist ein Skript, und jede Regel steht in einer Konfigurationsdatei:
 Jede Tabelle speichert ihr n, und Anteile, die in eine Entscheidung einfließen, tragen Wilson-Intervalle zu 95 %. Die amtlichen Reihen werden als eigene Einheiten ausgewertet und nie mit Statistiken auf Inseratsebene vermischt. Eine Suite aus 67 Tests prüft das Verhalten der Regeln und die Konsistenz der Ausgaben, und ein Digest-Skript (Zusammenfassungsskript) gibt jede in den Dokumenten zitierte Zahl erneut aus den Tabellen aus.
 
 > [!definition] Textbasierter Anteil
-> Ein Anteil, der aus dem Inseratstext gelesen wird, etwa eine Technologie oder eine Sprachanforderung. Sein Nenner sind die Inserate mit einer Beschreibung von mehr als 300 Zeichen.
+> Ein Anteil, der aus dem Inseratstext gelesen wird, etwa eine Sprachanforderung. Sein Nenner sind die Inserate mit einer Beschreibung von mehr als 300 Zeichen.
 
 ## Ergebnis
 
@@ -72,7 +72,7 @@ SQL und Python führen, und der Stack ist auf Microsoft ausgerichtet: Azure und 
 > - Tableau — 3
 >
 > scale: 0–100 · unit: % · centre: no
-> caption: Textbasierter Anteil der Inserate, die die jeweilige Technologie nennen; Skala 0–100 %. Mehrfachnennungen möglich.
+> caption: Anteil der Inserate, die die jeweilige Technologie nennen; Skala 0–100 %. Mehrfachnennungen möglich.
 > source: Inserat-Momentaufnahme, 16. Sep. 2026. Anteile gerundet; unvollständige Abdeckung.
 
 ### Region
@@ -119,7 +119,7 @@ Data Engineering und Data Science sind die größten Rollenfamilien. Titel in Ma
 Die Saisonalität ist gegenüber dem Zyklus klein: Die Eurostat-Reihen zeigen eine unterjährige Schwankungsbreite von 5–14 %, gegenüber 255–567 % zwischen den Jahren.
 
 > [!quote] Ergebnis · Momentaufnahme vom 16. Sep. 2026 und AMS JobBarometer
-> Inserate für Datenrollen in Österreich verlangen SQL und Python auf einem Microsoft-Stack, und in der AMS-Berufsgruppe „Data Scientist“ ist die Steiermark die einzige große Region über ihrem Niveau von 2020.
+> In Inseraten für Datenrollen in Österreich liegen SQL und Python vorn, bei einem auf Microsoft ausgerichteten Stack, und in der AMS-Berufsgruppe „Data Scientist“ ist die Steiermark die einzige große Region über ihrem Niveau von 2020.
 
 ## Grenzen
 

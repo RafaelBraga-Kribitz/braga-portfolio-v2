@@ -1,5 +1,5 @@
 ---
-title: "Risikoanalyse für die Energie­beschaffung"  # ­ = soft hyphen: the h1 may break there on a narrow screen
+title: "Risikoanalyse für die Energie\u00ADbeschaffung"  # \u00AD = soft hyphen: the h1 may break there on a narrow screen
 code: "01-05"
 kind: brief
 date: "2026-07-24"
@@ -20,7 +20,7 @@ translationStatus: draft
 ---
 
 > [!summary] Zusammenfassung
-> Die Datenübernahme aus vier Quellen und ein in dbt modelliertes DuckDB-Warehouse sind gebaut und getestet; Ergebnisse zu den Strategien gibt es noch nicht. Empfohlen wird noch keine Strategie, und nach der projekteigenen Regel wird keine Zahl genannt, bevor der Strategiesimulator sie in die numerische Referenzdatei (Source of Truth) schreibt.
+> Die Datenübernahme aus vier Quellen und ein in dbt modelliertes DuckDB-Warehouse sind gebaut und getestet; Ergebnisse zu den Strategien gibt es noch nicht. Empfohlen wird noch keine Strategie, und nach der projekteigenen Regel wird kein Ergebnis genannt, bevor es in der automatisch erzeugten numerischen Referenzdatei (Source of Truth) steht, die mit dem Strategiesimulator entsteht.
 
 ## Fragestellung
 
@@ -92,7 +92,7 @@ Was diese Arbeit nicht belegt:
 
 ## Entscheidung
 
-Noch wird keine Strategie empfohlen. Das Projekt führt von Strompreisdaten zu einer Kosten-Risiko-Entscheidung zwischen den vier Strategien, und diese Entscheidung wartet auf die Kostenmodelle der Strategien und die Referenzdatei, die mit ihnen entsteht.
+Noch wird keine Strategie empfohlen. Das Projekt führt von Strompreisdaten zu einer Kosten-Risiko-Entscheidung zwischen den vier Strategien, und diese Entscheidung wartet auf den Strategiesimulator und die Referenzdatei, die mit ihm entsteht.
 
 Im Aufbau: Die Grundlagenphase ist umgesetzt; Lastprofil, Analytik, Simulator und Berichtsebene sind es nicht. Das Repository enthält die Projektcharta, die Spezifikationen und die bisherige Pipeline.
 

@@ -20,7 +20,7 @@ translationStatus: approved
 ---
 
 > [!summary] Summary
-> Under revision: the published figures are being re-estimated. As published, the model recovers a known truth before it decides anything, and on Meta’s public Robyn demo data the same weekly budget, reallocated under a breakeven rule, gains a median 15.1% of current media contribution with no loss in any of the 500 posterior draws used. The rule moves budget toward TV and Facebook, takes it from out-of-home, and holds print and search, whose interval lower bounds fall below breakeven.
+> Under revision: the published figures are being re-estimated. As published, the model is validated against a known truth before it decides anything, and on Meta’s public Robyn demo data the same weekly budget, reallocated under a breakeven rule, gains a median 15.1% of current media contribution with no loss in any of the 500 posterior draws used. The rule moves budget toward TV and Facebook, takes it from out-of-home, and holds print and search, whose interval lower bounds fall below breakeven.
 
 ## Question
 
@@ -64,7 +64,7 @@ Validation comes before any decision, so the steps run in this order:
 
 ### Validation on Layer P
 
-The sampler recovers the truth it was handed. Curve coverage is 91% (the true response curves inside the posterior band, over the observed spend range), and 26 of 28 true parameter values lie inside their 90% intervals. The misses follow a known trade-off rather than a bug: all five effect sizes and all five half-saturation points have medians above the truth, because a curve that rises higher but saturates later fits the same weeks. Recovery is therefore judged on curves and shares, which are what a budget decision uses.
+The sampler has to recover the truth it was handed. Curve coverage is 91% (the true response curves inside the posterior band, over the observed spend range), and 26 of 28 true parameter values lie inside their 90% intervals. The misses follow a known trade-off rather than a bug: all five effect sizes and all five half-saturation points have medians above the truth, because a curve that rises higher but saturates later fits the same weeks. Recovery is therefore judged on curves and shares, which are what a budget decision uses.
 
 Scored against the same truth, the platform-style report over-credits paid search by 45% (platform-reported against true incremental revenue) and gives the offline channels no credit at all.
 
@@ -124,10 +124,10 @@ What this does not establish:
 
 ## Decision
 
-Under the written rule, move budget toward TV and Facebook, take it from out-of-home, and hold print and search: no budget moves toward a channel whose interval’s lower bound falls below the breakeven ROAS of 2.50. The decision is made for a simulated advertiser in unnamed money units, not for a real one; a swap-in of real advertiser data is planned, not done.
+Under the written rule, move budget toward TV and Facebook, take it from out-of-home, and hold print and search: no budget moves toward a channel whose interval’s lower bound falls below the breakeven ROAS of 2.50. The decision is made on a simulated public dataset in unnamed money units; a swap-in of real advertiser data is planned, not done.
 
 > [!faq]- What would reverse the decision?
-> The rule names the conditions itself. A re-estimate in which the lower bound of TV’s or Facebook’s marginal-ROAS 90% interval falls to 2.50 or below stops the move toward that channel, and a 10th percentile of the reallocation gain that is no longer positive stops the reallocation. The optimiser also assumes that response curves hold at the new spend levels and that competitors do not react; if either fails, the recommendation does not stand.
+> The rule names the conditions itself. A re-estimate in which the lower bound of TV’s or Facebook’s marginal-ROAS 90% interval falls to 2.50 or below stops the move toward that channel, and a 10th percentile of the reallocation gain that is no longer positive stops the reallocation. The optimiser also assumes that response curves hold at the new spend levels and that competitors do not react; the recommendation rests on both, and neither is established.
 
 Code, reports and the decision memo are in the repository. The numbers in its README are rendered from the report files, and a test checks that the two agree.
 

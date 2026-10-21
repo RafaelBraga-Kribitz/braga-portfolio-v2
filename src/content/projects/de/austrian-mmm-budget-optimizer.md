@@ -20,7 +20,7 @@ translationStatus: draft
 ---
 
 > [!summary] Zusammenfassung
-> In Überarbeitung: Die veröffentlichten Zahlen werden neu geschätzt. In der veröffentlichten Fassung stellt das Modell eine bekannte Wahrheit wieder her, bevor es etwas entscheidet, und auf Metas öffentlichem Robyn-Demodatensatz bringt dasselbe Wochenbudget, nach einer Breakeven-Regel umverteilt, im Median 15,1 % des derzeitigen Deckungsbeitrags der Medien; keine der 500 verwendeten Ziehungen aus der A-posteriori-Verteilung zeigt einen Verlust. Die Regel verschiebt Budget zu TV und Facebook, zieht es von der Außenwerbung (Out-of-Home) ab und lässt Print und Search (Suchmaschinenwerbung), deren Intervall-Untergrenzen unter dem Breakeven liegen, unverändert.
+> In Überarbeitung: Die veröffentlichten Zahlen werden neu geschätzt. In der veröffentlichten Fassung wird das Modell an einer bekannten Wahrheit validiert, bevor es etwas entscheidet, und auf Metas öffentlichem Robyn-Demodatensatz bringt dasselbe Wochenbudget, nach einer Breakeven-Regel umverteilt, im Median 15,1 % des derzeitigen Deckungsbeitrags der Medien; keine der 500 verwendeten Ziehungen aus der A-posteriori-Verteilung zeigt einen Verlust. Die Regel verschiebt Budget zu TV und Facebook, zieht es von der Außenwerbung (Out-of-Home) ab und lässt Print und Search (Suchmaschinenwerbung), deren Intervall-Untergrenzen unter dem Breakeven liegen, unverändert.
 
 ## Fragestellung
 
@@ -39,7 +39,7 @@ Die Frage ist jene, die jedes werbetreibende Unternehmen an seinen Mediaplan ste
 > - Übertragung — geometrischer Adstock (Übertragungseffekt der Werbung) je Kanal, Abklingrate geschätzt
 > - Sättigung — Hill-Kurve auf die Adstock-transformierten Ausgaben
 > - Basislinie — linearer Trend · zwei jährliche Fourier-Paare · eine Kontrollvariable
-> - Deckungsbeitrag — 40 %, angenommen
+> - Deckungs&shy;beitrags&shy;quote — 40 %, angenommen
 > - Breakeven-ROAS — 2,50
 
 Die Priors (A-priori-Verteilungen) sind schwach informativ und für alle Kanäle gleich, damit die Schätzungen aus den Daten kommen und nicht aus einer Annahme, die die Antwort schon kennt.
@@ -48,7 +48,7 @@ Die Priors (A-priori-Verteilungen) sind schwach informativ und für alle Kanäle
 
 Die Validierung kommt vor jeder Entscheidung; die Schritte laufen daher in dieser Reihenfolge:
 
-1. Das Modell wird in PyMC angepasst und mit NUTS (No-U-Turn Sampler; nutpie) gezogen: zwei Ketten mit je 1.000 Tuning-Schritten und 1.000 Ziehungen, Ziel-Akzeptanzrate 0,9, nach Divergenzen über eine protokollierte Stufenfolge auf 0,99 angehoben.
+1. Das Modell wird in PyMC angepasst und mit NUTS (No-U-Turn Sampler; nutpie) gesampelt: zwei Ketten mit je 1.000 Tuning-Schritten und 1.000 Ziehungen, Ziel-Akzeptanzrate 0,9, nach Divergenzen über eine protokollierte Stufenfolge auf 0,99 angehoben.
 2. Ein Fit zählt nur bei einem R-hat unter 1,01, einer effektiven Stichprobengröße über 400 und null Divergenzen. Jeder Fit legt diese Diagnosewerte neben sich ab.
 3. Auf Layer P muss der Sampler die Wahrheit wiederherstellen, die ihm vorgegeben wurde, und die plattformartige Attribution wird an derselben Wahrheit gemessen.
 4. Das Modell wird auf beiden Layern an einem Holdout (zurückgehaltener Testzeitraum) von 26 Wochen gegen zwei Vergleichsmodelle geprüft: eine Ridge-Regression und eine saisonal naive Prognose.
@@ -64,7 +64,7 @@ Die Validierung kommt vor jeder Entscheidung; die Schritte laufen daher in diese
 
 ### Validierung auf Layer P
 
-Der Sampler stellt die Wahrheit wieder her, die ihm vorgegeben wurde. Die Kurvenabdeckung beträgt 91 % (die wahren Reaktionskurven innerhalb des Posterior-Bands, über den beobachteten Ausgabenbereich), und 26 von 28 wahren Parameterwerten liegen innerhalb ihrer Intervalle zu 90 %. Die Abweichungen folgen einem bekannten Zielkonflikt, nicht einem Fehler: Alle fünf Effektgrößen und alle fünf Halbsättigungspunkte haben Mediane über der Wahrheit, weil eine Kurve, die höher steigt, aber später sättigt, dieselben Wochen erklärt. Die Wiederherstellung wird daher an Kurven und Anteilen beurteilt, also an dem, was eine Budgetentscheidung verwendet.
+Der Sampler muss die Wahrheit wiederherstellen, die ihm vorgegeben wurde. Die Kurvenabdeckung beträgt 91 % (die wahren Reaktionskurven innerhalb des Posterior-Bands, über den beobachteten Ausgabenbereich), und 26 von 28 wahren Parameterwerten liegen innerhalb ihrer Intervalle zu 90 %. Die Abweichungen folgen einem bekannten Zielkonflikt, nicht einem Fehler: Alle fünf Effektgrößen und alle fünf Halbsättigungspunkte haben Mediane über der Wahrheit, weil eine Kurve, die höher steigt, aber später sättigt, dieselben Wochen erklärt. Die Wiederherstellung wird daher an Kurven und Anteilen beurteilt, also an dem, was eine Budgetentscheidung verwendet.
 
 An derselben Wahrheit gemessen, rechnet der plattformartige Bericht Paid Search 45 % zu viel zu (von der Plattform ausgewiesener gegenüber wahrem inkrementellem Umsatz) und den Offline-Kanälen gar nichts.
 
@@ -108,7 +108,7 @@ Das Breakeven-Kriterium ist es, das Print und Search auf dem derzeitigen Niveau 
 
 ### Holdout
 
-Auf einem Holdout von 26 Wochen gegen zwei Vergleichsmodelle hatte das Modell auf Layer P den geringsten mittleren absoluten prozentualen Fehler (MAPE): 3,0 %, gegenüber 4,7 % für die Ridge-Regression und 9,6 % für eine saisonal naive Prognose. Auf Layer R unterlag es mit 7,9 % gegenüber 5,1 % für die Ridge-Regression. Das wird so berichtet, wie es ausgefallen ist. Das Argument für das MMM ist, dass es mit Intervallen angibt, welcher Kanal den Umsatz erwirtschaftet hat; das können die Vergleichsmodelle nicht. Auf Layer P deckten seine Intervalle zu 90 % 85 % der Holdout-Wochen ab: etwas zu eng, das Modell ist also etwas zu selbstsicher.
+Auf einem Holdout von 26 Wochen gegen zwei Vergleichsmodelle hatte das Modell auf Layer P den geringsten mittleren absoluten prozentualen Fehler (MAPE): 3,0 %, gegenüber 4,7 % für die Ridge-Regression und 9,6 % für eine saisonal naive Prognose. Auf Layer R unterlag es mit 7,9 % gegenüber 5,1 % für die Ridge-Regression. Das wird so berichtet, wie es ausgefallen ist. Das Argument für das MMM ist, dass es mit Intervallen angibt, welcher Kanal den Umsatz erwirtschaftet hat; das können die Vergleichsmodelle nicht. Auf Layer P lagen 85 % der Holdout-Wochen innerhalb seiner Intervalle zu 90 %: etwas zu eng, das Modell ist also etwas zu selbstsicher.
 
 > [!quote] Ergebnis · Layer R, 500 Posterior-Ziehungen
 > Nach der Breakeven-Regel umverteilt, bringt dasselbe Wochenbudget im Median 15,1 % des derzeitigen Deckungsbeitrags der Medien, und keine der 500 Ziehungen zeigt einen Verlust.
@@ -124,10 +124,10 @@ Was diese Arbeit nicht belegt:
 
 ## Entscheidung
 
-Nach der schriftlich festgelegten Regel wird Budget zu TV und Facebook verschoben und von der Außenwerbung abgezogen; Print und Search bleiben unverändert, denn zu einem Kanal, dessen Intervall-Untergrenze unter dem Breakeven-ROAS von 2,50 liegt, wird kein Budget verschoben. Die Entscheidung gilt für ein simuliertes werbetreibendes Unternehmen in nicht benannten Geldeinheiten, nicht für ein reales; der Austausch gegen echte Daten ist geplant, nicht erfolgt.
+Nach der schriftlich festgelegten Regel wird Budget zu TV und Facebook verschoben und von der Außenwerbung abgezogen; Print und Search bleiben unverändert, denn zu einem Kanal, dessen Intervall-Untergrenze unter dem Breakeven-ROAS von 2,50 liegt, wird kein Budget verschoben. Die Entscheidung beruht auf einem simulierten öffentlichen Datensatz in nicht benannten Geldeinheiten; der Austausch gegen echte Daten eines werbetreibenden Unternehmens ist geplant, nicht erfolgt.
 
 > [!faq]- Was würde die Entscheidung umkehren?
-> Die Regel nennt die Bedingungen selbst. Fällt bei einer Neuschätzung die Untergrenze des Intervalls zu 90 % für den marginalen ROAS von TV oder Facebook auf 2,50 oder darunter, endet die Verschiebung zu diesem Kanal; ist das 10. Perzentil des Umverteilungsgewinns nicht mehr positiv, endet die Umverteilung. Der Optimierer nimmt außerdem an, dass die Reaktionskurven bei den neuen Ausgabenniveaus gelten und dass Mitbewerber nicht reagieren; trifft eines davon nicht zu, hält die Empfehlung nicht.
+> Die Regel nennt die Bedingungen selbst. Fällt bei einer Neuschätzung die Untergrenze des Intervalls zu 90 % für den marginalen ROAS von TV oder Facebook auf 2,50 oder darunter, endet die Verschiebung zu diesem Kanal; ist das 10. Perzentil des Umverteilungsgewinns nicht mehr positiv, endet die Umverteilung. Der Optimierer nimmt außerdem an, dass die Reaktionskurven bei den neuen Ausgabenniveaus gelten und dass Mitbewerber nicht reagieren; die Empfehlung beruht auf beiden Annahmen, und keine davon ist belegt.
 
 Code, Berichte und das Entscheidungsmemo liegen im Repository. Die Zahlen in seiner README werden aus den Berichtsdateien erzeugt, und ein Test prüft, dass beide übereinstimmen.
 

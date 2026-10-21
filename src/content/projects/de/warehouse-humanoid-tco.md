@@ -40,15 +40,15 @@ Die Arbeitskosten beruhen auf Löhnen nach österreichischem Kollektivvertrag (K
 > - Episoden — 2.359 · fünf öffentliche UnifoLM-Datensätze, per Hash fixiert
 > - Übertragung — Faktor 0,50–0,90 auf die demonstrierte Geschwindigkeit
 > - Szenarien — 7 · je 15 Replikationen, 105 Läufe
-> - Durchsatz — 120 Aufträge pro Stunde · Auslastung höchstens 0,85
+> - Nachfrage — 120 Aufträge pro Stunde · Auslastung höchstens 0,85
 > - Unsicherheit — 10.000 Monte-Carlo-Ziehungen je Szenario
 > - Zinssatz — 8 % pro Jahr über fünf Jahre
 > - Arbeitskosten — Löhne nach österreichischem Kollektivvertrag (KV)
-> - Capex — öffentliche Preisannahmen · inklusive Integrationskosten und Abschlägen für die Verfügbarkeit
+> - Capex — öffentliche Preisannahmen für Roboter und AMR
 
 ## Methode
 
-Vier Module laufen nacheinander mit einem einzigen Befehl, jedes aus dem Repository reproduzierbar:
+Vier Module laufen nacheinander mit einem einzigen Befehl:
 
 1. **Extraktion der Leistungsfähigkeit.** Taktzeiten und eine regelbasierte Aufgabentaxonomie aus den Episoden.
 2. **Ereignisdiskrete Simulation.** Sieben Besetzungsszenarien mit je 15 Replikationen (105 Läufe), nachfragebegrenzt bei 120 Aufträgen pro Stunde; jedes Szenario wird auf eine Auslastung von höchstens 0,85 dimensioniert.
@@ -110,8 +110,8 @@ Die Rangfolge gilt nur unter den genannten Annahmen. Was diese Arbeit nicht bele
 
 Unter diesen Annahmen: die schlanke Hybridvariante jetzt einsetzen und die Beschaffung humanoider Roboter zurückstellen. Die Investitionskosten sind nicht der begrenzende Faktor; ein niedrigerer Preis humanoider Roboter allein ändert die Entscheidung daher nicht.
 
-> [!faq]- Was würde die Entscheidung umkehren?
-> Wachsende Nachfrage, Arbeitskräftemangel oder Mehrschichtbetrieb. Bei der modellierten Nachfrage wird kein Preis im durchsuchten Bereich kostengleich; eine erneute Prüfung lohnt sich, sobald sich einer der drei Faktoren ändert.
+> [!faq]- Wann lohnt sich eine erneute Prüfung?
+> Wenn die Nachfrage wächst, Arbeitskräfte knapp werden oder auf Mehrschichtbetrieb umgestellt wird. Bei der modellierten Nachfrage wird kein Preis humanoider Roboter im durchsuchten Bereich kostengleich.
 
 Das Repository enthält den Code, die Grafiken, die Management-Zusammenfassungen und die Governance-Dokumentation.
 
