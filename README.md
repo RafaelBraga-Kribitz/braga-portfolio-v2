@@ -1,0 +1,57 @@
+# Braga · portfolio v2
+
+The second attempt at Rafael Braga-Kribitz's portfolio: a static Astro site built on the
+v2 design system (ultramarine accent, BKribitz type, hairlines, IBCS charts), in English
+and German, with no JavaScript on content pages.
+
+## Run it locally
+
+Requires Node 22 (`.nvmrc`) and git.
+
+```bash
+mkdir -p ~/Dev && cd ~/Dev
+git clone https://github.com/RafaelBraga-Kribitz/braga-portfolio-v2.git
+cd braga-portfolio-v2
+npm ci
+npm run dev            # http://localhost:4321/en/
+```
+
+The quality gates use Playwright's Chromium. Install it once per machine:
+
+```bash
+npx playwright install chromium
+```
+
+## Commands
+
+| Command | What it does |
+|---|---|
+| `npm run dev` | Development server with hot reload |
+| `npm run build` | Static build into `dist/` |
+| `npm run preview` | Serves `dist/` |
+| `npm run check` | Astro and TypeScript diagnostics |
+| `npm run lint` | No inline styles; no hex outside tokens, 12px floor, class contract, contrast table |
+| `npm run test:unit` | Number/date formatting cases and the tool maths, with hand-computed references |
+| `npm run test:gates` | Thirteen design gates, links, hreflang, scripts policy and axe on every built page, at six widths in both themes |
+| `npm run verify` | All of the above in order |
+
+## Where things are
+
+| Path | Holds |
+|---|---|
+| `design-system/` | The stylesheets: tokens, base, layout, components, charts, bench, print, Obsidian snippet. Start with its README. |
+| `src/content/` | Projects, writing and legal pages as Markdown (EN and DE). The authoring guide is `src/content/README.md`. |
+| `src/pages/` | Routes for both language trees (`/en/`, `/de/`). |
+| `src/components/`, `src/layouts/` | The site patterns (shell, cover, listing, document, evidence figure, bench) and the base layout. |
+| `src/lib/` | Routes, chrome strings (i18n), formatting by language, the Markdown pipeline, tool maths. |
+| `scripts/gates/`, `scripts/lint/` | The gates runner and the lint rules. |
+| `handoff/` | The design handoff as received: decisions, audit, specimens, v2 tokens, source content. Read-only. |
+| `BUILD-BRIEF.md`, `docs/PAGE-BRIEF.md` | The working briefs the build follows. |
+
+## How work flows between the cloud session and this repository
+
+- `main` holds states that build and pass `npm run verify`.
+- Work in progress from the cloud session is pushed to `build/*` branches, each with a
+  draft pull request. Review there, then merge into `main`.
+- Work locally on your own branch; the cloud session pulls `main` before it starts a new
+  step, so local changes are never overwritten.
