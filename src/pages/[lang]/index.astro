@@ -47,15 +47,18 @@ const lang = Astro.params.lang as Lang;
 // about.rows: the 03 About rows' sub lines, keyed by the heading id of the
 // About document in that language (src/content/pages/<lang>/about.md).
 // home.yaml sections[03].subNodes, British spelling, "Marketing Data
-// Science role" → the v2 role (D-001). Skills is the one h2 without a
-// home.yaml line; its line names the four categories the About page lists.
+// Science role" → the v2 role (D-001); CV says "plain tables", since the
+// About CV holds two (Experience, Education) where home.yaml says "a plain
+// table". Skills is the one h2 without a home.yaml line; its line names the
+// four categories the About page lists. The edition keeps month and year
+// together with an NBSP, as format.mjs does inside every date.
 const copy = {
   en: {
     title: 'Marketing Data Analyst',
     lead: 'Marketing experience, translated into analytical work. Questions about demand, allocation and cost, answered with data and explicit limits.',
     titleLines: ['Marketing', 'Data Analyst'],
     focus: 'Marketing · Data · Decisions',
-    edition: 'October 2026',
+    edition: 'October 2026',
     writing: {
       prose: 'Two registers, deliberately kept apart; everything is dated, so nothing reads as more settled than it is.',
     },
@@ -66,7 +69,7 @@ const copy = {
         background: 'A marketing career in which the technical work kept moving towards the centre, and one conviction: a measurement only counts once it changes an allocation.',
         'expertise--approach': 'Frame the decision first, estimate honestly with the uncertainty attached, then optimise the metric that actually matters. The toolbox serves that order, not the reverse.',
         skills: 'Domains, methods, toolbox and practice, listed by category.',
-        cv: 'Roles and education set as a plain table, newest first.',
+        cv: 'Roles and education set as plain tables, newest first.',
         contact: 'Email is the direct line, and it is answered. Worth writing about: a Marketing Data Analyst role, a measurement setup that looks misspecified, or a model whose numbers have stopped agreeing with the business.',
       } as Record<string, string>,
     },
@@ -80,7 +83,7 @@ const copy = {
     lead: 'Marketing-Erfahrung, übersetzt in analytische Arbeit. Fragen zu Nachfrage, Allokation und Kosten, beantwortet mit Daten und ausdrücklich genannten Grenzen.',
     titleLines: ['Marketing', 'Data Analyst'],
     focus: 'Marketing · Daten · Entscheidungen',
-    edition: 'Oktober 2026',
+    edition: 'Oktober 2026',
     writing: {
       prose: 'Zwei Register, bewusst getrennt; alles ist datiert, damit nichts gefestigter wirkt, als es ist.',
     },
@@ -91,7 +94,7 @@ const copy = {
         hintergrund: 'Eine Marketinglaufbahn, in der die technische Arbeit immer weiter ins Zentrum rückte, und eine Überzeugung: Eine Messung zählt erst, wenn sie eine Allokation verändert.',
         'expertise-und-arbeitsweise': 'Zuerst die Entscheidung rahmen, dann ehrlich schätzen, mit ausgewiesener Unsicherheit, und schließlich die Kennzahl optimieren, auf die es tatsächlich ankommt. Der Werkzeugkasten dient dieser Reihenfolge, nicht umgekehrt.',
         kenntnisse: 'Fachgebiete, Methoden, Werkzeugkasten und Praxis, nach Kategorie geordnet.',
-        lebenslauf: 'Berufsstationen und Ausbildung als schlichte Tabelle, die jüngsten zuerst.',
+        lebenslauf: 'Berufsstationen und Ausbildung als schlichte Tabellen, die jüngsten zuerst.',
         kontakt: 'E-Mail ist der direkte Weg, und sie wird beantwortet. Anlässe zum Schreiben: eine Rolle als Marketing Data Analyst, ein Messaufbau, der fehlspezifiziert wirkt, oder ein Modell, dessen Zahlen nicht mehr zum Geschäft passen.',
       } as Record<string, string>,
     },

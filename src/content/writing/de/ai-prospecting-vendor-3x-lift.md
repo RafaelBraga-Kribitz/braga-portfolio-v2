@@ -12,13 +12,13 @@ draft: false
 translationStatus: draft
 ---
 
-Anbieter von KI-Prospecting-Tools (Werkzeugen für die KI-gestützte Suche nach potenziellen Neukunden) versprechen mehr Leads, weniger Recherche, bessere Qualifizierung und eine schnellere Pipeline. Eine aktuelle Fallstudie beziffert das: Eine KI-Prospecting-Plattform fand rund dreimal so viele relevante Leads wie ein herkömmlicher Webcrawler, bei etwa 90 % Precision und Recall (Genauigkeit und Trefferquote) in der Lead-Qualifizierung, und Vertriebsprofis bewerteten ihre KI-generierten Zusammenfassungen positiv.
+Anbieter von KI-Prospecting-Tools (Werkzeugen für die KI-gestützte Suche nach potenziellen Neukunden) versprechen mehr Leads, weniger Recherche, bessere Qualifizierung und eine schnellere Pipeline. Eine aktuelle Fallstudie beziffert das: Eine KI-Prospecting-Plattform fand rund dreimal so viele relevante Leads wie ein herkömmlicher Webcrawler, bei etwa 90 % Precision und Recall (Genauigkeit und Trefferquote) in der Lead-Qualifizierung, und Vertriebsprofis bewerteten die KI-generierten Zusammenfassungen der Plattform positiv.
 
-Es handelt sich um die Studie von Kaplan, Seker und Yoruk (2025), „A review of AI-based business lead generation: Scrapus as a case study“, erschienen in Frontiers in Artificial Intelligence. Ein Detail zählt vor allem anderen: Der dritte Autor ist mit OptiWisdom affiliiert, dem Unternehmen hinter Scrapus. Hier bewertet ein Anbieter sein eigenes Produkt. Das macht die Ergebnisse nicht falsch. Es macht sie zu einer Verkaufsunterlage mit Methodenteil, und ich lese sie als solche.
+Es handelt sich um die Studie von Kaplan, Seker und Yoruk (2025), „A review of AI-based business lead generation: Scrapus as a case study“, erschienen in Frontiers in Artificial Intelligence. Ein Detail zählt vor allem anderen: Die an dritter Stelle genannte Person ist mit OptiWisdom affiliiert, dem Unternehmen hinter Scrapus. Hier bewertet ein Anbieter sein eigenes Produkt. Das macht die Ergebnisse nicht falsch. Es macht sie zu einer Verkaufsunterlage mit Methodenteil, und ich lese sie als solche.
 
 Ich habe zwanzig Jahre lang Marketingtechnologie eingekauft. Die Frage, die ich dabei zu stellen gelernt habe, lautet nicht „Funktioniert das Modell?“, sondern „Was müsste zutreffen, damit dieses Ergebnis in meinen Zahlen auftaucht?“
 
-Im Folgenden: was die Studie zeigt, was sie nicht zeigt, und die vier Bedingungen, die vor einer Unterschrift für mich erfüllt sein müssten.
+Im Folgenden: was die Studie zeigt, was sie nicht zeigt und die vier Bedingungen, die vor einer Unterschrift für mich erfüllt sein müssten.
 
 ## Was die Belege tatsächlich stützen
 
@@ -36,7 +36,7 @@ Nichts davon ist ein Ausschlussgrund. Es ist die übliche Lücke zwischen einem 
 
 ## Mehr gefundene Leads müssen zu mehr Pipeline werden
 
-Eine Harvest Rate von 15 % gegenüber 5 % ist eine Effizienzkennzahl. Sie misst, wie gut das System durch das Web navigiert. Sie misst weder vereinbarte Termine noch vom Vertrieb akzeptierte Leads (Sales-accepted Leads), geschaffene Verkaufschancen oder Umsatz.
+Eine Harvest Rate von 15 % gegenüber 5 % ist eine Effizienzkennzahl. Sie misst, wie gut das System durch das Web navigiert. Sie misst keine vereinbarten Termine, keine vom Vertrieb akzeptierten Leads (Sales-accepted Leads), keine geschaffenen Verkaufschancen und keinen Umsatz.
 
 Das ist der häufigste Fehler bei der Bewertung von Marketingtechnologie. Anbieter optimieren Zwischenkennzahlen, weil sie diese kontrollieren. Käufer brauchen Ergebnisse, weil sie dafür bezahlen.
 
@@ -54,7 +54,7 @@ Käuferfrage: Hinterlässt mein Idealkunde überhaupt genug beobachtbare Signale
 
 Neunzig Prozent Precision klingen hervorragend, bis man sie hochrechnet. Tausend Leads bei 10 % Falsch-Positiven sind hundert schlechte Empfehlungen. Bei fünf Minuten Prüfung pro Lead ist das ein voller Arbeitstag für Leads, die nie echt waren, und zwar bei jeder Aktualisierung der Liste.
 
-Und das setzt voraus, dass das Team sie überhaupt prüft. Ein Tool mit 90 % Precision, das der Vertrieb ignoriert, hat eine Precision von null. Die Studie berichtet, dass die Nutzerinnen und Nutzer die KI-Zusammenfassungen bevorzugten. Sie misst weder die Akzeptanz im Alltag noch die eingesparte Zeit, die CRM-Integration oder das Verhalten des Vertriebs nach der zweiten Woche. Das Implementierungsrisiko ist meist größer als das Algorithmusrisiko. Ich habe mehr Tools an Reibung scheitern sehen als an schlechten Modellen.
+Und das setzt voraus, dass das Team sie überhaupt prüft. Ein Tool mit 90 % Precision, das der Vertrieb ignoriert, hat eine Precision von null. Die Studie berichtet, dass die Nutzerinnen und Nutzer die KI-Zusammenfassungen bevorzugten. Nicht gemessen werden die Akzeptanz im Alltag, die eingesparte Zeit, die CRM-Integration und das Verhalten des Vertriebs nach der zweiten Woche. Das Implementierungsrisiko ist meist größer als das Algorithmusrisiko. Ich habe mehr Tools an Reibung scheitern sehen als an schlechten Modellen.
 
 Käuferfrage: Wie viele Leads werden vom Vertrieb angenommen, zu Kosten, die das Team zu tragen bereit ist?
 

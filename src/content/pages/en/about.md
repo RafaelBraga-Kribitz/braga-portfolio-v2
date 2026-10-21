@@ -19,7 +19,7 @@ I worked as a Marketing Data Scientist at BioSynCare, on the questions every mar
 
 That habit predates the job title. My career is in marketing, and the technical work was never a detour from it; it was how the marketing got done. When a question outgrew the available tools, I built the tool: scrapers where the data was not offered, automation where a process did not deserve manual hours, text and sentiment analysis on what customers said, ad copy generated programmatically and tested in experiments. The same pattern ran through the startups I founded and through my work as part of the campaign that helped elect Mario Abdo Benítez president of Paraguay.[^1]
 
-The tendency was probably there all along: my mother is a mathematician, my father an engineer, and treating problems as systems to be taken apart was the default at home. Marketing is where that habit proved its worth. Marketing data analysis is the same combination, working under its proper name.
+The tendency was probably there all along: my mother is a mathematician, my father an engineer, and treating problems as systems to be taken apart was the default at home. Marketing is where that habit proved its worth. Marketing Data Science is the same combination, working under its proper name.
 
 ## Expertise & Approach
 
