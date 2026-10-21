@@ -6,12 +6,12 @@
 //        [--widths 320,390,768,1024,1280,1440] [--themes light,dark]
 //        [--quick] [--json out.json] [--expect expect.json]
 //        [--site https://…] [--base /repo/] [--concurrency 3] [--verbose]
-//        [--pending tests/gates/pending-routes.json | --no-pending]
+//        [--pending tests/gates/pending-routes.json | --no-pending] [--draft-langs de]
 //
 // Enumerates every index.html and 404.html under --dir, serves the folder
 // (scripts/gates/server.mjs), and for each page runs
-//   once           L-01…L-05 over the raw HTML file (pageFacts → staticGates)
-//   width × theme  G-01…G-13 in the rendered page (pageGates)
+//   once           L-01…L-07 over the raw HTML file (pageFacts → staticGates)
+//   width × theme  G-01…G-14 in the rendered page (pageGates)
 //   390, 1280      A-01 axe (wcag2a, wcag2aa, wcag21aa), both themes
 // One browser; one context per theme (theme set by an init script that
 // writes localStorage['bk-theme'], as the reader's stored choice would);
@@ -28,7 +28,11 @@
 // Pending routes: pages of the site map that a later phase builds. A link
 // to one is reported (L-01 counts it, a `pending` row lists them) but does
 // not fail; an entry whose page now exists fails the run until it is
-// removed, so the list only shrinks. Read by default for the default dir.
+// removed, so the list only shrinks. Read by default, whatever --dir is
+// (a scratch build gets the verdict dist gets); --no-pending opts out.
+//
+// --draft-langs de: the languages whose every page must show the draft
+// mark (gate L-07; DRAFT_LANGS in src/lib/i18n.ts). '' when approved.
 //
 // Prints a compact table (page · gate · status · detail), writes the JSON
 // report, exits 1 on any failure. With --expect it instead exits 0 only when
@@ -38,7 +42,7 @@
 import { readFileSync, writeFileSync, readdirSync, statSync, realpathSync, existsSync, mkdirSync } from 'node:fs';
 import { join, relative, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { chromium } from 'playwright';
+import { chromium } from '@playwright/test';   // the declared package (it re-exports playwright's launchers)
 import { AxeBuilder } from '@axe-core/playwright';
 import { serve, basePrefix } from './server.mjs';
 import { GATES, GATE_NAME, pageGates, pageFacts, staticGates, axeGate, pagePathOf, skipped, fileFor } from './checks.mjs';
@@ -51,7 +55,8 @@ const argv = process.argv.slice(2);
 const flag = (n) => argv.includes(n);
 const val = (n, d) => { const i = argv.indexOf(n); return i >= 0 && argv[i + 1] !== undefined && !argv[i + 1].startsWith('--') ? argv[i + 1] : d; };
 if (flag('--help') || flag('-h')) {
-  console.log(readFileSync(fileURLToPath(import.meta.url), 'utf8').split('\n').slice(2, 36).map((l) => l.replace(/^\/\/ ?/, '')).join('\n'));
+  const lines = readFileSync(fileURLToPath(import.meta.url), 'utf8').split('\n');
+  console.log(lines.slice(2, lines.findIndex((l, i) => i > 2 && l.startsWith('// ====='))).map((l) => l.replace(/^\/\/ ?/, '')).join('\n'));
   process.exit(0);
 }
 const quick = flag('--quick');
@@ -69,7 +74,12 @@ const opts = {
   base: basePrefix(val('--base', process.env.SITE_BASE || '')),
   chromium: val('--chromium', process.env.GATES_CHROMIUM || '/opt/pw-browsers/chromium'),
   height: Number(val('--height', 900)) || 900,
-  pending: flag('--no-pending') ? '' : val('--pending', argv.includes('--dir') ? '' : join(ROOT, 'tests/gates/pending-routes.json')),
+  // the pending list applies to every build, --dir or not: a scratch build
+  // of the same source must get the same verdict as dist (--no-pending opts out)
+  pending: flag('--no-pending') ? '' : val('--pending', join(ROOT, 'tests/gates/pending-routes.json')),
+  // languages whose pages must carry the draft mark (gate L-07); mirrors
+  // DRAFT_LANGS in src/lib/i18n.ts — empty both when the owner approves
+  draftLangs: val('--draft-langs', 'de').split(',').map((s) => s.trim().toLowerCase()).filter(Boolean),
 };
 
 function siteFromConfig() {
@@ -138,7 +148,7 @@ try {
     const f = facts.get(p.path);
     report.set(p.path, {
       page: p.path, file: relative(ROOT, p.file) || p.file, redirect: f.refresh !== null,
-      static: staticGates(p.path, f, { dir: opts.dir, site, pages: facts, pending, base: opts.base }), runs: [], missing: new Set(), errors: [],
+      static: staticGates(p.path, f, { dir: opts.dir, site, pages: facts, pending, base: opts.base, draftLangs: opts.draftLangs }), runs: [], missing: new Set(), errors: [],
     });
   }
 

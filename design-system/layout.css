@@ -66,9 +66,13 @@
   background: var(--surface); color: var(--ink);
   border-bottom: var(--hairline);
 }
+/* the hairline (.shell) runs full bleed; the bar keeps to the page grid,
+   so above --page-max the wordmark and the theme square stand on the
+   same column lines as the content and the footer (grid.css rule 1) */
 .shell-bar {
   display: flex; align-items: center; gap: 16px 32px;
   min-height: 80px; padding-inline: var(--gutter);
+  max-width: var(--page-max); margin-inline: auto;
 }
 /* BRAGA is always uppercase, everywhere (D-009a): 800, −0.07em */
 .shell-mark {

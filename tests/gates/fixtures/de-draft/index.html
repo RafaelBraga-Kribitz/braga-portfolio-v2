@@ -1,0 +1,52 @@
+<!doctype html>
+<!-- L-07: a German page (a draft language) without the draft mark; everything else is the clean page -->
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>(function(){try{var t=localStorage.getItem('bk-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}})()</script>
+<title>Entwurfsseite ohne Marke · Gates</title>
+<meta name="description" content="Die saubere Seite auf Deutsch, ohne Entwurfsmarke: nur L-07 schlägt fehl.">
+<!-- the two surfaces of design-system/tokens.css, written as rgb() because a meta cannot read a token -->
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="rgb(228 230 234)">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="rgb(25 26 29)">
+<link rel="stylesheet" href="/fixture.css">
+</head>
+<body>
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="bar">
+  <a class="mark shell-mark" href="/de-draft/">BRAGA</a>
+  <nav aria-label="Index">
+    <a class="door" href="#s-1">01 · Result</a>
+    <a class="door" href="#s-2">02 · Data</a>
+  </nav>
+</header>
+<main id="main">
+  <p class="label">00 · Fixture</p>
+  <h1>Entwurf ohne Marke</h1>
+  <p>This page passes every gate at every width in both themes. It carries a <a href="/de-draft/">link inside a sentence</a>, which the target-size gate exempts, and nothing else that moves.</p>
+
+  <h2 id="s-1">Result</h2>
+  <p>The model resolved 1,240,991 rows in 38&nbsp;s. Five-year cost: <span class="figure">€453,000</span>.</p>
+  <div class="ev"><span class="ev-fill" style="--w: 40%"></span></div>
+  <svg class="chart" viewBox="0 0 200 40" role="img" aria-label="Bar at 40 per cent of the scale">
+    <rect x="0" y="4" width="80" height="12"></rect>
+    <text x="0" y="34">40 % of the scale</text>
+  </svg>
+
+  <h2 id="s-2">Data</h2>
+  <div class="table-scroll" role="region" aria-label="Sources" tabindex="0">
+    <table>
+      <thead><tr><th scope="col">Source</th><th scope="col">Rows</th><th scope="col">Period</th><th scope="col">Licence</th></tr></thead>
+      <tbody>
+        <tr><td>Job postings, Austria</td><td>720</td><td>Jan 2026 – Sep 2026</td><td>Public listings</td></tr>
+        <tr><td>Electricity prices, day-ahead</td><td>8,760</td><td>Jan 2025 – Dec 2025</td><td>Open data</td></tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+<footer>
+  <p class="label">Rafael Braga-Kribitz · Gate fixture</p>
+</footer>
+</body>
+</html>

@@ -4,19 +4,30 @@
 //
 // No dependencies. Scans every .astro .tsx .ts .md .mdx .mjs .js file under
 // src/ and, when it exists, every .html file under dist/ (or under the
-// folder given as --dist <dir>). Fails on every style= / style={ attribute
-// except one whose value consists only of custom-property declarations,
-// the ONE permitted form:
-//   style="--w: 40%; --x: 0%"       (.ev-fill / .ev-mid / chart marks)
-//   style={`--w: ${w}%`}            (the same, computed)
-//   style={{ '--w': w }}            (Preact islands only)
+// folder given as --dist <dir>). Fails on every style attribute except one
+// whose value consists only of custom-property declarations AND sits where
+// rule 1 allows it:
+//   style="--w: 40%; --x: 0%"       on .ev-fill / .ev-mid, or a chart mark
+//                                   (.mark, .swatch, an SVG shape, anything
+//                                   inside an <svg>)
+//   style={`--w: ${w}%`}            the same, computed
+//   style={{ '--w': w }}            anywhere inside a Preact tool island
+//                                   (src/components/tools/; <astro-island>
+//                                   in a built page)
 // A {…} expression passes only when it provably yields custom properties:
 // a literal, a ternary of literals, or a same-file helper returning one
 //   style={b.x ? `--x: ${b.x}; --w: ${b.w}` : `--w: ${b.w}`}
 //   style={geometry(b)}   with   const geometry = (b) => `--w: ${b.w}`
-// An attribute is `style=` written tight (as markup and JSX write it). In
-// markup (.md .mdx .html) spaces around the = count too; in code files a
-// spaced `style = …` is a variable assignment, not an attribute.
+//
+// Forms. Attribute names are case-insensitive (STYLE="…" reaches the page
+// as style). Built HTML and Markdown are read tag by tag, so text that only
+// looks like an attribute (an HTML example inside a code block, escaped as
+// &lt;b style=…&gt;; a Markdown code fence or code span) is not flagged.
+// Code files are read as text: `style=` written tight, `style = …` with
+// spaces inside a tag (outside a tag a spaced `style = …` is a variable
+// assignment), a spread `{...{ style: … }}`, the props object of
+// h() / createElement() / jsx() calls, and in .tsx / .astro any object
+// literal with a style key (a props object spread later, {...props}).
 //
 // Built HTML: every page, every code block, table and formula included,
 // must be clean; nothing is exempt (mathematics is native MathML since 21
@@ -24,7 +35,7 @@
 // prints file:line for each offender.
 // ============================================================
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
-import { join, relative, extname, resolve } from 'node:path';
+import { join, relative, extname, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
@@ -46,7 +57,10 @@ function walk(dir, out = []) {
   return out;
 }
 const SRC_EXT = new Set(['.astro', '.tsx', '.ts', '.md', '.mdx', '.mjs', '.js']);
-const MARKUP_EXT = new Set(['.md', '.mdx', '.html']);
+/** read tag by tag (HTML syntax); everything else is read as code */
+const MARKUP_EXT = new Set(['.md', '.html']);
+/** the Preact tool islands: custom properties anywhere inside them */
+const ISLANDS = join(root, 'src', 'components', 'tools');
 /** @param {string} text @param {number} idx */
 const lineOf = (text, idx) => text.slice(0, idx).split('\n').length;
 
@@ -55,8 +69,18 @@ const lineOf = (text, idx) => text.slice(0, idx).split('\n').length;
 const VALUE = String.raw`(?:"([^"]*)"|'([^']*)'|` + '`([^`]*)`' + String.raw`|\{((?:[^{}]|\{(?:[^{}]|\{[^{}]*\})*\})*)\}|([^\s"'` + '`' + String.raw`{}<>=][^\s>]*))`;
 // not part of a longer name or a property access (el.style, data-style, $style)
 const LEAD = String.raw`(?<![\w$.:-])style`;
-const STYLE_TIGHT = new RegExp(`${LEAD}=${VALUE}`, 'g');
-const STYLE_SPACED = new RegExp(`${LEAD}\\s*=\\s*${VALUE}`, 'g');
+const STYLE_TIGHT = new RegExp(`${LEAD}=${VALUE}`, 'gi');
+const STYLE_SPACED = new RegExp(`${LEAD}(?:\\s+=\\s*|=\\s+)${VALUE}`, 'gi');
+// an object-literal style key whose value is a literal (not a type): { style: { … } }
+const OBJKEY = /(?<![\w$.-])['"]?style['"]?\s*:\s*(?=[{'"`])/gi;
+// a spread whose object names style: {...{ style: … }}
+const SPREAD = /\.\.\.\s*\{\s*['"]?style['"]?\s*:/gi;
+// a hyperscript / JSX-runtime call with a props object: h('div', { … })
+const CALL = /\b(?:h|createElement|jsxs?|jsxDEV)\(\s*(?:'[^']*'|"[^"]*"|[A-Za-z_$][\w$.]*)\s*,\s*(?=\{)/g;
+
+// where rule 1 allows the custom-property form
+const MARK_CLASS = /(?:^|\s)(?:ev-fill|ev-mid|mark|swatch)(?:\s|$)/;
+const SVG_TAGS = new Set(['svg', 'g', 'rect', 'line', 'path', 'circle', 'ellipse', 'polyline', 'polygon', 'text', 'tspan', 'use']);
 
 // a value made only of custom-property declarations
 const CUSTOM_ONLY = /^\s*(?:--[\w-]+\s*:\s*[^;]*;?\s*)+$/;
@@ -228,29 +252,181 @@ function permitted(str, obj, file) {
   return permittedExpr(obj, file);
 }
 
+/* ---------- reading tags ---------- */
+
+/** Replaces every match of re with spaces of the same length (line numbers stay). @param {string} text @param {RegExp} re */
+const blankAll = (text, re) => text.replace(re, (m) => m.replace(/[^\n]/g, ' '));
+/** [start, end) index ranges of the elements an opening/closing pair encloses. @param {string} text @param {string} tag */
+function ranges(text, tag) {
+  const out = [];
+  const re = new RegExp(`<${tag}\\b[\\s\\S]*?</${tag}\\s*>`, 'gi');
+  for (const m of text.matchAll(re)) out.push([m.index ?? 0, (m.index ?? 0) + m[0].length]);
+  return out;
+}
+/** @param {number} i @param {number[][]} rs */
+const within = (i, rs) => rs.some(([a, b]) => i >= a && i < b);
+
+// one start tag with its attributes; quoted values may hold ">"
+const TAG = /<([a-zA-Z][\w:-]*)((?:\s+[^\s"'>/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'=<>`]+))?)*)\s*\/?>/g;
+const ATTR = /([^\s"'>/=]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+)))?/g;
+
+/** Index of the "<" opening the tag that holds position i, or -1 (text outside a tag). @param {string} s @param {number} i */
+function tagStart(s, i) {
+  const from = s.lastIndexOf('<', i);
+  if (from < 0 || !/[A-Za-z]/.test(s[from + 1] || '')) return -1;
+  // between the tag name and i: no ">" or ";" outside {…}, quotes and =>
+  let between = s.slice(from, i).replace(/=>/g, '  ');
+  between = between.replace(/"[^"\n]*"|'[^'\n]*'|`[^`]*`/g, '');
+  let prev;
+  do { prev = between; between = between.replace(/\{[^{}]*\}/g, ''); } while (between !== prev);
+  return /[>;{}]/.test(between) ? -1 : from;
+}
+/** The source of the tag opening at `from` (to its ">" at depth 0). @param {string} s @param {number} from */
+function tagSource(s, from) {
+  let depth = 0;
+  for (let i = from + 1; i < s.length; i++) {
+    const c = s[i];
+    if (c === '"' || c === "'") { i = skipQuote(s, i); continue; }
+    if (c === '`') { i = skipTemplate(s, i); continue; }
+    if (c === '{') depth++;
+    else if (c === '}') depth--;
+    else if (c === '>' && depth === 0 && s[i - 1] !== '=') return s.slice(from, i + 1);
+  }
+  return s.slice(from);
+}
+/** The class attribute's literal text in a tag's source (class, className, quoted or {`…`}). @param {string} src */
+function classIn(src) {
+  const m = /\bclass(?:Name)?\s*=\s*(?:"([^"]*)"|'([^']*)'|\{\s*[`'"]([^`'"]*)[`'"]\s*\})/.exec(src);
+  return m ? (m[1] ?? m[2] ?? m[3] ?? '') : '';
+}
+
 /** @type {string[]} */
 const failures = [];
 let checked = 0;
-/** @param {string} file */
-function scan(file) {
-  const text = readFileSync(file, 'utf8');
-  const re = MARKUP_EXT.has(extname(file)) ? STYLE_SPACED : STYLE_TIGHT;
-  checked++;
-  for (const m of text.matchAll(re)) {
-    const i = m.index ?? 0;
-    if (permitted(m[1] ?? m[2] ?? m[3] ?? m[5], m[4], text)) continue;
-    failures.push(`${rel(file)}:${lineOf(text, i)} · ${m[0].slice(0, 80).replace(/\s+/g, ' ')}`);
+/** @param {string} file @param {string} text @param {number} i @param {string} what @param {string} why */
+const fail = (file, text, i, what, why) => failures.push(`${rel(file)}:${lineOf(text, i)} · ${what.slice(0, 80).replace(/\s+/g, ' ')}${why ? ' · ' + why : ''}`);
+const WHERE = 'custom properties belong on .ev-fill / .ev-mid, a chart mark or inside a tool island (rule 1)';
+
+/** Built HTML and Markdown: tag by tag. @param {string} file @param {string} raw */
+function scanMarkup(file, raw) {
+  let text = blankAll(raw, /<!--[\s\S]*?-->/g);
+  text = blankAll(text, /(<(script|style)\b[^>]*>)[\s\S]*?(<\/\2\s*>)/gi);
+  if (extname(file) === '.md') {
+    // fenced code and code spans are text, not markup
+    text = blankAll(text, /^(\s*)(`{3,}|~{3,})[^\n]*\n[\s\S]*?^\1\2[ \t]*$/gm);
+    text = blankAll(text, /`[^`\n]+`/g);
+  }
+  const svg = ranges(text, 'svg');
+  const islands = ranges(text, 'astro-island');
+  for (const t of text.matchAll(TAG)) {
+    const at = t.index ?? 0;
+    const name = t[1].toLowerCase();
+    let style = null, cls = '';
+    for (const a of (t[2] || '').matchAll(ATTR)) {
+      const key = a[1].toLowerCase();
+      const value = a[2] ?? a[3] ?? a[4] ?? '';
+      if (key === 'style') style = value;
+      else if (key === 'class') cls = value;
+    }
+    if (style === null) continue;
+    if (!customOnly(style)) { fail(file, text, at, t[0], 'sets real properties'); continue; }
+    if (!(MARK_CLASS.test(cls) || SVG_TAGS.has(name) || within(at, svg) || within(at, islands))) fail(file, text, at, t[0], WHERE);
   }
 }
 
+/** Code files (.astro .tsx .ts .mjs .js .mdx): as text. @param {string} file @param {string} text */
+function scanCode(file, text) {
+  const island = file.startsWith(ISLANDS + sep);
+  const svg = ranges(text, 'svg');
+  /** @param {number} i  where the attribute sits */
+  const placed = (i) => {
+    if (island || within(i, svg)) return true;
+    const from = tagStart(text, i);
+    if (from < 0) return false;
+    const src = tagSource(text, from);
+    const name = (/^<([A-Za-z][\w:-]*)/.exec(src) || [])[1] || '';
+    return SVG_TAGS.has(name.toLowerCase()) || MARK_CLASS.test(classIn(src));
+  };
+  const check = (i, m, ok) => {
+    if (!ok) fail(file, text, i, m, 'sets real properties or cannot be proven to set custom properties only');
+    else if (!placed(i)) fail(file, text, i, m, WHERE);
+  };
+  for (const m of text.matchAll(STYLE_TIGHT)) {
+    const i = m.index ?? 0;
+    check(i, m[0], permitted(m[1] ?? m[2] ?? m[3] ?? m[5], m[4], text));
+  }
+  for (const m of text.matchAll(STYLE_SPACED)) {
+    const i = m.index ?? 0;
+    // `const style = …` / `style = x;` is an assignment; inside a tag it is an attribute
+    if (tagStart(text, i) < 0) continue;
+    check(i, m[0], permitted(m[1] ?? m[2] ?? m[3] ?? m[5], m[4], text));
+  }
+  for (const m of text.matchAll(SPREAD)) fail(file, text, m.index ?? 0, m[0], 'a spread cannot be proven to set custom properties only');
+  // in a component file, a props object with a style key may be spread
+  // later ({...props}): its value must be custom properties too
+  if (/\.(?:tsx|jsx|astro)$/.test(file)) {
+    for (const m of text.matchAll(OBJKEY)) {
+      const from = (m.index ?? 0) + m[0].length;
+      const rest = text.slice(from);
+      let end = rest.length;
+      eachTop(rest, (c, k) => { if (c === ',' || c === ';' || c === '\n') { end = k; return true; } return false; });
+      const expr = rest.slice(0, end);
+      if (!permittedExpr(expr, text)) fail(file, text, m.index ?? 0, `style:${expr}`, 'a style object sets real properties or cannot be proven to set custom properties only');
+      else if (!island) fail(file, text, m.index ?? 0, `style:${expr}`, WHERE);
+    }
+  }
+  for (const m of text.matchAll(CALL)) {
+    const from = (m.index ?? 0) + m[0].length;
+    const obj = text.slice(from, from + skipBlock(text.slice(from)) + 1);
+    const inner = obj.slice(1, -1);
+    // the top-level `style:` of the props object
+    let at = -1;
+    eachTop(inner, (_c, k) => { if (/^style\s*:/i.test(inner.slice(k)) && !/[\w$]/.test(inner[k - 1] || '')) { at = k; return true; } return false; });
+    if (at < 0) continue;
+    const valueFrom = at + inner.slice(at).indexOf(':') + 1;
+    const rest = inner.slice(valueFrom);
+    let end = rest.length;
+    eachTop(rest, (c, k) => { if (c === ',') { end = k; return true; } return false; });
+    const expr = rest.slice(0, end);
+    const ok = permittedExpr(expr, text);
+    const i = from + 1 + at;
+    if (!ok) fail(file, text, i, `style:${expr}`, 'sets real properties or cannot be proven to set custom properties only');
+    else if (!(island || MARK_CLASS.test(obj))) fail(file, text, i, `style:${expr}`, WHERE);
+  }
+}
+
+/** @param {string} file @param {string} text */
+function scanText(file, text) {
+  checked++;
+  if (MARKUP_EXT.has(extname(file))) scanMarkup(file, text);
+  else scanCode(file, text);
+}
+
+/**
+ * The offenders in one file's text, without touching the disk; `file` is a
+ * path (its extension picks markup or code; a path under
+ * src/components/tools/ is an island). For tests/unit/lint-style.test.mjs.
+ * @param {string} file @param {string} text @returns {string[]}
+ */
+export function lintText(file, text) {
+  const before = failures.length;
+  scanText(resolve(root, file), text);
+  return failures.splice(before);
+}
+
+const isMain = process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (isMain) main();
+
+function main() {
 const sources = walk(join(root, 'src')).filter((p) => SRC_EXT.has(extname(p)));
-for (const p of sources) scan(p);
+for (const p of sources) scanText(p, readFileSync(p, 'utf8'));
 const distFiles = existsSync(DIST) ? walk(DIST).filter((p) => extname(p) === '.html') : [];
-for (const p of distFiles) scan(p);
+for (const p of distFiles) scanText(p, readFileSync(p, 'utf8'));
 
 if (failures.length) {
   for (const f of failures) console.error(`FAIL · inline style · ${f}`);
-  console.error(`\nlint:style failed · ${failures.length} inline style attribute${failures.length === 1 ? '' : 's'} (only custom-property declarations are allowed, e.g. style="--w: 40%").`);
+  console.error(`\nlint:style failed · ${failures.length} inline style attribute${failures.length === 1 ? '' : 's'} (only custom-property declarations on an evidence bar or chart mark, or inside a tool island, are allowed, e.g. <span class="ev-fill" style="--w: 40%">).`);
   process.exit(1);
 }
 console.log(`lint:style passed · ${checked} files checked (${sources.length} source, ${distFiles.length} built page${distFiles.length === 1 ? '' : 's'}${existsSync(DIST) ? ` in ${rel(DIST)}` : ', no dist'}).`);
+}

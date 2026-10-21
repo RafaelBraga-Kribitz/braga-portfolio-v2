@@ -134,17 +134,19 @@ a:hover { color: var(--ink); }
   text-decoration-color: var(--mid); text-underline-offset: 0.18em;
 }
 .prose a:hover, .doc a:hover, p a:hover, li a:hover, dd a:hover, figcaption a:hover, td a:hover { text-decoration-color: var(--ink); }
-.listing-row:hover .lr-arrow, .door:hover .door-arrow, .lr-year:hover .lr-arrow { color: var(--accent-01); }
+/* the arrow rule itself lives with the listing (components.css section 1) */
 
 /* 7 · targets: at least 24 × 24 CSS px everywhere (2.5.8), 44 × 44 below
       768 (HANDOFF 10). Nav and footer links, the trail, the meta row, the
       end bar, the forward links and a paragraph that is one link
       (.link-line) get a block box; text inside them does not move. A link
-      inside a sentence is exempt (the 2.5.8 inline exception). */
-nav a, footer a, .door, .shell-lang, .doc-meta a, .link-line a { min-height: 24px; display: inline-flex; align-items: center; }
+      inside a sentence is exempt (the 2.5.8 inline exception). The doors
+      and the language link are 44px tall at every width: the shell sets
+      that itself (layout.css section 2), so they are not listed here. */
+nav a, footer a, .doc-meta a, .link-line a { min-height: 24px; display: inline-flex; align-items: center; }
 .link-line a { gap: 8px; }
 @media (max-width: 767px) {
-  nav a, footer a, .door, .shell-lang, .doc-meta a, .link-line a { min-height: 44px; min-width: 44px; }
+  nav a, footer a, .doc-meta a, .link-line a { min-height: 44px; min-width: 44px; }
   /* the trail, the end bar, the cover CTA and the forward links are
      defined in layout.css, which raises them in its section 10 */
 }
@@ -228,13 +230,15 @@ td, th, dd, output, input, .num { font-variant-numeric: var(--num); }
 .doc > ol { list-style: decimal-leading-zero; }
 .doc li::marker { color: var(--ink-3); font-variant-numeric: var(--num); }
 .doc strong { font-weight: 700; }
+/* em sizes follow their context (a 12px table head, a 13px mono cell):
+   max() keeps them on the 12px floor (rule 4, gate G-01) */
 .doc code {
-  font: 400 0.9em / 1 var(--font-mono); background: var(--surface-2);
+  font: 400 max(12px, 0.9em) / 1 var(--font-mono); background: var(--surface-2);
   padding: 1px 4px; font-variant-numeric: var(--num);
 }
 .doc > hr { border: 0; border-top: var(--hairline); height: 0; }
 .doc mark { background: none; color: inherit; }
-.doc sup { font-size: 0.75em; line-height: 0; vertical-align: super; }   /* 12px at the 16px body: the floor holds for footnote refs */
+.doc sup { font-size: max(12px, 0.75em); line-height: 0; vertical-align: super; }   /* 12px at the 16px body, and never less in a 13px cell or a 15px callout */
 .doc sup a { font-family: var(--font-mono); color: var(--ink-2); text-decoration: none; padding-inline: 2px; }
 .doc img { display: block; max-width: 100%; height: auto; }
 /* ==text== in prose: the earned figure, accent text, at most one per section (D-025) */

@@ -2,8 +2,10 @@
 // 1. Alignment: the processor writes GFM column alignment as an inline
 //    style (text-align), which the design system forbids; it becomes the
 //    align attribute the stylesheet reads (th[align="right"] → mono, right).
-// 2. Every <table> is wrapped in <div class="table-scroll"> so a wide table
-//    scrolls inside its wrapper and only there (gate G-06).
+// 2. Every <table> is wrapped in <div class="table-scroll" tabindex="0"> so
+//    a wide table scrolls inside its wrapper and only there (gate G-06);
+//    tabindex="0" keeps that scroll region reachable by keyboard (WCAG
+//    2.1.1, axe scrollable-region-focusable), as .math-body does.
 // Two passes: the cells first, the wrapper second.
 const ALIGN = /text-align\s*:\s*(left|right|center)\s*;?/i;
 
@@ -30,7 +32,7 @@ export const tableScroll = {
       const parent = ctx.parent(node);
       const classes = parent && parent.type === 'element' && parent.properties ? parent.properties.className : undefined;
       if (Array.isArray(classes) && classes.includes('table-scroll')) return; // already wrapped (hand-written HTML)
-      ctx.wrapNode(node, { type: 'element', tagName: 'div', properties: { className: ['table-scroll'] }, children: [] });
+      ctx.wrapNode(node, { type: 'element', tagName: 'div', properties: { className: ['table-scroll'], tabIndex: 0 }, children: [] });
     },
   },
 };

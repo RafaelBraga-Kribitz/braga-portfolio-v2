@@ -240,12 +240,14 @@ details.callout > .callout-content { padding-block: 0 24px; max-width: var(--mea
 /* ---------- 5 · CODE BLOCK (D-035) ----------
    Always a dark panel, distinct from the page in both themes, with
    the six-token palette (base.css), a copy button and a wrap toggle
-   (wrap on by default). code.js (~1 KB, progressive) adds the
-   buttons; without it the block is static and wrapped.
+   (wrap on by default). The build renders the panel and both buttons,
+   labelled in the page's language (src/lib/rehype/code.mjs); code.js
+   (~1 KB, progressive) makes them work. Without it the block is static
+   and wrapped, and the buttons do nothing.
      <div class="code" data-lang="python" data-wrap="on">
        <div class="code-bar"><span>python · listing 04-01-1</span>
-         <span class="code-tools"><button class="code-wrap" aria-pressed="true">Wrap · on</button>
-           <button class="code-copy">Copy</button></span></div>
+         <span class="code-tools"><button class="code-wrap" aria-pressed="true" data-on="Wrap · on" data-off="Wrap · off">Wrap · on</button>
+           <button class="code-copy" data-label="Copy" data-copied="Copied" data-failed="Copy failed">Copy</button></span></div>
        <pre><code>…</code></pre></div> */
 .code { background: var(--code-bg); color: var(--code-ink); border: 1px solid var(--code-edge); min-width: 0; color-scheme: dark; }
 .code-bar {

@@ -32,10 +32,10 @@
 .markdown-reading-view ol { list-style: decimal-leading-zero; }
 .markdown-reading-view li::marker { color: var(--ink-3); font-variant-numeric: var(--num); }
 .markdown-reading-view strong { font-weight: 700; }
-.markdown-reading-view code { font: 400 0.9em / 1 var(--font-mono); background: var(--surface-2); padding: 1px 4px; font-variant-numeric: var(--num); }
+.markdown-reading-view code { font: 400 max(12px, 0.9em) / 1 var(--font-mono); background: var(--surface-2); padding: 1px 4px; font-variant-numeric: var(--num); }
 .markdown-reading-view hr { border: 0; border-top: var(--hairline); height: 0; }
 .markdown-reading-view mark { background: none; color: inherit; }
-.markdown-reading-view sup { font-size: 0.75em; line-height: 0; vertical-align: super; }
+.markdown-reading-view sup { font-size: max(12px, 0.75em); line-height: 0; vertical-align: super; }
 .markdown-reading-view sup a { font-family: var(--font-mono); color: var(--ink-2); text-decoration: none; padding-inline: 2px; }
 .markdown-reading-view img { display: block; max-width: 100%; height: auto; }
 .markdown-reading-view p mark,

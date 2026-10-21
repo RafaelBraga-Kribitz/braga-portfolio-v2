@@ -8,9 +8,13 @@
 // script so that it can reach them: with a stored choice it sets
 // data-theme AND gives both metas the stored theme's colour (light is the
 // first meta, dark the second), so the browser bar matches the page from
-// the first paint, not only after a click. The toggle reads the colour of
-// the painted canvas (html is painted with --surface) after it flips the
-// theme, so it never depends on what the pre-paint script overwrote.
+// the first paint, not only after a click. Their values and the script
+// come from src/lib/theme.ts (read from tokens.css at build), shared with
+// the root redirect page. The toggle reads the colour of the painted
+// canvas (html is painted with --surface) after it flips the theme, so it
+// never depends on what the pre-paint script overwrote; with no stored
+// choice it follows the OS while the page is open (its aria-label names
+// the theme in force).
 //
 // Share card and favicons (HANDOFF 24, AUDIT P-10): public/share-card.png
 // and public/favicon-{32,180}.png, rendered by `npm run assets`
@@ -23,6 +27,7 @@ import { site } from '../lib/site';
 import type { Lang } from '../lib/i18n';
 import { t, otherLang } from '../lib/i18n';
 import { route, alternates, absolute, withBase, type PageId, type DoorCode } from '../lib/routes';
+import { themeColor, PREPAINT } from '../lib/theme';
 
 interface Props {
   lang: Lang;
@@ -52,9 +57,9 @@ const shareAlt = `${site.wordmark} · ${site.name} · ${site.role[lang]}`;
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#E4E6EA">
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#191A1D">
-    <script is:inline>(function(){try{var t=localStorage.getItem('bk-theme');if(t==='light'||t==='dark'){var d=document,m=d.querySelectorAll('meta[name=theme-color]');d.documentElement.dataset.theme=t;if(m.length===2)m[0].content=m[1].content=m[t==='dark'?1:0].content}}catch(e){}})()</script>
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content={themeColor.light}>
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content={themeColor.dark}>
+    <script is:inline set:html={PREPAINT}></script>
     <title>{title} · {site.name}</title>
     <meta name="description" content={description}>
     <link rel="canonical" href={canonical}>
@@ -86,7 +91,7 @@ const shareAlt = `${site.wordmark} · ${site.name} · ${site.role[lang]}`;
     <Shell lang={lang} page={page} current={current} />
     <main id="main" class="grid-container"><slot /></main>
     <Footer lang={lang} />
-    <script is:inline>(function(){var b=document.querySelector('.shell-theme');if(!b)return;var d=document.documentElement;var ms=document.querySelectorAll('meta[name="theme-color"]');function current(){return d.dataset.theme||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}function label(theme){b.setAttribute('aria-label',b.getAttribute('data-label')+' · '+(theme==='dark'?b.getAttribute('data-dark'):b.getAttribute('data-light')))}label(current());b.addEventListener('click',function(){var next=current()==='dark'?'light':'dark';d.dataset.theme=next;try{localStorage.setItem('bk-theme',next)}catch(e){}var c=getComputedStyle(d).backgroundColor;for(var i=0;i<ms.length;i++)ms[i].setAttribute('content',c);label(next)})})()</script>
+    <script is:inline>(function(){var b=document.querySelector('.shell-theme');if(!b)return;var d=document.documentElement;var ms=document.querySelectorAll('meta[name="theme-color"]');function current(){return d.dataset.theme||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}function label(theme){b.setAttribute('aria-label',b.getAttribute('data-label')+' · '+(theme==='dark'?b.getAttribute('data-dark'):b.getAttribute('data-light')))}label(current());try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){if(!d.dataset.theme)label(current())})}catch(e){}b.addEventListener('click',function(){var next=current()==='dark'?'light':'dark';d.dataset.theme=next;try{localStorage.setItem('bk-theme',next)}catch(e){}var c=getComputedStyle(d).backgroundColor;for(var i=0;i<ms.length;i++)ms[i].setAttribute('content',c);label(next)})})()</script>
     {hasCode && <script is:inline src={withBase('/scripts/code.js')} defer></script>}
   </body>
 </html>

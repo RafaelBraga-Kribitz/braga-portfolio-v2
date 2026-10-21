@@ -231,6 +231,32 @@ test('CM · zero errors and zero denominators do not divide by zero', () => {
   assert.deepEqual(m, { accuracy: 0, precision: 0, recall: 0, specificity: 0, npv: 0, f1: 0, fpr: 0, fnr: 0 });
 });
 
+/* Shares that would round past 100: Churn counts (FN 20, FP 40) at €3 per FP and €10 per FN.
+     cost = 40 · 3 + 20 · 10 = 120 + 200 = €320 ; FN share 200 / 320 = 62.5 % ; FP share 37.5 %
+     rounded independently: 63 + 38 = 101 ; FN rounded, FP its complement: 63 + 37 = 100 */
+test('CM · the two cost shares add up to 100%', () => {
+  const e = cm.evaluate({ ...cm.DEFAULTS, costFP: 3, costFN: 10 });
+  assert.equal(e.totalCost, 320);
+  assert.equal(e.verdict('en'), 'Errors cost €320 across 500 cases: 63% from the 20 churners missed, 37% from the 40 false alarms.');
+  assert.equal(e.verdict('de'), `Fehler kosten €${NBSP}320 über 500 Fälle: 63${NBSP}% durch 20 übersehene Abwanderer, 37${NBSP}% durch 40 Fehlalarme.`);
+});
+
+/* No positive case: n 100 at a prevalence of 0.1 % → positives = round(0.1) = 0 ; specificity 100 % → FP 0.
+   Recall, FNR and F1 are 0/0 and print as an en dash; precision is 0/0 too (TP + FP = 0).
+   The verdict must not say "every positive is flagged". */
+test('CM · zero positives: undefined rates print a dash and the verdict says why', () => {
+  const e = cm.evaluate({ n: 100, prevalence: 0.1, sensitivity: 90, specificity: 100, costFP: 10, costFN: 200 });
+  assert.deepEqual([e.positives, e.tp, e.fn, e.fp, e.tn], [0, 0, 0, 0, 100]);
+  assert.equal(e.verdict('en'), 'No error cost across 100 cases, but no case is positive at this prevalence: recall and F1 are undefined.');
+  assert.equal(e.verdict('de'), 'Keine Fehlerkosten über 100 Fälle, aber bei dieser Prävalenz ist kein Fall positiv: Recall und F1 sind nicht definiert.');
+  const v = Object.fromEntries(e.kpis('en').map((k) => [k.key, k.value]));
+  assert.deepEqual([v.accuracy, v.precision, v.recall, v.specificity, v.f1, v.fnr], ['100.0%', EN_DASH, EN_DASH, '100.0%', EN_DASH, EN_DASH]);
+  // with false alarms but no positives, precision is defined (0 of the flagged are positive)
+  const f = cm.evaluate({ n: 100, prevalence: 0.1, sensitivity: 90, specificity: 90, costFP: 10, costFN: 200 });
+  const w = Object.fromEntries(f.kpis('en').map((k) => [k.key, k.value]));
+  assert.deepEqual([w.precision, w.recall, w.f1], ['0.0%', EN_DASH, EN_DASH]);
+});
+
 /* ============================================================
    Formatting (format.js conventions, D-031)
    ============================================================ */

@@ -9,13 +9,15 @@
 // sitemap read too; while a collection is empty its section shows the
 // heading without a listing. The Work and Writing claims are i18n keys
 // shared with the indexes. German chrome and claims are agent drafts
-// (O-05); on the home page the draft notice is an HTML comment only.
+// (O-05): the German cover shows the in-build mark with the "Entwurf ·
+// Freigabe ausstehend" label directly under its ruled footer (D-011,
+// HANDOFF item 25), as a .label line.
 import Base from '@/layouts/Base.astro';
 import Cover from '@/components/Cover.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import Listing from '@/components/Listing.astro';
 import ListingRow from '@/components/ListingRow.astro';
-import { t, formatDate, type Lang } from '@/lib/i18n';
+import { t, formatDate, isDraftLang, type Lang } from '@/lib/i18n';
 import { route, workRoute, writingRoute } from '@/lib/routes';
 import { LANGS, site } from '@/lib/site';
 import { tools, toolsProse } from '@/lib/catalogue';
@@ -66,8 +68,7 @@ const writing = await writingOf(lang);
 const allProjects = projects.length ? t(lang, 'all-n-projects').replace('{n}', String(projects.length)) : t(lang, 'all-projects');
 ---
 <Base lang={lang} page="home" title={copy.title} description={copy.lead}>
-  {lang === 'de' && <Fragment set:html={'<!-- Entwurf · Freigabe ausstehend: German chrome and claims on this page are agent drafts awaiting the owner’s approval (HANDOFF O-05). -->'} />}
-  <Cover lang={lang} spec={spec} titleLines={copy.titleLines} lead={copy.lead} />
+  <Cover lang={lang} spec={spec} titleLines={copy.titleLines} lead={copy.lead} draft={isDraftLang(lang)} />
 
   <section class="section" id="work">
     <SectionHeading number="01" word={t(lang, 'door.work')} claim={t(lang, 'work.claim')} prose={t(lang, 'work.prose')} link={{ href: route('work', lang), label: allProjects }} />

@@ -17,15 +17,18 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { LANGS, type Lang } from './lib/site';
+import { STATUSES, type StatusState } from './lib/i18n';
 
-/* ---------- vocabularies ---------- */
+/* ---------- vocabularies ----------
+   The languages and the status states have one source each (src/lib/site.ts,
+   src/lib/i18n.ts), shared with the chrome, so the schema and the pages
+   cannot drift apart. */
 
-export const LANGS = ['en', 'de'] as const;
-export type Lang = (typeof LANGS)[number];
-
+export { LANGS, STATUSES };
+export type { Lang };
 /** D-029: five states, one square each, always with a label. */
-export const STATUSES = ['complete', 'functional', 'under-revision', 'in-build', 'archived'] as const;
-export type Status = (typeof STATUSES)[number];
+export type Status = StatusState;
 
 export const PROJECT_KINDS = ['case', 'brief'] as const;
 export type ProjectKind = (typeof PROJECT_KINDS)[number];

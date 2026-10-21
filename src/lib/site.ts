@@ -8,8 +8,9 @@
 // src/lib/routes.ts puts on every internal URL; never join `url` and a
 // path by hand, use absolute() from routes.ts.
 
-export type Lang = 'en' | 'de';
-export const LANGS: readonly Lang[] = ['en', 'de'];
+/** The two built route trees (D-011). The content schema (src/content.config.ts) reads this list. */
+export const LANGS = ['en', 'de'] as const;
+export type Lang = (typeof LANGS)[number];
 
 export interface Site {
   name: string;

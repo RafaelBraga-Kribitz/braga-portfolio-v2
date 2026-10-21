@@ -24,7 +24,7 @@ const otherHref = page === 'notfound' ? route('home', other) : route(page, other
 <header class="shell" lang={lang}>
   <div class="shell-bar">
     <a class="shell-mark" href={route('home', lang)}>{site.wordmark}</a>
-    <nav class="shell-doors" aria-label={t(lang, 'index')}>
+    <nav class="shell-doors" aria-label={t(lang, 'nav.sections')}>
       {doors.map((d) => (
         <a class="door" href={route(d.id, lang)} aria-current={d.code === current ? 'page' : undefined}><span class="door-code">{d.code}</span><span class="door-label">{doorLabel(d, lang)}</span></a>
       ))}

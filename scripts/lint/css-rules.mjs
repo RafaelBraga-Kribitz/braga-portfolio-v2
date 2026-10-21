@@ -3,12 +3,19 @@
    lint:css — design-system rules (BUILD-BRIEF §6 rules 2 and 4, §8 A)
    No dependencies. Exits 1 with a message when:
      1. a hex colour appears in any design-system/*.css other than
-        tokens.css, or anywhere under src/;
+        tokens.css, or anywhere under src/ (theme-color metas included:
+        src/lib/theme.ts reads them out of tokens.css);
      2. a font-size below 12px (px) or 0.75rem appears in a stylesheet,
-        a component or an SVG attribute;
+        a component or an SVG attribute; or a relative size below 1em /
+        100% / `smaller` / `x-small` that is not held on the floor by
+        max(12px, …) or clamp(12px, …): an em follows its context (a 12px
+        table head, a 13px mono cell), so 0.75em there is 9px;
      3. a class of the class contract (BUILD-BRIEF §5) is missing from
         the stylesheets (the bench set is Agent D's: a warning while
-        bench.css does not exist, a failure once it does);
+        bench.css does not exist, a failure once it does); or a stylesheet
+        defines a class that neither the contract nor design-system/
+        README.md ("Sub-classes the patterns use") names: "use those
+        names, do not coin others" (§5) holds only while the list is whole;
      4. a token pair of the contrast table falls below its threshold.
    It always prints the contrast table (WCAG 2 ratios computed from the
    hex values it parses out of tokens.css), light and dark.
@@ -54,11 +61,10 @@ const hexTargets = [
 for (const p of hexTargets) {
   const raw = readFileSync(p, 'utf8');
   const text = stripComments(raw, extname(p));
-  const lines = text.split('\n');
   for (const m of text.matchAll(HEX)) {
     const ln = lineOf(text, m.index);
-    // the one permitted hex outside tokens.css: <meta name="theme-color" content="#…"> (D-024; a meta cannot read var())
-    if (/theme-color/.test(lines[ln - 1])) continue;
+    // no exemption: the theme-color metas read --surface from tokens.css
+    // at build time (src/lib/theme.ts), so no hex is copied into src/
     failures.push(`hex colour outside tokens.css · ${rel(p)}:${ln} · ${m[0]} (use a var(--…) from design-system/tokens.css)`);
   }
 }
@@ -70,6 +76,7 @@ const floorTargets = [
 ];
 const FONT_DECL = /\bfont(?:-size)?\s*:\s*([^;{}]+)/gi;          // font-size: … and the font: shorthand
 const SIZE = /(\d*\.?\d+)(px|rem)(?![\w-])/g;
+const REL = /(?<![\w.-])(\d*\.?\d+)(em|%)(?![\w-])/g;
 const SVG_ATTR = /\bfont-size\s*=\s*["']?(\d*\.?\d+)(px|rem)?["']?/gi;
 for (const p of floorTargets) {
   const text = stripComments(readFileSync(p, 'utf8'), extname(p));
@@ -78,6 +85,15 @@ for (const p of floorTargets) {
       const v = parseFloat(s[1]);
       if ((s[2] === 'px' && v < 12) || (s[2] === 'rem' && v < 0.75)) failures.push(`font size below the 12px floor · ${rel(p)}:${lineOf(text, d.index)} · ${s[0]} in "${d[0].trim().slice(0, 60)}"`);
     }
+  }
+  for (const d of text.matchAll(FONT_DECL)) {
+    // the size of a `font:` shorthand comes before the "/" of the line height
+    const isShorthand = !/^font-size/i.test(d[0]);
+    const value = isShorthand ? d[1].split('/')[0] : d[1];
+    if (/\b(?:max|clamp)\(\s*(?:12px|0?\.75rem)/i.test(value)) continue;
+    const small = [...value.matchAll(REL)].filter((s) => parseFloat(s[1]) < (s[2] === '%' ? 100 : 1));
+    if (/(?:^|\s)(?:smaller|x-small|xx-small)\b/i.test(value)) small.push(['smaller']);
+    for (const s of small) failures.push(`relative font size can fall below the 12px floor · ${rel(p)}:${lineOf(text, d.index)} · ${s[0]} in "${d[0].trim().slice(0, 60)}" (write max(12px, ${s[0]}))`);
   }
   for (const a of text.matchAll(SVG_ATTR)) {
     const v = parseFloat(a[1]);
@@ -110,6 +126,24 @@ for (const [group, classes] of Object.entries(CONTRACT)) {
     if (hasClass(c)) continue;
     if (group === 'bench' && !benchPresent) warnings.push(`contract class .${c} pending: design-system/bench.css (Agent D) does not exist yet`);
     else failures.push(`contract class .${c} (${group}) is missing from design-system/*.css`);
+  }
+}
+// every class a stylesheet defines is named in the contract or the README
+// (ranges as the documents write them: .col-1…12, .col-start-N, .cat-1…5)
+{
+  const docs = ['BUILD-BRIEF.md', 'design-system/README.md'].map((f) => existsSync(join(root, f)) ? readFileSync(join(root, f), 'utf8') : '').join('\n');
+  const named = new Set([...docs.matchAll(/\.([a-zA-Z][\w-]*)/g)].map((m) => m[1]));
+  const ranges = [...docs.matchAll(/\.([a-z][\w-]*-)(\d+)\s*…\s*(?:\.\1)?(\d+)/g)].map((m) => [m[1], +m[2], +m[3]]);
+  const families = [...docs.matchAll(/\.([a-z][\w-]*-)N\b/g)].map((m) => m[1]);
+  const isNamed = (c) => {
+    if (named.has(c)) return true;
+    const m = /^(.*-)(\d+)$/.exec(c);
+    return !!m && (families.includes(m[1]) || ranges.some(([p, a, b]) => p === m[1] && +m[2] >= a && +m[2] <= b));
+  };
+  for (const p of dsFiles.filter((f) => basename(f) !== 'obsidian-snippet.css')) {
+    const sel = stripComments(readFileSync(p, 'utf8'), '.css').replace(/\{[^{}]*\}/g, '{}');
+    const coined = new Set([...sel.matchAll(/\.([a-zA-Z][\w-]*)/g)].map((m) => m[1]).filter((c) => !isNamed(c)));
+    for (const c of coined) failures.push(`class .${c} in ${rel(p)} is named in neither BUILD-BRIEF §5 nor design-system/README.md (list it under "Sub-classes the patterns use", or use a listed name)`);
   }
 }
 for (const s of STATES) if (!new RegExp(`\\.status\\[data-state=["']${s}["']\\]`).test(selectorsOnly) && s !== 'complete') failures.push(`status state "${s}" has no .status[data-state="${s}"] rule`);

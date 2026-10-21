@@ -196,7 +196,11 @@ from the frontmatter, so the body starts at `##`.
   table cell it stays ink). At most one per section; never a word, never
   decoration; never in a heading (it stays literal there).
 - No images, no icons, no emoji, no inline style attributes, no raw HTML.
-  Glyphs: → ↗ ← § · ▲ + − – … only.
+  Glyphs: → ↗ ← § · ▲ + − – … only (gate L-06 fails a page with any other
+  symbol in its text: ©, ™, ✓, ★, an emoji; code and formulae excepted).
+- No task lists (`- [ ]`, `- [x]`): the design system has no checkbox, and
+  the build fails on one, naming the file. Write a plain list and state
+  the status in words.
 
 ## 5. Callouts
 
@@ -351,8 +355,8 @@ caption with the source. Not a callout on the page: it becomes
 
 GitHub tables. Alignment colons become `align` attributes (right-aligned
 columns set in mono, for figures); every table is wrapped in
-`<div class="table-scroll">` so a wide table scrolls inside itself, never the
-page.
+`<div class="table-scroll" tabindex="0">` so a wide table scrolls inside
+itself, never the page, and the keyboard can reach that scroll.
 
 ```md
 | Metric | Value |
@@ -404,6 +408,9 @@ Each fence becomes the dark panel of D-035:
 </div>
 ```
 
+The button labels follow the document's `lang` (German: „Umbruch · an“,
+„Kopieren“; agent drafts); the labels `code.js` swaps in travel as
+`data-on` / `data-off` and `data-label` / `data-copied` / `data-failed`.
 Wrap is on by default; the buttons work once `/scripts/code.js` loads
 (`hasCode` on `Base`), and the block is complete without it.
 
@@ -438,6 +445,7 @@ heading reads "Footnotes" or "Fußnoten" by `lang`.
 |---|---|---|
 | mdast | `src/lib/remark/math.mjs` | keeps `$5 and $10` as text |
 | mdast | `src/lib/remark/code-lang.mjs` | unknown fence language → plain text |
+| mdast | `src/lib/remark/task-lists.mjs` | a GFM task list fails the build |
 | mdast | `src/lib/remark/callouts.mjs` | `==mark==`, then the callouts |
 | mdast | `src/lib/remark/callouts.mjs` | `[!bars]` → the evidence figure |
 | hast | Prism (Astro) | class-based highlighting |

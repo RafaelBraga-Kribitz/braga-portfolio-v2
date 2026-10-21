@@ -31,7 +31,8 @@ export interface RangeProps {
   onChange: (value: number) => void;
 }
 
-/** label · native range · readout, on the .range grid of bench.css */
+/** label · native range · readout, on the .range grid of bench.css. The
+    slider speaks the readout ("4.0%", "€ 10"), not its raw value. */
 export function Range({ id, label, bound, value, display, onChange }: RangeProps) {
   return (
     <div class="range">
@@ -43,6 +44,7 @@ export function Range({ id, label, bound, value, display, onChange }: RangeProps
         max={bound.max}
         step={bound.step}
         value={value}
+        aria-valuetext={display}
         onInput={(e) => onChange(clamp(Number(e.currentTarget.value), bound.min, bound.max))}
       />
       <output for={id} class="range-value">{display}</output>
@@ -192,9 +194,14 @@ export default function AbSampleSizeBench({ lang = 'en' }: { lang?: Lang }) {
         </div>
 
         <div class="bench-output col-8 vrule">
-          <p class="bench-verdict display">{p.verdict(lang)}</p>
+          {/* The verdict is the live readout (role=status: polite, atomic):
+              it carries its own context, so a screen reader hears the
+              whole sentence after each change; the readouts below are not
+              announced, since their labels never change and their bare
+              values would be read without them. */}
+          <p class="bench-verdict display" role="status">{p.verdict(lang)}</p>
 
-          <div class="bench-kpis" aria-live="polite">
+          <div class="bench-kpis">
             {p.kpis(lang).map((k) => (
               <Kpi key={k.key} label={t.kpi[k.key] ?? k.key} value={k.value} note={k.note} />
             ))}

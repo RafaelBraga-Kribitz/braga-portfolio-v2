@@ -10,6 +10,7 @@ import { satteri } from '@astrojs/markdown-satteri';
 import mathGuard from './src/lib/remark/math.mjs';
 import codeLang from './src/lib/remark/code-lang.mjs';
 import callouts from './src/lib/remark/callouts.mjs';
+import taskLists from './src/lib/remark/task-lists.mjs';
 import katex from './src/lib/rehype/katex.mjs';
 import tables from './src/lib/rehype/tables.mjs';
 import code from './src/lib/rehype/code.mjs';
@@ -47,7 +48,8 @@ export default defineConfig({
     syntaxHighlight: 'prism',
     processor: satteri({
       features: {
-        // gfm: true — tables, footnotes, strikethrough, task lists. The
+        // gfm: true — tables, footnotes, strikethrough, task lists (the
+        // last refused by task-lists.mjs: Sätteri has no switch for them). The
         // footnote strings are English here; footnotes.mjs localises them
         // for a German document. The back-reference glyph is ← (D-030).
         gfm: { footnotes: { label: 'Footnotes', backContent: '←', backLabel: 'Back to reference {reference}' } },
@@ -58,8 +60,9 @@ export default defineConfig({
       },
       // the remark phase, in order: the $-price guard, fence languages Prism
       // cannot load → text (else their code reaches the page as raw HTML),
-      // then ==marks== and callouts (bars included: the evidence figure)
-      mdastPlugins: [mathGuard, codeLang, callouts],
+      // GFM task lists refused (no checkbox in the design system), then
+      // ==marks== and callouts (bars included: the evidence figure)
+      mdastPlugins: [mathGuard, codeLang, taskLists, callouts],
       // the rehype phase, in order. headings and footnotes are factories,
       // passed uncalled: Sätteri calls them once per document, so each page
       // gets its own slugger and its own language.
@@ -67,6 +70,7 @@ export default defineConfig({
         // rehype-katex's job, as native MathML only (no HTML layer, so no
         // inline style and no KaTeX stylesheet; decision of 21 Oct 2026)
         katex({ strict: false }),
+        // align attributes; the .table-scroll wrapper, keyboard-reachable
         tables,
         code,
         math,

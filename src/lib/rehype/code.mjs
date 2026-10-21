@@ -17,8 +17,21 @@
 // default and the block is complete without code.js (the buttons are inert).
 // Each panel sets `hasCode: true` in the document's plugin frontmatter, which
 // the page templates read from render(entry).remarkPluginFrontmatter.
+//
+// The button labels follow the document's language (frontmatter `lang`, as
+// footnotes.mjs does): the build writes the first label, and the labels
+// code.js swaps in later travel as data attributes (data-on / data-off on
+// Wrap, data-copied / data-failed on Copy, data-label: the resting label),
+// so public/scripts/code.js carries no strings of its own. The German
+// labels are agent drafts awaiting the owner's approval (O-05).
 
 import { CODE_LABELS } from '../remark/code-lang.mjs';
+
+/** The panel's chrome strings by document language. */
+export const CODE_STRINGS = {
+  en: { on: 'Wrap · on', off: 'Wrap · off', copy: 'Copy', copied: 'Copied', failed: 'Copy failed' },
+  de: { on: 'Umbruch · an', off: 'Umbruch · aus', copy: 'Kopieren', copied: 'Kopiert', failed: 'Kopieren fehlgeschlagen' },
+};
 
 /** Prism token class → the six-token palette (first match in class order wins). */
 const TOKENS = {
@@ -82,12 +95,13 @@ export const codePanel = {
       // switches Base's hasCode (the one page that loads /scripts/code.js)
       const fm = ctx.data.astro && ctx.data.astro.frontmatter;
       if (fm && typeof fm === 'object') fm.hasCode = true;
+      const w = CODE_STRINGS[fm && fm.lang === 'de' ? 'de' : 'en'];
       return h('div', { className: ['code'], dataLang: authored || lang, dataWrap: 'on' }, [
         h('div', { className: ['code-bar'] }, [
           h('span', {}, [t(authored || LABEL[lang] || lang)]),
           h('span', { className: ['code-tools'] }, [
-            h('button', { type: 'button', className: ['code-wrap'], ariaPressed: 'true' }, [t('Wrap · on')]),
-            h('button', { type: 'button', className: ['code-copy'] }, [t('Copy')]),
+            h('button', { type: 'button', className: ['code-wrap'], ariaPressed: 'true', dataOn: w.on, dataOff: w.off }, [t(w.on)]),
+            h('button', { type: 'button', className: ['code-copy'], dataLabel: w.copy, dataCopied: w.copied, dataFailed: w.failed }, [t(w.copy)]),
           ]),
         ]),
         h('pre', {}, [h('code', { className: [`language-${lang}`] }, retoken(body))]),

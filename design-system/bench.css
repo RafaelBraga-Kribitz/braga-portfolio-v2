@@ -27,8 +27,8 @@
            <p class="bench-limit">Limit: …</p>
          </div>
          <div class="bench-output col-8 vrule">
-           <p class="bench-verdict display">…</p>
-           <div class="bench-kpis" aria-live="polite"><div class="kpi">
+           <p class="bench-verdict display" role="status">…</p>
+           <div class="bench-kpis"><div class="kpi">
              <div class="label">Per arm</div><div class="kpi-value">39,473</div><div class="kpi-note">visitors</div></div> ×4</div>
            <div class="bench-figure"><div class="bench-figure-head"><span class="label">Fig. 04-02 · …</span>
              <span class="label dim">log scale · lift 2–50%</span></div>
@@ -68,8 +68,11 @@
   margin-top: 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px 24px;
   border-top: var(--rule); border-bottom: var(--rule); padding-block: 16px;
 }
-.kpi { min-width: 0; }
-.kpi > .label { white-space: nowrap; }
+/* Each readout is a subgrid of three rows (label, value, note), so a label
+   that needs two lines ("False positive rate" in a 144px track at 1440)
+   wraps inside its box and the values of that row stay on one line. */
+.kpi { min-width: 0; display: grid; grid-row: span 3; grid-template-rows: subgrid; row-gap: 0; align-content: start; }
+.kpi > .label { overflow-wrap: anywhere; text-wrap: balance; }
 .kpi-value {
   margin-top: 12px; font: 400 clamp(24px, 2.4vw, 30px) / 1 var(--font-mono);
   font-variant-numeric: var(--num); color: var(--ink); white-space: nowrap;
@@ -112,8 +115,12 @@
          <label><input type="radio" name="preset" value="Checkout" checked><span>Checkout</span></label> ×n
        </div></fieldset> */
 .segmented { min-width: 0; }
-.segmented > legend { display: block; width: 100%; padding: 0; margin-bottom: 16px; }
-.segmented-strip { display: flex; border: 1px solid var(--edge); min-width: 0; }
+/* The legend floats, so it is laid out inside the fieldset's padding box
+   instead of in its top-border band: a fieldset that opens on a rule
+   (.rule-t, Power) shows the rule, then 16px, then the legend, then 16px,
+   then the strip (Site 06), the same as a p.label.rule-t group (Inputs). */
+.segmented > legend { float: left; display: block; width: 100%; padding: 0; margin-bottom: 16px; }
+.segmented-strip { clear: both; display: flex; border: 1px solid var(--edge); min-width: 0; }
 .segmented-strip > label {
   position: relative; flex: 1 1 0; min-width: 0; height: 40px;
   display: flex; align-items: center; justify-content: center; padding-inline: 8px;
