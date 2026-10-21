@@ -16,6 +16,8 @@
 //                                <a href><b>text</b><span class="sub">rest</span>
 //                                <span class="glyph" aria-hidden="true">→</span></a>
 //   > [!cta] Call to action    → <a href>text <span class="glyph">↗</span></a>
+//   > [!bars] Fig. 01-01-1 · … → the evidence figure of the Site specimen
+//                                (pattern 05), not a callout: see "bars" below
 //   ==text== in a paragraph    → <mark>text</mark> (list items and table
 //                                cells too; headings stay plain)
 //   a callout inside a callout → built by the outer one, any depth
@@ -23,7 +25,9 @@
 // Two passes, in order: marks first (so a metrics value can carry its mark),
 // then the callouts. Both build plain mdast/custom nodes that the processor
 // renders through data.hName / data.hProperties (the vocabulary of
-// design-system/components.css, section 3; no class is invented here).
+// design-system/components.css, section 3, and charts.css, section 1; no
+// class is invented here).
+import { number, percent, currency, unit as withUnit } from '../format.mjs';
 
 /** Inline node types a text node may sit inside and still be "in a paragraph". */
 const INLINE = new Set(['emphasis', 'strong', 'delete', 'link', 'linkReference', 'superscript', 'subscript']);
@@ -190,7 +194,13 @@ function specList(content, ctx, node) {
       rows.push(el('dt', {}, inline), el('dd', {}, []));
       continue;
     }
-    rows.push(el('dt', {}, split.before), el('dd', {}, split.after));
+    // A value that is one link and nothing else (an e-mail address in the
+    // Impressum) has no sentence around it, so the inline-target exception
+    // does not apply: `.link-line` gives the link its 24px box (44 below
+    // 768), as it does for a paragraph that is one link (base.css 3.7, G-05).
+    const lone = split.after.filter((n) => !(n.type === 'text' && !n.value.trim()));
+    const dd = lone.length === 1 && lone[0].type === 'link' ? { className: ['link-line'] } : {};
+    rows.push(el('dt', {}, split.before), el('dd', dd, split.after));
   }
   content[i] = el('dl', {}, rows);
 }
@@ -270,6 +280,223 @@ function ctaLink(content, ctx, node) {
   content[found.block] = el('a', { href: found.link.url }, [...found.link.children, text(' '), glyph(found.link.url)]);
 }
 
+/* ---------------------------------------------------------------------------
+   bars · the evidence figure (Site specimen 05) in Markdown
+
+     > [!bars] Fig. 01-01-1 · Skill mentions          ← kicker (p.label)
+     > SQL and Python lead the snapshot.              ← finding (p.evidence-heading)
+     > - SQL — 40                                     ← one bar per item: label — value
+     > - Python — 35
+     >
+     > scale: 0–100 · unit: % · centre: no            ← optional meta lines
+     > accent: SQL
+     > caption: Share of 720 core postings.
+     > source: supplied project record, 16 Sep 2026.
+
+   becomes the DOM charts.css styles (section 1):
+
+     <figure class="evidence" data-width="wide">
+       <p class="label">…</p><p class="evidence-heading display">…</p>
+       <div class="ev-bars"><div class="ev-bar" [data-accent]>
+         <span class="ev-label">SQL</span>
+         <span class="ev-track"><span class="ev-fill" style="--w: 40%"></span>[<span class="ev-mid"></span>]</span>
+         <span class="ev-value">40%</span></div>…</div>
+       <figcaption>caption<br><b>Source:</b> source</figcaption>
+     </figure>
+
+   Values are bare numbers (decimal point "." or ",", no grouping, "−" or
+   "-" for a negative; the declared unit may follow) and are printed through
+   src/lib/format.mjs in the document's language. Geometry is the only
+   inline style, custom properties only: --w (and --x when the fill does not
+   start at the left edge). centre: yes draws the zero line at 50% and grows
+   each bar left or right from it on a symmetric scale (−m–m). Defaults:
+   scale 0–100 for unit %, else 0 to the largest value; centred, ± the
+   largest magnitude. A malformed value, a value outside the scale or an
+   unknown line fails the build, naming the file.
+   ------------------------------------------------------------------------- */
+
+const SOURCE = { en: 'Source', de: 'Quelle' };
+const META_KEY = /^\s*(scale|unit|centre|center|accent|caption|source)\s*:\s*/i;
+const NUM = String.raw`[+−-]?\d+(?:[.,]\d+)?`;
+
+/** Plain text of inline nodes. @param {any[]} nodes @returns {string} */
+const plain = (nodes) => nodes.map((n) => (typeof n.value === 'string' ? n.value : Array.isArray(n.children) ? plain(n.children) : '')).join('');
+
+/**
+ * Splits inline nodes into lines at soft line breaks ("\n" in a text node)
+ * and hard breaks.
+ * @param {any[]} inline @returns {any[][]}
+ */
+function splitLines(inline) {
+  /** @type {any[][]} */
+  const out = [[]];
+  for (const n of inline) {
+    if (n.type === 'break') { out.push([]); continue; }
+    if (n.type !== 'text' || !n.value.includes('\n')) { out[out.length - 1].push(n); continue; }
+    n.value.split('\n').forEach((part, i) => {
+      if (i > 0) out.push([]);
+      if (part) out[out.length - 1].push(text(part));
+    });
+  }
+  return out.filter((l) => plain(l).trim() !== '');
+}
+
+/** Drops leading characters from a run of inline nodes. @param {any[]} nodes @param {number} count */
+function dropChars(nodes, count) {
+  const out = clone(nodes);
+  let left = count;
+  while (left > 0 && out.length && out[0].type === 'text') {
+    if (out[0].value.length > left) { out[0].value = out[0].value.slice(left); left = 0; break; }
+    left -= out[0].value.length;
+    out.shift();
+  }
+  return out;
+}
+
+/** "−28" / "3,5" / "40" → a number and its authored decimals. @param {string} s */
+function parseNumber(s) {
+  const m = new RegExp(`^${NUM}$`).exec(s.trim());
+  if (!m) return null;
+  const t = s.trim().replace('−', '-').replace(',', '.');
+  const frac = t.split('.')[1];
+  return { value: Number(t), digits: frac ? frac.length : 0 };
+}
+
+/**
+ * The evidence figure for a [!bars] callout.
+ * @param {{ title: any[], content: any[] }} head @param {any} ctx
+ */
+function barsFigure(head, ctx) {
+  const lang = ctx.data && ctx.data.astro && ctx.data.astro.frontmatter && ctx.data.astro.frontmatter.lang === 'de' ? 'de' : 'en';
+  const where = ctx.fileURL ? ctx.fileURL.pathname : 'markdown';
+  /** @param {string} msg */
+  const fail = (msg) => { throw new Error(`bars callout in ${where}: ${msg}`); };
+
+  const content = head.content;
+  const listAt = content.findIndex((b) => b.type === 'list');
+  if (listAt < 0) fail('no list of "label — value" items');
+
+  // the finding: the paragraphs before the list, as one heading
+  const heading = [];
+  for (const b of content.slice(0, listAt)) {
+    if (b.type !== 'paragraph') fail(`unexpected ${b.type} before the list`);
+    if (heading.length) heading.push(text(' '));
+    heading.push(...b.children);
+  }
+
+  // meta lines: the paragraphs after the list, and lines a bar item swallowed
+  // (a meta line written straight under the last item continues its paragraph)
+  /** @type {any[][]} */
+  const metaLines = [];
+  /** @type {{ label: any[], raw: string }[]} */
+  const items = [];
+  for (const item of content[listAt].children) {
+    const lines = splitLines(itemInline(item));
+    if (!lines.length) continue;
+    const split = splitAtSeparator(lines[0]);
+    if (!split) fail(`the item “${plain(lines[0]).trim()}” has no "label — value" separator (a spaced em or en dash)`);
+    items.push({ label: split.before, raw: plain(split.after).trim() });
+    metaLines.push(...lines.slice(1));
+  }
+  for (const b of content.slice(listAt + 1)) {
+    if (b.type !== 'paragraph') fail(`unexpected ${b.type} after the list`);
+    metaLines.push(...splitLines(b.children));
+  }
+  if (!items.length) fail('the list has no items');
+
+  /** @type {Record<string, string>} */
+  const meta = {};
+  /** @type {Record<'caption' | 'source', any[]>} */
+  const rich = { caption: [], source: [] };
+  for (const line of metaLines) {
+    const first = plain(line);
+    const m = META_KEY.exec(first);
+    if (!m) fail(`a line is not one of scale, unit, centre, accent, caption, source: “${first.trim()}”`);
+    const key = m[1].toLowerCase();
+    if (key === 'caption' || key === 'source') { rich[key] = dropChars(line, m[0].length); continue; }
+    // "scale: 0–100 · unit: % · centre: no": key: value pairs joined by the middle dot
+    for (const pair of first.split('·')) {
+      const p = /^\s*([a-z]+)\s*:\s*(.*?)\s*$/i.exec(pair);
+      const k = p ? p[1].toLowerCase() : '';
+      if (!p || !['scale', 'unit', 'centre', 'center', 'accent'].includes(k)) fail(`“${pair.trim()}” is not scale, unit, centre or accent`);
+      meta[k === 'center' ? 'centre' : k] = p[2];
+    }
+  }
+
+  const u = (meta.unit ?? '').trim();
+  const centreRaw = (meta.centre ?? 'no').trim().toLowerCase();
+  if (!['yes', 'no', 'true', 'false'].includes(centreRaw)) fail(`centre is yes or no, not “${meta.centre}”`);
+  const centre = centreRaw === 'yes' || centreRaw === 'true';
+
+  /** strips the declared unit after a figure. @param {string} s */
+  const bare = (s) => (u && s.endsWith(u) ? s.slice(0, -u.length) : s).replace(/[\s ]+$/, '');
+  const bars = items.map((it) => {
+    const n = parseNumber(bare(it.raw));
+    if (!n) fail(`“${it.raw}” is not a number (write digits, a decimal point and an optional minus: 40, 3.5, −28)`);
+    return { ...it, ...n };
+  });
+
+  // the scale
+  let lo; let hi;
+  if (meta.scale) {
+    const s = new RegExp(`^(${NUM})\\s*(?:–|—|-|to)\\s*(${NUM})$`).exec(bare(meta.scale.trim()));
+    const a = s && parseNumber(s[1]);
+    const b = s && parseNumber(s[2]);
+    if (!a || !b || !(b.value > a.value)) fail(`scale “${meta.scale}” is not "low–high" with low below high`);
+    lo = a.value; hi = b.value;
+  } else if (centre) {
+    const m = Math.max(...bars.map((b) => Math.abs(b.value)));
+    lo = -m; hi = m;
+  } else {
+    lo = 0; hi = u === '%' ? 100 : Math.max(...bars.map((b) => b.value));
+  }
+  if (!(hi > lo)) fail('the scale is empty (every value is zero)');
+  if (centre && lo !== -hi) fail(`a centred scale is symmetric around zero (−${hi}–${hi}), not ${lo}–${hi}`);
+
+  let accent = -1;
+  if (meta.accent) {
+    accent = bars.findIndex((b) => plain(b.label).trim().toLowerCase() === meta.accent.trim().toLowerCase());
+    if (accent < 0) fail(`accent “${meta.accent}” names no bar`);
+  }
+
+  /** @param {number} v */
+  const pct = (v) => `${Number(v.toFixed(2))}%`;
+  /** @param {number} v @param {number} digits */
+  const show = (v, digits) => {
+    const s = u === '%' ? percent(v, lang, digits) : u === '€' ? currency(v, lang, digits) : u ? withUnit(v, u, lang, digits) : number(v, lang, digits);
+    return centre && v > 0 ? `+${s}` : s;
+  };
+
+  const rows = bars.map((b, i) => {
+    if (b.value < lo || b.value > hi) fail(`“${plain(b.label).trim()} — ${b.raw}” lies outside the scale ${lo}–${hi}`);
+    let x; let w;
+    if (centre) { w = (Math.abs(b.value) / (hi - lo)) * 100; x = b.value < 0 ? 50 - w : 50; }
+    else { w = ((b.value - lo) / (hi - lo)) * 100; x = 0; }
+    const style = x ? `--x: ${pct(x)}; --w: ${pct(w)}` : `--w: ${pct(w)}`;
+    const track = [el('span', { className: ['ev-fill'], style }, [])];
+    if (centre) track.push(el('span', { className: ['ev-mid'] }, []));
+    return el('div', i === accent ? { className: ['ev-bar'], dataAccent: '' } : { className: ['ev-bar'] }, [
+      el('span', { className: ['ev-label'] }, b.label),
+      el('span', { className: ['ev-track'] }, track),
+      el('span', { className: ['ev-value'] }, [text(show(b.value, b.digits))]),
+    ]);
+  });
+
+  const caption = [];
+  if (rich.caption.length) caption.push(...rich.caption);
+  if (rich.source.length) {
+    if (caption.length) caption.push(el('br', {}, []));
+    caption.push(el('b', {}, [text(`${SOURCE[lang]}:`)]), text(' '), ...rich.source);
+  }
+
+  const children = [];
+  if (head.title.length) children.push(el('p', { className: ['label'] }, head.title));
+  if (heading.length) children.push(el('p', { className: ['evidence-heading', 'display'] }, heading));
+  children.push(el('div', { className: ['ev-bars'] }, rows));
+  if (caption.length) children.push(el('figcaption', {}, caption));
+  return el('figure', { className: ['evidence'], dataWidth: 'wide' }, children);
+}
+
 /**
  * Builds the callout for a blockquote's (cloned) children, or null when the
  * blockquote is an ordinary quotation. Callouts nested inside are built here
@@ -279,6 +506,7 @@ function ctaLink(content, ctx, node) {
 function build(blocks, ctx, node) {
   const head = parseHead(blocks);
   if (!head) return null;
+  if (head.type === 'bars') return barsFigure(head, ctx);
   const { type, metadata, fold } = head;
   const content = head.content;
   nest(content, ctx, node);

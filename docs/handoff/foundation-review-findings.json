@@ -1,0 +1,236 @@
+[
+ {
+  "id": 0,
+  "status": "confirmed",
+  "title": "Above 1320px the header no longer lines up with the page grid",
+  "file": "/home/user/braga-portfolio-v2/design-system/layout.css",
+  "severity": "drift",
+  "detail": "<header class=\"shell\"> spans the full viewport and .shell-bar only pads by --gutter. It has no --page-max limit. The footer sits in .grid-container, as the Site specimen's own header and footer do, but the shell does not. So above 1320px the header's wordmark and controls move out of the content column. Measured: at 1366 the header BRAGA starts at x=32 while the content and the footer BRAGA start at x=55. At 1440 it is 32 against 92, and the theme square ends at 1408 against a content edge of 1348. At 1920 it is 32 against 332, a 300px offset. This breaks the grid.css rule that content and rules start and end on column lines, and the header and footer wordmarks no longer stack. Suggested fix (Agent A, one line): give .shell-bar `max-width: var(--page-max); margin-inline: auto` and keep the full-bleed hairline on .shell. Lines up at 1024 and 768 (32 = 32).",
+  "verify": "node /tmp/claude-0/-home-user/f1008afd-cfe9-512b-95a9-f11714fce75e/scratchpad/builds/review-1-fidelity/wide.mjs /home/user/braga-portfolio-v2/dist prints headerMarkX, footerMarkX and contentLeft at 1366, 1440 and 1920; all three should be equal. Visual check: /tmp/claude-0/-home-user/f1008afd-cfe9-512b-95a9-f11714fce75e/scratchpad/builds/review-1-fidelity/en-home-1440-dark-top.png."
+ },
+ {
+  "id": 1,
+  "status": "confirmed",
+  "title": "A/B bench: the rule above \"Power\" is hidden and the gap below its label is doubled",
+  "file": "/home/user/braga-portfolio-v2/design-system/bench.css",
+  "severity": "drift",
+  "detail": "The Power group is <fieldset class=\"segmented rule-t\"> (AbSampleSizeBench.tsx). A legend renders inside the fieldset's top-border band, and .segmented > legend is width 100%. The legend therefore paints over the 1px --rule, so no rule shows above POWER, while Inputs has one. Also, the 16px padding-top from `.bench-controls > .rule-t` lands between the legend and the strip. Measured at 1440: fieldset y=723 and legend y=723 (the legend sits in the border band); the gap from legend to strip is 32px for Power against 16px for Preset. The specimen (Site 06) has range → 16 → rule → 16 → POWER → 16 → control, and BUILD-BRIEF rule 10 says to keep the specimen's spacing. The confusion matrix is not affected: its groups use p.label.rule-t. Fix options: wrap the fieldset in an element that carries .rule-t and the padding, or open Power with a p.label.rule-t as Inputs does.",
+  "verify": "node /tmp/claude-0/-home-user/f1008afd-cfe9-512b-95a9-f11714fce75e/scratchpad/builds/review-1-fidelity/power.mjs /home/user/braga-portfolio-v2/dist prints gapLegendToStrip=32 for the Power fieldset and 16 for Preset. For a 2x crop of the control column: node /tmp/claude-0/-home-user/f1008afd-cfe9-512b-95a9-f11714fce75e/scratchpad/builds/review-1-fidelity/clip.mjs /home/user/braga-portfolio-v2/dist /en/tools/ab-sample-size/ 1440 80 530 450 360 out.png. It shows no rule above POWER (my copy: clip-power.png in the same folder)."
+ },
+ {
+  "id": 2,
+  "status": "confirmed",
+  "title": "The German home page shows no draft mark",
+  "file": "/home/user/braga-portfolio-v2/src/pages/[lang]/index.astro",
+  "severity": "drift",
+  "detail": "BUILD-BRIEF §3 says to mark every DE page with the in-build status mark and the label \"Entwurf · Freigabe ausstehend\" in its meta row until the owner approves. HANDOFF §4 item 25 says drafts show their status in the page, never as hidden previews. /de/ carries the notice only as an HTML comment, so a visitor sees nothing. Its German claims, lead, focus line and domains are agent drafts (O-05). /de/tools/, /de/tools/ab-sample-size/ and /de/tools/confusion-matrix/ do show the mark. The integrator says the comment-only form was the lead's instruction. That instruction conflicts with the brief and the handoff, so someone with authority needs to decide. The page has no meta row; the cover rail or cover foot is the natural place for the mark.\n[also reported by another lens:] BUILD-BRIEF §3: 'mark every DE page with the status mark \"in-build\" + label \"Entwurf · Freigabe ausstehend\" in its meta row until approved.' index.astro:83 emits only an HTML comment on /de/, so readers see no draft mark, although the page carries agent-drafted German claims, lead, focus line and domains (O-05). /de/tools/, /de/tools/ab-sample-size/ and /de/tools/confusion-matrix/ do render the mark. The integrator reports doing this on instruction, but the brief ranks above any agent task text.\n[also reported by another lens:] BUILD-BRIEF §3 (D-011): \"mark every DE page with the status mark 'in-build' + label 'Entwurf · Freigabe ausstehend' in its meta row until approved\". HANDOFF §4 item 25: drafts \"show their status in the page, never as hidden previews\". /de/ emits the notice only as an HTML comment (index.astro:83), so no reader sees it. The German cover lead, claims, focus line and domains are agent drafts (O-05). The other three DE pages carry the visible mark. The integrator says this was instructed; the instruction contradicts the brief.",
+  "verify": "grep -c 'Entwurf' /home/user/braga-portfolio-v2/dist/de/index.html returns 1, and that one hit is inside '<!-- … -->'. grep 'data-state=\"in-build\"' on the same file finds only the Energy project row. Compare /home/user/braga-portfolio-v2/dist/de/tools/index.html, which contains <span class=\"status\" data-state=\"in-build\">Entwurf · Freigabe ausstehend</span>."
+ },
+ {
+  "id": 3,
+  "status": "confirmed",
+  "title": "Footer colophon drops the specimen's status line and adds © (not in D-030)",
+  "file": "/home/user/braga-portfolio-v2/src/components/Footer.astro",
+  "severity": "drift",
+  "detail": "In the Site specimen (01 Shell) the colophon reads RAFAEL BRAGA-KRIBITZ / GREATER GRAZ, AUSTRIA · EUR / PRIVATE REVIEW · COPY AWAITING APPROVAL · 2026. The build replaces the third line with \"© 2026\" on every page. That has two effects. (a) It drops the specimen's copy and the one site-wide visible statement that the copy awaits approval (BUILD-BRIEF rule 9: use handoff copy verbatim; HANDOFF item 25). (b) It adds ©, which is not in the D-030 glyph inventory (→ ↗ ← § · ▲ + − – … and the squares; BUILD-BRIEF rule 3: glyphs from D-030 only). If a copyright line is wanted, it is an owner decision and should be recorded as a new decision.",
+  "verify": "grep -o '©[^<]*' /home/user/braga-portfolio-v2/dist/en/index.html prints '© 2026'. Compare line 149 of '/home/user/braga-portfolio-v2/handoff/specimens/Design System v2 - Site.dc.html'."
+ },
+ {
+  "id": 5,
+  "status": "confirmed",
+  "title": "theme-color metas stay on the OS values after a reload with a stored theme",
+  "file": "/home/user/braga-portfolio-v2/src/layouts/Base.astro",
+  "severity": "polish",
+  "detail": "This is still present; it is already in the integrator's open list (B). Steps: light OS, stored bk-theme=dark, then reload. The page renders dark (body rgb(25,26,29), color-scheme dark), but the metas stay ['#E4E6EA', '#191A1D']. The light-media meta applies, so the browser UI is light around a dark page until the first click; after a click both metas are set to #191A1D. D-024 asks for theme-color per theme. Fix: have the toggle script's start-up path, which already calls label(current()), also write colors[current()] into both metas.\n[also reported by another lens:] D-024 requires a theme-color per theme. Only the click handler of the inline toggle rewrites the two metas. The pre-paint script sets data-theme but leaves the metas alone. With the OS in light mode and bk-theme=dark stored, the page renders dark while the light-media meta still says #E4E6EA, so the browser chrome is light over a dark page. The integrator already lists this as open from Agent B. It is confirmed here.\n[also reported by another lens:] D-024 wants a theme-color per page theme. The pre-paint script (Base.astro:37) sets data-theme but leaves the metas alone; only the click handler (line 52) rewrites them. Measured in Chromium:\n- OS light with stored dark: the page is dark, the light-media meta still reads #E4E6EA.\n- Light chosen under OS dark, then reload: the page is light, the dark meta reads #191A1D.\n- No stored choice and the OS switches to dark while the page is open: the page turns dark, but the button's aria-label still ends \"· Light\" (no matchMedia listener).\nThe two theme-color hexes are also copied by hand into Base.astro:42–43 and src/pages/index.astro:25–26. The css lint exempts any line containing \"theme-color\", so a token change will not reach them.",
+  "verify": "Run node /tmp/claude-0/-home-user/f1008afd-cfe9-512b-95a9-f11714fce75e/scratchpad/builds/review-1-fidelity/measure.mjs /home/user/braga-portfolio-v2/dist and read the 'toggle.reload.metas' field: it shows [\"#E4E6EA\",\"#191A1D\"] while 'toggle.reload.dt' is 'dark'."
+ },
+ {
+  "id": 7,
+  "status": "confirmed",
+  "title": "Em-sized code and sup in document CSS render below the 12px floor",
+  "file": "/home/user/braga-portfolio-v2/design-system/base.css",
+  "severity": "fail",
+  "detail": "base.css:232 `.doc code { font: 400 0.9em / 1 … }` and :237 `.doc sup { font-size: 0.75em }`. The comment beside these rules says the floor holds at the 16px body. It does not hold in the design system's own smaller contexts. Measured at 390 and 1440 on a temp article.doc page that loads the built global CSS: code inside `.table-scroll th`, `.callout-title`, `.fig-label` and `.fig-source` renders at 10.8px; sup inside `td`, `.callout[data-callout=\"tool\"]` and `.footnotes` renders at 11.25px. This breaks rule 4. No built page has these combinations yet, because no document pages exist, so the gates are green today. The first project page with a footnote ref in a table cell or inline code in a caption or table header will fail. Suggested fix: `max(12px, 0.9em)` and `max(12px, 0.75em)`.\n[also reported by another lens:] base.css:232 sets `.doc code { font: 400 0.9em … }` and base.css:237 sets `.doc sup { font-size: 0.75em }`. The comment on the latter says \"12px at the 16px body: the floor holds\". It holds only at a 16px body. Measured on the fixture:\n- a footnote reference in a right-aligned (mono 13px) table cell renders at 9.8px;\n- inline code in a table head (12px) renders at 10.8px;\n- a reference in a left-aligned cell, in .footnotes, or in a t-small callout is 15 × 0.75 = 11.25px.\nAll of these fail G-01 and rule 4. lint:css checks only px and rem (FONT_DECL/SIZE), so it cannot see em sizes. Project pages with sourced tables will hit this.",
+  "verify": "node /tmp/claude-0/-home-user/f1008afd-cfe9-512b-95a9-f11714fce75e/scratchpad/builds/review-1-audit/em.mjs /tmp/claude-0/-home-user/f1008afd-cfe9-512b-95a9-f11714fce75e/scratchpad/builds/review-1-mutant serves /zzdoc/ and prints 'code “th_code” in TH = 10.80px', 'sup “2” in TD = 11.25px' and the others. Alternatively, paste `<article class=\"doc\"><div class=\"table-scroll\"><table><tr><th>A <code>x</code></th><td>b<sup>1</sup></td></tr></table></div></article>` into the <main> of a temp copy of dist/en/index.html and run `node scripts/gates/run.mjs --dir <copy> --pages /en/ --no-pending`: G-01 lists 10.8px and 11.2px."
+ },
+ {
+  "id": 9,
+  "status": "unverified",
+  "title": "Tool verdict sentence is not in a live region; the KPI live region announces bare numbers",
+  "file": "/home/user/braga-portfolio-v2/src/components/tools/AbSampleSizeBench.tsx",
+  "severity": "fail",
+  "detail": "`<p class=\"bench-verdict display\">` (AbSampleSizeBench.tsx:195, ConfusionMatrixBench.tsx:135) is the primary readout and changes on every input. It sits outside any aria-live, role=status or output element, so screen-reader users never hear it (WCAG 4.1.3 Status Messages). Only `.bench-kpis` (lines 197 and 161) is aria-live='polite'. It has no aria-atomic, and its labels never change, so after a slider step it announces only the changed values without their labels: '37,510 75,020 38 d 0.42 pp' on A/B, and up to 10 rates on the confusion matrix. Suggested fix: role=\"status\" (or aria-live=polite with aria-atomic=true) on the verdict, which carries its own context, and drop or atomise the KPI region.",
+  "verify": "node /tmp/claude-0/-home-user/f1008afd-cfe9-512b-95a9-f11714fce75e/scratchpad/builds/review-1-audit/tools.mjs /tmp/claude-0/-home-user/f1008afd-cfe9-512b-95a9-f11714fce75e/scratchpad/builds/review-1-rules prints 'verdict inside a live region: false' for all four tool pages. It also shows the verdict changing after two ArrowRight presses ('Testable. 39,473 …' to 'Testable. 37,510 …'). Or in DevTools on /en/tools/ab-sample-size/: document.querySelector('.bench-verdict').closest('[aria-live],[role=status],output') returns null."
+ },
+ {
+  "id": 10,
+  "status": "unverified",
+  "title": "Range sliders expose raw values without unit or locale formatting (no aria-valuetext)",
+  "file": "/home/user/braga-portfolio-v2/src/components/tools/AbSampleSizeBench.tsx",
+  "severity": "polish",
+  "detail": "The shared Range component (AbSampleSizeBench.tsx:35-51, also used by ConfusionMatrixBench) renders `<input type=range>` without aria-valuetext. On focus, a screen reader announces '4', '10', '2000', '500', '20', '10', '200'. The visible readouts say '4.0%', '10%', '2,000', '20.0%', '€10', and in German '4,0 %', '2.000', '€ 10'. The adjacent <output> (implicit role=status) speaks the formatted value only after a change, not on focus. Adding aria-valuetext={display} fixes both tools.",
+  "verify": "On /en/tools/ab-sample-size/ and /de/tools/confusion-matrix/ (built), run Array.from(document.querySelectorAll('input[type=range]')).map(i => i.getAttribute('aria-valuetext')): every entry is null. tools.mjs (path above) prints 'valuetext=null' for each slider."
+ },
+ {
+  "id": 13,
+  "status": "unverified",
+  "title": "Gate verdict depends on --dir: the pending list is dropped when a directory is passed",
+  "file": "/home/user/braga-portfolio-v2/scripts/gates/run.mjs",
+  "severity": "polish",
+  "detail": "run.mjs:63 loads tests/gates/pending-routes.json only when --dir is absent. The same source passes `npm run test:gates` on dist, but exits 1 with L-01×9 when built into the scratchpad (as BUILD-BRIEF §7 tells parallel agents to do) and checked with --dir. Every one of those offenders is a listed pending route (checked against the JSON). Reviewers and builders using their own outDir get a red run that means nothing. Suggested fix: apply the default pending file whenever it exists (--no-pending still opts out), or document that --dir runs need --pending.",
+  "verify": "npx astro build --outDir /tmp/b && node scripts/gates/run.mjs --dir /tmp/b → exit 1, 'L-01×9'. Then node scripts/gates/run.mjs --dir /tmp/b --pending tests/gates/pending-routes.json → L-01 passes."
+ },
+ {
+  "id": 14,
+  "status": "unverified",
+  "title": "L-04 and lint:style accept a custom-property inline style on any element",
+  "file": "/home/user/braga-portfolio-v2/scripts/gates/checks.mjs",
+  "severity": "polish",
+  "detail": "Rule 1 permits the `style=\"--w: …\"` form only on .ev-fill and .ev-mid, on chart marks, and inside the Preact tools. L-04 (checks.mjs:559-564) and scripts/lint/no-inline-style.mjs:63 (CUSTOM_ONLY) accept a custom-property-only style on any element on any page. A deliberate `<div style=\"--w: 40%\">` on /en/ passed L-04, while `style=\"color: red\"` failed it. Nothing violates this today: EvidenceFigure's .ev-fill is the only use.",
+  "verify": "In a temp copy of the build, add `<div style=\"--w: 40%\">x</div>` inside <main> of en/index.html. Run `node scripts/gates/run.mjs --dir <copy> --pages /en/ --pending tests/gates/pending-routes.json --verbose`: L-04 shows pass."
+ },
+ {
+  "id": 15,
+  "status": "unverified",
+  "title": "Root redirect page has no pre-paint theme script",
+  "file": "/home/user/braga-portfolio-v2/src/pages/index.astro",
+  "severity": "polish",
+  "detail": "Rule 6 lists 'data-theme handling' for every page, and D-024 applies the stored override before first paint. The root page renders a visible skip link, h1 and two links from the global stylesheet, with no script at all. A reader with bk-theme=dark on a light OS sees one light frame before the meta refresh lands on the dark /en/. The 137-byte pre-paint script is a permitted script, so adding it costs nothing against rule 5. The gates skip rendered checks on redirect pages, so they never see this.",
+  "verify": "grep -c 'bk-theme' dist/index.html returns 0, and grep -c 'bk-theme' dist/en/index.html returns 2 or more."
+ },
+ {
+  "id": 16,
+  "status": "unverified",
+  "title": "Two navigation landmarks share the name \"Index\" on every page",
+  "file": "/home/user/braga-portfolio-v2/src/components/Shell.astro",
+  "severity": "polish",
+  "detail": "Shell.astro:27 labels the header doors `<nav aria-label={t(lang,'index')}>` ('Index'). The footer's first group (D-013 'Index') is also `<nav aria-label=\"Index\">`, so a landmark list offers two identical 'Index navigation' entries. This is axe best-practice landmark-unique; A-01 runs only the wcag2a, wcag2aa and wcag21aa tags, so it does not report it. Keep the footer group name from D-013 and give the header nav a distinct name.\n[also reported by another lens:] Shell.astro:27 labels the doors nav t(lang,'index') = \"Index\". Footer.astro labels its first group nav with the group title, also \"Index\" in both languages. A landmark list then shows two identical \"Index navigation\" entries. axe's landmark-unique rule flags .shell-doors on /en/ and /de/tools/ab-sample-size/. A-01 runs only the wcag2a/2aa/21aa tags, so the gate does not see it.",
+  "verify": "node /tmp/claude-0/-home-user/f1008afd-cfe9-512b-95a9-f11714fce75e/scratchpad/builds/review-1-audit/axebp.mjs /tmp/claude-0/-home-user/f1008afd-cfe9-512b-95a9-f11714fce75e/scratchpad/builds/review-1-rules reports 'landmark-unique(1): .shell-doors' on every page. Also, grep -o 'aria-label=\"Index\"' dist/en/index.html | wc -l returns 2."
+ },
+ {
+  "id": 17,
+  "status": "unverified",
+  "title": "Confusion-matrix KPI labels overflow their cell at 1440",
+  "file": "/home/user/braga-portfolio-v2/design-system/bench.css",
+  "severity": "polish",
+  "detail": "bench.css:72 `.kpi > .label { white-space: nowrap; }`. At 1440 on /en/tools/confusion-matrix/, 'False positive rate' and 'False negative rate' extend 12px past the right edge of the .kpi box (text right 860 against box 848, and 1027 against 1015). The German 'Falsch-positiv-Rate' and 'Falsch-negativ-Rate' do the same. They do not reach the next KPI (24px gap), and G-06 does not see it because nothing crosses the viewport. 390, 768, 1024 and 1280 are clean.",
+  "verify": "node /tmp/claude-0/-home-user/f1008afd-cfe9-512b-95a9-f11714fce75e/scratchpad/builds/review-1-audit/kpi.mjs /tmp/claude-0/-home-user/f1008afd-cfe9-512b-95a9-f11714fce75e/scratchpad/builds/review-1-rules prints the two overflows per language at 1440 only."
+ },
+ {
+  "id": 18,
+  "status": "unverified",
+  "title": "Production origin is a guessed value that does not match the GitHub account",
+  "file": "src/lib/site.ts",
+  "severity": "fail",
+  "detail": "site.url (src/lib/site.ts:28) and astro.config.mjs:24 `site` are both https://rafaelbragakribitz.github.io. Nothing in handoff/ names a github.io host (grep finds 0 matches). site.github is https://github.com/RafaelBraga-Kribitz, and a GitHub Pages user site for that account is served at rafaelbraga-kribitz.github.io: Pages keeps the hyphen. The hyphen-less host is therefore a different account. Every absolute URL the build emits uses it: canonical, all hreflang alternates (rule 6), 32 sitemap <loc>s plus their xhtml:links, robots.txt, the feed <link>, and the footer's Sitemap and RSS links. Footer.astro links to those two absolutely, so they leave the site even in a local preview. If the repo is a project site rather than <user>.github.io, Astro also needs `base`, or every root-relative /en/… link breaks. The owner has to confirm the origin.",
+  "verify": "cd /home/user/braga-portfolio-v2 && grep -n \"url:\\|github:\" src/lib/site.ts && grep -n \"site:\" astro.config.mjs && grep -rhoi \"github\\.io\" handoff/ | wc -l   # 0 sources\ngrep -o 'href=\"https://rafaelbragakribitz[^\"]*\"' dist/en/index.html | sort | uniq -c"
+ },
+ {
+  "id": 19,
+  "status": "unverified",
+  "title": "Code-block buttons are 28px tall, under the 44px target below 768",
+  "file": "design-system/components.css",
+  "severity": "fail",
+  "detail": "components.css:252 sets `.code-bar button, .code-copy, .code-wrap { min-height: 28px }`. src/lib/rehype/code.mjs puts the Wrap and Copy buttons on every fenced block, so every page with code fails G-05 at 320 and 390 (D-027/§3: targets ≥ 44px below 768). Measured on a markdown fixture at 390: button.code-wrap 99.5×28 and button.code-copy 58.6×28. No built page has code yet, so the current gate run cannot see this. The kitchen sink (/en|de/system/) has to show code and will fail.",
+  "verify": "/tmp/claude-0/-home-user/f1008afd-cfe9-512b-95a9-f11714fce75e/scratchpad/builds/review-1-code/repro.sh   # rebuilds the fixture (copy of the repo in …/review-1-code/proj, content at src/content/writing/{en,de}/fixture.md) and runs the gates: G-05 FAIL · button.code-wrap “Wrap · on” · 99.5×28 at 390"
+ },
+ {
+  "id": 20,
+  "status": "unverified",
+  "title": "Display maths is a scroll container that keyboard users cannot reach (axe serious)",
+  "file": "src/lib/rehype/math.mjs",
+  "severity": "fail",
+  "detail": "math.mjs:23 wraps each display block in <div class=\"math-body\">. components.css:331 gives it `overflow: auto hidden`, but the element has no tabindex, role or name. axe reports scrollable-region-focusable (serious, WCAG 2.1.1) on `.math > .math-body` for a long fraction at 390 and at 1280, with and without katex.min.css. The A/B island already solved the same problem: its .bench-figure-scroll has tabIndex=0, role=group and aria-labelledby. The math wrapper needs the same treatment, for example tabindex=\"0\", role=\"group\" and an aria-label naming the equation number.",
+  "verify": "/tmp/claude-0/-home-user/f1008afd-cfe9-512b-95a9-f11714fce75e/scratchpad/builds/review-1-code/repro.sh   # A-01 FAIL · scrollable-region-focusable (serious) · .math:nth-child(9) > .math-body"
+ },
+ {
+  "id": 22,
+  "status": "unverified",
+  "title": "No way to link katex.min.css, so formulas render twice",
+  "file": "src/layouts/Base.astro",
+  "severity": "missing",
+  "detail": "src/content/README.md §7 says \"A page with mathematics links /fonts/katex/katex.min.css\". Base.astro's Props (line 14) offer only hasCode (line 53): there is no hasMath flag and no head slot, so a page cannot add the stylesheet without editing Base. Without it, Chromium shows the native MathML and the unstyled KaTeX HTML layer one above the other, for example \"n = (p2 − p1)2(z1−α/2 + z1−β)2 · …\" under the real fraction (screenshot math.png beside the fixture). The kitchen sink must show maths. Even with the stylesheet linked, nested scripts (x^{a^{b}}) render at 9.7px, under the floor; the owner needs to decide whether KaTeX's script sizes are exempt.",
+  "verify": "Open /tmp/claude-0/-home-user/f1008afd-cfe9-512b-95a9-f11714fce75e/scratchpad/builds/review-1-code/math.png (no KaTeX CSS) and math-katex.png (linked). grep -n \"hasCode\\|interface Props\\|<slot\" /home/user/braga-portfolio-v2/src/layouts/Base.astro"
+ },
+ {
+  "id": 24,
+  "status": "unverified",
+  "title": "22 bench and confusion-matrix sub-classes are coined but not listed in the contract",
+  "file": "design-system/README.md",
+  "severity": "drift",
+  "detail": "BUILD-BRIEF §5: sub-classes \"are listed in design-system/README.md ('Sub-classes the patterns use'); use those names, do not coin others\". The built tool pages use these classes, which are defined in bench.css but named in neither the README nor the brief:\n- bench-eq, bench-figure, bench-figure-head, bench-figure-scroll, bench-rule, bench-tool\n- cm-bench, cm-cell, cm-corner, cm-head, cm-matrix, cm-n, cm-note, cm-row\n- kpi-value, kpi-note\n- range-label, range-value\n- segmented-strip, sym, tool-body\nAll are styled, so nothing renders wrong. The contract list is simply incomplete for the next builders.",
+  "verify": "cd /home/user/braga-portfolio-v2 && for c in bench-eq bench-figure-scroll cm-cell kpi-value range-label segmented-strip tool-body; do printf \"%s readme=%s brief=%s dist=%s\\n\" $c $(grep -c \"$c\" design-system/README.md) $(grep -c \"$c\" BUILD-BRIEF.md) $(grep -rl \"class=\\\"[^\\\"]*$c\" dist | wc -l); done"
+ },
+ {
+  "id": 25,
+  "status": "unverified",
+  "title": "G-01 counts KaTeX's zero-width struts, so every maths page fails once its CSS is linked",
+  "file": "scripts/gates/checks.mjs",
+  "severity": "polish",
+  "detail": "G-01 (checks.mjs:177) tests every element with trimmed text. KaTeX writes a U+200B in each `.vlist-s` and styles it at font-size 1px. String.trim() does not strip U+200B, so each sub/superscript, fraction and operator limit is reported (\"span.vlist-s “​” · 1.0px\": 14 runs on two formulas). The fixture self-test has no maths page, so this never showed. The gate needs to ignore text made only of zero-width characters, or `.katex-html .vlist-s`. Otherwise the kitchen sink cannot pass.",
+  "verify": "/tmp/claude-0/-home-user/f1008afd-cfe9-512b-95a9-f11714fce75e/scratchpad/builds/review-1-code/repro.sh   # /en/zz-fixture-katex/ G-01 FAIL · span.vlist-s “​” · 1.0px"
+ },
+ {
+  "id": 26,
+  "status": "unverified",
+  "title": "Confusion-matrix verdict can print shares summing to 101%, and claims \"every positive is flagged\" when there are none",
+  "file": "src/lib/tools/confusion-matrix.mjs",
+  "severity": "polish",
+  "detail": "Shares are rounded independently (lines 174–175). With Churn and costFP 3, costFN 10 the costs split 62.5 / 37.5, and the verdict reads \"63% from the 20 churners missed, 38% from the 40 false alarms\" (101%). The same happens in the German page, live in the browser. A largest-remainder split, or deriving one share as 100 − the other, fixes it.\nThe bounds also allow zero positives (n 100, prevalence 0.1 % → round(0.1) = 0). Then:\n- precision and recall (0/0) print as \"0.0%\" and F1 as \"0.000\";\n- the verdict, through noErrors (line 107), says \"every positive is flagged and no negative is\", which contradicts Recall 0.0% on the same view.",
+  "verify": "cd /home/user/braga-portfolio-v2 && node --input-type=module -e \"import * as cm from './src/lib/tools/confusion-matrix.mjs'; console.log(cm.evaluate({...cm.PRESETS.Churn,costFP:3,costFN:10,preset:'Churn'}).verdict('en')); const z=cm.evaluate({n:100,prevalence:0.1,sensitivity:90,specificity:100,costFP:10,costFN:200}); console.log(z.verdict('en'), z.kpis('en').slice(1,3).map(k=>k.label+' '+k.value).join(', '))\""
+ },
+ {
+  "id": 27,
+  "status": "unverified",
+  "title": "Code-block controls: the Copy label can stick, the labels stay English on German pages, and nothing checks hasCode",
+  "file": "public/scripts/code.js",
+  "severity": "polish",
+  "detail": "1. code.js:18 saves `was = btn.textContent` on every click. A second click within 1.5 s saves \"Copied\", and the button then stays \"Copied\" for good (reproduced).\n2. The strings are English only: \"Wrap · on\" and \"Copy\" from src/lib/rehype/code.mjs:83–84, and \"Wrap · off\", \"Copied\" and \"Copy failed\" from code.js. A lang=\"de\" page shows WRAP · ON and COPY. footnotes.mjs localises its strings by frontmatter lang; code.mjs does not.\n3. The buttons are rendered at build. If a page with code omits hasCode, they are inert, and neither the gates nor the lint require code.js when a .code block is present. L-03 only permits it.\n4. The components.css §5 comment says code.js \"adds the buttons\", which contradicts the pipeline.",
+  "verify": "cd /home/user/braga-portfolio-v2 && node /tmp/claude-0/-home-user/f1008afd-cfe9-512b-95a9-f11714fce75e/scratchpad/builds/review-1-code/copy.mjs /tmp/claude-0/-home-user/f1008afd-cfe9-512b-95a9-f11714fce75e/scratchpad/builds/review-1-code/out   # prints lang de · labels PYTHON / WRAP · ON / COPY, then \"Copied\" 2.5 s after two clicks"
+ },
+ {
+  "id": 28,
+  "status": "unverified",
+  "title": "lint:style misses some inline-style forms and flags style= text inside code blocks",
+  "file": "scripts/lint/no-inline-style.mjs",
+  "severity": "polish",
+  "detail": "The tight form `style={{color:'red'}}` in a .tsx file IS caught.\nFalse negatives in the source scan:\n- a spaced JSX/Astro attribute, `style = {{ color: 'red' }}` or `<div style = \"color: red\">` (valid syntax; code files use STYLE_TIGHT, lines 58–59);\n- JSX spread props, `{...{style:{…}}}`;\n- `h('div', { style: {…} })`;\n- uppercase `STYLE=\"…\"` in .md. LEAD is case-sensitive, and the attribute reaches dist unchanged.\nThe built-page gate L-04 parses with DOMParser and does catch the SSR'd cases. Island states that are only set client-side are seen by neither check.\nFalse positive: escaped text inside a fenced block (`&lt;b style=\"color:red\"&gt;` in <code>) fails the lint, both in the .md source and in dist. An HTML or CSS example in an essay or the kitchen sink therefore blocks `npm run lint`.",
+  "verify": "B=/tmp/claude-0/-home-user/f1008afd-cfe9-512b-95a9-f11714fce75e/scratchpad/builds/review-1-code; for c in a.tsx b.tsx c.tsx h.tsx e.md; do printf \"$c: \"; node $B/lintroot-$c/scripts/lint/no-inline-style.mjs --dist $B/nodist 2>&1 | head -1; done   # only a.tsx fails\nnode $B/lintroot-dist/scripts/lint/no-inline-style.mjs --dist $B/out   # FAIL on text inside <code class=\"language-text\">"
+ },
+ {
+  "id": 31,
+  "status": "unverified",
+  "title": "GFM task lists render unlabeled 13×13 checkboxes",
+  "file": "astro.config.mjs",
+  "severity": "polish",
+  "detail": "`gfm` is enabled with task lists (astro.config.mjs:35–38). `- [ ] x` renders <input type=\"checkbox\" disabled> with no accessible name. axe reports label (critical) and G-05 reports 13×13 targets at every width. The authoring guide neither documents nor forbids task lists. If they belong to the ~30 authoring elements of the kitchen sink, that page fails A-01. Either style and label them in the pipeline, or exclude them and say so in src/content/README.md.",
+  "verify": "/tmp/claude-0/-home-user/f1008afd-cfe9-512b-95a9-f11714fce75e/scratchpad/builds/review-1-code/repro.sh   # A-01 FAIL · label (critical) · .task-list-item:nth-child(1) > input; G-05 · input · 13×13"
+ },
+ {
+  "id": 32,
+  "status": "unverified",
+  "title": "Phantom dependencies and unused declared ones",
+  "file": "package.json",
+  "severity": "polish",
+  "detail": "Imported but not declared; they resolve only because npm hoists them:\n- @astrojs/markdown-satteri (astro.config.mjs)\n- satteri (src/lib/rehype/katex.mjs)\n- prismjs (src/lib/remark/code-lang.mjs)\n- github-slugger (src/lib/rehype/headings.mjs). This one is missing from the integrator's open list.\n- playwright (scripts/gates/run.mjs; only @playwright/test is declared)\nDeclared but imported nowhere: rehype-katex, remark-math, unist-util-visit.",
+  "verify": "cd /home/user/braga-portfolio-v2 && grep -rn \"from 'satteri'\\|markdown-satteri\\|prismjs\\|github-slugger\\|from 'playwright'\\|unist-util-visit\\|rehype-katex'\\|remark-math'\" src scripts astro.config.mjs --include=*.mjs --include=*.ts | grep -v '^\\s*//' ; node -e \"console.log(Object.keys(require('./package.json').dependencies).join(' '))\""
+ },
+ {
+  "id": 33,
+  "status": "unverified",
+  "title": "Dead fallback date formatter and duplicated types",
+  "file": "src/lib/i18n.ts",
+  "severity": "polish",
+  "detail": "i18n.ts:160–195 keeps:\n- a second month table, `localDate`;\n- an `import.meta.glob(['./format.mjs','./format.ts'])` fallback;\n- `usesSharedFormatter`, which nothing reads;\n- a second NBSP export.\nThe fallback dates from before format.mjs existed. Now that it does, localDate never runs, yet it would silently mask a broken import. Separately, content.config.ts redefines LANGS/Lang (also in site.ts) and Status (= StatusState in i18n.ts), so two vocabularies can drift.",
+  "verify": "cd /home/user/braga-portfolio-v2 && grep -rn \"usesSharedFormatter\\|localDate\" src | grep -v '^src/lib/i18n.ts' | wc -l   # 0; grep -n \"LANGS\\|STATUSES\\|StatusState\" src/content.config.ts src/lib/site.ts src/lib/i18n.ts"
+ },
+ {
+  "id": 34,
+  "status": "unverified",
+  "title": "Small CSS duplication and one dead selector",
+  "file": "design-system/base.css",
+  "severity": "polish",
+  "detail": "`.listing-row:hover .lr-arrow { color: var(--accent-01) }` appears twice: base.css:137 and components.css:90. base.css:137 also targets `.door:hover .door-arrow`, but no markup has `.door-arrow`. The door and language-link targets (`.door` and `.shell-lang` min-height, 24 and 44px) are set in base.css:144/147 and set again in layout.css, where they win on load order. The integrator notes the base rule lost and added layout.css §10. Two sources for one rule.",
+  "verify": "cd /home/user/braga-portfolio-v2 && grep -n \"listing-row:hover .lr-arrow\\|door-arrow\" design-system/*.css src -r; grep -n \"\\.door\\b.*min-height\\|\\.shell-lang.*min-height\\|^\\.door {\\|^\\.shell-lang {\" design-system/base.css design-system/layout.css"
+ }
+]

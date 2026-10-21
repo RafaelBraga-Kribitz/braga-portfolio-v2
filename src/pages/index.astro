@@ -1,13 +1,15 @@
 ---
-// Root: a static redirect page to /en/ (BUILD-BRIEF §4). No script: a
-// meta refresh of 0 does the work, the canonical names /en/, and a plain
-// pair of links serves a browser that does not follow the refresh. It
-// still carries what every page carries (skip link, one main, one h1,
-// the two theme-color metas, the hreflang pair), so it reads as part of
-// the site for the moment it is seen.
+// Root: a static redirect page to /en/ (BUILD-BRIEF §4). A meta refresh
+// of 0 does the work, the canonical names /en/, and a plain pair of links
+// serves a browser that does not follow the refresh. It still carries what
+// every page carries (skip link, one main, one h1, the two theme-color
+// metas, the hreflang pair, and the pre-paint script, the one script it
+// has: a reader with a stored dark choice sees no light frame before
+// /en/), so it reads as part of the site for the moment it is seen.
 import '../styles/global.css';
 import { site } from '../lib/site';
 import { absolute, alternates, route } from '../lib/routes';
+import { themeColor, PREPAINT } from '../lib/theme';
 
 const en = route('home', 'en');
 const de = route('home', 'de');
@@ -17,13 +19,14 @@ const de = route('home', 'de');
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content={themeColor.light}>
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content={themeColor.dark}>
+    <script is:inline set:html={PREPAINT}></script>
     <meta http-equiv="refresh" content={`0; url=${en}`}>
     <title>{site.name}</title>
     <meta name="description" content="Portfolio of Rafael Braga-Kribitz, Marketing Data Analyst. English and German.">
     <link rel="canonical" href={absolute(en)}>
     {alternates('home').map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#E4E6EA">
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#191A1D">
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>

@@ -4,10 +4,15 @@
 // its one accent mark (drawn by CSS on .cover-name), the role as the
 // page's h1, one sentence, and a ruled footer that ends in the only call
 // to action. The block carries its own hairline and 64px top padding:
-// place it directly in <main>, not inside .section.
+// place it directly in <main>, not inside .section. On a page whose copy
+// is an agent draft (`draft`, the German home) the in-build mark with the
+// "Entwurf · Freigabe ausstehend" label sits as a .label line directly
+// under the ruled footer (HANDOFF D-011, item 25: drafts show their status
+// in the page).
 import { site } from '../lib/site';
 import type { Lang } from '../lib/i18n';
 import { t } from '../lib/i18n';
+import StatusMark from './StatusMark.astro';
 
 interface Props {
   lang: Lang;
@@ -18,9 +23,11 @@ interface Props {
   titleLines?: string[];
   lead: string;
   cta?: { href: string; label: string; external?: boolean };
+  /** Show the draft mark under the cover's footer. */
+  draft?: boolean;
 }
 
-const { lang, spec, kicker, titleLines, lead, cta } = Astro.props;
+const { lang, spec, kicker, titleLines, lead, cta, draft = false } = Astro.props;
 const lines = titleLines ?? [site.role[lang]];
 const action = cta ?? { href: `mailto:${site.email}`, label: t(lang, 'contact.cta'), external: true };
 ---
@@ -40,5 +47,6 @@ const action = cta ?? { href: `mailto:${site.email}`, label: t(lang, 'contact.ct
       <span class="label">{t(lang, 'cover.independent')}</span>
       <a href={action.href} class="label cover-cta">{action.label} <span class="glyph" aria-hidden="true">{action.external === false ? '→' : '↗'}</span></a>
     </div>
+    {draft && <p class="label"><StatusMark state="in-build" lang={lang} label={t(lang, 'draft')} /></p>}
   </div>
 </section>

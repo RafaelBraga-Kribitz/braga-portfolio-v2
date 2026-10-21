@@ -1,0 +1,59 @@
+---
+// 01-NN · A project — the document template (docs/PAGE-BRIEF.md, Site
+// specimen s04): the opener on the page grid (trail "01 Work → 01-04",
+// title, lead, meta: domain · status · Published · Updated · Repository ↗),
+// then the contents rail on 3 and the document on 9: the metric strip from
+// the frontmatter `metrics` (the accent one carries the accent), the
+// Markdown body, and the end bar (← All projects · § END · next project
+// by code, wrapping to the first). One page per language per entry of the
+// projects collection; every word comes from the entry or from i18n.
+import Document from '@/layouts/Document.astro';
+import { render } from 'astro:content';
+import { t, formatDate, type Lang } from '@/lib/i18n';
+import { route, workRoute } from '@/lib/routes';
+import { LANGS } from '@/lib/site';
+import { projectsOf, nextOf, type ProjectEntry } from '@/lib/collections';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const lang of LANGS) {
+    const list = await projectsOf(lang);
+    for (const entry of list) paths.push({ params: { lang, slug: entry.data.slug }, props: { entry, list } });
+  }
+  return paths;
+}
+
+interface Props { entry: ProjectEntry; list: ProjectEntry[] }
+
+const { entry, list } = Astro.props;
+const lang = Astro.params.lang as Lang;
+const d = entry.data;
+const { Content, headings, remarkPluginFrontmatter } = await render(entry);
+const next = nextOf(list, entry);
+
+const meta = [
+  { text: d.domain },
+  { status: d.status },
+  { text: `${t(lang, 'published')} ${formatDate(d.date, lang)}` },
+  ...(d.updated ? [{ text: `${t(lang, 'updated')} ${formatDate(d.updated, lang)}` }] : []),
+  ...(d.repository ? [{ text: t(lang, 'repository'), href: d.repository, external: true }] : []),
+];
+---
+<Document
+  lang={lang}
+  page={`work.${d.slug}`}
+  title={d.title}
+  description={d.summary}
+  current="01"
+  hasCode={remarkPluginFrontmatter?.hasCode === true}
+  trail={[{ label: `01 ${t(lang, 'door.work')}`, href: route('work', lang) }, { label: d.code, current: true }]}
+  lead={d.lead}
+  meta={meta}
+  draft={d.translationStatus === 'draft'}
+  headings={headings}
+  metrics={d.metrics}
+  prev={{ href: route('work', lang), label: t(lang, 'all-projects') }}
+  next={next && { href: workRoute(next.data.slug, lang), label: `${next.data.code} ${next.data.title}` }}
+>
+  <Content />
+</Document>

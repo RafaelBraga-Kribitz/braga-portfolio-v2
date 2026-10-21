@@ -1,0 +1,49 @@
+---
+// 03 · About — the document template (docs/PAGE-BRIEF.md: a 04 Document
+// variant) over the `pages` collection entry src/content/pages/<lang>/
+// about.md: the opener on the page grid (trail "03 About", title, lead,
+// meta: Updated <date> when set, the draft mark for an unapproved German
+// file), the contents rail on 3, the Markdown body on 9 (spec callout,
+// skills, CV table, contact: all authored in the file), the end bar back
+// to the index. The page is built only for a language whose file exists.
+import Document from '@/layouts/Document.astro';
+import { render } from 'astro:content';
+import { t, formatDate, type Lang } from '@/lib/i18n';
+import { route } from '@/lib/routes';
+import { LANGS } from '@/lib/site';
+import { pageOf, type PageEntry } from '@/lib/collections';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const lang of LANGS) {
+    const entry = await pageOf('about', lang);
+    if (entry) paths.push({ params: { lang }, props: { entry } });
+  }
+  return paths;
+}
+
+interface Props { entry: PageEntry }
+
+const { entry } = Astro.props;
+const lang = Astro.params.lang as Lang;
+const d = entry.data;
+const { Content, headings, remarkPluginFrontmatter } = await render(entry);
+const meta = d.updated ? [{ text: `${t(lang, 'updated')} ${formatDate(d.updated, lang)}` }] : [];
+---
+<Document
+  lang={lang}
+  page="about"
+  title={d.title}
+  description={d.summary}
+  current="03"
+  hasCode={remarkPluginFrontmatter?.hasCode === true}
+  trail={[{ label: `03 ${t(lang, 'door.about')}`, current: true }]}
+  lead={d.lead}
+  meta={meta}
+  draft={d.translationStatus === 'draft'}
+  headings={headings}
+  bodyLang={d.contentLang}
+  back={{ href: route('home', lang), label: t(lang, 'to-index') }}
+>
+  <Content />
+</Document>

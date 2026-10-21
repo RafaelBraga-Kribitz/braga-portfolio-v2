@@ -1,10 +1,13 @@
-// src/content.config.ts — the three content collections (Astro 7 content
+// src/content.config.ts — the four content collections (Astro 7 content
 // layer, glob loader). Markdown only (Obsidian-compatible): the authoring
 // guide is src/content/README.md.
 //
-//   projects  src/content/projects/{en,de}/<slug>.md
-//   writing   src/content/writing/{en,de}/<slug>.md
-//   legal     src/content/legal/{en,de}/<slug>.md
+//   projects  src/content/projects/{en,de}/<slug>.md   → /<lang>/work/<slug>/
+//   writing   src/content/writing/{en,de}/<slug>.md    → /<lang>/writing/<slug>/
+//   pages     src/content/pages/{en,de}/<slug>.md      → about, system
+//   legal     src/content/legal/{en,de}/<file>.md      → impressum, privacy,
+//             accessibility, by the `page` key (the German URLs differ:
+//             /de/datenschutz/, /de/barrierefreiheit/; src/lib/routes.ts)
 //
 // Entry ids are the path without the extension ("en/warehouse-humanoid-tco"),
 // never the frontmatter slug: the slug is shared by the two languages of one
@@ -14,15 +17,18 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { LANGS, type Lang } from './lib/site';
+import { STATUSES, type StatusState } from './lib/i18n';
 
-/* ---------- vocabularies ---------- */
+/* ---------- vocabularies ----------
+   The languages and the status states have one source each (src/lib/site.ts,
+   src/lib/i18n.ts), shared with the chrome, so the schema and the pages
+   cannot drift apart. */
 
-export const LANGS = ['en', 'de'] as const;
-export type Lang = (typeof LANGS)[number];
-
+export { LANGS, STATUSES };
+export type { Lang };
 /** D-029: five states, one square each, always with a label. */
-export const STATUSES = ['complete', 'functional', 'under-revision', 'in-build', 'archived'] as const;
-export type Status = (typeof STATUSES)[number];
+export type Status = StatusState;
 
 export const PROJECT_KINDS = ['case', 'brief'] as const;
 export type ProjectKind = (typeof PROJECT_KINDS)[number];
@@ -33,6 +39,14 @@ export type WritingKind = (typeof WRITING_KINDS)[number];
 /** A German page stays `draft` (status mark in-build, "Entwurf · Freigabe ausstehend") until the owner approves it. */
 export const TRANSLATION_STATUSES = ['approved', 'draft'] as const;
 export type TranslationStatus = (typeof TRANSLATION_STATUSES)[number];
+
+/** The `pages` collection: one-off documents rendered with the document template. */
+export const PAGE_SLUGS = ['about', 'system'] as const;
+export type PageSlug = (typeof PAGE_SLUGS)[number];
+
+/** The `legal` collection: the page each file is, a key shared by both languages (routes.ts page ids). */
+export const LEGAL_PAGES = ['impressum', 'privacy', 'accessibility'] as const;
+export type LegalPage = (typeof LEGAL_PAGES)[number];
 
 /* ---------- field types ---------- */
 
@@ -80,6 +94,8 @@ export const projectSchema = z
     code,
     kind: z.enum(PROJECT_KINDS),
     date: isoDate,
+    /** Optional: the opener's meta row shows "Updated <date>" when set. */
+    updated: isoDate.optional(),
     summary: z.string().min(1),
     lead: z.string().min(1),
     domain: z.string().min(1),
@@ -114,19 +130,45 @@ export const writingSchema = z.object({
   translationStatus: z.enum(TRANSLATION_STATUSES).default('approved'),
 });
 
+export const pageSchema = z.object({
+  title: z.string().min(1),
+  /** about | system: the route is /<lang>/<slug>/. */
+  slug: z.enum(PAGE_SLUGS),
+  lang,
+  /** The meta description and og:description. */
+  summary: z.string().min(1),
+  /** Optional standfirst under the title (.doc-lead). */
+  lead: z.string().min(1).optional(),
+  /** Optional document code ("03-01"); equation numbers derive from it. */
+  code: code.optional(),
+  /** Optional: the opener's meta row shows "Updated <date>" when set. */
+  updated: isoDate.optional(),
+  /** Optional: the language of the body when it is not the page's (the German kitchen sink may keep English content); sets lang on article.doc. */
+  contentLang: lang.optional(),
+  draft: z.boolean().default(false),
+  translationStatus: z.enum(TRANSLATION_STATUSES).default('approved'),
+});
+
 export const legalSchema = z.object({
   title: z.string().min(1),
-  slug,
+  /** Which legal page this file is; the EN and DE file share it. The URL comes from src/lib/routes.ts (/de/datenschutz/ for privacy in German). */
+  page: z.enum(LEGAL_PAGES),
+  /** Optional, informational: the file name is free (impressum.md, datenschutz.md). */
+  slug: slug.optional(),
   lang,
+  /** "As of <date>" / "Stand <date>" in the opener's meta row. */
   updated: isoDate,
-  /** The page's meta description; optional, the page may supply its own. */
-  summary: z.string().min(1).optional(),
+  /** The page's meta description. */
+  summary: z.string().min(1),
+  /** Optional standfirst under the title (.doc-lead). */
+  lead: z.string().min(1).optional(),
   draft: z.boolean().default(false),
   translationStatus: z.enum(TRANSLATION_STATUSES).default('approved'),
 });
 
 export type ProjectData = z.infer<typeof projectSchema>;
 export type WritingData = z.infer<typeof writingSchema>;
+export type PageData = z.infer<typeof pageSchema>;
 export type LegalData = z.infer<typeof legalSchema>;
 export type Metric = z.infer<typeof metric>;
 
@@ -151,5 +193,6 @@ const loader = (collection: string) =>
 export const collections = {
   projects: defineCollection({ loader: loader('projects'), schema: projectSchema }),
   writing: defineCollection({ loader: loader('writing'), schema: writingSchema }),
+  pages: defineCollection({ loader: loader('pages'), schema: pageSchema }),
   legal: defineCollection({ loader: loader('legal'), schema: legalSchema }),
 };

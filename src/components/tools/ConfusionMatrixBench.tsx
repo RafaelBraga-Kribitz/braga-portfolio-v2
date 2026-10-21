@@ -132,7 +132,8 @@ export default function ConfusionMatrixBench({ lang = 'en' }: { lang?: Lang }) {
         </div>
 
         <div class="bench-output col-8 vrule">
-          <p class="bench-verdict display">{e.verdict(lang)}</p>
+          {/* the live readout: see AbSampleSizeBench */}
+          <p class="bench-verdict display" role="status">{e.verdict(lang)}</p>
 
           <div class="bench-figure">
             <div class="bench-figure-head">
@@ -158,7 +159,7 @@ export default function ConfusionMatrixBench({ lang = 'en' }: { lang?: Lang }) {
             </div>
           </div>
 
-          <div class="bench-kpis" aria-live="polite">
+          <div class="bench-kpis">
             {e.kpis(lang).map((k) => (
               <Kpi key={k.key} label={k.label} value={k.value} note={k.note} accent={k.accent} />
             ))}

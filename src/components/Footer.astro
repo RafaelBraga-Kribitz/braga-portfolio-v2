@@ -1,11 +1,14 @@
 ---
 // Site footer, Site specimen s01: four link groups (D-013) over a
-// wordmark bar. The bar's right block is NAME · LOCATION · EUR and the
-// copyright line (not the specimen's "private review" line). Casing is
-// the stylesheet's (the colophon and labels are uppercased by CSS), so
-// the source text keeps its natural case.
+// wordmark bar. The bar's right block is the specimen's three-line
+// colophon: name / location · EUR / status · year. The status line states
+// the status of this build (i18n `footer.status`) where the specimen says
+// "Private review · copy awaiting approval"; the year is a plain figure
+// (no © glyph: D-030). Casing is the stylesheet's (the colophon and
+// labels are uppercased by CSS), so the source text keeps its natural case.
 import { site } from '../lib/site';
 import type { Lang } from '../lib/i18n';
+import { t } from '../lib/i18n';
 import { footerGroups } from '../lib/routes';
 
 interface Props {
@@ -32,7 +35,7 @@ const year = new Date().getFullYear();
     </div>
     <div class="site-footer-bar">
       <span class="site-footer-mark">{site.wordmark}</span>
-      <p class="site-footer-colophon">{site.name}<br>{site.location[lang]} · EUR<br>© {year}</p>
+      <p class="site-footer-colophon">{site.name}<br>{site.location[lang]} · EUR<br>{t(lang, 'footer.status')} · {String(year)}</p>
     </div>
   </div>
 </footer>

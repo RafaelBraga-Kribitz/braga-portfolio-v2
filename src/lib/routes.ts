@@ -2,6 +2,14 @@
 // /de/ with the same path except the German legal slugs. Project and
 // essay routes are generated from slugs; "work.<slug>" and
 // "writing.<slug>" are valid page ids.
+//
+// Base path (DEPLOY.md): the table below holds paths from the site root
+// ("/en/work/"); every function that hands a URL to a template, a feed or
+// a sitemap puts the configured base in front of it (import.meta.env.
+// BASE_URL, from `base` in astro.config.mjs, which reads SITE_BASE). At the
+// default base "/" nothing changes; at "/braga-portfolio/" route('work',
+// 'en') is "/braga-portfolio/en/work/". withBase() is idempotent, so a
+// path that already carries the base is left alone.
 
 import { site, type Lang } from './site';
 import { t, otherLang, type ChromeKey } from './i18n';
@@ -35,6 +43,11 @@ export type StaticPageId =
 export type PageId = StaticPageId | `work.${string}` | `writing.${string}`;
 export interface RoutePair { en: string; de: string }
 
+/** The legal pages, in footer order. Their German paths differ from the English ones. */
+export const legalPageIds = ['impressum', 'privacy', 'accessibility'] as const;
+export type LegalPageId = (typeof legalPageIds)[number];
+
+/** Paths from the site root, without the base. Read them through route() / routePair(). */
 export const routes: Record<StaticPageId, RoutePair> = {
   home: { en: '/en/', de: '/de/' },
   work: { en: '/en/work/', de: '/de/work/' },
@@ -51,17 +64,40 @@ export const routes: Record<StaticPageId, RoutePair> = {
   notfound: { en: '/404.html', de: '/404.html' },
 };
 
+/* ---------- base path ---------- */
+
+/** The configured base without its trailing slash: '' at the root, '/braga-portfolio' on a project page. */
+export const BASE: string = (import.meta.env.BASE_URL ?? '/').replace(/\/+$/, '');
+
+/** A root path with the base in front ("/en/" → "/braga-portfolio/en/"). Idempotent; leaves URLs with a scheme alone. */
+export function withBase(path: string): string {
+  if (!path.startsWith('/') || path.startsWith('//')) return path;
+  if (!BASE || path === BASE || path.startsWith(`${BASE}/`)) return path;
+  return BASE + path;
+}
+
+/** The last path segment of a page's route in a language, without slashes ("/de/datenschutz/" → "datenschutz"). */
+export function segment(pageId: StaticPageId, lang: Lang): string {
+  const parts = routes[pageId][lang].split('/').filter(Boolean);
+  return parts[parts.length - 1] ?? '';
+}
+
+/* ---------- routes ---------- */
+
 export function workRoute(slug: string, lang: Lang): string {
-  return `/${lang}/work/${slug}/`;
+  return withBase(`/${lang}/work/${slug}/`);
 }
 
 export function writingRoute(slug: string, lang: Lang): string {
-  return `/${lang}/writing/${slug}/`;
+  return withBase(`/${lang}/writing/${slug}/`);
 }
 
-/** Both language paths of a page id. Throws on an unknown id. */
+/** Both language paths of a page id, with the base. Throws on an unknown id. */
 export function routePair(pageId: PageId): RoutePair {
-  if (pageId in routes) return routes[pageId as StaticPageId];
+  if (pageId in routes) {
+    const pair = routes[pageId as StaticPageId];
+    return { en: withBase(pair.en), de: withBase(pair.de) };
+  }
   if (pageId.startsWith('work.')) {
     const slug = pageId.slice('work.'.length);
     return { en: workRoute(slug, 'en'), de: workRoute(slug, 'de') };
@@ -73,14 +109,14 @@ export function routePair(pageId: PageId): RoutePair {
   throw new Error(`routes: unknown page id "${pageId}"`);
 }
 
-/** Root-relative path of a page in a language. */
+/** Path of a page in a language, with the base. */
 export function route(pageId: PageId, lang: Lang): string {
   return routePair(pageId)[lang];
 }
 
-/** Absolute URL on the production origin (astro.config `site`). */
+/** Absolute URL on the production origin (astro.config `site`); the base is added when the path lacks it. */
 export function absolute(path: string): string {
-  return new URL(path, site.url).href;
+  return new URL(withBase(path), site.url).href;
 }
 
 export interface Alternate { hreflang: 'en' | 'de' | 'x-default'; href: string }

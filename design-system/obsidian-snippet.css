@@ -32,10 +32,10 @@
 .markdown-reading-view ol { list-style: decimal-leading-zero; }
 .markdown-reading-view li::marker { color: var(--ink-3); font-variant-numeric: var(--num); }
 .markdown-reading-view strong { font-weight: 700; }
-.markdown-reading-view code { font: 400 0.9em / 1 var(--font-mono); background: var(--surface-2); padding: 1px 4px; font-variant-numeric: var(--num); }
+.markdown-reading-view code { font: 400 max(12px, 0.9em) / 1 var(--font-mono); background: var(--surface-2); padding: 1px 4px; font-variant-numeric: var(--num); }
 .markdown-reading-view hr { border: 0; border-top: var(--hairline); height: 0; }
 .markdown-reading-view mark { background: none; color: inherit; }
-.markdown-reading-view sup { font-size: 0.75em; line-height: 0; vertical-align: super; }
+.markdown-reading-view sup { font-size: max(12px, 0.75em); line-height: 0; vertical-align: super; }
 .markdown-reading-view sup a { font-family: var(--font-mono); color: var(--ink-2); text-decoration: none; padding-inline: 2px; }
 .markdown-reading-view img { display: block; max-width: 100%; height: auto; }
 .markdown-reading-view p mark,
@@ -67,7 +67,7 @@
 .markdown-reading-view .callout[data-callout="quote"] { border-top: var(--hairline); padding-top: 16px; }
 .markdown-reading-view .callout[data-callout="quote"] .callout-content { font: var(--w-display) var(--t-h3) / var(--lh-snug) var(--font-display); letter-spacing: var(--tracking-tight); text-wrap: balance; max-width: 30em; }
 .markdown-reading-view .callout[data-callout="quote"] .callout-title { order: 2; }
-.markdown-reading-view .callout[data-callout="spec"] dl { margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: 32px; border-top: var(--rule-open); }
+.markdown-reading-view .callout[data-callout="spec"] dl { margin: 0; display: grid; grid-template-columns: fit-content(40%) minmax(0, 1fr); column-gap: 32px; border-top: var(--rule-open); }
 .markdown-reading-view .callout[data-callout="spec"] dt,
 .markdown-reading-view .callout[data-callout="spec"] dd { margin: 0; padding-block: 10px; border-bottom: var(--rule); }
 .markdown-reading-view .callout[data-callout="spec"] dt { font: 400 var(--t-mono-sm) / 1.5 var(--font-mono); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2); }
@@ -162,6 +162,5 @@
 .markdown-reading-view .math { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: center; padding-block: 16px; border-top: var(--rule); border-bottom: var(--rule); font-variant-numeric: var(--num); }
 .markdown-reading-view .math .math-body { min-width: 0; overflow: auto hidden; padding-block: 6px; display: grid; gap: 8px; }
 .markdown-reading-view .math math { font-size: 1.2em; display: block math; max-width: 100%; }
-.markdown-reading-view .math .katex-display { margin: 0; }
 .markdown-reading-view .eq-no { font: 400 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: var(--tracking-label); color: var(--ink-3); font-variant-numeric: var(--num); white-space: nowrap; }
 .markdown-reading-view p math { font-size: 1.05em; }

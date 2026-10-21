@@ -1,0 +1,38 @@
+---
+// 02 · Writing index — Site pattern 03 (Index): the section heading (its
+// claim is this page's h1; the prose is the note on the two registers,
+// essays and notes, from home.yaml) and the listing of every non-draft
+// essay and note of the language (code 02-NN, kind and date, year). The
+// claim and the prose are i18n keys the home Index shares; the rows are the
+// writing collection (src/lib/collections.ts). German strings are drafts:
+// the DE page carries the in-build mark under the listing.
+import Base from '@/layouts/Base.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import Listing from '@/components/Listing.astro';
+import ListingRow from '@/components/ListingRow.astro';
+import StatusMark from '@/components/StatusMark.astro';
+import { t, formatDate, type Lang } from '@/lib/i18n';
+import { writingRoute } from '@/lib/routes';
+import { LANGS } from '@/lib/site';
+import { writingOf, writingCode, yearOf } from '@/lib/collections';
+
+export function getStaticPaths() {
+  return LANGS.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Lang;
+const writing = await writingOf(lang);
+---
+<Base lang={lang} page="writing" title={t(lang, 'door.writing')} description={t(lang, 'writing.prose')} current="02">
+  <section class="section">
+    <SectionHeading number="02" word={t(lang, 'door.writing')} claim={t(lang, 'writing.claim')} prose={t(lang, 'writing.prose')} as="h1" />
+    {writing.length > 0 && (
+      <Listing head={{ index: t(lang, 'index'), title: t(lang, 'title'), meta: t(lang, 'kind-date'), trail: t(lang, 'year') }}>
+        {writing.map((e, i) => (
+          <ListingRow code={writingCode(e, i)} title={e.data.title} sub={e.data.summary} meta={[t(lang, `kind.${e.data.kind}`), formatDate(e.data.date, lang)]} lang={lang} trail={yearOf(e.data.date)} href={writingRoute(e.data.slug, lang)} />
+        ))}
+      </Listing>
+    )}
+    {lang === 'de' && <div class="doc-meta"><StatusMark state="in-build" lang={lang} label={t(lang, 'draft')} /></div>}
+  </section>
+</Base>

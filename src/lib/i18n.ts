@@ -4,9 +4,21 @@
 // missing key, so a typo fails the build instead of rendering a blank.
 
 import type { Lang } from './site';
+import { date } from './format.mjs';
 export type { Lang } from './site';
 
-export type StatusState = 'complete' | 'functional' | 'under-revision' | 'in-build' | 'archived';
+/** D-029: five states, one square each, always with a label. The content schema (src/content.config.ts) reads this list. */
+export const STATUSES = ['complete', 'functional', 'under-revision', 'in-build', 'archived'] as const;
+export type StatusState = (typeof STATUSES)[number];
+
+/**
+ * Languages whose chrome is an agent draft awaiting the owner's approval
+ * (HANDOFF O-05, D-011): every page in one of them shows the in-build mark
+ * with the `draft` label. Empty the list when the owner approves; gate
+ * L-07 (scripts/gates/checks.mjs, `--draft-langs`) checks the same set.
+ */
+export const DRAFT_LANGS: readonly Lang[] = ['de'];
+export const isDraftLang = (lang: Lang): boolean => DRAFT_LANGS.includes(lang);
 
 const en = {
   // header doors
@@ -17,6 +29,10 @@ const en = {
   // skip link and landmarks
   skip: 'Skip to content',
   index: 'Index',
+  // the header doors' landmark name (Site specimen s01: "Sections"); the
+  // footer's first group is "Index" (D-013), and two navigation landmarks
+  // must not share a name
+  'nav.sections': 'Sections',
   // footer groups (D-013)
   'footer.index': 'Index',
   'footer.site': 'Site',
@@ -34,6 +50,10 @@ const en = {
   'link.github': 'GitHub',
   'link.linkedin': 'LinkedIn',
   'link.kaggle': 'Kaggle',
+  // the colophon's third line (Site specimen s01, "PRIVATE REVIEW · COPY
+  // AWAITING APPROVAL · 2026"), stating the status of this build; the
+  // year follows it. Change it when the owner approves the copy.
+  'footer.status': 'In build · copy awaiting approval',
   // status vocabulary (D-029)
   'status.complete': 'Complete',
   'status.functional': 'Functional',
@@ -53,15 +73,32 @@ const en = {
   'cover.evidence': 'Evidence before claims',
   'cover.independent': 'Independent portfolio',
   'contact.cta': 'Get in touch',
+  // section claims shared by the home Index and the section indexes
+  // (Site specimen s03; home.yaml sections[02].leadParagraphs[0] with the
+  // spaced en dash of O-03, NBSP before it)
+  'work.claim': 'A decision. Its evidence.',
+  'work.prose': 'Selected analytical projects, with the question, result and limits kept together.',
+  'writing.claim': 'Finished arguments and working notes.',
+  'writing.prose': 'Two registers, deliberately kept apart. Essays are finished arguments\u00A0– a position taken, defended, and closed. Notes are the working surface, revised in place as the thinking moves.',
+  // status vocabulary (Site specimen s03, D-029): one line of use per state
+  'status-vocabulary': 'Status vocabulary',
+  'status-use.complete': 'Shipped; the result stands. Filled.',
+  'status-use.functional': 'Works end to end; the scope is stated. Filled centre in an outline.',
+  'status-use.under-revision': 'A flaw was found and is being fixed\u00A0– said plainly. Half filled.',
+  'status-use.in-build': 'Not yet a result. Outline.',
+  'status-use.archived': 'Kept for the record; no longer maintained. Dotted outline.',
   // listings
   'all-projects': 'All projects',
-  'all-5-projects': 'All 5 projects',
+  'all-n-projects': 'All {n} projects',
   'all-writing': 'All writing',
   'all-tools': 'All tools',
   'open-profile': 'Open the profile',
   project: 'Project',
   title: 'Title',
   tool: 'Tool',
+  // the head of the home page's 03 About listing: one row per h2 of the
+  // About document
+  section: 'Section',
   'kind-date': 'Kind / date',
   'kind.essay': 'Essay',
   'kind.note': 'Note',
@@ -75,6 +112,11 @@ const en = {
   source: 'Source',
   'doc.end': '§ END',
   'back-to-index': 'Back to the index',
+  'to-index': 'Index',
+  published: 'Published',
+  updated: 'Updated',
+  'as-of': 'As of',
+  repository: 'Repository',
   // tools
   'tool.nojs': 'Without JavaScript the default scenario is shown; the controls need JavaScript.',
 } as const;
@@ -88,6 +130,7 @@ const de: Record<ChromeKey, string> = {
   'door.tools': 'Werkzeuge',
   skip: 'Zum Inhalt springen',
   index: 'Index',
+  'nav.sections': 'Bereiche',
   'footer.index': 'Index',
   'footer.site': 'Seite',
   'footer.elsewhere': 'Anderswo',
@@ -103,6 +146,7 @@ const de: Record<ChromeKey, string> = {
   'link.github': 'GitHub',
   'link.linkedin': 'LinkedIn',
   'link.kaggle': 'Kaggle',
+  'footer.status': 'Im Aufbau · Freigabe der Texte ausstehend',
   'status.complete': 'Abgeschlossen',
   'status.functional': 'Funktionsfähig',
   'status.under-revision': 'In Überarbeitung',
@@ -119,14 +163,25 @@ const de: Record<ChromeKey, string> = {
   'cover.evidence': 'Belege vor Behauptungen',
   'cover.independent': 'Unabhängiges Portfolio',
   'contact.cta': 'Kontakt aufnehmen',
+  'work.claim': 'Eine Entscheidung. Ihre Belege.',
+  'work.prose': 'Ausgewählte analytische Projekte, bei denen Frage, Ergebnis und Grenzen beisammen bleiben.',
+  'writing.claim': 'Fertige Argumente und Arbeitsnotizen.',
+  'writing.prose': 'Zwei Register, bewusst getrennt. Essays sind fertige Argumente\u00A0– eine Position, bezogen, verteidigt und abgeschlossen. Notizen sind die Arbeitsfläche, an Ort und Stelle überarbeitet, während das Denken sich bewegt.',
+  'status-vocabulary': 'Statusvokabular',
+  'status-use.complete': 'Ausgeliefert; das Ergebnis steht. Gefüllt.',
+  'status-use.functional': 'Funktioniert durchgängig; der Umfang ist angegeben. Gefüllte Mitte im Umriss.',
+  'status-use.under-revision': 'Ein Fehler wurde gefunden und wird behoben\u00A0– offen gesagt. Halb gefüllt.',
+  'status-use.in-build': 'Noch kein Ergebnis. Umriss.',
+  'status-use.archived': 'Zur Dokumentation aufbewahrt; nicht mehr gepflegt. Gepunkteter Umriss.',
   'all-projects': 'Alle Projekte',
-  'all-5-projects': 'Alle 5 Projekte',
+  'all-n-projects': 'Alle {n} Projekte',
   'all-writing': 'Alle Texte',
   'all-tools': 'Alle Werkzeuge',
   'open-profile': 'Profil öffnen',
   project: 'Projekt',
   title: 'Titel',
   tool: 'Werkzeug',
+  section: 'Abschnitt',
   'kind-date': 'Art / Datum',
   'kind.essay': 'Essay',
   'kind.note': 'Notiz',
@@ -139,6 +194,11 @@ const de: Record<ChromeKey, string> = {
   source: 'Quelle',
   'doc.end': '§ ENDE',
   'back-to-index': 'Zurück zum Index',
+  'to-index': 'Zum Index',
+  published: 'Veröffentlicht',
+  updated: 'Aktualisiert',
+  'as-of': 'Stand',
+  repository: 'Repository',
   'tool.nojs': 'Ohne JavaScript wird das Standardszenario gezeigt; die Regler brauchen JavaScript.',
 };
 
@@ -158,38 +218,13 @@ export function otherLang(lang: Lang): Lang {
 }
 
 /* ---- dates ----
-   The canonical formatters live in Agent C's src/lib/format.mjs (the port
-   of handoff/ds-update/proposals/format.js). import.meta.glob resolves at
-   build time: when that file exists its date() is re-exported here as
-   formatDate; when it is absent the local port below answers, with the
-   same reference cases (EN "16 Sep 2026", DE "16. Sep. 2026", NBSP inside
-   the figure, Austrian "Jän." for January; D-031). */
-export const NBSP = ' ';
-
-type DateFn = (iso: string, lang?: string) => string;
-const formatModules = import.meta.glob<{ date?: DateFn }>(['./format.mjs', './format.ts'], { eager: true });
-const sharedDate: DateFn | undefined = formatModules['./format.mjs']?.date ?? formatModules['./format.ts']?.date;
-
-const MONTHS: Record<Lang, readonly string[]> = {
-  en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-  de: ['Jän.', 'Feb.', 'März', 'Apr.', 'Mai', 'Juni', 'Juli', 'Aug.', 'Sep.', 'Okt.', 'Nov.', 'Dez.'],
-};
-
-function localDate(iso: string, lang: Lang): string {
-  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
-  if (!m) throw new Error(`formatDate: expected YYYY-MM-DD, got "${iso}"`);
-  const y = Number(m[1]);
-  const mon = MONTHS[lang][Number(m[2]) - 1];
-  const d = Number(m[3]);
-  if (!mon || !d) throw new Error(`formatDate: invalid date "${iso}"`);
-  return lang === 'de' ? `${d}.${NBSP}${mon}${NBSP}${y}` : `${d}${NBSP}${mon}${NBSP}${y}`;
-}
+   format.mjs (the port of handoff/ds-update/proposals/format.js, with its
+   reference cases in tests/unit/format.test.mjs) is the one formatter:
+   EN "16 Sep 2026", DE "16. Sep. 2026", NBSP inside the figure, Austrian
+   "Jän." for January (D-031). */
 
 /** ISO date (YYYY-MM-DD) → the page language's short form. */
 export function formatDate(iso: string, lang: Lang): string {
   if (!/^\d{4}-\d{2}-\d{2}/.test(iso)) throw new Error(`formatDate: expected YYYY-MM-DD, got "${iso}"`);
-  return sharedDate ? sharedDate(iso, lang) : localDate(iso, lang);
+  return date(iso, lang);
 }
-
-/** True when formatDate is served by src/lib/format.mjs (Agent C). */
-export const usesSharedFormatter = sharedDate !== undefined;

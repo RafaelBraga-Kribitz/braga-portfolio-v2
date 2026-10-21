@@ -17,7 +17,10 @@
 // The maths of the eight rates is ported from the v1 tool
 // (braga-design-system-template/src/lib/tools/confusion-matrix.ts
 // getMetrics); MCC is not carried over, the brief names eight metrics.
-// Zero denominators give 0, as in v1.
+// Zero denominators give 0 in metrics(), as in v1; the readouts print a
+// rate whose denominator is zero as an en dash (undefined, not 0.0%), and
+// the verdict says when there is no positive case at all (a prevalence
+// that rounds to zero positives at a small n).
 //
 // Presets are v1's scenarios re-expressed as rates, three of the five
 // (churn, fraud, lead scoring; moderation and ad clicks are dropped so the
@@ -105,6 +108,7 @@ const WORDS = {
     verdict: (c, n, s) => `Errors cost ${c} across ${n} cases: ${s.fnShare} from ${s.missed}, ${s.fpShare} from ${s.falseAlarms}.`,
     free: (zero, s) => `At these prices ${s.missed} and ${s.falseAlarms} cost ${zero}.`,
     noErrors: (n) => `No error cost across ${n} cases: every positive is flagged and no negative is.`,
+    noPositives: (n) => `No error cost across ${n} cases, but no case is positive at this prevalence: recall and F1 are undefined.`,
     perCase: 'per case',
     kpis: {
       accuracy: ['Accuracy', '(TP + TN) / n'],
@@ -131,6 +135,7 @@ const WORDS = {
     // "für" keeps the accusative of `missed`, as "durch" does above
     free: (zero, s) => `Bei diesen Preisen fallen für ${s.missed} und ${s.falseAlarms} ${zero} an.`,
     noErrors: (n) => `Keine Fehlerkosten über ${n} Fälle: jeder Positive wird erkannt und kein Negativer.`,
+    noPositives: (n) => `Keine Fehlerkosten über ${n} Fälle, aber bei dieser Prävalenz ist kein Fall positiv: Recall und F1 sind nicht definiert.`,
     perCase: 'pro Fall',
     kpis: {
       accuracy: ['Genauigkeit', '(TP + TN) / n'],
@@ -161,7 +166,7 @@ export function evaluate({ n, prevalence, sensitivity, specificity, costFP, cost
   const verdict = (lang = 'en') => {
     const w = WORDS[lang] ?? WORDS.en;
     const cases = number(k.n, lang);
-    if (k.fp + k.fn === 0) return w.noErrors(cases);
+    if (k.fp + k.fn === 0) return k.positives === 0 ? w.noPositives(cases) : w.noErrors(cases);
     const pos = (w.positive[preset] ?? w.positive.default)[k.fn === 1 ? 0 : 1];
     const phrases = {
       missed: w.missed(number(k.fn, lang), pos, k.fn === 1),
@@ -169,26 +174,30 @@ export function evaluate({ n, prevalence, sensitivity, specificity, costFP, cost
     };
     // errors exist but both prices are zero: say so, never "no errors"
     if (c.totalCost === 0) return w.free(currency(0, lang), phrases);
+    // the two shares are printed whole and must add up to 100 (62.5 / 37.5
+    // would round to 63 + 38): round one, the other is its complement
+    const fnPct = Math.round(c.fnShare * 100);
     return w.verdict(currency(c.totalCost, lang), cases, {
       ...phrases,
-      fnShare: percent(Math.round(c.fnShare * 100), lang, 0),
-      fpShare: percent(Math.round(c.fpShare * 100), lang, 0),
+      fnShare: percent(fnPct, lang, 0),
+      fpShare: percent(100 - fnPct, lang, 0),
     });
   };
 
   const kpis = (lang = 'en') => {
     const w = WORDS[lang] ?? WORDS.en;
-    const rate = (v) => percent(v * 100, lang, 1);
+    // a rate over a zero denominator is undefined: an en dash, not 0.0%
+    const rate = (v, den) => (den > 0 ? percent(v * 100, lang, 1) : EN_DASH);
     const row = (key, value, accent = false) => ({ key, label: w.kpis[key][0], value, note: w.kpis[key][1], accent });
     return [
-      row('accuracy', rate(m.accuracy)),
-      row('precision', rate(m.precision)),
-      row('recall', rate(m.recall)),
-      row('specificity', rate(m.specificity)),
-      row('npv', rate(m.npv)),
-      row('f1', number(m.f1, lang, 3)),
-      row('fpr', rate(m.fpr)),
-      row('fnr', rate(m.fnr)),
+      row('accuracy', rate(m.accuracy, k.n)),
+      row('precision', rate(m.precision, k.tp + k.fp)),
+      row('recall', rate(m.recall, k.tp + k.fn)),
+      row('specificity', rate(m.specificity, k.tn + k.fp)),
+      row('npv', rate(m.npv, k.tn + k.fn)),
+      row('f1', 2 * k.tp + k.fp + k.fn > 0 && k.tp + k.fn > 0 ? number(m.f1, lang, 3) : EN_DASH),
+      row('fpr', rate(m.fpr, k.tn + k.fp)),
+      row('fnr', rate(m.fnr, k.tp + k.fn)),
       row('totalCost', currency(c.totalCost, lang), true),        // the one earned figure (D-025)
       row('costPerCase', currency(c.costPerCase, lang, 2)),
     ];

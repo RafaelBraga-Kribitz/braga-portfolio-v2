@@ -6,12 +6,12 @@
 // failing on tests/gates/fixtures/bad/ (see tests/gates/README.md).
 //
 // Three kinds of function:
-//   pageGates(opts)   G-01…G-13. Runs INSIDE the page (page.evaluate), so it
+//   pageGates(opts)   G-01…G-14. Runs INSIDE the page (page.evaluate), so it
 //                     is self-contained: no closure over this module.
 //   pageFacts(html)   runs inside a blank page; parses the raw HTML file with
 //                     DOMParser (no script runs) and returns plain data for
 //                     the static gates.
-//   staticGates(...)  L-01…L-05, in Node, over pageFacts output and the
+//   staticGates(...)  L-01…L-07, in Node, over pageFacts output and the
 //                     files on disk.
 //   axeGate(...)      A-01, axe-core over the live page.
 //
@@ -35,11 +35,14 @@ export const GATES = [
   ['G-11', 'Reduced motion'],
   ['G-12', 'Project fonts loaded'],
   ['G-13', 'No third-party requests'],
+  ['G-14', 'Shell on the page grid'],
   ['L-01', 'Internal links resolve'],
   ['L-02', 'hreflang pairs'],
   ['L-03', 'Scripts policy'],
   ['L-04', 'No inline style'],
   ['L-05', 'Head metadata'],
+  ['L-06', 'Glyph inventory'],
+  ['L-07', 'Draft mark'],
   ['A-01', 'axe WCAG 2.1 AA'],
 ];
 export const GATE_NAME = Object.fromEntries(GATES);
@@ -56,7 +59,7 @@ export function result(id, offenders, total, noteOk, noteFail, extra) {
 export const skipped = (id, why) => ({ id, name: GATE_NAME[id] || id, status: 'skip', count: 0, total: 0, summary: why, offenders: [] });
 
 /* ================================================================
-   G-01 … G-13 — inside the page. Keep this function self-contained.
+   G-01 … G-14 — inside the page. Keep this function self-contained.
    opts: { foreign: string[] }   third-party requests seen on the wire
    ================================================================ */
 export async function pageGates(opts = {}) {
@@ -121,7 +124,7 @@ export async function pageGates(opts = {}) {
   const skip = (el) => !!el.closest('[data-gate-skip], [hidden], script, style, template, noscript');
   const visible = (el) => { const r = el.getBoundingClientRect(); if (r.width <= 0 || r.height <= 0) return false; const s = cs(el); return s.visibility !== 'hidden' && s.display !== 'none' && s.opacity !== '0'; };
   // visually hidden: an ancestor-or-self box of ≤ 1px that clips (the
-  // sr-only pattern; KaTeX's MathML copy). Not rendered text, not a target.
+  // sr-only pattern). Not rendered text, not a target.
   const clipMemo = new Map();
   const clippedBox = (n) => {
     if (clipMemo.has(n)) return clipMemo.get(n);
@@ -274,7 +277,27 @@ export async function pageGates(opts = {}) {
     const id = decodeURIComponent(first.getAttribute('href').slice(1));
     if (!id || !doc.getElementById(id)) lOff.push(`skip link points at #${id}, which does not exist`);
   }
-  out.push(result('G-10', 'Landmarks + skip link', lOff, 5, 'header, nav, one main, footer present; the skip link is the first tab stop', '%n structure problems'));
+  // two landmarks of one role need different names (axe best practice
+  // landmark-unique, outside the WCAG tags A-01 runs): a landmark list
+  // that offers "Index navigation" twice cannot be told apart
+  const nameOf = (el) => {
+    const lab = el.getAttribute('aria-labelledby');
+    if (lab) return lab.split(/\s+/).map((i) => doc.getElementById(i)?.textContent || '').join(' ').replace(/\s+/g, ' ').trim();
+    return (el.getAttribute('aria-label') || el.getAttribute('title') || '').replace(/\s+/g, ' ').trim();
+  };
+  const IMPLICIT = { NAV: 'navigation', ASIDE: 'complementary', SECTION: 'region', FORM: 'form' };
+  const marks = new Map();
+  for (const el of doc.querySelectorAll('nav, aside, section[aria-label], section[aria-labelledby], form[aria-label], form[aria-labelledby], [role="navigation"], [role="complementary"], [role="region"], [role="search"]')) {
+    if (skip(el) || cs(el).display === 'none' || cs(el).visibility === 'hidden') continue;
+    const role = el.getAttribute('role') || IMPLICIT[el.tagName];
+    if (!role) continue;
+    const name = nameOf(el);
+    const key = `${role}|${name.toLowerCase()}`;
+    const m = marks.get(key) || { role, name, n: 0 };
+    m.n++; marks.set(key, m);
+  }
+  for (const m of marks.values()) if (m.n > 1) lOff.push(`${m.n} ${m.role} landmarks named “${m.name || '(no name)'}”: the landmark name must be unique`);
+  out.push(result('G-10', 'Landmarks + skip link', lOff, 5, 'header, nav, one main, footer present; landmark names unique; the skip link is the first tab stop', '%n structure problems'));
 
   // G-11 · a prefers-reduced-motion rule sets --dur to 0
   const walk = (rules, fn) => { for (const r of Array.from(rules || [])) { fn(r); let kids = null; try { kids = r.cssRules; } catch (e) { /* none */ } if (kids && kids.length) walk(kids, fn); } };
@@ -334,6 +357,28 @@ export async function pageGates(opts = {}) {
   for (const f of opts.foreign || []) { const u = urlOf(f); foreign.add('request ' + (u ? u.host + u.pathname.slice(0, 48) : f)); }
   out.push(result('G-13', 'No third-party requests', Array.from(foreign), 1, 'every resource is served from this origin', '%n resources load from another origin'));
 
+  // G-14 · the shell stands on the page grid (grid.css rule 1): the header's
+  // wordmark starts where the content of <main> starts, the cluster ends
+  // where it ends (768 and up), and the footer's wordmark stacks under the
+  // header's, at every width: above --page-max too (the shell's hairline is
+  // full bleed, its bar is not)
+  const sOff = [];
+  const shellMark = doc.querySelector('.shell-mark');
+  const mainEl = doc.querySelector('main');
+  if (shellMark && mainEl && !skip(shellMark)) {
+    const mr = mainEl.getBoundingClientRect(), ms = cs(mainEl);
+    const left = mr.left + parseFloat(ms.borderLeftWidth) + parseFloat(ms.paddingLeft);
+    const right = mr.right - parseFloat(ms.borderRightWidth) - parseFloat(ms.paddingRight);
+    const textLeft = (el) => { const r = doc.createRange(); r.selectNodeContents(el); const b = r.getBoundingClientRect(); return b.width ? b.left : el.getBoundingClientRect().left; };
+    const mx = textLeft(shellMark);
+    if (Math.abs(mx - left) > 1) sOff.push(`header wordmark starts at ${Math.round(mx)}px, the content of <main> at ${Math.round(left)}px`);
+    const cluster = doc.querySelector('.shell-cluster');
+    if (cluster && vw >= 768) { const cr = cluster.getBoundingClientRect().right; if (Math.abs(cr - right) > 1) sOff.push(`header controls end at ${Math.round(cr)}px, the content of <main> at ${Math.round(right)}px`); }
+    const footMark = doc.querySelector('.site-footer-mark');
+    if (footMark && visible(footMark)) { const fx = textLeft(footMark); if (Math.abs(fx - mx) > 1) sOff.push(`footer wordmark starts at ${Math.round(fx)}px, the header's at ${Math.round(mx)}px`); }
+  }
+  out.push(result('G-14', 'Shell on the page grid', sOff, shellMark ? 3 : 0, shellMark ? 'header and footer wordmarks and the controls stand on the column lines of <main>' : 'no .shell-mark on this page', '%n shell edges off the page grid'));
+
   return { results: out, theme: doc.documentElement.dataset.theme || '', vw, elements: all.length };
 }
 
@@ -371,6 +416,28 @@ export function pageFacts(html) {
     refresh = m ? m[1].trim() : '';
     if (refresh) refs.push({ tag: 'meta', attr: 'refresh', value: refresh, rel: '', el: '<meta http-equiv=refresh>' });
   }
+  // D-030: the text may use → ↗ ← § · ▲ + − – … and the squares; any
+  // other symbol (©, ™, ✓, ★, an emoji, another arrow) is a glyph the
+  // inventory does not have. Code, formulae and scripts are not prose.
+  const GLYPH = /[\p{So}\p{Extended_Pictographic}\u2190-\u21FF\u27F0-\u27FF\u2900-\u297F\u2B00-\u2BFF]/u;
+  const GLYPH_OK = new Set(['→', '↗', '←', '▲', '■', '□', '▣', '▤', '⊡', '°']);
+  const glyphs = [];
+  const notProse = 'script, style, template, noscript, code, pre, kbd, samp, math';
+  const walker = doc.body ? doc.createTreeWalker(doc.body, NodeFilter.SHOW_TEXT) : null;
+  const seenGlyph = new Set();
+  const noteGlyphs = (text, where) => {
+    for (const ch of text) {
+      if (!GLYPH.test(ch) || GLYPH_OK.has(ch) || seenGlyph.has(ch + where)) continue;
+      seenGlyph.add(ch + where);
+      glyphs.push(`“${ch}” U+${ch.codePointAt(0).toString(16).toUpperCase().padStart(4, '0')} in ${where}`);
+    }
+  };
+  for (let n = walker && walker.nextNode(); n; n = walker.nextNode()) {
+    const host = n.parentElement;
+    if (!host || host.closest(notProse)) continue;
+    noteGlyphs(n.textContent || '', `${desc(host)} “${(n.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 32)}”`);
+  }
+  for (const el of q('[aria-label], [title], [alt]')) for (const a of ['aria-label', 'title', 'alt']) if (el.hasAttribute(a)) noteGlyphs(el.getAttribute(a) || '', `${desc(el)} ${a}`);
   const firstScript = doc.head ? doc.head.querySelector('script') : null;
   const firstSheet = doc.head ? doc.head.querySelector('link[rel~="stylesheet"], style') : null;
   return {
@@ -393,16 +460,26 @@ export function pageFacts(html) {
       firstInHead: s === firstScript,
       beforeSheets: !firstSheet || !!(s.compareDocumentPosition(firstSheet) & Node.DOCUMENT_POSITION_FOLLOWING),
     })),
-    styles: q('[style]').map((el) => ({ el: desc(el), value: el.getAttribute('style') || '', katex: !!el.closest('.katex-html[aria-hidden="true"]') })),
+    // where rule 1 allows a custom-property style: an evidence bar or chart
+    // mark, anything inside an <svg>, anything inside a tool island
+    styles: q('[style]').map((el) => ({ el: desc(el), value: el.getAttribute('style') || '', placed: el.matches('.ev-fill, .ev-mid, .mark, .swatch') || !!el.closest('svg, astro-island') })),
+    glyphs,
+    // the draft mark (StatusMark with the draft label sets data-draft)
+    drafts: q('.status[data-state="in-build"][data-draft]').length,
+    // code panels whose buttons need /scripts/code.js
+    codeBlocks: q('.code .code-copy, .code .code-wrap').length,
   };
 }
 
 /* ================================================================
    L-01 … L-05 — in Node, over pageFacts output and the files on disk.
    ctx: { dir, site: URL|null, pages: Map<pagePath, facts>,
-          pending?: Set<string> }   pages of the site map not built yet
+          pending?: Set<string>,    pages of the site map not built yet
                                     (tests/gates/pending-routes.json): a
                                     link to one is counted, not failed
+          base?: string }           the build's base path ('' or '/repo'):
+                                    URLs carry it, page paths and files do
+                                    not; a local URL outside it fails L-01
    ================================================================ */
 
 /** the page path a file serves: en/work/index.html → /en/work/ */
@@ -412,8 +489,13 @@ export function pagePathOf(rel) {
 }
 const normPath = (p) => (p.endsWith('/index.html') ? p.slice(0, -'index.html'.length) : p);
 
-/** classify a reference: fragment | local | external | skip */
-export function classifyRef(value, pagePath, site) {
+/**
+ * classify a reference: fragment | local | external | skip. `pagePath` and
+ * the returned `path` are relative to the build root (no base); `base` is
+ * the prefix every local URL must carry ('' at the root, '/repo' on a
+ * project page): it is stripped, and a local URL without it is `outside`.
+ */
+export function classifyRef(value, pagePath, site, base = '') {
   const v = (value || '').trim();
   if (!v) return { kind: 'skip' };
   if (v.startsWith('#')) { let id = v.slice(1); try { id = decodeURIComponent(id); } catch { /* keep raw */ } return { kind: 'fragment', id }; }
@@ -423,13 +505,20 @@ export function classifyRef(value, pagePath, site) {
     const s = scheme[1].toLowerCase();
     if (s === 'http' || s === 'https') {
       let u; try { u = new URL(v); } catch { return { kind: 'bad', why: 'unparseable URL' }; }
-      if (site && u.origin === site.origin) return { kind: 'local', path: u.pathname, hash: u.hash, site: true };
+      if (site && u.origin === site.origin) return { ...unbase(u.pathname, base), hash: u.hash, site: true };
       return { kind: 'external' };
     }
     return { kind: 'skip', scheme: s }; // mailto:, tel:, data:, blob:, javascript:
   }
-  let u; try { u = new URL(v, 'http://gates.local' + pagePath); } catch { return { kind: 'bad', why: 'unparseable URL' }; }
-  return { kind: 'local', path: u.pathname, hash: u.hash };
+  let u; try { u = new URL(v, 'http://gates.local' + base + pagePath); } catch { return { kind: 'bad', why: 'unparseable URL' }; }
+  return { ...unbase(u.pathname, base), hash: u.hash };
+}
+
+/** a URL path with the base stripped; one outside the base keeps its path and is flagged. @param {string} path @param {string} base */
+function unbase(path, base) {
+  if (!base) return { kind: 'local', path };
+  if (path === base || path.startsWith(base + '/')) return { kind: 'local', path: path.slice(base.length) || '/' };
+  return { kind: 'local', path, outside: true };
 }
 
 /** the file a local URL path resolves to, or null (dir → index.html) */
@@ -450,6 +539,7 @@ const isToolPage = (p) => /^\/(en|de)\/tools\/[^/]+\/$/.test(p);
 export function staticGates(pagePath, f, ctx) {
   const out = [];
   const site = ctx.site || null;
+  const base = ctx.base || '';
   const redirect = f.refresh !== null;
 
   // L-01 · internal links resolve (href/src without a scheme, and absolute
@@ -460,7 +550,7 @@ export function staticGates(pagePath, f, ctx) {
   const ids = new Set(f.ids);
   const seen = new Set();
   for (const r of f.refs) {
-    const c = classifyRef(r.value, pagePath, site);
+    const c = classifyRef(r.value, pagePath, site, base);
     if (c.kind === 'bad') { lOff.push(`${r.el} ${r.attr}="${r.value}" · ${c.why}`); continue; }
     if (c.kind === 'fragment') {
       checked++;
@@ -469,6 +559,7 @@ export function staticGates(pagePath, f, ctx) {
     }
     if (c.kind !== 'local') continue;
     checked++;
+    if (c.outside) { lOff.push(`${r.el} ${r.attr}="${r.value}" · outside the base path ${base}/`); continue; }
     if (seen.has(c.path)) continue;
     seen.add(c.path);
     if (fileFor(ctx.dir, c.path)) continue;
@@ -488,7 +579,7 @@ export function staticGates(pagePath, f, ctx) {
     const hOff = [];
     const own = tree ? tree[1] : (f.lang || '').slice(0, 2).toLowerCase();
     const other = own === 'de' ? 'en' : 'de';
-    const localOf = (href) => { const c = classifyRef(href, pagePath, site); return c.kind === 'local' ? normPath(c.path) : null; };
+    const localOf = (href) => { const c = classifyRef(href, pagePath, site, base); return c.kind === 'local' && !c.outside ? normPath(c.path) : null; };
     const by = {};
     for (const a of f.alternates) (by[a.hreflang] ||= []).push(a.href);
     for (const h of ['en', 'de', 'x-default']) {
@@ -510,7 +601,7 @@ export function staticGates(pagePath, f, ctx) {
       if (!twin) hOff.push(`hreflang="${other}" ${twinPath} is not a page in this build`);
       else {
         if ((twin.lang || '').slice(0, 2).toLowerCase() !== other) hOff.push(`${twinPath} has <html lang="${twin.lang}">, not ${other}`);
-        const back = twin.alternates.filter((a) => a.hreflang === own).map((a) => { const c = classifyRef(a.href, twinPath, site); return c.kind === 'local' ? normPath(c.path) : a.href; });
+        const back = twin.alternates.filter((a) => a.hreflang === own).map((a) => { const c = classifyRef(a.href, twinPath, site, base); return c.kind === 'local' && !c.outside ? normPath(c.path) : a.href; });
         if (!back.length) hOff.push(`${twinPath} has no hreflang="${own}" alternate back`);
         else if (!back.includes(pagePath)) hOff.push(`${twinPath} hreflang="${own}" points to ${back[0]}, not back to ${pagePath}`);
       }
@@ -529,7 +620,7 @@ export function staticGates(pagePath, f, ctx) {
     if (!JS_TYPES.has(s.type)) continue; // data block
     let kind;
     if (s.src) {
-      const c = classifyRef(s.src, pagePath, site);
+      const c = classifyRef(s.src, pagePath, site, base);
       if (c.kind === 'external') kind = 'external';
       else if (c.kind === 'local' && c.path === '/scripts/code.js') kind = 'code';
       else if (c.kind === 'local' && c.path.startsWith('/_astro/')) kind = 'island';
@@ -548,21 +639,30 @@ export function staticGates(pagePath, f, ctx) {
       if (kind === 'prepaint' && !(s.firstInHead && s.beforeSheets)) sOff.push(`pre-paint script is not the first script in <head> before the stylesheets`);
     }
   }
-  if (!redirect && !kinds.prepaint) sOff.push('no inline pre-paint theme script in <head> (D-024)');
+  // every page, the redirect stub included: a stored dark choice must
+  // hold from the first frame (D-024)
+  if (!kinds.prepaint) sOff.push('no inline pre-paint theme script in <head> (D-024)');
+  // code.js exactly where a code panel needs it: without it the Copy and
+  // Wrap buttons the build rendered do nothing; without a panel it is a
+  // script the page does not need (rule 5)
+  const panels = f.codeBlocks || 0;
+  if (panels && !kinds.code) sOff.push(`${panels} code-panel button${panels === 1 ? '' : 's'} but no /scripts/code.js: they do nothing (pass hasCode to Base)`);
+  if (!panels && kinds.code) sOff.push('/scripts/code.js on a page without a code panel');
   out.push(result('L-03', sOff, f.scripts.length, `${f.scripts.length} scripts: ${Object.entries(kinds).filter(([, n]) => n).map(([k, n]) => (n > 1 ? n + ' ' : '') + k).join(', ') || 'none'}`, '%n script policy problems'));
 
-  // L-04 · no inline style attributes except custom-property-only values.
-  // KaTeX's own layout (<span class="katex-html" aria-hidden="true">) is
-  // exempt, as in scripts/lint/no-inline-style.mjs
+  // L-04 · no inline style attributes except custom-property-only values,
+  // and those only where rule 1 allows them: on .ev-fill / .ev-mid, a chart
+  // mark (.mark, .swatch, inside an <svg>) or inside a tool island.
+  // Nothing is exempt: mathematics is native MathML (21 Oct 2026), so
+  // KaTeX's styled HTML layer no longer reaches a page.
   const stOff = [];
-  let katex = 0;
   for (const s of f.styles) {
-    if (s.katex) { katex++; continue; }
     const decls = s.value.split(';').map((d) => d.trim()).filter(Boolean);
     const bad = decls.filter((d) => !/^--[\w-]+\s*:/.test(d));
-    if (bad.length) stOff.push(`${s.el} style="${s.value.slice(0, 60)}" · ${bad.map((d) => d.split(':')[0].trim()).join(', ')}`);
+    if (bad.length) stOff.push(`${s.el} style="${s.value.slice(0, 60)}" · sets ${bad.map((d) => d.split(':')[0].trim()).join(', ')}`);
+    else if (s.placed === false) stOff.push(`${s.el} style="${s.value.slice(0, 60)}" · custom properties outside an evidence bar, a chart mark or a tool island`);
   }
-  out.push(result('L-04', stOff, f.styles.length - katex, `${f.styles.length - katex} style attributes, custom properties only${katex ? ` (${katex} KaTeX layout styles exempt)` : ''}`, '%n inline style attributes set real properties'));
+  out.push(result('L-04', stOff, f.styles.length, `${f.styles.length} style attributes, custom properties only, on bars, marks or in islands`, '%n inline style attributes break rule 1'));
 
   // L-05 · head metadata: title, description, lang, two theme-colors, viewport
   // (a redirect stub needs lang, title and viewport only)
@@ -580,6 +680,21 @@ export function staticGates(pagePath, f, ctx) {
     else if (!(tc.some((t) => /light/.test(t.media)) && tc.some((t) => /dark/.test(t.media)))) mOff.push('theme-color metas lack the light and dark media queries');
   }
   out.push(result('L-05', mOff, redirect ? 3 : 5, redirect ? 'redirect stub: lang, title, viewport present' : 'title, description, lang, two theme-colors, viewport present', '%n head metadata problems'));
+
+  // L-06 · glyph inventory (D-030, BUILD-BRIEF rule 3): no symbol in the
+  // text (or in aria-label, title, alt) beyond → ↗ ← ▲ and the squares;
+  // punctuation (§ · + − – …) and the degree sign are not symbols
+  const gl = f.glyphs || [];
+  out.push(result('L-06', gl, 1, 'no symbol outside the D-030 inventory', '%n symbols outside the D-030 inventory'));
+
+  // L-07 · draft mark: every page in a draft language (--draft-langs,
+  // DRAFT_LANGS in src/lib/i18n.ts) shows the in-build mark with the draft
+  // label (D-011; HANDOFF item 25: drafts show their status in the page)
+  const draftLangs = ctx.draftLangs || [];
+  const pageLang = (f.lang || '').slice(0, 2).toLowerCase();
+  if (redirect) out.push(skipped('L-07', 'redirect page'));
+  else if (!draftLangs.includes(pageLang)) out.push(skipped('L-07', pageLang ? `lang ${pageLang} is not a draft language` : 'no lang'));
+  else out.push(result('L-07', f.drafts ? [] : [`no draft mark (.status[data-state="in-build"][data-draft]) on a page in ${pageLang}`], 1, `the draft mark is shown (${f.drafts})`, 'the page is a draft and does not say so'));
 
   return out;
 }

@@ -12,7 +12,7 @@ fail is not a gate": every gate below is seen failing on
 | `scripts/gates/run.mjs` | the CLI: enumerates pages, serves the folder, drives Chromium, prints the table, writes JSON |
 | `scripts/gates/checks.mjs` | the gates: `pageGates` (in the page), `pageFacts` + `staticGates` (raw HTML), `axeGate` |
 | `scripts/gates/server.mjs` | a dependency-free static server (directory → `index.html`, misses → `404.html`, OS-assigned port) |
-| `tests/gates/fixtures/` | a tiny fake dist: `clean/` passes everything, `bad/` breaks every gate, `expect.json` says so |
+| `tests/gates/fixtures/` | a tiny fake dist: `clean/` passes everything, `bad/` breaks every gate, `de-draft/` breaks L-07 alone, `expect.json` says so |
 
 ## Running
 
@@ -20,6 +20,7 @@ fail is not a gate": every gate below is seen failing on
 npm run test:gates                                   # dist/, every page, 6 widths × 2 themes, axe
 node scripts/gates/run.mjs --dir <build> --quick     # 390 + 1280, light only, no axe
 node scripts/gates/run.mjs --dir tests/gates/fixtures --expect tests/gates/fixtures/expect.json   # self-test
+SITE_BASE=/braga-portfolio/ npx astro build --outDir <build> && node scripts/gates/run.mjs --dir <build> --base /braga-portfolio/ --quick   # a project-page build
 ```
 
 | Option | Default | Meaning |
@@ -32,12 +33,14 @@ node scripts/gates/run.mjs --dir tests/gates/fixtures --expect tests/gates/fixtu
 | `--json <file>` | none | the full report (every context, every offender) |
 | `--expect <file>` | none | exit 0 only if the failing gates match the file exactly (see Fixtures) |
 | `--site <url>` | `site` from `astro.config.mjs` | absolute URLs on this origin (canonical, hreflang, feed) are checked as local files |
+| `--base <path>` | `$SITE_BASE`, else `/` | the base path the build was made with (`SITE_BASE=/braga-portfolio/`, a project-page deploy; DEPLOY.md): the folder is served under it, pages are opened under it, and L-01 fails any local URL that lacks it. Page paths in the table, in `--pages` and in the pending list stay relative to the build root (`/en/work/`) |
 | `--concurrency <n>` | `3` | pages rendered in parallel (one browser throughout) |
 | `--verbose` | off | print every gate row and up to eight offenders per failure |
 | `--no-axe` | off | skip A-01 without the rest of `--quick` |
 | `--chromium <path>` | `/opt/pw-browsers/chromium` (or `$GATES_CHROMIUM`) | browser binary; never run `playwright install` |
-| `--pending <file>` | `tests/gates/pending-routes.json` when `--dir` is not given | routes of the site map that a later phase builds: L-01 counts a link to one instead of failing it, and a `pending` row says how many are linked. A listed route that now exists fails the run until it is removed from the file, so the list only shrinks |
-| `--no-pending` | off | treat every unbuilt route as a broken link |
+| `--pending <file>` | `tests/gates/pending-routes.json`, whatever `--dir` is (a scratch build gets the verdict `dist/` gets) | routes of the site map that a later phase builds: L-01 counts a link to one instead of failing it, and a `pending` row says how many are linked. A listed route that now exists fails the run until it is removed from the file, so the list only shrinks |
+| `--no-pending` | off | treat every unbuilt route as a broken link (the fixture self-test uses it) |
+| `--draft-langs <list>` | `de` | the languages whose every page must show the draft mark (L-07); mirrors `DRAFT_LANGS` in `src/lib/i18n.ts`. Pass `''` (and empty that list) once the owner approves the German copy |
 
 Exit status: `1` if any gate fails (or, with `--expect`, if the failures differ
 from the expectation), `2` if the folder has no pages, `0` otherwise. Seven
@@ -92,15 +95,18 @@ sr-only pattern) are not rendered text and are left out of G-01 to G-06.
 | G-07 | Square corners | any element or `::before`/`::after` has a radius above 0 |
 | G-08 | No shadow, gradient, blur | `box-shadow`, `text-shadow`, a gradient `background-image`, a `blur()`/`drop-shadow()` filter or a `backdrop-filter`, on any element or pseudo-element |
 | G-09 | Heading order | not exactly one `h1`, or a level is skipped (h2 → h4) |
-| G-10 | Landmarks + skip link | `header`, `nav` or `footer` missing; not exactly one `main`; the first tab stop is not the `.skip` link; its `#target` does not exist |
+| G-10 | Landmarks + skip link | `header`, `nav` or `footer` missing; not exactly one `main`; two landmarks of one role share a name (axe's best-practice `landmark-unique`, which the WCAG tags of A-01 leave out: the header doors and the footer's Index group were both "Index"); the first tab stop is not the `.skip` link; its `#target` does not exist |
 | G-11 | Reduced motion | no `@media (prefers-reduced-motion: reduce)` rule, or none sets `--dur` to a value that resolves to 0 |
 | G-12 | Project fonts loaded | after `document.fonts.ready`, no face of `BKribitz` or of `BKribitz Mono` reports `loaded` |
 | G-13 | No third-party requests | a stylesheet, script, image, frame, `@import` or `@font-face` points at another origin, or any request leaves for one (the runner blocks and records it) |
+| G-14 | Shell on the page grid | the text of `.shell-mark` does not start on the content edge of `<main>` (±1px), `.shell-cluster` does not end on its right edge (768 and up), or the footer's `.site-footer-mark` does not stack under the header's; at every width, above `--page-max` too (grid.css rule 1). A page without `.shell-mark` passes |
 | L-01 | Internal links resolve | an `href`/`src`/`srcset`/`action`, island `component-url`/`renderer-url`, or meta-refresh URL without a scheme (or on the site's own origin) maps to no file: `/a/` needs `a/index.html`, `#fragments` are stripped, `mailto:`/`tel:` are allowed; an on-page `#id` must exist; a same-origin request that answered 4xx at render time is added here |
 | L-02 | hreflang pairs | on every `/en/` and `/de/` page (and any page that declares alternates): `en`, `de` and `x-default` are not each present once; one does not resolve; the own-language alternate is not the page itself; the twin does not exist, lacks the twin `lang`, or does not point back |
-| L-03 | Scripts policy | any script other than (a) the inline pre-paint script, first in `<head>` before the stylesheets, (b) the inline theme toggle, (c) `/scripts/code.js`; Astro island scripts (`/_astro/…` or the inline island loaders) only under `/tools/<name>/`; also fails when the pre-paint script is missing. JSON / JSON-LD blocks are data and pass |
-| L-04 | No inline style | a `style` attribute declares anything but custom properties (`style="--w: 40%"` is the permitted form); KaTeX's own layout inside `.katex-html[aria-hidden="true"]` is exempt, as in `scripts/lint/no-inline-style.mjs` |
+| L-03 | Scripts policy | any script other than (a) the inline pre-paint script, first in `<head>` before the stylesheets, (b) the inline theme toggle, (c) `/scripts/code.js`; Astro island scripts (`/_astro/…` or the inline island loaders) only under `/tools/<name>/`; also fails when the pre-paint script is missing (the redirect stub included), when a code panel's buttons are on the page without `/scripts/code.js`, or when `code.js` loads on a page with no code panel. JSON / JSON-LD blocks are data and pass |
+| L-04 | No inline style | a `style` attribute declares anything but custom properties, or declares them outside the places rule 1 allows: `.ev-fill` / `.ev-mid`, a chart mark (`.mark`, `.swatch`, anything inside an `<svg>`) or anything inside an `<astro-island>` (a tool). Nothing is exempt (mathematics is native MathML, so no KaTeX layout styles reach a page; 21 Oct 2026) |
 | L-05 | Head metadata | no `<html lang>`, `<title>`, `<meta name="description">`, viewport with `width=device-width`, or exactly two `theme-color` metas (light and dark media); a redirect stub needs only lang, title and viewport |
+| L-06 | Glyph inventory | the text (or an `aria-label`, `title`, `alt`) holds a symbol outside D-030: any character of Unicode class So, an `Extended_Pictographic` character or an arrow other than → ↗ ← (©, ™, ✓, ★, ⇒, an emoji). Allowed: → ↗ ← ▲ ■ □ ▣ ▤ ⊡ and the degree sign; § · + − – … are punctuation, not symbols. Code, `pre`, `kbd`, `samp`, MathML and scripts are not checked |
+| L-07 | Draft mark | a page whose `<html lang>` is a draft language (`--draft-langs`, default `de`) has no `.status[data-state="in-build"][data-draft]` (the in-build mark with the "Entwurf · Freigabe ausstehend" label; StatusMark sets `data-draft`). Skipped on other languages and on redirect stubs |
 | A-01 | axe WCAG 2.1 AA | axe-core (`@axe-core/playwright`, tags `wcag2a`, `wcag2aa`, `wcag21aa`) reports any violation, at 390 and 1280 in both themes |
 
 ### Where the port departs from checks.js
@@ -155,6 +161,14 @@ up by its viewBox, one `style="--w: 40%"`, a reduced-motion rule, both faces.
 | hreflang `en` + `de` → `/de/bad/` (absent), no `x-default` | L-02, L-01 |
 | no pre-paint script | L-03 (and the dark contexts warn) |
 | no description, one theme-color | L-05 |
+| a `.shell-mark` 24px in from the content edge | G-14 |
+| a second `nav` named "Index" | G-10 |
+| `© 2026` in a paragraph | L-06 |
+| `style="--w: 40%"` on a plain `div` | L-04 |
+| a code panel's Copy button without `/scripts/code.js` | L-03 |
+
+**`de-draft/index.html`** is the clean page in German (`lang="de"`) without
+the draft mark: L-07 is its only failure.
 
 `expect.json` records, per page, the gates that must fail and a phrase each
 failure must mention. With `--expect` the run exits 0 only when every expected

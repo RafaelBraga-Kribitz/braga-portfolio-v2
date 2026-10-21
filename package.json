@@ -10,25 +10,27 @@
     "check": "astro check",
     "test:unit": "node --test \"tests/unit/**/*.test.mjs\"",
     "test:gates": "node scripts/gates/run.mjs",
-    "test:gates:self": "node scripts/gates/run.mjs --dir tests/gates/fixtures --expect tests/gates/fixtures/expect.json",
+    "test:gates:self": "node scripts/gates/run.mjs --dir tests/gates/fixtures --base / --no-pending --expect tests/gates/fixtures/expect.json",
     "lint:style": "node scripts/lint/no-inline-style.mjs",
     "lint:css": "node scripts/lint/css-rules.mjs",
     "lint": "npm run lint:style && npm run lint:css",
-    "verify": "npm run check && npm run lint && npm run test:unit && npm run build && npm run test:gates"
+    "verify": "npm run check && npm run lint && npm run test:unit && npm run build && npm run test:gates",
+    "assets": "node scripts/assets/build-assets.mjs"
   },
   "dependencies": {
     "@astrojs/check": "0.9.11",
+    "@astrojs/markdown-satteri": "0.4.4",
     "@astrojs/mdx": "8.1.0",
     "@astrojs/preact": "6.1.0",
     "@astrojs/rss": "4.0.19",
     "@axe-core/playwright": "4.12.1",
     "@playwright/test": "1.61.1",
     "astro": "7.4.1",
+    "github-slugger": "2.0.0",
     "katex": "0.16.47",
     "preact": "11.0.1",
-    "rehype-katex": "7.0.1",
-    "remark-math": "6.0.0",
-    "typescript": "5.9.3",
-    "unist-util-visit": "5.1.0"
+    "prismjs": "1.30.0",
+    "satteri": "0.10.5",
+    "typescript": "5.9.3"
   }
 }

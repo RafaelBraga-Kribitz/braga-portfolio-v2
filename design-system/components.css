@@ -113,6 +113,12 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
 .status-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0 32px; }
 .status-list > * { border-top: var(--rule); padding-block: 12px; display: flex; flex-direction: column; gap: 4px; }
 .status-list .status-use { font-size: var(--t-small); color: var(--ink-2); line-height: 1.4; }
+/* the vocabulary block is a .grid (label on 3, .status-list on 9) that sits
+   --block-gap under the listing (Site 03), or under the section heading
+   while the listing is empty; a draft mark after it keeps the 16px the
+   tools index gives one under a listing (bench.css) */
+.listing + .grid, .section-heading + .grid { margin-top: var(--block-gap); }
+.grid + .doc-meta { margin-top: 16px; }
 
 /* ---------- 3 · CALLOUTS (P-08 · 4, the Obsidian callout DOM) ----------
    <div class="callout" data-callout="note"><div class="callout-title">…</div>
@@ -155,9 +161,13 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
 }
 .callout[data-callout="quote"] .callout-title { order: 2; }
 
-/* spec — key/value rows (renderer: "Term — value" list items → dl) */
+/* spec — key/value rows (renderer: "Term — value" list items → dl).
+   The term column is as wide as its longest term up to 40% of the row, then
+   wraps: a German term ("Unternehmensgegenstand", 180px in capitals) left a
+   76px value column at 320. A one-word term breaks at a soft hyphen
+   (&shy; in the Markdown). */
 .callout[data-callout="spec"] dl {
-  margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr);
+  margin: 0; display: grid; grid-template-columns: fit-content(40%) minmax(0, 1fr);
   column-gap: 32px; border-top: var(--rule-open);
 }
 .callout[data-callout="spec"] dt, .callout[data-callout="spec"] dd { margin: 0; padding-block: 10px; border-bottom: var(--rule); }
@@ -234,12 +244,14 @@ details.callout > .callout-content { padding-block: 0 24px; max-width: var(--mea
 /* ---------- 5 · CODE BLOCK (D-035) ----------
    Always a dark panel, distinct from the page in both themes, with
    the six-token palette (base.css), a copy button and a wrap toggle
-   (wrap on by default). code.js (~1 KB, progressive) adds the
-   buttons; without it the block is static and wrapped.
+   (wrap on by default). The build renders the panel and both buttons,
+   labelled in the page's language (src/lib/rehype/code.mjs); code.js
+   (~1 KB, progressive) makes them work. Without it the block is static
+   and wrapped, and the buttons do nothing.
      <div class="code" data-lang="python" data-wrap="on">
        <div class="code-bar"><span>python · listing 04-01-1</span>
-         <span class="code-tools"><button class="code-wrap" aria-pressed="true">Wrap · on</button>
-           <button class="code-copy">Copy</button></span></div>
+         <span class="code-tools"><button class="code-wrap" aria-pressed="true" data-on="Wrap · on" data-off="Wrap · off">Wrap · on</button>
+           <button class="code-copy" data-label="Copy" data-copied="Copied" data-failed="Copy failed">Copy</button></span></div>
        <pre><code>…</code></pre></div> */
 .code { background: var(--code-bg); color: var(--code-ink); border: 1px solid var(--code-edge); min-width: 0; color-scheme: dark; }
 .code-bar {
@@ -255,6 +267,10 @@ details.callout > .callout-content { padding-block: 0 24px; max-width: var(--mea
 }
 .code-bar button:hover, .code-copy:hover, .code-wrap:hover { background: var(--code-edge); color: var(--code-ink); }
 .code-bar button:focus-visible, .code-copy:focus-visible, .code-wrap:focus-visible { outline: 2px solid var(--code-ink); outline-offset: 2px; }
+/* below 768 every target is 44 × 44 (P-02 rule 7, gate G-05); the bar grows around the buttons */
+@media (max-width: 767px) {
+  .code-bar button, .code-copy, .code-wrap { min-height: 44px; min-width: 44px; }
+}
 .code pre { background: transparent; border: 0; color: var(--code-ink); margin: 0; }
 .code[data-wrap="off"] pre { white-space: pre; overflow-x: auto; overflow-wrap: normal; }
 /* code wraps to its column by default; a bare pre (no .code wrapper) sits on a surface-2 wash */
@@ -321,7 +337,10 @@ figure.fig[data-kind="diagram"] .nodeLabel, figure.fig[data-kind="diagram"] .edg
 .footnotes ol { margin: 0; padding-left: 24px; display: grid; gap: 8px; }
 .footnotes a[data-footnote-backref] { font-family: var(--font-mono); text-decoration: none; color: var(--ink-3); }
 
-/* math: KaTeX at build (HTML + MathML); the block is numbered from the document code */
+/* math: KaTeX at build to native MathML only (no HTML layer, no KaTeX
+   stylesheet; decision of 21 Oct 2026); the block is numbered from the
+   document code:
+     <div class="math"><div class="math-body"><math display="block">…</math></div><span class="eq-no">(01-04-1)</span></div> */
 .math {
   display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: center;
   padding-block: 16px; border-top: var(--rule); border-bottom: var(--rule);
@@ -330,7 +349,6 @@ figure.fig[data-kind="diagram"] .nodeLabel, figure.fig[data-kind="diagram"] .edg
 /* MathML neither wraps nor shrinks: the cell scrolls, the number never overprints */
 .math .math-body { min-width: 0; overflow: auto hidden; padding-block: 6px; display: grid; gap: 8px; }
 .math math { font-size: 1.2em; display: block math; max-width: 100%; }
-.math .katex-display { margin: 0; }
 .eq-no {
   font: 400 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: var(--tracking-label);
   color: var(--ink-3); font-variant-numeric: var(--num); white-space: nowrap;

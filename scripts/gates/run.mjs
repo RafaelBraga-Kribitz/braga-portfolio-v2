@@ -5,22 +5,34 @@
 //   node scripts/gates/run.mjs [--dir dist] [--pages /en/,/en/work/]
 //        [--widths 320,390,768,1024,1280,1440] [--themes light,dark]
 //        [--quick] [--json out.json] [--expect expect.json]
-//        [--site https://…] [--concurrency 3] [--verbose]
-//        [--pending tests/gates/pending-routes.json | --no-pending]
+//        [--site https://…] [--base /repo/] [--concurrency 3] [--verbose]
+//        [--pending tests/gates/pending-routes.json | --no-pending] [--draft-langs de]
 //
 // Enumerates every index.html and 404.html under --dir, serves the folder
 // (scripts/gates/server.mjs), and for each page runs
-//   once           L-01…L-05 over the raw HTML file (pageFacts → staticGates)
-//   width × theme  G-01…G-13 in the rendered page (pageGates)
+//   once           L-01…L-07 over the raw HTML file (pageFacts → staticGates)
+//   width × theme  G-01…G-14 in the rendered page (pageGates)
 //   390, 1280      A-01 axe (wcag2a, wcag2aa, wcag21aa), both themes
 // One browser; one context per theme (theme set by an init script that
 // writes localStorage['bk-theme'], as the reader's stored choice would);
 // three pages in parallel. --quick: 390 and 1280, light only, no axe.
 //
+// --base: a build made with SITE_BASE (a project-page deploy, DEPLOY.md)
+// is served under that path, every page is opened under it, and every
+// internal URL must carry it (L-01 fails a local link outside it). The
+// default is $SITE_BASE, as the build reads it, so `npm run verify` with
+// SITE_BASE set checks the build it made. Page paths in the table, in
+// --pages and in the pending list stay relative to the build root
+// (/en/work/), as the files are.
+//
 // Pending routes: pages of the site map that a later phase builds. A link
 // to one is reported (L-01 counts it, a `pending` row lists them) but does
 // not fail; an entry whose page now exists fails the run until it is
-// removed, so the list only shrinks. Read by default for the default dir.
+// removed, so the list only shrinks. Read by default, whatever --dir is
+// (a scratch build gets the verdict dist gets); --no-pending opts out.
+//
+// --draft-langs de: the languages whose every page must show the draft
+// mark (gate L-07; DRAFT_LANGS in src/lib/i18n.ts). '' when approved.
 //
 // Prints a compact table (page · gate · status · detail), writes the JSON
 // report, exits 1 on any failure. With --expect it instead exits 0 only when
@@ -30,9 +42,9 @@
 import { readFileSync, writeFileSync, readdirSync, statSync, realpathSync, existsSync, mkdirSync } from 'node:fs';
 import { join, relative, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { chromium } from 'playwright';
+import { chromium } from '@playwright/test';   // the declared package (it re-exports playwright's launchers)
 import { AxeBuilder } from '@axe-core/playwright';
-import { serve } from './server.mjs';
+import { serve, basePrefix } from './server.mjs';
 import { GATES, GATE_NAME, pageGates, pageFacts, staticGates, axeGate, pagePathOf, skipped, fileFor } from './checks.mjs';
 
 const ROOT = fileURLToPath(new URL('../../', import.meta.url));
@@ -43,7 +55,8 @@ const argv = process.argv.slice(2);
 const flag = (n) => argv.includes(n);
 const val = (n, d) => { const i = argv.indexOf(n); return i >= 0 && argv[i + 1] !== undefined && !argv[i + 1].startsWith('--') ? argv[i + 1] : d; };
 if (flag('--help') || flag('-h')) {
-  console.log(readFileSync(fileURLToPath(import.meta.url), 'utf8').split('\n').slice(2, 22).map((l) => l.replace(/^\/\/ ?/, '')).join('\n'));
+  const lines = readFileSync(fileURLToPath(import.meta.url), 'utf8').split('\n');
+  console.log(lines.slice(2, lines.findIndex((l, i) => i > 2 && l.startsWith('// ====='))).map((l) => l.replace(/^\/\/ ?/, '')).join('\n'));
   process.exit(0);
 }
 const quick = flag('--quick');
@@ -58,9 +71,15 @@ const opts = {
   verbose: flag('--verbose'),
   concurrency: Math.max(1, Number(val('--concurrency', 3)) || 3),
   site: val('--site', siteFromConfig()),
+  base: basePrefix(val('--base', process.env.SITE_BASE || '')),
   chromium: val('--chromium', process.env.GATES_CHROMIUM || '/opt/pw-browsers/chromium'),
   height: Number(val('--height', 900)) || 900,
-  pending: flag('--no-pending') ? '' : val('--pending', argv.includes('--dir') ? '' : join(ROOT, 'tests/gates/pending-routes.json')),
+  // the pending list applies to every build, --dir or not: a scratch build
+  // of the same source must get the same verdict as dist (--no-pending opts out)
+  pending: flag('--no-pending') ? '' : val('--pending', join(ROOT, 'tests/gates/pending-routes.json')),
+  // languages whose pages must carry the draft mark (gate L-07); mirrors
+  // DRAFT_LANGS in src/lib/i18n.ts — empty both when the owner approves
+  draftLangs: val('--draft-langs', 'de').split(',').map((s) => s.trim().toLowerCase()).filter(Boolean),
 };
 
 function siteFromConfig() {
@@ -109,7 +128,7 @@ if (opts.pending && existsSync(opts.pending)) {
   console.error(`gates: no such pending file ${opts.pending}`); process.exit(2);
 }
 
-const srv = await serve(opts.dir);
+const srv = await serve(opts.dir, { base: opts.base });
 const launch = { headless: true };
 if (opts.chromium && existsSync(opts.chromium)) launch.executablePath = opts.chromium;
 const browser = await chromium.launch(launch);
@@ -129,7 +148,7 @@ try {
     const f = facts.get(p.path);
     report.set(p.path, {
       page: p.path, file: relative(ROOT, p.file) || p.file, redirect: f.refresh !== null,
-      static: staticGates(p.path, f, { dir: opts.dir, site, pages: facts, pending }), runs: [], missing: new Set(), errors: [],
+      static: staticGates(p.path, f, { dir: opts.dir, site, pages: facts, pending, base: opts.base, draftLangs: opts.draftLangs }), runs: [], missing: new Set(), errors: [],
     });
   }
 
@@ -167,7 +186,7 @@ try {
       const run = { width: job.width, theme: job.theme, applied: '', results: [] };
       try {
         await w.page.setViewportSize({ width: job.width, height: opts.height });
-        await w.page.goto(origin + job.path, { waitUntil: 'load', timeout: 30000 });
+        await w.page.goto(origin + opts.base + job.path, { waitUntil: 'load', timeout: 30000 });
         await w.page.waitForFunction(() => !document.querySelector('astro-island[ssr]'), null, { timeout: 5000 }).catch(() => {});
         const g = await w.page.evaluate(pageGates, { foreign: w.state.foreign });
         run.applied = g.theme;
@@ -229,7 +248,7 @@ try {
   const line = (a, b, c, d) => { const s = `${pad(a, pw)}  ${pad(b, 5)}  ${pad(c, 4)}  ${d}`; return s.length > cols ? s.slice(0, cols - 1) + '…' : s; };
   const ctxText = (g) => (g.failing[0] === 'static' ? 'static' : g.failing.length === g.contexts ? `all ${g.contexts} ctx` : `${g.failing.length}/${g.contexts} ctx (${g.failing.slice(0, 3).join(' ')}${g.failing.length > 3 ? ' …' : ''})`);
   const relDir = relative(process.cwd(), opts.dir);
-  console.log(`gates · ${relDir && !relDir.startsWith('..') ? relDir : opts.dir} · ${pages.length} page${pages.length === 1 ? '' : 's'} · widths ${opts.widths.join('/')} · ${opts.themes.join('+')}${opts.axe ? ' · axe at ' + (axeWidths.join('/') || '—') : ' · no axe'}`);
+  console.log(`gates · ${relDir && !relDir.startsWith('..') ? relDir : opts.dir}${opts.base ? ` (base ${opts.base}/)` : ''} · ${pages.length} page${pages.length === 1 ? '' : 's'} · widths ${opts.widths.join('/')} · ${opts.themes.join('+')}${opts.axe ? ' · axe at ' + (axeWidths.join('/') || '—') : ' · no axe'}`);
   console.log(line('PAGE', 'GATE', 'STAT', 'DETAIL'));
   let failRows = 0;
   const byGate = {};
@@ -288,7 +307,7 @@ try {
     mkdirSync(dirname(out), { recursive: true });
     writeFileSync(out, JSON.stringify({
       dir: opts.dir, served: srv.url, startedAt: new Date(t0).toISOString(), seconds: Number(seconds),
-      options: { widths: opts.widths, themes: opts.themes, axe: opts.axe, axeWidths, quick, pages: opts.pages, site: opts.site },
+      options: { widths: opts.widths, themes: opts.themes, axe: opts.axe, axeWidths, quick, pages: opts.pages, site: opts.site, base: opts.base || '/' },
       summary: { pages: pages.length, contexts: jobs.length, failingGates: failRows, failingPages, byGate, expectOk, pending: pending ? { file: opts.pending, routes: pending.size, stale: pendingStale } : null },
       pages: pagesOut.map((p) => ({ ...p, runs: p.runs.map((r) => ({ width: r.width, theme: r.theme, applied: r.applied, results: r.results })) })),
     }, null, 2));
