@@ -1,7 +1,9 @@
 ---
 // Site footer, Site specimen s01: four link groups (D-013) over a
 // wordmark bar. The bar's right block is NAME · LOCATION · EUR and the
-// copyright line (not the specimen's "private review" line).
+// copyright line (not the specimen's "private review" line). Casing is
+// the stylesheet's (the colophon and labels are uppercased by CSS), so
+// the source text keeps its natural case.
 import { site } from '../lib/site';
 import type { Lang } from '../lib/i18n';
 import { footerGroups } from '../lib/routes';
@@ -13,15 +15,14 @@ interface Props {
 const { lang } = Astro.props;
 const groups = footerGroups(lang);
 const year = new Date().getFullYear();
-const upper = (s: string) => s.toLocaleUpperCase(lang === 'de' ? 'de-AT' : 'en-GB');
 ---
-<div class="grid-container">
-  <footer class="site-footer">
+<footer class="grid-container">
+  <div class="site-footer">
     <div class="grid">
       {groups.map((g) => (
-        <nav class="col-3" aria-label={g.title}>
-          <div class="label">{g.title}</div>
-          <ul>
+        <nav class="col-3 site-footer-group" aria-label={g.title}>
+          <p class="label">{g.title}</p>
+          <ul class="site-footer-links">
             {g.links.map((l) => (
               <li><a href={l.href} hreflang={l.hreflang} lang={l.lang}>{l.label}{l.external && <Fragment> <span class="glyph" aria-hidden="true">↗</span></Fragment>}</a></li>
             ))}
@@ -29,9 +30,9 @@ const upper = (s: string) => s.toLocaleUpperCase(lang === 'de' ? 'de-AT' : 'en-G
         </nav>
       ))}
     </div>
-    <div class="rule-t">
-      <span>{site.wordmark}</span>
-      <p>{upper(site.name)}<br>{upper(site.location[lang])} · EUR<br>© {year}</p>
+    <div class="site-footer-bar">
+      <span class="site-footer-mark">{site.wordmark}</span>
+      <p class="site-footer-colophon">{site.name}<br>{site.location[lang]} · EUR<br>© {year}</p>
     </div>
-  </footer>
-</div>
+  </div>
+</footer>

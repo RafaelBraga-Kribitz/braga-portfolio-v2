@@ -1,0 +1,49 @@
+---
+// 04-02 · A/B sample size — Site pattern 06 (Bench). Opener on the page
+// grid, the Preact island (default scenario server-rendered), then the
+// no-script note. German strings are drafts (O-05): the DE page carries
+// the in-build mark in its meta row.
+import Base from '@/layouts/Base.astro';
+import DocOpener from '@/components/DocOpener.astro';
+import Callout from '@/components/Callout.astro';
+import AbSampleSizeBench from '@/components/tools/AbSampleSizeBench';
+import { t, type Lang } from '@/lib/i18n';
+import { route } from '@/lib/routes';
+import { LANGS } from '@/lib/site';
+
+export function getStaticPaths() {
+  return LANGS.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Lang;
+
+const copy = {
+  en: {
+    title: 'A/B sample size',
+    h1: 'A/B sample size',
+    lead: 'How many visitors each arm needs before a lift of a given size can be seen, and whether that fits in eight weeks at the traffic available.',
+    meta: ['Two-proportion z-test', 'Power 80 or 90'],
+  },
+  de: {
+    title: 'A/B-Stichprobengröße',
+    h1: 'A/B-Stichproben\u00ADgröße',   // soft hyphen: one word is wider than the 320px line at --t-h1
+    lead: 'Wie viele Besucher jeder Arm braucht, bevor ein Lift einer gegebenen Größe sichtbar wird, und ob das beim verfügbaren Traffic in acht Wochen passt.',
+    meta: ['Zwei-Anteile-z-Test', 'Power 80 oder 90'],
+  },
+}[lang];
+---
+<Base lang={lang} page="tools.ab-sample-size" title={copy.title} description={copy.lead} current="04">
+  <DocOpener
+    lang={lang}
+    grid
+    trail={[{ label: `04 ${t(lang, 'door.tools')}`, href: route('tools', lang) }, { label: '04-02', current: true }]}
+    title={copy.h1}
+    lead={copy.lead}
+    meta={copy.meta.map((text) => ({ text }))}
+    draft={lang === 'de'}
+  />
+  <div class="tool-body">
+    <AbSampleSizeBench client:load lang={lang} />
+    <Callout type="tool"><p>{t(lang, 'tool.nojs')}</p></Callout>
+  </div>
+</Base>

@@ -1,8 +1,10 @@
 ---
 // Home cover, Site specimen s02: a spec-sheet rail on three columns
 // (kicker, then place · focus · edition), the body on nine: the name with
-// its one accent mark, the role as the page's h1, one sentence, and a
-// ruled footer that ends in the only call to action.
+// its one accent mark (drawn by CSS on .cover-name), the role as the
+// page's h1, one sentence, and a ruled footer that ends in the only call
+// to action. The block carries its own hairline and 64px top padding:
+// place it directly in <main>, not inside .section.
 import { site } from '../lib/site';
 import type { Lang } from '../lib/i18n';
 import { t } from '../lib/i18n';
@@ -22,21 +24,21 @@ const { lang, spec, kicker, titleLines, lead, cta } = Astro.props;
 const lines = titleLines ?? [site.role[lang]];
 const action = cta ?? { href: `mailto:${site.email}`, label: t(lang, 'contact.cta'), external: true };
 ---
-<div class="cover grid">
-  <div class="cover-rail col-3">
-    <span class="label">{kicker ?? t(lang, 'cover.kicker')}</span>
+<section class="cover">
+  <div class="cover-rail">
+    <span class="label cover-index">{kicker ?? t(lang, 'cover.kicker')}</span>
     <dl>
       {spec.map((s) => <div><dt class="label">{s.k}</dt><dd>{s.v}</dd></div>)}
     </dl>
   </div>
-  <div class="cover-body col-9">
-    <p class="label"><span aria-hidden="true"></span>{site.name}</p>
-    <h1 class="display">{lines.map((line, i) => <Fragment>{i > 0 && <br />}{line}</Fragment>)}</h1>
-    <p class="prose">{lead}</p>
-    <div class="rule-t">
+  <div class="cover-body">
+    <p class="label cover-name">{site.name}</p>
+    <h1 class="display cover-role">{lines.map((line, i) => <Fragment>{i > 0 && <br />}{line}</Fragment>)}</h1>
+    <p class="prose cover-lead">{lead}</p>
+    <div class="cover-foot">
       <span class="label">{t(lang, 'cover.evidence')}</span>
       <span class="label">{t(lang, 'cover.independent')}</span>
-      <a href={action.href} class="label">{action.label} <span class="glyph" aria-hidden="true">{action.external === false ? '→' : '↗'}</span></a>
+      <a href={action.href} class="label cover-cta">{action.label} <span class="glyph" aria-hidden="true">{action.external === false ? '→' : '↗'}</span></a>
     </div>
   </div>
-</div>
+</section>

@@ -1,0 +1,49 @@
+---
+// 04-01 · Confusion matrix — Site pattern 06 (Bench). Opener on the page
+// grid, the Preact island (default scenario server-rendered), then the
+// no-script note. German strings are drafts (O-05): the DE page carries
+// the in-build mark in its meta row.
+import Base from '@/layouts/Base.astro';
+import DocOpener from '@/components/DocOpener.astro';
+import Callout from '@/components/Callout.astro';
+import ConfusionMatrixBench from '@/components/tools/ConfusionMatrixBench';
+import { t, type Lang } from '@/lib/i18n';
+import { route } from '@/lib/routes';
+import { LANGS } from '@/lib/site';
+
+export function getStaticPaths() {
+  return LANGS.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Lang;
+
+const copy = {
+  en: {
+    title: 'Confusion matrix',
+    h1: 'Confusion matrix',
+    lead: 'From the number of cases, the prevalence and a model’s sensitivity and specificity: the four counts, eight rates, and what the errors cost at a price per false alarm and per miss.',
+    meta: ['Binary classification', 'One operating point'],
+  },
+  de: {
+    title: 'Konfusionsmatrix',
+    h1: 'Konfusions\u00ADmatrix',   // soft hyphen: one word is wider than the 320px line at --t-h1
+    lead: 'Aus Fallzahl, Prävalenz sowie Sensitivität und Spezifität eines Modells: die vier Zählwerte, acht Raten und was die Fehler bei einem Preis je Fehlalarm und je Versäumnis kosten.',
+    meta: ['Binäre Klassifikation', 'Ein Arbeitspunkt'],
+  },
+}[lang];
+---
+<Base lang={lang} page="tools.confusion-matrix" title={copy.title} description={copy.lead} current="04">
+  <DocOpener
+    lang={lang}
+    grid
+    trail={[{ label: `04 ${t(lang, 'door.tools')}`, href: route('tools', lang) }, { label: '04-01', current: true }]}
+    title={copy.h1}
+    lead={copy.lead}
+    meta={copy.meta.map((text) => ({ text }))}
+    draft={lang === 'de'}
+  />
+  <div class="tool-body">
+    <ConfusionMatrixBench client:load lang={lang} />
+    <Callout type="tool"><p>{t(lang, 'tool.nojs')}</p></Callout>
+  </div>
+</Base>

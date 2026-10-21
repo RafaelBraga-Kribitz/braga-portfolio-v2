@@ -162,7 +162,7 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
 .site-footer-colophon {
   margin: 0; text-align: right;
   font: 400 var(--t-mono-sm) / 1.8 var(--font-mono); color: var(--ink-2);
-  text-transform: uppercase; letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
   font-variant-numeric: var(--num);
 }
 
@@ -269,9 +269,8 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
   margin: 0; font: var(--w-display) var(--t-h1) / var(--lh-tight) var(--font-display);
   letter-spacing: var(--tracking-tight); text-wrap: balance;
 }
-.doc-opener :is(h1, h2, h3) + .doc-lead, .doc-opener .doc-lead + .doc-meta,
-.doc-opener :is(h1, h2, h3) + .doc-meta { margin-top: 24px; }
-.doc > .doc-opener > * + * { margin-top: 0; }   /* the stacked variant spaces by gap */
+.doc-opener > [class*="col-"] > * + * { margin-top: 24px; }   /* title → lead → meta, 24px each (Site 04) */
+.doc > .doc-opener > * + * { margin-top: 0; }                  /* the stacked variant spaces by its gap */
 .doc-trail {
   margin: 0; display: flex; flex-wrap: wrap; gap: 8px 12px;
   font: 400 var(--t-mono-sm) / 1.6 var(--font-mono);
@@ -347,6 +346,12 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
 .metric-label { margin-top: 12px; }
 .metric[data-accent] .metric-value, .metric-value[data-accent] { color: var(--accent-01); }
 .doc > .metric-strip { grid-column: wide; }
+/* below 560px three columns cannot hold a seven-digit figure at the 30px
+   floor of the clamp (€453,000 is 135px; a third of 390 is 103px): the
+   figures stack, the 24px gap and the rules stay */
+@media (max-width: 559px) {
+  .metric-strip { grid-template-columns: minmax(0, 1fr); }
+}
 
 /* ---------- 9 · UTILITY PAGES: the 404 numeral (Templates 01) ----------
    The number is set in the mono face next to the h1; aria-hidden.

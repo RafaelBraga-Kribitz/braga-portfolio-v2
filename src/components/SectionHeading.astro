@@ -15,11 +15,11 @@ interface Props {
 const { number, word, claim, prose, link, as, id } = Astro.props;
 const Tag = as ?? 'h2';
 ---
-<header class="section-heading grid" id={id}>
-  <p class="col-3 label"><span>{number}</span><span>{word}</span></p>
-  <div class="col-7">
+<div class="section-heading" id={id}>
+  <p class="col-3 label section-heading-kicker"><span>{number}</span><span>{word}</span></p>
+  <div class="col-7 section-heading-claim">
     <Tag class="display">{claim}</Tag>
     {prose && <p class="prose">{prose}</p>}
   </div>
-  {link && <a href={link.href} class="col-2 label">{link.label} <span class="glyph" aria-hidden="true">→</span></a>}
-</header>
+  {link && <a href={link.href} class="col-2 label section-heading-link">{link.label} <span class="glyph" aria-hidden="true">→</span></a>}
+</div>

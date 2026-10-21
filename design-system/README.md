@@ -13,7 +13,7 @@ Plain CSS, no build step, no dependencies. Every page loads `src/styles/global.c
 | 5 | `charts.css` | The evidence figure (Site 05); chart SVG text and strokes; IBCS roles and categorical fills. | D-015 · D-016 · D-033 · Site 05 |
 | 6 | `bench.css` | **Agent D's file**: `.bench*`, `.segmented`, `.range`, `.button`. Imported by global.css after charts.css. | D-027 · Site 06 |
 | 7 | `print.css` | A4, the light palette on paper, chrome dropped, no breaks inside figures. Last, so it overrides everything. | P-11 |
-| — | `obsidian-snippet.css` | The document elements and callouts scoped to `.markdown-reading-view`. Generated from base.css + components.css (see the file header); install with tokens.css in `.obsidian/snippets/`. | P-08 |
+| — | `obsidian-snippet.css` | The document elements and callouts scoped to `.markdown-reading-view`. Generated from base.css (sections 4–5) + components.css (sections 3–6) by the rules in its header (`.doc > X` → `.markdown-reading-view X`, grid placement dropped); regenerate it whenever those two files change. Install with tokens.css in `.obsidian/snippets/`. | P-08 |
 
 `npm run lint:css` (`scripts/lint/css-rules.mjs`) fails on a hex outside tokens.css or anywhere under `src/`, on a font size below 12px / 0.75rem, on a missing contract class, on a token pair below its contrast threshold, and prints the contrast table. The two dark copies in tokens.css must stay identical; the lint checks that too.
 
@@ -34,9 +34,9 @@ Layout `.grid-container .page-grid .grid .col-1…12 .col-start-N .section .rule
 - Footer: `.site-footer` goes **inside** a `.grid-container` (`<footer class="grid-container"><div class="site-footer">`); four `.col-3.site-footer-group` on a `.grid`, each `.label` + `ul.site-footer-links`; then `.site-footer-bar` with `.site-footer-mark` (BRAGA) and `p.site-footer-colophon`.
 - Cover: `.cover` is its own grid with a hairline and 64px top padding — place it directly in `<main>`, not inside `.section`. Children: `.cover-rail` (`.label.cover-index`, a `<dl>` of `.label` dt / dd), `.cover-body` (`p.label.cover-name` with the accent square drawn by CSS, `h1.cover-role`, `p.prose.cover-lead`, `.cover-foot` with `.label` spans and `a.label.cover-cta` + `.glyph`).
 - Section heading: `.section-heading` is its own grid; `p.section-heading-kicker` (two spans: number, word), `.section-heading-claim` (h2.display + p.prose), `a.section-heading-link` (+ `.glyph`). `.section-heading + .listing` gets 32px.
-- Document opener: either `header.doc-opener.grid` with `.col-3` (trail) and `.col-9` (title, `.doc-lead`, `.doc-meta`), or stacked inside `article.doc`. The title may be h1–h3; it renders at `--t-h1`.
+- Document opener: either `header.doc-opener.grid` with `.col-3` (trail) and `.col-9` (title, `.doc-lead`, `.doc-meta`: 24px between each, set on `.doc-opener > [class*="col-"] > * + *`), or stacked inside `article.doc` (24px grid gap, no margins). The title may be h1–h3; it renders at `--t-h1`.
 - Contents: `nav.toc` with `p.label`, `ol > li > a` holding `span.toc-num` + `span`. Mark the active item with `aria-current` on the `<a>` (title to ink, number to accent).
-- Metric strip: `.metric-strip > .metric > .metric-value + .metric-label.label`; `data-accent` on the earned `.metric`.
+- Metric strip: `.metric-strip > .metric > .metric-value + .metric-label.label`; `data-accent` on the earned `.metric`. Three columns, 24px gap; below 560px the figures stack (a seven-digit value at the 30px floor does not fit a third of 390px).
 - Evidence: `figure.evidence` with `p.label`, `p.evidence-heading`, `.ev-bars > .ev-bar > .ev-label + .ev-track (> .ev-fill [+ .ev-mid]) + .ev-value`, then `figcaption` with `<b>Source:</b>`. `data-accent` on the winning `.ev-bar`.
 - Status vocabulary: `.status-list > div > .status + .status-use`.
 - 404: `.doc-opener > .doc-numeral-row > span.doc-numeral + h1`.

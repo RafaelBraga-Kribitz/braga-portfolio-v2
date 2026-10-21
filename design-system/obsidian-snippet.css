@@ -1,9 +1,14 @@
 /* ============================================================
    OBSIDIAN SNIPPET — Braga design system v2
-   The document elements (base.css section 5) and the components
+   The document elements (base.css sections 4–5) and the components
    (components.css sections 3–6) with every selector scoped to
-   .markdown-reading-view. Generated mechanically from those two
-   files; do not edit by hand, regenerate when they change.
+   .markdown-reading-view. Derived mechanically from those two files:
+   ".doc > X" and ".doc X" become ".markdown-reading-view X"; a
+   selector without .doc is prefixed; ".doc" itself becomes
+   ".markdown-reading-view .markdown-preview-view" with its type,
+   colour and counter declarations only; rules that only place an
+   element on the article grid are dropped. Do not edit by hand;
+   regenerate when base.css or components.css change.
 
    Install: copy tokens.css AND this file into <vault>/.obsidian/
    snippets/ and enable both (Settings → Appearance → CSS snippets).
@@ -16,6 +21,7 @@
    wraps each block in its own div, so its own spacing applies.
    ============================================================ */
 
+.markdown-reading-view .markdown-preview-view { font: 400 var(--t-body) / var(--lh-body) var(--font-body); color: var(--ink); counter-reset: sec; }
 .markdown-reading-view h2 { counter-increment: sec; font: var(--w-display) var(--t-h3) / var(--lh-snug) var(--font-display); letter-spacing: var(--tracking-tight); text-wrap: balance; border-top: var(--hairline); padding-top: 16px; }
 .markdown-reading-view h2::before { content: counter(sec, decimal-leading-zero); display: block; margin-bottom: 8px; font: 400 var(--t-mono) / 1 var(--font-mono); letter-spacing: var(--tracking-label); color: var(--ink-3); font-variant-numeric: var(--num); }
 .markdown-reading-view h3 { font: var(--w-display) 1.25rem / 1.3 var(--font-display); letter-spacing: var(--tracking-tight); text-wrap: balance; }
@@ -52,10 +58,7 @@
 .markdown-reading-view .callout-content > p + ol { margin-top: var(--flow-related); }
 .markdown-reading-view .callout-content ul,
 .markdown-reading-view .callout-content ol { padding-left: 24px; }
-.markdown-reading-view .callout:is([data-callout="note"],
-.markdown-reading-view [data-callout="aside"],
-.markdown-reading-view [data-callout="warning"],
-.markdown-reading-view [data-callout="tool"]) { background: var(--surface-2); border-top: var(--rule); padding: 24px; }
+.markdown-reading-view .callout:is([data-callout="note"], [data-callout="aside"], [data-callout="warning"], [data-callout="tool"]) { background: var(--surface-2); border-top: var(--rule); padding: 24px; }
 .markdown-reading-view .callout[data-callout="warning"] .callout-title::before { content: "▲"; }
 .markdown-reading-view .callout[data-callout="summary"] { border-top: var(--rule-open); border-bottom: var(--hairline); padding-block: 16px 24px; }
 .markdown-reading-view .callout[data-callout="summary"] .callout-content { font-size: var(--t-lead); line-height: 1.5; max-width: var(--measure-doc); text-wrap: pretty; }
@@ -119,8 +122,6 @@
 .markdown-reading-view pre { background: var(--surface-2); border-top: var(--rule); }
 .markdown-reading-view pre code,
 .markdown-reading-view .code pre code { background: none; padding: 0; font: inherit; }
-.markdown-reading-view figure.fig > .code,
-.markdown-reading-view figure.fig > pre { grid-column: auto; }
 .markdown-reading-view figure.fig { display: grid; gap: 16px; border-top: var(--hairline); padding-top: 16px; min-width: 0; }
 .markdown-reading-view .fig figcaption { display: grid; gap: 6px; }
 .markdown-reading-view .fig-label { font: 400 var(--t-mono-sm) / 1.4 var(--font-mono); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-3); font-variant-numeric: var(--num); }
@@ -148,10 +149,8 @@
 .markdown-reading-view td[align="right"],
 .markdown-reading-view .table-scroll th[align="right"],
 .markdown-reading-view .table-scroll td[align="right"],
-.markdown-reading-view :is(th,
-.markdown-reading-view td).num-cell,
-.markdown-reading-view .table-scroll :is(th,
-.markdown-reading-view td).num-cell { text-align: right; font-family: var(--font-mono); font-size: var(--t-mono); }
+.markdown-reading-view :is(th, td).num-cell,
+.markdown-reading-view .table-scroll :is(th, td).num-cell { text-align: right; font-family: var(--font-mono); font-size: var(--t-mono); }
 .markdown-reading-view tbody tr,
 .markdown-reading-view .table-scroll tbody tr { transition: background var(--dur) var(--ease); }
 .markdown-reading-view tbody tr:hover,

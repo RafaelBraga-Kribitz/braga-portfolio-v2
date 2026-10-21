@@ -17,7 +17,7 @@ const en = {
   // skip link and landmarks
   skip: 'Skip to content',
   index: 'Index',
-  // footer groups
+  // footer groups (D-013)
   'footer.index': 'Index',
   'footer.site': 'Site',
   'footer.elsewhere': 'Elsewhere',
@@ -142,19 +142,24 @@ export function otherLang(lang: Lang): Lang {
 }
 
 /* ---- dates ----
-   Local port of date() from handoff/ds-update/proposals/format.js
-   (D-031): EN "16 Sep 2026", DE "16. Sep. 2026", NBSP inside the figure,
-   Austrian "Jän." for January. Agent C's src/lib/format.mjs is the
-   canonical home of the formatters; when it lands, this function should
-   be replaced by a re-export of its date(). */
+   The canonical formatters live in Agent C's src/lib/format.mjs (the port
+   of handoff/ds-update/proposals/format.js). import.meta.glob resolves at
+   build time: when that file exists its date() is re-exported here as
+   formatDate; when it is absent the local port below answers, with the
+   same reference cases (EN "16 Sep 2026", DE "16. Sep. 2026", NBSP inside
+   the figure, Austrian "Jän." for January; D-031). */
 export const NBSP = ' ';
+
+type DateFn = (iso: string, lang?: string) => string;
+const formatModules = import.meta.glob<{ date?: DateFn }>(['./format.mjs', './format.ts'], { eager: true });
+const sharedDate: DateFn | undefined = formatModules['./format.mjs']?.date ?? formatModules['./format.ts']?.date;
+
 const MONTHS: Record<Lang, readonly string[]> = {
   en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
   de: ['Jän.', 'Feb.', 'März', 'Apr.', 'Mai', 'Juni', 'Juli', 'Aug.', 'Sep.', 'Okt.', 'Nov.', 'Dez.'],
 };
 
-/** ISO date (YYYY-MM-DD) → the page language's short form. */
-export function formatDate(iso: string, lang: Lang): string {
+function localDate(iso: string, lang: Lang): string {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
   if (!m) throw new Error(`formatDate: expected YYYY-MM-DD, got "${iso}"`);
   const y = Number(m[1]);
@@ -163,3 +168,12 @@ export function formatDate(iso: string, lang: Lang): string {
   if (!mon || !d) throw new Error(`formatDate: invalid date "${iso}"`);
   return lang === 'de' ? `${d}.${NBSP}${mon}${NBSP}${y}` : `${d}${NBSP}${mon}${NBSP}${y}`;
 }
+
+/** ISO date (YYYY-MM-DD) → the page language's short form. */
+export function formatDate(iso: string, lang: Lang): string {
+  if (!/^\d{4}-\d{2}-\d{2}/.test(iso)) throw new Error(`formatDate: expected YYYY-MM-DD, got "${iso}"`);
+  return sharedDate ? sharedDate(iso, lang) : localDate(iso, lang);
+}
+
+/** True when formatDate is served by src/lib/format.mjs (Agent C). */
+export const usesSharedFormatter = sharedDate !== undefined;
