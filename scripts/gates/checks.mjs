@@ -121,7 +121,7 @@ export async function pageGates(opts = {}) {
   const skip = (el) => !!el.closest('[data-gate-skip], [hidden], script, style, template, noscript');
   const visible = (el) => { const r = el.getBoundingClientRect(); if (r.width <= 0 || r.height <= 0) return false; const s = cs(el); return s.visibility !== 'hidden' && s.display !== 'none' && s.opacity !== '0'; };
   // visually hidden: an ancestor-or-self box of ≤ 1px that clips (the
-  // sr-only pattern; KaTeX's MathML copy). Not rendered text, not a target.
+  // sr-only pattern). Not rendered text, not a target.
   const clipMemo = new Map();
   const clippedBox = (n) => {
     if (clipMemo.has(n)) return clipMemo.get(n);
@@ -393,16 +393,19 @@ export function pageFacts(html) {
       firstInHead: s === firstScript,
       beforeSheets: !firstSheet || !!(s.compareDocumentPosition(firstSheet) & Node.DOCUMENT_POSITION_FOLLOWING),
     })),
-    styles: q('[style]').map((el) => ({ el: desc(el), value: el.getAttribute('style') || '', katex: !!el.closest('.katex-html[aria-hidden="true"]') })),
+    styles: q('[style]').map((el) => ({ el: desc(el), value: el.getAttribute('style') || '' })),
   };
 }
 
 /* ================================================================
    L-01 … L-05 — in Node, over pageFacts output and the files on disk.
    ctx: { dir, site: URL|null, pages: Map<pagePath, facts>,
-          pending?: Set<string> }   pages of the site map not built yet
+          pending?: Set<string>,    pages of the site map not built yet
                                     (tests/gates/pending-routes.json): a
                                     link to one is counted, not failed
+          base?: string }           the build's base path ('' or '/repo'):
+                                    URLs carry it, page paths and files do
+                                    not; a local URL outside it fails L-01
    ================================================================ */
 
 /** the page path a file serves: en/work/index.html → /en/work/ */
@@ -412,8 +415,13 @@ export function pagePathOf(rel) {
 }
 const normPath = (p) => (p.endsWith('/index.html') ? p.slice(0, -'index.html'.length) : p);
 
-/** classify a reference: fragment | local | external | skip */
-export function classifyRef(value, pagePath, site) {
+/**
+ * classify a reference: fragment | local | external | skip. `pagePath` and
+ * the returned `path` are relative to the build root (no base); `base` is
+ * the prefix every local URL must carry ('' at the root, '/repo' on a
+ * project page): it is stripped, and a local URL without it is `outside`.
+ */
+export function classifyRef(value, pagePath, site, base = '') {
   const v = (value || '').trim();
   if (!v) return { kind: 'skip' };
   if (v.startsWith('#')) { let id = v.slice(1); try { id = decodeURIComponent(id); } catch { /* keep raw */ } return { kind: 'fragment', id }; }
@@ -423,13 +431,20 @@ export function classifyRef(value, pagePath, site) {
     const s = scheme[1].toLowerCase();
     if (s === 'http' || s === 'https') {
       let u; try { u = new URL(v); } catch { return { kind: 'bad', why: 'unparseable URL' }; }
-      if (site && u.origin === site.origin) return { kind: 'local', path: u.pathname, hash: u.hash, site: true };
+      if (site && u.origin === site.origin) return { ...unbase(u.pathname, base), hash: u.hash, site: true };
       return { kind: 'external' };
     }
     return { kind: 'skip', scheme: s }; // mailto:, tel:, data:, blob:, javascript:
   }
-  let u; try { u = new URL(v, 'http://gates.local' + pagePath); } catch { return { kind: 'bad', why: 'unparseable URL' }; }
-  return { kind: 'local', path: u.pathname, hash: u.hash };
+  let u; try { u = new URL(v, 'http://gates.local' + base + pagePath); } catch { return { kind: 'bad', why: 'unparseable URL' }; }
+  return { ...unbase(u.pathname, base), hash: u.hash };
+}
+
+/** a URL path with the base stripped; one outside the base keeps its path and is flagged. @param {string} path @param {string} base */
+function unbase(path, base) {
+  if (!base) return { kind: 'local', path };
+  if (path === base || path.startsWith(base + '/')) return { kind: 'local', path: path.slice(base.length) || '/' };
+  return { kind: 'local', path, outside: true };
 }
 
 /** the file a local URL path resolves to, or null (dir → index.html) */
@@ -450,6 +465,7 @@ const isToolPage = (p) => /^\/(en|de)\/tools\/[^/]+\/$/.test(p);
 export function staticGates(pagePath, f, ctx) {
   const out = [];
   const site = ctx.site || null;
+  const base = ctx.base || '';
   const redirect = f.refresh !== null;
 
   // L-01 · internal links resolve (href/src without a scheme, and absolute
@@ -460,7 +476,7 @@ export function staticGates(pagePath, f, ctx) {
   const ids = new Set(f.ids);
   const seen = new Set();
   for (const r of f.refs) {
-    const c = classifyRef(r.value, pagePath, site);
+    const c = classifyRef(r.value, pagePath, site, base);
     if (c.kind === 'bad') { lOff.push(`${r.el} ${r.attr}="${r.value}" · ${c.why}`); continue; }
     if (c.kind === 'fragment') {
       checked++;
@@ -469,6 +485,7 @@ export function staticGates(pagePath, f, ctx) {
     }
     if (c.kind !== 'local') continue;
     checked++;
+    if (c.outside) { lOff.push(`${r.el} ${r.attr}="${r.value}" · outside the base path ${base}/`); continue; }
     if (seen.has(c.path)) continue;
     seen.add(c.path);
     if (fileFor(ctx.dir, c.path)) continue;
@@ -488,7 +505,7 @@ export function staticGates(pagePath, f, ctx) {
     const hOff = [];
     const own = tree ? tree[1] : (f.lang || '').slice(0, 2).toLowerCase();
     const other = own === 'de' ? 'en' : 'de';
-    const localOf = (href) => { const c = classifyRef(href, pagePath, site); return c.kind === 'local' ? normPath(c.path) : null; };
+    const localOf = (href) => { const c = classifyRef(href, pagePath, site, base); return c.kind === 'local' && !c.outside ? normPath(c.path) : null; };
     const by = {};
     for (const a of f.alternates) (by[a.hreflang] ||= []).push(a.href);
     for (const h of ['en', 'de', 'x-default']) {
@@ -510,7 +527,7 @@ export function staticGates(pagePath, f, ctx) {
       if (!twin) hOff.push(`hreflang="${other}" ${twinPath} is not a page in this build`);
       else {
         if ((twin.lang || '').slice(0, 2).toLowerCase() !== other) hOff.push(`${twinPath} has <html lang="${twin.lang}">, not ${other}`);
-        const back = twin.alternates.filter((a) => a.hreflang === own).map((a) => { const c = classifyRef(a.href, twinPath, site); return c.kind === 'local' ? normPath(c.path) : a.href; });
+        const back = twin.alternates.filter((a) => a.hreflang === own).map((a) => { const c = classifyRef(a.href, twinPath, site, base); return c.kind === 'local' && !c.outside ? normPath(c.path) : a.href; });
         if (!back.length) hOff.push(`${twinPath} has no hreflang="${own}" alternate back`);
         else if (!back.includes(pagePath)) hOff.push(`${twinPath} hreflang="${own}" points to ${back[0]}, not back to ${pagePath}`);
       }
@@ -529,7 +546,7 @@ export function staticGates(pagePath, f, ctx) {
     if (!JS_TYPES.has(s.type)) continue; // data block
     let kind;
     if (s.src) {
-      const c = classifyRef(s.src, pagePath, site);
+      const c = classifyRef(s.src, pagePath, site, base);
       if (c.kind === 'external') kind = 'external';
       else if (c.kind === 'local' && c.path === '/scripts/code.js') kind = 'code';
       else if (c.kind === 'local' && c.path.startsWith('/_astro/')) kind = 'island';
@@ -552,17 +569,15 @@ export function staticGates(pagePath, f, ctx) {
   out.push(result('L-03', sOff, f.scripts.length, `${f.scripts.length} scripts: ${Object.entries(kinds).filter(([, n]) => n).map(([k, n]) => (n > 1 ? n + ' ' : '') + k).join(', ') || 'none'}`, '%n script policy problems'));
 
   // L-04 · no inline style attributes except custom-property-only values.
-  // KaTeX's own layout (<span class="katex-html" aria-hidden="true">) is
-  // exempt, as in scripts/lint/no-inline-style.mjs
+  // Nothing is exempt: mathematics is native MathML (21 Oct 2026), so
+  // KaTeX's styled HTML layer no longer reaches a page.
   const stOff = [];
-  let katex = 0;
   for (const s of f.styles) {
-    if (s.katex) { katex++; continue; }
     const decls = s.value.split(';').map((d) => d.trim()).filter(Boolean);
     const bad = decls.filter((d) => !/^--[\w-]+\s*:/.test(d));
     if (bad.length) stOff.push(`${s.el} style="${s.value.slice(0, 60)}" · ${bad.map((d) => d.split(':')[0].trim()).join(', ')}`);
   }
-  out.push(result('L-04', stOff, f.styles.length - katex, `${f.styles.length - katex} style attributes, custom properties only${katex ? ` (${katex} KaTeX layout styles exempt)` : ''}`, '%n inline style attributes set real properties'));
+  out.push(result('L-04', stOff, f.styles.length, `${f.styles.length} style attributes, custom properties only`, '%n inline style attributes set real properties'));
 
   // L-05 · head metadata: title, description, lang, two theme-colors, viewport
   // (a redirect stub needs lang, title and viewport only)

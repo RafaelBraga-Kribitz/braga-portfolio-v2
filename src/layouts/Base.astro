@@ -1,15 +1,28 @@
 ---
 // Base layout: the contract of BUILD-BRIEF §9. Every page gets the head
-// (pre-paint theme script first), the skip link, the shell, one
-// <main id="main">, the footer, the inline theme toggle, and – only when
-// hasCode — code.js. Nothing else runs on a content page.
+// (the pre-paint theme script as its first script), the skip link, the
+// shell, one <main id="main">, the footer, the inline theme toggle, and –
+// only when hasCode — code.js. Nothing else runs on a content page.
+//
+// Theme (D-024). The two theme-color metas come before the pre-paint
+// script so that it can reach them: with a stored choice it sets
+// data-theme AND gives both metas the stored theme's colour (light is the
+// first meta, dark the second), so the browser bar matches the page from
+// the first paint, not only after a click. The toggle reads the colour of
+// the painted canvas (html is painted with --surface) after it flips the
+// theme, so it never depends on what the pre-paint script overwrote.
+//
+// Share card and favicons (HANDOFF 24, AUDIT P-10): public/share-card.png
+// and public/favicon-{32,180}.png, rendered by `npm run assets`
+// (scripts/assets/build-assets.mjs). Every URL here goes through
+// src/lib/routes.ts, so a project-page build (SITE_BASE) carries its base.
 import '../styles/global.css';
 import Shell from '../components/Shell.astro';
 import Footer from '../components/Footer.astro';
 import { site } from '../lib/site';
 import type { Lang } from '../lib/i18n';
-import { t } from '../lib/i18n';
-import { route, alternates, absolute, type PageId, type DoorCode } from '../lib/routes';
+import { t, otherLang } from '../lib/i18n';
+import { route, alternates, absolute, withBase, type PageId, type DoorCode } from '../lib/routes';
 
 interface Props {
   lang: Lang;
@@ -19,29 +32,53 @@ interface Props {
   current?: DoorCode;
   hasCode?: boolean;
   noindex?: boolean;
+  /** og:type: a document (project, essay) is an article. */
+  ogType?: 'website' | 'article';
 }
 
-const { lang, page, title, description, current, hasCode = false, noindex = false } = Astro.props;
+const { lang, page, title, description, current, hasCode = false, noindex = false, ogType = 'website' } = Astro.props;
 const canonical = absolute(route(page, lang));
 // The 404 has no German twin (one 404.html, English with the German
 // line), so it declares no hreflang pair: an hreflang="de" pointing at
 // an English page would be false.
 const alts = page === 'notfound' ? [] : alternates(page);
 const feed = absolute('/feed.xml');
+const locale = { en: 'en_GB', de: 'de_AT' } as const;
+const shareCard = absolute('/share-card.png');
+const shareAlt = `${site.wordmark} · ${site.name} · ${site.role[lang]}`;
 ---
 <!doctype html>
 <html lang={lang}>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script is:inline>(function(){try{var t=localStorage.getItem('bk-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}})()</script>
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#E4E6EA">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#191A1D">
+    <script is:inline>(function(){try{var t=localStorage.getItem('bk-theme');if(t==='light'||t==='dark'){var d=document,m=d.querySelectorAll('meta[name=theme-color]');d.documentElement.dataset.theme=t;if(m.length===2)m[0].content=m[1].content=m[t==='dark'?1:0].content}}catch(e){}})()</script>
     <title>{title} · {site.name}</title>
     <meta name="description" content={description}>
     <link rel="canonical" href={canonical}>
     {alts.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#E4E6EA">
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#191A1D">
     {noindex && <meta name="robots" content="noindex">}
+    <link rel="icon" type="image/png" sizes="32x32" href={withBase('/favicon-32.png')}>
+    <link rel="apple-touch-icon" sizes="180x180" href={withBase('/favicon-180.png')}>
+    <meta property="og:type" content={ogType}>
+    <meta property="og:site_name" content={site.name}>
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={canonical}>
+    <meta property="og:locale" content={locale[lang]}>
+    <meta property="og:locale:alternate" content={locale[otherLang(lang)]}>
+    <meta property="og:image" content={shareCard}>
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content={shareAlt}>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content={title}>
+    <meta name="twitter:description" content={description}>
+    <meta name="twitter:image" content={shareCard}>
+    <meta name="twitter:image:alt" content={shareAlt}>
     <link rel="alternate" type="application/rss+xml" title={`${site.name} · RSS`} href={feed}>
   </head>
   <body>
@@ -49,7 +86,7 @@ const feed = absolute('/feed.xml');
     <Shell lang={lang} page={page} current={current} />
     <main id="main" class="grid-container"><slot /></main>
     <Footer lang={lang} />
-    <script is:inline>(function(){var b=document.querySelector('.shell-theme');if(!b)return;var d=document.documentElement;var ml=document.querySelector('meta[name="theme-color"][media*="light"]');var md=document.querySelector('meta[name="theme-color"][media*="dark"]');var colors={light:ml?ml.getAttribute('content'):'',dark:md?md.getAttribute('content'):''};function current(){return d.dataset.theme||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}function label(theme){b.setAttribute('aria-label',b.getAttribute('data-label')+' · '+(theme==='dark'?b.getAttribute('data-dark'):b.getAttribute('data-light')))}label(current());b.addEventListener('click',function(){var next=current()==='dark'?'light':'dark';d.dataset.theme=next;try{localStorage.setItem('bk-theme',next)}catch(e){}if(ml)ml.setAttribute('content',colors[next]);if(md)md.setAttribute('content',colors[next]);label(next)})})()</script>
-    {hasCode && <script is:inline src="/scripts/code.js" defer></script>}
+    <script is:inline>(function(){var b=document.querySelector('.shell-theme');if(!b)return;var d=document.documentElement;var ms=document.querySelectorAll('meta[name="theme-color"]');function current(){return d.dataset.theme||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}function label(theme){b.setAttribute('aria-label',b.getAttribute('data-label')+' · '+(theme==='dark'?b.getAttribute('data-dark'):b.getAttribute('data-light')))}label(current());b.addEventListener('click',function(){var next=current()==='dark'?'light':'dark';d.dataset.theme=next;try{localStorage.setItem('bk-theme',next)}catch(e){}var c=getComputedStyle(d).backgroundColor;for(var i=0;i<ms.length;i++)ms[i].setAttribute('content',c);label(next)})})()</script>
+    {hasCode && <script is:inline src={withBase('/scripts/code.js')} defer></script>}
   </body>
 </html>

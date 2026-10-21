@@ -18,11 +18,10 @@
 // markup (.md .mdx .html) spaces around the = count too; in code files a
 // spaced `style = …` is a variable assignment, not an attribute.
 //
-// Built HTML: the subtree <span class="katex-html" aria-hidden="true"> is
-// KaTeX's own layout (struts and vlists: generated, hidden from assistive
-// technology; the MathML beside it is the accessible tree) and is exempt.
-// Everything else in the page, every code block and table included, must
-// be clean. Exits 1 and prints file:line for each offender.
+// Built HTML: every page, every code block, table and formula included,
+// must be clean; nothing is exempt (mathematics is native MathML since 21
+// Oct 2026, so KaTeX's styled HTML layer no longer exists). Exits 1 and
+// prints file:line for each offender.
 // ============================================================
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, relative, extname, resolve } from 'node:path';
@@ -229,48 +228,25 @@ function permitted(str, obj, file) {
   return permittedExpr(obj, file);
 }
 
-/** Ranges of KaTeX's HTML layer in a built page: <span class="katex-html" …> to its closing </span>. @param {string} html */
-function katexRanges(html) {
-  /** @type {[number, number][]} */
-  const ranges = [];
-  const tag = /<span\b[^>]*>|<\/span>/g;
-  let depth = 0;
-  let start = -1;
-  for (const m of html.matchAll(tag)) {
-    const i = m.index ?? 0;
-    if (m[0][1] === '/') {
-      if (depth > 0 && --depth === 0) { ranges.push([start, i + m[0].length]); start = -1; }
-      continue;
-    }
-    if (depth > 0) depth++;
-    else if (/class="[^"]*\bkatex-html\b/.test(m[0])) { depth = 1; start = i; }
-  }
-  return ranges;
-}
-/** @param {[number, number][]} ranges @param {number} i */
-const inRanges = (ranges, i) => ranges.some(([a, b]) => i >= a && i < b);
-
 /** @type {string[]} */
 const failures = [];
 let checked = 0;
-/** @param {string} file @param {boolean} html */
-function scan(file, html) {
+/** @param {string} file */
+function scan(file) {
   const text = readFileSync(file, 'utf8');
-  const ranges = html ? katexRanges(text) : [];
   const re = MARKUP_EXT.has(extname(file)) ? STYLE_SPACED : STYLE_TIGHT;
   checked++;
   for (const m of text.matchAll(re)) {
     const i = m.index ?? 0;
     if (permitted(m[1] ?? m[2] ?? m[3] ?? m[5], m[4], text)) continue;
-    if (html && inRanges(ranges, i)) continue;
     failures.push(`${rel(file)}:${lineOf(text, i)} · ${m[0].slice(0, 80).replace(/\s+/g, ' ')}`);
   }
 }
 
 const sources = walk(join(root, 'src')).filter((p) => SRC_EXT.has(extname(p)));
-for (const p of sources) scan(p, false);
+for (const p of sources) scan(p);
 const distFiles = existsSync(DIST) ? walk(DIST).filter((p) => extname(p) === '.html') : [];
-for (const p of distFiles) scan(p, true);
+for (const p of distFiles) scan(p);
 
 if (failures.length) {
   for (const f of failures) console.error(`FAIL · inline style · ${f}`);

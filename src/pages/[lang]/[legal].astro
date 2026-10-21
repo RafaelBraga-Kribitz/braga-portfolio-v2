@@ -1,0 +1,54 @@
+---
+// Impressum · Privacy · Accessibility — the utility template (Templates
+// specimen s02): one stacked article.doc with the opener inside it (trail
+// "Others → Impressum" / "Sonstiges → Datenschutz", h1, lead when set,
+// meta: the draft mark for an unapproved file and "As of <date>" /
+// "Stand <date>"), flat prose, the end bar (§ END · ← Index).
+//
+// The German URLs differ from the English ones (/de/datenschutz/,
+// /de/barrierefreiheit/). They come from src/lib/routes.ts, not from file
+// names: for each language and each legal page id, the last segment of its
+// route is this file's [legal] parameter, and the entry is the `legal`
+// collection file of that language whose frontmatter `page` is the id. A
+// page is built only for a language whose file exists.
+import Base from '@/layouts/Base.astro';
+import DocOpener from '@/components/DocOpener.astro';
+import DocEnd from '@/components/DocEnd.astro';
+import { render } from 'astro:content';
+import { t, formatDate, type Lang, type ChromeKey } from '@/lib/i18n';
+import { route, segment, legalPageIds, type LegalPageId } from '@/lib/routes';
+import { LANGS } from '@/lib/site';
+import { legalOf, type LegalEntry } from '@/lib/collections';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const lang of LANGS) {
+    for (const id of legalPageIds) {
+      const entry = await legalOf(id, lang);
+      if (entry) paths.push({ params: { lang, legal: segment(id, lang) }, props: { entry, id } });
+    }
+  }
+  return paths;
+}
+
+interface Props { entry: LegalEntry; id: LegalPageId }
+
+const { entry, id } = Astro.props;
+const lang = Astro.params.lang as Lang;
+const d = entry.data;
+const { Content, remarkPluginFrontmatter } = await render(entry);
+---
+<Base lang={lang} page={id} title={d.title} description={d.summary} hasCode={remarkPluginFrontmatter?.hasCode === true}>
+  <article class="doc">
+    <DocOpener
+      lang={lang}
+      trail={[{ label: t(lang, 'footer.others') }, { label: t(lang, `link.${id}` as ChromeKey), current: true }]}
+      title={d.title}
+      lead={d.lead}
+      meta={[{ text: `${t(lang, 'as-of')} ${formatDate(d.updated, lang)}` }]}
+      draft={d.translationStatus === 'draft'}
+    />
+    <Content />
+    <DocEnd lang={lang} back={{ href: route('home', lang), label: t(lang, 'to-index') }} />
+  </article>
+</Base>

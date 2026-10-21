@@ -1,0 +1,58 @@
+# Build, verify and publish the site with GitHub Pages (DEPLOY.md).
+# One-time setup: Settings → Pages → Source: GitHub Actions.
+# A project-site deploy sets the repository variable SITE_BASE to
+# /<repository>/; a user site or a custom domain leaves it unset.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# one deployment at a time; a running one is allowed to finish
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      SITE_BASE: ${{ vars.SITE_BASE || '/' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium for the gates
+        run: npx playwright install --with-deps chromium
+
+      # astro check, lint, unit tests, the build (with SITE_BASE) and every
+      # gate over dist/ (the gate runner reads SITE_BASE as its --base)
+      - name: Verify
+        run: npm run verify
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

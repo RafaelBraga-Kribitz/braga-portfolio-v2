@@ -1,0 +1,57 @@
+---
+// 02-NN · An essay or a note — the document template (docs/PAGE-BRIEF.md,
+// Site specimen s04), as the project pages use it: the opener on the page
+// grid (trail "02 Writing → 02-01", title, lead, meta: kind · Published ·
+// Updated), then the contents rail on 3 and the document on 9 (the
+// Markdown body, the end bar: ← All writing · § END · the next entry in
+// listing order, wrapping to the first). One page per language per entry
+// of the writing collection; every word comes from the entry or from i18n.
+import Document from '@/layouts/Document.astro';
+import { render } from 'astro:content';
+import { t, formatDate, type Lang } from '@/lib/i18n';
+import { route, writingRoute } from '@/lib/routes';
+import { LANGS } from '@/lib/site';
+import { writingOf, writingCode, nextOf, type WritingEntry } from '@/lib/collections';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const lang of LANGS) {
+    const list = await writingOf(lang);
+    for (const entry of list) paths.push({ params: { lang, slug: entry.data.slug }, props: { entry, list } });
+  }
+  return paths;
+}
+
+interface Props { entry: WritingEntry; list: WritingEntry[] }
+
+const { entry, list } = Astro.props;
+const lang = Astro.params.lang as Lang;
+const d = entry.data;
+const { Content, headings, remarkPluginFrontmatter } = await render(entry);
+const code = writingCode(entry, list.findIndex((e) => e.id === entry.id));
+const next = nextOf(list, entry);
+const nextCode = next ? writingCode(next, list.findIndex((e) => e.id === next.id)) : '';
+
+const meta = [
+  { text: t(lang, `kind.${d.kind}`) },
+  { text: `${t(lang, 'published')} ${formatDate(d.date, lang)}` },
+  ...(d.updated ? [{ text: `${t(lang, 'updated')} ${formatDate(d.updated, lang)}` }] : []),
+];
+---
+<Document
+  lang={lang}
+  page={`writing.${d.slug}`}
+  title={d.title}
+  description={d.summary}
+  current="02"
+  hasCode={remarkPluginFrontmatter?.hasCode === true}
+  trail={[{ label: `02 ${t(lang, 'door.writing')}`, href: route('writing', lang) }, { label: code, current: true }]}
+  lead={d.lead}
+  meta={meta}
+  draft={d.translationStatus === 'draft'}
+  headings={headings}
+  prev={{ href: route('writing', lang), label: t(lang, 'all-writing') }}
+  next={next && { href: writingRoute(next.data.slug, lang), label: `${nextCode} ${next.data.title}` }}
+>
+  <Content />
+</Document>

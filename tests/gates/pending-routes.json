@@ -1,8 +1,6 @@
 {
-  "note": "Pages of the site map (BUILD-BRIEF §4) that a later phase builds. The shell, the footer and the home Index already link to them. A link to a route listed here is counted by L-01, not failed; a listed route that exists in the build fails the run until it is removed here, so this list only shrinks. Read by `npm run test:gates` (the default dist); `--pending <file>` or `--no-pending` override.",
+  "note": "Pages of the site map (BUILD-BRIEF §4) that a later phase builds. The shell, the footer and the home Index already link to them. A link to a route listed here is counted by L-01, not failed; a listed route that exists in the build fails the run until it is removed here, so this list only shrinks. Read by `npm run test:gates` (the default dist); `--pending <file>` or `--no-pending` override. Built since the templates step (removed): the Work and Writing indexes and the kitchen sink. About and the legal pages build as soon as their Markdown exists (src/content/pages, src/content/legal); projects and essays as soon as their entries exist.",
   "routes": [
-    "/en/work/",
-    "/de/work/",
     "/en/work/austria-data-job-market-intelligence/",
     "/de/work/austria-data-job-market-intelligence/",
     "/en/work/austrian-mmm-budget-optimizer/",
@@ -13,8 +11,6 @@
     "/de/work/warehouse-humanoid-tco/",
     "/en/work/energy-procurement-risk-analyzer/",
     "/de/work/energy-procurement-risk-analyzer/",
-    "/en/writing/",
-    "/de/writing/",
     "/en/writing/ai-prospecting-vendor-3x-lift/",
     "/de/writing/ai-prospecting-vendor-3x-lift/",
     "/en/about/",
@@ -24,8 +20,6 @@
     "/en/privacy/",
     "/de/datenschutz/",
     "/en/accessibility/",
-    "/de/barrierefreiheit/",
-    "/en/system/",
-    "/de/system/"
+    "/de/barrierefreiheit/"
   ]
 }

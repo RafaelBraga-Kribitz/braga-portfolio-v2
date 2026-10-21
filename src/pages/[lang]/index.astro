@@ -1,14 +1,15 @@
 ---
 // Home — Site pattern 02 (Cover) and 03 (Index): the title page, then the
 // four doors as sections, each opened by a section heading.
-//   01 Work     the five projects (BUILD-BRIEF §4, notes from the Site
-//               specimen's projects array)
-//   02 Writing  the one essay (frontmatter of the source MDX)
+//   01 Work     the projects collection of the language, by code
+//   02 Writing  the writing collection of the language
 //   03 About    the claim from about.yaml's lead
-//   04 Tools    the two benches
-// The rows live in src/lib/catalogue.ts so the indexes and the sitemap
-// read the same list. German chrome and claims are agent drafts (O-05);
-// on the home page the draft notice is an HTML comment only.
+//   04 Tools    the two benches (src/lib/catalogue.ts)
+// Rows come from src/lib/collections.ts, which the section indexes and the
+// sitemap read too; while a collection is empty its section shows the
+// heading without a listing. The Work and Writing claims are i18n keys
+// shared with the indexes. German chrome and claims are agent drafts
+// (O-05); on the home page the draft notice is an HTML comment only.
 import Base from '@/layouts/Base.astro';
 import Cover from '@/components/Cover.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
@@ -17,8 +18,8 @@ import ListingRow from '@/components/ListingRow.astro';
 import { t, formatDate, type Lang } from '@/lib/i18n';
 import { route, workRoute, writingRoute } from '@/lib/routes';
 import { LANGS, site } from '@/lib/site';
-import { projects, essays, tools, toolsProse } from '@/lib/catalogue';
-import { dash } from '@/lib/format.mjs';
+import { tools, toolsProse } from '@/lib/catalogue';
+import { projectsOf, writingOf, writingCode, yearOf } from '@/lib/collections';
 
 export function getStaticPaths() {
   return LANGS.map((lang) => ({ params: { lang } }));
@@ -33,15 +34,6 @@ const copy = {
     titleLines: ['Marketing', 'Data Analyst'],
     focus: 'Marketing · Data · Decisions',
     edition: 'October 2026',
-    work: {
-      claim: 'A decision. Its evidence.',
-      prose: 'Selected analytical projects, with the question, result and limits kept together.',
-    },
-    writing: {
-      claim: 'Finished arguments and working notes.',
-      // home.yaml sections[02].leadParagraphs[0], the em dash as the spaced en dash (O-03)
-      prose: `Two registers, deliberately kept apart. Essays are finished arguments${dash('en')}a position taken, defended, and closed. Notes are the working surface, revised in place as the thinking moves.`,
-    },
     about: {
       // about.yaml lead, second sentence (British "modelled"); the first
       // sentence with the role of D-001 (the source says "Scientist")
@@ -56,14 +48,6 @@ const copy = {
     titleLines: ['Marketing', 'Data Analyst'],
     focus: 'Marketing · Daten · Entscheidungen',
     edition: 'Oktober 2026',
-    work: {
-      claim: 'Eine Entscheidung. Ihre Belege.',
-      prose: 'Ausgewählte analytische Projekte, bei denen Frage, Ergebnis und Grenzen beisammen bleiben.',
-    },
-    writing: {
-      claim: 'Fertige Argumente und Arbeitsnotizen.',
-      prose: `Zwei Register, bewusst getrennt. Essays sind fertige Argumente${dash('de')}eine Position, bezogen, verteidigt und abgeschlossen. Notizen sind die Arbeitsfläche, an Ort und Stelle überarbeitet, während das Denken sich bewegt.`,
-    },
     about: {
       claim: 'Das Fachwissen stammt aus selbst geführten Kampagnen, nicht nur aus ihrer Modellierung.',
       prose: 'Marketing Data Analyst; baut die Mess- und Entscheidungssysteme hinter der Frage, wohin das Marketingbudget fließt.',
@@ -77,28 +61,34 @@ const spec = [
   { k: t(lang, 'cover.focus'), v: copy.focus },
   { k: t(lang, 'cover.edition'), v: copy.edition },
 ];
-const textLang: Lang = 'en';
+const projects = await projectsOf(lang);
+const writing = await writingOf(lang);
+const allProjects = projects.length ? t(lang, 'all-n-projects').replace('{n}', String(projects.length)) : t(lang, 'all-projects');
 ---
 <Base lang={lang} page="home" title={copy.title} description={copy.lead}>
   {lang === 'de' && <Fragment set:html={'<!-- Entwurf · Freigabe ausstehend: German chrome and claims on this page are agent drafts awaiting the owner’s approval (HANDOFF O-05). -->'} />}
   <Cover lang={lang} spec={spec} titleLines={copy.titleLines} lead={copy.lead} />
 
   <section class="section" id="work">
-    <SectionHeading number="01" word={t(lang, 'door.work')} claim={copy.work.claim} prose={copy.work.prose} link={{ href: route('work', lang), label: t(lang, 'all-5-projects') }} />
-    <Listing head={{ index: t(lang, 'index'), title: t(lang, 'project'), meta: t(lang, 'discipline-status'), trail: t(lang, 'year') }}>
-      {projects.map((p) => (
-        <ListingRow code={p.code} title={p.title} sub={p.note} textLang={textLang} meta={[p.domain[lang]]} status={p.status} lang={lang} trail={p.year} href={workRoute(p.slug, lang)} />
-      ))}
-    </Listing>
+    <SectionHeading number="01" word={t(lang, 'door.work')} claim={t(lang, 'work.claim')} prose={t(lang, 'work.prose')} link={{ href: route('work', lang), label: allProjects }} />
+    {projects.length > 0 && (
+      <Listing head={{ index: t(lang, 'index'), title: t(lang, 'project'), meta: t(lang, 'discipline-status'), trail: t(lang, 'year') }}>
+        {projects.map((p) => (
+          <ListingRow code={p.data.code} title={p.data.title} sub={p.data.summary} meta={[p.data.domain]} status={p.data.status} lang={lang} trail={yearOf(p.data.date)} href={workRoute(p.data.slug, lang)} />
+        ))}
+      </Listing>
+    )}
   </section>
 
   <section class="section" id="writing">
-    <SectionHeading number="02" word={t(lang, 'door.writing')} claim={copy.writing.claim} prose={copy.writing.prose} link={{ href: route('writing', lang), label: t(lang, 'all-writing') }} />
-    <Listing head={{ index: t(lang, 'index'), title: t(lang, 'title'), meta: t(lang, 'kind-date'), trail: t(lang, 'year') }}>
-      {essays.map((e) => (
-        <ListingRow code={e.code} title={e.title} sub={e.summary} textLang={textLang} meta={[t(lang, `kind.${e.kind}`), formatDate(e.date, lang)]} lang={lang} trail={e.date.slice(0, 4)} href={writingRoute(e.slug, lang)} />
-      ))}
-    </Listing>
+    <SectionHeading number="02" word={t(lang, 'door.writing')} claim={t(lang, 'writing.claim')} prose={t(lang, 'writing.prose')} link={{ href: route('writing', lang), label: t(lang, 'all-writing') }} />
+    {writing.length > 0 && (
+      <Listing head={{ index: t(lang, 'index'), title: t(lang, 'title'), meta: t(lang, 'kind-date'), trail: t(lang, 'year') }}>
+        {writing.map((e, i) => (
+          <ListingRow code={writingCode(e, i)} title={e.data.title} sub={e.data.summary} meta={[t(lang, `kind.${e.data.kind}`), formatDate(e.data.date, lang)]} lang={lang} trail={yearOf(e.data.date)} href={writingRoute(e.data.slug, lang)} />
+        ))}
+      </Listing>
+    )}
   </section>
 
   <section class="section" id="about">

@@ -1,0 +1,49 @@
+---
+// The kitchen sink (noindex; docs/PAGE-BRIEF.md): every authoring element
+// once, rendered through the document template from the `pages` collection
+// entry src/content/pages/<lang>/system.md, which the content step fills.
+// Trail "§ Index → <title>"; no door is current; the meta row shows Updated
+// <date> when set and the draft mark for an unapproved German file. The
+// page is built only for a language whose file exists; it stays out of the
+// sitemap (src/pages/sitemap.xml.ts) and out of search indexes.
+import Document from '@/layouts/Document.astro';
+import { render } from 'astro:content';
+import { t, formatDate, type Lang } from '@/lib/i18n';
+import { route } from '@/lib/routes';
+import { LANGS } from '@/lib/site';
+import { pageOf, type PageEntry } from '@/lib/collections';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const lang of LANGS) {
+    const entry = await pageOf('system', lang);
+    if (entry) paths.push({ params: { lang }, props: { entry } });
+  }
+  return paths;
+}
+
+interface Props { entry: PageEntry }
+
+const { entry } = Astro.props;
+const lang = Astro.params.lang as Lang;
+const d = entry.data;
+const { Content, headings, remarkPluginFrontmatter } = await render(entry);
+const meta = d.updated ? [{ text: `${t(lang, 'updated')} ${formatDate(d.updated, lang)}` }] : [];
+---
+<Document
+  lang={lang}
+  page="system"
+  title={d.title}
+  description={d.summary}
+  hasCode={remarkPluginFrontmatter?.hasCode === true}
+  noindex
+  trail={[{ label: `§ ${t(lang, 'index')}`, href: route('home', lang) }, { label: d.title, current: true }]}
+  lead={d.lead}
+  meta={meta}
+  draft={d.translationStatus === 'draft'}
+  headings={headings}
+  bodyLang={d.contentLang}
+  back={{ href: route('home', lang), label: t(lang, 'to-index') }}
+>
+  <Content />
+</Document>

@@ -15,6 +15,8 @@
 // styles (tok-kw, tok-fn, tok-str, tok-num, tok-cm, tok-op); a token outside
 // the six is unwrapped and reads as an identifier (code-ink). Wrap is on by
 // default and the block is complete without code.js (the buttons are inert).
+// Each panel sets `hasCode: true` in the document's plugin frontmatter, which
+// the page templates read from render(entry).remarkPluginFrontmatter.
 
 import { CODE_LABELS } from '../remark/code-lang.mjs';
 
@@ -76,6 +78,10 @@ export const codePanel = {
       // authored name is in the data bag (src/lib/remark/code-lang.mjs)
       const labels = ctx.data[CODE_LABELS];
       const authored = labels instanceof Map ? labels.get(ctx.textContent(code).replace(/\n$/, '')) : undefined;
+      // tell the page it has a code panel: render(entry).remarkPluginFrontmatter.hasCode
+      // switches Base's hasCode (the one page that loads /scripts/code.js)
+      const fm = ctx.data.astro && ctx.data.astro.frontmatter;
+      if (fm && typeof fm === 'object') fm.hasCode = true;
       return h('div', { className: ['code'], dataLang: authored || lang, dataWrap: 'on' }, [
         h('div', { className: ['code-bar'] }, [
           h('span', {}, [t(authored || LABEL[lang] || lang)]),

@@ -1,0 +1,73 @@
+---
+// The document template (docs/PAGE-BRIEF.md, Site specimen s04): projects,
+// essays, About and the kitchen sink. Above the grid, the opener on the
+// page grid (trail on 3; title, lead and meta on 9); then a 3/9 grid with
+// the contents rail and the article:
+//
+//   <header class="doc-opener grid">…</header>
+//   <div class="grid">
+//     <nav class="toc col-3">…</nav>
+//     <article class="doc col-9">[metric strip] <Content/> <footer class="doc-end">…</footer></article>
+//   </div>
+//
+// The contents rail lists the document's h2 sections in order (the numbers
+// match the ones the stylesheet draws on each h2) and leaves out the
+// footnotes heading (src/content/README.md §1). Without JavaScript there is
+// no active item. The rail is omitted when the document has no h2.
+import Base from './Base.astro';
+import DocOpener from '../components/DocOpener.astro';
+import Toc from '../components/Toc.astro';
+import MetricStrip from '../components/MetricStrip.astro';
+import DocEnd from '../components/DocEnd.astro';
+import type { Lang, StatusState } from '../lib/i18n';
+import type { PageId, DoorCode } from '../lib/routes';
+import type { MarkdownHeading } from 'astro';
+
+type Crumb = { label: string; href?: string; current?: boolean; sep?: '→' | '·' };
+type MetaItem = { text: string; href?: string; external?: boolean } | { status: StatusState; label?: string };
+type Link = { href: string; label: string };
+
+interface Props {
+  lang: Lang;
+  page: PageId;
+  /** <title> and og:title; the h1 is `heading` when given, else this. */
+  title: string;
+  heading?: string;
+  description: string;
+  current?: DoorCode;
+  hasCode?: boolean;
+  noindex?: boolean;
+  trail: Crumb[];
+  lead?: string;
+  meta?: MetaItem[];
+  /** The in-build mark with the draft label first in the meta row. */
+  draft?: boolean;
+  headings: MarkdownHeading[];
+  metrics?: { value: string; label: string; accent?: boolean }[];
+  /** End bar: the way back before the end mark, the next document after it; or `back` after it (utility style). */
+  prev?: Link;
+  next?: Link;
+  back?: Link;
+  /** Language of the document body when it differs from the page (a kitchen sink kept in English). */
+  bodyLang?: Lang;
+}
+
+const {
+  lang, page, title, heading, description, current, hasCode = false, noindex = false,
+  trail, lead, meta = [], draft = false, headings, metrics = [], prev, next, back, bodyLang,
+} = Astro.props;
+
+const sections = headings.filter((h) => h.depth === 2 && h.slug !== 'footnote-label');
+const toc = sections.map((h, i) => ({ n: String(i + 1).padStart(2, '0'), title: h.text, href: `#${h.slug}` }));
+---
+<Base lang={lang} page={page} title={title} description={description} current={current} hasCode={hasCode} noindex={noindex} ogType="article">
+  <DocOpener lang={lang} grid trail={trail} title={heading ?? title} lead={lead} meta={meta} draft={draft} />
+  <div class="grid">
+    {toc.length > 0 && <Toc class="col-3" lang={lang} items={toc} />}
+    <article class:list={['doc', 'col-9', toc.length === 0 && 'col-start-4']} lang={bodyLang && bodyLang !== lang ? bodyLang : undefined}>
+      {metrics.length > 0 && <MetricStrip metrics={metrics} />}
+      <slot />
+      <DocEnd lang={lang} prev={prev} next={next} back={back} />
+    </article>
+  </div>
+</Base>

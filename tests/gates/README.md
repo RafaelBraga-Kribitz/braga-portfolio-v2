@@ -20,6 +20,7 @@ fail is not a gate": every gate below is seen failing on
 npm run test:gates                                   # dist/, every page, 6 widths × 2 themes, axe
 node scripts/gates/run.mjs --dir <build> --quick     # 390 + 1280, light only, no axe
 node scripts/gates/run.mjs --dir tests/gates/fixtures --expect tests/gates/fixtures/expect.json   # self-test
+SITE_BASE=/braga-portfolio/ npx astro build --outDir <build> && node scripts/gates/run.mjs --dir <build> --base /braga-portfolio/ --quick   # a project-page build
 ```
 
 | Option | Default | Meaning |
@@ -32,6 +33,7 @@ node scripts/gates/run.mjs --dir tests/gates/fixtures --expect tests/gates/fixtu
 | `--json <file>` | none | the full report (every context, every offender) |
 | `--expect <file>` | none | exit 0 only if the failing gates match the file exactly (see Fixtures) |
 | `--site <url>` | `site` from `astro.config.mjs` | absolute URLs on this origin (canonical, hreflang, feed) are checked as local files |
+| `--base <path>` | `$SITE_BASE`, else `/` | the base path the build was made with (`SITE_BASE=/braga-portfolio/`, a project-page deploy; DEPLOY.md): the folder is served under it, pages are opened under it, and L-01 fails any local URL that lacks it. Page paths in the table, in `--pages` and in the pending list stay relative to the build root (`/en/work/`) |
 | `--concurrency <n>` | `3` | pages rendered in parallel (one browser throughout) |
 | `--verbose` | off | print every gate row and up to eight offenders per failure |
 | `--no-axe` | off | skip A-01 without the rest of `--quick` |
@@ -99,7 +101,7 @@ sr-only pattern) are not rendered text and are left out of G-01 to G-06.
 | L-01 | Internal links resolve | an `href`/`src`/`srcset`/`action`, island `component-url`/`renderer-url`, or meta-refresh URL without a scheme (or on the site's own origin) maps to no file: `/a/` needs `a/index.html`, `#fragments` are stripped, `mailto:`/`tel:` are allowed; an on-page `#id` must exist; a same-origin request that answered 4xx at render time is added here |
 | L-02 | hreflang pairs | on every `/en/` and `/de/` page (and any page that declares alternates): `en`, `de` and `x-default` are not each present once; one does not resolve; the own-language alternate is not the page itself; the twin does not exist, lacks the twin `lang`, or does not point back |
 | L-03 | Scripts policy | any script other than (a) the inline pre-paint script, first in `<head>` before the stylesheets, (b) the inline theme toggle, (c) `/scripts/code.js`; Astro island scripts (`/_astro/…` or the inline island loaders) only under `/tools/<name>/`; also fails when the pre-paint script is missing. JSON / JSON-LD blocks are data and pass |
-| L-04 | No inline style | a `style` attribute declares anything but custom properties (`style="--w: 40%"` is the permitted form); KaTeX's own layout inside `.katex-html[aria-hidden="true"]` is exempt, as in `scripts/lint/no-inline-style.mjs` |
+| L-04 | No inline style | a `style` attribute declares anything but custom properties (`style="--w: 40%"` is the permitted form); nothing is exempt (mathematics is native MathML, so no KaTeX layout styles reach a page; 21 Oct 2026) |
 | L-05 | Head metadata | no `<html lang>`, `<title>`, `<meta name="description">`, viewport with `width=device-width`, or exactly two `theme-color` metas (light and dark media); a redirect stub needs only lang, title and viewport |
 | A-01 | axe WCAG 2.1 AA | axe-core (`@axe-core/playwright`, tags `wcag2a`, `wcag2aa`, `wcag21aa`) reports any violation, at 390 and 1280 in both themes |
 

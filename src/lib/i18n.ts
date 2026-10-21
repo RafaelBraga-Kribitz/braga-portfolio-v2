@@ -53,9 +53,23 @@ const en = {
   'cover.evidence': 'Evidence before claims',
   'cover.independent': 'Independent portfolio',
   'contact.cta': 'Get in touch',
+  // section claims shared by the home Index and the section indexes
+  // (Site specimen s03; home.yaml sections[02].leadParagraphs[0] with the
+  // spaced en dash of O-03, NBSP before it)
+  'work.claim': 'A decision. Its evidence.',
+  'work.prose': 'Selected analytical projects, with the question, result and limits kept together.',
+  'writing.claim': 'Finished arguments and working notes.',
+  'writing.prose': 'Two registers, deliberately kept apart. Essays are finished arguments\u00A0– a position taken, defended, and closed. Notes are the working surface, revised in place as the thinking moves.',
+  // status vocabulary (Site specimen s03, D-029): one line of use per state
+  'status-vocabulary': 'Status vocabulary',
+  'status-use.complete': 'Shipped; the result stands. Filled.',
+  'status-use.functional': 'Works end to end; the scope is stated. Filled centre in an outline.',
+  'status-use.under-revision': 'A flaw was found and is being fixed\u00A0– said plainly. Half filled.',
+  'status-use.in-build': 'Not yet a result. Outline.',
+  'status-use.archived': 'Kept for the record; no longer maintained. Dotted outline.',
   // listings
   'all-projects': 'All projects',
-  'all-5-projects': 'All 5 projects',
+  'all-n-projects': 'All {n} projects',
   'all-writing': 'All writing',
   'all-tools': 'All tools',
   'open-profile': 'Open the profile',
@@ -75,6 +89,11 @@ const en = {
   source: 'Source',
   'doc.end': '§ END',
   'back-to-index': 'Back to the index',
+  'to-index': 'Index',
+  published: 'Published',
+  updated: 'Updated',
+  'as-of': 'As of',
+  repository: 'Repository',
   // tools
   'tool.nojs': 'Without JavaScript the default scenario is shown; the controls need JavaScript.',
 } as const;
@@ -119,8 +138,18 @@ const de: Record<ChromeKey, string> = {
   'cover.evidence': 'Belege vor Behauptungen',
   'cover.independent': 'Unabhängiges Portfolio',
   'contact.cta': 'Kontakt aufnehmen',
+  'work.claim': 'Eine Entscheidung. Ihre Belege.',
+  'work.prose': 'Ausgewählte analytische Projekte, bei denen Frage, Ergebnis und Grenzen beisammen bleiben.',
+  'writing.claim': 'Fertige Argumente und Arbeitsnotizen.',
+  'writing.prose': 'Zwei Register, bewusst getrennt. Essays sind fertige Argumente\u00A0– eine Position, bezogen, verteidigt und abgeschlossen. Notizen sind die Arbeitsfläche, an Ort und Stelle überarbeitet, während das Denken sich bewegt.',
+  'status-vocabulary': 'Statusvokabular',
+  'status-use.complete': 'Ausgeliefert; das Ergebnis steht. Gefüllt.',
+  'status-use.functional': 'Funktioniert durchgängig; der Umfang ist angegeben. Gefüllte Mitte im Umriss.',
+  'status-use.under-revision': 'Ein Fehler wurde gefunden und wird behoben\u00A0– offen gesagt. Halb gefüllt.',
+  'status-use.in-build': 'Noch kein Ergebnis. Umriss.',
+  'status-use.archived': 'Zur Dokumentation aufbewahrt; nicht mehr gepflegt. Gepunkteter Umriss.',
   'all-projects': 'Alle Projekte',
-  'all-5-projects': 'Alle 5 Projekte',
+  'all-n-projects': 'Alle {n} Projekte',
   'all-writing': 'Alle Texte',
   'all-tools': 'Alle Werkzeuge',
   'open-profile': 'Profil öffnen',
@@ -139,6 +168,11 @@ const de: Record<ChromeKey, string> = {
   source: 'Quelle',
   'doc.end': '§ ENDE',
   'back-to-index': 'Zurück zum Index',
+  'to-index': 'Zum Index',
+  published: 'Veröffentlicht',
+  updated: 'Aktualisiert',
+  'as-of': 'Stand',
+  repository: 'Repository',
   'tool.nojs': 'Ohne JavaScript wird das Standardszenario gezeigt; die Regler brauchen JavaScript.',
 };
 

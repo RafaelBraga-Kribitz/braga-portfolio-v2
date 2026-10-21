@@ -319,8 +319,9 @@ main > .cover:first-child { border-top: 0; }
 }
 .doc-end:not(:first-child) { margin-top: var(--flow-group); }
 /* a document page ends 64px above the footer, as the Site specimen's
-   document grid does (padding-bottom: 64px) */
-main > .doc:last-child { padding-bottom: 64px; }
+   document grid does (padding-bottom: 64px): the stacked article, or the
+   3/9 grid (contents rail + article.doc) under an opener on the page grid */
+main > .doc:last-child, .doc-opener.grid + .grid { padding-bottom: 64px; }
 .doc > .doc-end { grid-column: wide; }
 .doc-end a { color: var(--ink); text-decoration: none; min-height: 24px; display: inline-flex; align-items: center; gap: 8px; }
 .doc-end .glyph { color: var(--ink-2); }

@@ -1,101 +1,16 @@
-// The listing rows the home page and the indexes share, until the content
-// collections (src/content.config.ts) hold the projects and the essay.
-// One source, so the home Index, the section indexes and the sitemap
-// cannot drift apart.
+// The tool rows the home page's 04 Tools section and the tools index share.
+// Projects and essays are not listed here: they come from the content
+// collections (src/content.config.ts) through src/lib/collections.ts. The
+// tools are pages, not Markdown, so their rows stay in code.
 //
-//   projects  BUILD-BRIEF §4 (code, slug, title, domain, status) and the
-//             Site specimen's `projects` array (the one-line notes)
-//   essays    handoff/source-content/content/writing/blog/
-//             ai-prospecting-vendor-3x-lift.mdx frontmatter (title,
-//             summary, date); the code is the brief's 02-01
 //   tools     the two benches of BUILD-BRIEF §4 (codes 04-01, 04-02)
 //
-// German: the project titles and notes and the essay stay English for now
-// (rendered with lang="en"); domains, tool rows and every label are agent
-// drafts awaiting the owner's approval (HANDOFF O-05).
+// German: the tool rows and the prose are agent drafts awaiting the owner's
+// approval (HANDOFF O-05).
 
 import type { Lang } from './site';
 import type { StatusState } from './i18n';
 import { dash } from './format.mjs';
-
-export interface ProjectRow {
-  code: string;
-  slug: string;
-  title: string;
-  note: string;
-  domain: Record<Lang, string>;
-  status: StatusState;
-  year: string;
-}
-
-export const projects: readonly ProjectRow[] = [
-  {
-    code: '01-01',
-    slug: 'austria-data-job-market-intelligence',
-    title: 'Austria data-job market intelligence',
-    note: '720 core postings. A dated view of titles, skills and regional demand.',
-    domain: { en: 'Labour market', de: 'Arbeitsmarkt' },
-    status: 'complete',
-    year: '2026',
-  },
-  {
-    code: '01-02',
-    slug: 'austrian-mmm-budget-optimizer',
-    title: 'Austrian MMM and budget optimiser',
-    note: 'Bayesian media-mix modelling. A budget decision with a downside check.',
-    domain: { en: 'Marketing', de: 'Marketing' },
-    status: 'under-revision',
-    year: '2026',
-  },
-  {
-    code: '01-03',
-    slug: 'decision-analytics-reconstruction',
-    title: 'Decision analytics reconstruction',
-    note: 'A three-module reconstruction. Allocation gains are proxies, not campaign effects.',
-    domain: { en: 'Decision science', de: 'Entscheidungsanalyse' },
-    status: 'functional',
-    year: '2026',
-  },
-  {
-    code: '01-04',
-    slug: 'warehouse-humanoid-tco',
-    title: 'Warehouse humanoid TCO',
-    note: '€453,000 over five years. One person and three mobile robots lead the model.',
-    domain: { en: 'Operations', de: 'Betrieb' },
-    status: 'complete',
-    year: '2026',
-  },
-  {
-    code: '01-05',
-    slug: 'energy-procurement-risk-analyzer',
-    title: 'Energy procurement risk analyser',
-    note: 'From electricity-price records to a cost-risk decision. In build.',
-    domain: { en: 'Energy', de: 'Energie' },
-    status: 'in-build',
-    year: '2026',
-  },
-];
-
-export interface EssayRow {
-  code: string;
-  slug: string;
-  title: string;
-  summary: string;
-  /** yyyy-mm-dd */
-  date: string;
-  kind: 'essay' | 'note';
-}
-
-export const essays: readonly EssayRow[] = [
-  {
-    code: '02-01',
-    slug: 'ai-prospecting-vendor-3x-lift',
-    title: 'An AI prospecting vendor claims a 3× lift. What I would require before signing.',
-    summary: 'A vendor-authored benchmark on AI prospecting is enough to justify a pilot, not a purchase. Four buyer conditions close the gap.',
-    date: '2026-09-19',
-    kind: 'essay',
-  },
-];
 
 export interface ToolRow {
   code: string;
