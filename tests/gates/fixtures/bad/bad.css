@@ -1,0 +1,21 @@
+/* ============================================================
+   bad.css — the stylesheet of the BAD gate fixture. Every rule below
+   exists to break a gate; see tests/gates/README.md for the list.
+   Colours are tokens from the real tokens.css; the only literal colour
+   in the fixture is the inline style="color:red" that L-04 must catch.
+   Deliberately absent: a prefers-reduced-motion rule (G-11) and any use
+   of the project faces (G-12: the page renders in a fallback serif).
+   ============================================================ */
+@import url('/tokens.css');
+
+body { margin: 0; padding: 0 16px; font: 400 16px / 1.5 Georgia, serif; }
+.top a { margin-right: 16px; }
+
+.tiny     { font-size: 11px; }                                   /* G-01 */
+.faint    { color: var(--mid); }                                 /* G-02, G-03 */
+.acc-low  { color: var(--accent-01); background: var(--mid); }   /* G-02, G-04 */
+.rounded  { border: 1px solid var(--ink); border-radius: 8px; padding: 8px; }   /* G-07 */
+.shadow   { box-shadow: 0 2px 8px var(--ink); padding: 8px; }    /* G-08 */
+.gradient { background-image: linear-gradient(var(--surface), var(--surface-3)); padding: 8px; }  /* G-08 */
+.short    { display: block; height: 20px; line-height: 20px; overflow: hidden; }  /* G-05 */
+.wide     { width: 1600px; border-top: 1px solid var(--ink); }   /* G-06 */

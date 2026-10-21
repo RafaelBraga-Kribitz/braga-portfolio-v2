@@ -10,6 +10,7 @@
     "check": "astro check",
     "test:unit": "node --test \"tests/unit/**/*.test.mjs\"",
     "test:gates": "node scripts/gates/run.mjs",
+    "test:gates:self": "node scripts/gates/run.mjs --dir tests/gates/fixtures --expect tests/gates/fixtures/expect.json",
     "lint:style": "node scripts/lint/no-inline-style.mjs",
     "lint:css": "node scripts/lint/css-rules.mjs",
     "lint": "npm run lint:style && npm run lint:css",

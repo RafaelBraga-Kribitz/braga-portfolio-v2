@@ -1,0 +1,37 @@
+---
+// Root: a static redirect page to /en/ (BUILD-BRIEF §4). No script: a
+// meta refresh of 0 does the work, the canonical names /en/, and a plain
+// pair of links serves a browser that does not follow the refresh. It
+// still carries what every page carries (skip link, one main, one h1,
+// the two theme-color metas, the hreflang pair), so it reads as part of
+// the site for the moment it is seen.
+import '../styles/global.css';
+import { site } from '../lib/site';
+import { absolute, alternates, route } from '../lib/routes';
+
+const en = route('home', 'en');
+const de = route('home', 'de');
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="refresh" content={`0; url=${en}`}>
+    <title>{site.name}</title>
+    <meta name="description" content="Portfolio of Rafael Braga-Kribitz, Marketing Data Analyst. English and German.">
+    <link rel="canonical" href={absolute(en)}>
+    {alternates('home').map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#E4E6EA">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#191A1D">
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <main id="main" class="grid-container">
+      <article class="doc section">
+        <h1>{site.name}</h1>
+        <p><a href={en} hreflang="en">English <span class="glyph" aria-hidden="true">→</span></a> · <a href={de} hreflang="de" lang="de">Deutsch <span class="glyph" aria-hidden="true">→</span></a></p>
+      </article>
+    </main>
+  </body>
+</html>

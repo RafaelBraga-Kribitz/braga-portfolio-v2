@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 
 import * as ab from '../../src/lib/tools/ab-sample-size.mjs';
 import * as cm from '../../src/lib/tools/confusion-matrix.mjs';
+import * as fmt from '../../src/lib/format.mjs';
 
 const NBSP = ' ';
 const EN_DASH = '–';
@@ -59,19 +60,23 @@ test('A/B · a small lift on a thin baseline is over the ceiling', () => {
   assert.equal(p.weeks, 121);
   assert.equal(p.withinCeiling, false);
   assert.equal(p.verdict('en'), `Not testable at this traffic. 845${NBSP}days exceeds the eight-week ceiling; accept a larger lift or add traffic.`);
+  // German: the days are the subject here, so nominative "Tage" (not the dative "Tagen" of "in 40 Tagen")
+  assert.equal(p.verdict('de'), `Bei diesem Traffic nicht testbar. 845${NBSP}Tage überschreiten die Acht-Wochen-Grenze; einen größeren Lift akzeptieren oder Traffic hinzufügen.`);
+  assert.equal(p.kpis('en')[2].note, 'over the 8-week ceiling');
 });
 
-test('A/B · a lifted rate at or above 100 % is Infinity, shown as —', () => {
+test('A/B · a lifted rate at or above 100 % is Infinity, shown as the en dash (D-030)', () => {
   assert.equal(ab.samplePerArm(80, 30, '80'), Infinity);   // p2 = 1.04
-  assert.equal(ab.fmtN(Infinity), '—');
+  assert.equal(ab.fmtN(Infinity), EN_DASH);
   assert.throws(() => ab.samplePerArm(4, 10, '95'), RangeError);
 });
 
 /* The specimen's wording with the brief's typography: NBSP inside figures,
-   the spaced en dash as the English dash (O-03), en-GB separators. */
+   the spaced en dash as the English dash (O-03) with an NBSP before it
+   (format.dash), en-GB separators. */
 test('A/B · verdict, KPIs and live equation of the default', () => {
   const p = ab.plan({ base: 4, lift: 10, traffic: 2000, power: '80' });
-  assert.equal(p.verdict('en'), `Testable. 39,473 visitors per arm reach a 10% lift in 40${NBSP}days ${EN_DASH} run 6 full weeks.`);
+  assert.equal(p.verdict('en'), `Testable. 39,473 visitors per arm reach a 10% lift in 40${NBSP}days${NBSP}${EN_DASH} run 6 full weeks.`);
   const k = p.kpis('en');
   assert.deepEqual(k.map((x) => x.value), ['39,473', '78,946', `40${NBSP}d`, `0.40${NBSP}pp`]);
   assert.equal(k[2].note, '6 full weeks · within the 8-week ceiling');
@@ -81,7 +86,7 @@ test('A/B · verdict, KPIs and live equation of the default', () => {
 
 test('A/B · German draft uses de-AT separators and NBSP before %', () => {
   const p = ab.plan({ base: 4, lift: 10, traffic: 2000, power: '80' });
-  assert.equal(p.verdict('de'), `Testbar. 39.473 Besucher pro Arm erreichen einen Lift von 10${NBSP}% in 40${NBSP}Tagen ${EN_DASH} 6 volle Wochen laufen lassen.`);
+  assert.equal(p.verdict('de'), `Testbar. 39.473 Besucher pro Arm erreichen einen Lift von 10${NBSP}% in 40${NBSP}Tagen${NBSP}${EN_DASH} 6 volle Wochen laufen lassen.`);
   assert.equal(p.kpis('de')[3].value, `0,40${NBSP}PP`);
   assert.equal(p.kpis('de')[3].note, `4,0${NBSP}% → 4,40${NBSP}%`);
 });
@@ -180,7 +185,7 @@ test('CM · the Churn default rebuilds v1\'s counts exactly and reads the verdic
   assert.equal(e.totalCost, 4400);
   assert.ok(Math.abs(e.costPerCase - 8.8) < 1e-12);
   assert.equal(e.verdict('en'), 'Errors cost €4,400 across 500 cases: 91% from the 20 churners missed, 9% from the 40 false alarms.');
-  assert.equal(e.verdict('de'), `Fehler kosten €${NBSP}4.400 über 500 Fälle: 91${NBSP}% durch die 20 übersehenen Abwanderer, 9${NBSP}% durch die 40 Fehlalarme.`);
+  assert.equal(e.verdict('de'), `Fehler kosten €${NBSP}4.400 über 500 Fälle: 91${NBSP}% durch 20 übersehene Abwanderer, 9${NBSP}% durch 40 Fehlalarme.`);
   const k = e.kpis('en');
   assert.deepEqual(k.map((x) => x.value), ['88.0%', '66.7%', '80.0%', '90.0%', '94.7%', '0.727', '10.0%', '20.0%', '€4,400', '€8.80']);
   assert.deepEqual(k.filter((x) => x.accent).map((x) => x.key), ['totalCost']);   // one accent figure (D-025)
@@ -197,6 +202,26 @@ test('CM · the Fraud and Leads presets rebuild v1 within rounding', () => {
   assert.deepEqual([l.tp, l.fp, l.fn, l.tn], [60, 20, 40, 180]);
 });
 
+/* Singular counts: n 100, prevalence 2 %, sensitivity 50 %, specificity 99 %, Churn wording.
+     positives = 2 ; TP = 1 ; FN = 1 ; negatives = 98 ; TN = round(97.02) = 97 ; FP = 1
+     cost at €10 per FP, €200 per FN: 10 + 200 = €210 ; FN share 200 / 210 = 95.2 % → 95 % ; FP share 10 / 210 = 4.8 % → 5 % */
+test('CM · one miss and one false alarm read in the singular', () => {
+  const e = cm.evaluate({ n: 100, prevalence: 2, sensitivity: 50, specificity: 99, costFP: 10, costFN: 200, preset: 'Churn' });
+  assert.deepEqual([e.tp, e.fn, e.fp, e.tn], [1, 1, 1, 97]);
+  assert.equal(e.totalCost, 210);
+  assert.equal(e.verdict('en'), 'Errors cost €210 across 100 cases: 95% from the 1 churner missed, 5% from the 1 false alarm.');
+  assert.equal(e.verdict('de'), `Fehler kosten €${NBSP}210 über 100 Fälle: 95${NBSP}% durch 1 übersehenen Abwanderer, 5${NBSP}% durch 1 Fehlalarm.`);
+});
+
+/* Errors at a price of zero: the Churn counts (FN 20, FP 40) at €0 and €0.
+   The verdict must not claim there are no errors. */
+test('CM · errors priced at zero are stated, not hidden', () => {
+  const e = cm.evaluate({ ...cm.DEFAULTS, costFP: 0, costFN: 0 });
+  assert.deepEqual([e.fn, e.fp, e.totalCost], [20, 40, 0]);
+  assert.equal(e.verdict('en'), 'At these prices the 20 churners missed and the 40 false alarms cost €0.');
+  assert.equal(e.verdict('de'), `Bei diesen Preisen fallen für 20 übersehene Abwanderer und 40 Fehlalarme €${NBSP}0 an.`);
+});
+
 test('CM · zero errors and zero denominators do not divide by zero', () => {
   const e = cm.evaluate({ n: 1000, prevalence: 10, sensitivity: 100, specificity: 100, costFP: 10, costFN: 10 });
   assert.equal(e.totalCost, 0);
@@ -209,6 +234,11 @@ test('CM · zero errors and zero denominators do not divide by zero', () => {
 /* ============================================================
    Formatting (format.js conventions, D-031)
    ============================================================ */
+test('format · the tools use the shared formatter (src/lib/format.mjs)', () => {
+  for (const name of ['number', 'currency', 'percent', 'unit', 'dash']) assert.equal(ab[name], fmt[name], name);
+  for (const name of ['number', 'currency', 'percent', 'unit']) assert.equal(cm[name], fmt[name], name);
+});
+
 test('format · en-GB and de-AT separators, NBSP, real minus', () => {
   assert.equal(ab.number(1240991, 'en'), '1,240,991');
   assert.equal(ab.number(1240991, 'de'), '1.240.991');

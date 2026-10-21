@@ -1,0 +1,71 @@
+---
+// 404 — Templates specimen 01 (Not found), one to one: an error treated as
+// data. The opener (trail, the 404 numeral, the h1, the lead), the metrics
+// callout, Fig. 404-1 as a 2 × 2 classification grid whose "1" is the
+// page's one accent figure (D-025), the aside on limitations, the decision,
+// the way back, the report link and the end bar. English, with the
+// specimen's German line for German readers (GitHub Pages serves one
+// 404.html). Astro writes it to dist/404.html.
+import Base from '@/layouts/Base.astro';
+import DocOpener from '@/components/DocOpener.astro';
+import Callout from '@/components/Callout.astro';
+import DocEnd from '@/components/DocEnd.astro';
+import { route } from '@/lib/routes';
+import { site } from '@/lib/site';
+import { dash, NBSP } from '@/lib/format.mjs';
+
+const lang = 'en' as const;
+const home = route('home', lang);
+const homeDe = route('home', 'de');
+const n1 = `n${NBSP}=${NBSP}1`;
+const report = `mailto:${site.email}?subject=${encodeURIComponent('Broken link')}`;
+const matrixLabel = 'Two by two matrix: you expected a page and it exists, all indexed pages; you expected a page and it does not exist, one, this request; you did not expect a page and it exists, zero; you did not expect a page and none exists, the rest of the web';
+---
+<Base lang={lang} page="notfound" title="No such page" description="The address resolves to nothing in this document. The index lists everything that exists." noindex>
+  <article class="doc" lang="en">
+    <DocOpener
+      lang={lang}
+      trail={[
+        { label: '§ Index', href: home },
+        { label: '404', current: true },
+        { label: `Observation · ${n1}`, sep: '·' },
+      ]}
+      numeral="404"
+      title="No such page."
+      lead="The address resolves to nothing in this document. The index lists everything that exists, and it is short enough to read."
+    />
+    <Callout type="metrics" title="Readings">
+      <ul>
+        <li><b>0</b><span>Pages at this address</span></li>
+        <li><b>100%</b><span>Indexed addresses that resolve</span></li>
+        <li><b>1</b><span>Request recorded, in the host’s log only</span></li>
+      </ul>
+    </Callout>
+    <figure class="fig" data-width="wide">
+      <figcaption><span class="fig-label">Fig. 404-1 · classification of this request</span><span class="fig-title">One false positive: a page was expected where none exists.</span></figcaption>
+      <div class="fig-matrix" role="img" aria-label={matrixLabel}>
+        <div></div>
+        <div class="fig-matrix-head">Page exists</div>
+        <div class="fig-matrix-head">No page exists</div>
+        <div class="fig-matrix-head" data-row>You expected a page</div>
+        <div class="fig-matrix-cell"><span class="fig-matrix-name">All indexed pages</span><span class="fig-matrix-tag">True positive</span></div>
+        <div class="fig-matrix-cell" data-accent><span class="fig-matrix-count">1</span><span class="fig-matrix-tag">False positive · this request</span></div>
+        <div class="fig-matrix-head" data-row>You did not</div>
+        <div class="fig-matrix-cell"><span class="fig-matrix-count">0</span><span class="fig-matrix-tag">False negative · nothing is hidden</span></div>
+        <div class="fig-matrix-cell"><span class="fig-matrix-name">The rest of the web</span><span class="fig-matrix-tag">True negative</span></div>
+      </div>
+      <p class="fig-source"><b>Source:</b> this request, now. Precision of the index: 100%{dash('en')}every address it lists resolves. Recall: 100%{dash('en')}nothing that exists is missing from it.</p>
+    </figure>
+    <Callout type="aside" title="Limitations">
+      <p>This page cannot tell where the address came from: a typo, an old link, or a page that moved. It records nothing about you beyond the host’s standard log. One missing page is not a trend; {n1}.</p>
+    </Callout>
+    <h2 id="nf-decision">Decision</h2>
+    <p>Return to the index. If a link on this site brought you here, the link is the error, not you{dash('en')}say so and it will be fixed.</p>
+    <Callout type="cta" title="Way back">
+      <a href={home}>Back to the index <span class="glyph" aria-hidden="true">→</span></a>
+    </Callout>
+    <p class="link-line"><a href={report}>Report the broken link <span class="glyph" aria-hidden="true">↗</span></a></p>
+    <p class="label" lang="de">DE · Beobachtung · {n1} · Keine solche Seite. · Die Adresse führt zu nichts in diesem Dokument. Der Index listet alles, was es gibt, und er ist kurz genug zum Lesen. · Abb. 404-1 · Ein falsch Positives: eine Seite wurde erwartet, wo keine ist. · <a href={homeDe} hreflang="de">Zurück zum Index <span class="glyph" aria-hidden="true">→</span></a></p>
+    <DocEnd lang={lang} back={{ href: home, label: 'Index' }} />
+  </article>
+</Base>

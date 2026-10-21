@@ -2,7 +2,8 @@
 // 04 · Tools index — Site pattern 03 (Index): section heading + listing.
 // Two rows, 04-01 and 04-02 (BUILD-BRIEF §4). The lead keeps the
 // owner's copy from handoff/source-content/content/data/home.yaml
-// (tools.leadParagraphs[0]) with the brief's spaced en dash (O-03).
+// (tools.leadParagraphs[0]) with the brief's spaced en dash (O-03,
+// format.dash: NBSP before it so no line starts with the dash).
 // German strings are drafts: the DE page carries the in-build mark
 // "Entwurf · Freigabe ausstehend" (D-011, O-05).
 import Base from '@/layouts/Base.astro';
@@ -13,6 +14,7 @@ import StatusMark from '@/components/StatusMark.astro';
 import { t, type Lang } from '@/lib/i18n';
 import { route } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
+import { tools, toolsProse } from '@/lib/catalogue';
 
 export function getStaticPaths() {
   return LANGS.map((lang) => ({ params: { lang } }));
@@ -20,37 +22,29 @@ export function getStaticPaths() {
 
 const lang = Astro.params.lang as Lang;
 
+// One <h1> per page (BUILD-BRIEF §6 rule 6): the claim is this page's
+// title. The rows and the prose come from src/lib/catalogue.ts, which the
+// home page's 04 Tools section shares.
 const copy = {
   en: {
     title: 'Tools',
     description: 'Two small instruments: a confusion matrix with a cost per error, and an A/B sample-size bench with an eight-week ceiling.',
     claim: 'Change an assumption.',
-    prose: 'Some arguments are easier to make with a control than with a paragraph. These are small, self-contained instruments – nothing to install, no account, and no data leaving the browser.',
-    head: { title: 'Tool', meta: 'Discipline / status' },
-    tools: {
-      cm: { title: 'Confusion matrix', sub: 'Eight rates and a cost per error from four numbers.', domain: 'Classification' },
-      ab: { title: 'A/B sample size', sub: 'Visitors per arm, duration and the eight-week ceiling from a baseline and a lift.', domain: 'Experiments' },
-    },
   },
   de: {
     title: 'Werkzeuge',
     description: 'Zwei kleine Instrumente: eine Konfusionsmatrix mit Kosten je Fehler und eine A/B-Stichprobenbank mit Acht-Wochen-Grenze.',
     claim: 'Eine Annahme ändern.',
-    prose: 'Manche Argumente lassen sich mit einem Regler leichter führen als mit einem Absatz. Dies sind kleine, in sich geschlossene Instrumente – nichts zu installieren, kein Konto, keine Daten verlassen den Browser.',
-    head: { title: 'Werkzeug', meta: 'Disziplin / Status' },
-    tools: {
-      cm: { title: 'Konfusionsmatrix', sub: 'Acht Raten und Kosten je Fehler aus vier Zahlen.', domain: 'Klassifikation' },
-      ab: { title: 'A/B-Stichprobengröße', sub: 'Besucher pro Arm, Dauer und die Acht-Wochen-Grenze aus Basisrate und Lift.', domain: 'Experimente' },
-    },
   },
 }[lang];
 ---
 <Base lang={lang} page="tools" title={copy.title} description={copy.description} current="04">
   <section class="section">
-    <SectionHeading number="04" word={t(lang, 'door.tools')} claim={copy.claim} prose={copy.prose} as="h2" />
-    <Listing head={{ index: t(lang, 'index'), title: copy.head.title, meta: copy.head.meta, trail: t(lang, 'open') }}>
-      <ListingRow code="04-01" title={copy.tools.cm.title} sub={copy.tools.cm.sub} meta={[copy.tools.cm.domain]} status="functional" lang={lang} trail={t(lang, 'open')} href={route('tools.confusion-matrix', lang)} />
-      <ListingRow code="04-02" title={copy.tools.ab.title} sub={copy.tools.ab.sub} meta={[copy.tools.ab.domain]} status="functional" lang={lang} trail={t(lang, 'open')} href={route('tools.ab-sample-size', lang)} />
+    <SectionHeading number="04" word={t(lang, 'door.tools')} claim={copy.claim} prose={toolsProse(lang)} as="h1" />
+    <Listing head={{ index: t(lang, 'index'), title: t(lang, 'tool'), meta: t(lang, 'discipline-status'), trail: t(lang, 'open') }}>
+      {tools(lang).map((row) => (
+        <ListingRow code={row.code} title={row.title} sub={row.sub} meta={[row.domain]} status={row.status} lang={lang} trail={t(lang, 'open')} href={route(row.page, lang)} />
+      ))}
     </Listing>
     {lang === 'de' && <div class="doc-meta"><StatusMark state="in-build" lang={lang} label={t(lang, 'draft')} /></div>}
   </section>

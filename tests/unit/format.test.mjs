@@ -10,7 +10,7 @@ import {
 
 describe('format · constants', () => {
   it('are the typographic characters, not ASCII', () => {
-    assert.equal(NBSP, ' ');
+    assert.equal(NBSP, '\u00A0');
     assert.equal(MINUS, '−');
     assert.equal(EN_DASH, '–');
   });

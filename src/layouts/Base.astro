@@ -23,7 +23,10 @@ interface Props {
 
 const { lang, page, title, description, current, hasCode = false, noindex = false } = Astro.props;
 const canonical = absolute(route(page, lang));
-const alts = alternates(page);
+// The 404 has no German twin (one 404.html, English with the German
+// line), so it declares no hreflang pair: an hreflang="de" pointing at
+// an English page would be false.
+const alts = page === 'notfound' ? [] : alternates(page);
 const feed = absolute('/feed.xml');
 ---
 <!doctype html>

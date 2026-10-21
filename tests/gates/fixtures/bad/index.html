@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bad fixture · Gates</title>
+<!-- L-05: no meta description, one theme-color only -->
+<meta name="theme-color" content="rgb(228 230 234)">
+<!-- L-02: an incomplete alternate set (no x-default; the de twin does not exist) -->
+<link rel="alternate" hreflang="en" href="/bad/">
+<link rel="alternate" hreflang="de" href="/de/bad/">
+<link rel="stylesheet" href="/bad/bad.css">
+<!-- G-13, L-03: a third-party script (the runner blocks the request and records it) -->
+<script src="https://cdn.jsdelivr.net/npm/left-pad@1.3.0/index.js"></script>
+</head>
+<body>
+<!-- G-10: no skip link; the first tab stop is a navigation link; no footer -->
+<header class="top">
+  <nav aria-label="Index">
+    <a href="/clean/">Clean</a>
+    <a href="/missing/">Missing page</a><!-- L-01 -->
+  </nav>
+</header>
+<main id="main">
+  <h1>Bad fixture</h1>
+  <h1>A second h1</h1><!-- G-09 -->
+  <h2>Level two</h2>
+  <h4>Skipped level four</h4><!-- G-09 -->
+  <p class="tiny">Eleven-pixel footnote text.</p>
+  <p class="faint">Set in the mid grey.</p>
+  <p class="acc-low">Accent figure on mid grey.</p>
+  <p style="color:red">Inline red text.</p><!-- L-04 -->
+  <div class="rounded">Rounded box.</div>
+  <div class="shadow">Shadowed box.</div>
+  <div class="gradient">Gradient box.</div>
+  <a class="short" href="/clean/">Twenty-pixel target</a>
+  <div class="wide">A rule 1600px wide.</div>
+</main>
+</body>
+</html>

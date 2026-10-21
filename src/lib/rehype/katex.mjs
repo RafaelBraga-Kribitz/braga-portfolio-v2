@@ -8,8 +8,15 @@
 // A formula KaTeX cannot parse fails the build, naming the file and the
 // formula: the error fallback would render red text with an inline style,
 // which the design system forbids.
+//
+// KaTeX writes <math xmlns="http://www.w3.org/1998/Math/MathML">; Sätteri's
+// htmlToHast stores that attribute as ":xmlns", which serialises as an
+// invalid attribute name. In HTML the parser puts <math> in the MathML
+// namespace on its own, so the attribute is dropped before parsing.
 import katex from 'katex';
 import { htmlToHast } from 'satteri';
+
+const MATHML_XMLNS = / xmlns="http:\/\/www\.w3\.org\/1998\/Math\/MathML"/g;
 
 /** @param {string[] | undefined} classes @param {string} name */
 const has = (classes, name) => Array.isArray(classes) && classes.includes(name);
@@ -38,7 +45,7 @@ export default function katexPlugin(options = {}) {
           const where = ctx.fileURL ? ctx.fileURL.pathname : 'markdown';
           throw new Error(`KaTeX could not render ${displayMode ? 'display' : 'inline'} math in ${where}: ${error instanceof Error ? error.message : String(error)}\n  ${value}`);
         }
-        const tree = htmlToHast(html, { fragment: true });
+        const tree = htmlToHast(html.replace(MATHML_XMLNS, ''), { fragment: true });
         const nodes = 'children' in tree ? tree.children : [];
         ctx.replaceNode(inPre ? parent : node, nodes);
       },

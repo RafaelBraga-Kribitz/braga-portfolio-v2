@@ -7,8 +7,9 @@ interface Props {
   claim: string;
   prose?: string;
   link?: { href: string; label: string };
-  /** Heading level of the claim; h2 on a page with its own h1. */
-  as?: 'h2' | 'h3';
+  /** Heading level of the claim: h2 on a page with its own h1, h1 when
+      the claim is the page's title (an index page). */
+  as?: 'h1' | 'h2' | 'h3';
   id?: string;
 }
 

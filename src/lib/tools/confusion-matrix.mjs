@@ -26,7 +26,7 @@
 // 98.19 % to 98.2 %, so its rebuilt counts are 45 / 179 / 5 / 9771 against
 // v1's 45 / 180 / 5 / 9770 (an assumption, recorded).
 
-import { NBSP, EN_DASH, number, currency, percent, unit } from './ab-sample-size.mjs';
+import { NBSP, EN_DASH, number, currency, percent, unit } from '../format.mjs';
 export { NBSP, EN_DASH, number, currency, percent, unit };
 
 /* ---------- presets (v1 scenarios as rates) ---------- */
@@ -88,15 +88,23 @@ export function cost({ fp, fn, n }, costFP, costFN) {
   };
 }
 
-/* ---------- words ---------- */
+/* ---------- words ----------
+   Count phrases take the singular at 1 ("the 1 churner missed"). The
+   German draft drops the article so one strong declension serves every
+   count in the accusative: "durch 20 übersehene Abwanderer", "durch 1
+   übersehenen Abwanderer" (all four nouns are masculine). */
 const WORDS = {
   en: {
-    positive: { Churn: 'churners', Fraud: 'frauds', Leads: 'qualified leads', default: 'positives' },
-    missed: 'missed',
-    falseAlarms: 'false alarms',
-    verdict: (c, k, s) =>
-      `Errors cost ${c} across ${k.n} cases: ${s.fnShare} from the ${k.fn} ${s.positive} ${s.missed}, ${s.fpShare} from the ${k.fp} ${s.falseAlarms}.`,
-    noErrors: (k) => `No error cost across ${k.n} cases: every positive is flagged and no negative is.`,
+    // [singular, plural] of the positive class, by preset vocabulary
+    positive: {
+      Churn: ['churner', 'churners'], Fraud: ['fraud', 'frauds'],
+      Leads: ['qualified lead', 'qualified leads'], default: ['positive', 'positives'],
+    },
+    missed: (k, pos) => `the ${k} ${pos} missed`,
+    falseAlarms: (k, one) => `the ${k} ${one ? 'false alarm' : 'false alarms'}`,
+    verdict: (c, n, s) => `Errors cost ${c} across ${n} cases: ${s.fnShare} from ${s.missed}, ${s.fpShare} from ${s.falseAlarms}.`,
+    free: (zero, s) => `At these prices ${s.missed} and ${s.falseAlarms} cost ${zero}.`,
+    noErrors: (n) => `No error cost across ${n} cases: every positive is flagged and no negative is.`,
     perCase: 'per case',
     kpis: {
       accuracy: ['Accuracy', '(TP + TN) / n'],
@@ -113,12 +121,16 @@ const WORDS = {
   },
   de: {
     // Entwurf · Freigabe ausstehend (O-05)
-    positive: { Churn: 'Abwanderer', Fraud: 'Betrugsfälle', Leads: 'qualifizierte Leads', default: 'Positive' },
-    missed: 'übersehenen',
-    falseAlarms: 'Fehlalarme',
-    verdict: (c, k, s) =>
-      `Fehler kosten ${c} über ${k.n} Fälle: ${s.fnShare} durch die ${k.fn} ${s.missed} ${s.positive}, ${s.fpShare} durch die ${k.fp} ${s.falseAlarms}.`,
-    noErrors: (k) => `Keine Fehlerkosten über ${k.n} Fälle: jeder Positive wird erkannt und kein Negativer.`,
+    positive: {
+      Churn: ['Abwanderer', 'Abwanderer'], Fraud: ['Betrugsfall', 'Betrugsfälle'],
+      Leads: ['qualifizierten Lead', 'qualifizierte Leads'], default: ['Positiven', 'Positive'],
+    },
+    missed: (k, pos, one) => `${k} ${one ? 'übersehenen' : 'übersehene'} ${pos}`,
+    falseAlarms: (k, one) => `${k} ${one ? 'Fehlalarm' : 'Fehlalarme'}`,
+    verdict: (c, n, s) => `Fehler kosten ${c} über ${n} Fälle: ${s.fnShare} durch ${s.missed}, ${s.fpShare} durch ${s.falseAlarms}.`,
+    // "für" keeps the accusative of `missed`, as "durch" does above
+    free: (zero, s) => `Bei diesen Preisen fallen für ${s.missed} und ${s.falseAlarms} ${zero} an.`,
+    noErrors: (n) => `Keine Fehlerkosten über ${n} Fälle: jeder Positive wird erkannt und kein Negativer.`,
     perCase: 'pro Fall',
     kpis: {
       accuracy: ['Genauigkeit', '(TP + TN) / n'],
@@ -145,16 +157,22 @@ export function evaluate({ n, prevalence, sensitivity, specificity, costFP, cost
   const m = metrics(k);
   const c = cost(k, costFP, costFN);
 
+  /** @param {'en'|'de'} [lang] */
   const verdict = (lang = 'en') => {
     const w = WORDS[lang] ?? WORDS.en;
-    const kk = { n: number(k.n, lang), fn: number(k.fn, lang), fp: number(k.fp, lang) };
-    if (c.totalCost === 0) return w.noErrors(kk);
-    return w.verdict(currency(c.totalCost, lang), kk, {
+    const cases = number(k.n, lang);
+    if (k.fp + k.fn === 0) return w.noErrors(cases);
+    const pos = (w.positive[preset] ?? w.positive.default)[k.fn === 1 ? 0 : 1];
+    const phrases = {
+      missed: w.missed(number(k.fn, lang), pos, k.fn === 1),
+      falseAlarms: w.falseAlarms(number(k.fp, lang), k.fp === 1),
+    };
+    // errors exist but both prices are zero: say so, never "no errors"
+    if (c.totalCost === 0) return w.free(currency(0, lang), phrases);
+    return w.verdict(currency(c.totalCost, lang), cases, {
+      ...phrases,
       fnShare: percent(Math.round(c.fnShare * 100), lang, 0),
       fpShare: percent(Math.round(c.fpShare * 100), lang, 0),
-      positive: w.positive[preset] ?? w.positive.default,
-      missed: w.missed,
-      falseAlarms: w.falseAlarms,
     });
   };
 

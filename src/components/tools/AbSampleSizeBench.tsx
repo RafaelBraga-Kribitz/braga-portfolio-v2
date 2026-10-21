@@ -103,7 +103,7 @@ const T = {
   en: {
     region: 'A/B sample size bench',
     head: '04-02 · A/B testing · sample size',
-    headRight: ['Two-sided · ', ' = 0.05 · equal arms'],
+    headRight: ['Two-sided · ', ' = 0.05 · equal arms'],   // NBSP: "α = 0.05" never breaks (format.equation)
     preset: 'Preset',
     inputs: 'Inputs',
     base: 'Baseline',
@@ -122,7 +122,7 @@ const T = {
   de: {
     region: 'A/B-Stichprobengröße',
     head: '04-02 · A/B-Test · Stichprobengröße',
-    headRight: ['Zweiseitig · ', ' = 0,05 · gleiche Arme'],
+    headRight: ['Zweiseitig · ', ' = 0,05 · gleiche Arme'],
     preset: 'Vorlage',
     inputs: 'Eingaben',
     base: 'Basisrate',
@@ -202,11 +202,14 @@ export default function AbSampleSizeBench({ lang = 'en' }: { lang?: Lang }) {
 
           <div class="bench-figure">
             <div class="bench-figure-head">
-              <span class="label">{t.fig}</span>
+              <span class="label" id="ab-fig-label">{t.fig}</span>
               <span class="label dim">{t.figNote}</span>
             </div>
-            <div class="bench-figure-scroll">
-              <svg viewBox={`0 0 640 260`} role="img" aria-label={t.figAlt}>
+            {/* Below ~1060px the 640px chart scrolls sideways; the scroller
+                takes focus so a keyboard can scroll it (WCAG 2.1.1, axe
+                scrollable-region-focusable). */}
+            <div class="bench-figure-scroll" tabIndex={0} role="group" aria-labelledby="ab-fig-label">
+              <svg viewBox="0 0 640 260" role="img" aria-label={t.figAlt}>
                 {c.yTicks.map((yt) => (
                   <g key={yt.label}>
                     <line class="gridline" x1={CHART.x0} y1={yt.y} x2={CHART.x1} y2={yt.y} />

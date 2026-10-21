@@ -1,0 +1,59 @@
+/* ============================================================
+   fixture.css — the minimal stylesheet of the CLEAN gate fixture.
+   Colours, type sizes and the ten @font-face rules come from the real
+   design-system/tokens.css (symlinked at /tokens.css); the faces load from
+   the real public/fonts (symlinked at /fonts/). No colour is written here:
+   every value is a token.
+   ============================================================ */
+@import url('/tokens.css');
+
+/* G-11: the reduced-motion rule sets --dur to 0 (via --dur-reduced) */
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur: var(--dur-reduced); }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { font-variant-numeric: tabular-nums lining-nums slashed-zero; }
+body { margin: 0; font: 400 var(--t-body) / 1.5 var(--font-body); background: var(--surface); color: var(--ink); }
+
+/* the skip link: first tab stop, off-screen until focused, 44px tall */
+.skip {
+  position: absolute; left: var(--gutter); top: 8px; z-index: 100;
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px;
+  background: var(--surface); color: var(--ink); border: 1px solid var(--ink);
+  font: 400 var(--t-mono-sm) / 1 var(--font-mono); text-transform: uppercase; text-decoration: none;
+  transform: translateY(-200%);
+}
+.skip:focus-visible { transform: none; }
+
+.bar { display: flex; flex-wrap: wrap; align-items: center; gap: 0 16px; padding: 0 var(--gutter); border-bottom: 1px solid var(--mid); }
+.bar a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; color: var(--ink); text-decoration: none; transition: background-color var(--dur) var(--ease, ease); }
+.bar a:hover { background: var(--surface-2); }
+.mark { font-weight: 800; letter-spacing: -0.07em; }
+.bar nav { display: flex; gap: 16px; }
+.door { font: 400 var(--t-mono) / 1 var(--font-mono); text-transform: uppercase; }
+
+main { max-width: calc(60ch + 2 * var(--gutter)); padding: 0 var(--gutter) 64px; }
+h1 { font: 700 var(--t-h1) / 1.1 var(--font-display); margin: 32px 0 16px; }
+h2 { font: 700 var(--t-h3) / 1.2 var(--font-display); margin: 48px 0 16px; }
+p { margin: 0 0 16px; }
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.label { font: 400 var(--t-mono-sm) / 1.4 var(--font-mono); text-transform: uppercase; color: var(--ink-2); }
+.figure { color: var(--accent-01); font-weight: 700; }
+
+/* the permitted overflow: a table scrolls inside its wrapper, and only there */
+.table-scroll { overflow-x: auto; border-top: 1px solid var(--ink); margin: 0 0 32px; }
+.table-scroll table { border-collapse: collapse; min-width: 720px; }
+.table-scroll th, .table-scroll td { text-align: left; padding: 8px 16px 8px 0; border-bottom: 1px solid var(--mid); }
+
+/* the one permitted inline form: a custom property for a bar's width */
+.ev { height: 8px; background: var(--surface-3); margin: 0 0 32px; }
+.ev-fill { display: block; height: 8px; width: var(--w); background: var(--ink); }
+
+/* SVG text is 12 user units; the viewBox only ever scales it up */
+.chart { display: block; width: 100%; max-width: 480px; margin: 0 0 32px; }
+.chart text { fill: var(--ink-2); font: 400 12px var(--font-mono); }
+.chart rect { fill: var(--ink); }
+
+footer { border-top: 1px solid var(--mid); padding: 16px var(--gutter); }
+footer p { margin: 0; }

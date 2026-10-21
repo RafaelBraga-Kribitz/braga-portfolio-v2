@@ -32,7 +32,8 @@
              <div class="label">Per arm</div><div class="kpi-value">39,473</div><div class="kpi-note">visitors</div></div> ×4</div>
            <div class="bench-figure"><div class="bench-figure-head"><span class="label">Fig. 04-02 · …</span>
              <span class="label dim">log scale · lift 2–50%</span></div>
-             <div class="bench-figure-scroll"><svg viewBox="0 0 640 260">…</svg></div></div>
+             <div class="bench-figure-scroll" tabindex="0" role="group" aria-labelledby="…">
+               <svg viewBox="0 0 640 260" role="img" aria-label="…">…</svg></div></div>
          </div>
        </div>
        <div class="bench-rule grid rule-t"><div class="col-4 label">Rule</div>
@@ -82,7 +83,9 @@
 /* The chart keeps the specimen's 640 × 260 viewBox. Its text is CSS 12px,
    so the SVG never scales below 1:1 (G-01 measures after viewBox
    scaling, A-04): width 100% above 640px, a horizontal scroller below
-   (content inside an overflow-x wrapper is allowed by G-06). */
+   (content inside an overflow-x wrapper is allowed by G-06). The
+   scroller is focusable so a keyboard can scroll it; the ink ring of
+   base.css marks it. */
 .bench-figure-scroll { margin-top: 16px; overflow-x: auto; min-width: 0; }
 .bench-figure svg { display: block; width: 100%; min-width: 640px; height: auto; overflow: visible; }
 
@@ -160,21 +163,22 @@
 .range input[type="range"]::-moz-range-thumb { width: 14px; height: 14px; background: var(--ink); border: 0; border-radius: 0; cursor: pointer; }
 .range input[type="range"]::-moz-focus-outer { border: 0; }
 
-/* button: 28px, mono 12px uppercase, --edge boundary, transparent;
-   hover washes to surface-2. data-variant="ghost" keeps the height and
-   drops the boundary (the Reset of a bench). */
+/* button: the v1 Button (COMPONENT-SOURCE · primitives) under P-02
+   rule 7: one 28px height for both variants, 12px mono uppercase, a 1px
+   --edge boundary, transparent; ink-2 label, hover washes to surface-2
+   and the label goes to ink. data-variant="ghost" is the same box with
+   v1's narrower inset (10px against 14px); nothing moves on hover. */
 .button {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  height: 28px; padding: 0 12px; box-sizing: border-box;
+  height: 28px; padding: 0 14px; box-sizing: border-box;
   font-family: var(--font-mono); font-weight: 400; font-size: var(--t-mono-sm);
   letter-spacing: var(--tracking-label); text-transform: uppercase; line-height: 1;
-  color: var(--ink); background: transparent; border: 1px solid var(--edge); border-radius: 0;
+  color: var(--ink-2); background: transparent; border: 1px solid var(--edge); border-radius: 0;
   cursor: pointer; text-decoration: none; white-space: nowrap;
   transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
 }
-.button:hover { background: var(--surface-2); }
-.button[data-variant="ghost"] { border-color: transparent; color: var(--ink-2); padding-inline: 0; }
-.button[data-variant="ghost"]:hover { color: var(--ink); background: var(--surface-2); padding-inline: 12px; }
+.button:hover { background: var(--surface-2); color: var(--ink); }
+.button[data-variant="ghost"] { padding-inline: 10px; }
 .button:disabled { color: var(--ink-3); cursor: default; background: transparent; }
 
 /* below 768 every control reaches 44px through padding (P-02 rule 7) */
@@ -189,7 +193,7 @@
    predicted one. TP and TN sit on surface-2; FP and FN carry the bad-
    variance tint (D-016, a mark, never type) and the ▲ on their label.
      <div class="cm-matrix" role="table" aria-label="Confusion matrix">
-       <div class="cm-row" role="row"><div class="cm-corner" role="columnheader"></div>
+       <div class="cm-row" role="row"><div class="cm-corner" role="cell"></div>
          <div class="cm-head label" role="columnheader">Predicted positive</div>…</div>
        <div class="cm-row" role="row"><div class="cm-head label" role="rowheader">Actual positive</div>
          <div class="cm-cell" role="cell"><span class="label">TP</span><span class="cm-n">80</span><span class="cm-note">…</span></div>

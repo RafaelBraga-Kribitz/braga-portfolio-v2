@@ -16,7 +16,7 @@
 /** @typedef {'en' | 'de'} Lang */
 
 /** Non-breaking space, U+00A0: the only space allowed inside a figure. */
-export const NBSP = ' ';
+export const NBSP = '\u00A0';
 /** Real minus sign, U+2212. */
 export const MINUS = '−';
 /** En dash, U+2013: ranges and the English prose dash. */
@@ -155,7 +155,7 @@ export function quotes(text, lang = 'en') {
     if (ch !== '"' && ch !== "'") { out += ch; continue; }
     const prev = i > 0 ? text[i - 1] : '';
     const next = i + 1 < text.length ? text[i + 1] : '';
-    const opening = prev === '' || /[\s([{–— ]/.test(prev);
+    const opening = prev === '' || /[\s([{–—\u00A0]/.test(prev);
     if (ch === '"') { out += opening ? q.dl : q.dr; continue; }
     if (opening) { out += /\d/.test(next) ? '’' : q.sl; continue; }
     out += word.test(prev) && word.test(next) ? '’' : q.sr;
@@ -186,22 +186,22 @@ export function dash(lang = 'en') {
 /* hand-computed reference cases (expected strings written by hand, not by the code) */
 /** @type {Case[]} */
 export const CASES = [
-  { name: 'currency 453000', run: (l) => currency(453000, l), en: '€453,000', de: '€ 453.000' },
+  { name: 'currency 453000', run: (l) => currency(453000, l), en: '€453,000', de: '€\u00A0453.000' },
   { name: 'decimal 0.05', run: (l) => number(0.05, l), en: '0.05', de: '0,05' },
   { name: 'integer 1240991', run: (l) => number(1240991, l), en: '1,240,991', de: '1.240.991' },
-  { name: 'date 2026-09-16', run: (l) => date('2026-09-16', l), en: '16 Sep 2026', de: '16. Sep. 2026' },
-  { name: 'unit 38 s', run: (l) => unit(38, 's', l), en: '38 s', de: '38 s' },
-  { name: 'percent −28', run: (l) => percent(-28, l), en: '−28%', de: '−28 %' },
-  { name: 'percent 99.8', run: (l) => percent(99.8, l, 1), en: '99.8%', de: '99,8 %' },
+  { name: 'date 2026-09-16', run: (l) => date('2026-09-16', l), en: '16\u00A0Sep\u00A02026', de: '16.\u00A0Sep.\u00A02026' },
+  { name: 'unit 38 s', run: (l) => unit(38, 's', l), en: '38\u00A0s', de: '38\u00A0s' },
+  { name: 'percent −28', run: (l) => percent(-28, l), en: '−28%', de: '−28\u00A0%' },
+  { name: 'percent 99.8', run: (l) => percent(99.8, l, 1), en: '99.8%', de: '99,8\u00A0%' },
   { name: 'range 2020–2025', run: () => range(2020, 2025), en: '2020–2025', de: '2020–2025' },
-  { name: 'equation α = 0.05', run: (l) => equation('α', 0.05, l), en: 'α = 0.05', de: 'α = 0,05' },
+  { name: 'equation α = 0.05', run: (l) => equation('α', 0.05, l), en: 'α\u00A0=\u00A00.05', de: 'α\u00A0=\u00A00,05' },
   { name: 'ellipsis', run: () => ellipsis('n = 1, 2, ...'), en: 'n = 1, 2, …', de: 'n = 1, 2, …' },
   { name: 'quotes', run: (l) => quotes('He said "no", it\'s done, \'ok\'', l), en: 'He said “no”, it’s done, ‘ok’', de: 'He said „no“, it’s done, ‚ok‘' },
-  { name: 'dash', run: (l) => `a${dash(l)}b`, en: 'a – b', de: 'a – b' },
+  { name: 'dash', run: (l) => `a${dash(l)}b`, en: 'a\u00A0– b', de: 'a\u00A0– b' },
 ];
 
 /** @param {string} s */
-const show = (s) => s.replace(/ /g, '⎵');
+const show = (s) => s.replace(/\u00A0/g, '⎵');
 
 /**
  * Runs every reference case in both languages and reports which pass.

@@ -16,13 +16,16 @@ interface Props {
   trail?: string;
   href: string;
   external?: boolean;
+  /** Language of the title and sub line when it differs from the page
+      (an English project name on a German page). */
+  textLang?: Lang;
 }
 
-const { code, title, sub, meta = [], status, lang, trail, href, external = false } = Astro.props;
+const { code, title, sub, meta = [], status, lang, trail, href, external = false, textLang } = Astro.props;
 ---
 <a class="listing-row" href={href}>
   <span class="lr-index lr-code">{code}</span>
-  <span class="lr-title"><span class="lr-title-main">{title}</span>{sub && <span class="lr-title-sub">{sub}</span>}</span>
+  <span class="lr-title" lang={textLang && textLang !== lang ? textLang : undefined}><span class="lr-title-main">{title}</span>{sub && <span class="lr-title-sub">{sub}</span>}</span>
   <span class="lr-meta">{meta.map((m) => <span class="lr-mono">{m}</span>)}{status && <StatusMark state={status} lang={lang} />}</span>
   <span class="lr-trail lr-year">{trail} <span class="lr-arrow" aria-hidden="true">{external ? '↗' : '→'}</span></span>
 </a>

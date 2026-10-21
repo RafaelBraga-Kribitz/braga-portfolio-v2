@@ -8,15 +8,14 @@
 // Two-sided, α = 0.05, equal arms, normal approximation for two
 // proportions. Limit: no sequential peeking, no more than two arms.
 //
-// Number formatting mirrors handoff/ds-update/proposals/format.js
-// (number · currency · percent · unit) so the island can switch to Agent
-// C's src/lib/format.mjs with an import change once it lands. Spaces
-// inside a figure are U+00A0; the English dash is the spaced en dash
-// (BUILD-BRIEF §3, O-03).
+// Figures are formatted by src/lib/format.mjs (the port of
+// handoff/ds-update/proposals/format.js, D-031): NBSP inside a figure,
+// the language's separators, the real minus, and the spaced en dash as
+// the prose dash (O-03). The formatters are re-exported so the island
+// imports one module.
 
-export const NBSP = ' ';
-export const MINUS = '−';
-export const EN_DASH = '–';
+import { NBSP, MINUS, EN_DASH, number, currency, percent, unit, dash } from '../format.mjs';
+export { NBSP, MINUS, EN_DASH, number, currency, percent, unit, dash };
 
 /* ---------- constants (the specimen's data script, verbatim) ---------- */
 export const Z_A = 1.959964;                              // z at 1 − α/2, α = 0.05
@@ -45,44 +44,15 @@ export const CHART = {
   marker: 10,                      // the accent square
 };
 
-/* ---------- formatting (format.js conventions) ---------- */
-const sep = (lang) => (lang === 'de' ? { group: '.', decimal: ',' } : { group: ',', decimal: '.' });
-
+/* ---------- the specimen's figure format ---------- */
 /**
- * Integer or fixed-decimal figure with the language's separators and the real minus.
- * @param {number} v
- * @param {string} [lang]
- * @param {number|null} [digits] fixed decimals; null keeps the value's own
- * @returns {string}
- */
-export function number(v, lang = 'en', digits = null) {
-  const s = sep(lang);
-  const neg = v < 0;
-  v = Math.abs(v);
-  const d = digits == null ? (Number.isInteger(v) ? 0 : Math.min(6, (String(v).split('.')[1] || '').length)) : digits;
-  const fixed = v.toFixed(d);
-  let [int, frac] = fixed.split('.');
-  int = int.replace(/\B(?=(\d{3})+(?!\d))/g, s.group);
-  return (neg ? MINUS : '') + int + (frac != null && frac.length ? s.decimal + frac : '');
-}
-/** @param {number} v @param {string} [lang] @param {number} [digits] @returns {string} */
-export function currency(v, lang = 'en', digits = 0) {
-  return lang === 'de' ? '€' + NBSP + number(v, lang, digits) : '€' + number(v, lang, digits);
-}
-/** @param {number} v @param {string} [lang] @param {number|null} [digits] @returns {string} */
-export function percent(v, lang = 'en', digits = null) {
-  return number(v, lang, digits) + (lang === 'de' ? NBSP + '%' : '%');
-}
-/** @param {number} v @param {string} u @param {string} [lang] @param {number|null} [digits] @returns {string} */
-export function unit(v, u, lang = 'en', digits = null) {
-  return number(v, lang, digits) + NBSP + u;
-}
-/**
- * The specimen's fmtN: '—' when infinite, 1.23M from a million, grouped below.
- * @param {number} n @param {string} [lang] @returns {string}
+ * The specimen's fmtN: 1.23M from a million, grouped below. An infinite
+ * size (a lifted rate at 100 %, out of the bounds) prints the en dash;
+ * the specimen's em dash is not in the glyph inventory (D-030).
+ * @param {number} n @param {'en'|'de'} [lang] @returns {string}
  */
 export function fmtN(n, lang = 'en') {
-  if (!Number.isFinite(n)) return '—';
+  if (!Number.isFinite(n)) return EN_DASH;
   if (n >= 1e6) return number(n / 1e6, lang, 2) + (lang === 'de' ? NBSP + 'M' : 'M');
   return number(Math.round(n), lang, 0);
 }
@@ -145,9 +115,9 @@ export function xTicks(lang = 'en') {
 const WORDS = {
   en: {
     testable: (per, lift, days, weeks) =>
-      `Testable. ${per} visitors per arm reach a ${lift} lift in ${days} ${EN_DASH} run ${weeks}.`,
-    notTestable: (days) =>
-      `Not testable at this traffic. ${days} exceeds the eight-week ceiling; accept a larger lift or add traffic.`,
+      `Testable. ${per} visitors per arm reach a ${lift} lift in ${days}${dash('en')}run ${weeks}.`,
+    notTestable: (d) =>
+      `Not testable at this traffic. ${unit(d, 'days', 'en')} exceeds the eight-week ceiling; accept a larger lift or add traffic.`,
     weeks: (w) => `${w} full week${w > 1 ? 's' : ''}`,
     days: (d) => unit(d, d === 1 ? 'day' : 'days', 'en'),
     within: 'within the 8-week ceiling',
@@ -159,11 +129,13 @@ const WORDS = {
   de: {
     // Entwurf · Freigabe ausstehend (O-05)
     testable: (per, lift, days, weeks) =>
-      `Testbar. ${per} Besucher pro Arm erreichen einen Lift von ${lift} in ${days} ${EN_DASH} ${weeks} laufen lassen.`,
-    notTestable: (days) =>
-      `Bei diesem Traffic nicht testbar. ${days} überschreiten die Acht-Wochen-Grenze; einen größeren Lift akzeptieren oder Traffic hinzufügen.`,
+      `Testbar. ${per} Besucher pro Arm erreichen einen Lift von ${lift} in ${days}${dash('de')}${weeks} laufen lassen.`,
+    // the subject is nominative here ("845 Tage überschreiten"), the dative
+    // "Tagen" of `days` belongs to "in 40 Tagen"
+    notTestable: (d) =>
+      `Bei diesem Traffic nicht testbar. ${unit(d, 'Tage', 'de')} überschreiten die Acht-Wochen-Grenze; einen größeren Lift akzeptieren oder Traffic hinzufügen.`,
     weeks: (w) => `${w} volle Woche${w > 1 ? 'n' : ''}`,
-    days: (d) => unit(d, d === 1 ? 'Tag' : 'Tagen', 'de'),
+    days: (d) => unit(d, d === 1 ? 'Tag' : 'Tagen', 'de'),           // dative, after "in"
     within: 'innerhalb der 8-Wochen-Grenze',
     over: 'über der 8-Wochen-Grenze',
     visitors: 'Besucher',
@@ -197,7 +169,7 @@ export function plan({ base, lift, traffic, power = '80' }) {
     const w = WORDS[lang] ?? WORDS.en;
     return withinCeiling
       ? w.testable(fmtN(perArm, lang), percent(lift, lang, 0), w.days(days), w.weeks(weeks))
-      : w.notTestable(w.days(days));
+      : w.notTestable(days);
   };
 
   const kpis = (lang = 'en') => {
@@ -207,7 +179,7 @@ export function plan({ base, lift, traffic, power = '80' }) {
       { key: 'total', value: fmtN(total, lang), note: w.twoArms },
       {
         key: 'duration',
-        value: Number.isFinite(days) ? unit(days, 'd', lang) : '—',
+        value: Number.isFinite(days) ? unit(days, 'd', lang) : EN_DASH,
         note: withinCeiling ? `${w.weeks(weeks)} · ${w.within}` : w.over,
       },
       {

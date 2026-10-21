@@ -114,7 +114,7 @@ p { text-wrap: pretty; }
       until keyboard focus; flat, hairline-bordered mono label. */
 .skip {
   position: absolute; left: var(--gutter); top: 8px; z-index: 100;
-  padding: 14px 16px; background: var(--surface); color: var(--ink);
+  padding: 15px 16px; background: var(--surface); color: var(--ink);   /* 15 + 12 + 15 + the two 1px borders = 44px (targets below 768) */
   border: 1px solid var(--ink); text-decoration: none;
   font: 400 var(--t-mono-sm) / 1 var(--font-mono);
   letter-spacing: var(--tracking-label); text-transform: uppercase;
@@ -136,12 +136,17 @@ a:hover { color: var(--ink); }
 .prose a:hover, .doc a:hover, p a:hover, li a:hover, dd a:hover, figcaption a:hover, td a:hover { text-decoration-color: var(--ink); }
 .listing-row:hover .lr-arrow, .door:hover .door-arrow, .lr-year:hover .lr-arrow { color: var(--accent-01); }
 
-/* 7 · targets: at least 24 × 24 CSS px everywhere (2.5.8), 44 below 768
-      (HANDOFF 10). Nav and footer links get block height; text inside
-      them does not move. */
-nav a, footer a, .door, .shell-lang { min-height: 24px; display: inline-flex; align-items: center; }
+/* 7 · targets: at least 24 × 24 CSS px everywhere (2.5.8), 44 × 44 below
+      768 (HANDOFF 10). Nav and footer links, the trail, the meta row, the
+      end bar, the forward links and a paragraph that is one link
+      (.link-line) get a block box; text inside them does not move. A link
+      inside a sentence is exempt (the 2.5.8 inline exception). */
+nav a, footer a, .door, .shell-lang, .doc-meta a, .link-line a { min-height: 24px; display: inline-flex; align-items: center; }
+.link-line a { gap: 8px; }
 @media (max-width: 767px) {
-  nav a, footer a, .door, .shell-lang { min-height: 44px; }
+  nav a, footer a, .door, .shell-lang, .doc-meta a, .link-line a { min-height: 44px; min-width: 44px; }
+  /* the trail, the end bar, the cover CTA and the forward links are
+     defined in layout.css, which raises them in its section 10 */
 }
 
 /* 9 · hyphenation only in running text, never in titles; `lang` on the

@@ -10,6 +10,7 @@
    7 the contents rail (Site 04)
    8 the metric strip (Site 04, D-025)
    9 utility pages: the 404 numeral (Templates 01)
+  10 targets below 768: the block links above at 44 × 44
    Loads after base.css. Spacing values are the specimen's own
    (BUILD-BRIEF rule 10).
    ============================================================ */
@@ -35,6 +36,12 @@
 .col-start-1{grid-column-start:1}.col-start-2{grid-column-start:2}.col-start-3{grid-column-start:3}.col-start-4{grid-column-start:4}.col-start-5{grid-column-start:5}.col-start-6{grid-column-start:6}.col-start-7{grid-column-start:7}.col-start-8{grid-column-start:8}.col-start-9{grid-column-start:9}.col-start-10{grid-column-start:10}.col-start-11{grid-column-start:11}.col-start-12{grid-column-start:12}
 
 .section     { padding-block: var(--section-pad); border-top: var(--hairline); }
+/* a section opened by a section heading takes the heading's ink rule
+   (--rule-open opens a block) instead of its own hairline, and a run of
+   such sections keeps one --section-pad between them, not two: rows →
+   section-pad → ink rule, never rule · gap · hairline · gap · ink rule */
+.section:has(> .section-heading:first-child) { border-top: 0; }
+.section + .section:has(> .section-heading:first-child) { padding-top: 0; }
 .rule-t      { border-top: var(--rule); }
 .rule-strong { border-top: var(--hairline); }
 .vrule       { border-left: var(--rule); padding-left: var(--space-2); }
@@ -126,11 +133,11 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
    300. Below 300 every language is compact. */
 @container shell (max-width: 359px) {
   .shell:lang(de) .door:not([aria-current="page"]) .door-label { display: none; }
-  .shell:lang(de) .door:not([aria-current="page"]) { min-width: 32px; justify-content: center; }
+  .shell:lang(de) .door:not([aria-current="page"]) { min-width: 44px; justify-content: center; }   /* a code alone is 15px wide; the target is 44 × 44 below 768 */
 }
 @container shell (max-width: 299px) {
   .door:not([aria-current="page"]) .door-label { display: none; }
-  .door:not([aria-current="page"]) { min-width: 32px; justify-content: center; }  /* a code alone is 15px wide; the target stays ≥ 24 */
+  .door:not([aria-current="page"]) { min-width: 44px; justify-content: center; }  /* a code alone is 15px wide; the target stays 44 × 44 */
 }
 
 /* ---------- 3 · SITE FOOTER (Site 01 · D-013) ----------
@@ -150,7 +157,13 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
 .site-footer-links,
 .site-footer-group > .label + * { margin-top: 24px; display: flex; flex-direction: column; gap: 8px; list-style: none; padding: 0; }
 .site-footer-links a,
-.site-footer-group a { font-size: var(--t-small); line-height: 1.4; color: var(--ink); text-decoration: none; }
+.site-footer-group a { font-size: var(--t-small); line-height: 1.4; color: var(--ink); text-decoration: none; gap: 6px; }   /* gap: the space before ↗ in a flex link */
+/* below 768 the four groups sit two by two: stacked, with 44px link rows,
+   the footer ran to 1,150px at 390 */
+@media (max-width: 767px) {
+  .site-footer > .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 32px; }
+  .site-footer .site-footer-group { grid-column: auto; }
+}
 .site-footer-bar {
   margin-top: 48px; border-top: var(--rule); padding-top: 24px;
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px;
@@ -193,6 +206,9 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
   grid-column: span 3; min-width: 0;
   display: flex; flex-direction: column; justify-content: space-between; gap: 32px; padding-bottom: 16px;
 }
+/* directly under the shell the shell's own hairline closes the header;
+   a second one would draw a 2px line across the content width */
+main > .cover:first-child { border-top: 0; }
 .cover-index { color: var(--ink); }
 .cover-rail dl { margin: 0; display: flex; flex-direction: column; gap: 16px; }
 .cover-rail dd { margin: 4px 0 0; font-size: var(--t-small); }
@@ -253,7 +269,9 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
 .section-heading + .listing { margin-top: 32px; }
 @media (max-width: 767px) {
   .section-heading { grid-template-columns: minmax(0, 1fr); }
-  .section-heading > * { grid-column: 1 / -1; justify-self: start; }
+  /* :is() lifts this to the specificity of the .section-heading > .col-N
+     rules above, so the stack wins (else the spans make implicit columns) */
+  .section-heading > :is(*, [class*="col-"], [class*="section-heading-"]) { grid-column: 1 / -1; justify-self: start; }
 }
 
 /* ---------- 6 · DOCUMENT OPENER, TRAIL, LEAD, META, END (P-08 · 3 + Site 04) ----------
@@ -272,7 +290,7 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
 .doc-opener > [class*="col-"] > * + * { margin-top: 24px; }   /* title → lead → meta, 24px each (Site 04) */
 .doc > .doc-opener > * + * { margin-top: 0; }                  /* the stacked variant spaces by its gap */
 .doc-trail {
-  margin: 0; display: flex; flex-wrap: wrap; gap: 8px 12px;
+  margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 12px;
   font: 400 var(--t-mono-sm) / 1.6 var(--font-mono);
   letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2);
   font-variant-numeric: var(--num);
@@ -288,18 +306,21 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
   letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2);
   font-variant-numeric: var(--num);
 }
-.doc-meta a { color: var(--ink-2); text-decoration: none; }
+.doc-meta a { color: var(--ink-2); text-decoration: none; gap: 8px; }
 .doc-meta a:hover { color: var(--ink); }
 .doc-meta .status { color: var(--ink); }
 
 .doc-end {
   border-top: var(--hairline); padding-top: 24px;
-  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px;
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 16px;
   font: 400 var(--t-mono-sm) / 1 var(--font-mono);
   letter-spacing: var(--tracking-label); text-transform: uppercase;
   font-variant-numeric: var(--num);
 }
 .doc-end:not(:first-child) { margin-top: var(--flow-group); }
+/* a document page ends 64px above the footer, as the Site specimen's
+   document grid does (padding-bottom: 64px) */
+main > .doc:last-child { padding-bottom: 64px; }
 .doc > .doc-end { grid-column: wide; }
 .doc-end a { color: var(--ink); text-decoration: none; min-height: 24px; display: inline-flex; align-items: center; gap: 8px; }
 .doc-end .glyph { color: var(--ink-2); }
@@ -354,13 +375,26 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
 }
 
 /* ---------- 9 · UTILITY PAGES: the 404 numeral (Templates 01) ----------
-   The number is set in the mono face next to the h1; aria-hidden.
+   The number is set in the display face next to the h1, as the
+   Templates specimen sets it ("the three zeros are the only decoration,
+   and they are the typeface's"); aria-hidden. The opener closes on 32px
+   instead of 48 (the specimen's own padding-bottom).
      <header class="doc-opener"><p class="doc-trail">…</p>
        <div class="doc-numeral-row"><span class="doc-numeral" aria-hidden="true">404</span>
          <h1>No such page.</h1></div><p class="doc-lead">…</p></header> */
 .doc-numeral-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 40px; }
 .doc-opener .doc-numeral {
-  font: var(--w-display) clamp(96px, 16vw, 200px) / 0.9 var(--font-mono);
+  font: var(--w-display) clamp(96px, 16vw, 200px) / 0.9 var(--font-display);
   letter-spacing: -0.05em; font-variant-numeric: var(--num);
 }
 .doc-opener .doc-numeral + :is(h1, h2, h3) { font-size: var(--t-h2); max-width: 14em; }
+.doc-opener:has(> .doc-numeral-row) { padding-bottom: 32px; }
+
+/* ---------- 10 · TARGETS BELOW 768 (P-02 rule 7 · HANDOFF 10) ----------
+   Every block link defined in this file is at least 24px tall; below 768
+   it is 44 × 44 (base.css section 3.7 does the same for nav and footer
+   links). The text inside does not move: the boxes grow around it. */
+@media (max-width: 767px) {
+  .doc-trail a, .doc-end a, .cover-cta,
+  :is(.section-heading-link, .section-heading > .col-2) { min-height: 44px; min-width: 44px; }
+}

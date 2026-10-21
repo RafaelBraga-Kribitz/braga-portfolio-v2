@@ -16,6 +16,8 @@
 // the six is unwrapped and reads as an identifier (code-ink). Wrap is on by
 // default and the block is complete without code.js (the buttons are inert).
 
+import { CODE_LABELS } from '../remark/code-lang.mjs';
+
 /** Prism token class → the six-token palette (first match in class order wins). */
 const TOKENS = {
   comment: 'tok-cm', prolog: 'tok-cm', doctype: 'tok-cm', cdata: 'tok-cm', shebang: 'tok-cm',
@@ -33,23 +35,24 @@ const h = (tag, properties, children) => ({ type: 'element', tagName: tag, prope
 const t = (value) => ({ type: 'text', value });
 
 /**
- * Rewrites Prism's token spans to the six classes; unwraps the rest. Pure.
+ * Rewrites Prism's token spans to the six classes; unwraps everything else.
+ * Prism emits nothing but text and token spans, so any other element is
+ * markup that leaked through an unhighlighted fence (see
+ * src/lib/remark/code-lang.mjs): it is unwrapped to its text, never kept.
+ * Pure.
  * @param {any[]} nodes
  * @returns {any[]}
  */
 function retoken(nodes) {
   const out = [];
   for (const n of nodes) {
-    if (n.type !== 'element') { out.push(n); continue; }
+    if (n.type === 'text') { out.push(n); continue; }
+    if (n.type !== 'element') continue; // comments, raw: dropped
     const children = retoken(n.children || []);
     const classes = Array.isArray(n.properties && n.properties.className) ? n.properties.className : [];
-    if (n.tagName === 'span' && classes.includes('token')) {
-      const cls = classes.map((c) => TOKENS[c]).find(Boolean);
-      if (cls) out.push(h('span', { className: [cls] }, children));
-      else out.push(...children);
-      continue;
-    }
-    out.push({ ...n, children });
+    const cls = n.tagName === 'span' && classes.includes('token') ? classes.map((c) => TOKENS[c]).find(Boolean) : undefined;
+    if (cls) out.push(h('span', { className: [cls] }, children));
+    else out.push(...children);
   }
   return out;
 }
@@ -69,9 +72,13 @@ export const codePanel = {
       const pclass = parent && parent.type === 'element' && parent.properties ? parent.properties.className : undefined;
       if (Array.isArray(pclass) && pclass.includes('code')) return; // already a panel
       const body = JSON.parse(JSON.stringify(code.children || []));
-      return h('div', { className: ['code'], dataLang: lang, dataWrap: 'on' }, [
+      // a fence language Prism does not know was rendered as text; its
+      // authored name is in the data bag (src/lib/remark/code-lang.mjs)
+      const labels = ctx.data[CODE_LABELS];
+      const authored = labels instanceof Map ? labels.get(ctx.textContent(code).replace(/\n$/, '')) : undefined;
+      return h('div', { className: ['code'], dataLang: authored || lang, dataWrap: 'on' }, [
         h('div', { className: ['code-bar'] }, [
-          h('span', {}, [t(LABEL[lang] || lang)]),
+          h('span', {}, [t(authored || LABEL[lang] || lang)]),
           h('span', { className: ['code-tools'] }, [
             h('button', { type: 'button', className: ['code-wrap'], ariaPressed: 'true' }, [t('Wrap · on')]),
             h('button', { type: 'button', className: ['code-copy'] }, [t('Copy')]),

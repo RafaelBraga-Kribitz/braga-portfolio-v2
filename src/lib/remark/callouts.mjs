@@ -16,7 +16,9 @@
 //                                <a href><b>text</b><span class="sub">rest</span>
 //                                <span class="glyph" aria-hidden="true">→</span></a>
 //   > [!cta] Call to action    → <a href>text <span class="glyph">↗</span></a>
-//   ==text== in a paragraph    → <mark>text</mark>
+//   ==text== in a paragraph    → <mark>text</mark> (list items and table
+//                                cells too; headings stay plain)
+//   a callout inside a callout → built by the outer one, any depth
 //
 // Two passes, in order: marks first (so a metrics value can carry its mark),
 // then the callouts. Both build plain mdast/custom nodes that the processor
@@ -81,13 +83,16 @@ function blockAncestor(node, ctx) {
   return p;
 }
 
-/** Pass 1: ==text== → <mark> inside paragraphs. */
+/** Blocks whose text may carry ==marks== (Obsidian highlights there too; headings stay plain). */
+const MARK_BLOCKS = new Set(['paragraph', 'tableCell']);
+
+/** Pass 1: ==text== → <mark> inside paragraphs (list items included) and table cells. */
 export const marks = {
   name: 'bk-marks',
   text(node, ctx) {
     if (!node.value.includes('==')) return;
     const block = blockAncestor(node, ctx);
-    if (!block || block.type !== 'paragraph') return;
+    if (!block || !MARK_BLOCKS.has(block.type)) return;
     const { nodes, changed } = markify([clone(node)]);
     if (changed) ctx.replaceNode(node, nodes);
   },
@@ -265,28 +270,65 @@ function ctaLink(content, ctx, node) {
   content[found.block] = el('a', { href: found.link.url }, [...found.link.children, text(' '), glyph(found.link.url)]);
 }
 
+/**
+ * Builds the callout for a blockquote's (cloned) children, or null when the
+ * blockquote is an ordinary quotation. Callouts nested inside are built here
+ * too: a node replaced in a pass cannot be replaced again from inside.
+ * @param {any[]} blocks @param {any} ctx @param {any} node
+ */
+function build(blocks, ctx, node) {
+  const head = parseHead(blocks);
+  if (!head) return null;
+  const { type, metadata, fold } = head;
+  const content = head.content;
+  nest(content, ctx, node);
+  const title = head.title.length ? head.title : [text(type === 'cta' ? 'Call to action' : titleCase(type))];
+  if (type === 'spec') specList(content, ctx, node);
+  else if (type === 'metrics') metricsList(content, ctx, node);
+  else if (type === 'bookmark') bookmarkLink(content, ctx, node);
+  else if (type === 'cta') ctaLink(content, ctx, node);
+  const faq = type === 'faq';
+  const props = { className: ['callout'], dataCallout: type };
+  if (metadata) props.dataCalloutMetadata = metadata;
+  if (faq && fold === '+') props.open = true;
+  return el(faq ? 'details' : 'div', props, [
+    el(faq ? 'summary' : 'div', { className: ['callout-title'] }, title),
+    el('div', { className: ['callout-content'] }, content),
+  ]);
+}
+
+/**
+ * Replaces, in place, every callout blockquote below these nodes.
+ * @param {any[]} nodes @param {any} ctx @param {any} node
+ */
+function nest(nodes, ctx, node) {
+  for (let i = 0; i < nodes.length; i++) {
+    const n = nodes[i];
+    if (n.type === 'blockquote') {
+      const built = build(n.children, ctx, node);
+      if (built) { nodes[i] = built; continue; }
+    }
+    if (Array.isArray(n.children)) nest(n.children, ctx, node);
+  }
+}
+
+/** Whether a blockquote opens with a callout marker. @param {any} bq */
+const isCallout = (bq) => {
+  const first = bq.children && bq.children[0];
+  const t0 = first && first.type === 'paragraph' && first.children && first.children[0];
+  return !!t0 && t0.type === 'text' && MARKER.test(t0.value);
+};
+
 /** Pass 2: the callouts. */
 export const callouts = {
   name: 'bk-callouts',
   blockquote(node, ctx) {
-    const blocks = clone(node.children);
-    const head = parseHead(blocks);
-    if (!head) return; // an ordinary quotation stays a <blockquote>
-    const { type, metadata, fold } = head;
-    const content = head.content;
-    const title = head.title.length ? head.title : [text(type === 'cta' ? 'Call to action' : titleCase(type))];
-    if (type === 'spec') specList(content, ctx, node);
-    else if (type === 'metrics') metricsList(content, ctx, node);
-    else if (type === 'bookmark') bookmarkLink(content, ctx, node);
-    else if (type === 'cta') ctaLink(content, ctx, node);
-    const faq = type === 'faq';
-    const props = { className: ['callout'], dataCallout: type };
-    if (metadata) props.dataCalloutMetadata = metadata;
-    if (faq && fold === '+') props.open = true;
-    ctx.replaceNode(node, el(faq ? 'details' : 'div', props, [
-      el(faq ? 'summary' : 'div', { className: ['callout-title'] }, title),
-      el('div', { className: ['callout-content'] }, content),
-    ]));
+    // a callout inside a callout is built by the outer one (nest)
+    for (let p = ctx.parent(node); p; p = ctx.parent(p)) {
+      if (p.type === 'blockquote' && isCallout(p)) return;
+    }
+    const built = build(clone(node.children), ctx, node);
+    if (built) ctx.replaceNode(node, built); // else an ordinary quotation stays a <blockquote>
   },
 };
 

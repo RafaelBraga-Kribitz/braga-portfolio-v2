@@ -2,7 +2,7 @@
 // the same types under allowJs; this file serves extensionless imports).
 export type Lang = 'en' | 'de';
 
-export const NBSP: ' ';
+export const NBSP: '\u00A0';
 export const MINUS: '−';
 export const EN_DASH: '–';
 

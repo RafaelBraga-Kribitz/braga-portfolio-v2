@@ -56,7 +56,15 @@ const en = {
   // listings
   'all-projects': 'All projects',
   'all-5-projects': 'All 5 projects',
+  'all-writing': 'All writing',
+  'all-tools': 'All tools',
+  'open-profile': 'Open the profile',
   project: 'Project',
+  title: 'Title',
+  tool: 'Tool',
+  'kind-date': 'Kind / date',
+  'kind.essay': 'Essay',
+  'kind.note': 'Note',
   'discipline-status': 'Discipline / status',
   year: 'Year',
   read: 'Read',
@@ -68,7 +76,7 @@ const en = {
   'doc.end': '§ END',
   'back-to-index': 'Back to the index',
   // tools
-  'tool.nojs': 'Without JavaScript the default scenario is shown as text and a table.',
+  'tool.nojs': 'Without JavaScript the default scenario is shown; the controls need JavaScript.',
 } as const;
 
 export type ChromeKey = keyof typeof en;
@@ -113,7 +121,15 @@ const de: Record<ChromeKey, string> = {
   'contact.cta': 'Kontakt aufnehmen',
   'all-projects': 'Alle Projekte',
   'all-5-projects': 'Alle 5 Projekte',
+  'all-writing': 'Alle Texte',
+  'all-tools': 'Alle Werkzeuge',
+  'open-profile': 'Profil öffnen',
   project: 'Projekt',
+  title: 'Titel',
+  tool: 'Werkzeug',
+  'kind-date': 'Art / Datum',
+  'kind.essay': 'Essay',
+  'kind.note': 'Notiz',
   'discipline-status': 'Disziplin / Status',
   year: 'Jahr',
   read: 'Lesen',
@@ -123,7 +139,7 @@ const de: Record<ChromeKey, string> = {
   source: 'Quelle',
   'doc.end': '§ ENDE',
   'back-to-index': 'Zurück zum Index',
-  'tool.nojs': 'Ohne JavaScript wird das Standardszenario als Text und Tabelle angezeigt.',
+  'tool.nojs': 'Ohne JavaScript wird das Standardszenario gezeigt; die Regler brauchen JavaScript.',
 };
 
 export const dictionaries: Record<Lang, Record<ChromeKey, string>> = { en, de };

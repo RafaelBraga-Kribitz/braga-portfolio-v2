@@ -100,6 +100,7 @@ Listing: `.listing`, `.listing-head`, `.listing-row`, `.lr-index`, `.lr-title`, 
 Status: `.status[data-state="complete|functional|under-revision|in-build|archived"]`.
 Document: `article.doc`, `.doc-opener`, `.doc-trail`, `.doc-lead`, `.doc-meta`, `.doc-end`, `.glyph`, `.table-scroll`, `figure.fig`, `.fig-label`, `.fig-title`, `.fig-source`, `.code`, `.code-bar`, `.code-copy`, `.code-wrap`, `.math`, `.eq-no`, `.footnotes`, `.callout[data-callout="note|aside|warning|tool|summary|definition|quote|spec|metrics|faq|bookmark|cta"]`, `.callout-title`, `.callout-content`, `.cta`.
 Site patterns (new, from the Site specimen; define them in layout.css/components.css): `.cover`, `.cover-rail`, `.cover-body`, `.section-heading` (kicker 3 / claim 7 / forward link 2), `.metric-strip`, `.toc`, `.evidence` (figure with bars: `.ev-bars`, `.ev-bar`, `.ev-track`, `.ev-fill`, `.ev-mid`), `.bench`, `.bench-head`, `.bench-controls`, `.bench-output`, `.bench-verdict`, `.bench-kpis`, `.bench-limit`, `.segmented`, `.range`, `.button`.
+Sub-classes of these patterns (footer, cover, section heading, opener, contents, metric strip, evidence, 404 grid `.fig-matrix*`, `.link-line`) are listed in `design-system/README.md` ("Sub-classes the patterns use"); use those names, do not coin others.
 
 ## 6. Rules every agent enforces
 

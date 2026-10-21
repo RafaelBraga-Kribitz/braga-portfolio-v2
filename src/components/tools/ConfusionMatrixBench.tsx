@@ -31,7 +31,7 @@ const T = {
     reset: 'Reset',
     limit: 'Limit: whole cases rounded from the rates, one operating point. The threshold curve behind it is not modelled.',
     fig: 'Fig. 04-01 · Confusion matrix',
-    figNote: (n: string) => `n = ${n} · rows actual · columns predicted`,
+    figNote: (n: string) => `n\u00A0=\u00A0${n} · rows actual · columns predicted`,   // NBSP: format.equation
     matrix: 'Confusion matrix',
     predicted: ['Predicted positive', 'Predicted negative'],
     actual: ['Actual positive', 'Actual negative'],
@@ -58,7 +58,7 @@ const T = {
     reset: 'Zurücksetzen',
     limit: 'Limit: ganze Fälle, aus den Raten gerundet, ein Arbeitspunkt. Die Schwellenkurve dahinter ist nicht modelliert.',
     fig: 'Abb. 04-01 · Konfusionsmatrix',
-    figNote: (n: string) => `n = ${n} · Zeilen tatsächlich · Spalten vorhergesagt`,
+    figNote: (n: string) => `n\u00A0=\u00A0${n} · Zeilen tatsächlich · Spalten vorhergesagt`,
     matrix: 'Konfusionsmatrix',
     predicted: ['Vorhergesagt positiv', 'Vorhergesagt negativ'],
     actual: ['Tatsächlich positiv', 'Tatsächlich negativ'],
@@ -141,7 +141,7 @@ export default function ConfusionMatrixBench({ lang = 'en' }: { lang?: Lang }) {
             </div>
             <div class="cm-matrix" role="table" aria-label={t.matrix}>
               <div class="cm-row" role="row">
-                <div class="cm-corner" role="columnheader" aria-label={t.matrix}></div>
+                <div class="cm-corner" role="cell"></div>
                 <div class="cm-head label" role="columnheader">{t.predicted[0]}</div>
                 <div class="cm-head label" role="columnheader">{t.predicted[1]}</div>
               </div>

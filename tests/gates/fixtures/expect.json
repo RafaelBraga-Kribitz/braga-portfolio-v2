@@ -1,0 +1,24 @@
+{
+  "/clean/": [],
+  "/bad/": {
+    "G-01": ["11.0px", "Eleven-pixel"],
+    "G-02": ["Set in the mid grey", "Inline red text"],
+    "G-03": "= --mid",
+    "G-04": "Accent figure on mid grey",
+    "G-05": ["Twenty-pixel target", "×20"],
+    "G-06": ["scrollWidth", "A rule 1600px wide"],
+    "G-07": "border-radius 8px",
+    "G-08": ["box-shadow", "gradient"],
+    "G-09": ["2 h1 elements", "h2 → h4"],
+    "G-10": ["not the .skip link", "no <footer>"],
+    "G-11": "no @media (prefers-reduced-motion: reduce) rule",
+    "G-12": "status “loaded”",
+    "G-13": "cdn.jsdelivr.net",
+    "L-01": "/missing/ does not exist",
+    "L-02": ["no hreflang=\"x-default\" alternate", "/de/bad/ does not exist"],
+    "L-03": ["third-party script", "no inline pre-paint theme script"],
+    "L-04": "style=\"color:red\"",
+    "L-05": ["no <meta name=\"description\">", "1 <meta name=\"theme-color\">"],
+    "A-01": "color-contrast"
+  }
+}
