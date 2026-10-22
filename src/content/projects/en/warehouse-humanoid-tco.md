@@ -1,6 +1,6 @@
 ---
 title: Warehouse humanoid TCO
-code: "01-04"
+code: "01-05"
 kind: case
 date: "2026-05-21"
 updated: "2026-09-16"
@@ -64,7 +64,7 @@ One tracked finding changed the headline.[^1] An earlier version compared fixed 
 
 Of the seven scenarios, the lean hybrid of one person and three AMRs has the lowest five-year present cost. Its capital requirement is €195,000.
 
-> [!bars] Fig. 01-04-1 · Five-year present cost by scenario
+> [!bars] Fig. 01-05-1 · Five-year present cost by scenario
 > The lean hybrid costs 30% less than people alone and less than a fifth of the best humanoid case.
 > - Lean hybrid — 453
 > - Human-only — 647
@@ -115,10 +115,6 @@ Under these assumptions, deploy the lean hybrid now and defer humanoid procureme
 
 The repository holds the code, the charts, the executive summaries and the governance record.
 
-> [!bookmark] Next
-> [01-05 Energy procurement risk analyser](/en/work/energy-procurement-risk-analyzer/) — From electricity-price records to a cost-risk decision. In build.
 
-> [!cta]
-> [Open the repository](https://github.com/RafaelBraga-Kribitz/warehouse_humanoid_tco)
 
 [^1]: The build runs under a governance protocol enforced in continuous integration (CI): every change closes a tracked finding with a named verification script, and CI re-runs the script of every closed finding on each pull request.

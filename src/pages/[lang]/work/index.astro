@@ -1,9 +1,10 @@
 ---
 // 01 · Work index — Site pattern 03 (Index): the section heading (its
-// claim is this page's h1), the listing of every non-draft project of the
-// language by code, then the status vocabulary of the Site specimen s03
-// (five states, one line of use each). The claim, the prose and the
-// vocabulary are i18n keys (the home Index shares the claim and the prose);
+// claim is this page's h1) and the listing of every non-draft project of
+// the language by code. The UX pass (22 Oct 2026) dropped the year column
+// (every row read "2026") and the status vocabulary block of Site s03: the
+// label beside each square already says the state. The claim and the
+// prose are i18n keys (the home Index shares them);
 // the rows are the projects collection (src/lib/collections.ts). German
 // strings are drafts: the DE page carries the in-build mark
 // "Entwurf · Freigabe ausstehend" under the listing, as the tools index does.
@@ -12,10 +13,10 @@ import SectionHeading from '@/components/SectionHeading.astro';
 import Listing from '@/components/Listing.astro';
 import ListingRow from '@/components/ListingRow.astro';
 import StatusMark from '@/components/StatusMark.astro';
-import { t, type Lang, type StatusState, type ChromeKey } from '@/lib/i18n';
+import { t, type Lang } from '@/lib/i18n';
 import { workRoute } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
-import { projectsOf, yearOf } from '@/lib/collections';
+import { projectsOf } from '@/lib/collections';
 
 export function getStaticPaths() {
   return LANGS.map((lang) => ({ params: { lang } }));
@@ -23,26 +24,17 @@ export function getStaticPaths() {
 
 const lang = Astro.params.lang as Lang;
 const projects = await projectsOf(lang);
-const states: StatusState[] = ['complete', 'functional', 'under-revision', 'in-build', 'archived'];
 ---
 <Base lang={lang} page="work" title={t(lang, 'door.work')} description={t(lang, 'work.prose')} current="01">
   <section class="section">
     <SectionHeading number="01" word={t(lang, 'door.work')} claim={t(lang, 'work.claim')} prose={t(lang, 'work.prose')} as="h1" />
     {projects.length > 0 && (
-      <Listing head={{ index: t(lang, 'index'), title: t(lang, 'project'), meta: t(lang, 'discipline-status'), trail: t(lang, 'year') }}>
+      <Listing head={{ index: t(lang, 'index'), title: t(lang, 'project'), meta: t(lang, 'discipline-status'), trail: '' }}>
         {projects.map((p) => (
-          <ListingRow code={p.data.code} title={p.data.title} sub={p.data.summary} meta={[p.data.domain]} status={p.data.status} lang={lang} trail={yearOf(p.data.date)} href={workRoute(p.data.slug, lang)} />
+          <ListingRow code={p.data.code} title={p.data.title} sub={p.data.summary} meta={[p.data.domain]} status={p.data.status} lang={lang} href={workRoute(p.data.slug, lang)} />
         ))}
       </Listing>
     )}
-    <div class="grid">
-      <h2 class="col-3 label">{t(lang, 'status-vocabulary')}</h2>
-      <div class="col-9 status-list">
-        {states.map((state) => (
-          <div><StatusMark state={state} lang={lang} /><span class="status-use">{t(lang, `status-use.${state}` as ChromeKey)}</span></div>
-        ))}
-      </div>
-    </div>
     {lang === 'de' && <div class="doc-meta"><StatusMark state="in-build" lang={lang} label={t(lang, 'draft')} /></div>}
   </section>
 </Base>

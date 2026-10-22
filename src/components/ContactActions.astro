@@ -1,0 +1,34 @@
+---
+// The contact pair (UX pass, 22 Oct 2026): the section's primary action,
+// a mailto button in the accent (.cta: the section's one accent, G-15),
+// and beside it the "Copy address" button for a reader without a mail
+// client. The copy button ships hidden; the inline shell script in
+// Base.astro reveals it and swaps its label for two seconds after a
+// click (src/lib/contact.mjs). The address is printed between them, so
+// it stays readable without JavaScript and when copying fails.
+import { site } from '../lib/site';
+import type { Lang } from '../lib/i18n';
+import { t } from '../lib/i18n';
+import { COPY_LABELS } from '../lib/contact.mjs';
+
+interface Props {
+  lang: Lang;
+  /** Button label; "Get in touch" by default. */
+  label?: string;
+  /** Mail subject, prefilled (a project page passes its title). */
+  subject?: string;
+  /** Print the address as text between the two buttons (default): it is
+      what a reader selects when copying fails. */
+  showAddress?: boolean;
+  class?: string;
+}
+
+const { lang, label, subject, showAddress = true, class: className } = Astro.props;
+const href = `mailto:${site.email}${subject ? `?subject=${encodeURIComponent(subject)}` : ''}`;
+const w = COPY_LABELS[lang];
+---
+<div class:list={['contact-actions', className]}>
+  <a class="cta" href={href}>{label ?? t(lang, 'contact.cta')} <span class="glyph" aria-hidden="true">↗</span></a>
+  {showAddress && <span class="contact-address">{site.email}</span>}
+  <button type="button" class="button" data-copy={site.email} data-label={w.label} data-copied={w.copied} data-failed={w.failed} aria-live="polite" hidden>{w.label}</button>
+</div>

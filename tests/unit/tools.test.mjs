@@ -188,7 +188,7 @@ test('CM · the Churn default rebuilds v1\'s counts exactly and reads the verdic
   assert.equal(e.verdict('de'), `Fehler kosten €${NBSP}4.400 über 500 Fälle: 91${NBSP}% durch 20 übersehene Abwanderer, 9${NBSP}% durch 40 Fehlalarme.`);
   const k = e.kpis('en');
   assert.deepEqual(k.map((x) => x.value), ['88.0%', '66.7%', '80.0%', '90.0%', '94.7%', '0.727', '10.0%', '20.0%', '€4,400', '€8.80']);
-  assert.deepEqual(k.filter((x) => x.accent).map((x) => x.key), ['totalCost']);   // one accent figure (D-025)
+  assert.deepEqual(k.filter((x) => x.accent).map((x) => x.key), ['totalCost']);   // one accent per section (G-15)
   assert.equal(e.costLive('en'), 'cost = 40 · €10 + 20 · €200 = €400 + €4,000 = €4,400 · €8.80 per case');
 });
 

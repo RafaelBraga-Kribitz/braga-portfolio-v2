@@ -1,18 +1,20 @@
 ---
-// Home cover, Site specimen s02: a spec-sheet rail on three columns
-// (kicker, then place · focus · edition), the body on nine: the name with
-// its one accent mark (drawn by CSS on .cover-name), the role as the
-// page's h1, one sentence, and a ruled footer that ends in the only call
-// to action. The block carries its own hairline and 64px top padding:
-// place it directly in <main>, not inside .section. On a page whose copy
-// is an agent draft (`draft`, the German home) the in-build mark with the
-// "Entwurf · Freigabe ausstehend" label sits as a .label line directly
-// under the ruled footer (HANDOFF D-011, item 25: drafts show their status
-// in the page).
+// Home cover, Site specimen s02, after the UX pass of 22 Oct 2026: a
+// spec-sheet rail on three columns (kicker, then place · focus), the body
+// on nine: the name with its ink mark (drawn by CSS on .cover-name), the
+// role as the page's h1, one sentence, and a ruled footer holding the
+// contact pair, whose accent button is the cover's one accent (G-15).
+// Below 768 the body comes first (layout.css). The block carries its own
+// hairline and top padding: place it directly in <main>, not inside
+// .section. On a page whose copy is an agent draft (`draft`, the German
+// home) the in-build mark with the "Entwurf · Freigabe ausstehend" label
+// sits as a .label line directly under the ruled footer (HANDOFF D-011,
+// item 25: drafts show their status in the page).
 import { site } from '../lib/site';
 import type { Lang } from '../lib/i18n';
 import { t } from '../lib/i18n';
 import StatusMark from './StatusMark.astro';
+import ContactActions from './ContactActions.astro';
 
 interface Props {
   lang: Lang;
@@ -22,14 +24,12 @@ interface Props {
   /** Lines of the role title; the specimen breaks after "Marketing". */
   titleLines?: string[];
   lead: string;
-  cta?: { href: string; label: string; external?: boolean };
   /** Show the draft mark under the cover's footer. */
   draft?: boolean;
 }
 
-const { lang, spec, kicker, titleLines, lead, cta, draft = false } = Astro.props;
+const { lang, spec, kicker, titleLines, lead, draft = false } = Astro.props;
 const lines = titleLines ?? [site.role[lang]];
-const action = cta ?? { href: `mailto:${site.email}`, label: t(lang, 'contact.cta'), external: true };
 ---
 <section class="cover">
   <div class="cover-rail">
@@ -43,9 +43,7 @@ const action = cta ?? { href: `mailto:${site.email}`, label: t(lang, 'contact.ct
     <h1 class="display cover-role">{lines.map((line, i) => <Fragment>{i > 0 && <br />}{line}</Fragment>)}</h1>
     <p class="prose cover-lead">{lead}</p>
     <div class="cover-foot">
-      <span class="label">{t(lang, 'cover.evidence')}</span>
-      <span class="label">{t(lang, 'cover.independent')}</span>
-      <a href={action.href} class="label cover-cta">{action.label} <span class="glyph" aria-hidden="true">{action.external === false ? '→' : '↗'}</span></a>
+      <ContactActions lang={lang} />
     </div>
     {draft && <p class="label"><StatusMark state="in-build" lang={lang} label={t(lang, 'draft')} /></p>}
   </div>

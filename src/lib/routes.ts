@@ -114,6 +114,15 @@ export function route(pageId: PageId, lang: Lang): string {
   return routePair(pageId)[lang];
 }
 
+/**
+ * The contact section of the About page (UX pass, 22 Oct 2026): where the
+ * header's and the footer's "Contact" lead, so the word opens a section
+ * with the address, the copy button and the context, not a mail client.
+ */
+export function contactRoute(lang: Lang): string {
+  return `${route('about', lang)}#${lang === 'de' ? 'kontakt' : 'contact'}`;
+}
+
 /** Absolute URL on the production origin (astro.config `site`); the base is added when the path lacks it. */
 export function absolute(path: string): string {
   return new URL(withBase(path), site.url).href;
@@ -160,7 +169,7 @@ export function footerGroups(lang: Lang): FooterGroup[] {
       title: t(lang, 'footer.site'),
       links: [
         { label: t(lang, 'link.home'), href: route('home', lang) },
-        { label: t(lang, 'link.contact'), href: `mailto:${site.email}` },
+        { label: t(lang, 'link.contact'), href: contactRoute(lang) },
         { label: t(lang, 'link.language'), href: route('home', other), hreflang: other, lang: other },
       ],
     },

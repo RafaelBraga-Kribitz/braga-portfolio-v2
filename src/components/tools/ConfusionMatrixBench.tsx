@@ -1,14 +1,18 @@
 // 04-01 · Confusion matrix — the same bench as 04-02 (Site s06): head
 // bar, controls on 4, output on 8, verdict, a 2 × 2 matrix, the eight
-// rates as readouts with the one accent figure (the total cost, D-025),
+// rates as readouts with the bench's one accent (the total cost, G-15),
 // and the cost arithmetic spelled out as the rule line. Default state is
 // server-rendered. Maths: src/lib/tools/confusion-matrix.mjs (tested).
 //
+// The value fields and the address-bar state are the A/B bench's (UX
+// pass, 22 Oct 2026; see AbSampleSizeBench).
+//
 // German strings are agent drafts awaiting the owner's approval (O-05).
 
-import { useState } from 'preact/hooks';
+import { useState, useEffect, useRef } from 'preact/hooks';
 import { evaluate, PRESETS, DEFAULTS, BOUNDS, RULE, number, percent, currency } from '@/lib/tools/confusion-matrix.mjs';
 import { Range, Segmented, Kpi, BenchHead, type Lang } from './AbSampleSizeBench';
+import { readParams, writeParams } from '@/lib/tools/url-state.mjs';
 
 /* ---------- words ---------- */
 
@@ -89,6 +93,20 @@ const START: State = { ...DEFAULTS, vocab: DEFAULTS.preset };
 export default function ConfusionMatrixBench({ lang = 'en' }: { lang?: Lang }) {
   const t = T[lang] ?? T.en;
   const [s, setS] = useState<State>(START);
+
+  // the scenario in the address bar (see AbSampleSizeBench)
+  const first = useRef(true);
+  useEffect(() => {
+    const names = Object.keys(PRESETS);
+    const got = readParams(location.search, BOUNDS, { preset: names, vocab: names });
+    if (!Object.keys(got).length) return;
+    const moved = Object.keys(BOUNDS).some((k) => k in got);
+    setS((prev) => ({ ...prev, ...(got as Partial<State>), preset: (got.preset as string) ?? (moved ? null : prev.preset), vocab: (got.vocab as string) ?? (got.preset as string) ?? prev.vocab }));
+  }, []);
+  useEffect(() => {
+    if (first.current) { first.current = false; return; }
+    history.replaceState(history.state, '', location.pathname + writeParams(s as unknown as Record<string, unknown>, START as unknown as Record<string, unknown>, ['n', 'prevalence', 'sensitivity', 'specificity', 'costFP', 'costFN', 'preset', 'vocab']) + location.hash);
+  }, [s]);
   const e = evaluate({ ...s, preset: s.vocab });
   const cells = t.cells[s.vocab] ?? t.cells.Churn;
 
@@ -115,14 +133,14 @@ export default function ConfusionMatrixBench({ lang = 'en' }: { lang?: Lang }) {
           <Segmented name="cm-preset" legend={t.preset} items={PRESET_ITEMS} value={s.preset} onChange={applyPreset} />
 
           <p class="label rule-t">{t.inputs}</p>
-          <Range id="cm-n" label={t.n} bound={BOUNDS.n} value={s.n} display={number(s.n, lang, 0)} onChange={set('n')} />
-          <Range id="cm-prevalence" label={t.prevalence} bound={BOUNDS.prevalence} value={s.prevalence} display={percent(s.prevalence, lang, 1)} onChange={set('prevalence')} />
-          <Range id="cm-sensitivity" label={t.sensitivity} bound={BOUNDS.sensitivity} value={s.sensitivity} display={percent(s.sensitivity, lang, 1)} onChange={set('sensitivity')} />
-          <Range id="cm-specificity" label={t.specificity} bound={BOUNDS.specificity} value={s.specificity} display={percent(s.specificity, lang, 1)} onChange={set('specificity')} />
+          <Range id="cm-n" lang={lang} label={t.n} bound={BOUNDS.n} value={s.n} digits={0} format={(v) => number(v, lang, 0)} onChange={set('n')} />
+          <Range id="cm-prevalence" lang={lang} label={t.prevalence} bound={BOUNDS.prevalence} value={s.prevalence} digits={1} format={(v) => percent(v, lang, 1)} onChange={set('prevalence')} />
+          <Range id="cm-sensitivity" lang={lang} label={t.sensitivity} bound={BOUNDS.sensitivity} value={s.sensitivity} digits={1} format={(v) => percent(v, lang, 1)} onChange={set('sensitivity')} />
+          <Range id="cm-specificity" lang={lang} label={t.specificity} bound={BOUNDS.specificity} value={s.specificity} digits={1} format={(v) => percent(v, lang, 1)} onChange={set('specificity')} />
 
           <p class="label rule-t">{t.costs}</p>
-          <Range id="cm-cost-fp" label={t.costFP} bound={BOUNDS.costFP} value={s.costFP} display={currency(s.costFP, lang)} onChange={set('costFP')} />
-          <Range id="cm-cost-fn" label={t.costFN} bound={BOUNDS.costFN} value={s.costFN} display={currency(s.costFN, lang)} onChange={set('costFN')} />
+          <Range id="cm-cost-fp" lang={lang} label={t.costFP} bound={BOUNDS.costFP} value={s.costFP} digits={0} format={(v) => currency(v, lang)} onChange={set('costFP')} />
+          <Range id="cm-cost-fn" lang={lang} label={t.costFN} bound={BOUNDS.costFN} value={s.costFN} digits={0} format={(v) => currency(v, lang)} onChange={set('costFN')} />
 
           <div>
             <button type="button" class="button" data-variant="ghost" onClick={() => setS(START)}>{t.reset}</button>

@@ -88,6 +88,8 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
 .lr-year { display: inline-flex; gap: 10px; align-items: baseline; color: var(--ink-2); font-variant-numeric: var(--num); }
 .lr-arrow { color: var(--ink-2); transition: color var(--dur) var(--ease); }
 .listing-row:hover .lr-arrow { color: var(--accent-01); }
+/* a listing without its head (the home page) opens on a rhythm rule */
+.listing > .listing-row:first-child { border-top: var(--rule); }
 /* nested index (site map): indent the title without breaking the grid */
 .listing-row.lr-child .lr-title { padding-left: var(--space-4); }
 
@@ -179,7 +181,7 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
 
 /* metrics — tiles between an ink rule and a hairline. Renderer: the run
    before " — " becomes <b>, the rest <span>; ==value== keeps its <mark>.
-   The key value is set in the accent (D-025); siblings ink-2. */
+   The key value is set in the accent (one per section, G-15); siblings ink-2. */
 .callout[data-callout="metrics"] { border-top: var(--rule-open); border-bottom: var(--hairline); padding-block: 24px; }
 .callout[data-callout="metrics"] ul {
   list-style: none; margin: 0; padding: 0;
@@ -226,17 +228,31 @@ details.callout > .callout-content { padding-block: 0 24px; max-width: var(--mea
 .callout[data-callout="tool"] .callout-content { font-size: var(--t-small); line-height: 1.5; }
 .callout[data-callout="tool"] .callout-content b { font-variant-numeric: var(--num); }
 
-/* ---------- 4 · CTA — the single primary link-button of a page ---------- */
+/* ---------- 4 · CTA — the primary action of a section ----------
+   UX pass, 22 Oct 2026: the one thing a section asks the reader to do
+   carries that section's one accent (G-15): accent fill, --on-accent
+   label, 48px tall. Hover inverts to ink. One per section; secondary
+   actions are .button (an outline in --edge) or a plain link. */
 .callout[data-callout="cta"] .callout-title { display: none; }
-.callout[data-callout="cta"] .callout-content a, .cta {
+.callout[data-callout="cta"] .callout-content a, a.cta {
   display: inline-flex; align-items: center; gap: 12px; min-height: 48px; padding-inline: 20px;
-  border: 1px solid var(--ink); color: var(--ink); text-decoration: none;
-  font: 400 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: var(--tracking-label); text-transform: uppercase;
-  transition: background var(--dur) var(--ease);
+  border: 1px solid var(--accent-01); background: var(--accent-01); color: var(--on-accent); text-decoration: none;
+  font: 500 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: var(--tracking-label); text-transform: uppercase;
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease);
 }
-.callout[data-callout="cta"] .callout-content a:hover, .cta:hover { background: var(--surface-2); }
-.callout[data-callout="cta"] .glyph, .cta .glyph { color: var(--ink-2); }
-.callout[data-callout="cta"] a:hover .glyph, .cta:hover .glyph { color: var(--accent-01); }
+.callout[data-callout="cta"] .callout-content a:hover, a.cta:hover { background: var(--ink); border-color: var(--ink); color: var(--surface); }
+.callout[data-callout="cta"] .glyph, a.cta .glyph { color: inherit; }
+
+/* the contact pair (src/components/ContactActions.astro and a mailto cta
+   callout): the cta, the address as selectable text, the copy button.
+   The address selects whole on one click (user-select: all), the manual
+   way out when the clipboard refuses. */
+.contact-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
+.contact-actions .button { min-height: 48px; padding-inline: 16px; }
+.contact-address {
+  font: 400 var(--t-mono-sm) / 1.4 var(--font-mono); color: var(--ink-2);
+  overflow-wrap: anywhere; user-select: all; -webkit-user-select: all;
+}
 
 /* the glyph (D-030): a recessive arrow or separator beside a label */
 .glyph { color: var(--ink-2); }
@@ -359,7 +375,7 @@ figure.fig[data-kind="diagram"] .nodeLabel, figure.fig[data-kind="diagram"] .edg
    A 2 × 2 grid of outcomes inside figure.fig, drawn with 1px gaps on a
    --rule-c ground (hairline cells, no borders of their own). Column and
    row heads on the surface, the four outcomes on a surface-2 wash; the
-   one earned count takes the accent and its tag turns ink (D-025).
+   one earned count takes the accent and its tag turns ink (the figure's one accent, G-15).
      <div class="fig-matrix" role="img" aria-label="…">
        <div></div><div class="fig-matrix-head">Page exists</div><div class="fig-matrix-head">No page exists</div>
        <div class="fig-matrix-head" data-row>You expected a page</div>

@@ -6,14 +6,23 @@
 // anywhere: the chart is drawn with attributes and the role classes of
 // charts.css (.gridline .axis .cap .curve .cursor .marker).
 //
+// UX pass (22 Oct 2026): each slider's readout is an editable field that
+// accepts what a reader types ("4,5", "2.000", "€ 10", "2k"; parse.mjs),
+// says so in plain words when it cannot read an entry or had to keep it
+// within bounds, and keeps the entry for correction; the inputs live in
+// the address bar (url-state.mjs), so a scenario survives a reload and
+// can be shared.
+//
 // German strings are agent drafts awaiting the owner's approval (O-05).
 
-import { useState } from 'preact/hooks';
+import { useState, useEffect, useRef } from 'preact/hooks';
 import type { ComponentChildren } from 'preact';
 import {
   plan, PRESETS, DEFAULTS, BOUNDS, POWERS, RULE, CHART,
   percent, number, clamp,
 } from '@/lib/tools/ab-sample-size.mjs';
+import { parseTyped } from '@/lib/tools/parse.mjs';
+import { readParams, writeParams } from '@/lib/tools/url-state.mjs';
 
 export type Lang = 'en' | 'de';
 
@@ -26,14 +35,41 @@ export interface RangeProps {
   label: string;
   bound: Bound;
   value: number;
-  /** The readout beside the slider, already formatted for the language. */
-  display: string;
+  /** Formats a value for the readout, the slider's spoken value and the notes ("4.0%", "€ 10"). */
+  format: (value: number) => string;
   onChange: (value: number) => void;
+  lang: Lang;
+  /** Decimals a typed value is rounded to: the readout's own, so the field never shows a figure other than the one in use. */
+  digits?: number;
 }
 
-/** label · native range · readout, on the .range grid of bench.css. The
-    slider speaks the readout ("4.0%", "€ 10"), not its raw value. */
-export function Range({ id, label, bound, value, display, onChange }: RangeProps) {
+/** The value field's words: its accessible name and its two notes. */
+const FIELD = {
+  en: { exact: 'exact value', invalid: 'Not a number. Type a value such as {ex}.', clamped: 'Kept within {min}–{max}.' },
+  de: { exact: 'genauer Wert', invalid: 'Keine Zahl. Bitte einen Wert wie {ex} eingeben.', clamped: 'Auf {min}–{max} begrenzt.' },
+};
+
+/** label · native range · editable readout, on the .range grid of
+    bench.css. The slider speaks the readout ("4.0%", "€ 10"), not its raw
+    value. The readout is a text field: a value it can read inside the
+    bounds applies as it is typed; on Enter or leaving the field an
+    out-of-range value is kept within the bounds and a note says so, and
+    an unreadable entry stays in the field, marked invalid, with a note on
+    how to fix it. Escape restores the current value. */
+export function Range({ id, label, bound, value, format, onChange, lang, digits }: RangeProps) {
+  const w = FIELD[lang] ?? FIELD.en;
+  const read = (text: string) => { const n = parseTyped(text, lang); return n === null || digits === undefined ? n : Number(n.toFixed(digits)); };
+  const [draft, setDraft] = useState<string | null>(null);
+  const [note, setNote] = useState<{ kind: 'invalid' | 'clamped'; text: string } | null>(null);
+  const commit = () => {
+    if (draft === null) return;
+    const n = read(draft);
+    if (n === null) { setNote({ kind: 'invalid', text: w.invalid.replace('{ex}', format(value)) }); return; }
+    const c = clamp(n, bound.min, bound.max);
+    setNote(c !== n ? { kind: 'clamped', text: w.clamped.replace('{min}', format(bound.min)).replace('{max}', format(bound.max)) } : null);
+    setDraft(null);
+    onChange(c);
+  };
   return (
     <div class="range">
       <label for={id} class="range-label">{label}</label>
@@ -44,10 +80,33 @@ export function Range({ id, label, bound, value, display, onChange }: RangeProps
         max={bound.max}
         step={bound.step}
         value={value}
-        aria-valuetext={display}
-        onInput={(e) => onChange(clamp(Number(e.currentTarget.value), bound.min, bound.max))}
+        aria-valuetext={format(value)}
+        onInput={(e) => { setDraft(null); setNote(null); onChange(clamp(Number(e.currentTarget.value), bound.min, bound.max)); }}
       />
-      <output for={id} class="range-value">{display}</output>
+      <input
+        class="range-value"
+        type="text"
+        inputMode="decimal"
+        autoComplete="off"
+        spellcheck={false}
+        aria-label={`${label} · ${w.exact}`}
+        aria-invalid={note?.kind === 'invalid' ? 'true' : undefined}
+        aria-describedby={`${id}-note`}
+        value={draft ?? format(value)}
+        onFocus={(e) => e.currentTarget.select()}
+        onInput={(e) => {
+          const text = e.currentTarget.value;
+          setDraft(text);
+          const n = read(text);
+          if (n !== null && n >= bound.min && n <= bound.max) { setNote(null); onChange(n); }
+        }}
+        onBlur={commit}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') commit();
+          else if (e.key === 'Escape') { setDraft(null); setNote(null); }
+        }}
+      />
+      <p class="range-note" id={`${id}-note`} data-kind={note?.kind} aria-live="polite">{note?.text ?? ''}</p>
     </div>
   );
 }
@@ -153,6 +212,18 @@ export default function AbSampleSizeBench({ lang = 'en' }: { lang?: Lang }) {
   const t = T[lang] ?? T.en;
   const [s, setS] = useState<State>({ ...DEFAULTS });
   const p = plan(s);
+
+  // the scenario in the address bar: read once after hydration (the
+  // server rendered the defaults), then written on every change
+  const first = useRef(true);
+  useEffect(() => {
+    const got = readParams(location.search, BOUNDS, { power: POWERS, preset: Object.keys(PRESETS) });
+    if (Object.keys(got).length) setS((prev) => ({ ...prev, ...(got as Partial<State>), preset: (got.preset as string) ?? (('base' in got || 'lift' in got || 'traffic' in got) ? null : prev.preset) }));
+  }, []);
+  useEffect(() => {
+    if (first.current) { first.current = false; return; }
+    history.replaceState(history.state, '', location.pathname + writeParams(s as unknown as Record<string, unknown>, DEFAULTS, ['base', 'lift', 'traffic', 'power', 'preset']) + location.hash);
+  }, [s]);
   const c = p.chart;
 
   const set = (key: 'base' | 'lift' | 'traffic') => (v: number) => setS({ ...s, [key]: v, preset: null });
@@ -173,9 +244,9 @@ export default function AbSampleSizeBench({ lang = 'en' }: { lang?: Lang }) {
           <Segmented name="ab-preset" legend={t.preset} items={PRESET_ITEMS} value={s.preset} onChange={applyPreset} />
 
           <p class="label rule-t">{t.inputs}</p>
-          <Range id="ab-base" label={t.base} bound={BOUNDS.base} value={s.base} display={percent(s.base, lang, 1)} onChange={set('base')} />
-          <Range id="ab-lift" label={t.lift} bound={BOUNDS.lift} value={s.lift} display={percent(s.lift, lang, 0)} onChange={set('lift')} />
-          <Range id="ab-traffic" label={t.traffic} bound={BOUNDS.traffic} value={s.traffic} display={number(s.traffic, lang, 0)} onChange={set('traffic')} />
+          <Range id="ab-base" lang={lang} label={t.base} bound={BOUNDS.base} value={s.base} digits={1} format={(v) => percent(v, lang, 1)} onChange={set('base')} />
+          <Range id="ab-lift" lang={lang} label={t.lift} bound={BOUNDS.lift} value={s.lift} digits={0} format={(v) => percent(v, lang, 0)} onChange={set('lift')} />
+          <Range id="ab-traffic" lang={lang} label={t.traffic} bound={BOUNDS.traffic} value={s.traffic} digits={0} format={(v) => number(v, lang, 0)} onChange={set('traffic')} />
 
           <Segmented
             class="rule-t"

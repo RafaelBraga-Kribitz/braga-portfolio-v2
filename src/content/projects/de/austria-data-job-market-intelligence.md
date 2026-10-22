@@ -139,10 +139,6 @@ Die Momentaufnahme ist eine Evidenzbasis, kein Urteil. Ihre Ergebnisse fließen 
 
 Code unter MIT-Lizenz; Dokumente und aggregierte Ergebnisse unter CC BY 4.0.
 
-> [!bookmark] Weiter
-> [01-02 MMM und Budgetoptimierung für Österreich](/de/work/austrian-mmm-budget-optimizer/) — Bayes’sches Media-Mix-Modelling. Eine Budgetentscheidung mit Prüfung des Abwärtsrisikos.
 
-> [!cta]
-> [Repository öffnen](https://github.com/RafaelBraga-Kribitz/austria-data-job-market-intelligence)
 
 [^1]: Das AMS JobBarometer zählt Online-Inserate nach Berufsgruppe und Bundesland; „Data Scientist“ ist die Berufsgruppe, aus der der Trend gelesen wird.

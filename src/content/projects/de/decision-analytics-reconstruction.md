@@ -1,6 +1,6 @@
 ---
 title: "Rekonstruktion von Entscheidungs\u00ADanalysen"  # \u00AD = soft hyphen: the h1 may break there on a narrow screen
-code: "01-03"
+code: "01-02"
 kind: case
 date: "2026-05-07"
 summary: Eine Rekonstruktion in drei Modulen. Allokationsgewinne sind Näherungswerte, keine Kampagneneffekte.
@@ -95,7 +95,7 @@ Bei einem Budgetrahmen von 6 Mio. USD erzeugt das MILP rund 54,77 % mehr line
 
 Die einzige echte Out-of-Sample-Prüfung (Prüfung an Daten, die nicht in die Anpassung eingehen) wird ungeschönt berichtet. Wird der Tracker mit jeweils einer zurückgehaltenen realen Umfragewelle neu angepasst und das Wahlergebnis nachweislich ausgeschlossen, erfasste das Band zu 95 % die zurückgehaltene Umfrage in 3 von 6 getesteten Wellen, bei einem Brier-Score von 0,31 für das Vorzeichen des Vorsprungs.
 
-> [!bars] Abb. 01-03-1 · Out-of-Sample-Prüfung
+> [!bars] Abb. 01-02-1 · Out-of-Sample-Prüfung
 > Das Band zu 95 % erfasste die zurückgehaltene Umfrage in 3 von 6 Wellen.
 > - Getestet — 6
 > - Erfasst — 3
@@ -123,9 +123,3 @@ Was diese Arbeit nicht belegt:
 Jedes Modul wird nur so weit berichtet, wie seine eigene Prüfung reicht: die Segmente als Anpassung an synthetische Wahlberechtigte, der Allokationsgewinn als Solver-Vergleich auf synthetischer Reichweite und die Tracking-Kurve als Retrodiktion. Die Rekonstruktion behauptet nicht, dass Analytik den Vorsprung von 3,70 Prozentpunkten verursacht hat. Das öffentliche Ergebnis ist der Anker; zu zeigen, was das Modell stützen kann und was nicht, ist der Zweck der Arbeit.
 
 Funktionsfähig: Die drei Module laufen durchgängig. Es ist eine Portfolio-Rekonstruktion, kein produktives Kampagnensystem. Das Repository enthält den Code, die Fallstudie und die Validierungsprüfungen (Gates).
-
-> [!bookmark] Weiter
-> [01-04 TCO humanoider Roboter im Lager](/de/work/warehouse-humanoid-tco/) — Bei der modellierten Nachfrage schlagen humanoide Roboter die schlanke Hybridvariante noch nicht.
-
-> [!cta] Handlungsaufforderung
-> [Repository öffnen](https://github.com/RafaelBraga-Kribitz/decision-analytics-reconstruction)

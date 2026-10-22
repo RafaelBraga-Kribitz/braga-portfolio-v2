@@ -7,19 +7,28 @@
 //   <header class="doc-opener grid">…</header>
 //   <div class="grid">
 //     <nav class="toc col-3">…</nav>
-//     <article class="doc col-9">[metric strip] <Content/> <footer class="doc-end">…</footer></article>
+//     <article class="doc col-9">[metric strip] [details.toc-compact] <Content/>
+//       [div.doc-close] <footer class="doc-end">…</footer></article>
 //   </div>
 //
 // The contents rail lists the document's h2 sections in order (the numbers
 // match the ones the stylesheet draws on each h2) and leaves out the
 // footnotes heading (src/content/README.md §1). Without JavaScript there is
 // no active item. The rail is omitted when the document has no h2.
+//
+// UX pass (22 Oct 2026): the rail is sticky from 768 up; below 768 it is
+// hidden and the same list sits under the metric strip as a closed
+// <details> (.toc-compact), so the figures and the summary come first.
+// `close` ends a project on one primary action (the contact pair, subject
+// prefilled) with the repository as a quiet link under it.
 import Base from './Base.astro';
 import DocOpener from '../components/DocOpener.astro';
 import Toc from '../components/Toc.astro';
 import MetricStrip from '../components/MetricStrip.astro';
 import DocEnd from '../components/DocEnd.astro';
+import ContactActions from '../components/ContactActions.astro';
 import type { Lang, StatusState } from '../lib/i18n';
+import { t } from '../lib/i18n';
 import type { PageId, DoorCode } from '../lib/routes';
 import type { MarkdownHeading } from 'astro';
 
@@ -50,11 +59,13 @@ interface Props {
   back?: Link;
   /** Language of the document body when it differs from the page (a kitchen sink kept in English). */
   bodyLang?: Lang;
+  /** The close of a project: the mail subject and the repository link. */
+  close?: { subject: string; repository?: string };
 }
 
 const {
   lang, page, title, heading, description, current, hasCode = false, noindex = false,
-  trail, lead, meta = [], draft = false, headings, metrics = [], prev, next, back, bodyLang,
+  trail, lead, meta = [], draft = false, headings, metrics = [], prev, next, back, bodyLang, close,
 } = Astro.props;
 
 const sections = headings.filter((h) => h.depth === 2 && h.slug !== 'footnote-label');
@@ -66,7 +77,22 @@ const toc = sections.map((h, i) => ({ n: String(i + 1).padStart(2, '0'), title: 
     {toc.length > 0 && <Toc class="col-3" lang={lang} items={toc} />}
     <article class:list={['doc', 'col-9', toc.length === 0 && 'col-start-4']} lang={bodyLang && bodyLang !== lang ? bodyLang : undefined}>
       {metrics.length > 0 && <MetricStrip metrics={metrics} />}
+      {toc.length > 0 && (
+        <details class="toc toc-compact">
+          <summary class="label">{t(lang, 'contents')}</summary>
+          <ol>
+            {toc.map((i) => <li><a href={i.href}><span class="toc-num">{i.n}</span><span>{i.title}</span></a></li>)}
+          </ol>
+        </details>
+      )}
       <slot />
+      {close && (
+        <div class="doc-close" lang={bodyLang && bodyLang !== lang ? lang : undefined}>
+          <p>{t(lang, 'contact.project')}</p>
+          <ContactActions lang={lang} subject={close.subject} />
+          {close.repository && <p class="link-line"><a href={close.repository}>{t(lang, 'open-repository')} <span class="glyph" aria-hidden="true">↗</span></a></p>}
+        </div>
+      )}
       <DocEnd lang={lang} prev={prev} next={next} back={back} />
     </article>
   </div>

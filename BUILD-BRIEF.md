@@ -9,7 +9,8 @@ and `handoff/AUDIT.md` > this brief > the specimens in `handoff/specimens/`.
 The second attempt at Rafael Braga-Kribitz's portfolio, built from the v2 design
 system handoff in `handoff/`. A static Astro 7 site: plain HTML + CSS, two built
 route trees (`/en/`, `/de/`), no JavaScript on content pages except (a) the 158-byte
-pre-paint theme script, (b) the theme toggle, (c) `code.js` on pages with code
+pre-paint theme script, (b) the inline shell script (theme toggle and the "Copy
+address" buttons of the contact pair), (c) `code.js` on pages with code
 blocks. The two tools are Preact islands with a server-rendered static fallback.
 
 Stack (already installed, do not run `npm install`): astro 7.4.1, @astrojs/preact,
@@ -36,7 +37,7 @@ source material: never edit it.
 ## 3. Settled decisions (summary; the full text is in handoff/HANDOFF.md)
 
 - Role: **Marketing Data Analyst**. Wordmark **BRAGA**, uppercase everywhere, weight 800, letter-spacing −0.07em. The name "Rafael Braga-Kribitz" is title case with the hyphen.
-- Accent: ultramarine, `--accent-01` = #2F4BE0 light / #7C93FF dark. It may be text only for the one earned figure per view (D-025). `--accent-02` is retired. Blue "moment" blocks use the `.dark` inversion.
+- Accent: ultramarine, `--accent-01` = #2F4BE0 light / #7C93FF dark. **One accent per section** (owner, 22 Oct 2026; replaces D-025's one per view): each section — the cover, each `.section` of an index page, a document's opener and metric strip, each h2 section of a document, a figure, a bench, the end of a document — spends the accent on at most one element, the one the reader should see first there: its earned figure, or its primary action (`.cta`, accent fill with `--on-accent` text). Gate G-15 enforces it. `--accent-02` is retired. Blue "moment" blocks use the `.dark` inversion.
 - Neutrals (light): surface #E4E6EA, surface-2 #DCDEE2, surface-3 #D4D6DA, ink #26282C, ink-2 = ink-3 #5A5C61, mid #9EA0A5 (hairlines only, never text), rule #C2C4CA. Dark: #191A1D / #2C2D30 / #484A4D / ink #F3F5F9 / ink-2 #CED0D4 / ink-3 #97999D / mid #7E8084 / rule #393A3D.
 - Headings: weight 700 (`--w-display`); 900 is retired. No font size below 12px anywhere (SVG text included). `--t-mono-sm` 12px, `--t-mono` 13px.
 - Spacing: 8px base; flow tokens related 8 / element 16 / block 32 / lead 48 / group 64 / section 96 (64 below 768). `--rule-open: 1px solid var(--ink)` opens a block. Page max 1320px, gutter 16 (outer) / 32 at md+ per spacing.css.
@@ -64,7 +65,7 @@ Root `/` is a static redirect page to `/en/`. Every page exists under both `/en/
 | Page | EN route | DE route | Pattern |
 |---|---|---|---|
 | Home | `/en/` | `/de/` | 02 Cover + 03 Index sections (01 Work listing of 5, 02 Writing, 03 About, 04 Tools) |
-| Work index | `/en/work/` | `/de/work/` | 03 Index: section heading + listing + status vocabulary |
+| Work index | `/en/work/` | `/de/work/` | 03 Index: section heading + listing (the status vocabulary block was dropped in the UX pass) |
 | Project ×5 | `/en/work/<slug>/` | `/de/work/<slug>/` | 04 Document: opener, metric strip, contents rail on 3, doc on 9, evidence figures (05), end bar |
 | About / CV | `/en/about/` | `/de/about/` | 04 Document variant: opener, spec callout, skills, CV table, contact; "Download CV" link only if a PDF exists (none yet: omit the link) |
 | Writing index | `/en/writing/` | `/de/writing/` | 03 Index listing (essays, notes) |
@@ -84,10 +85,13 @@ Project slugs, codes and statuses (the Site specimen's order; dates from the sou
 | Code | Slug | Title | Domain | Status |
 |---|---|---|---|---|
 | 01-01 | `austria-data-job-market-intelligence` | Austria data-job market intelligence | Labour market | complete |
-| 01-02 | `austrian-mmm-budget-optimizer` | Austrian MMM and budget optimiser | Marketing | under-revision |
-| 01-03 | `decision-analytics-reconstruction` | Decision analytics reconstruction | Decision science | functional |
-| 01-04 | `warehouse-humanoid-tco` | Warehouse humanoid TCO | Operations | complete |
-| 01-05 | `energy-procurement-risk-analyzer` | Energy procurement risk analyser | Energy | in-build |
+| 01-02 | `decision-analytics-reconstruction` | Decision analytics reconstruction | Decision science | functional |
+| 01-03 | `austrian-mmm-budget-optimizer` | Austrian MMM and budget optimiser | Marketing | under-revision |
+| 01-04 | `energy-procurement-risk-analyzer` | Energy procurement risk analyser | Energy | in-build |
+| 01-05 | `warehouse-humanoid-tco` | Warehouse humanoid TCO | Operations | complete |
+
+Order (UX pass, 22 Oct 2026, serial position): complete projects open and close the list; the
+codes were renumbered to match (figure labels and equation numbers follow the code).
 
 Header doors: 01 Work · 02 Writing · 03 About · 04 Tools (DE: Arbeit · Schreiben · Über · Werkzeuge). Tool codes: 04-01 Confusion matrix, 04-02 A/B sample size. Writing codes: 02-01 the essay.
 
@@ -108,12 +112,26 @@ Sub-classes of these patterns (footer, cover, section heading, opener, contents,
 2. **Tokens only.** No new hex values in `src/`; every colour is a `var(--…)` from `design-system/tokens.css`.
 3. **No icons, no emoji, no SVG files, no images.** Glyphs from D-030 only.
 4. **No font size below 12px.** Mono labels are `--t-mono-sm` (12px) at the smallest.
-5. **No JavaScript on content pages** beyond the three allowed scripts. Tools are Preact islands (`client:load`) that render their default scenario server-side so the page is complete without JS, plus a `.callout[data-callout="tool"]` note.
+5. **No JavaScript on content pages** beyond the three allowed scripts. Tools are Preact islands (`client:load`) that render their default scenario server-side so the page is complete without JS, plus a `.callout[data-callout="tool"]` note inside `<noscript>`.
 6. **Every page** has: `<html lang>`, `data-theme` handling, `<link rel="alternate" hreflang>` for en, de and x-default, `<meta name="theme-color">` ×2, the skip link as the first focusable element, one `<main id="main">`, one `<h1>`, the shell and the footer, `<title>` and `<meta name="description">`.
 7. **Numbers in copy** use NBSP between value and unit, real minus, en dash ranges, the language's separators. Use `src/lib/format.ts`.
 8. British English. Dates like "16 Sep 2026" (EN) and "16. Sep. 2026" (DE).
 9. Keep the authored copy from `handoff/source-content/` where it exists; restructure, do not invent facts or numbers. Where the handoff provides copy (Site specimen, Templates), use it verbatim.
 10. Keep the specimen's spacing exactly (the Site specimen's inline styles tell you the values: translate them into classes with the same numbers).
+
+## 6a. UX rules (owner, 22 Oct 2026)
+
+From the UX review against the twenty interface laws (Hick, Fitts, Jakob, proximity, Miller,
+Doherty, Von Restorff, serial position, peak-end, …). The theme toggle stays as it is for now.
+
+1. **One accent per section** (§3, gate G-15): the section's earned figure or its primary action, never both.
+2. **One primary action per section**, `.cta` in the accent. The contact pair (`src/components/ContactActions.astro`): the mailto `.cta`, the address as selectable text, a "Copy address" button with immediate feedback. Used on the cover, the home 03 About block, the close of every project and (as a mailto cta callout) the About contact section.
+3. **Contact is one step away everywhere**: "Contact" in the header cluster and the footer leads to the About page's contact section, not to a mail client.
+4. **Essentials first**: below 768 the cover's body (name, role, sentence, action) comes before its rail; a document's contents collapse into a closed `<details>` under the metric strip; the 404 offers the way back before the joke.
+5. **Fewer choices, less noise**: no year column in listings, no listing head rows on the home page, no status vocabulary block, no plain labels beside the cover's action, no "Edition" row.
+6. **Links look like links**: links in the trail, the meta row and the header carry the hairline underline (D-032), where they sit among mono labels of the same style.
+7. **Keep the reader oriented**: the contents rail is sticky from 768 up; documents show their reading time; a project ends on one question and one action, with the repository as a quiet link and the next project only in the end bar.
+8. **Benches answer at once and accept what is typed**: below 768 the verdict leads and stays in view while the controls scroll; every readout is an editable field (`src/lib/tools/parse.mjs` accepts either decimal mark, grouping, units, "k"); an unreadable entry stays in the field with a note on how to fix it; out-of-range entries are kept within bounds and say so; the inputs live in the URL (`src/lib/tools/url-state.mjs`); the slider thumb is 20px.
 
 ## 7. Verification
 
@@ -146,4 +164,4 @@ import Base from '@/layouts/Base.astro';
 - `hasCode`: adds `<script src="/scripts/code.js">` (deferred) — the only per-page script switch.
 - Base renders `<main id="main" class="grid-container">` around the slot. Pages place `.section` blocks and `.grid` rows inside it, as the Site specimen does.
 - `src/lib/i18n.ts` exports `t(lang, key)` and the dictionaries; `src/lib/site.ts` exports `site = { name, wordmark: 'BRAGA', email, location: { en: 'Greater Graz, Austria', de: 'Großraum Graz, Österreich' }, url }`.
-- The theme toggle script (inline in Base, no framework): reads the resolved theme, flips `document.documentElement.dataset.theme`, writes `localStorage['bk-theme']` only after the click, updates the two `theme-color` metas, and updates the button's `aria-label`.
+- The theme toggle script (inline in Base, no framework): reads the resolved theme, flips `document.documentElement.dataset.theme`, writes `localStorage['bk-theme']` only after the click, updates the two `theme-color` metas, and updates the button's `aria-label`. The same inline script reveals the `[data-copy]` buttons of the contact pair (shipped `hidden`) and swaps their label for two seconds after a click ("Copied", or how to recover).

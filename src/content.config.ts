@@ -79,7 +79,7 @@ const code = z.string().regex(/^\d{2}-\d{2}$/, 'a code is two two-digit groups, 
 const lang = z.enum(LANGS);
 const tags = z.array(z.string().min(1)).default([]);
 
-/** One tile of the metric strip. `value` is the formatted figure as it reads ("€453,000", "38 s"); `accent` marks the one earned figure (D-025). */
+/** One tile of the metric strip. `value` is the formatted figure as it reads ("€453,000", "38 s"); `accent` marks the strip's one earned figure (one accent per section). */
 const metric = z.object({
   value: z.string().min(1),
   label: z.string().min(1),
@@ -109,7 +109,7 @@ export const projectSchema = z
     translationStatus: z.enum(TRANSLATION_STATUSES).default('approved'),
   })
   .refine((p) => p.metrics.filter((m) => m.accent).length <= 1, {
-    message: 'at most one metric carries accent: true (D-025, one earned figure per view)',
+    message: 'at most one metric carries accent: true (one accent per section: the metric strip is one section)',
     path: ['metrics'],
   });
 

@@ -130,7 +130,11 @@ A blockquote without a marker stays a quotation. The authoring guide, on the ord
 ### Bookmark · `[!bookmark]`
 
 > [!bookmark] Next
-> [01-05 Energy procurement risk analyser](/en/work/energy-procurement-risk-analyzer/) — From electricity-price records to a cost-risk decision. In build.
+> [01-04 Energy procurement risk analyser](/en/work/energy-procurement-risk-analyzer/) — From electricity-price records to a cost-risk decision. In build.
+
+## Actions
+
+The primary action of a section carries that section’s one accent (UX pass, 22 Oct 2026; gate G-15), so it sits in a section of its own here, apart from the earned figure of the metrics callout above.
 
 ### Call to action · `[!cta]`
 

@@ -1,7 +1,8 @@
 ---
 // 04-02 · A/B sample size — Site pattern 06 (Bench). Opener on the page
 // grid, the Preact island (default scenario server-rendered), then the
-// no-script note. German strings are drafts (O-05): the DE page carries
+// no-script note, inside <noscript> (UX pass, 22 Oct 2026: a reader
+// with JavaScript does not need it). German strings are drafts (O-05): the DE page carries
 // the in-build mark in its meta row.
 import Base from '@/layouts/Base.astro';
 import DocOpener from '@/components/DocOpener.astro';
@@ -44,6 +45,6 @@ const copy = {
   />
   <div class="tool-body">
     <AbSampleSizeBench client:load lang={lang} />
-    <Callout type="tool"><p>{t(lang, 'tool.nojs')}</p></Callout>
+    <noscript><Callout type="tool"><p>{t(lang, 'tool.nojs')}</p></Callout></noscript>
   </div>
 </Base>

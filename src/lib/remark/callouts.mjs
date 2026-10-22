@@ -28,6 +28,7 @@
 // design-system/components.css, section 3, and charts.css, section 1; no
 // class is invented here).
 import { number, percent, currency, unit as withUnit } from '../format.mjs';
+import { copyButtonProps, mailtoAddress } from '../contact.mjs';
 
 /** Inline node types a text node may sit inside and still be "in a paragraph". */
 const INLINE = new Set(['emphasis', 'strong', 'delete', 'link', 'linkReference', 'superscript', 'subscript']);
@@ -277,7 +278,12 @@ function bookmarkLink(content, ctx, node) {
 function ctaLink(content, ctx, node) {
   const found = findLink(content);
   if (!found) { ctx.report({ message: 'cta callout: no link in the content', node, severity: 'warning' }); return; }
-  content[found.block] = el('a', { href: found.link.url }, [...found.link.children, text(' '), glyph(found.link.url)]);
+  const link = el('a', { href: found.link.url }, [...found.link.children, text(' '), glyph(found.link.url)]);
+  if (!/^mailto:/i.test(found.link.url)) { content[found.block] = link; return; }
+  // a mailto button gets the copy button beside it (src/lib/contact.mjs)
+  const lang = ctx.data && ctx.data.astro && ctx.data.astro.frontmatter && ctx.data.astro.frontmatter.lang === 'de' ? 'de' : 'en';
+  const props = copyButtonProps(lang, mailtoAddress(found.link.url));
+  content[found.block] = el('div', { className: ['contact-actions'] }, [link, el('button', props, [text(props.dataLabel)])]);
 }
 
 /* ---------------------------------------------------------------------------

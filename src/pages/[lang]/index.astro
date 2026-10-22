@@ -1,21 +1,22 @@
 ---
 // Home — Site pattern 02 (Cover) and 03 (Index): the title page, then the
 // four doors as sections, each opened by a section heading (kicker 3 /
-// claim 7 / forward link 2) and followed by its rows.
+// claim 7 / forward link 2) and followed by its rows. UX pass, 22 Oct 2026:
+// the listings carry no head row (four sections would repeat it) and no
+// year column; each section spends its one accent on one thing (G-15).
 //
-//   Cover       Site specimen s02, verbatim: the coverSpec rail (Based in ·
-//               Focus · Edition), the name, the role, one sentence, the
-//               ruled footer with the one call to action.
+//   Cover       Site specimen s02: the rail (Based in · Focus), the name,
+//               the role, one sentence, the contact pair (the accent).
 //   01 Work     Site specimen s03: claim, prose and "All 5 projects" as the
 //               specimen sets them; one row per project of the language,
 //               by code (the projects collection: title, summary as the
-//               sub line, domain, status, year).
+//               sub line, domain, status).
 //   02 Writing  the claim the Writing index shares (i18n); one sentence of
 //               prose from home.yaml sections[02]; the writing collection.
-//   03 About    claim and prose from home.yaml sections[03]; one row per
-//               h2 of the About document, numbered 03-NN as that page
-//               draws them, linked to the heading's id; the sub lines are
-//               home.yaml's subNodes (Skills has none there: see below).
+//   03 About    claim and prose from home.yaml sections[03], the forward
+//               link to the profile, then one block instead of a row per
+//               About heading: the contact line (home.yaml's Contact
+//               subNode) and the contact pair.
 //   04 Tools    claim and prose from home.yaml sections[04]; the two
 //               benches (src/lib/catalogue.ts, shared with the index).
 //
@@ -31,12 +32,12 @@ import Cover from '@/components/Cover.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import Listing from '@/components/Listing.astro';
 import ListingRow from '@/components/ListingRow.astro';
-import { render } from 'astro:content';
+import ContactActions from '@/components/ContactActions.astro';
 import { t, formatDate, isDraftLang, type Lang } from '@/lib/i18n';
 import { route, workRoute, writingRoute } from '@/lib/routes';
 import { LANGS, site } from '@/lib/site';
 import { tools } from '@/lib/catalogue';
-import { projectsOf, writingOf, writingCode, yearOf, pageOf } from '@/lib/collections';
+import { projectsOf, writingOf, writingCode } from '@/lib/collections';
 
 export function getStaticPaths() {
   return LANGS.map((lang) => ({ params: { lang } }));
@@ -44,34 +45,21 @@ export function getStaticPaths() {
 
 const lang = Astro.params.lang as Lang;
 
-// about.rows: the 03 About rows' sub lines, keyed by the heading id of the
-// About document in that language (src/content/pages/<lang>/about.md).
-// home.yaml sections[03].subNodes, British spelling, "Marketing Data
-// Science role" → the v2 role (D-001); CV says "plain tables", since the
-// About CV holds two (Experience, Education) where home.yaml says "a plain
-// table". Skills is the one h2 without a home.yaml line; its line names the
-// four categories the About page lists. The edition keeps month and year
-// together with an NBSP, as format.mjs does inside every date.
+// about.contact: home.yaml sections[03].subNodes, the Contact line, with
+// the v2 role (D-001).
 const copy = {
   en: {
     title: 'Marketing Data Analyst',
     lead: 'Marketing experience, translated into analytical work. Questions about demand, allocation and cost, answered with data and explicit limits.',
     titleLines: ['Marketing', 'Data Analyst'],
     focus: 'Marketing · Data · Decisions',
-    edition: 'October 2026',
     writing: {
       prose: 'Two registers, deliberately kept apart; everything is dated, so nothing reads as more settled than it is.',
     },
     about: {
       claim: 'The work sits where a marketing decision meets the evidence for it.',
       prose: 'Most of it is measurement that has to survive a budget meeting, with the uncertainty carried through to the decision rather than rounded away.',
-      rows: {
-        background: 'A marketing career in which the technical work kept moving towards the centre, and one conviction: a measurement only counts once it changes an allocation.',
-        'expertise--approach': 'Frame the decision first, estimate honestly with the uncertainty attached, then optimise the metric that actually matters. The toolbox serves that order, not the reverse.',
-        skills: 'Domains, methods, toolbox and practice, listed by category.',
-        cv: 'Roles and education set as plain tables, newest first.',
-        contact: 'Email is the direct line, and it is answered. Worth writing about: a Marketing Data Analyst role, a measurement setup that looks misspecified, or a model whose numbers have stopped agreeing with the business.',
-      } as Record<string, string>,
+      contact: 'Email is the direct line, and it is answered. Worth writing about: a Marketing Data Analyst role, a measurement setup that looks misspecified, or a model whose numbers have stopped agreeing with the business.',
     },
     tools: {
       claim: 'Some arguments are easier to make with a control than with a paragraph.',
@@ -83,20 +71,13 @@ const copy = {
     lead: 'Marketing-Erfahrung, übersetzt in analytische Arbeit. Fragen zu Nachfrage, Allokation und Kosten, beantwortet mit Daten und ausdrücklich genannten Grenzen.',
     titleLines: ['Marketing', 'Data Analyst'],
     focus: 'Marketing · Daten · Entscheidungen',
-    edition: 'Oktober 2026',
     writing: {
       prose: 'Zwei Register, bewusst getrennt; alles ist datiert, damit nichts gefestigter wirkt, als es ist.',
     },
     about: {
       claim: 'Die Arbeit liegt dort, wo eine Marketingentscheidung auf ihre Belege trifft.',
       prose: 'Meist sind es Messungen, die eine Budgetbesprechung überstehen müssen, wobei die Unsicherheit bis zur Entscheidung mitgeführt statt weggerundet wird.',
-      rows: {
-        hintergrund: 'Eine Marketinglaufbahn, in der die technische Arbeit immer weiter ins Zentrum rückte, und eine Überzeugung: Eine Messung zählt erst, wenn sie eine Allokation verändert.',
-        'expertise-und-arbeitsweise': 'Zuerst die Entscheidung rahmen, dann ehrlich schätzen, mit ausgewiesener Unsicherheit, und schließlich die Kennzahl optimieren, auf die es tatsächlich ankommt. Der Werkzeugkasten dient dieser Reihenfolge, nicht umgekehrt.',
-        kenntnisse: 'Fachgebiete, Methoden, Werkzeugkasten und Praxis, nach Kategorie geordnet.',
-        lebenslauf: 'Berufsstationen und Ausbildung als schlichte Tabellen, die jüngsten zuerst.',
-        kontakt: 'E-Mail ist der direkte Weg, und sie wird beantwortet. Anlässe zum Schreiben: eine Rolle als Marketing Data Analyst, ein Messaufbau, der fehlspezifiziert wirkt, oder ein Modell, dessen Zahlen nicht mehr zum Geschäft passen.',
-      } as Record<string, string>,
+      contact: 'E-Mail ist der direkte Weg, und sie wird beantwortet. Anlässe zum Schreiben: eine Rolle als Marketing Data Analyst, ein Messaufbau, der fehlspezifiziert wirkt, oder ein Modell, dessen Zahlen nicht mehr zum Geschäft passen.',
     },
     tools: {
       claim: 'Manche Argumente lassen sich mit einem Regler leichter führen als mit einem Absatz.',
@@ -108,25 +89,10 @@ const copy = {
 const spec = [
   { k: t(lang, 'cover.based-in'), v: site.location[lang] },
   { k: t(lang, 'cover.focus'), v: copy.focus },
-  { k: t(lang, 'cover.edition'), v: copy.edition },
 ];
 const projects = await projectsOf(lang);
 const writing = await writingOf(lang);
 const allProjects = projects.length ? t(lang, 'all-n-projects').replace('{n}', String(projects.length)) : t(lang, 'all-projects');
-
-// 03 About: the About document's h2 sections in order, without the
-// footnotes heading, numbered as the page draws them (01, 02, … under 03).
-// A heading without a line above fails the build, so a renamed section is
-// caught here rather than shipped as a row without its sub line.
-const about = await pageOf('about', lang);
-const aboutSections = about
-  ? (await render(about)).headings.filter((h) => h.depth === 2 && h.slug !== 'footnote-label')
-  : [];
-const aboutRows = aboutSections.map((h, i) => {
-  const sub = copy.about.rows[h.slug];
-  if (!sub) throw new Error(`home (${lang}): no 03 About row line for the About heading "${h.text}" (#${h.slug}); add it to src/pages/[lang]/index.astro`);
-  return { code: `03-${String(i + 1).padStart(2, '0')}`, title: h.text, sub, href: `${route('about', lang)}#${h.slug}` };
-});
 ---
 <Base lang={lang} page="home" title={copy.title} description={copy.lead}>
   <Cover lang={lang} spec={spec} titleLines={copy.titleLines} lead={copy.lead} draft={isDraftLang(lang)} />
@@ -134,9 +100,9 @@ const aboutRows = aboutSections.map((h, i) => {
   <section class="section" id="work">
     <SectionHeading number="01" word={t(lang, 'door.work')} claim={t(lang, 'work.claim')} prose={t(lang, 'work.prose')} link={{ href: route('work', lang), label: allProjects }} />
     {projects.length > 0 && (
-      <Listing head={{ index: t(lang, 'index'), title: t(lang, 'project'), meta: t(lang, 'discipline-status'), trail: t(lang, 'year') }}>
+      <Listing>
         {projects.map((p) => (
-          <ListingRow code={p.data.code} title={p.data.title} sub={p.data.summary} meta={[p.data.domain]} status={p.data.status} lang={lang} trail={yearOf(p.data.date)} href={workRoute(p.data.slug, lang)} />
+          <ListingRow code={p.data.code} title={p.data.title} sub={p.data.summary} meta={[p.data.domain]} status={p.data.status} lang={lang} href={workRoute(p.data.slug, lang)} />
         ))}
       </Listing>
     )}
@@ -145,9 +111,9 @@ const aboutRows = aboutSections.map((h, i) => {
   <section class="section" id="writing">
     <SectionHeading number="02" word={t(lang, 'door.writing')} claim={t(lang, 'writing.claim')} prose={copy.writing.prose} link={{ href: route('writing', lang), label: t(lang, 'all-writing') }} />
     {writing.length > 0 && (
-      <Listing head={{ index: t(lang, 'index'), title: t(lang, 'title'), meta: t(lang, 'kind-date'), trail: t(lang, 'year') }}>
+      <Listing>
         {writing.map((e, i) => (
-          <ListingRow code={writingCode(e, i)} title={e.data.title} sub={e.data.summary} meta={[t(lang, `kind.${e.data.kind}`), formatDate(e.data.date, lang)]} lang={lang} trail={yearOf(e.data.date)} href={writingRoute(e.data.slug, lang)} />
+          <ListingRow code={writingCode(e, i)} title={e.data.title} sub={e.data.summary} meta={[t(lang, `kind.${e.data.kind}`), formatDate(e.data.date, lang)]} lang={lang} href={writingRoute(e.data.slug, lang)} />
         ))}
       </Listing>
     )}
@@ -155,18 +121,17 @@ const aboutRows = aboutSections.map((h, i) => {
 
   <section class="section" id="about">
     <SectionHeading number="03" word={t(lang, 'door.about')} claim={copy.about.claim} prose={copy.about.prose} link={{ href: route('about', lang), label: t(lang, 'open-profile') }} />
-    {aboutRows.length > 0 && (
-      <Listing head={{ index: t(lang, 'index'), title: t(lang, 'section'), meta: '', trail: '' }}>
-        {aboutRows.map((row) => (
-          <ListingRow code={row.code} title={row.title} sub={row.sub} lang={lang} trail={t(lang, 'read')} href={row.href} />
-        ))}
-      </Listing>
-    )}
+    <div class="grid">
+      <div class="section-contact">
+        <p class="prose">{copy.about.contact}</p>
+        <ContactActions lang={lang} />
+      </div>
+    </div>
   </section>
 
   <section class="section" id="tools">
     <SectionHeading number="04" word={t(lang, 'door.tools')} claim={copy.tools.claim} prose={copy.tools.prose} link={{ href: route('tools', lang), label: t(lang, 'all-tools') }} />
-    <Listing head={{ index: t(lang, 'index'), title: t(lang, 'tool'), meta: t(lang, 'discipline-status'), trail: t(lang, 'open') }}>
+    <Listing>
       {tools(lang).map((row) => (
         <ListingRow code={row.code} title={row.title} sub={row.sub} meta={[row.domain]} status={row.status} lang={lang} trail={t(lang, 'open')} href={route(row.page, lang)} />
       ))}

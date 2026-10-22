@@ -1,6 +1,6 @@
 ---
 title: Decision analytics reconstruction
-code: "01-03"
+code: "01-02"
 kind: case
 date: "2026-05-07"
 summary: A three-module reconstruction. Allocation gains are proxies, not campaign effects.
@@ -95,7 +95,7 @@ On a USD 6 million envelope, the MILP produces about 54.77% more linearised pe
 
 The one true out-of-sample check is reported unflattered. Refitting the tracker with each real poll wave held out, and the election result provably excluded, the 95% band caught the held-out poll in 3 of 6 tested waves, with a Brier score of 0.31 on the sign of the margin.
 
-> [!bars] Fig. 01-03-1 · Out-of-sample check
+> [!bars] Fig. 01-02-1 · Out-of-sample check
 > The 95% band caught the held-out poll in 3 of 6 waves.
 > - Tested — 6
 > - Caught — 3
@@ -123,9 +123,3 @@ What this does not establish:
 Report each module only as far as its own check reaches: the segments as a fit to synthetic voters, the allocation gain as a solver comparison on synthetic reach, and the tracking curve as a retrodiction. The reconstruction does not claim that analytics caused the 3.70-point margin. The public result is the anchor; showing what the model can and cannot support is the point of the work.
 
 Functional: the three modules run end to end. It is a portfolio reconstruction, not a production campaign system. The repository holds the code, the case study and the validation gates.
-
-> [!bookmark] Next
-> [01-04 Warehouse humanoid TCO](/en/work/warehouse-humanoid-tco/) — At the modelled demand, humanoids do not yet beat the lean hybrid.
-
-> [!cta]
-> [Open the repository](https://github.com/RafaelBraga-Kribitz/decision-analytics-reconstruction)

@@ -1,6 +1,6 @@
 ---
 title: TCO humanoider Roboter im Lager
-code: "01-04"
+code: "01-05"
 kind: case
 date: "2026-05-21"
 updated: "2026-09-16"
@@ -64,7 +64,7 @@ Ein nachverfolgter Befund hat das Hauptergebnis verändert.[^1] Eine frühere Ve
 
 Von den sieben Szenarien hat die schlanke Hybridvariante aus einer Person und drei AMR den niedrigsten Kostenbarwert über fünf Jahre. Ihr Investitionsbedarf beträgt € 195.000.
 
-> [!bars] Abb. 01-04-1 · Kostenbarwert über fünf Jahre nach Szenario
+> [!bars] Abb. 01-05-1 · Kostenbarwert über fünf Jahre nach Szenario
 > Die schlanke Hybridvariante kostet 30 % weniger als reines Personal und weniger als ein Fünftel des besten Humanoid-Falls.
 > - Person + 3 AMR — 453
 > - Nur Personal — 647
@@ -115,10 +115,6 @@ Unter diesen Annahmen: die schlanke Hybridvariante jetzt einsetzen und die Besch
 
 Das Repository enthält den Code, die Grafiken, die Management-Zusammenfassungen und die Governance-Dokumentation.
 
-> [!bookmark] Weiter
-> [01-05 Risikoanalyse für die Energiebeschaffung](/de/work/energy-procurement-risk-analyzer/) — Von Strompreisdaten zu einer Kosten-Risiko-Entscheidung. Im Aufbau.
 
-> [!cta] Handlungsaufforderung
-> [Repository öffnen](https://github.com/RafaelBraga-Kribitz/warehouse_humanoid_tco)
 
 [^1]: Die Entwicklung folgt einem Governance-Protokoll, das in der Continuous Integration (CI, automatisierte Prüfung bei jeder Änderung) durchgesetzt wird: Jede Änderung schließt einen nachverfolgten Befund mit einem benannten Prüfskript ab, und die CI führt bei jedem Pull-Request das Skript jedes abgeschlossenen Befunds erneut aus.

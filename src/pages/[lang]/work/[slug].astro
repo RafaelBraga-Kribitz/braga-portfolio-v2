@@ -1,18 +1,20 @@
 ---
 // 01-NN · A project — the document template (docs/PAGE-BRIEF.md, Site
 // specimen s04): the opener on the page grid (trail "01 Work → 01-04",
-// title, lead, meta: domain · status · Published · Updated · Repository ↗),
+// title, lead, meta: domain · status · Published · reading time · Updated ·
+// Repository ↗),
 // then the contents rail on 3 and the document on 9: the metric strip from
 // the frontmatter `metrics` (the accent one carries the accent), the
-// Markdown body, and the end bar (← All projects · § END · next project
-// by code, wrapping to the first). One page per language per entry of the
+// Markdown body, the close (UX pass, 22 Oct 2026: the contact pair with
+// the subject prefilled, then the repository link) and the end bar
+// (← All projects · § END · next project by code, wrapping to the first). One page per language per entry of the
 // projects collection; every word comes from the entry or from i18n.
 import Document from '@/layouts/Document.astro';
 import { render } from 'astro:content';
 import { t, formatDate, type Lang } from '@/lib/i18n';
 import { route, workRoute } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
-import { projectsOf, nextOf, type ProjectEntry } from '@/lib/collections';
+import { projectsOf, nextOf, readingMinutes, type ProjectEntry } from '@/lib/collections';
 
 export async function getStaticPaths() {
   const paths = [];
@@ -35,6 +37,7 @@ const meta = [
   { text: d.domain },
   { status: d.status },
   { text: `${t(lang, 'published')} ${formatDate(d.date, lang)}` },
+  { text: t(lang, 'min-read').replace('{n}', String(readingMinutes(entry.body))) },
   ...(d.updated ? [{ text: `${t(lang, 'updated')} ${formatDate(d.updated, lang)}` }] : []),
   ...(d.repository ? [{ text: t(lang, 'repository'), href: d.repository, external: true }] : []),
 ];
@@ -54,6 +57,7 @@ const meta = [
   metrics={d.metrics}
   prev={{ href: route('work', lang), label: t(lang, 'all-projects') }}
   next={next && { href: workRoute(next.data.slug, lang), label: `${next.data.code} ${next.data.title}` }}
+  close={{ subject: t(lang, 'contact.subject').replace('{title}', `${d.code} ${d.title}`), repository: d.repository }}
 >
   <Content />
 </Document>

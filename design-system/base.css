@@ -241,7 +241,7 @@ td, th, dd, output, input, .num { font-variant-numeric: var(--num); }
 .doc sup { font-size: max(12px, 0.75em); line-height: 0; vertical-align: super; }   /* 12px at the 16px body, and never less in a 13px cell or a 15px callout */
 .doc sup a { font-family: var(--font-mono); color: var(--ink-2); text-decoration: none; padding-inline: 2px; }
 .doc img { display: block; max-width: 100%; height: auto; }
-/* ==text== in prose: the earned figure, accent text, at most one per section (D-025) */
+/* ==text== in prose: the earned figure, accent text, at most one per section (G-15) */
 .doc p mark, .doc li mark { color: var(--accent-01); font-variant-numeric: var(--num); }
 /* blockquote outside a callout: surface-2 wash on a rhythm rule (no side rules in v2) */
 .doc > blockquote { background: var(--surface-2); border-top: var(--rule); padding: 24px; }

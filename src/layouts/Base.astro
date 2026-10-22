@@ -2,7 +2,11 @@
 // Base layout: the contract of BUILD-BRIEF §9. Every page gets the head
 // (the pre-paint theme script as its first script), the skip link, the
 // shell, one <main id="main">, the footer, the inline theme toggle, and –
-// only when hasCode — code.js. Nothing else runs on a content page.
+// only when hasCode — code.js. Nothing else runs on a content page. The
+// inline shell script also reveals and runs the "Copy address" buttons
+// of the contact pair (src/components/ContactActions.astro, the mailto
+// cta callout; labels in src/lib/contact.mjs): it acknowledges a click at
+// once ("Copied", or how to recover when the clipboard refuses).
 //
 // Theme (D-024). The two theme-color metas come before the pre-paint
 // script so that it can reach them: with a stored choice it sets
@@ -91,7 +95,7 @@ const shareAlt = `${site.wordmark} · ${site.name} · ${site.role[lang]}`;
     <Shell lang={lang} page={page} current={current} />
     <main id="main" class="grid-container"><slot /></main>
     <Footer lang={lang} />
-    <script is:inline>(function(){var b=document.querySelector('.shell-theme');if(!b)return;var d=document.documentElement;var ms=document.querySelectorAll('meta[name="theme-color"]');function current(){return d.dataset.theme||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}function label(theme){b.setAttribute('aria-label',b.getAttribute('data-label')+' · '+(theme==='dark'?b.getAttribute('data-dark'):b.getAttribute('data-light')))}label(current());try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){if(!d.dataset.theme)label(current())})}catch(e){}b.addEventListener('click',function(){var next=current()==='dark'?'light':'dark';d.dataset.theme=next;try{localStorage.setItem('bk-theme',next)}catch(e){}var c=getComputedStyle(d).backgroundColor;for(var i=0;i<ms.length;i++)ms[i].setAttribute('content',c);label(next)})})()</script>
+    <script is:inline>(function(){var d=document.documentElement;var cb=document.querySelectorAll('[data-copy]');for(var i=0;i<cb.length;i++)cb[i].hidden=false;document.addEventListener('click',function(e){var c=e.target.closest&&e.target.closest('[data-copy]');if(!c)return;function done(ok){c.textContent=c.getAttribute(ok?'data-copied':'data-failed');clearTimeout(c._bk);c._bk=setTimeout(function(){c.textContent=c.getAttribute('data-label')},ok?2000:6000)}if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(c.getAttribute('data-copy')).then(function(){done(true)},function(){done(false)});else done(false)});var b=document.querySelector('.shell-theme');if(!b)return;var ms=document.querySelectorAll('meta[name="theme-color"]');function current(){return d.dataset.theme||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}function label(theme){b.setAttribute('aria-label',b.getAttribute('data-label')+' · '+(theme==='dark'?b.getAttribute('data-dark'):b.getAttribute('data-light')))}label(current());try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){if(!d.dataset.theme)label(current())})}catch(e){}b.addEventListener('click',function(){var next=current()==='dark'?'light':'dark';d.dataset.theme=next;try{localStorage.setItem('bk-theme',next)}catch(e){}var c=getComputedStyle(d).backgroundColor;for(var i=0;i<ms.length;i++)ms[i].setAttribute('content',c);label(next)})})()</script>
     {hasCode && <script is:inline src={withBase('/scripts/code.js')} defer></script>}
   </body>
 </html>
