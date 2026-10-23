@@ -15,7 +15,7 @@
 
 /* ---------- 1 · THE BENCH ----------
      <section class="bench-tool">
-       <div class="bench-head"><span class="label">04-02 · A/B testing · sample size</span>
+       <div class="bench-head"><span class="label">03-02 · A/B testing · sample size</span>
          <span class="label">Two-sided · <span class="sym">α</span> = 0.05 · equal arms</span></div>
        <div class="bench grid">
          <div class="bench-controls col-4">
@@ -30,7 +30,7 @@
            <p class="bench-verdict display" role="status">…</p>
            <div class="bench-kpis"><div class="kpi">
              <div class="label">Per arm</div><div class="kpi-value">39,473</div><div class="kpi-note">visitors</div></div> ×4</div>
-           <div class="bench-figure"><div class="bench-figure-head"><span class="label">Fig. 04-02 · …</span>
+           <div class="bench-figure"><div class="bench-figure-head"><span class="label">Fig. 03-02 · …</span>
              <span class="label dim">log scale · lift 2–50%</span></div>
              <div class="bench-figure-scroll" tabindex="0" role="group" aria-labelledby="…">
                <svg viewBox="0 0 640 260" role="img" aria-label="…">…</svg></div></div>
@@ -108,7 +108,7 @@
      ordered first and sticks to the top of the viewport) */
   .bench-output { display: contents; }
   .bench-verdict {
-    order: -1; position: sticky; top: 0; z-index: 1;
+    order: -1; position: sticky; top: var(--shell-h); z-index: 1;
     background: var(--surface); padding-block: 16px; border-bottom: var(--rule);
     font-size: var(--t-body);
   }
@@ -226,7 +226,7 @@
   .range-value { height: 44px; }
 }
 
-/* ---------- 3 · THE CONFUSION MATRIX (04-01) ----------
+/* ---------- 3 · THE CONFUSION MATRIX (03-01) ----------
    A 2 × 2 grid with its headers: rows are the actual class, columns the
    predicted one. TP and TN sit on surface-2; FP and FN carry the bad-
    variance tint (D-016, a mark, never type) and the ▲ on their label.

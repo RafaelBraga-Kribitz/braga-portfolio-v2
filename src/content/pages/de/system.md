@@ -88,7 +88,7 @@ Ein Zitatblock ohne Markierung bleibt ein Zitat. Der Autorenleitfaden über die 
 
 ### Werkzeug · `[!tool]`
 
-> [!tool] 04-02 · A/B-Stichprobengröße · interaktiv
+> [!tool] 03-02 · A/B-Stichprobengröße · interaktiv
 > Die Regler brauchen JavaScript. Ohne JavaScript gilt das Standardszenario: Bei einer Basisrate von 4 %, einem relativen Lift (Steigerung der Konversionsrate) von 10 % und einer Power (Teststärke) von 80 % braucht der Test **39.473** Besucher pro Arm – 40 Tage bei 2.000 Besuchern pro Tag. Eine Demonstration des Vokabulars; das Werkzeug selbst ist [04-02 A/B-Stichprobengröße](/de/tools/ab-sample-size/).
 
 ### Zusammenfassung · `[!summary]`

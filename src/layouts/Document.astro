@@ -59,20 +59,22 @@ interface Props {
   back?: Link;
   /** Language of the document body when it differs from the page (a kitchen sink kept in English). */
   bodyLang?: Lang;
+  /** A portrait in the opener's left column (About). */
+  portrait?: { src?: string; alt: string; caption: string; empty: string };
   /** The close of a project: the mail subject and the repository link. */
   close?: { subject: string; repository?: string };
 }
 
 const {
   lang, page, title, heading, description, current, hasCode = false, noindex = false,
-  trail, lead, meta = [], draft = false, headings, metrics = [], prev, next, back, bodyLang, close,
+  trail, lead, meta = [], draft = false, headings, metrics = [], prev, next, back, bodyLang, close, portrait,
 } = Astro.props;
 
 const sections = headings.filter((h) => h.depth === 2 && h.slug !== 'footnote-label');
 const toc = sections.map((h, i) => ({ n: String(i + 1).padStart(2, '0'), title: h.text, href: `#${h.slug}` }));
 ---
 <Base lang={lang} page={page} title={title} description={description} current={current} hasCode={hasCode} noindex={noindex} ogType="article">
-  <DocOpener lang={lang} grid trail={trail} title={heading ?? title} lead={lead} meta={meta} draft={draft} />
+  <DocOpener lang={lang} grid trail={trail} title={heading ?? title} lead={lead} meta={meta} draft={draft} portrait={portrait} />
   <div class="grid">
     {toc.length > 0 && <Toc class="col-3" lang={lang} items={toc} />}
     <article class:list={['doc', 'col-9', toc.length === 0 && 'col-start-4']} lang={bodyLang && bodyLang !== lang ? bodyLang : undefined}>

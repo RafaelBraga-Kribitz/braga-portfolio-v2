@@ -12,7 +12,8 @@ import Base from '@/layouts/Base.astro';
 import DocOpener from '@/components/DocOpener.astro';
 import Callout from '@/components/Callout.astro';
 import DocEnd from '@/components/DocEnd.astro';
-import { route } from '@/lib/routes';
+import { route, contactRoute } from '@/lib/routes';
+import { mailParts } from '@/lib/contact.mjs';
 import { site } from '@/lib/site';
 import { dash, NBSP } from '@/lib/format.mjs';
 
@@ -20,7 +21,9 @@ const lang = 'en' as const;
 const home = route('home', lang);
 const homeDe = route('home', 'de');
 const n1 = `n${NBSP}=${NBSP}1`;
-const report = `mailto:${site.email}?subject=${encodeURIComponent('Broken link')}`;
+// the report link opens a mail with the subject set; its address is
+// assembled on click and is not in the page (src/lib/contact.mjs)
+const mail = mailParts(site.email);
 const matrixLabel = 'Two by two matrix: you expected a page and it exists, all indexed pages; you expected a page and it does not exist, one, this request; you did not expect a page and it exists, zero; you did not expect a page and none exists, the rest of the web';
 ---
 <Base lang={lang} page="notfound" title="No such page" description="The address resolves to nothing in this document. The index lists everything that exists." noindex>
@@ -39,7 +42,7 @@ const matrixLabel = 'Two by two matrix: you expected a page and it exists, all i
     <Callout type="cta" title="Way back">
       <a href={home}>Back to the index <span class="glyph" aria-hidden="true">→</span></a>
     </Callout>
-    <p class="link-line"><a href={report}>Report the broken link <span class="glyph" aria-hidden="true">↗</span></a></p>
+    <p class="link-line"><a href={contactRoute('en')} data-mail data-u={mail.u} data-d={mail.d} data-subject="Broken link">Report the broken link <span class="glyph" aria-hidden="true">↗</span></a></p>
     <Callout type="metrics" title="Readings">
       <ul>
         <li><b>0</b><span>Pages at this address</span></li>

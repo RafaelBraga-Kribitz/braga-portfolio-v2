@@ -93,7 +93,7 @@ sr-only pattern) are not rendered text and are left out of G-01 to G-06.
 | G-05 | Targets ≥ 24 / 44px | a link, button, input, select, textarea, summary or role=tab/switch/button is narrower or shorter than 24px, or 44px below a 768px viewport; links inline in a sentence are exempt (WCAG 2.5.8) |
 | G-06 | No horizontal overflow | `scrollWidth` exceeds `clientWidth`, or an element's right edge passes the viewport outside an `overflow-x: auto/scroll` wrapper that itself fits; only the outermost offender is listed |
 | G-07 | Square corners | any element or `::before`/`::after` has a radius above 0 |
-| G-08 | No shadow, gradient, blur | `box-shadow`, `text-shadow`, a gradient `background-image`, a `blur()`/`drop-shadow()` filter or a `backdrop-filter`, on any element or pseudo-element |
+| G-08 | No shadow, gradient, blur | `box-shadow`, `text-shadow`, a gradient `background-image`, a `blur()`/`drop-shadow()` filter or a `backdrop-filter`, on any element or pseudo-element; the one exception is the `backdrop-filter` of the sticky `header.shell` (its glass, owner, 23 Oct 2026) |
 | G-09 | Heading order | not exactly one `h1`, or a level is skipped (h2 → h4) |
 | G-10 | Landmarks + skip link | `header`, `nav` or `footer` missing; not exactly one `main`; two landmarks of one role share a name (axe's best-practice `landmark-unique`, which the WCAG tags of A-01 leave out: the header doors and the footer's Index group were both "Index"); the first tab stop is not the `.skip` link; its `#target` does not exist |
 | G-11 | Reduced motion | no `@media (prefers-reduced-motion: reduce)` rule, or none sets `--dur` to a value that resolves to 0 |

@@ -65,6 +65,23 @@
   container-type: inline-size; container-name: shell;
   background: var(--surface); color: var(--ink);
   border-bottom: var(--hairline);
+  position: sticky; top: 0; z-index: 20;
+}
+/* glass (owner, 23 Oct 2026; the one exception to "no blur", D-021): the
+   sticky header lets the page show through, blurred, on a surface tint
+   of 78%, so the type keeps its contrast whatever passes under it. A
+   reader who asked for less transparency, or a browser without
+   backdrop-filter, gets the opaque surface. Gate G-08 allows the blur on
+   .shell alone. */
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .shell {
+    background: color-mix(in srgb, var(--surface) 78%, transparent);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    backdrop-filter: blur(18px) saturate(1.4);
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .shell { background: var(--surface); -webkit-backdrop-filter: none; backdrop-filter: none; }
 }
 /* the hairline (.shell) runs full bleed; the bar keeps to the page grid,
    so above --page-max the wordmark and the theme square stand on the
@@ -201,7 +218,7 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
 /* ---------- 4 · COVER (Site 02) ----------
    A title page on the 12-column grid: a spec-sheet rail on 3, the
    name with its ink mark, the role, one sentence and a ruled footer
-   that holds the contact pair on 9: the cover's one accent is its
+   that holds the contact button on 9: the cover's one accent is its
    primary button (G-15). Below 768 the body comes first and the rail
    follows it (essentials first: name, role, sentence, action). A complete block
    with its own hairline and 64px top padding: use it directly in
@@ -213,8 +230,7 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
          <p class="label cover-name">Rafael Braga-Kribitz</p>
          <h1 class="cover-role">Marketing<br>Data Analyst</h1>
          <p class="prose cover-lead">…</p>
-         <div class="cover-foot"><div class="contact-actions"><a class="cta" href="mailto:…">Get in touch ↗</a>
-           <span class="contact-address">…</span><button class="button" data-copy hidden>Copy address</button></div></div>
+         <div class="cover-foot"><div class="mail-split">…</div></div>
        </div>
      </section> */
 .cover {
@@ -250,7 +266,11 @@ main > .cover:first-child { border-top: 0; }
 }
 
 /* ---------- 5 · SECTION HEADING (Site 03) ----------
-   Opens on an ink rule: kicker on 3, claim on 7, forward link on 2.
+   Opens on an ink rule. Owner, 23 Oct 2026 (indentation reversed): the
+   section number stands alone on column 1 and the section's text starts
+   on column 2 (the word, then the claim on 8), the forward link on 3 at
+   the right; the listing rows under it are the second level and sit
+   further in (components.css section 1). Below 768 it stacks.
      <div class="section-heading">
        <p class="section-heading-kicker label"><span>01</span><span>Work</span></p>
        <div class="section-heading-claim"><h2 class="display">A decision. Its evidence.</h2>
@@ -263,18 +283,20 @@ main > .cover:first-child { border-top: 0; }
   border-top: var(--rule-open); padding-top: 16px;
 }
 .section-heading-kicker, .section-heading > .col-3 {
-  grid-column: span 3; margin: 0; color: var(--ink); display: flex; gap: 16px; min-width: 0;
+  margin: 0; color: var(--ink); display: contents; min-width: 0;
   font-family: var(--font-mono); font-weight: 400; font-size: var(--t-mono-sm);
   letter-spacing: var(--tracking-label); text-transform: uppercase; font-variant-numeric: var(--num);
 }
-.section-heading-claim, .section-heading > .col-7 { grid-column: span 7; min-width: 0; }
+.section-heading-kicker > span:first-child { grid-column: 1; grid-row: 1; }
+.section-heading-kicker > span:last-child { grid-column: 2 / span 8; grid-row: 1; }
+.section-heading-claim, .section-heading > .col-7 { grid-column: 2 / span 8; grid-row: 2; min-width: 0; }
 .section-heading-claim > :is(h1, h2, h3, .display) {
   margin: 0; font: var(--w-display) var(--t-h3) / var(--lh-snug) var(--font-display);
   letter-spacing: var(--tracking-tight); text-wrap: balance;
 }
 .section-heading-claim > p { margin: 16px 0 0; color: var(--ink-2); max-width: var(--measure); text-wrap: pretty; }
 .section-heading-link, .section-heading > .col-2 {
-  grid-column: span 2; justify-self: end; align-self: start;
+  grid-column: 10 / span 3; grid-row: 1; justify-self: end; align-self: start;
   display: inline-flex; gap: 12px; align-items: center; min-height: 24px; white-space: nowrap;
   color: var(--ink); text-decoration: none;
   font-family: var(--font-mono); font-weight: 400; font-size: var(--t-mono-sm);
@@ -283,16 +305,17 @@ main > .cover:first-child { border-top: 0; }
 .section-heading-link .glyph { color: var(--ink-2); }
 .section-heading-link:hover .glyph { color: var(--accent-01); }
 .section-heading + .listing { margin-top: 32px; }
-/* the home 03 About block (UX pass): a contact line and the contact pair
-   under the claim, on the claim's columns (4 to 10); full width below 768 */
-.section-contact { grid-column: 4 / span 7; min-width: 0; }
+/* the home 04 About block (UX pass): a contact line and the contact pair
+   under the claim, on the claim's columns (2 to 9); full width below 768 */
+.section-contact { grid-column: 2 / span 8; min-width: 0; }
 .section-contact > * + * { margin-top: 24px; }
 @media (max-width: 767px) { .section-contact { grid-column: 1 / -1; } }
 @media (max-width: 767px) {
   .section-heading { grid-template-columns: minmax(0, 1fr); }
   /* :is() lifts this to the specificity of the .section-heading > .col-N
      rules above, so the stack wins (else the spans make implicit columns) */
-  .section-heading > :is(*, [class*="col-"], [class*="section-heading-"]) { grid-column: 1 / -1; justify-self: start; }
+  .section-heading > :is(*, [class*="col-"], [class*="section-heading-"]) { grid-column: 1 / -1; grid-row: auto; justify-self: start; }
+  .section-heading-kicker { display: flex; gap: 16px; }
 }
 
 /* ---------- 6 · DOCUMENT OPENER, TRAIL, LEAD, META, END (P-08 · 3 + Site 04) ----------
@@ -324,6 +347,17 @@ main > .cover:first-child { border-top: 0; }
   text-decoration-color: var(--mid); text-underline-offset: 0.3em;
 }
 .doc-trail a:hover, .doc-meta a:hover { text-decoration-color: var(--ink); }
+/* the portrait (owner, 23 Oct 2026): under the trail on the opener's three
+   columns, a 4:5 photo opened by the ink rule that opens every block,
+   square, unframed, with a mono caption. Until the file exists the frame
+   is a surface-2 field of the same size with a label. Below 768 it is
+   capped at 200px so the title stays near the top. */
+.portrait { margin: 32px 0 0; border-top: var(--rule-open); padding-top: 16px; max-width: 280px; }
+.portrait img, .portrait-empty { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; }
+.portrait-empty { background: var(--surface-2); display: grid; place-items: center; }
+.portrait-empty .label { color: var(--ink-3); }
+.portrait figcaption { margin-top: 12px; color: var(--ink-2); }
+@media (max-width: 767px) { .portrait { max-width: 200px; margin-top: 24px; } }
 .doc-trail a { color: var(--ink-2); min-height: 24px; display: inline-flex; align-items: center; }
 .doc-trail a:hover { color: var(--ink); }
 .doc-trail b { font-weight: 400; color: var(--ink); }
@@ -360,7 +394,7 @@ main > .doc:last-child, .doc-opener.grid + .grid { padding-bottom: 64px; }
    contact pair with the mail subject prefilled (the section's one accent,
    G-15), then the repository as a quiet link. Opens on an ink rule.
      <div class="doc-close"><p>Questions about this project…?</p>
-       <div class="contact-actions">…</div><p class="link-line"><a>Open the repository ↗</a></p></div> */
+       <div class="mail-split">…</div><p class="link-line"><a>Open the repository ↗</a></p></div> */
 .doc-close { grid-column: wide; border-top: var(--rule-open); padding-top: 24px; }
 .doc-close > * + * { margin-top: 24px; }
 .doc-close > p:first-child { font: var(--w-display) var(--t-h3, 1.25rem) / 1.3 var(--font-display); letter-spacing: var(--tracking-tight); max-width: 36ch; text-wrap: balance; }
@@ -379,7 +413,7 @@ main > .doc:last-child, .doc-opener.grid + .grid { padding-bottom: 64px; }
    closed <details> at the top of the article, so the summary and the
    figures are not pushed down by six lines of contents */
 @media (min-width: 768px) {
-  nav.toc { position: sticky; top: 32px; align-self: start; max-height: calc(100vh - 64px); overflow-y: auto; }
+  nav.toc { position: sticky; top: calc(var(--shell-h) + 32px); align-self: start; max-height: calc(100vh - var(--shell-h) - 64px); overflow-y: auto; }
   .toc-compact { display: none; }
 }
 @media (max-width: 767px) {

@@ -14,10 +14,14 @@
 /* ---------- 0 · reset ---------- */
 *, *::before, *::after { box-sizing: border-box; }
 
+/* the sticky header's height (owner, 23 Oct 2026: the header sticks):
+   80px in one row, 101px in two rows below 768 (layout.css section 2) */
+:root { --shell-h: 80px; }
+@media (max-width: 767px) { :root { --shell-h: 101px; } }
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  scroll-padding-top: 96px;        /* P-02 rule 4: anchors land below the 80px header + 16 (WCAG 2.4.11) */
+  scroll-padding-top: calc(var(--shell-h) + 16px);   /* P-02 rule 4: anchors land below the sticky header + 16 (WCAG 2.4.11) */
 }
 body {
   margin: 0;

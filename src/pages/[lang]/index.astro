@@ -13,11 +13,11 @@
 //               sub line, domain, status).
 //   02 Writing  the claim the Writing index shares (i18n); one sentence of
 //               prose from home.yaml sections[02]; the writing collection.
-//   03 About    claim and prose from home.yaml sections[03], the forward
+//   04 About    claim and prose from home.yaml sections[03], the forward
 //               link to the profile, then one block instead of a row per
 //               About heading: the contact line (home.yaml's Contact
 //               subNode) and the contact pair.
-//   04 Tools    claim and prose from home.yaml sections[04]; the two
+//   03 Tools    claim and prose from home.yaml sections[04]; the two
 //               benches (src/lib/catalogue.ts, shared with the index).
 //
 // Rows come from src/lib/collections.ts, which the section indexes and the
@@ -119,22 +119,22 @@ const allProjects = projects.length ? t(lang, 'all-n-projects').replace('{n}', S
     )}
   </section>
 
+  <section class="section" id="tools">
+    <SectionHeading number="03" word={t(lang, 'door.tools')} claim={copy.tools.claim} prose={copy.tools.prose} link={{ href: route('tools', lang), label: t(lang, 'all-tools') }} />
+    <Listing>
+      {tools(lang).map((row) => (
+        <ListingRow code={row.code} title={row.title} sub={row.sub} meta={[row.domain]} status={row.status} lang={lang} trail={t(lang, 'open')} href={route(row.page, lang)} />
+      ))}
+    </Listing>
+  </section>
+
   <section class="section" id="about">
-    <SectionHeading number="03" word={t(lang, 'door.about')} claim={copy.about.claim} prose={copy.about.prose} link={{ href: route('about', lang), label: t(lang, 'open-profile') }} />
+    <SectionHeading number="04" word={t(lang, 'door.about')} claim={copy.about.claim} prose={copy.about.prose} link={{ href: route('about', lang), label: t(lang, 'open-profile') }} />
     <div class="grid">
       <div class="section-contact">
         <p class="prose">{copy.about.contact}</p>
         <ContactActions lang={lang} />
       </div>
     </div>
-  </section>
-
-  <section class="section" id="tools">
-    <SectionHeading number="04" word={t(lang, 'door.tools')} claim={copy.tools.claim} prose={copy.tools.prose} link={{ href: route('tools', lang), label: t(lang, 'all-tools') }} />
-    <Listing>
-      {tools(lang).map((row) => (
-        <ListingRow code={row.code} title={row.title} sub={row.sub} meta={[row.domain]} status={row.status} lang={lang} trail={t(lang, 'open')} href={route(row.page, lang)} />
-      ))}
-    </Listing>
   </section>
 </Base>

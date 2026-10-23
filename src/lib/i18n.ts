@@ -106,6 +106,8 @@ const en = {
   'as-of': 'As of',
   repository: 'Repository',
   'open-repository': 'Open the repository',
+  // the About portrait's empty frame, until the photo file exists
+  'portrait.empty': 'Photo · 4:5',
   // reading time in a document's meta row ({n} whole minutes, at least 1)
   'min-read': '{n}\u00A0min read',
   // tools
@@ -181,6 +183,7 @@ const de: Record<ChromeKey, string> = {
   'as-of': 'Stand',
   repository: 'Repository',
   'open-repository': 'Repository öffnen',
+  'portrait.empty': 'Foto · 4:5',
   'min-read': '{n}\u00A0Min. Lesezeit',
   'tool.nojs': 'Ohne JavaScript wird das Standardszenario gezeigt; die Regler brauchen JavaScript.',
 };

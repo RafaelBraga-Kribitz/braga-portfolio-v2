@@ -1,4 +1,4 @@
-// Confusion matrix — pure functions for the 04-01 bench. No DOM, no
+// Confusion matrix — pure functions for the 03-01 bench. No DOM, no
 // framework. The island (ConfusionMatrixBench.tsx) and the unit tests
 // both read this file.
 //

@@ -241,19 +241,20 @@ export async function pageGates(opts = {}) {
   out.push(result('G-07', 'Square corners', round, shown.length, 'no corner above 0', '%n elements carry a radius'));
 
   // G-08 · flat: no shadow, no gradient, no blur
-  const unflat = (s) => {
+  // the sticky header's glass (owner, 23 Oct 2026) is the one blur allowed
+  const unflat = (s, glass = false) => {
     const why = [];
     if (s.boxShadow && s.boxShadow !== 'none') why.push('box-shadow');
     if (s.textShadow && s.textShadow !== 'none') why.push('text-shadow');
     if (/gradient/.test(s.backgroundImage || '')) why.push('gradient');
     if (/blur\(|drop-shadow\(/.test(s.filter || '')) why.push('filter ' + s.filter);
     const bf = s.backdropFilter || s.webkitBackdropFilter;
-    if (bf && bf !== 'none') why.push('backdrop-filter ' + bf);
+    if (bf && bf !== 'none' && !glass) why.push('backdrop-filter ' + bf);
     return why;
   };
   const flat = [];
   for (const el of shown) {
-    const w = unflat(cs(el)); if (w.length) flat.push(`${desc(el)} · ${w.join(', ')}`);
+    const w = unflat(cs(el), el.matches('header.shell')); if (w.length) flat.push(`${desc(el)} · ${w.join(', ')}`);
     for (const [p, s] of pseudos(el)) { const v = unflat(s); if (v.length) flat.push(`${desc(el)}${p} · ${v.join(', ')}`); }
   }
   out.push(result('G-08', 'No shadow, gradient, blur', flat, shown.length, 'no shadow, gradient or blur in the rendered page', '%n elements use a shadow, a gradient or a blur'));

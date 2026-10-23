@@ -1,4 +1,4 @@
-// 04-01 · Confusion matrix — the same bench as 04-02 (Site s06): head
+// 03-01 · Confusion matrix — the same bench as 03-02 (Site s06): head
 // bar, controls on 4, output on 8, verdict, a 2 × 2 matrix, the eight
 // rates as readouts with the bench's one accent (the total cost, G-15),
 // and the cost arithmetic spelled out as the rule line. Default state is
@@ -21,7 +21,7 @@ type Cells = { tp: string; fp: string; fn: string; tn: string };
 const T = {
   en: {
     region: 'Confusion matrix bench',
-    head: '04-01 · Classification · confusion matrix',
+    head: '03-01 · Classification · confusion matrix',
     headRight: 'Binary · one operating point · costs per error',
     preset: 'Preset',
     inputs: 'Inputs',
@@ -34,7 +34,7 @@ const T = {
     costFN: '€ per FN',
     reset: 'Reset',
     limit: 'Limit: whole cases rounded from the rates, one operating point. The threshold curve behind it is not modelled.',
-    fig: 'Fig. 04-01 · Confusion matrix',
+    fig: 'Fig. 03-01 · Confusion matrix',
     figNote: (n: string) => `n\u00A0=\u00A0${n} · rows actual · columns predicted`,   // NBSP: format.equation
     matrix: 'Confusion matrix',
     predicted: ['Predicted positive', 'Predicted negative'],
@@ -48,7 +48,7 @@ const T = {
   },
   de: {
     region: 'Konfusionsmatrix',
-    head: '04-01 · Klassifikation · Konfusionsmatrix',
+    head: '03-01 · Klassifikation · Konfusionsmatrix',
     headRight: 'Binär · ein Arbeitspunkt · Kosten je Fehler',
     preset: 'Vorlage',
     inputs: 'Eingaben',
@@ -61,7 +61,7 @@ const T = {
     costFN: '€ pro FN',
     reset: 'Zurücksetzen',
     limit: 'Limit: ganze Fälle, aus den Raten gerundet, ein Arbeitspunkt. Die Schwellenkurve dahinter ist nicht modelliert.',
-    fig: 'Abb. 04-01 · Konfusionsmatrix',
+    fig: 'Abb. 03-01 · Konfusionsmatrix',
     figNote: (n: string) => `n\u00A0=\u00A0${n} · Zeilen tatsächlich · Spalten vorhergesagt`,
     matrix: 'Konfusionsmatrix',
     predicted: ['Vorhergesagt positiv', 'Vorhergesagt negativ'],

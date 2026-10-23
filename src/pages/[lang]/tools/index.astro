@@ -1,6 +1,6 @@
 ---
-// 04 · Tools index — Site pattern 03 (Index): section heading + listing.
-// Two rows, 04-01 and 04-02 (BUILD-BRIEF §4). The lead keeps the
+// 03 · Tools index — Site pattern 03 (Index): section heading + listing.
+// Two rows, 03-01 and 03-02 (BUILD-BRIEF §4). The lead keeps the
 // owner's copy from handoff/source-content/content/data/home.yaml
 // (tools.leadParagraphs[0]) with the brief's spaced en dash (O-03,
 // format.dash: NBSP before it so no line starts with the dash).
@@ -24,7 +24,7 @@ const lang = Astro.params.lang as Lang;
 
 // One <h1> per page (BUILD-BRIEF §6 rule 6): the claim is this page's
 // title. The rows and the prose come from src/lib/catalogue.ts, which the
-// home page's 04 Tools section shares.
+// home page's 03 Tools section shares.
 const copy = {
   en: {
     title: 'Tools',
@@ -38,9 +38,9 @@ const copy = {
   },
 }[lang];
 ---
-<Base lang={lang} page="tools" title={copy.title} description={copy.description} current="04">
+<Base lang={lang} page="tools" title={copy.title} description={copy.description} current="03">
   <section class="section">
-    <SectionHeading number="04" word={t(lang, 'door.tools')} claim={copy.claim} prose={toolsProse(lang)} as="h1" />
+    <SectionHeading number="03" word={t(lang, 'door.tools')} claim={copy.claim} prose={toolsProse(lang)} as="h1" />
     <Listing head={{ index: t(lang, 'index'), title: t(lang, 'tool'), meta: t(lang, 'discipline-status'), trail: t(lang, 'open') }}>
       {tools(lang).map((row) => (
         <ListingRow code={row.code} title={row.title} sub={row.sub} meta={[row.domain]} status={row.status} lang={lang} trail={t(lang, 'open')} href={route(row.page, lang)} />

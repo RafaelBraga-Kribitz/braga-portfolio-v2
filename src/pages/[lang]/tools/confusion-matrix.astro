@@ -1,5 +1,5 @@
 ---
-// 04-01 · Confusion matrix — Site pattern 06 (Bench). Opener on the page
+// 03-01 · Confusion matrix — Site pattern 06 (Bench). Opener on the page
 // grid, the Preact island (default scenario server-rendered), then the
 // no-script note, inside <noscript> (UX pass, 22 Oct 2026: a reader
 // with JavaScript does not need it). German strings are drafts (O-05): the DE page carries
@@ -33,11 +33,11 @@ const copy = {
   },
 }[lang];
 ---
-<Base lang={lang} page="tools.confusion-matrix" title={copy.title} description={copy.lead} current="04">
+<Base lang={lang} page="tools.confusion-matrix" title={copy.title} description={copy.lead} current="03">
   <DocOpener
     lang={lang}
     grid
-    trail={[{ label: `04 ${t(lang, 'door.tools')}`, href: route('tools', lang) }, { label: '04-01', current: true }]}
+    trail={[{ label: `03 ${t(lang, 'door.tools')}`, href: route('tools', lang) }, { label: '03-01', current: true }]}
     title={copy.h1}
     lead={copy.lead}
     meta={copy.meta.map((text) => ({ text }))}

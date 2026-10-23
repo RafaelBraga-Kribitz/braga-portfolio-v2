@@ -28,7 +28,7 @@
 // design-system/components.css, section 3, and charts.css, section 1; no
 // class is invented here).
 import { number, percent, currency, unit as withUnit } from '../format.mjs';
-import { copyButtonProps, mailtoAddress } from '../contact.mjs';
+import { MAIL_LABELS, mailParts, mailtoAddress } from '../contact.mjs';
 
 /** Inline node types a text node may sit inside and still be "in a paragraph". */
 const INLINE = new Set(['emphasis', 'strong', 'delete', 'link', 'linkReference', 'superscript', 'subscript']);
@@ -280,10 +280,18 @@ function ctaLink(content, ctx, node) {
   if (!found) { ctx.report({ message: 'cta callout: no link in the content', node, severity: 'warning' }); return; }
   const link = el('a', { href: found.link.url }, [...found.link.children, text(' '), glyph(found.link.url)]);
   if (!/^mailto:/i.test(found.link.url)) { content[found.block] = link; return; }
-  // a mailto button gets the copy button beside it (src/lib/contact.mjs)
+  // a mailto button becomes the split contact button, its address drawn by
+  // CSS and never written into the page (src/lib/contact.mjs). Open leads
+  // to this section without JavaScript.
   const lang = ctx.data && ctx.data.astro && ctx.data.astro.frontmatter && ctx.data.astro.frontmatter.lang === 'de' ? 'de' : 'en';
-  const props = copyButtonProps(lang, mailtoAddress(found.link.url));
-  content[found.block] = el('div', { className: ['contact-actions'] }, [link, el('button', props, [text(props.dataLabel)])]);
+  const w = MAIL_LABELS[lang];
+  const { u, d } = mailParts(mailtoAddress(found.link.url));
+  const subject = new URLSearchParams(String(found.link.url).split('?')[1] || '').get('subject');
+  content[found.block] = el('div', { className: ['mail-split'], dataU: u, dataD: d, ...(subject ? { dataSubject: subject } : {}) }, [
+    el('span', { className: ['mail-split-face'], ariaHidden: 'true' }, [el('span', { className: ['mail-split-addr'], dataU: u, dataD: d }), el('span', { className: ['glyph'] }, [text('↗')])]),
+    el('button', { type: 'button', className: ['mail-split-copy'], ariaLabel: w.copyName, dataLabel: w.copy, dataCopied: w.copied, dataFailed: w.failed, hidden: true }, [text(w.copy)]),
+    el('a', { className: ['mail-split-open'], href: lang === 'de' ? '#kontakt' : '#contact', ariaLabel: w.openName, hidden: true }, [text(`${w.open} `), el('span', { className: ['glyph'], ariaHidden: 'true' }, [text('↗')])]),
+  ]);
 }
 
 /* ---------------------------------------------------------------------------

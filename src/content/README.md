@@ -128,7 +128,7 @@ translationStatus: approved    # a German file: draft until the owner approves
 ---
 ```
 
-About renders with the document template (trail `03 About`); the kitchen
+About renders with the document template (trail `04 About`); the kitchen
 sink with the same template, noindex, trail `§ Index → <title>`, outside the
 sitemap. Everything below the opener (spec callouts, the CV table, the
 contact cta) is written in the body.

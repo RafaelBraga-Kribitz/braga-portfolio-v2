@@ -1,7 +1,7 @@
 ---
 // 03 · About — the document template (docs/PAGE-BRIEF.md: a 04 Document
 // variant) over the `pages` collection entry src/content/pages/<lang>/
-// about.md: the opener on the page grid (trail "03 About", title, lead,
+// about.md: the opener on the page grid (trail "04 About", title, lead,
 // meta: Updated <date> when set, the draft mark for an unapproved German
 // file), the contents rail on 3, the Markdown body on 9 (spec callout,
 // skills, CV table, contact: all authored in the file), the end bar back
@@ -10,7 +10,7 @@ import Document from '@/layouts/Document.astro';
 import { render } from 'astro:content';
 import { t, formatDate, type Lang } from '@/lib/i18n';
 import { route } from '@/lib/routes';
-import { LANGS } from '@/lib/site';
+import { LANGS, site } from '@/lib/site';
 import { pageOf, type PageEntry } from '@/lib/collections';
 
 export async function getStaticPaths() {
@@ -28,6 +28,17 @@ const { entry } = Astro.props;
 const lang = Astro.params.lang as Lang;
 const d = entry.data;
 const { Content, headings, remarkPluginFrontmatter } = await render(entry);
+// The portrait (owner, 23 Oct 2026): put a 4:5 photo at
+// src/assets/portrait.jpg (or .jpeg, .png, .webp) and it appears in the
+// opener's left column; until then the frame shows empty at the same size.
+const photos = import.meta.glob<{ default: { src: string } }>('/src/assets/portrait.{jpg,jpeg,png,webp}', { eager: true });
+const photo = Object.values(photos)[0]?.default;
+const portrait = {
+  src: photo?.src,
+  alt: site.name,
+  caption: `${site.name} · ${site.location[lang]}`,
+  empty: t(lang, 'portrait.empty'),
+};
 const meta = d.updated ? [{ text: `${t(lang, 'updated')} ${formatDate(d.updated, lang)}` }] : [];
 ---
 <Document
@@ -35,15 +46,16 @@ const meta = d.updated ? [{ text: `${t(lang, 'updated')} ${formatDate(d.updated,
   page="about"
   title={d.title}
   description={d.summary}
-  current="03"
+  current="04"
   hasCode={remarkPluginFrontmatter?.hasCode === true}
-  trail={[{ label: `03 ${t(lang, 'door.about')}`, current: true }]}
+  trail={[{ label: `04 ${t(lang, 'door.about')}`, current: true }]}
   lead={d.lead}
   meta={meta}
   draft={d.translationStatus === 'draft'}
   headings={headings}
   bodyLang={d.contentLang}
   back={{ href: route('home', lang), label: t(lang, 'to-index') }}
+  portrait={portrait}
 >
   <Content />
 </Document>

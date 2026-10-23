@@ -38,6 +38,7 @@ Each is recorded where it lives in the code; reverse any of them there.
 9. **Confusion-matrix presets**: three of v1's five scenarios (Churn, Fraud, Leads), re-expressed as rates; recorded in `src/lib/tools/confusion-matrix.mjs`.
 10. **Mermaid is not wired** (the package is not installed); a `mermaid` fence renders as a code panel. The authoring guide says not to use one yet.
 11. **UX pass (owner, 22 Oct 2026, branch `ux/laws-pass`).** The site was reviewed against twenty interface laws and every recommendation was applied except the theme toggle, which stays as it is. **The accent rule changed from one per view (D-025) to one per section**: each section spends the accent on the one thing the reader should look at first, its earned figure or its primary action. `handoff/` is read-only, so the change is recorded here, in `BUILD-BRIEF.md` §3 and §6a, `design-system/README.md` and `tokens.css`, and enforced by the new gate G-15. The full list of changes is `BUILD-BRIEF.md` §6a. Project codes were renumbered (01-02 Decision analytics, 01-03 MMM, 01-04 Energy, 01-05 Warehouse TCO) so complete projects open and close the list.
+12. **Owner feedback, 23 Oct 2026** (same branch): sticky glass header (the one blur); doors reordered to 01 Work · 02 Writing · 03 Tools · 04 About (tool codes 03-01, 03-02); a portrait frame on About (drop the photo at `src/assets/portrait.jpg`); the contact button splits into Copy / Open on hover and its address is drawn by CSS, never in the HTML; the contents rail marks the section in view; indentation reversed (section text from column 2, listing titles from column 4); footer order Site · Index · Others · Elsewhere. Rules in `BUILD-BRIEF.md` §3, §6 rule 3 and §6a.
 
 ## 3. What is left, in order
 
@@ -86,7 +87,7 @@ and a human look at every page against the specimens.
 
 - `main`: the integrated foundation (every gate green on the 10 pages that existed then) and the README.
 - `build/pages`: everything since, up to this handoff. A draft pull request into `main` is open; merge it once §3 items 1–4 are done, or merge now and continue on `main` if you prefer.
-- `ux/laws-pass`: the UX pass of §2 item 11, on top of `main`, in its own draft pull request so it can be merged or dropped as a whole.
+- `ux/laws-pass`: the UX pass of §2 items 11–12, on top of `main`, in its own draft pull request so it can be merged or dropped as a whole.
 
 ## 7. Continuing with Claude Code
 

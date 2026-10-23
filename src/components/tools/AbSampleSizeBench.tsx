@@ -1,4 +1,4 @@
-// 04-02 · A/B sample size — the Site specimen's bench (s06), one to one.
+// 03-02 · A/B sample size — the Site specimen's bench (s06), one to one.
 // A Preact island: the default scenario renders on the server, so the
 // page is complete without JavaScript; with it, every readout, the
 // verdict, the chart and the live equation follow the controls. The
@@ -163,7 +163,7 @@ export function BenchHead({ left, right }: { left: ComponentChildren; right: Com
 const T = {
   en: {
     region: 'A/B sample size bench',
-    head: '04-02 · A/B testing · sample size',
+    head: '03-02 · A/B testing · sample size',
     headRight: ['Two-sided · ', ' = 0.05 · equal arms'],   // NBSP: "α = 0.05" never breaks (format.equation)
     preset: 'Preset',
     inputs: 'Inputs',
@@ -174,7 +174,7 @@ const T = {
     reset: 'Reset',
     limit: 'Limit: normal approximation for two proportions. Does not cover sequential peeking or more than two arms.',
     kpi: { perArm: 'Per arm', total: 'Total', duration: 'Duration', mde: 'Absolute MDE' } as Record<string, string>,
-    fig: 'Fig. 04-02 · Sample per arm against lift',
+    fig: 'Fig. 03-02 · Sample per arm against lift',
     figNote: 'log scale · lift 2–50%',
     figAlt: 'Visitors per arm against relative lift on a log scale, with the eight-week ceiling at this traffic and the current lift marked.',
     cap: '8-week ceiling at this traffic',
@@ -182,7 +182,7 @@ const T = {
   },
   de: {
     region: 'A/B-Stichprobengröße',
-    head: '04-02 · A/B-Test · Stichprobengröße',
+    head: '03-02 · A/B-Test · Stichprobengröße',
     headRight: ['Zweiseitig · ', ' = 0,05 · gleiche Arme'],
     preset: 'Vorlage',
     inputs: 'Eingaben',
@@ -193,7 +193,7 @@ const T = {
     reset: 'Zurücksetzen',
     limit: 'Limit: Normalapproximation für zwei Anteile. Deckt weder sequentielles Nachschauen noch mehr als zwei Arme ab.',
     kpi: { perArm: 'Pro Arm', total: 'Gesamt', duration: 'Dauer', mde: 'Absolute MDE' } as Record<string, string>,
-    fig: 'Abb. 04-02 · Stichprobe pro Arm gegen Lift',
+    fig: 'Abb. 03-02 · Stichprobe pro Arm gegen Lift',
     figNote: 'log-Skala · Lift 2–50 %',
     figAlt: 'Besucher pro Arm gegen relativen Lift auf einer log-Skala, mit der Acht-Wochen-Grenze bei diesem Traffic und dem aktuellen Lift markiert.',
     cap: '8-Wochen-Grenze bei diesem Traffic',

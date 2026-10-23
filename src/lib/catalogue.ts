@@ -1,9 +1,9 @@
-// The tool rows the home page's 04 Tools section and the tools index share.
+// The tool rows the home page's 03 Tools section and the tools index share.
 // Projects and essays are not listed here: they come from the content
 // collections (src/content.config.ts) through src/lib/collections.ts. The
 // tools are pages, not Markdown, so their rows stay in code.
 //
-//   tools     the two benches of BUILD-BRIEF §4 (codes 04-01, 04-02)
+//   tools     the two benches of BUILD-BRIEF §4 (codes 03-01, 03-02)
 //
 // German: the tool rows and the prose are agent drafts awaiting the owner's
 // approval (HANDOFF O-05).
@@ -36,8 +36,8 @@ const toolCopy: Record<Lang, { cm: Omit<ToolRow, 'code' | 'page' | 'status'>; ab
 export function tools(lang: Lang): ToolRow[] {
   const c = toolCopy[lang];
   return [
-    { code: '04-01', page: 'tools.confusion-matrix', status: 'functional', ...c.cm },
-    { code: '04-02', page: 'tools.ab-sample-size', status: 'functional', ...c.ab },
+    { code: '03-01', page: 'tools.confusion-matrix', status: 'functional', ...c.cm },
+    { code: '03-02', page: 'tools.ab-sample-size', status: 'functional', ...c.ab },
   ];
 }
 

@@ -22,8 +22,8 @@ export interface Door { code: DoorCode; id: DoorId }
 export const doors: readonly Door[] = [
   { code: '01', id: 'work' },
   { code: '02', id: 'writing' },
-  { code: '03', id: 'about' },
-  { code: '04', id: 'tools' },
+  { code: '03', id: 'tools' },
+  { code: '04', id: 'about' },
 ];
 
 export type StaticPageId =
@@ -154,17 +154,14 @@ export interface FooterLink {
 }
 export interface FooterGroup { title: string; links: FooterLink[] }
 
-/** The four footer groups of D-013 for a language. */
+/** The four footer groups of D-013 for a language, in the owner's order of 23 Oct 2026. */
 export function footerGroups(lang: Lang): FooterGroup[] {
   const other = otherLang(lang);
   const elsewhere: FooterLink[] = [{ label: t(lang, 'link.github'), href: site.github, external: true }];
   if (site.linkedin) elsewhere.push({ label: t(lang, 'link.linkedin'), href: site.linkedin, external: true });
   if (site.kaggle) elsewhere.push({ label: t(lang, 'link.kaggle'), href: site.kaggle, external: true });
+  // order (owner, 23 Oct 2026): Site, Index, Others, Elsewhere
   return [
-    {
-      title: t(lang, 'footer.index'),
-      links: doors.map((d) => ({ label: `${d.code} ${doorLabel(d, lang)}`, href: route(d.id, lang) })),
-    },
     {
       title: t(lang, 'footer.site'),
       links: [
@@ -173,7 +170,10 @@ export function footerGroups(lang: Lang): FooterGroup[] {
         { label: t(lang, 'link.language'), href: route('home', other), hreflang: other, lang: other },
       ],
     },
-    { title: t(lang, 'footer.elsewhere'), links: elsewhere },
+    {
+      title: t(lang, 'footer.index'),
+      links: doors.map((d) => ({ label: `${d.code} ${doorLabel(d, lang)}`, href: route(d.id, lang) })),
+    },
     {
       title: t(lang, 'footer.others'),
       links: [
@@ -184,5 +184,6 @@ export function footerGroups(lang: Lang): FooterGroup[] {
         { label: t(lang, 'link.accessibility'), href: route('accessibility', lang) },
       ],
     },
+    { title: t(lang, 'footer.elsewhere'), links: elsewhere },
   ];
 }

@@ -1,6 +1,8 @@
 ---
-// Section heading, Site specimen s03: opens on an ink rule; kicker
-// (number · word) on three columns, claim on seven, forward link on two.
+// Section heading, Site specimen s03: opens on an ink rule; the number on
+// column 1, the word and the claim from column 2, the forward link at the
+// right (owner, 23 Oct 2026: the first level starts further out than the
+// listing rows under it; layout.css section 5).
 interface Props {
   number: string;
   word: string;
@@ -17,10 +19,10 @@ const { number, word, claim, prose, link, as, id } = Astro.props;
 const Tag = as ?? 'h2';
 ---
 <div class="section-heading" id={id}>
-  <p class="col-3 label section-heading-kicker"><span>{number}</span><span>{word}</span></p>
-  <div class="col-7 section-heading-claim">
+  <p class="label section-heading-kicker"><span>{number}</span><span>{word}</span></p>
+  <div class="section-heading-claim">
     <Tag class="display">{claim}</Tag>
     {prose && <p class="prose">{prose}</p>}
   </div>
-  {link && <a href={link.href} class="col-2 label section-heading-link">{link.label} <span class="glyph" aria-hidden="true">→</span></a>}
+  {link && <a href={link.href} class="label section-heading-link">{link.label} <span class="glyph" aria-hidden="true">→</span></a>}
 </div>
