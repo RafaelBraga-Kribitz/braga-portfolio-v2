@@ -452,3 +452,36 @@ figure.fig[data-kind="diagram"] .nodeLabel, figure.fig[data-kind="diagram"] .edg
 }
 .fig-matrix-cell[data-accent] .fig-matrix-count { color: var(--accent-01); }
 .fig-matrix-cell[data-accent] .fig-matrix-tag { color: var(--ink); }
+
+/* ---------- KEYBOARD SHORTCUTS (owner, 23 Oct 2026) ----------
+   "?" opens dialog.keys (Base.astro): a sheet on the surface, opened by
+   the ink rule, square, no shadow; the page dims behind it. Keys are
+   kbd: mono figures in a --edge box. A section reached with j / k takes
+   focus for screen readers ([data-kbd-target]); the scroll is the cue,
+   so it draws no ring.
+     <dialog class="keys"><div class="keys-head"><h2 class="label">…</h2><button class="button">Close <kbd>Esc</kbd></button></div>
+       <p class="keys-lead">…</p><dl class="keys-list"><div><dt><kbd>j</kbd> / <kbd>k</kbd></dt><dd>…</dd></div>…</dl></dialog> */
+kbd {
+  display: inline-block; min-width: 24px; padding: 3px 6px; box-sizing: border-box; text-align: center;
+  font: 400 var(--t-mono-sm) / 1 var(--font-mono); color: var(--ink);
+  border: 1px solid var(--edge); border-radius: 0; background: var(--surface);
+}
+dialog.keys {
+  width: min(560px, calc(100% - 32px)); max-height: calc(100vh - 64px); overflow-y: auto;
+  margin: auto; padding: 24px; box-sizing: border-box;
+  background: var(--surface); color: var(--ink);
+  border: 0; border-top: var(--rule-open); border-radius: 0;
+}
+dialog.keys::backdrop { background: color-mix(in srgb, var(--ink) 45%, transparent); }
+.keys-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.keys-head h2 { margin: 0; }
+.keys-head .button kbd { min-width: 0; padding: 2px 4px; }
+.keys-lead { margin: 16px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); }
+.keys-list { margin: 16px 0 0; }
+.keys-list > div {
+  display: grid; grid-template-columns: 136px minmax(0, 1fr); gap: 16px; align-items: baseline;
+  padding-block: 10px; border-top: var(--rule);
+}
+.keys-list dt { color: var(--ink-2); font: 400 var(--t-mono-sm) / 1.6 var(--font-mono); white-space: nowrap; }
+.keys-list dd { margin: 0; font-size: var(--t-small); line-height: 1.5; }
+[data-kbd-target]:focus { outline: none; }

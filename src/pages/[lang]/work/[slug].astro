@@ -14,7 +14,7 @@ import { render } from 'astro:content';
 import { t, formatDate, type Lang } from '@/lib/i18n';
 import { route, workRoute } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
-import { projectsOf, nextOf, readingMinutes, type ProjectEntry } from '@/lib/collections';
+import { projectsOf, nextOf, prevOf, readingMinutes, type ProjectEntry } from '@/lib/collections';
 
 export async function getStaticPaths() {
   const paths = [];
@@ -32,6 +32,7 @@ const lang = Astro.params.lang as Lang;
 const d = entry.data;
 const { Content, headings, remarkPluginFrontmatter } = await render(entry);
 const next = nextOf(list, entry);
+const prev = prevOf(list, entry);
 
 const meta = [
   { text: d.domain },
@@ -57,6 +58,8 @@ const meta = [
   metrics={d.metrics}
   prev={{ href: route('work', lang), label: t(lang, 'all-projects') }}
   next={next && { href: workRoute(next.data.slug, lang), label: `${next.data.code} ${next.data.title}` }}
+  nextDoc={next && workRoute(next.data.slug, lang)}
+  prevDoc={prev && workRoute(prev.data.slug, lang)}
   close={{ subject: t(lang, 'contact.subject').replace('{title}', `${d.code} ${d.title}`), repository: d.repository }}
 >
   <Content />

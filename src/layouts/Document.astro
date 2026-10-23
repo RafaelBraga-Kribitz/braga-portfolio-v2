@@ -59,6 +59,9 @@ interface Props {
   back?: Link;
   /** Language of the document body when it differs from the page (a kitchen sink kept in English). */
   bodyLang?: Lang;
+  /** The previous / next document's URL (the head's rel=prev/next: the p and n keys). */
+  prevDoc?: string;
+  nextDoc?: string;
   /** A portrait in the opener's left column (About). */
   portrait?: { src?: string; alt: string; caption: string; empty: string };
   /** The close of a project: the mail subject and the repository link. */
@@ -67,13 +70,13 @@ interface Props {
 
 const {
   lang, page, title, heading, description, current, hasCode = false, noindex = false,
-  trail, lead, meta = [], draft = false, headings, metrics = [], prev, next, back, bodyLang, close, portrait,
+  trail, lead, meta = [], draft = false, headings, metrics = [], prev, next, back, bodyLang, close, portrait, prevDoc, nextDoc,
 } = Astro.props;
 
 const sections = headings.filter((h) => h.depth === 2 && h.slug !== 'footnote-label');
 const toc = sections.map((h, i) => ({ n: String(i + 1).padStart(2, '0'), title: h.text, href: `#${h.slug}` }));
 ---
-<Base lang={lang} page={page} title={title} description={description} current={current} hasCode={hasCode} noindex={noindex} ogType="article">
+<Base lang={lang} page={page} title={title} description={description} current={current} hasCode={hasCode} noindex={noindex} ogType="article" prevDoc={prevDoc} nextDoc={nextDoc}>
   <DocOpener lang={lang} grid trail={trail} title={heading ?? title} lead={lead} meta={meta} draft={draft} portrait={portrait} />
   <div class="grid">
     {toc.length > 0 && <Toc class="col-3" lang={lang} items={toc} />}

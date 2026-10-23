@@ -123,6 +123,11 @@ export function contactRoute(lang: Lang): string {
   return `${route('about', lang)}#${lang === 'de' ? 'kontakt' : 'contact'}`;
 }
 
+/** The keyboard section of the accessibility statement (the shortcut list without JavaScript). */
+export function keysRoute(lang: Lang): string {
+  return `${route('accessibility', lang)}#${lang === 'de' ? 'tastatur' : 'keyboard'}`;
+}
+
 /** Absolute URL on the production origin (astro.config `site`); the base is added when the path lacks it. */
 export function absolute(path: string): string {
   return new URL(withBase(path), site.url).href;
@@ -149,6 +154,8 @@ export interface FooterLink {
   href: string;
   /** Leaves the site: rendered with the ↗ glyph. */
   external?: boolean;
+  /** Opens the keyboard-shortcut panel when JavaScript runs. */
+  keys?: boolean;
   hreflang?: Lang;
   lang?: Lang;
 }
@@ -182,6 +189,7 @@ export function footerGroups(lang: Lang): FooterGroup[] {
         { label: t(lang, 'link.impressum'), href: route('impressum', lang) },
         { label: t(lang, 'link.privacy'), href: route('privacy', lang) },
         { label: t(lang, 'link.accessibility'), href: route('accessibility', lang) },
+        { label: t(lang, 'link.keys'), href: keysRoute(lang), keys: true },
       ],
     },
     { title: t(lang, 'footer.elsewhere'), links: elsewhere },

@@ -110,6 +110,20 @@ const en = {
   'portrait.empty': 'Photo · 4:5',
   // reading time in a document's meta row ({n} whole minutes, at least 1)
   'min-read': '{n}\u00A0min read',
+  // keyboard shortcuts (owner, 23 Oct 2026): the panel that "?" opens
+  'keys.title': 'Keyboard shortcuts',
+  'keys.lead': 'Single keys, ignored while typing in a field or with Cmd, Ctrl or Alt held.',
+  'keys.home': 'Home',
+  'keys.doors': 'Work, Writing, Tools, About',
+  'keys.sections': 'Next / previous section on this page',
+  'keys.docs': 'Next / previous project or essay',
+  'keys.up': 'Up one level',
+  'keys.lang': 'Deutsch',
+  'keys.theme': 'Light or dark theme',
+  'keys.help': 'This list',
+  'keys.close': 'Close',
+  'keys.or': 'or',
+  'link.keys': 'Keyboard shortcuts',
   // tools
   'tool.nojs': 'Without JavaScript the default scenario is shown; the controls need JavaScript.',
 } as const;
@@ -185,6 +199,19 @@ const de: Record<ChromeKey, string> = {
   'open-repository': 'Repository öffnen',
   'portrait.empty': 'Foto · 4:5',
   'min-read': '{n}\u00A0Min. Lesezeit',
+  'keys.title': 'Tastaturkürzel',
+  'keys.lead': 'Einzelne Tasten; ohne Wirkung beim Tippen in ein Feld oder mit gehaltener Cmd-, Strg- oder Alt-Taste.',
+  'keys.home': 'Startseite',
+  'keys.doors': 'Arbeit, Schreiben, Werkzeuge, Über',
+  'keys.sections': 'Nächster / vorheriger Abschnitt dieser Seite',
+  'keys.docs': 'Nächstes / vorheriges Projekt oder Essay',
+  'keys.up': 'Eine Ebene höher',
+  'keys.lang': 'English',
+  'keys.theme': 'Hell- oder Dunkelmodus',
+  'keys.help': 'Diese Liste',
+  'keys.close': 'Schließen',
+  'keys.or': 'oder',
+  'link.keys': 'Tastaturkürzel',
   'tool.nojs': 'Ohne JavaScript wird das Standardszenario gezeigt; die Regler brauchen JavaScript.',
 };
 

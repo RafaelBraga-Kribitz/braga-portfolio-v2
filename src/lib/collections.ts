@@ -40,6 +40,13 @@ export function nextOf<T extends { id: string }>(list: readonly T[], current: T)
   return list[(i + 1) % list.length];
 }
 
+/** The entry before `current` in a list, wrapping to the last; none when the list has no other entry. */
+export function prevOf<T extends { id: string }>(list: readonly T[], current: T): T | undefined {
+  if (list.length < 2) return undefined;
+  const i = list.findIndex((e) => e.id === current.id);
+  return list[(i - 1 + list.length) % list.length];
+}
+
 /**
  * Reading time of a Markdown body in whole minutes (at least 1), at 200
  * words a minute: the meta row's "12 min read" (UX pass, 22 Oct 2026).

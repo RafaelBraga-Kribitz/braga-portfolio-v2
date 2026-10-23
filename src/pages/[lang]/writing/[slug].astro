@@ -11,7 +11,7 @@ import { render } from 'astro:content';
 import { t, formatDate, type Lang } from '@/lib/i18n';
 import { route, writingRoute } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
-import { writingOf, writingCode, nextOf, readingMinutes, type WritingEntry } from '@/lib/collections';
+import { writingOf, writingCode, nextOf, prevOf, readingMinutes, type WritingEntry } from '@/lib/collections';
 
 export async function getStaticPaths() {
   const paths = [];
@@ -30,6 +30,7 @@ const d = entry.data;
 const { Content, headings, remarkPluginFrontmatter } = await render(entry);
 const code = writingCode(entry, list.findIndex((e) => e.id === entry.id));
 const next = nextOf(list, entry);
+const prev = prevOf(list, entry);
 const nextCode = next ? writingCode(next, list.findIndex((e) => e.id === next.id)) : '';
 
 const meta = [
@@ -53,6 +54,8 @@ const meta = [
   headings={headings}
   prev={{ href: route('writing', lang), label: t(lang, 'all-writing') }}
   next={next && { href: writingRoute(next.data.slug, lang), label: `${nextCode} ${next.data.title}` }}
+  nextDoc={next && writingRoute(next.data.slug, lang)}
+  prevDoc={prev && writingRoute(prev.data.slug, lang)}
 >
   <Content />
 </Document>

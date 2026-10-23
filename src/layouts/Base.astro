@@ -7,8 +7,13 @@
 // button (src/components/ContactActions.astro, the mailto cta callout,
 // src/lib/contact.mjs): it reveals the Copy and Open halves, reassembles
 // the address from its reversed halves only on click, and acknowledges a
-// copy at once; and the contents rail's active item: the h2 section in
-// view gets aria-current="location" as the page scrolls.
+// copy at once; the contents rail's active item: the h2 section in
+// view gets aria-current="location" as the page scrolls; and the keyboard
+// shortcuts (owner, 23 Oct 2026): 0 home, 1–4 the doors, j/k the next or
+// previous section, n/p the next or previous document (the head's
+// rel=next/prev), u up one level, l the other language, t the theme, ?
+// the panel listing them (dialog.keys; Esc closes it). A key does nothing
+// while the reader types in a field or holds Cmd, Ctrl or Alt.
 //
 // Theme (D-024). The two theme-color metas come before the pre-paint
 // script so that it can reach them: with a stored choice it sets
@@ -45,9 +50,24 @@ interface Props {
   noindex?: boolean;
   /** og:type: a document (project, essay) is an article. */
   ogType?: 'website' | 'article';
+  /** The previous / next document (rel=prev / rel=next; the n and p keys). */
+  prevDoc?: string;
+  nextDoc?: string;
 }
 
-const { lang, page, title, description, current, hasCode = false, noindex = false, ogType = 'website' } = Astro.props;
+const { lang, page, title, description, current, hasCode = false, noindex = false, ogType = 'website', prevDoc, nextDoc } = Astro.props;
+// the shortcut panel (owner, 23 Oct 2026): rows of keys and what they do
+const keyRows: { keys: string[]; what: string }[] = [
+  { keys: ['0'], what: t(lang, 'keys.home') },
+  { keys: ['1', '2', '3', '4'], what: t(lang, 'keys.doors') },
+  { keys: ['j', 'k'], what: t(lang, 'keys.sections') },
+  { keys: ['n', 'p'], what: t(lang, 'keys.docs') },
+  { keys: ['u'], what: t(lang, 'keys.up') },
+  { keys: ['l'], what: t(lang, 'keys.lang') },
+  { keys: ['t'], what: t(lang, 'keys.theme') },
+  { keys: ['?'], what: t(lang, 'keys.help') },
+  { keys: ['Esc'], what: t(lang, 'keys.close') },
+];
 const canonical = absolute(route(page, lang));
 // The 404 has no German twin (one 404.html, English with the German
 // line), so it declares no hreflang pair: an hreflang="de" pointing at
@@ -90,6 +110,8 @@ const shareAlt = `${site.wordmark} · ${site.name} · ${site.role[lang]}`;
     <meta name="twitter:description" content={description}>
     <meta name="twitter:image" content={shareCard}>
     <meta name="twitter:image:alt" content={shareAlt}>
+    {prevDoc && <link rel="prev" href={prevDoc} />}
+    {nextDoc && <link rel="next" href={nextDoc} />}
     <link rel="alternate" type="application/rss+xml" title={`${site.name} · RSS`} href={feed}>
   </head>
   <body>
@@ -97,7 +119,14 @@ const shareAlt = `${site.wordmark} · ${site.name} · ${site.role[lang]}`;
     <Shell lang={lang} page={page} current={current} />
     <main id="main" class="grid-container"><slot /></main>
     <Footer lang={lang} />
-    <script is:inline>(function(){var d=document.documentElement;function rv(s){return (s||'').split('').reverse().join('')}function ad(n){return rv(n.getAttribute('data-u'))+'@'+rv(n.getAttribute('data-d'))}var ms=document.querySelectorAll('.mail-split');for(var i=0;i<ms.length;i++){ms[i].setAttribute('data-ready','');var hs=ms[i].querySelectorAll('[hidden]');for(var j=0;j<hs.length;j++)hs[j].hidden=false}document.addEventListener('click',function(e){var t=e.target;if(!t||!t.closest)return;var o=t.closest('.mail-split-open, a[data-mail]');if(o){var h=o.closest('[data-u]');if(!h)return;e.preventDefault();var s=h.getAttribute('data-subject');location.href='mailto:'+ad(h)+(s?'?subject='+encodeURIComponent(s):'');return}var c=t.closest('.mail-split-copy');if(!c)return;var m=c.closest('[data-u]');function done(ok){c.textContent=c.getAttribute(ok?'data-copied':'data-failed');clearTimeout(c._bk);c._bk=setTimeout(function(){c.textContent=c.getAttribute('data-label')},ok?2000:4000)}if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(ad(m)).then(function(){done(true)},function(){done(false)});else done(false)});var tl=document.querySelectorAll('nav.toc a[href^="#"]'),sec=[];for(var k=0;k<tl.length;k++){var el=document.getElementById(decodeURIComponent(tl[k].getAttribute('href').slice(1)));if(el)sec.push([el,tl[k]])}if(sec.length){var cur=null,tk=false;function spy(){tk=false;var y=(parseFloat(getComputedStyle(d).getPropertyValue('--shell-h'))||80)+48,a=null;for(var q=0;q<sec.length;q++){if(sec[q][0].getBoundingClientRect().top<=y)a=sec[q][1];else break}if(window.innerHeight+window.scrollY>=d.scrollHeight-2&&sec[sec.length-1][0].getBoundingClientRect().top<window.innerHeight)a=sec[sec.length-1][1];if(a!==cur){if(cur)cur.removeAttribute('aria-current');if(a)a.setAttribute('aria-current','location');cur=a}}addEventListener('scroll',function(){if(!tk){tk=true;requestAnimationFrame(spy)}},{passive:true});spy()}var b=document.querySelector('.shell-theme');if(!b)return;var ms=document.querySelectorAll('meta[name="theme-color"]');function current(){return d.dataset.theme||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}function label(theme){b.setAttribute('aria-label',b.getAttribute('data-label')+' · '+(theme==='dark'?b.getAttribute('data-dark'):b.getAttribute('data-light')))}label(current());try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){if(!d.dataset.theme)label(current())})}catch(e){}b.addEventListener('click',function(){var next=current()==='dark'?'light':'dark';d.dataset.theme=next;try{localStorage.setItem('bk-theme',next)}catch(e){}var c=getComputedStyle(d).backgroundColor;for(var i=0;i<ms.length;i++)ms[i].setAttribute('content',c);label(next)})})()</script>
+    <dialog class="keys" aria-labelledby="keys-title">
+      <div class="keys-head"><h2 id="keys-title" class="label">{t(lang, 'keys.title')}</h2><button type="button" class="button" data-keys-close>{t(lang, 'keys.close')} <kbd>Esc</kbd></button></div>
+      <p class="keys-lead">{t(lang, 'keys.lead')}</p>
+      <dl class="keys-list">
+        {keyRows.map((r) => <div><dt>{r.keys.map((k, i) => <Fragment>{i > 0 && (r.keys.length === 2 ? ' / ' : ' ')}<kbd>{k}</kbd></Fragment>)}</dt><dd>{r.what}</dd></div>)}
+      </dl>
+    </dialog>
+    <script is:inline>(function(){var d=document.documentElement;function rv(s){return (s||'').split('').reverse().join('')}function ad(n){return rv(n.getAttribute('data-u'))+'@'+rv(n.getAttribute('data-d'))}var ms=document.querySelectorAll('.mail-split');for(var i=0;i<ms.length;i++){ms[i].setAttribute('data-ready','');var hs=ms[i].querySelectorAll('[hidden]');for(var j=0;j<hs.length;j++)hs[j].hidden=false}document.addEventListener('click',function(e){var t=e.target;if(!t||!t.closest)return;var o=t.closest('.mail-split-open, a[data-mail]');if(o){var h=o.closest('[data-u]');if(!h)return;e.preventDefault();var s=h.getAttribute('data-subject');location.href='mailto:'+ad(h)+(s?'?subject='+encodeURIComponent(s):'');return}var c=t.closest('.mail-split-copy');if(!c)return;var m=c.closest('[data-u]');function done(ok){c.textContent=c.getAttribute(ok?'data-copied':'data-failed');clearTimeout(c._bk);c._bk=setTimeout(function(){c.textContent=c.getAttribute('data-label')},ok?2000:4000)}if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(ad(m)).then(function(){done(true)},function(){done(false)});else done(false)});var tl=document.querySelectorAll('nav.toc a[href^="#"]'),sec=[];for(var k=0;k<tl.length;k++){var el=document.getElementById(decodeURIComponent(tl[k].getAttribute('href').slice(1)));if(el)sec.push([el,tl[k]])}if(sec.length){var cur=null,tk=false;function spy(){tk=false;var y=(parseFloat(getComputedStyle(d).getPropertyValue('--shell-h'))||80)+48,a=null;for(var q=0;q<sec.length;q++){if(sec[q][0].getBoundingClientRect().top<=y)a=sec[q][1];else break}if(window.innerHeight+window.scrollY>=d.scrollHeight-2&&sec[sec.length-1][0].getBoundingClientRect().top<window.innerHeight)a=sec[sec.length-1][1];if(a!==cur){if(cur)cur.removeAttribute('aria-current');if(a)a.setAttribute('aria-current','location');cur=a}}addEventListener('scroll',function(){if(!tk){tk=true;requestAnimationFrame(spy)}},{passive:true});spy()}var dlg=document.querySelector('dialog.keys');function openKeys(){if(dlg&&!dlg.open&&dlg.showModal)dlg.showModal()}document.addEventListener('click',function(e){var t=e.target;if(!t||!t.closest)return;if(t.closest('[data-keys-open]')&&dlg&&dlg.showModal){e.preventDefault();openKeys()}else if(t.closest('[data-keys-close]')&&dlg)dlg.close();else if(t===dlg)dlg.close()});function go(h){if(h)location.href=h}function hrefOf(s){var a=document.querySelector(s);return a&&a.getAttribute('href')}function secs(){var a=document.querySelector('article.doc'),l=a&&a.querySelectorAll('h2[id]:not(#footnote-label)').length?a.querySelectorAll('h2[id]:not(#footnote-label)'):document.querySelectorAll('main > .cover, main > .section, main > .doc-opener, main > .tool-body, main > .grid');return Array.prototype.slice.call(l)}function jump(dir){var y=(parseFloat(getComputedStyle(d).getPropertyValue('--shell-h'))||80)+16,l=secs(),el=null;if(dir>0){for(var i=0;i<l.length;i++)if(l[i].getBoundingClientRect().top>y+8){el=l[i];break}}else{for(var j=l.length-1;j>=0;j--)if(l[j].getBoundingClientRect().top<y-8){el=l[j];break}}var sm=matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth';if(!el){if(dir<0)window.scrollTo({top:0,behavior:sm});return}if(!el.hasAttribute('tabindex'))el.setAttribute('tabindex','-1');el.setAttribute('data-kbd-target','');el.scrollIntoView({block:'start',behavior:sm});el.focus({preventScroll:true})}document.addEventListener('keydown',function(e){if(e.defaultPrevented||e.metaKey||e.ctrlKey||e.altKey)return;var t=e.target;if(t&&(t.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)))return;if(dlg&&dlg.open&&e.key!=='?')return;var k=e.key,doors=document.querySelectorAll('.shell-doors a');if(k==='?'){e.preventDefault();if(dlg&&dlg.open)dlg.close();else openKeys()}else if(k==='0')go(hrefOf('.shell-mark'));else if(/^[1-4]$/.test(k)&&doors[+k-1])go(doors[+k-1].getAttribute('href'));else if(k==='j'||k==='k'){e.preventDefault();jump(k==='j'?1:-1)}else if(k==='n')go(hrefOf('link[rel="next"]'));else if(k==='p')go(hrefOf('link[rel="prev"]'));else if(k==='u')go(hrefOf('.doc-trail a')||hrefOf('.shell-mark'));else if(k==='l')go(hrefOf('.shell-lang'));else if(k==='t'){var tb=document.querySelector('.shell-theme');if(tb)tb.click()}});var b=document.querySelector('.shell-theme');if(!b)return;var ms=document.querySelectorAll('meta[name="theme-color"]');function current(){return d.dataset.theme||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}function label(theme){b.setAttribute('aria-label',b.getAttribute('data-label')+' · '+(theme==='dark'?b.getAttribute('data-dark'):b.getAttribute('data-light')))}label(current());try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){if(!d.dataset.theme)label(current())})}catch(e){}b.addEventListener('click',function(){var next=current()==='dark'?'light':'dark';d.dataset.theme=next;try{localStorage.setItem('bk-theme',next)}catch(e){}var c=getComputedStyle(d).backgroundColor;for(var i=0;i<ms.length;i++)ms[i].setAttribute('content',c);label(next)})})()</script>
     {hasCode && <script is:inline src={withBase('/scripts/code.js')} defer></script>}
   </body>
 </html>
