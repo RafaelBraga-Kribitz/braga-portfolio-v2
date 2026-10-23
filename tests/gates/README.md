@@ -90,7 +90,7 @@ sr-only pattern) are not rendered text and are left out of G-01 to G-06.
 | G-02 | Text contrast | a text run is below 4.5:1, or 3:1 when large (≥ 24px, or ≥ 18.66px at 700+), against the first painted background found walking up the tree (unmeasurable over a background image) |
 | G-03 | Mid grey never text | a text run's colour equals the resolved `--mid` where it sits (D-007); glyph-only runs (→ ↗ · ▲ squares) are exempt |
 | G-04 | Accent text passes | a text run in the resolved `--accent-01` misses its threshold where it sits (never on the raised dark surface) |
-| G-05 | Targets ≥ 24 / 44px | a link, button, input, select, textarea, summary or role=tab/switch/button is narrower or shorter than 24px, or 44px below a 768px viewport; links inline in a sentence are exempt (WCAG 2.5.8) |
+| G-05 | Targets ≥ 24 / 44px | a link, button, input, select, textarea, summary or role=tab/switch/button is narrower or shorter than 24px, or 44px below a 768px viewport (32px for the footer's links, owner, 23 Oct 2026); links inline in a sentence are exempt (WCAG 2.5.8) |
 | G-06 | No horizontal overflow | `scrollWidth` exceeds `clientWidth`, or an element's right edge passes the viewport outside an `overflow-x: auto/scroll` wrapper that itself fits; only the outermost offender is listed |
 | G-07 | Square corners | any element or `::before`/`::after` has a radius above 0 |
 | G-08 | No shadow, gradient, blur | `box-shadow`, `text-shadow`, a gradient `background-image`, a `blur()`/`drop-shadow()` filter or a `backdrop-filter`, on any element or pseudo-element; the one exception is the `backdrop-filter` of the sticky `header.shell` (its glass, owner, 23 Oct 2026) |

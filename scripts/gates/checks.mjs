@@ -211,7 +211,10 @@ export async function pageGates(opts = {}) {
   const targets = Array.from(doc.querySelectorAll('a[href], button, input:not([type="hidden"]), select, textarea, summary, [role="tab"], [role="switch"], [role="button"]'))
     .filter((el) => !skip(el) && visible(el) && !srOnly(el) && !inlineInText(el));
   const min = win.innerWidth < 768 ? 44 : 24;
-  const smallT = targets.filter((el) => { const r = el.getBoundingClientRect(); return r.width < min - 0.5 || r.height < min - 0.5; })
+  // the footer's links are 32px below 768 (owner, 23 Oct 2026: the space
+  // between them no larger than the text); above WCAG 2.5.8's 24px
+  const minOf = (el) => (min === 44 && el.closest('.site-footer-links') ? 32 : min);
+  const smallT = targets.filter((el) => { const r = el.getBoundingClientRect(), m = minOf(el); return r.width < m - 0.5 || r.height < m - 0.5; })
     .map((el) => { const r = el.getBoundingClientRect(); return `${desc(el)} · ${Math.round(r.width * 10) / 10}×${Math.round(r.height * 10) / 10}`; });
   out.push(result('G-05', `Targets ≥ ${min}px`, smallT, targets.length, `${targets.length} targets, all at least ${min}px`, `%n targets smaller than ${min}px`));
 
