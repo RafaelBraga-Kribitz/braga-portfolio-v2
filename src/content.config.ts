@@ -1,21 +1,26 @@
 // src/content.config.ts — the four content collections (Astro 7 content
-// layer, glob loader). Markdown only (Obsidian-compatible): the authoring
-// guide is src/content/README.md.
+// layer), read from the Obsidian vault at vault/ (owner, 23 Oct 2026).
+// The vault conventions (folders, the H1 as title, #status/… tags,
+// `publish: true`) live in src/lib/vault/meta.mjs; the writing guide is
+// vault/_guide/Start here.md.
 //
-//   projects  src/content/projects/{en,de}/<slug>.md   → /<lang>/work/<slug>/
-//   writing   src/content/writing/{en,de}/<slug>.md    → /<lang>/writing/<slug>/
-//   pages     src/content/pages/{en,de}/<slug>.md      → about, system
-//   legal     src/content/legal/{en,de}/<file>.md      → impressum, privacy,
+//   projects  vault/Projects/{en,de}/**.md         → /<lang>/work/<slug>/
+//   writing   vault/{Essays,Notes}/{en,de}/**.md   → /<lang>/writing/<slug>/
+//   pages     vault/Pages/{en,de}/*.md             → about, system
+//   legal     vault/Legal/{en,de}/*.md             → impressum, privacy,
 //             accessibility, by the `page` key (the German URLs differ:
 //             /de/datenschutz/, /de/barrierefreiheit/; src/lib/routes.ts)
 //
-// Entry ids are the path without the extension ("en/warehouse-humanoid-tco"),
-// never the frontmatter slug: the slug is shared by the two languages of one
-// document, so it cannot be the id (the glob loader would otherwise use it and
-// the German entry would overwrite the English one). The folder and the
-// frontmatter `lang` must agree; a mismatch fails the build.
+// A note becomes an entry only with `publish: true` (and not dated in the
+// future: scheduled publishing). Everything else in a site folder stays in
+// the vault: it is read, never validated, never built. Entry ids are the
+// vault path without the extension ("Projects/en/warehouse-humanoid-tco"),
+// never the slug: the slug is shared by the two languages of one document.
+// The language folder and a `lang` property, if set, must agree.
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
+import type { Loader } from 'astro/loaders';
+import { vaultLoader } from './lib/vault/loader.mjs';
 import { z } from 'astro/zod';
 import { LANGS, type Lang } from './lib/site';
 import { STATUSES, type StatusState } from './lib/i18n';
@@ -79,6 +84,24 @@ const code = z.string().regex(/^\d{2}-\d{2}$/, 'a code is two two-digit groups, 
 const lang = z.enum(LANGS);
 const tags = z.array(z.string().min(1)).default([]);
 
+/** Properties every published note may carry (Ghost's post settings, as Obsidian properties). */
+const publishing = {
+  /** Only `publish: true` builds (the loader drops the rest before validation). */
+  publish: z.literal(true),
+  /** Obsidian's draft switch; a draft never builds. */
+  draft: z.boolean().default(false),
+  /** Feature image: an attachment name or vault path (Ghost's feature image). */
+  cover: z.string().min(1).optional(),
+  cover_alt: z.string().optional(),
+  /** Pinned first in its listings (Ghost's featured post). */
+  featured: z.boolean().default(false),
+  /** Overrides for search and sharing (Ghost's meta data). */
+  seo_title: z.string().min(1).optional(),
+  seo_description: z.string().min(1).optional(),
+  canonical: z.url().optional(),
+  aliases: z.array(z.string()).default([]),
+};
+
 /** One tile of the metric strip. `value` is the formatted figure as it reads ("€453,000", "38 s"); `accent` marks the strip's one earned figure (one accent per section). */
 const metric = z.object({
   value: z.string().min(1),
@@ -105,7 +128,7 @@ export const projectSchema = z
     slug,
     metrics: z.array(metric).default([]),
     repository: z.url().optional(),
-    draft: z.boolean().default(false),
+    ...publishing,
     translationStatus: z.enum(TRANSLATION_STATUSES).default('approved'),
   })
   .refine((p) => p.metrics.filter((m) => m.accent).length <= 1, {
@@ -126,7 +149,7 @@ export const writingSchema = z.object({
   tags,
   lang,
   slug,
-  draft: z.boolean().default(false),
+  ...publishing,
   translationStatus: z.enum(TRANSLATION_STATUSES).default('approved'),
 });
 
@@ -145,7 +168,7 @@ export const pageSchema = z.object({
   updated: isoDate.optional(),
   /** Optional: the language of the body when it is not the page's (the German kitchen sink may keep English content); sets lang on article.doc. */
   contentLang: lang.optional(),
-  draft: z.boolean().default(false),
+  ...publishing,
   translationStatus: z.enum(TRANSLATION_STATUSES).default('approved'),
 });
 
@@ -162,7 +185,7 @@ export const legalSchema = z.object({
   summary: z.string().min(1),
   /** Optional standfirst under the title (.doc-lead). */
   lead: z.string().min(1).optional(),
-  draft: z.boolean().default(false),
+  ...publishing,
   translationStatus: z.enum(TRANSLATION_STATUSES).default('approved'),
 });
 
@@ -174,25 +197,26 @@ export type Metric = z.infer<typeof metric>;
 
 /* ---------- loader ---------- */
 
-/**
- * The entry id is the relative path without the extension: "en/<file>". The
- * folder must match the frontmatter `lang`.
- */
+/** The entry id is the vault path without the extension; the language folder must match a `lang` property. */
 function pathId({ entry, data }: { entry: string; data: Record<string, unknown> }): string {
   const id = entry.replace(/\.md$/, '');
-  const folder = id.split('/')[0];
+  const folder = id.split('/')[1];
   if (data.lang !== undefined && data.lang !== folder) {
-    throw new Error(`content: ${entry} sits in ${folder}/ but its frontmatter says lang: ${String(data.lang)}`);
+    throw new Error(`vault: ${entry} sits in ${folder}/ but its properties say lang: ${String(data.lang)}`);
   }
   return id;
 }
 
-const loader = (collection: string) =>
-  glob({ pattern: '{en,de}/*.md', base: `./src/content/${collection}`, generateId: pathId });
+/**
+ * Astro's glob loader over the vault, with the Obsidian reading put in
+ * front of validation (src/lib/vault/loader.mjs).
+ */
+const vault = (name: string, folders: string[], filePattern = '**/*.md'): Loader =>
+  vaultLoader(glob, { name, folders, filePattern, generateId: pathId }) as Loader;
 
 export const collections = {
-  projects: defineCollection({ loader: loader('projects'), schema: projectSchema }),
-  writing: defineCollection({ loader: loader('writing'), schema: writingSchema }),
-  pages: defineCollection({ loader: loader('pages'), schema: pageSchema }),
-  legal: defineCollection({ loader: loader('legal'), schema: legalSchema }),
+  projects: defineCollection({ loader: vault('projects', ['Projects']), schema: projectSchema }),
+  writing: defineCollection({ loader: vault('writing', ['Essays', 'Notes']), schema: writingSchema }),
+  pages: defineCollection({ loader: vault('pages', ['Pages'], '*.md'), schema: pageSchema }),
+  legal: defineCollection({ loader: vault('legal', ['Legal'], '*.md'), schema: legalSchema }),
 };

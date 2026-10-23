@@ -69,15 +69,16 @@ E.g. `https://example.com/` (none is chosen yet).
 
 ## The workflow
 
-`.github/workflows/pages.yml`, on every push to `main` or `master` and by
-hand (Actions → Deploy to GitHub Pages → Run workflow):
+`.github/workflows/pages.yml`, on every push to `main` or `master`, by
+hand (Actions → Deploy to GitHub Pages → Run workflow), and daily at 04:43
+UTC so a vault note with a future `date` goes online on that day:
 
 1. checks out the repository and sets up Node 22 with the npm cache;
 2. `npm ci` (the lockfile is the source of truth);
 3. installs Playwright's Chromium for the gates (`npx playwright install
    --with-deps chromium`; in the agents' container the browser is
    preinstalled and this step is never run there);
-4. `npm run verify`: `astro check`, both lints, the unit tests, the build
+4. `npm run verify`: `astro check`, both lints, the unit tests, `vault:check`, the build
    (with `SITE_BASE` when set) and every gate over `dist/` (with the same
    base: the gate runner reads `SITE_BASE` too). A red gate stops the
    deploy;

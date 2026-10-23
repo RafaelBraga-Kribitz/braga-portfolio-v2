@@ -19,12 +19,14 @@ export default function links(options = {}) {
   return {
     name: 'bk-base-links',
     element: {
-      filter: ['a'],
+      // links, and the sources of vault media (img, video, audio, source)
+      filter: ['a', 'img', 'video', 'audio', 'source'],
       visit(node, ctx) {
-        const href = node.properties && node.properties.href;
+        const attr = node.tagName === 'a' ? 'href' : 'src';
+        const href = node.properties && node.properties[attr];
         if (typeof href !== 'string' || !href.startsWith('/') || href.startsWith('//')) return;
         if (href === prefix || href.startsWith(`${prefix}/`)) return;
-        ctx.setProperty(node, 'href', prefix + href);
+        ctx.setProperty(node, attr, prefix + href);
       },
     },
   };

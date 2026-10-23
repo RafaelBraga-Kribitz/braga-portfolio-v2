@@ -8,6 +8,10 @@ on:
   push:
     branches: [main, master]
   workflow_dispatch:
+  # scheduled publishing (owner, 23 Oct 2026): a note dated in the future
+  # is left out of the build; a daily build puts it online on its date
+  schedule:
+    - cron: '43 4 * * *'
 
 permissions:
   contents: read

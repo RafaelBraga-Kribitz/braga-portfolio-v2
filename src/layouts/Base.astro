@@ -53,9 +53,22 @@ interface Props {
   /** The previous / next document (rel=prev / rel=next; the n and p keys). */
   prevDoc?: string;
   nextDoc?: string;
+  /** This page's own path when it is not route(page, lang) (a tag page). */
+  path?: string;
+  /** The other language's version: a path, or null when there is none (a
+      note written in one language, a tag page). Undefined: route(page, other). */
+  twinPath?: string | null;
+  /** Ghost-style overrides from a note's properties: the <title> and the
+      share title, the description, the canonical URL, the share image. */
+  seoTitle?: string;
+  seoDescription?: string;
+  canonicalUrl?: string;
+  ogImage?: { src: string; alt: string };
 }
 
-const { lang, page, title, description, current, hasCode = false, noindex = false, ogType = 'website', prevDoc, nextDoc } = Astro.props;
+const { lang, page, title: pageTitle, description: pageDescription, current, hasCode = false, noindex = false, ogType = 'website', prevDoc, nextDoc, path, twinPath, seoTitle, seoDescription, canonicalUrl, ogImage } = Astro.props;
+const title = seoTitle ?? pageTitle;
+const description = seoDescription ?? pageDescription;
 // the shortcut panel (owner, 23 Oct 2026): rows of keys and what they do
 const keyRows: { keys: string[]; what: string }[] = [
   { keys: ['0'], what: t(lang, 'keys.home') },
@@ -68,14 +81,22 @@ const keyRows: { keys: string[]; what: string }[] = [
   { keys: ['?'], what: t(lang, 'keys.help') },
   { keys: ['Esc'], what: t(lang, 'keys.close') },
 ];
-const canonical = absolute(route(page, lang));
+const ownPath = path ?? route(page, lang);
+const canonical = canonicalUrl ?? absolute(ownPath);
 // The 404 has no German twin (one 404.html, English with the German
 // line), so it declares no hreflang pair: an hreflang="de" pointing at
 // an English page would be false.
-const alts = page === 'notfound' ? [] : alternates(page);
+const other = otherLang(lang);
+// a page without a twin declares only itself (L-02); a given twin pairs with it
+const alts = page === 'notfound' ? []
+  : twinPath === null ? [{ hreflang: lang, href: absolute(ownPath) }, { hreflang: 'x-default', href: absolute(ownPath) }]
+  : twinPath !== undefined ? [{ hreflang: lang, href: absolute(ownPath) }, { hreflang: other, href: absolute(twinPath) }, { hreflang: 'x-default', href: absolute(lang === 'en' ? ownPath : twinPath) }]
+  : alternates(page);
+// the language link: the twin, or the other language's home when there is none
+const otherHref = page === 'notfound' || twinPath === null ? route('home', other) : twinPath ?? route(page, other);
 const feed = absolute('/feed.xml');
 const locale = { en: 'en_GB', de: 'de_AT' } as const;
-const shareCard = absolute('/share-card.png');
+const shareCard = ogImage ? absolute(ogImage.src) : absolute('/share-card.png');
 const shareAlt = `${site.wordmark} · ${site.name} · ${site.role[lang]}`;
 ---
 <!doctype html>
@@ -101,22 +122,20 @@ const shareAlt = `${site.wordmark} · ${site.name} · ${site.role[lang]}`;
     <meta property="og:locale" content={locale[lang]}>
     <meta property="og:locale:alternate" content={locale[otherLang(lang)]}>
     <meta property="og:image" content={shareCard}>
-    <meta property="og:image:type" content="image/png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content={shareAlt}>
+    {!ogImage && <Fragment><meta property="og:image:type" content="image/png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"></Fragment>}
+    <meta property="og:image:alt" content={ogImage?.alt || shareAlt}>
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content={title}>
     <meta name="twitter:description" content={description}>
     <meta name="twitter:image" content={shareCard}>
-    <meta name="twitter:image:alt" content={shareAlt}>
+    <meta name="twitter:image:alt" content={ogImage?.alt || shareAlt}>
     {prevDoc && <link rel="prev" href={prevDoc} />}
     {nextDoc && <link rel="next" href={nextDoc} />}
     <link rel="alternate" type="application/rss+xml" title={`${site.name} · RSS`} href={feed}>
   </head>
   <body>
     <a class="skip" href="#main">{t(lang, 'skip')}</a>
-    <Shell lang={lang} page={page} current={current} />
+    <Shell lang={lang} current={current} otherHref={otherHref} />
     <main id="main" class="grid-container"><slot /></main>
     <Footer lang={lang} />
     <dialog class="keys" aria-labelledby="keys-title">

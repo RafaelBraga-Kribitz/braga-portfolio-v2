@@ -11,20 +11,27 @@ import { render } from 'astro:content';
 import { t, formatDate, type Lang } from '@/lib/i18n';
 import { route, writingRoute } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
-import { writingOf, writingCode, nextOf, prevOf, readingMinutes, type WritingEntry } from '@/lib/collections';
+import { otherLang } from '@/lib/i18n';
+import { writingOf, writingCode, nextOf, prevOf, readingMinutes, vaultExtras, type WritingEntry } from '@/lib/collections';
 
 export async function getStaticPaths() {
   const paths = [];
   for (const lang of LANGS) {
     const list = await writingOf(lang);
-    for (const entry of list) paths.push({ params: { lang, slug: entry.data.slug }, props: { entry, list } });
+    const others = await writingOf(otherLang(lang));
+    for (const entry of list) {
+      const twin = others.find((o) => o.data.slug === entry.data.slug);
+      paths.push({ params: { lang, slug: entry.data.slug }, props: { entry, list, twinPath: twin ? writingRoute(twin.data.slug, twin.data.lang) : null } });
+    }
   }
   return paths;
 }
 
-interface Props { entry: WritingEntry; list: WritingEntry[] }
+interface Props { entry: WritingEntry; list: WritingEntry[]; twinPath: string | null }
 
-const { entry, list } = Astro.props;
+const { entry, list, twinPath } = Astro.props;
+// the vault behind the note (owner, 23 Oct 2026): cover, tags, related notes
+const extras = vaultExtras(entry, Astro.params.lang as Lang);
 const lang = Astro.params.lang as Lang;
 const d = entry.data;
 const { Content, headings, remarkPluginFrontmatter } = await render(entry);
@@ -55,6 +62,13 @@ const meta = [
   prev={{ href: route('writing', lang), label: t(lang, 'all-writing') }}
   next={next && { href: writingRoute(next.data.slug, lang), label: `${nextCode} ${next.data.title}` }}
   nextDoc={next && writingRoute(next.data.slug, lang)}
+  twinPath={twinPath}
+  seoTitle={d.seo_title}
+  seoDescription={d.seo_description}
+  canonicalUrl={d.canonical}
+  cover={extras.cover}
+  tags={extras.tags}
+  related={extras.related}
   prevDoc={prev && writingRoute(prev.data.slug, lang)}
 >
   <Content />

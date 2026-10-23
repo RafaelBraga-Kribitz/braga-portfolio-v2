@@ -623,8 +623,11 @@ export function staticGates(pagePath, f, ctx) {
   out.push(result('L-01', lOff, checked, `${checked} internal references, all resolve${pendingNote}`, `%n internal references do not resolve${pendingNote}`, { pending: Array.from(pendingHits) }));
 
   // L-02 · hreflang: every /en/ and /de/ page (and any page that declares
-  // alternates) carries en, de and x-default; its own-language alternate is
-  // itself; the other-language alternate exists, has that lang and points back
+  // alternates) carries its own language and x-default; its own-language
+  // alternate is itself; a declared other-language alternate exists, has
+  // that lang and points back. A page without a twin (a note written in
+  // one language, a tag page; owner, 23 Oct 2026) declares no other-
+  // language alternate, and its x-default is itself.
   const tree = /^\/(en|de)\//.exec(pagePath);
   if (redirect) out.push(skipped('L-02', 'redirect page'));
   else if (!tree && !f.alternates.length) out.push(skipped('L-02', 'not under /en/ or /de/ and declares no alternates'));
@@ -635,8 +638,8 @@ export function staticGates(pagePath, f, ctx) {
     const localOf = (href) => { const c = classifyRef(href, pagePath, site, base); return c.kind === 'local' && !c.outside ? normPath(c.path) : null; };
     const by = {};
     for (const a of f.alternates) (by[a.hreflang] ||= []).push(a.href);
-    for (const h of ['en', 'de', 'x-default']) {
-      if (!by[h]) hOff.push(`no hreflang="${h}" alternate`);
+    for (const h of [own, other, 'x-default']) {
+      if (!by[h]) { if (h !== other) hOff.push(`no hreflang="${h}" alternate`); }
       else if (by[h].length > 1) hOff.push(`${by[h].length} hreflang="${h}" alternates`);
     }
     for (const [h, hrefs] of Object.entries(by)) {

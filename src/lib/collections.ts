@@ -6,6 +6,9 @@
 
 import { getCollection, type CollectionEntry } from 'astro:content';
 import type { Lang } from './site';
+import { vaultIndex, resolveAttachment, mediaPath } from './vault/index.mjs';
+import { related } from './vault/related.mjs';
+import { imageSize } from './vault/image-size.mjs';
 
 export type ProjectEntry = CollectionEntry<'projects'>;
 export type WritingEntry = CollectionEntry<'writing'>;
@@ -22,6 +25,8 @@ export async function projectsOf(lang: Lang): Promise<ProjectEntry[]> {
 export async function writingOf(lang: Lang): Promise<WritingEntry[]> {
   const list = await getCollection('writing', (e) => e.data.lang === lang && !e.data.draft);
   return list.sort((a, b) => {
+    // featured (a note's `featured: true`, Ghost's featured post) first
+    if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
     const ca = a.data.code ?? '￿';
     const cb = b.data.code ?? '￿';
     return ca.localeCompare(cb) || b.data.date.localeCompare(a.data.date) || a.data.slug.localeCompare(b.data.slug);
@@ -84,4 +89,32 @@ export async function pageOf(slug: PageEntry['data']['slug'], lang: Lang): Promi
 export async function legalOf(page: LegalEntry['data']['page'], lang: Lang): Promise<LegalEntry | undefined> {
   const list = await getCollection('legal', (e) => e.data.page === page && e.data.lang === lang && !e.data.draft);
   return list[0];
+}
+
+/* ---------- the vault behind an entry (owner, 23 Oct 2026) ----------
+   What a page needs from the Obsidian vault that the collection entry does
+   not carry: the cover image as a /media/ file, the tags as links to their
+   pages, and the related notes (src/lib/vault/related.mjs). */
+
+export interface VaultExtras {
+  cover?: { src: string; alt: string; width?: number; height?: number };
+  tags: { label: string; href: string }[];
+  related: { href: string; title: string; sub?: string }[];
+}
+
+/** The tag page of a tag (no base: routes go through withBase in the page). */
+export const tagPath = (tag: string, lang: Lang) => `/${lang}/tags/${tag.split('/').map(encodeURIComponent).join('/')}/`;
+
+export function vaultExtras(entry: { filePath?: string; data: { tags?: string[]; cover?: string; cover_alt?: string; title: string } }, lang: Lang): VaultExtras {
+  const index = vaultIndex();
+  const rel = (entry.filePath ?? '').replace(/^vault\//, '');
+  const note = index.notes.find((n: { rel: string }) => n.rel === rel);
+  let cover: VaultExtras['cover'];
+  if (entry.data.cover) {
+    const att = resolveAttachment(index, entry.data.cover.replace(/^!?\[\[|\]\]$/g, ''));
+    if (att && att.kind === 'image') cover = { src: mediaPath(att), alt: entry.data.cover_alt ?? '', ...(imageSize(att.abs) ?? {}) };
+  }
+  const tags = (entry.data.tags ?? []).map((t) => ({ label: `#${t}`, href: tagPath(t, lang) }));
+  const rel3 = note ? related(index.notes, note).map((r: { note: { url: string; data: { title: string; summary?: string } } }) => ({ href: r.note.url, title: r.note.data.title, sub: r.note.data.summary })) : [];
+  return { cover, tags, related: rel3 };
 }

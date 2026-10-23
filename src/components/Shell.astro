@@ -7,21 +7,20 @@
 import { site } from '../lib/site';
 import type { Lang } from '../lib/i18n';
 import { t, otherLang } from '../lib/i18n';
-import { doors, doorLabel, route, contactRoute, type PageId, type DoorCode } from '../lib/routes';
+import { doors, doorLabel, route, contactRoute, type DoorCode } from '../lib/routes';
 
 interface Props {
   lang: Lang;
-  page: PageId;
   /** Door code that receives aria-current="page". */
   current?: DoorCode;
+  /** The language link: the same page in the other language, or that
+      language's home when the page has no twin (Base.astro decides). */
+  otherHref: string;
 }
 
-const { lang, page, current } = Astro.props;
+const { lang, current, otherHref } = Astro.props;
 const other = otherLang(lang);
 const codes: Record<Lang, string> = { en: 'EN', de: 'DE' };
-// The language link leads to the same page in the other language; the 404
-// has no twin, so it leads to the other language's home.
-const otherHref = page === 'notfound' ? route('home', other) : route(page, other);
 ---
 <header class="shell" lang={lang}>
   <div class="shell-bar">

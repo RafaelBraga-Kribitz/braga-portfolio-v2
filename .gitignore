@@ -2,3 +2,15 @@ node_modules/
 dist/
 .astro/
 /tests/gates/out/
+# Obsidian: per-machine state stays local; the shared settings in
+# vault/.obsidian/ (app, core plugins, templates, property types, the CSS
+# snippets) are committed
+vault/.obsidian/workspace*.json
+vault/.obsidian/plugins/
+vault/.obsidian/cache
+vault/.obsidian/graph.json
+vault/.obsidian/community-plugins.json
+vault/.trash/
+vault/.smart-env/
+vault/.smart-connections/
+.DS_Store
