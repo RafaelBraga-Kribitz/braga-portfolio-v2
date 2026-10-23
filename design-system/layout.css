@@ -199,6 +199,11 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
 @media (max-width: 767px) {
   .site-footer > .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 32px; }
   .site-footer .site-footer-group { grid-column: auto; }
+  /* the links are 44px boxes here (base.css 7), so the 8px gap between
+     them would add to the box's own air: rows sit edge to edge, one link
+     every 44px, and the label keeps 12px to its list (owner, 23 Oct 2026:
+     the stack read too loose) */
+  .site-footer-links, .site-footer-group > .label + * { margin-top: 12px; gap: 0; }
 }
 .site-footer-bar {
   margin-top: 48px; border-top: var(--rule); padding-top: 24px;
