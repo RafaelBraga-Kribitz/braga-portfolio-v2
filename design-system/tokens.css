@@ -43,8 +43,9 @@
   /* control boundary · D-027 (WCAG 1.4.11: 3:1; --mid is 2.1:1) */
   --edge: var(--ink-2);
 
-  /* accent · D-004 ultramarine, one hue, two values. Text only for the
-     one earned figure per view (D-025). --accent-02 retired (D-005). */
+  /* accent · D-004 ultramarine, one hue, two values. One accent per
+     section (owner, 22 Oct 2026; replaces D-025): the section's earned
+     figure or its primary action. --accent-02 retired (D-005). */
   --accent-01: #2F4BE0;
   --on-accent: #FFFFFF;
 

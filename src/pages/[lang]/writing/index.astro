@@ -14,7 +14,7 @@ import StatusMark from '@/components/StatusMark.astro';
 import { t, formatDate, type Lang } from '@/lib/i18n';
 import { writingRoute } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
-import { writingOf, writingCode, yearOf } from '@/lib/collections';
+import { writingOf, writingCode } from '@/lib/collections';
 
 export function getStaticPaths() {
   return LANGS.map((lang) => ({ params: { lang } }));
@@ -27,9 +27,9 @@ const writing = await writingOf(lang);
   <section class="section">
     <SectionHeading number="02" word={t(lang, 'door.writing')} claim={t(lang, 'writing.claim')} prose={t(lang, 'writing.prose')} as="h1" />
     {writing.length > 0 && (
-      <Listing head={{ index: t(lang, 'index'), title: t(lang, 'title'), meta: t(lang, 'kind-date'), trail: t(lang, 'year') }}>
+      <Listing head={{ index: t(lang, 'index'), title: t(lang, 'title'), meta: t(lang, 'kind-date'), trail: '' }}>
         {writing.map((e, i) => (
-          <ListingRow code={writingCode(e, i)} title={e.data.title} sub={e.data.summary} meta={[t(lang, `kind.${e.data.kind}`), formatDate(e.data.date, lang)]} lang={lang} trail={yearOf(e.data.date)} href={writingRoute(e.data.slug, lang)} />
+          <ListingRow code={writingCode(e, i)} title={e.data.title} sub={e.data.summary} meta={[t(lang, `kind.${e.data.kind}`), formatDate(e.data.date, lang)]} lang={lang} href={writingRoute(e.data.slug, lang)} />
         ))}
       </Listing>
     )}

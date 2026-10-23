@@ -88,7 +88,7 @@ A blockquote without a marker stays a quotation. The authoring guide, on the ord
 
 ### Tool · `[!tool]`
 
-> [!tool] 04-02 · A/B sample size · interactive
+> [!tool] 03-02 · A/B sample size · interactive
 > The bench needs JavaScript. Without it the default scenario stands: at a 4% baseline, a 10% relative lift and 80% power, the test needs **39,473** visitors per arm – 40 days at 2,000 visitors a day. A vocabulary demonstration; the tool itself is [04-02 A/B sample size](/en/tools/ab-sample-size/).
 
 ### Summary · `[!summary]`
@@ -130,7 +130,11 @@ A blockquote without a marker stays a quotation. The authoring guide, on the ord
 ### Bookmark · `[!bookmark]`
 
 > [!bookmark] Next
-> [01-05 Energy procurement risk analyser](/en/work/energy-procurement-risk-analyzer/) — From electricity-price records to a cost-risk decision. In build.
+> [01-04 Energy procurement risk analyser](/en/work/energy-procurement-risk-analyzer/) — From electricity-price records to a cost-risk decision. In build.
+
+## Actions
+
+The primary action of a section carries that section’s one accent (UX pass, 22 Oct 2026; gate G-15), so it sits in a section of its own here, apart from the earned figure of the metrics callout above.
 
 ### Call to action · `[!cta]`
 

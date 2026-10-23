@@ -1,6 +1,6 @@
 ---
 title: "Risikoanalyse für die Energie\u00ADbeschaffung"  # \u00AD = soft hyphen: the h1 may break there on a narrow screen
-code: "01-05"
+code: "01-04"
 kind: brief
 date: "2026-07-24"
 summary: Von Strompreisdaten zu einer Kosten-Risiko-Entscheidung. Im Aufbau.
@@ -95,9 +95,3 @@ Was diese Arbeit nicht belegt:
 Noch wird keine Strategie empfohlen. Das Projekt führt von Strompreisdaten zu einer Kosten-Risiko-Entscheidung zwischen den vier Strategien, und diese Entscheidung wartet auf den Strategiesimulator und die Referenzdatei, die mit ihm entsteht.
 
 Im Aufbau: Die Grundlagenphase ist umgesetzt; Lastprofil, Analytik, Simulator und Berichtsebene sind es nicht. Das Repository enthält die Projektcharta, die Spezifikationen und die bisherige Pipeline.
-
-> [!bookmark] Weiter
-> [01-01 Arbeitsmarkt für Datenberufe in Österreich](/de/work/austria-data-job-market-intelligence/) — Eine datierte Sicht auf Stellentitel, Kenntnisse und regionale Nachfrage.
-
-> [!cta] Handlungsaufforderung
-> [Repository öffnen](https://github.com/RafaelBraga-Kribitz/energy-procurement-risk-analyzer)

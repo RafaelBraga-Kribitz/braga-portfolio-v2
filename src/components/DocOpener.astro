@@ -36,10 +36,14 @@ interface Props {
   draft?: boolean;
   /** Trail on three columns, body on nine (Site s04). */
   grid?: boolean;
+  /** A portrait under the trail on the three columns (the About page; owner,
+      23 Oct 2026). Without `src` the frame shows empty, labelled, at the
+      same 4:5 size, until src/assets/portrait.jpg exists. */
+  portrait?: { src?: string; alt: string; caption: string; empty: string };
   id?: string;
 }
 
-const { lang, trail, numeral, title, lead, meta = [], draft = false, grid = false, id } = Astro.props;
+const { lang, trail, numeral, title, lead, meta = [], draft = false, grid = false, id, portrait } = Astro.props;
 const hasMeta = meta.length > 0 || draft;
 ---
 {grid ? (
@@ -53,6 +57,14 @@ const hasMeta = meta.length > 0 || draft;
           </Fragment>
         ))}
       </p>
+      {portrait && (
+        <figure class="portrait">
+          {portrait.src
+            ? <img src={portrait.src} alt={portrait.alt} width="800" height="1000" decoding="async" />
+            : <div class="portrait-empty"><span class="label">{portrait.empty}</span></div>}
+          <figcaption class="label">{portrait.caption}</figcaption>
+        </figure>
+      )}
     </div>
     <div class="col-9">
       {numeral ? (

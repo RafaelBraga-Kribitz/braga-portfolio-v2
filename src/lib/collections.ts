@@ -40,8 +40,27 @@ export function nextOf<T extends { id: string }>(list: readonly T[], current: T)
   return list[(i + 1) % list.length];
 }
 
-/** The year of a yyyy-mm-dd date. */
-export const yearOf = (iso: string): string => iso.slice(0, 4);
+/** The entry before `current` in a list, wrapping to the last; none when the list has no other entry. */
+export function prevOf<T extends { id: string }>(list: readonly T[], current: T): T | undefined {
+  if (list.length < 2) return undefined;
+  const i = list.findIndex((e) => e.id === current.id);
+  return list[(i - 1 + list.length) % list.length];
+}
+
+/**
+ * Reading time of a Markdown body in whole minutes (at least 1), at 200
+ * words a minute: the meta row's "12 min read" (UX pass, 22 Oct 2026).
+ * Callout markers, link targets, fences' backticks and table pipes are not
+ * words; the figures of a [!bars] list are read and count.
+ */
+export function readingMinutes(body: string | undefined): number {
+  const text = (body ?? '')
+    .replace(/\[![\w-]+\][+-]?/g, ' ')
+    .replace(/\]\([^)]*\)/g, ' ')
+    .replace(/[`|>#*_=]+/g, ' ');
+  const words = text.match(/[\p{L}\p{N}][\p{L}\p{N}'’.,%€-]*/gu)?.length ?? 0;
+  return Math.max(1, Math.round(words / 200));
+}
 
 /** Slugs of a collection and the languages each exists in (non-draft), for the sitemap. */
 export async function slugLanguages(collection: 'projects' | 'writing'): Promise<Map<string, Set<Lang>>> {

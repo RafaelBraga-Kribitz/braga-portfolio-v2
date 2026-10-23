@@ -42,15 +42,15 @@ What the marketing career adds is the domain half of the job: knowing how campai
 | Dates | Role | Organisation |
 |:--|:--|:--|
 | 2023–⁠2026 | Marketing Data Scientist | BioSynCare – marketing measurement, experimentation, and decision support |
-| 2021–⁠2023 | Data Scientist | Named employer lands when the CV file is attached. |
-| 2019–⁠2021 | Analyst | Named employer lands when the CV file is attached. |
+| 2021–⁠2023 | Data Scientist | Named on request |
+| 2019–⁠2021 | Analyst | Named on request |
 
 ### Education
 
 | Dates | Degree | Institution |
 |:--|:--|:--|
-| 2017–⁠2019 | MSc | Named institution lands when the CV file is attached. |
-| 2014–⁠2017 | BSc | Named institution lands when the CV file is attached. |
+| 2017–⁠2019 | MSc | Named on request |
+| 2014–⁠2017 | BSc | Named on request |
 
 ## Contact
 

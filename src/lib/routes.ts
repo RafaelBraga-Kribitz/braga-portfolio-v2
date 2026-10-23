@@ -22,8 +22,8 @@ export interface Door { code: DoorCode; id: DoorId }
 export const doors: readonly Door[] = [
   { code: '01', id: 'work' },
   { code: '02', id: 'writing' },
-  { code: '03', id: 'about' },
-  { code: '04', id: 'tools' },
+  { code: '03', id: 'tools' },
+  { code: '04', id: 'about' },
 ];
 
 export type StaticPageId =
@@ -114,6 +114,20 @@ export function route(pageId: PageId, lang: Lang): string {
   return routePair(pageId)[lang];
 }
 
+/**
+ * The contact section of the About page (UX pass, 22 Oct 2026): where the
+ * header's and the footer's "Contact" lead, so the word opens a section
+ * with the address, the copy button and the context, not a mail client.
+ */
+export function contactRoute(lang: Lang): string {
+  return `${route('about', lang)}#${lang === 'de' ? 'kontakt' : 'contact'}`;
+}
+
+/** The keyboard section of the accessibility statement (the shortcut list without JavaScript). */
+export function keysRoute(lang: Lang): string {
+  return `${route('accessibility', lang)}#${lang === 'de' ? 'tastatur' : 'keyboard'}`;
+}
+
 /** Absolute URL on the production origin (astro.config `site`); the base is added when the path lacks it. */
 export function absolute(path: string): string {
   return new URL(withBase(path), site.url).href;
@@ -140,31 +154,33 @@ export interface FooterLink {
   href: string;
   /** Leaves the site: rendered with the ↗ glyph. */
   external?: boolean;
+  /** Opens the keyboard-shortcut panel when JavaScript runs. */
+  keys?: boolean;
   hreflang?: Lang;
   lang?: Lang;
 }
 export interface FooterGroup { title: string; links: FooterLink[] }
 
-/** The four footer groups of D-013 for a language. */
+/** The four footer groups of D-013 for a language, in the owner's order of 23 Oct 2026. */
 export function footerGroups(lang: Lang): FooterGroup[] {
   const other = otherLang(lang);
   const elsewhere: FooterLink[] = [{ label: t(lang, 'link.github'), href: site.github, external: true }];
   if (site.linkedin) elsewhere.push({ label: t(lang, 'link.linkedin'), href: site.linkedin, external: true });
   if (site.kaggle) elsewhere.push({ label: t(lang, 'link.kaggle'), href: site.kaggle, external: true });
+  // order (owner, 23 Oct 2026): Site, Index, Others, Elsewhere
   return [
-    {
-      title: t(lang, 'footer.index'),
-      links: doors.map((d) => ({ label: `${d.code} ${doorLabel(d, lang)}`, href: route(d.id, lang) })),
-    },
     {
       title: t(lang, 'footer.site'),
       links: [
         { label: t(lang, 'link.home'), href: route('home', lang) },
-        { label: t(lang, 'link.contact'), href: `mailto:${site.email}` },
+        { label: t(lang, 'link.contact'), href: contactRoute(lang) },
         { label: t(lang, 'link.language'), href: route('home', other), hreflang: other, lang: other },
       ],
     },
-    { title: t(lang, 'footer.elsewhere'), links: elsewhere },
+    {
+      title: t(lang, 'footer.index'),
+      links: doors.map((d) => ({ label: `${d.code} ${doorLabel(d, lang)}`, href: route(d.id, lang) })),
+    },
     {
       title: t(lang, 'footer.others'),
       links: [
@@ -173,7 +189,9 @@ export function footerGroups(lang: Lang): FooterGroup[] {
         { label: t(lang, 'link.impressum'), href: route('impressum', lang) },
         { label: t(lang, 'link.privacy'), href: route('privacy', lang) },
         { label: t(lang, 'link.accessibility'), href: route('accessibility', lang) },
+        { label: t(lang, 'link.keys'), href: keysRoute(lang), keys: true },
       ],
     },
+    { title: t(lang, 'footer.elsewhere'), links: elsewhere },
   ];
 }

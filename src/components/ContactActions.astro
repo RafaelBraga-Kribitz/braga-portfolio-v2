@@ -1,0 +1,32 @@
+---
+// The contact button (owner, 23 Oct 2026): the section's primary action,
+// in the accent (the section's one accent, G-15). At rest it reads as the
+// email address, set like the About page's button; on hover or keyboard
+// focus it splits in half: "Copy" (left) copies the address, "Open"
+// (right) opens the mail app, each with its own highlight. On a touch
+// screen both halves show under the address. The address is drawn by CSS
+// from two reversed halves and is never in the HTML (src/lib/contact.mjs);
+// the inline shell script in Base.astro reveals the halves and
+// reassembles the address on click. Without JavaScript the address still
+// reads, and Open leads to the About page's contact section.
+import { site } from '../lib/site';
+import type { Lang } from '../lib/i18n';
+import { contactRoute } from '../lib/routes';
+import { MAIL_LABELS, mailParts } from '../lib/contact.mjs';
+
+interface Props {
+  lang: Lang;
+  /** Mail subject, prefilled (a project page passes its title). */
+  subject?: string;
+  class?: string;
+}
+
+const { lang, subject, class: className } = Astro.props;
+const w = MAIL_LABELS[lang];
+const { u, d } = mailParts(site.email);
+---
+<div class:list={['mail-split', className]} data-u={u} data-d={d} data-subject={subject}>
+  <span class="mail-split-face" aria-hidden="true"><span class="mail-split-addr" data-u={u} data-d={d}></span><span class="glyph">↗</span></span>
+  <button type="button" class="mail-split-copy" aria-label={w.copyName} data-label={w.copy} data-copied={w.copied} data-failed={w.failed} hidden>{w.copy}</button>
+  <a class="mail-split-open" href={contactRoute(lang)} aria-label={w.openName} hidden>{w.open} <span class="glyph" aria-hidden="true">↗</span></a>
+</div>

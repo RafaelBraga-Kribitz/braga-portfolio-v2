@@ -1,6 +1,6 @@
 ---
 title: Austrian MMM and budget optimiser
-code: "01-02"
+code: "01-03"
 kind: case
 date: "2026-08-04"
 summary: "Bayesian media-mix modelling. A budget decision with a downside check. Under revision: the published figures are being re-estimated."
@@ -72,7 +72,7 @@ Scored against the same truth, the platform-style report over-credits paid searc
 
 On the public dataset, the same total weekly budget reallocated under the decision rule gains a median ==15.1%== of current media contribution. The 10th percentile is 8.8%, and none of the 500 posterior draws used shows a loss.
 
-> [!bars] Fig. 01-02-1 · Recommended change in weekly spend
+> [!bars] Fig. 01-03-1 · Recommended change in weekly spend
 > Budget moves from out-of-home to TV and Facebook.
 > - TV — 50
 > - Out-of-home — −20
@@ -130,9 +130,3 @@ Under the written rule, move budget toward TV and Facebook, take it from out-of-
 > The rule names the conditions itself. A re-estimate in which the lower bound of TV’s or Facebook’s marginal-ROAS 90% interval falls to 2.50 or below stops the move toward that channel, and a 10th percentile of the reallocation gain that is no longer positive stops the reallocation. The optimiser also assumes that response curves hold at the new spend levels and that competitors do not react; the recommendation rests on both, and neither is established.
 
 Code, reports and the decision memo are in the repository. The numbers in its README are rendered from the report files, and a test checks that the two agree.
-
-> [!bookmark] Next
-> [01-03 Decision analytics reconstruction](/en/work/decision-analytics-reconstruction/) — A three-module reconstruction. Allocation gains are proxies, not campaign effects.
-
-> [!cta]
-> [Open the repository](https://github.com/RafaelBraga-Kribitz/austrian-mmm-budget-optimizer)

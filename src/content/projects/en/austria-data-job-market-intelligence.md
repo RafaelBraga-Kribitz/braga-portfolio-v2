@@ -139,10 +139,6 @@ The snapshot is an evidence base, not a verdict. Its findings feed two decision 
 
 Code is under MIT; documents and aggregated outputs are under CC BY 4.0.
 
-> [!bookmark] Next
-> [01-02 Austrian MMM and budget optimiser](/en/work/austrian-mmm-budget-optimizer/) — Bayesian media-mix modelling. A budget decision with a downside check.
 
-> [!cta]
-> [Open the repository](https://github.com/RafaelBraga-Kribitz/austria-data-job-market-intelligence)
 
 [^1]: The AMS JobBarometer counts online ads per occupation class and federal state; “Data Scientist” is the class the trend is read from.

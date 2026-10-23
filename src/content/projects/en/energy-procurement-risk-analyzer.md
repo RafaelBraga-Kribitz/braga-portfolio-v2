@@ -1,6 +1,6 @@
 ---
 title: Energy procurement risk analyser
-code: "01-05"
+code: "01-04"
 kind: brief
 date: "2026-07-24"
 summary: From electricity-price records to a cost-risk decision. In build.
@@ -95,9 +95,3 @@ What this does not establish:
 No strategy is recommended yet. The project leads from electricity-price records to a cost-risk decision between the four strategies, and that decision waits for the strategy simulator and the source-of-truth file that arrives with it.
 
 In build: the foundation stage is implemented, and the load profile, analytics, simulator and reporting are not. The repository holds the charter, the specifications and the pipeline so far.
-
-> [!bookmark] Next
-> [01-01 Austria data-job market intelligence](/en/work/austria-data-job-market-intelligence/) — A dated view of titles, skills and regional demand.
-
-> [!cta]
-> [Open the repository](https://github.com/RafaelBraga-Kribitz/energy-procurement-risk-analyzer)

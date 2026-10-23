@@ -6,7 +6,7 @@
 // failing on tests/gates/fixtures/bad/ (see tests/gates/README.md).
 //
 // Three kinds of function:
-//   pageGates(opts)   G-01…G-14. Runs INSIDE the page (page.evaluate), so it
+//   pageGates(opts)   G-01…G-15. Runs INSIDE the page (page.evaluate), so it
 //                     is self-contained: no closure over this module.
 //   pageFacts(html)   runs inside a blank page; parses the raw HTML file with
 //                     DOMParser (no script runs) and returns plain data for
@@ -36,6 +36,7 @@ export const GATES = [
   ['G-12', 'Project fonts loaded'],
   ['G-13', 'No third-party requests'],
   ['G-14', 'Shell on the page grid'],
+  ['G-15', 'One accent per section'],
   ['L-01', 'Internal links resolve'],
   ['L-02', 'hreflang pairs'],
   ['L-03', 'Scripts policy'],
@@ -59,7 +60,7 @@ export function result(id, offenders, total, noteOk, noteFail, extra) {
 export const skipped = (id, why) => ({ id, name: GATE_NAME[id] || id, status: 'skip', count: 0, total: 0, summary: why, offenders: [] });
 
 /* ================================================================
-   G-01 … G-14 — inside the page. Keep this function self-contained.
+   G-01 … G-15 — inside the page. Keep this function self-contained.
    opts: { foreign: string[] }   third-party requests seen on the wire
    ================================================================ */
 export async function pageGates(opts = {}) {
@@ -197,7 +198,7 @@ export async function pageGates(opts = {}) {
   const midText = textEls.filter((el) => !GLYPH_ONLY.test(textOf(el)) && same(fgOf(el), tokenOf(el, '--mid'))).map((el) => `${desc(el)} · ${toHex(fgOf(el))} = --mid`);
   out.push(result('G-03', 'Mid grey never text', midText, textEls.length, 'no text set in --mid', '%n text runs are set in --mid'));
 
-  // G-04 · accent text (D-025: the one earned figure per view) must still
+  // G-04 · accent text (one accent per section, G-15) must still
   // pass its threshold where it sits — never on the raised dark surface
   const accRuns = textEls.filter((el) => !GLYPH_ONLY.test(textOf(el)) && same(fgOf(el), tokenOf(el, '--accent-01')));
   const accLow = accRuns.filter((el) => { const bg = bgOf(el); return bg && contrast(fgOf(el), bg) < needOf(el); })
@@ -210,7 +211,10 @@ export async function pageGates(opts = {}) {
   const targets = Array.from(doc.querySelectorAll('a[href], button, input:not([type="hidden"]), select, textarea, summary, [role="tab"], [role="switch"], [role="button"]'))
     .filter((el) => !skip(el) && visible(el) && !srOnly(el) && !inlineInText(el));
   const min = win.innerWidth < 768 ? 44 : 24;
-  const smallT = targets.filter((el) => { const r = el.getBoundingClientRect(); return r.width < min - 0.5 || r.height < min - 0.5; })
+  // the footer's links are 32px below 768 (owner, 23 Oct 2026: the space
+  // between them no larger than the text); above WCAG 2.5.8's 24px
+  const minOf = (el) => (min === 44 && el.closest('.site-footer-links') ? 32 : min);
+  const smallT = targets.filter((el) => { const r = el.getBoundingClientRect(), m = minOf(el); return r.width < m - 0.5 || r.height < m - 0.5; })
     .map((el) => { const r = el.getBoundingClientRect(); return `${desc(el)} · ${Math.round(r.width * 10) / 10}×${Math.round(r.height * 10) / 10}`; });
   out.push(result('G-05', `Targets ≥ ${min}px`, smallT, targets.length, `${targets.length} targets, all at least ${min}px`, `%n targets smaller than ${min}px`));
 
@@ -240,19 +244,20 @@ export async function pageGates(opts = {}) {
   out.push(result('G-07', 'Square corners', round, shown.length, 'no corner above 0', '%n elements carry a radius'));
 
   // G-08 · flat: no shadow, no gradient, no blur
-  const unflat = (s) => {
+  // the sticky header's glass (owner, 23 Oct 2026) is the one blur allowed
+  const unflat = (s, glass = false) => {
     const why = [];
     if (s.boxShadow && s.boxShadow !== 'none') why.push('box-shadow');
     if (s.textShadow && s.textShadow !== 'none') why.push('text-shadow');
     if (/gradient/.test(s.backgroundImage || '')) why.push('gradient');
     if (/blur\(|drop-shadow\(/.test(s.filter || '')) why.push('filter ' + s.filter);
     const bf = s.backdropFilter || s.webkitBackdropFilter;
-    if (bf && bf !== 'none') why.push('backdrop-filter ' + bf);
+    if (bf && bf !== 'none' && !glass) why.push('backdrop-filter ' + bf);
     return why;
   };
   const flat = [];
   for (const el of shown) {
-    const w = unflat(cs(el)); if (w.length) flat.push(`${desc(el)} · ${w.join(', ')}`);
+    const w = unflat(cs(el), el.matches('header.shell')); if (w.length) flat.push(`${desc(el)} · ${w.join(', ')}`);
     for (const [p, s] of pseudos(el)) { const v = unflat(s); if (v.length) flat.push(`${desc(el)}${p} · ${v.join(', ')}`); }
   }
   out.push(result('G-08', 'No shadow, gradient, blur', flat, shown.length, 'no shadow, gradient or blur in the rendered page', '%n elements use a shadow, a gradient or a blur'));
@@ -378,6 +383,54 @@ export async function pageGates(opts = {}) {
     if (footMark && visible(footMark)) { const fx = textLeft(footMark); if (Math.abs(fx - mx) > 1) sOff.push(`footer wordmark starts at ${Math.round(fx)}px, the header's at ${Math.round(mx)}px`); }
   }
   out.push(result('G-14', 'Shell on the page grid', sOff, shellMark ? 3 : 0, shellMark ? 'header and footer wordmarks and the controls stand on the column lines of <main>' : 'no .shell-mark on this page', '%n shell edges off the page grid'));
+
+  // G-15 · one accent per section (owner, 22 Oct 2026; replaces D-025's
+  // one per view). An accent spot is an element painted in the resolved
+  // --accent-01 at rest: its own text, its background, a border, an SVG
+  // fill or stroke, or a ::before/::after. A spot inside another spot is
+  // the same spot (a button's glyph), and every accent mark of one <svg>
+  // is one spot (a chart's marker and its cursor). The section is the
+  // nearest of SCOPES; inside article.doc and outside those, the h2
+  // section the element follows. Hover and focus are not at rest. Code
+  // panels are left out: their syntax colours are a palette of their own
+  // (D-035) that happens to share a value with the dark accent.
+  const SCOPES = 'figure, .bench-tool, .cover, .doc-opener, .metric-strip, .doc-close, .doc-end, main > .section, header, footer, nav';
+  const accentOf = (el) => tokenOf(el, '--accent-01');
+  const painted = (el) => {
+    const s = cs(el), acc = accentOf(el);
+    if (!acc) return false;
+    if (textOf(el) && same(parseColor(s.color), acc)) return true;
+    const bg = parseColor(s.backgroundColor);
+    if (bg && bg[3] > 0.5 && same(bg, acc)) return true;
+    for (const side of ['Top', 'Right', 'Bottom', 'Left']) if (parseFloat(s[`border${side}Width`]) > 0 && same(parseColor(s[`border${side}Color`]), acc)) return true;
+    if (el.ownerSVGElement && (same(parseColor(s.fill), acc) || (s.stroke !== 'none' && same(parseColor(s.stroke), acc)))) return true;
+    for (const [, p] of pseudos(el)) { const pb = parseColor(p.backgroundColor); if ((pb && pb[3] > 0.5 && same(pb, acc)) || same(parseColor(p.color), acc)) return true; }
+    return false;
+  };
+  const spotsAll = shown.filter((el) => !srOnly(el) && !el.closest('.code, pre') && painted(el));
+  const spotSet = new Set(spotsAll.map((el) => el.ownerSVGElement || el));
+  const spots = Array.from(spotSet).filter((el) => { for (let n = el.parentElement; n; n = n.parentElement) if (spotSet.has(n)) return false; return true; });
+  const scopeOf = (el) => {
+    const sc = el.closest(SCOPES);
+    const art = el.closest('article.doc');
+    if (art && (!sc || sc.contains(art))) {
+      let h = null;
+      for (const h2 of art.querySelectorAll('h2')) { if (h2.compareDocumentPosition(el) & 4) h = h2; else break; }
+      return { key: art, sub: h, label: h ? `h2 “${h.textContent.replace(/\s+/g, ' ').trim().slice(0, 30)}”` : 'document lead' };
+    }
+    return { key: sc || doc.body, sub: null, label: sc ? desc(sc) : 'page' };
+  };
+  const groups = new Map();
+  for (const el of spots) {
+    const s = scopeOf(el);
+    let byKey = groups.get(s.key); if (!byKey) { byKey = new Map(); groups.set(s.key, byKey); }
+    const g = byKey.get(s.sub) || { label: s.label, els: [] };
+    g.els.push(el); byKey.set(s.sub, g);
+  }
+  const aOff = [];
+  let sections = 0;
+  for (const byKey of groups.values()) for (const g of byKey.values()) { sections++; if (g.els.length > 1) aOff.push(`${g.label} · ${g.els.length} accents: ${g.els.map(desc).join(' + ')}`); }
+  out.push(result('G-15', 'One accent per section', aOff, sections, `${spots.length} accent spots, at most one per section`, '%n sections carry more than one accent'));
 
   return { results: out, theme: doc.documentElement.dataset.theme || '', vw, elements: all.length };
 }
@@ -611,7 +664,7 @@ export function staticGates(pagePath, f, ctx) {
 
   // L-03 · scripts policy: content pages carry only the inline pre-paint
   // script (first script in <head>, before the stylesheets), the inline
-  // theme toggle and /scripts/code.js; /tools/<name>/ pages may also carry
+  // theme toggle (which also runs the contact pair's copy buttons) and /scripts/code.js; /tools/<name>/ pages may also carry
   // Astro island scripts. Non-JS script types (JSON, JSON-LD) are data.
   const sOff = [];
   const JS_TYPES = new Set(['', 'text/javascript', 'application/javascript', 'module', 'text/ecmascript']);

@@ -27,7 +27,7 @@ const year = new Date().getFullYear();
           <p class="label">{g.title}</p>
           <ul class="site-footer-links">
             {g.links.map((l) => (
-              <li><a href={l.href} hreflang={l.hreflang} lang={l.lang}>{l.label}{l.external && <Fragment> <span class="glyph" aria-hidden="true">↗</span></Fragment>}</a></li>
+              <li><a href={l.href} hreflang={l.hreflang} lang={l.lang} data-keys-open={l.keys ? '' : undefined}>{l.label}{l.external && <Fragment> <span class="glyph" aria-hidden="true">↗</span></Fragment>}</a></li>
             ))}
           </ul>
         </nav>

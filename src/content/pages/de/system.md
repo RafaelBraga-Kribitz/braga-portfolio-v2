@@ -88,7 +88,7 @@ Ein Zitatblock ohne Markierung bleibt ein Zitat. Der Autorenleitfaden über die 
 
 ### Werkzeug · `[!tool]`
 
-> [!tool] 04-02 · A/B-Stichprobengröße · interaktiv
+> [!tool] 03-02 · A/B-Stichprobengröße · interaktiv
 > Die Regler brauchen JavaScript. Ohne JavaScript gilt das Standardszenario: Bei einer Basisrate von 4 %, einem relativen Lift (Steigerung der Konversionsrate) von 10 % und einer Power (Teststärke) von 80 % braucht der Test **39.473** Besucher pro Arm – 40 Tage bei 2.000 Besuchern pro Tag. Eine Demonstration des Vokabulars; das Werkzeug selbst ist [04-02 A/B-Stichprobengröße](/de/tools/ab-sample-size/).
 
 ### Zusammenfassung · `[!summary]`
@@ -130,7 +130,11 @@ Ein Zitatblock ohne Markierung bleibt ein Zitat. Der Autorenleitfaden über die 
 ### Lesezeichen · `[!bookmark]`
 
 > [!bookmark] Weiter
-> [01-05 Risikoanalyse für die Energiebeschaffung](/de/work/energy-procurement-risk-analyzer/) — Von Strompreisdaten zu einer Kosten-Risiko-Entscheidung. Im Aufbau.
+> [01-04 Risikoanalyse für die Energiebeschaffung](/de/work/energy-procurement-risk-analyzer/) — Von Strompreisdaten zu einer Kosten-Risiko-Entscheidung. Im Aufbau.
+
+## Aktionen
+
+Die Hauptaktion eines Abschnitts trägt dessen einzigen Akzent (UX-Durchgang, 22. Okt. 2026; Gate G-15). Deshalb steht sie hier in einem eigenen Abschnitt, getrennt von der hervorgehobenen Kennzahl im Kennzahlen-Callout darüber.
 
 ### Handlungsaufforderung · `[!cta]`
 

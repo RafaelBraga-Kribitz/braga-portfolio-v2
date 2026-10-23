@@ -66,7 +66,7 @@ lang: en                       # en | de, must match the folder
 slug: warehouse-humanoid-tco   # same in both languages
 updated: "2026-10-02"          # optional; the meta row adds "Updated 2 Oct 2026"
 metrics:                       # the metric strip under the opener
-  - { value: "€453,000", label: Five-year cost, accent: true }  # at most one accent (D-025)
+  - { value: "€453,000", label: Five-year cost, accent: true }  # at most one accent (the strip is one section, G-15)
   - { value: "38 s", label: Cycle time }
 repository: https://github.com/…   # optional, a full URL; the meta row adds "Repository ↗"
 draft: false                   # default false; drafts are not listed or built
@@ -128,7 +128,7 @@ translationStatus: approved    # a German file: draft until the owner approves
 ---
 ```
 
-About renders with the document template (trail `03 About`); the kitchen
+About renders with the document template (trail `04 About`); the kitchen
 sink with the same template, noindex, trail `§ Index → <title>`, outside the
 sitemap. Everything below the opener (spec callouts, the CV table, the
 contact cta) is written in the body.
@@ -191,7 +191,7 @@ from the frontmatter, so the body starts at `##`.
 - Links: `[text](/en/work/…/)` inside the site (root-relative: a
   project-page build puts its base path in front by itself, DEPLOY.md),
   full URLs outside.
-- `==text==` marks **the one earned figure** of a section (D-025): it renders
+- `==text==` marks **the one earned figure** of a section (one accent per section, G-15): it renders
   as `<mark>` and is set in the accent (in a paragraph or list item; in a
   table cell it stays ink). At most one per section; never a word, never
   decoration; never in a heading (it stays literal there).
@@ -334,7 +334,7 @@ caption with the source. Not a callout on the page: it becomes
   - `centre: yes` for a change around zero: the zero line sits at 50% and
     each bar grows left or right from it; the scale must be symmetric
     (`−50–50`; default ± the largest magnitude). Default `no`.
-  - `accent: <label>` gives that one bar the accent (the earned bar, D-025).
+  - `accent: <label>` gives that one bar the accent (the earned bar: the figure's one accent, G-15).
   - `caption:` the sentence under the bars: state n and the scale in words
     here (the scale line only positions the bars).
   - `source:` printed after **Source:** / **Quelle:** in ink. The specimen

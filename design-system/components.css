@@ -44,14 +44,17 @@
 }
 a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
 
-/* the four canonical slots (identical in head and row) */
-.lr-index { grid-column: 1 / span 1; }
-.lr-title { grid-column: 2 / span 6; min-width: 0; }
-.lr-meta  { grid-column: 8 / span 3; min-width: 0; }
-.lr-trail { grid-column: 11 / span 2; justify-self: end; text-align: right; white-space: nowrap; }
+/* the four canonical slots (identical in head and row). Owner, 23 Oct
+   2026 (indentation reversed): a row is the second level under its
+   section heading, so it sits further in. The code stands on column 2,
+   under the section's text, and the title starts on column 4. */
+.lr-index { grid-column: 2 / span 2; }
+.lr-title { grid-column: 4 / span 5; min-width: 0; }
+.lr-meta  { grid-column: 9 / span 3; min-width: 0; }
+.lr-trail { grid-column: 12 / span 1; justify-self: end; text-align: right; white-space: nowrap; }
 /* wide-title variant: title runs to the meta edge (lists with no middle column) */
 .listing-row.lr-wide .lr-title,
-.listing-head.lr-wide .lr-title { grid-column: 2 / span 8; }
+.listing-head.lr-wide .lr-title { grid-column: 4 / span 7; }
 /* the meta slot stacks discipline and status (Site 03) */
 .listing-row .lr-meta { display: flex; flex-direction: column; gap: 8px; }
 
@@ -88,6 +91,8 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
 .lr-year { display: inline-flex; gap: 10px; align-items: baseline; color: var(--ink-2); font-variant-numeric: var(--num); }
 .lr-arrow { color: var(--ink-2); transition: color var(--dur) var(--ease); }
 .listing-row:hover .lr-arrow { color: var(--accent-01); }
+/* a listing without its head (the home page) opens on a rhythm rule */
+.listing > .listing-row:first-child { border-top: var(--rule); }
 /* nested index (site map): indent the title without breaking the grid */
 .listing-row.lr-child .lr-title { padding-left: var(--space-4); }
 
@@ -179,7 +184,7 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
 
 /* metrics — tiles between an ink rule and a hairline. Renderer: the run
    before " — " becomes <b>, the rest <span>; ==value== keeps its <mark>.
-   The key value is set in the accent (D-025); siblings ink-2. */
+   The key value is set in the accent (one per section, G-15); siblings ink-2. */
 .callout[data-callout="metrics"] { border-top: var(--rule-open); border-bottom: var(--hairline); padding-block: 24px; }
 .callout[data-callout="metrics"] ul {
   list-style: none; margin: 0; padding: 0;
@@ -226,17 +231,67 @@ details.callout > .callout-content { padding-block: 0 24px; max-width: var(--mea
 .callout[data-callout="tool"] .callout-content { font-size: var(--t-small); line-height: 1.5; }
 .callout[data-callout="tool"] .callout-content b { font-variant-numeric: var(--num); }
 
-/* ---------- 4 · CTA — the single primary link-button of a page ---------- */
+/* ---------- 4 · CTA — the primary action of a section ----------
+   UX pass, 22 Oct 2026: the one thing a section asks the reader to do
+   carries that section's one accent (G-15): accent fill, --on-accent
+   label, 48px tall. Hover inverts to ink. One per section; secondary
+   actions are .button (an outline in --edge) or a plain link. */
 .callout[data-callout="cta"] .callout-title { display: none; }
-.callout[data-callout="cta"] .callout-content a, .cta {
+.callout[data-callout="cta"] .callout-content > a, a.cta {
   display: inline-flex; align-items: center; gap: 12px; min-height: 48px; padding-inline: 20px;
-  border: 1px solid var(--ink); color: var(--ink); text-decoration: none;
-  font: 400 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: var(--tracking-label); text-transform: uppercase;
-  transition: background var(--dur) var(--ease);
+  border: 1px solid var(--accent-01); background: var(--accent-01); color: var(--on-accent); text-decoration: none;
+  font: 500 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: var(--tracking-label); text-transform: uppercase;
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease);
 }
-.callout[data-callout="cta"] .callout-content a:hover, .cta:hover { background: var(--surface-2); }
-.callout[data-callout="cta"] .glyph, .cta .glyph { color: var(--ink-2); }
-.callout[data-callout="cta"] a:hover .glyph, .cta:hover .glyph { color: var(--accent-01); }
+.callout[data-callout="cta"] .callout-content > a:hover, a.cta:hover { background: var(--ink); border-color: var(--ink); color: var(--surface); }
+.callout[data-callout="cta"] .glyph, a.cta .glyph { color: inherit; }
+
+/* the contact button (owner, 23 Oct 2026; src/components/ContactActions.astro,
+   a mailto cta callout). At rest: the cta, reading as the email address
+   (the section's one accent, G-15). On hover or keyboard focus it splits
+   in half: Copy on the left highlights in ink, Open on the right in the
+   accent. On a touch screen (no hover) both halves sit under the address.
+   The address is generated text (::before, from two reversed halves under
+   a right-to-left override, src/lib/contact.mjs): it cannot be selected
+   or copied by hand and is not in the HTML. Without JavaScript the halves
+   stay hidden ([hidden]) and the address still reads.
+     <div class="mail-split" data-u="…" data-d="…" data-ready>
+       <span class="mail-split-face" aria-hidden="true"><span class="mail-split-addr" data-u data-d></span><span class="glyph">↗</span></span>
+       <button class="mail-split-copy">Copy</button><a class="mail-split-open" href="…">Open ↗</a></div> */
+.mail-split { position: relative; display: inline-grid; grid-template-columns: 1fr 1fr; max-width: 100%; vertical-align: top; }
+.mail-split-face, .mail-split .mail-split-copy, .mail-split .mail-split-open {
+  grid-row: 1; display: flex; align-items: center; justify-content: center; gap: 12px;
+  min-height: 48px; margin: 0; padding-inline: 20px;
+  font: 500 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: var(--tracking-label); text-transform: uppercase;
+  text-decoration: none; white-space: nowrap; border-radius: 0;
+}
+.mail-split-face {
+  grid-column: 1 / -1;
+  background: var(--accent-01); border: 1px solid var(--accent-01); color: var(--on-accent);
+  user-select: none; -webkit-user-select: none; cursor: default;
+}
+.mail-split-face .glyph { color: inherit; }
+.mail-split-addr { direction: rtl; unicode-bidi: bidi-override; }
+.mail-split-addr::before { content: attr(data-d) "\0040" attr(data-u); }
+.mail-split .mail-split-copy, .mail-split .mail-split-open {
+  border: 1px solid var(--ink); background: var(--surface); color: var(--ink); cursor: pointer;
+  opacity: 0; pointer-events: none;
+  transition: opacity var(--dur) var(--ease), background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.mail-split .mail-split-copy { grid-column: 1; border-right-width: 0; }
+.mail-split .mail-split-open { grid-column: 2; }
+.mail-split .mail-split-open .glyph { color: inherit; }
+.mail-split[data-ready]:is(:hover, :focus-within) .mail-split-face { visibility: hidden; }
+.mail-split[data-ready]:is(:hover, :focus-within) :is(.mail-split-copy, .mail-split-open) { opacity: 1; pointer-events: auto; }
+.mail-split .mail-split-copy:is(:hover, :focus-visible) { background: var(--ink); color: var(--surface); }
+.mail-split .mail-split-open:is(:hover, :focus-visible) { background: var(--accent-01); border-color: var(--accent-01); color: var(--on-accent); }
+@media (hover: none) {
+  .mail-split[data-ready] .mail-split-face { visibility: visible; }
+  .mail-split[data-ready] :is(.mail-split-copy, .mail-split-open) { grid-row: 2; opacity: 1; pointer-events: auto; border-top-width: 0; }
+}
+@media (max-width: 399px) {
+  .mail-split-face, .mail-split .mail-split-copy, .mail-split .mail-split-open { padding-inline: 12px; letter-spacing: 0; }
+}
 
 /* the glyph (D-030): a recessive arrow or separator beside a label */
 .glyph { color: var(--ink-2); }
@@ -359,7 +414,7 @@ figure.fig[data-kind="diagram"] .nodeLabel, figure.fig[data-kind="diagram"] .edg
    A 2 × 2 grid of outcomes inside figure.fig, drawn with 1px gaps on a
    --rule-c ground (hairline cells, no borders of their own). Column and
    row heads on the surface, the four outcomes on a surface-2 wash; the
-   one earned count takes the accent and its tag turns ink (D-025).
+   one earned count takes the accent and its tag turns ink (the figure's one accent, G-15).
      <div class="fig-matrix" role="img" aria-label="…">
        <div></div><div class="fig-matrix-head">Page exists</div><div class="fig-matrix-head">No page exists</div>
        <div class="fig-matrix-head" data-row>You expected a page</div>
@@ -397,3 +452,36 @@ figure.fig[data-kind="diagram"] .nodeLabel, figure.fig[data-kind="diagram"] .edg
 }
 .fig-matrix-cell[data-accent] .fig-matrix-count { color: var(--accent-01); }
 .fig-matrix-cell[data-accent] .fig-matrix-tag { color: var(--ink); }
+
+/* ---------- KEYBOARD SHORTCUTS (owner, 23 Oct 2026) ----------
+   "?" opens dialog.keys (Base.astro): a sheet on the surface, opened by
+   the ink rule, square, no shadow; the page dims behind it. Keys are
+   kbd: mono figures in a --edge box. A section reached with j / k takes
+   focus for screen readers ([data-kbd-target]); the scroll is the cue,
+   so it draws no ring.
+     <dialog class="keys"><div class="keys-head"><h2 class="label">…</h2><button class="button">Close <kbd>Esc</kbd></button></div>
+       <p class="keys-lead">…</p><dl class="keys-list"><div><dt><kbd>j</kbd> / <kbd>k</kbd></dt><dd>…</dd></div>…</dl></dialog> */
+kbd {
+  display: inline-block; min-width: 24px; padding: 3px 6px; box-sizing: border-box; text-align: center;
+  font: 400 var(--t-mono-sm) / 1 var(--font-mono); color: var(--ink);
+  border: 1px solid var(--edge); border-radius: 0; background: var(--surface);
+}
+dialog.keys {
+  width: min(560px, calc(100% - 32px)); max-height: calc(100vh - 64px); overflow-y: auto;
+  margin: auto; padding: 24px; box-sizing: border-box;
+  background: var(--surface); color: var(--ink);
+  border: 0; border-top: var(--rule-open); border-radius: 0;
+}
+dialog.keys::backdrop { background: color-mix(in srgb, var(--ink) 45%, transparent); }
+.keys-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.keys-head h2 { margin: 0; }
+.keys-head .button kbd { min-width: 0; padding: 2px 4px; }
+.keys-lead { margin: 16px 0 0; font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); }
+.keys-list { margin: 16px 0 0; }
+.keys-list > div {
+  display: grid; grid-template-columns: 136px minmax(0, 1fr); gap: 16px; align-items: baseline;
+  padding-block: 10px; border-top: var(--rule);
+}
+.keys-list dt { color: var(--ink-2); font: 400 var(--t-mono-sm) / 1.6 var(--font-mono); white-space: nowrap; }
+.keys-list dd { margin: 0; font-size: var(--t-small); line-height: 1.5; }
+[data-kbd-target]:focus { outline: none; }

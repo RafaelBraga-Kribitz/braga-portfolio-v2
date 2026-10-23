@@ -95,9 +95,9 @@
 .markdown-reading-view .callout[data-callout="tool"] .callout-content b { font-variant-numeric: var(--num); }
 .markdown-reading-view .callout[data-callout="cta"] .callout-title { display: none; }
 .markdown-reading-view .callout[data-callout="cta"] .callout-content a,
-.markdown-reading-view .cta { display: inline-flex; align-items: center; gap: 12px; min-height: 48px; padding-inline: 20px; border: 1px solid var(--ink); color: var(--ink); text-decoration: none; font: 400 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: var(--tracking-label); text-transform: uppercase; transition: background var(--dur) var(--ease); }
+.markdown-reading-view .cta { display: inline-flex; align-items: center; gap: 12px; min-height: 48px; padding-inline: 20px; border: 1px solid var(--accent-01); background: var(--accent-01); color: var(--on-accent); text-decoration: none; font: 400 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: var(--tracking-label); text-transform: uppercase; transition: background var(--dur) var(--ease); }
 .markdown-reading-view .callout[data-callout="cta"] .callout-content a:hover,
-.markdown-reading-view .cta:hover { background: var(--surface-2); }
+.markdown-reading-view .cta:hover { background: var(--ink); border-color: var(--ink); color: var(--surface); }
 .markdown-reading-view .callout[data-callout="cta"] .glyph,
 .markdown-reading-view .cta .glyph { color: var(--ink-2); }
 .markdown-reading-view .callout[data-callout="cta"] a:hover .glyph,

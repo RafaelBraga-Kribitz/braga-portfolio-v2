@@ -1,6 +1,6 @@
 ---
 title: "MMM und Budget\u00ADoptimierung für Österreich"  # \u00AD = soft hyphen: the h1 may break there on a narrow screen
-code: "01-02"
+code: "01-03"
 kind: case
 date: "2026-08-04"
 summary: "Bayes’sches Media-Mix-Modelling. Eine Budgetentscheidung mit Prüfung des Abwärtsrisikos. In Überarbeitung: Die veröffentlichten Zahlen werden neu geschätzt."
@@ -72,7 +72,7 @@ An derselben Wahrheit gemessen, rechnet der plattformartige Bericht Paid Search 
 
 Auf dem öffentlichen Datensatz bringt dasselbe gesamte Wochenbudget, nach der Entscheidungsregel umverteilt, im Median ==15,1 %== des derzeitigen Deckungsbeitrags der Medien. Das 10. Perzentil liegt bei 8,8 %, und keine der 500 verwendeten Posterior-Ziehungen zeigt einen Verlust.
 
-> [!bars] Abb. 01-02-1 · Empfohlene Änderung der Wochenausgaben
+> [!bars] Abb. 01-03-1 · Empfohlene Änderung der Wochenausgaben
 > Budget wandert von der Außenwerbung zu TV und Facebook.
 > - TV — 50
 > - Außenwerbung — −20
@@ -130,9 +130,3 @@ Nach der schriftlich festgelegten Regel wird Budget zu TV und Facebook verschobe
 > Die Regel nennt die Bedingungen selbst. Fällt bei einer Neuschätzung die Untergrenze des Intervalls zu 90 % für den marginalen ROAS von TV oder Facebook auf 2,50 oder darunter, endet die Verschiebung zu diesem Kanal; ist das 10. Perzentil des Umverteilungsgewinns nicht mehr positiv, endet die Umverteilung. Der Optimierer nimmt außerdem an, dass die Reaktionskurven bei den neuen Ausgabenniveaus gelten und dass Mitbewerber nicht reagieren; die Empfehlung beruht auf beiden Annahmen, und keine davon ist belegt.
 
 Code, Berichte und das Entscheidungsmemo liegen im Repository. Die Zahlen in seiner README werden aus den Berichtsdateien erzeugt, und ein Test prüft, dass beide übereinstimmen.
-
-> [!bookmark] Weiter
-> [01-03 Rekonstruktion von Entscheidungsanalysen](/de/work/decision-analytics-reconstruction/) — Eine Rekonstruktion in drei Modulen. Allokationsgewinne sind Näherungswerte, keine Kampagneneffekte.
-
-> [!cta] Handlungsaufforderung
-> [Repository öffnen](https://github.com/RafaelBraga-Kribitz/austrian-mmm-budget-optimizer)

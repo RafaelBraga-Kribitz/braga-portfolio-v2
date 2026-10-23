@@ -2,7 +2,7 @@
 // 02-NN · An essay or a note — the document template (docs/PAGE-BRIEF.md,
 // Site specimen s04), as the project pages use it: the opener on the page
 // grid (trail "02 Writing → 02-01", title, lead, meta: kind · Published ·
-// Updated), then the contents rail on 3 and the document on 9 (the
+// reading time · Updated), then the contents rail on 3 and the document on 9 (the
 // Markdown body, the end bar: ← All writing · § END · the next entry in
 // listing order, wrapping to the first). One page per language per entry
 // of the writing collection; every word comes from the entry or from i18n.
@@ -11,7 +11,7 @@ import { render } from 'astro:content';
 import { t, formatDate, type Lang } from '@/lib/i18n';
 import { route, writingRoute } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
-import { writingOf, writingCode, nextOf, type WritingEntry } from '@/lib/collections';
+import { writingOf, writingCode, nextOf, prevOf, readingMinutes, type WritingEntry } from '@/lib/collections';
 
 export async function getStaticPaths() {
   const paths = [];
@@ -30,11 +30,13 @@ const d = entry.data;
 const { Content, headings, remarkPluginFrontmatter } = await render(entry);
 const code = writingCode(entry, list.findIndex((e) => e.id === entry.id));
 const next = nextOf(list, entry);
+const prev = prevOf(list, entry);
 const nextCode = next ? writingCode(next, list.findIndex((e) => e.id === next.id)) : '';
 
 const meta = [
   { text: t(lang, `kind.${d.kind}`) },
   { text: `${t(lang, 'published')} ${formatDate(d.date, lang)}` },
+  { text: t(lang, 'min-read').replace('{n}', String(readingMinutes(entry.body))) },
   ...(d.updated ? [{ text: `${t(lang, 'updated')} ${formatDate(d.updated, lang)}` }] : []),
 ];
 ---
@@ -52,6 +54,8 @@ const meta = [
   headings={headings}
   prev={{ href: route('writing', lang), label: t(lang, 'all-writing') }}
   next={next && { href: writingRoute(next.data.slug, lang), label: `${nextCode} ${next.data.title}` }}
+  nextDoc={next && writingRoute(next.data.slug, lang)}
+  prevDoc={prev && writingRoute(prev.data.slug, lang)}
 >
   <Content />
 </Document>

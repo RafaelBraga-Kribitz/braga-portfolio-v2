@@ -1,4 +1,4 @@
-// Confusion matrix — pure functions for the 04-01 bench. No DOM, no
+// Confusion matrix — pure functions for the 03-01 bench. No DOM, no
 // framework. The island (ConfusionMatrixBench.tsx) and the unit tests
 // both read this file.
 //
@@ -198,7 +198,7 @@ export function evaluate({ n, prevalence, sensitivity, specificity, costFP, cost
       row('f1', 2 * k.tp + k.fp + k.fn > 0 && k.tp + k.fn > 0 ? number(m.f1, lang, 3) : EN_DASH),
       row('fpr', rate(m.fpr, k.tn + k.fp)),
       row('fnr', rate(m.fnr, k.tp + k.fn)),
-      row('totalCost', currency(c.totalCost, lang), true),        // the one earned figure (D-025)
+      row('totalCost', currency(c.totalCost, lang), true),        // the bench's one accent (G-15)
       row('costPerCase', currency(c.costPerCase, lang, 2)),
     ];
   };
