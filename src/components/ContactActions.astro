@@ -4,7 +4,8 @@
 // email address, set like the About page's button; on hover or keyboard
 // focus it splits in half: "Copy" (left) copies the address, "Open"
 // (right) opens the mail app, each with its own highlight. On a touch
-// screen both halves show under the address. The address is drawn by CSS
+// screen (no hover) the first tap on the address splits it in place, and a
+// tap elsewhere closes it. The address is drawn by CSS
 // from two reversed halves and is never in the HTML (src/lib/contact.mjs);
 // the inline shell script in Base.astro reveals the halves and
 // reassembles the address on click. Without JavaScript the address still
