@@ -42,6 +42,8 @@ Each is recorded where it lives in the code; reverse any of them there.
 13. **Keyboard navigation** (owner, 23 Oct 2026): single-key shortcuts and a `?` panel (`BUILD-BRIEF.md` §6a item 10), documented in the accessibility statement's new Keyboard section (EN and DE drafts). Footer links on mobile are 32px (the space between them no larger than the text), the one exception to the 44px targets.
 14. **The content is an Obsidian vault** (owner, 23 Oct 2026, branch `obsidian/vault`): `src/content/` moved to `vault/`; a note is public only with `publish: true`; the title is the first `# heading`; a project's status is a `#status/…` tag; wikilinks, embeds (images, galleries, video, audio, files, notes), tags with tag pages, tasks, Mermaid, Dataview queries, covers, featured, SEO fields, scheduled publishing and related notes. Rules in `BUILD-BRIEF.md` §6b; the owner's guide is `vault/_guide/Start here.md`. Task lists are now allowed (squares with a spoken state, not checkboxes).
 
+15. **Rules open, never close** (owner, 24 Oct 2026): a rule opens what follows it, nothing closes with a rule, and the first block under the shell has none. Every page was measured before the change (257 pairs of rules facing each other across empty space, on 75 pages at 390 and 1280) and after (none). Gate G-16 keeps it; `BUILD-BRIEF.md` §6a item 11.
+
 ## 3. What is left, in order
 
 1. **German editing pass** on every `/de/` document and the German chrome (`src/lib/i18n.ts`). The prompt the build used is the `german` stage in `docs/workflows/pages.workflow.js`: grammar and cases, Austrian forms (Jänner, de-AT numbers and dates, „ “ quotes), neutral formal register, meaning identical to EN, compounds that hyphenate at 320px.
