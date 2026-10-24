@@ -113,6 +113,15 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
   .lr-trail-word { display: none; }   /* the arrow alone says it; the word would push the meta to a second line */
   .listing-row.lr-child .lr-title { padding-left: var(--space-3); }
 }
+/* below 230 (owner, 24 Oct 2026): the code on its own line, the text under
+   it; both take the whole width inside the page's padding */
+@media (max-width: 229px) {
+  .listing-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .lr-index, .lr-title { grid-column: 1 / -1; }
+  .listing-row .lr-meta { grid-column: 1; }
+  .lr-trail { grid-column: 2; }
+  .listing-row.lr-child .lr-title { padding-left: 0; }
+}
 
 /* ---------- 2 · STATUS in listings and meta rows (D-029) ----------
    The mark itself is in base.css; here its label typography where it
