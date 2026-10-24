@@ -7,7 +7,7 @@ translationStatus: approved
 publish: true
 ---
 
-# About
+# About Me
 
 > [!spec] Profile
 > - Name — Rafael Braga-Kribitz

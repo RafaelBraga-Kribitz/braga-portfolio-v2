@@ -1,3 +1,6 @@
 {
-  "enabledCssSnippets": ["braga-tokens", "braga"]
+  "enabledCssSnippets": [
+    "braga-tokens",
+    "braga"
+  ]
 }
