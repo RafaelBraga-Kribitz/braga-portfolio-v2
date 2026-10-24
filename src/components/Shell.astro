@@ -3,7 +3,10 @@
 // contact link (UX pass, 22 Oct 2026: the reader's most likely next step
 // sits where sites put it, top right, and leads to the About page's
 // contact section), the language link and the theme square. One DOM at every width (shell.css
-// handles 320 / 390 / 768+ without a hamburger, D-028).
+// handles 320 / 390 / 768+ without a hamburger, D-028). Below 327 (owner,
+// 24 Oct 2026) the contact link leaves the header (it stays in the footer)
+// and the language link shows only the current code, a toggle: EN on an
+// English page, DE on its twin; "/ DE" stays in its name for screen readers.
 import { site } from '../lib/site';
 import type { Lang } from '../lib/i18n';
 import { t, otherLang } from '../lib/i18n';
@@ -32,7 +35,7 @@ const codes: Record<Lang, string> = { en: 'EN', de: 'DE' };
     </nav>
     <div class="shell-cluster">
       <a class="shell-contact" href={contactRoute(lang)}>{t(lang, 'link.contact')}</a>
-      <a class="shell-lang" href={otherHref} hreflang={other} lang={other}>{codes[lang]}<span>/ {codes[other]}</span></a>
+      <a class="shell-lang" href={otherHref} hreflang={other} lang={other}>{codes[lang]}<span class="shell-lang-other">/ {codes[other]}</span></a>
       <button class="shell-theme" type="button" aria-label={t(lang, 'theme.toggle')} data-label={t(lang, 'theme.toggle')} data-light={t(lang, 'theme.light')} data-dark={t(lang, 'theme.dark')}><span></span></button>
     </div>
   </div>

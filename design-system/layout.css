@@ -124,7 +124,7 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
   font: 400 var(--t-mono-sm) / 1 var(--font-mono); color: var(--ink); text-decoration: none;
   font-variant-numeric: var(--num);
 }
-.shell-lang span { color: var(--ink-2); padding-left: 8px; }
+.shell-lang-other { color: var(--ink-2); padding-left: 8px; }
 /* the contact link (UX pass, 22 Oct 2026): the language link's mono, in
    ink, with the hairline underline that marks it as a link */
 .shell-contact {
@@ -171,6 +171,21 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
   .shell:lang(de) .door:not([aria-current="page"]) .door-label { display: none; }
   .shell:lang(de) .door:not([aria-current="page"]) { min-width: 44px; justify-content: center; }   /* a code alone is 15px wide; the target is 44 × 44 below 768 */
 }
+/* below 327 (owner, 24 Oct 2026): one row for the wordmark, the language
+   toggle and the theme square. The contact link leaves the header (the
+   footer keeps it); the language link shows the current code alone, so it
+   reads as a toggle (EN here, DE on the twin); "/ DE" stays in its name */
+@container shell (max-width: 326px) {
+  .shell-contact { display: none; }
+  .shell-lang { min-width: 44px; justify-content: center; padding-inline: 0; }   /* the code alone is 15px; the target stays 44 × 44 */
+  .shell-lang-other { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; padding: 0; }
+  .shell-mark { padding-right: 0; }
+  .shell-cluster { padding-inline: 0 calc(var(--gutter) - 14px); }   /* the square's 44px box carries its own air */
+}
+/* below 240 the four codes need every pixel: no gap, half the gutter */
+@container shell (max-width: 239px) {
+  .shell-doors { gap: 0; padding-inline: 8px; }
+}
 @container shell (max-width: 299px) {
   .door:not([aria-current="page"]) .door-label { display: none; }
   .door:not([aria-current="page"]) { min-width: 44px; justify-content: center; }  /* a code alone is 15px wide; the target stays 44 × 44 */
@@ -216,11 +231,18 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
   letter-spacing: -0.07em; text-transform: uppercase; color: var(--ink); text-decoration: none;
 }
 .site-footer-colophon {
-  margin: 0; text-align: right;
+  margin: 0; text-align: right; min-width: 0;
   font: 400 var(--t-mono-sm) / 1.8 var(--font-mono); color: var(--ink-2);
   text-transform: uppercase;
   font-variant-numeric: var(--num);
 }
+
+/* below 438 (owner, 24 Oct 2026) the wordmark and the colophon keep one row */
+@media (max-width: 437px) {
+  .site-footer-bar { flex-wrap: nowrap; gap: 16px; }
+  .site-footer-mark { flex: none; font-size: clamp(18px, 6.6vw, 28.8px); }
+}
+.site-footer-colophon > span { white-space: nowrap; }   /* breaks only between phrases (Footer.astro) */
 
 /* ---------- 4 · COVER (Site 02) ----------
    A title page on the 12-column grid: a spec-sheet rail on 3, the

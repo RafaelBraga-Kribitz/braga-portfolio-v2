@@ -1,14 +1,11 @@
 ---
 // Site footer, Site specimen s01: four link groups (D-013) over a
-// wordmark bar. The bar's right block is the specimen's three-line
-// colophon: name / location · EUR / status · year. The status line states
-// the status of this build (i18n `footer.status`) where the specimen says
-// "Private review · copy awaiting approval"; the year is a plain figure
-// (no © glyph: D-030). Casing is the stylesheet's (the colophon and
+// wordmark bar. The bar's right block is the colophon: name / location ·
+// EUR. The specimen's third line (status · year) was dropped by the owner,
+// 24 Oct 2026. Casing is the stylesheet's (the colophon and
 // labels are uppercased by CSS), so the source text keeps its natural case.
 import { site } from '../lib/site';
 import type { Lang } from '../lib/i18n';
-import { t } from '../lib/i18n';
 import { footerGroups } from '../lib/routes';
 
 interface Props {
@@ -17,7 +14,9 @@ interface Props {
 
 const { lang } = Astro.props;
 const groups = footerGroups(lang);
-const year = new Date().getFullYear();
+// The colophon breaks only between phrases (owner, 24 Oct 2026): a name
+// part, a place ending in a comma, or "Austria · EUR" stays on one line.
+const phrases = (line: string) => line.replace(/ · /g, '\u00a0·\u00a0').split(/(?<=,) | (?=\S+$)/);
 ---
 <footer class="grid-container">
   <div class="site-footer">
@@ -35,7 +34,7 @@ const year = new Date().getFullYear();
     </div>
     <div class="site-footer-bar">
       <span class="site-footer-mark">{site.wordmark}</span>
-      <p class="site-footer-colophon">{site.name}<br>{site.location[lang]} · EUR<br>{t(lang, 'footer.status')} · {String(year)}</p>
+      <p class="site-footer-colophon">{phrases(site.name).map((w, i) => <Fragment>{i > 0 && " "}<span>{w}</span></Fragment>)}<br>{phrases(`${site.location[lang]} · EUR`).map((w, i) => <Fragment>{i > 0 && " "}<span>{w}</span></Fragment>)}</p>
     </div>
   </div>
 </footer>
