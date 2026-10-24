@@ -249,9 +249,11 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
   grid-column: span 3; min-width: 0;
   display: flex; flex-direction: column; justify-content: space-between; gap: 32px; padding-bottom: 16px;
 }
-/* directly under the shell the shell's own hairline closes the header;
-   a second one would draw a 2px line across the content width */
-main > .cover:first-child { border-top: 0; }
+/* directly under the shell the shell's own hairline opens the page; a
+   second rule there would face it across empty space (rules open, never
+   close: owner, 24 Oct 2026). Applies to the first block of any page */
+main > .cover:first-child, main > .section:first-child > .section-heading:first-child { border-top: 0; }
+main > .section:first-child > .section-heading:first-child { padding-top: 0; }
 .cover-index { color: var(--ink); }
 .cover-rail dl { margin: 0; display: flex; flex-direction: column; gap: 16px; }
 .cover-rail dd { margin: 4px 0 0; font-size: var(--t-small); }
@@ -431,7 +433,7 @@ main > .doc:last-child, .doc-opener.grid + .grid { padding-bottom: 64px; }
 @media (max-width: 767px) {
   nav.toc { display: none; }
 }
-.toc-compact { border-top: var(--rule); border-bottom: var(--rule); }
+.toc-compact { border-top: var(--rule); }
 .toc-compact > summary {
   display: flex; align-items: center; justify-content: space-between; min-height: 44px; cursor: pointer;
   list-style: none; color: var(--ink);
@@ -465,7 +467,7 @@ main > .doc:last-child, .doc-opener.grid + .grid { padding-bottom: 64px; }
      </div> */
 .metric-strip {
   display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px;
-  border-top: var(--rule-open); border-bottom: var(--hairline); padding-block: 24px;
+  border-top: var(--rule-open); padding-block: 24px;
 }
 .metric { min-width: 0; }
 .metric-value {
@@ -521,4 +523,3 @@ main > .doc:last-child, .doc-opener.grid + .grid { padding-bottom: 64px; }
 .doc-tags a.tag { display: inline-flex; align-items: center; min-height: 24px; }
 .doc > .doc-related { grid-column: wide; border-top: var(--rule-open); padding-top: 16px; }
 .doc-related > .label { margin: 0 0 8px; }
-.doc-related > .callout + .callout .callout-content a { border-top: 0; }

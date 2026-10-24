@@ -6,7 +6,7 @@
 // failing on tests/gates/fixtures/bad/ (see tests/gates/README.md).
 //
 // Three kinds of function:
-//   pageGates(opts)   G-01…G-15. Runs INSIDE the page (page.evaluate), so it
+//   pageGates(opts)   G-01…G-16. Runs INSIDE the page (page.evaluate), so it
 //                     is self-contained: no closure over this module.
 //   pageFacts(html)   runs inside a blank page; parses the raw HTML file with
 //                     DOMParser (no script runs) and returns plain data for
@@ -37,6 +37,7 @@ export const GATES = [
   ['G-13', 'No third-party requests'],
   ['G-14', 'Shell on the page grid'],
   ['G-15', 'One accent per section'],
+  ['G-16', 'Rules open, never close'],
   ['L-01', 'Internal links resolve'],
   ['L-02', 'hreflang pairs'],
   ['L-03', 'Scripts policy'],
@@ -60,7 +61,7 @@ export function result(id, offenders, total, noteOk, noteFail, extra) {
 export const skipped = (id, why) => ({ id, name: GATE_NAME[id] || id, status: 'skip', count: 0, total: 0, summary: why, offenders: [] });
 
 /* ================================================================
-   G-01 … G-15 — inside the page. Keep this function self-contained.
+   G-01 … G-16 — inside the page. Keep this function self-contained.
    opts: { foreign: string[] }   third-party requests seen on the wire
    ================================================================ */
 export async function pageGates(opts = {}) {
@@ -432,6 +433,50 @@ export async function pageGates(opts = {}) {
   let sections = 0;
   for (const byKey of groups.values()) for (const g of byKey.values()) { sections++; if (g.els.length > 1) aOff.push(`${g.label} · ${g.els.length} accents: ${g.els.map(desc).join(' + ')}`); }
   out.push(result('G-15', 'One accent per section', aOff, sections, `${spots.length} accent spots, at most one per section`, '%n sections carry more than one accent'));
+
+
+  // G-16 · rules open, never close (owner, 24 Oct 2026). A horizontal rule
+  // (a top or bottom border ≥ 1px, 120px or wider once the segments a
+  // table row draws cell by cell are joined) must not face the next rule
+  // below it across nothing but empty space: a block ends in white space
+  // and the next block's rule separates. Boxes (a border on the left and
+  // the right too: a button, an input) and a chart's own axes (.ev-bars,
+  // .fig-matrix) are not rules. Content is rendered
+  // text, a replaced element (img, svg, video, canvas, input, button,
+  // select, textarea), a status square or a bar's fill; screen-reader-only
+  // text is not.
+  const isRuleSide = (s, side) => parseFloat(s[`border${side}Width`]) >= 1 && s[`border${side}Style`] !== 'none' && (parseColor(s[`border${side}Color`]) || [0, 0, 0, 0])[3] > 0;
+  const sy = win.scrollY;
+  let segs = [];
+  const fills = [];
+  for (const el of shown) {
+    if (srOnly(el)) continue;
+    const s = cs(el), r = el.getBoundingClientRect();
+    const boxed = (isRuleSide(s, 'Left') && isRuleSide(s, 'Right')) || !!el.closest('.ev-bars, .fig-matrix');   // a box, or a chart's own axis
+    if (!boxed && r.width >= 8) for (const side of ['Top', 'Bottom']) if (isRuleSide(s, side)) segs.push({ y: (side === 'Top' ? r.top : r.bottom) + sy, x1: r.left, x2: r.right, el, side: side.toLowerCase() });
+    if (/^(img|svg|video|canvas|input|button|select|textarea|picture)$/i.test(el.tagName) || el.matches('.status, .ev-fill, .ev-mid')) fills.push({ y1: r.top + sy, y2: r.bottom + sy, x1: r.left, x2: r.right });
+  }
+  for (const el of textEls) for (const n of el.childNodes) if (n.nodeType === 3 && n.textContent.trim()) {
+    const rg = doc.createRange(); rg.selectNodeContents(n);
+    for (const q of rg.getClientRects()) if (q.width > 2 && q.height > 2) fills.push({ y1: q.top + sy, y2: q.bottom + sy, x1: q.left, x2: q.right });
+  }
+  segs.sort((p, q) => p.y - q.y || p.x1 - q.x1);
+  for (let i = 0; i < segs.length; i++) { const L = segs[i]; if (L.dead) continue;
+    for (let j = i + 1; j < segs.length && Math.abs(segs[j].y - L.y) < 0.6; j++) { const M = segs[j]; if (!M.dead && M.x1 <= L.x2 + 40 && M.x2 >= L.x1) { L.x1 = Math.min(L.x1, M.x1); L.x2 = Math.max(L.x2, M.x2); M.dead = true; } } }
+  segs = segs.filter((l) => !l.dead && l.x2 - l.x1 >= 120);
+  const rOff = [];
+  for (const a of segs) {
+    let b = null;
+    for (const c of segs) {
+      if (c.y <= a.y + 2) continue;
+      if (Math.min(a.x2, c.x2) - Math.max(a.x1, c.x1) < 0.5 * Math.min(a.x2 - a.x1, c.x2 - c.x1)) continue;
+      if (!b || c.y < b.y) b = c;
+    }
+    if (!b) continue;
+    const x1 = Math.max(a.x1, b.x1), x2 = Math.min(a.x2, b.x2);
+    if (!fills.some((k) => k.y2 > a.y + 1 && k.y1 < b.y - 1 && k.x2 > x1 && k.x1 < x2)) rOff.push(`${desc(a.el)} [${a.side}] · ${Math.round(b.y - a.y)}px of empty space · ${desc(b.el)} [${b.side}]`);
+  }
+  out.push(result('G-16', 'Rules open, never close', rOff, segs.length, `${segs.length} rules, none facing another across empty space`, '%n rules face the next rule across empty space'));
 
   return { results: out, theme: doc.documentElement.dataset.theme || '', vw, elements: all.length };
 }

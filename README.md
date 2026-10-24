@@ -32,7 +32,7 @@ npx playwright install chromium
 | `npm run check` | Astro and TypeScript diagnostics |
 | `npm run lint` | No inline styles; no hex outside tokens, 12px floor, class contract, contrast table |
 | `npm run test:unit` | Number/date formatting cases, the tool maths and the typed-input parser, with hand-computed references |
-| `npm run test:gates` | Fifteen design gates (one accent per section among them), links, hreflang, scripts policy and axe on every built page, at six widths in both themes |
+| `npm run test:gates` | Sixteen design gates (one accent per section and rules open, never close among them), links, hreflang, scripts policy and axe on every built page, at six widths in both themes |
 | `npm run vault:check` | Audits the vault: broken links and embeds, missing translations, bad properties, Dataview queries that do not parse |
 | `npm run vault:sync` | Copies the design-system CSS into the vault's Obsidian snippets |
 | `npm run verify` | All of the above in order |
