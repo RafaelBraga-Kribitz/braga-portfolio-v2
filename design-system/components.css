@@ -414,6 +414,33 @@ figure.fig[data-kind="diagram"] .nodeLabel, figure.fig[data-kind="diagram"] .edg
 .doc tbody tr, .table-scroll tbody tr { transition: background var(--dur) var(--ease); }
 .doc tbody tr:hover, .table-scroll tbody tr:hover { background: var(--surface-2); }
 
+/* side notes (owner, 24 Oct 2026; braga-design-system-template's .noteref /
+   .sidenote): a note with `footnotes: side` (src/lib/remark/sidenotes.mjs)
+   numbers its reference in small mono and hangs the note in the right
+   margin of the document, level with the top of the paragraph that refers
+   to it, under a hairline, in the small size and ink-2. The template sets
+   both numbers in its accent; here they stay in ink, since the accent is
+   the section's one (G-15). The note is emitted twice and one copy shows:
+   data-place="margin" from 1280 (184px: the margin beside the 60ch measure
+   is 218–298px wide there), data-place="inline" below, after the
+   reference, opened by a 2px ink rule on its left (the template's mobile
+   form).
+     <p><span class="sidenote" role="note" data-place="margin"><span class="ref">1</span> Paraguay …</span>
+       … president of Paraguay.<sup class="noteref">1</sup><span class="sidenote" role="note" data-place="inline">…</span></p> */
+.doc .noteref { font: 400 max(12px, 0.75em) / 0 var(--font-mono); color: var(--ink); vertical-align: super; margin-left: 2px; font-variant-numeric: var(--num); }
+.doc .sidenote { font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty; }
+.doc .sidenote .ref { font-family: var(--font-mono); color: var(--ink); margin-right: 6px; font-variant-numeric: var(--num); }
+.doc .sidenote[data-place="margin"] { display: none; }
+.doc .sidenote[data-place="inline"] { display: block; margin: 12px 0; padding-left: 16px; border-left: 2px solid var(--ink); }
+@media (min-width: 1280px) {
+  .doc .sidenote[data-place="inline"] { display: none; }
+  .doc .sidenote[data-place="margin"] {
+    --sidenote-w: 184px;
+    display: block; float: right; clear: right; width: var(--sidenote-w);
+    margin: 0.3em calc(-1 * (var(--sidenote-w) + 24px)) 0 0; padding-top: 8px; border-top: var(--hairline);
+  }
+}
+
 /* footnotes: endnotes under a hairline */
 .footnotes { border-top: var(--hairline); padding-top: 16px; font-size: var(--t-small); color: var(--ink-2); display: grid; gap: 8px; }
 .footnotes > h2 {

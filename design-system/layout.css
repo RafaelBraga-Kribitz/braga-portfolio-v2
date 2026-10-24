@@ -183,6 +183,11 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
   .shell-cluster { padding-inline: 0 calc(var(--gutter) - 14px); }   /* the square's 44px box carries its own air */
 }
 /* below 240 the four codes need every pixel: no gap, half the gutter */
+/* very small (owner, 24 Oct 2026): the wordmark becomes its B, same face,
+   size and weight; the rest stays in its name for screen readers */
+@container shell (max-width: 259px) {
+  .shell-mark .wordmark-rest { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
 @container shell (max-width: 239px) {
   .shell-doors { gap: 0; padding-inline: 8px; }
 }
@@ -238,6 +243,9 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
 }
 
 /* below 438 (owner, 24 Oct 2026) the wordmark and the colophon keep one row */
+@media (max-width: 259px) {
+  .site-footer-mark .wordmark-rest { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
 @media (max-width: 437px) {
   .site-footer-bar { flex-wrap: nowrap; gap: 16px; }
   .site-footer-mark { flex: none; font-size: clamp(18px, 6.6vw, 28.8px); }
@@ -265,8 +273,19 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
 .cover {
   display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
   column-gap: var(--grid-gutter); row-gap: var(--space-4);
-  border-top: var(--hairline); padding-top: 64px;
+  border-top: var(--hairline);
+  /* the cover fills the viewport under the shell (owner, 24 Oct 2026): the
+     rule of the next section stands at the bottom edge of the screen, and
+     the free height is shared above and below the content 4 : 9 (the
+     64px over and the 144px under it at 1440 × 900), so a taller window
+     gives more air on both sides and a shorter one less, never below the
+     minimums */
+  min-height: calc(100vh - var(--shell-h) - 1px);    /* the shell's own hairline */
+  min-height: calc(100svh - var(--shell-h) - 1px);
+  grid-template-rows: minmax(32px, 4fr) auto minmax(64px, 9fr);
 }
+.cover > .cover-rail, .cover > .cover-body { grid-row: 2; }
+main > .cover + .section { padding-top: 0; }
 .cover-rail {
   grid-column: span 3; min-width: 0;
   display: flex; flex-direction: column; justify-content: space-between; gap: 32px; padding-bottom: 16px;
@@ -290,9 +309,10 @@ main > .section:first-child > .section-heading:first-child { padding-top: 0; }
 .cover-lead { margin: 32px 0 0; font-size: var(--t-lead); line-height: 1.5; }
 .cover-foot { margin-top: 32px; border-top: var(--rule); padding-block: 24px 16px; }
 @media (max-width: 767px) {
-  .cover { grid-template-columns: minmax(0, 1fr); padding-top: 40px; }
+  .cover { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(32px, 4fr) auto auto minmax(64px, 9fr); }
   .cover-rail, .cover-body { grid-column: 1 / -1; }
-  .cover-body { order: -1; }
+  .cover > .cover-body { grid-row: 2; }
+  .cover > .cover-rail { grid-row: 3; }
   .cover-rail { padding-bottom: 0; }
 }
 
@@ -383,6 +403,10 @@ main > .section:first-child > .section-heading:first-child { padding-top: 0; }
    square, unframed, with a mono caption. Until the file exists the frame
    is a surface-2 field of the same size with a label. Below 768 it is
    capped at 200px so the title stays near the top. */
+.doc-split { padding-block: 64px; }   /* the side column and the article's header start level; the page ends 64px above the footer */
+.doc-split > .doc-side { min-width: 0; }
+.doc-split > .doc .doc-opener:first-child { padding-top: 0; }
+.doc-side > nav.toc { margin-top: 48px; }
 .portrait { margin: 32px 0 0; border-top: var(--rule-open); padding-top: 16px; max-width: 280px; }
 .portrait img, .portrait-empty { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; }
 /* black and white at rest; the colour returns, slowly, under the pointer
@@ -552,8 +576,9 @@ main > .doc:last-child, .doc-opener.grid + .grid { padding-bottom: 64px; }
    one's place: no space is added between them, so the block's own padding
    is the whole distance from its last line to the next rule. At the top of
    the page (under the shell) and at its foot (over the footer) the page's
-   own spacing stays. */
+   own spacing stays. A spec list is not among the openers: its label stands
+   above its rule. */
 .doc > :is(.callout[data-callout="summary"], .callout[data-callout="metrics"], .callout[data-callout="bookmark"], details.callout, .metric-strip, .table-scroll, .math, .toc-compact, .doc-related)
-  + :is(h2, .callout[data-callout="summary"], .callout[data-callout="metrics"], .callout[data-callout="definition"], .callout[data-callout="spec"], .callout[data-callout="bookmark"], details.callout, .metric-strip, .table-scroll, .math, .toc-compact, .doc-close, .doc-end, .footnotes, figure.evidence) { margin-top: 0; }
+  + :is(h2, .callout[data-callout="summary"], .callout[data-callout="metrics"], .callout[data-callout="definition"], .callout[data-callout="bookmark"], details.callout, .metric-strip, .table-scroll, .math, .toc-compact, .doc-close, .doc-end, .footnotes, figure.evidence) { margin-top: 0; }
 .section:has(> .listing:last-child):has(+ .section > .section-heading:first-child) { padding-bottom: 0; }
 .bench:has(.bench-kpis:last-child) + .bench-rule { margin-top: 0; }

@@ -27,7 +27,7 @@ const codes: Record<Lang, string> = { en: 'EN', de: 'DE' };
 ---
 <header class="shell" lang={lang}>
   <div class="shell-bar">
-    <a class="shell-mark" href={route('home', lang)}>{site.wordmark}</a>
+    <a class="shell-mark" href={route('home', lang)}>{site.wordmark.slice(0, 1)}<span class="wordmark-rest">{site.wordmark.slice(1)}</span></a>
     <nav class="shell-doors" aria-label={t(lang, 'nav.sections')}>
       {doors.map((d) => (
         <a class="door" href={route(d.id, lang)} aria-current={d.code === current ? 'page' : undefined}><span class="door-code">{d.code}</span><span class="door-label">{doorLabel(d, lang)}</span></a>

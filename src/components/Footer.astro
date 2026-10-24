@@ -33,7 +33,7 @@ const phrases = (line: string) => line.replace(/ · /g, '\u00a0·\u00a0').split(
       ))}
     </div>
     <div class="site-footer-bar">
-      <span class="site-footer-mark">{site.wordmark}</span>
+      <span class="site-footer-mark">{site.wordmark.slice(0, 1)}<span class="wordmark-rest">{site.wordmark.slice(1)}</span></span>
       <p class="site-footer-colophon">{phrases(site.name).map((w, i) => <Fragment>{i > 0 && " "}<span>{w}</span></Fragment>)}<br>{phrases(`${site.location[lang]} · EUR`).map((w, i) => <Fragment>{i > 0 && " "}<span>{w}</span></Fragment>)}</p>
     </div>
   </div>

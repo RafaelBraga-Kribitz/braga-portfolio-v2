@@ -476,7 +476,9 @@ export async function pageGates(opts = {}) {
       if (!b || c.y < b.y) b = c;
     }
     if (!b) continue;
-    const x1 = Math.max(a.x1, b.x1), x2 = Math.min(a.x2, b.x2);
+    // the band under the upper rule, across its whole width: a wide rule with
+    // text under it does not face a margin note's rule beside that text
+    const x1 = a.x1, x2 = a.x2;
     if (!fills.some((k) => k.y2 > a.y + 1 && k.y1 < b.y - 1 && k.x2 > x1 && k.x1 < x2)) rOff.push(`${desc(a.el)} [${a.side}] · ${Math.round(b.y - a.y)}px of empty space · ${desc(b.el)} [${b.side}]`);
   }
   out.push(result('G-16', 'Rules open, never close', rOff, segs.length, `${segs.length} rules, none facing another across empty space`, '%n rules face the next rule across empty space'));
