@@ -93,6 +93,9 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
 .listing-row:hover .lr-arrow { color: var(--accent-01); }
 /* a listing without its head (the home page) opens on a rhythm rule */
 .listing > .listing-row:first-child { border-top: var(--rule); }
+/* rules open, never close (owner, 24 Oct 2026): the last row ends in white
+   space; the next block's rule (a section heading, the footer) separates */
+.listing > .listing-row:last-child { border-bottom: 0; }
 /* nested index (site map): indent the title without breaking the grid */
 .listing-row.lr-child .lr-title { padding-left: var(--space-4); }
 
@@ -152,7 +155,7 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
 .callout[data-callout="warning"] .callout-title::before { content: "▲"; }
 
 /* summary — the abstract under the opener */
-.callout[data-callout="summary"] { border-top: var(--rule-open); border-bottom: var(--hairline); padding-block: 16px 24px; }
+.callout[data-callout="summary"] { border-top: var(--rule-open); padding-block: 16px 24px; }
 .callout[data-callout="summary"] .callout-content { font-size: var(--t-lead); line-height: 1.5; max-width: var(--measure-doc); text-wrap: pretty; }
 
 /* definition — term as a small display title over an ink opening rule */
@@ -179,6 +182,8 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
   margin: 0; display: grid; grid-template-columns: fit-content(40%) minmax(0, 1fr);
   column-gap: 32px; border-top: var(--rule-open);
 }
+/* every term and value is underlined in its own column, the last too: a
+   split rule belongs to its row, it does not close the block (owner, 24 Oct 2026) */
 .callout[data-callout="spec"] dt, .callout[data-callout="spec"] dd { margin: 0; padding-block: 10px; border-bottom: var(--rule); }
 .callout[data-callout="spec"] dt {
   font: 400 var(--t-mono-sm) / 1.5 var(--font-mono);
@@ -186,10 +191,10 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
 }
 .callout[data-callout="spec"] dd { font-size: var(--t-small); line-height: 1.5; font-variant-numeric: var(--num); }
 
-/* metrics — tiles between an ink rule and a hairline. Renderer: the run
+/* metrics — tiles under an ink rule (rules open, never close). Renderer: the run
    before " — " becomes <b>, the rest <span>; ==value== keeps its <mark>.
    The key value is set in the accent (one per section, G-15); siblings ink-2. */
-.callout[data-callout="metrics"] { border-top: var(--rule-open); border-bottom: var(--hairline); padding-block: 24px; }
+.callout[data-callout="metrics"] { border-top: var(--rule-open); padding-block: 24px; }
 .callout[data-callout="metrics"] ul {
   list-style: none; margin: 0; padding: 0;
   display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 24px 32px;
@@ -207,7 +212,7 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
 }
 
 /* faq — a native <details>, no script */
-details.callout { display: block; border-top: var(--rule); border-bottom: var(--rule); }
+details.callout { display: block; border-top: var(--rule); }
 details.callout > summary {
   list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
   gap: 16px; min-height: 48px; padding-block: 12px;
@@ -221,7 +226,7 @@ details.callout > .callout-content { padding-block: 0 24px; max-width: var(--mea
 /* bookmark — a link card: title, one line, arrow; the whole card is the link */
 .callout[data-callout="bookmark"] .callout-content a {
   display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 24px; align-items: center;
-  padding: 16px 0; border-top: var(--rule); border-bottom: var(--rule);
+  padding: 16px 0; border-top: var(--rule);
   color: var(--ink); text-decoration: none; transition: background var(--dur) var(--ease);
 }
 .callout[data-callout="bookmark"] .callout-content a:hover { background: var(--surface-2); }
@@ -391,6 +396,7 @@ figure.fig[data-kind="diagram"] .nodeLabel, figure.fig[data-kind="diagram"] .edg
   border-top: var(--rule-open); border-bottom: var(--rule); padding: 12px 16px 12px 0;
 }
 .doc td, .table-scroll td { padding: 12px 16px 12px 0; border-bottom: var(--rule); vertical-align: top; font-variant-numeric: var(--num); }
+:is(.doc, .table-scroll) tr:last-child > td { border-bottom: 0; }   /* rules open, never close */
 .doc th:last-child, .doc td:last-child, .table-scroll th:last-child, .table-scroll td:last-child { padding-right: 0; }
 .doc th[align="right"], .doc td[align="right"], .table-scroll th[align="right"], .table-scroll td[align="right"],
 .doc :is(th, td).num-cell, .table-scroll :is(th, td).num-cell {
@@ -415,7 +421,7 @@ figure.fig[data-kind="diagram"] .nodeLabel, figure.fig[data-kind="diagram"] .edg
      <div class="math"><div class="math-body"><math display="block">…</math></div><span class="eq-no">(01-04-1)</span></div> */
 .math {
   display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: center;
-  padding-block: 16px; border-top: var(--rule); border-bottom: var(--rule);
+  padding-block: 16px; border-top: var(--rule);
   font-variant-numeric: var(--num);
 }
 /* MathML neither wraps nor shrinks: the cell scrolls, the number never overprints */
