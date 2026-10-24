@@ -96,14 +96,18 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
 /* nested index (site map): indent the title without breaking the grid */
 .listing-row.lr-child .lr-title { padding-left: var(--space-4); }
 
-/* responsive: collapse to a stacked, left-aligned card */
+/* responsive: collapse to a stacked card. The meta sits on one line under
+   the title (owner, 24 Oct 2026): the status first, its square leading
+   the line, then the other meta, and the arrow at the line's end */
 @media (max-width: 720px) {
   .listing-head { display: none; }
-  .listing-row { grid-template-columns: 64px 1fr; row-gap: 6px; padding-block: var(--space-3); }
+  .listing-row { grid-template-columns: 64px minmax(0, 1fr) auto; row-gap: 6px; padding-block: var(--space-3); }
   .lr-index { grid-column: 1; }
-  .lr-title { grid-column: 2; }
-  .lr-meta  { grid-column: 2; }
-  .lr-trail { grid-column: 2; justify-self: start; text-align: left; }
+  .lr-title { grid-column: 2 / -1; }
+  .listing-row .lr-meta { grid-column: 2; flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; }
+  .lr-meta .status { order: -1; }
+  .lr-trail { grid-column: 3; align-self: end; }
+  .lr-trail-word { display: none; }   /* the arrow alone says it; the word would push the meta to a second line */
   .listing-row.lr-child .lr-title { padding-left: var(--space-3); }
 }
 
@@ -250,7 +254,7 @@ details.callout > .callout-content { padding-block: 0 24px; max-width: var(--mea
    a mailto cta callout). At rest: the cta, reading as the email address
    (the section's one accent, G-15). On hover or keyboard focus it splits
    in half: Copy on the left highlights in ink, Open on the right in the
-   accent. On a touch screen (no hover) both halves sit under the address.
+   accent. On a touch screen the first tap on the address splits it.
    The address is generated text (::before, from two reversed halves under
    a right-to-left override, src/lib/contact.mjs): it cannot be selected
    or copied by hand and is not in the HTML. Without JavaScript the halves
@@ -281,14 +285,19 @@ details.callout > .callout-content { padding-block: 0 24px; max-width: var(--mea
 .mail-split .mail-split-copy { grid-column: 1; border-right-width: 0; }
 .mail-split .mail-split-open { grid-column: 2; }
 .mail-split .mail-split-open .glyph { color: inherit; }
-.mail-split[data-ready]:is(:hover, :focus-within) .mail-split-face { visibility: hidden; }
-.mail-split[data-ready]:is(:hover, :focus-within) :is(.mail-split-copy, .mail-split-open) { opacity: 1; pointer-events: auto; }
+@media (hover: hover) {
+  .mail-split[data-ready]:hover .mail-split-face { visibility: hidden; }
+  .mail-split[data-ready]:hover :is(.mail-split-copy, .mail-split-open) { opacity: 1; pointer-events: auto; }
+}
+.mail-split[data-ready]:focus-within .mail-split-face { visibility: hidden; }
+.mail-split[data-ready]:focus-within :is(.mail-split-copy, .mail-split-open) { opacity: 1; pointer-events: auto; }
 .mail-split .mail-split-copy:is(:hover, :focus-visible) { background: var(--ink); color: var(--surface); }
 .mail-split .mail-split-open:is(:hover, :focus-visible) { background: var(--accent-01); border-color: var(--accent-01); color: var(--on-accent); }
-@media (hover: none) {
-  .mail-split[data-ready] .mail-split-face { visibility: visible; }
-  .mail-split[data-ready] :is(.mail-split-copy, .mail-split-open) { grid-row: 2; opacity: 1; pointer-events: auto; border-top-width: 0; }
-}
+/* a touch screen has no hover: the first tap on the address splits it in
+   place ([data-open], set by the shell script), a tap elsewhere closes it */
+.mail-split[data-ready] .mail-split-face { cursor: pointer; }
+.mail-split[data-open] .mail-split-face { visibility: hidden; }
+.mail-split[data-open] :is(.mail-split-copy, .mail-split-open) { opacity: 1; pointer-events: auto; }
 @media (max-width: 399px) {
   .mail-split-face, .mail-split .mail-split-copy, .mail-split .mail-split-open { padding-inline: 12px; letter-spacing: 0; }
 }
