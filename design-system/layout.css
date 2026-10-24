@@ -362,7 +362,7 @@ main > .cover:first-child { border-top: 0; }
 .portrait { margin: 32px 0 0; border-top: var(--rule-open); padding-top: 16px; max-width: 280px; }
 .portrait img, .portrait-empty { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; }
 /* black and white at rest; the colour returns, slowly, under the pointer
-   (owner, 24 Oct 2026). The photo is cut to 4:5 from the left (src/assets) */
+   (owner, 24 Oct 2026). The photo is cut to 4:5 equally on both sides (src/assets) */
 .portrait img { filter: grayscale(1); transition: filter 600ms var(--ease); }
 .portrait:hover img { filter: grayscale(0); }
 @media (prefers-reduced-motion: reduce) { .portrait img { transition: none; } }
