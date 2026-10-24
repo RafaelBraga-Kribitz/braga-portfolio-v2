@@ -33,6 +33,8 @@ npx playwright install chromium
 | `npm run lint` | No inline styles; no hex outside tokens, 12px floor, class contract, contrast table |
 | `npm run test:unit` | Number/date formatting cases, the tool maths and the typed-input parser, with hand-computed references |
 | `npm run test:gates` | Fifteen design gates (one accent per section among them), links, hreflang, scripts policy and axe on every built page, at six widths in both themes |
+| `npm run vault:check` | Audits the vault: broken links and embeds, missing translations, bad properties, Dataview queries that do not parse |
+| `npm run vault:sync` | Copies the design-system CSS into the vault's Obsidian snippets |
 | `npm run verify` | All of the above in order |
 
 ## Where things are
@@ -40,7 +42,7 @@ npx playwright install chromium
 | Path | Holds |
 |---|---|
 | `design-system/` | The stylesheets: tokens, base, layout, components, charts, bench, print, Obsidian snippet. Start with its README. |
-| `src/content/` | Projects, writing and legal pages as Markdown (EN and DE). The authoring guide is `src/content/README.md`. |
+| `vault/` | The content as an Obsidian vault: projects, essays, notes, pages and legal pages (EN and DE), attachments, templates. Open it in Obsidian; start with `vault/_guide/Start here.md`. Only notes with `publish: true` reach the site. |
 | `src/pages/` | Routes for both language trees (`/en/`, `/de/`). |
 | `src/components/`, `src/layouts/` | The site patterns (shell, cover, listing, document, evidence figure, bench) and the base layout. |
 | `src/lib/` | Routes, chrome strings (i18n), formatting by language, the Markdown pipeline, tool maths. |

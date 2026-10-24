@@ -1,0 +1,12 @@
+{
+  "attachmentFolderPath": "Attachments",
+  "newFileLocation": "current",
+  "useMarkdownLinks": false,
+  "newLinkFormat": "shortest",
+  "alwaysUpdateLinks": true,
+  "showInlineTitle": false,
+  "propertiesInDocument": "visible",
+  "strictLineBreaks": true,
+  "showUnsupportedFiles": false,
+  "userIgnoreFilters": []
+}

@@ -5,12 +5,13 @@ import mdx from '@astrojs/mdx';
 // markdown pipeline (content-pipeline step) ----------------------------------
 // Astro 7 renders Markdown with Sätteri; remark/rehype (unified) plugins only
 // run on @astrojs/markdown-remark, which is not installed. The plugins below
-// are Sätteri mdast/hast visitors doing the same jobs (src/content/README.md).
+// are Sätteri mdast/hast visitors doing the same jobs (vault/_guide/Syntax reference.md).
 import { satteri } from '@astrojs/markdown-satteri';
 import mathGuard from './src/lib/remark/math.mjs';
 import codeLang from './src/lib/remark/code-lang.mjs';
 import callouts from './src/lib/remark/callouts.mjs';
-import taskLists from './src/lib/remark/task-lists.mjs';
+import obsidian from './src/lib/remark/obsidian.mjs';
+import diagrams from './src/lib/remark/diagrams.mjs';
 import katex from './src/lib/rehype/katex.mjs';
 import tables from './src/lib/rehype/tables.mjs';
 import code from './src/lib/rehype/code.mjs';
@@ -18,6 +19,7 @@ import math from './src/lib/rehype/math.mjs';
 import headings from './src/lib/rehype/headings.mjs';
 import footnotes from './src/lib/rehype/footnotes.mjs';
 import links from './src/lib/rehype/links.mjs';
+import vaultMedia from './src/integrations/vault-media.mjs';
 
 // Origin and base path (DEPLOY.md). The origin is the GitHub Pages user
 // site of the account RafaelBraga-Kribitz (host names are lower case). A
@@ -41,7 +43,8 @@ export default defineConfig({
   output: 'static',
   trailingSlash: 'always',
   build: { format: 'directory' },
-  integrations: [preact(), mdx()],
+  // vaultMedia: the vault's attachments at /media/ (src/integrations/vault-media.mjs)
+  integrations: [preact(), mdx(), vaultMedia({ base })],
   markdown: {
     // Prism is class-based (<span class="token keyword">), never inline
     // styles; code.mjs maps its classes onto the six tok-* classes (D-035).
@@ -60,9 +63,11 @@ export default defineConfig({
       },
       // the remark phase, in order: the $-price guard, fence languages Prism
       // cannot load → text (else their code reaches the page as raw HTML),
-      // GFM task lists refused (no checkbox in the design system), then
-      // ==marks== and callouts (bars included: the evidence figure)
-      mdastPlugins: [mathGuard, codeLang, taskLists, callouts],
+      // ```mermaid drawn at build and ```dataview queries run over the vault
+      // (src/lib/remark/diagrams.mjs), Obsidian's syntax (the H1 title, [[links]], ![[embeds]], #tags,
+      // %%comments%%, Dataview fields, tasks; src/lib/remark/obsidian.mjs),
+      // then ==marks== and callouts (bars included: the evidence figure)
+      mdastPlugins: [mathGuard, codeLang, diagrams, obsidian, callouts],
       // the rehype phase, in order. headings and footnotes are factories,
       // passed uncalled: Sätteri calls them once per document, so each page
       // gets its own slugger and its own language.

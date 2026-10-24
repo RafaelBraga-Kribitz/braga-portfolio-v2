@@ -1,0 +1,166 @@
+/* ============================================================
+   OBSIDIAN SNIPPET — Braga design system v2
+   The document elements (base.css sections 4–5) and the components
+   (components.css sections 3–6) with every selector scoped to
+   .markdown-reading-view. Derived mechanically from those two files:
+   ".doc > X" and ".doc X" become ".markdown-reading-view X"; a
+   selector without .doc is prefixed; ".doc" itself becomes
+   ".markdown-reading-view .markdown-preview-view" with its type,
+   colour and counter declarations only; rules that only place an
+   element on the article grid are dropped. Do not edit by hand;
+   regenerate when base.css or components.css change.
+
+   Install: copy tokens.css AND this file into <vault>/.obsidian/
+   snippets/ and enable both (Settings → Appearance → CSS snippets).
+   tokens.css supplies the custom properties (its light values apply
+   through :root; the dark values apply when the OS prefers dark or
+   when a note carries `cssclasses: dark`). The @font-face URLs point
+   at /fonts/ and do not resolve inside Obsidian: install BKribitz and
+   BKribitz Mono as system fonts to see the project faces there.
+   Grid placement and the FLOW rules are deliberately absent: Obsidian
+   wraps each block in its own div, so its own spacing applies.
+   ============================================================ */
+
+.markdown-reading-view .markdown-preview-view { font: 400 var(--t-body) / var(--lh-body) var(--font-body); color: var(--ink); counter-reset: sec; }
+.markdown-reading-view h2 { counter-increment: sec; font: var(--w-display) var(--t-h3) / var(--lh-snug) var(--font-display); letter-spacing: var(--tracking-tight); text-wrap: balance; border-top: var(--hairline); padding-top: 16px; }
+.markdown-reading-view h2::before { content: counter(sec, decimal-leading-zero); display: block; margin-bottom: 8px; font: 400 var(--t-mono) / 1 var(--font-mono); letter-spacing: var(--tracking-label); color: var(--ink-3); font-variant-numeric: var(--num); }
+.markdown-reading-view h3 { font: var(--w-display) 1.25rem / 1.3 var(--font-display); letter-spacing: var(--tracking-tight); text-wrap: balance; }
+.markdown-reading-view h4 { font: 700 var(--t-body) / 1.4 var(--font-body); letter-spacing: 0; }
+.markdown-reading-view p { text-wrap: pretty; }
+.markdown-reading-view ul,
+.markdown-reading-view ol { padding-left: 24px; display: grid; gap: var(--flow-related); }
+.markdown-reading-view ol { list-style: decimal-leading-zero; }
+.markdown-reading-view li::marker { color: var(--ink-3); font-variant-numeric: var(--num); }
+.markdown-reading-view strong { font-weight: 700; }
+.markdown-reading-view code { font: 400 max(12px, 0.9em) / 1 var(--font-mono); background: var(--surface-2); padding: 1px 4px; font-variant-numeric: var(--num); }
+.markdown-reading-view hr { border: 0; border-top: var(--hairline); height: 0; }
+.markdown-reading-view mark { background: none; color: inherit; }
+.markdown-reading-view sup { font-size: max(12px, 0.75em); line-height: 0; vertical-align: super; }
+.markdown-reading-view sup a { font-family: var(--font-mono); color: var(--ink-2); text-decoration: none; padding-inline: 2px; }
+.markdown-reading-view img { display: block; max-width: 100%; height: auto; }
+.markdown-reading-view p mark,
+.markdown-reading-view li mark { color: var(--accent-01); font-variant-numeric: var(--num); }
+.markdown-reading-view blockquote { background: var(--surface-2); border-top: var(--rule); padding: 24px; }
+.markdown-reading-view blockquote > * + * { margin-top: var(--flow-element); }
+.markdown-reading-view .tok-kw { color: var(--code-kw); }
+.markdown-reading-view .tok-fn { color: var(--code-fn); }
+.markdown-reading-view .tok-str { color: var(--code-str); }
+.markdown-reading-view .tok-num { color: var(--code-num); }
+.markdown-reading-view .tok-cm { color: var(--code-ink-3); font-style: italic; }
+.markdown-reading-view .tok-op { color: var(--code-ink-2); }
+.markdown-reading-view .callout { display: grid; gap: 12px; min-width: 0; }
+.markdown-reading-view .callout .callout-icon,
+.markdown-reading-view .callout .callout-fold { display: none; }
+.markdown-reading-view .callout-title { display: flex; align-items: center; gap: 8px; font: 400 var(--t-mono-sm) / 1.4 var(--font-mono); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2); }
+.markdown-reading-view .callout-content > * { margin: 0; }
+.markdown-reading-view .callout-content > * + * { margin-top: var(--flow-element); }
+.markdown-reading-view .callout-content > p + ul,
+.markdown-reading-view .callout-content > p + ol { margin-top: var(--flow-related); }
+.markdown-reading-view .callout-content ul,
+.markdown-reading-view .callout-content ol { padding-left: 24px; }
+.markdown-reading-view .callout:is([data-callout="note"], [data-callout="aside"], [data-callout="warning"], [data-callout="tool"]) { background: var(--surface-2); border-top: var(--rule); padding: 24px; }
+.markdown-reading-view .callout[data-callout="warning"] .callout-title::before { content: "▲"; }
+.markdown-reading-view .callout[data-callout="summary"] { border-top: var(--rule-open); border-bottom: var(--hairline); padding-block: 16px 24px; }
+.markdown-reading-view .callout[data-callout="summary"] .callout-content { font-size: var(--t-lead); line-height: 1.5; max-width: var(--measure-doc); text-wrap: pretty; }
+.markdown-reading-view .callout[data-callout="definition"] { border-top: var(--rule-open); padding-top: 12px; }
+.markdown-reading-view .callout[data-callout="definition"] .callout-title { font: var(--w-display) var(--t-body) / 1.3 var(--font-display); letter-spacing: var(--tracking-tight); text-transform: none; color: var(--ink); }
+.markdown-reading-view .callout[data-callout="quote"] { border-top: var(--hairline); padding-top: 16px; }
+.markdown-reading-view .callout[data-callout="quote"] .callout-content { font: var(--w-display) var(--t-h3) / var(--lh-snug) var(--font-display); letter-spacing: var(--tracking-tight); text-wrap: balance; max-width: 30em; }
+.markdown-reading-view .callout[data-callout="quote"] .callout-title { order: 2; }
+.markdown-reading-view .callout[data-callout="spec"] dl { margin: 0; display: grid; grid-template-columns: fit-content(40%) minmax(0, 1fr); column-gap: 32px; border-top: var(--rule-open); }
+.markdown-reading-view .callout[data-callout="spec"] dt,
+.markdown-reading-view .callout[data-callout="spec"] dd { margin: 0; padding-block: 10px; border-bottom: var(--rule); }
+.markdown-reading-view .callout[data-callout="spec"] dt { font: 400 var(--t-mono-sm) / 1.5 var(--font-mono); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2); }
+.markdown-reading-view .callout[data-callout="spec"] dd { font-size: var(--t-small); line-height: 1.5; font-variant-numeric: var(--num); }
+.markdown-reading-view .callout[data-callout="metrics"] { border-top: var(--rule-open); border-bottom: var(--hairline); padding-block: 24px; }
+.markdown-reading-view .callout[data-callout="metrics"] ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 24px 32px; }
+.markdown-reading-view .callout[data-callout="metrics"] li { display: grid; gap: 12px; min-width: 0; }
+.markdown-reading-view .callout[data-callout="metrics"] li > b { display: flex; align-items: center; gap: 12px; font: var(--w-display) clamp(30px, 4vw, 50px) / 1.1 var(--font-display); letter-spacing: -0.04em; font-variant-numeric: var(--num); color: var(--ink-2); }
+.markdown-reading-view .callout[data-callout="metrics"] li > b:has(mark),
+.markdown-reading-view .callout[data-callout="metrics"] li.key > b { color: var(--accent-01); }
+.markdown-reading-view .callout[data-callout="metrics"] li > span { font: 400 var(--t-mono-sm) / 1.5 var(--font-mono); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2); }
+.markdown-reading-view details.callout { display: block; border-top: var(--rule); border-bottom: var(--rule); }
+.markdown-reading-view details.callout > summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; min-height: 48px; padding-block: 12px; font: 400 var(--t-body) / 1.4 var(--font-body); color: var(--ink); text-transform: none; letter-spacing: 0; }
+.markdown-reading-view details.callout > summary::-webkit-details-marker { display: none; }
+.markdown-reading-view details.callout > summary::after { content: "+"; font: 400 var(--t-mono) / 1 var(--font-mono); color: var(--ink-2); }
+.markdown-reading-view details.callout[open] > summary::after { content: "−"; }
+.markdown-reading-view details.callout > .callout-content { padding-block: 0 24px; max-width: var(--measure-doc); }
+.markdown-reading-view .callout[data-callout="bookmark"] .callout-content a { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 24px; align-items: center; padding: 16px 0; border-top: var(--rule); border-bottom: var(--rule); color: var(--ink); text-decoration: none; transition: background var(--dur) var(--ease); }
+.markdown-reading-view .callout[data-callout="bookmark"] .callout-content a:hover { background: var(--surface-2); }
+.markdown-reading-view .callout[data-callout="bookmark"] a b { font: var(--w-display) 1.125rem / 1.3 var(--font-display); letter-spacing: var(--tracking-tight); }
+.markdown-reading-view .callout[data-callout="bookmark"] a .sub { grid-column: 1; color: var(--ink-2); font-size: var(--t-small); line-height: 1.4; }
+.markdown-reading-view .callout[data-callout="bookmark"] a .glyph { grid-column: 2; grid-row: 1 / span 2; font-family: var(--font-mono); color: var(--ink-2); }
+.markdown-reading-view .callout[data-callout="bookmark"] a:hover .glyph { color: var(--accent-01); }
+.markdown-reading-view .callout[data-callout="tool"] .callout-content { font-size: var(--t-small); line-height: 1.5; }
+.markdown-reading-view .callout[data-callout="tool"] .callout-content b { font-variant-numeric: var(--num); }
+.markdown-reading-view .callout[data-callout="cta"] .callout-title { display: none; }
+.markdown-reading-view .callout[data-callout="cta"] .callout-content a,
+.markdown-reading-view .cta { display: inline-flex; align-items: center; gap: 12px; min-height: 48px; padding-inline: 20px; border: 1px solid var(--accent-01); background: var(--accent-01); color: var(--on-accent); text-decoration: none; font: 400 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: var(--tracking-label); text-transform: uppercase; transition: background var(--dur) var(--ease); }
+.markdown-reading-view .callout[data-callout="cta"] .callout-content a:hover,
+.markdown-reading-view .cta:hover { background: var(--ink); border-color: var(--ink); color: var(--surface); }
+.markdown-reading-view .callout[data-callout="cta"] .glyph,
+.markdown-reading-view .cta .glyph { color: var(--ink-2); }
+.markdown-reading-view .callout[data-callout="cta"] a:hover .glyph,
+.markdown-reading-view .cta:hover .glyph { color: var(--accent-01); }
+.markdown-reading-view .glyph { color: var(--ink-2); }
+.markdown-reading-view .code { background: var(--code-bg); color: var(--code-ink); border: 1px solid var(--code-edge); min-width: 0; color-scheme: dark; }
+.markdown-reading-view .code-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 8px 8px 8px 20px; border-bottom: 1px solid var(--code-edge); font: 400 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--code-ink-3); }
+.markdown-reading-view .code-bar .code-tools { display: flex; gap: 4px; }
+.markdown-reading-view .code-bar button,
+.markdown-reading-view .code-copy,
+.markdown-reading-view .code-wrap { min-height: 28px; padding: 0 12px; border: 1px solid var(--code-edge); background: transparent; color: var(--code-ink-2); font: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; transition: background var(--dur) var(--ease), color var(--dur) var(--ease); }
+.markdown-reading-view .code-bar button:hover,
+.markdown-reading-view .code-copy:hover,
+.markdown-reading-view .code-wrap:hover { background: var(--code-edge); color: var(--code-ink); }
+.markdown-reading-view .code-bar button:focus-visible,
+.markdown-reading-view .code-copy:focus-visible,
+.markdown-reading-view .code-wrap:focus-visible { outline: 2px solid var(--code-ink); outline-offset: 2px; }
+.markdown-reading-view .code pre { background: transparent; border: 0; color: var(--code-ink); margin: 0; }
+.markdown-reading-view .code[data-wrap="off"] pre { white-space: pre; overflow-x: auto; overflow-wrap: normal; }
+.markdown-reading-view pre,
+.markdown-reading-view .code pre { font: 400 var(--t-mono) / 1.7 var(--font-mono); padding: 24px; margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 2; min-width: 0; max-width: 100%; font-variant-numeric: var(--num); }
+.markdown-reading-view pre { background: var(--surface-2); border-top: var(--rule); }
+.markdown-reading-view pre code,
+.markdown-reading-view .code pre code { background: none; padding: 0; font: inherit; }
+.markdown-reading-view figure.fig { display: grid; gap: 16px; border-top: var(--hairline); padding-top: 16px; min-width: 0; }
+.markdown-reading-view .fig figcaption { display: grid; gap: 6px; }
+.markdown-reading-view .fig-label { font: 400 var(--t-mono-sm) / 1.4 var(--font-mono); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-3); font-variant-numeric: var(--num); }
+.markdown-reading-view .fig-title { font: var(--w-display) 1.3125rem / 1.3 var(--font-display); letter-spacing: var(--tracking-tight); color: var(--ink); text-wrap: balance; }
+.markdown-reading-view .fig-source { margin: 0; font: 400 var(--t-mono-sm) / 1.7 var(--font-mono); color: var(--ink-2); font-variant-numeric: var(--num); }
+.markdown-reading-view .fig-source b { font-weight: 400; color: var(--ink); }
+.markdown-reading-view figure.fig[data-kind="diagram"] svg { display: block; max-width: 100%; height: auto; }
+.markdown-reading-view figure.fig[data-kind="diagram"] .node rect,
+.markdown-reading-view figure.fig[data-kind="diagram"] .node polygon { fill: var(--surface-2); stroke: var(--ink); stroke-width: 1; rx: 0; ry: 0; }
+.markdown-reading-view figure.fig[data-kind="diagram"] .edgePath path { stroke: var(--ink-2); stroke-width: 1; fill: none; }
+.markdown-reading-view figure.fig[data-kind="diagram"] .nodeLabel,
+.markdown-reading-view figure.fig[data-kind="diagram"] .edgeLabel { font-family: var(--font-body); font-size: 14px; fill: var(--ink); color: var(--ink); }
+.markdown-reading-view .table-scroll { overflow-x: auto; min-width: 0; }
+.markdown-reading-view table,
+.markdown-reading-view .table-scroll table { border-collapse: collapse; width: 100%; font-size: var(--t-small); line-height: 1.4; }
+.markdown-reading-view th,
+.markdown-reading-view .table-scroll th { text-align: left; vertical-align: bottom; font: 400 var(--t-mono-sm) / 1.4 var(--font-mono); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2); border-top: var(--rule-open); border-bottom: var(--rule); padding: 12px 16px 12px 0; }
+.markdown-reading-view td,
+.markdown-reading-view .table-scroll td { padding: 12px 16px 12px 0; border-bottom: var(--rule); vertical-align: top; font-variant-numeric: var(--num); }
+.markdown-reading-view th:last-child,
+.markdown-reading-view td:last-child,
+.markdown-reading-view .table-scroll th:last-child,
+.markdown-reading-view .table-scroll td:last-child { padding-right: 0; }
+.markdown-reading-view th[align="right"],
+.markdown-reading-view td[align="right"],
+.markdown-reading-view .table-scroll th[align="right"],
+.markdown-reading-view .table-scroll td[align="right"],
+.markdown-reading-view :is(th, td).num-cell,
+.markdown-reading-view .table-scroll :is(th, td).num-cell { text-align: right; font-family: var(--font-mono); font-size: var(--t-mono); }
+.markdown-reading-view tbody tr,
+.markdown-reading-view .table-scroll tbody tr { transition: background var(--dur) var(--ease); }
+.markdown-reading-view tbody tr:hover,
+.markdown-reading-view .table-scroll tbody tr:hover { background: var(--surface-2); }
+.markdown-reading-view .footnotes { border-top: var(--hairline); padding-top: 16px; font-size: var(--t-small); color: var(--ink-2); display: grid; gap: 8px; }
+.markdown-reading-view .footnotes > h2 { all: unset; display: block; font: 400 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2); }
+.markdown-reading-view .footnotes ol { margin: 0; padding-left: 24px; display: grid; gap: 8px; }
+.markdown-reading-view .footnotes a[data-footnote-backref] { font-family: var(--font-mono); text-decoration: none; color: var(--ink-3); }
+.markdown-reading-view .math { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: center; padding-block: 16px; border-top: var(--rule); border-bottom: var(--rule); font-variant-numeric: var(--num); }
+.markdown-reading-view .math .math-body { min-width: 0; overflow: auto hidden; padding-block: 6px; display: grid; gap: 8px; }
+.markdown-reading-view .math math { font-size: 1.2em; display: block math; max-width: 100%; }
+.markdown-reading-view .eq-no { font: 400 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: var(--tracking-label); color: var(--ink-3); font-variant-numeric: var(--num); white-space: nowrap; }
+.markdown-reading-view p math { font-size: 1.05em; }

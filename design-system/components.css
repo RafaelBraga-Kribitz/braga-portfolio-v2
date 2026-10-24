@@ -49,7 +49,7 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
    section heading, so it sits further in. The code stands on column 2,
    under the section's text, and the title starts on column 4. */
 .lr-index { grid-column: 2 / span 2; }
-.lr-title { grid-column: 4 / span 5; min-width: 0; }
+.lr-title { grid-column: 4 / span 5; min-width: 0; overflow-wrap: break-word; }   /* a long single word (a German tag) wraps at 320 */
 .lr-meta  { grid-column: 9 / span 3; min-width: 0; }
 .lr-trail { grid-column: 12 / span 1; justify-self: end; text-align: right; white-space: nowrap; }
 /* wide-title variant: title runs to the meta edge (lists with no middle column) */
@@ -359,7 +359,15 @@ figure.fig { display: grid; gap: 16px; border-top: var(--hairline); padding-top:
 }
 .fig-source b { font-weight: 400; color: var(--ink); }
 /* diagram: build-time SVG; nodes are hairline boxes, radius 0; edges 1px ink-2 */
-figure.fig[data-kind="diagram"] svg { display: block; max-width: 100%; height: auto; }
+figure.fig[data-kind="diagram"] .diagram { overflow-x: auto; min-width: 0; }   /* a wide diagram scrolls in its own box (tabindex 0: keyboard) */
+figure.fig[data-kind="diagram"] svg { display: block; width: auto; max-width: none; height: auto; }   /* drawn at its own size: never shrunk below the 12px floor (G-01) */
+/* Mermaid's own class names meet the design system's (.label is a 12px mono
+   caps label here): inside a diagram, text keeps the size and face Mermaid
+   measured it in, or the boxes no longer fit their words */
+figure.fig[data-kind="diagram"] svg :is(.label, .nodeLabel, .edgeLabel, text, tspan) { font: inherit; text-transform: none; letter-spacing: normal; }
+figure.fig[data-kind="diagram"] .edgeLabel rect { fill: none; }
+/* an edge label reads clear of its line: a halo of the page colour, drawn under the letters */
+figure.fig[data-kind="diagram"] .edgeLabel text { stroke: var(--surface); stroke-width: 6px; stroke-linejoin: round; paint-order: stroke fill; }
 figure.fig[data-kind="diagram"] .node rect, figure.fig[data-kind="diagram"] .node polygon { fill: var(--surface-2); stroke: var(--ink); stroke-width: 1; rx: 0; ry: 0; }
 figure.fig[data-kind="diagram"] .edgePath path { stroke: var(--ink-2); stroke-width: 1; fill: none; }
 figure.fig[data-kind="diagram"] .nodeLabel, figure.fig[data-kind="diagram"] .edgeLabel { font-family: var(--font-body); font-size: 14px; fill: var(--ink); color: var(--ink); }
@@ -485,3 +493,54 @@ dialog.keys::backdrop { background: color-mix(in srgb, var(--ink) 45%, transpare
 .keys-list dt { color: var(--ink-2); font: 400 var(--t-mono-sm) / 1.6 var(--font-mono); white-space: nowrap; }
 .keys-list dd { margin: 0; font-size: var(--t-small); line-height: 1.5; }
 [data-kbd-target]:focus { outline: none; }
+
+/* ---------- OBSIDIAN CONTENT (owner, 23 Oct 2026; src/lib/remark/obsidian.mjs) ----------
+   What the vault's syntax becomes on the page. Images and video are the
+   vault's own files (/media/…), square, unframed, at the content width,
+   with a mono caption; a gallery sets two or three across. Tasks draw the
+   status squares (D-029) in place of a checkbox: to do □, done ■, in
+   progress ▤, cancelled struck through; the state is in words for screen
+   readers (.sr-only). An inline #tag is a quiet mono link.
+     <figure class="media" [data-size="s|m|l"]><img …><figcaption class="label">…</figcaption></figure>
+     <figure class="media-gallery" data-count="2|3"><div class="media-cell"><img …><figcaption>…</figcaption></div>…</figure>
+     <li class="task" data-task="open|done|doing|cancelled"><p><span class="sr-only">Done: </span>…</p></li>
+     <a class="tag" href="/en/tags/x/">#x</a> */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+figure.media, figure.media-gallery { margin: 0; min-width: 0; }
+figure.media img, figure.media video, .media-cell img {
+  display: block; width: 100%; height: auto; max-width: 100%; background: var(--surface-2);
+}
+figure.media[data-size="s"] { max-width: 320px; }
+figure.media[data-size="m"] { max-width: 560px; }
+figure.media audio { display: block; width: 100%; }
+figure.media figcaption, .media-cell figcaption { margin-top: 12px; color: var(--ink-2); }
+.media-gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.media-gallery[data-count="3"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.media-cell { min-width: 0; }
+.media-cell img { aspect-ratio: 1 / 1; object-fit: cover; }
+@media (max-width: 559px) { .media-gallery, .media-gallery[data-count="3"] { grid-template-columns: minmax(0, 1fr); } }
+
+.doc li.task { list-style: none; position: relative; }
+.doc li.task::marker { content: none; }
+.doc li.task::before {
+  content: ""; position: absolute; left: -22px; top: 0.55em; width: 10px; height: 10px; box-sizing: border-box;
+  border: 1px solid var(--ink); background: transparent;
+}
+.doc li.task[data-task="done"]::before { background: var(--ink); }
+.doc li.task[data-task="doing"]::before { border-bottom-width: 5px; }
+.doc li.task[data-task="cancelled"] { color: var(--ink-2); text-decoration: line-through; text-decoration-thickness: 1px; }
+.doc li.task[data-task="cancelled"]::before { border-style: dotted; }
+
+a.tag {
+  font: 400 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: var(--tracking-label);
+  color: var(--ink-2); text-decoration: underline; text-decoration-color: var(--mid); text-underline-offset: 0.3em;
+}
+a.tag:hover { color: var(--ink); text-decoration-color: var(--ink); }
+
+/* a link alone in a table cell (a Dataview TABLE's note column) is a
+   block target: 24px tall, 44 below 768 (gate G-05) */
+.doc td > a:only-child { display: inline-flex; align-items: center; min-height: 24px; }
+@media (max-width: 767px) { .doc td > a:only-child { min-height: 44px; } }

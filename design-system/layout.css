@@ -502,3 +502,18 @@ main > .doc:last-child, .doc-opener.grid + .grid { padding-bottom: 64px; }
   .doc-trail a, .doc-end a,
   :is(.section-heading-link, .section-heading > .col-2) { min-height: 44px; min-width: 44px; }
 }
+
+/* ---------- the vault in a document (owner, 23 Oct 2026) ----------
+   .doc-cover: a note's cover image (its `cover` property, Ghost's feature
+   image) on the wide track above the metric strip. .doc-tags: the note's
+   tags as quiet mono links after the body. .doc-related: up to three
+   related notes as bookmark cards under a label (src/lib/vault/related.mjs). */
+.doc > .doc-cover { grid-column: wide; }
+.doc-tags { display: flex; flex-wrap: wrap; gap: 0 16px; }
+/* owner, 23 Oct 2026: as in the footer, the space between two rows of tags
+   never exceeds the text size (12px): 24px boxes edge to edge at every
+   width, the WCAG 2.5.8 minimum; gate G-05 holds them to 24px below 768. */
+.doc-tags a.tag { display: inline-flex; align-items: center; min-height: 24px; }
+.doc > .doc-related { grid-column: wide; border-top: var(--rule-open); padding-top: 16px; }
+.doc-related > .label { margin: 0 0 8px; }
+.doc-related > .callout + .callout .callout-content a { border-top: 0; }

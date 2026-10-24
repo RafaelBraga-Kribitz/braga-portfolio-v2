@@ -1,0 +1,28 @@
+{
+  "types": {
+    "publish": "checkbox",
+    "draft": "checkbox",
+    "featured": "checkbox",
+    "date": "date",
+    "updated": "date",
+    "tags": "tags",
+    "aliases": "aliases",
+    "cssclasses": "multitext",
+    "code": "text",
+    "kind": "text",
+    "lang": "text",
+    "slug": "text",
+    "summary": "text",
+    "lead": "text",
+    "domain": "text",
+    "repository": "text",
+    "cover": "text",
+    "cover_alt": "text",
+    "seo_title": "text",
+    "seo_description": "text",
+    "canonical": "text",
+    "translationStatus": "text",
+    "page": "text",
+    "contentLang": "text"
+  }
+}

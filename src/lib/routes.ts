@@ -34,6 +34,7 @@ export type StaticPageId =
   | 'tools'
   | 'tools.confusion-matrix'
   | 'tools.ab-sample-size'
+  | 'tags'
   | 'impressum'
   | 'privacy'
   | 'accessibility'
@@ -56,6 +57,8 @@ export const routes: Record<StaticPageId, RoutePair> = {
   tools: { en: '/en/tools/', de: '/de/tools/' },
   'tools.confusion-matrix': { en: '/en/tools/confusion-matrix/', de: '/de/tools/confusion-matrix/' },
   'tools.ab-sample-size': { en: '/en/tools/ab-sample-size/', de: '/de/tools/ab-sample-size/' },
+  // the tag index (owner, 23 Oct 2026); each tag's page is /<lang>/tags/<tag>/
+  tags: { en: '/en/tags/', de: '/de/tags/' },
   impressum: { en: '/en/impressum/', de: '/de/impressum/' },
   privacy: { en: '/en/privacy/', de: '/de/datenschutz/' },
   accessibility: { en: '/en/accessibility/', de: '/de/barrierefreiheit/' },

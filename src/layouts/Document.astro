@@ -13,7 +13,7 @@
 //
 // The contents rail lists the document's h2 sections in order (the numbers
 // match the ones the stylesheet draws on each h2) and leaves out the
-// footnotes heading (src/content/README.md §1). Without JavaScript there is
+// footnotes heading (vault/_guide/Syntax reference.md §1). Without JavaScript there is
 // no active item. The rail is omitted when the document has no h2.
 //
 // UX pass (22 Oct 2026): the rail is sticky from 768 up; below 768 it is
@@ -29,7 +29,7 @@ import DocEnd from '../components/DocEnd.astro';
 import ContactActions from '../components/ContactActions.astro';
 import type { Lang, StatusState } from '../lib/i18n';
 import { t } from '../lib/i18n';
-import type { PageId, DoorCode } from '../lib/routes';
+import { withBase, type PageId, type DoorCode } from '../lib/routes';
 import type { MarkdownHeading } from 'astro';
 
 type Crumb = { label: string; href?: string; current?: boolean; sep?: '→' | '·' };
@@ -62,6 +62,16 @@ interface Props {
   /** The previous / next document's URL (the head's rel=prev/next: the p and n keys). */
   prevDoc?: string;
   nextDoc?: string;
+  /** The other language's version: a path, null when there is none (a note in one language). */
+  twinPath?: string | null;
+  /** Ghost-style overrides (a note's seo_title, seo_description, canonical) and its cover image. */
+  seoTitle?: string;
+  seoDescription?: string;
+  canonicalUrl?: string;
+  cover?: { src: string; alt: string; width?: number; height?: number };
+  /** The note's tags (links to their pages) and its related notes. */
+  tags?: { label: string; href: string }[];
+  related?: { href: string; title: string; sub?: string }[];
   /** A portrait in the opener's left column (About). */
   portrait?: { src?: string; alt: string; caption: string; empty: string };
   /** The close of a project: the mail subject and the repository link. */
@@ -71,16 +81,20 @@ interface Props {
 const {
   lang, page, title, heading, description, current, hasCode = false, noindex = false,
   trail, lead, meta = [], draft = false, headings, metrics = [], prev, next, back, bodyLang, close, portrait, prevDoc, nextDoc,
+  twinPath, seoTitle, seoDescription, canonicalUrl, cover, tags = [], related = [],
 } = Astro.props;
 
 const sections = headings.filter((h) => h.depth === 2 && h.slug !== 'footnote-label');
 const toc = sections.map((h, i) => ({ n: String(i + 1).padStart(2, '0'), title: h.text, href: `#${h.slug}` }));
 ---
-<Base lang={lang} page={page} title={title} description={description} current={current} hasCode={hasCode} noindex={noindex} ogType="article" prevDoc={prevDoc} nextDoc={nextDoc}>
+<Base lang={lang} page={page} title={title} description={description} current={current} hasCode={hasCode} noindex={noindex} ogType="article" prevDoc={prevDoc} nextDoc={nextDoc} twinPath={twinPath} seoTitle={seoTitle} seoDescription={seoDescription} canonicalUrl={canonicalUrl} ogImage={cover && { src: cover.src, alt: cover.alt }}>
   <DocOpener lang={lang} grid trail={trail} title={heading ?? title} lead={lead} meta={meta} draft={draft} portrait={portrait} />
   <div class="grid">
     {toc.length > 0 && <Toc class="col-3" lang={lang} items={toc} />}
     <article class:list={['doc', 'col-9', toc.length === 0 && 'col-start-4']} lang={bodyLang && bodyLang !== lang ? bodyLang : undefined}>
+      {cover && (
+        <figure class="media doc-cover"><img src={withBase(cover.src)} alt={cover.alt} width={cover.width} height={cover.height} decoding="async" /></figure>
+      )}
       {metrics.length > 0 && <MetricStrip metrics={metrics} />}
       {toc.length > 0 && (
         <details class="toc toc-compact">
@@ -91,6 +105,17 @@ const toc = sections.map((h, i) => ({ n: String(i + 1).padStart(2, '0'), title: 
         </details>
       )}
       <slot />
+      {tags.length > 0 && (
+        <p class="doc-tags">{tags.map((tg) => <a class="tag" href={withBase(tg.href)}>{tg.label}</a>)}</p>
+      )}
+      {related.length > 0 && (
+        <section class="doc-related" aria-labelledby="doc-related-title">
+          <p class="label" id="doc-related-title">{t(lang, 'related')}</p>
+          {related.map((r) => (
+            <div class="callout" data-callout="bookmark"><div class="callout-content"><a href={withBase(r.href)}><b>{r.title}</b>{r.sub && <span class="sub">{r.sub}</span>}<span class="glyph" aria-hidden="true">→</span></a></div></div>
+          ))}
+        </section>
+      )}
       {close && (
         <div class="doc-close" lang={bodyLang && bodyLang !== lang ? lang : undefined}>
           <p>{t(lang, 'contact.project')}</p>

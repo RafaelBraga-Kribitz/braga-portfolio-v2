@@ -14,8 +14,10 @@
     "lint:style": "node scripts/lint/no-inline-style.mjs",
     "lint:css": "node scripts/lint/css-rules.mjs",
     "lint": "npm run lint:style && npm run lint:css",
-    "verify": "npm run check && npm run lint && npm run test:unit && npm run build && npm run test:gates",
-    "assets": "node scripts/assets/build-assets.mjs"
+    "verify": "npm run check && npm run lint && npm run test:unit && npm run vault:check && npm run build && npm run test:gates",
+    "assets": "node scripts/assets/build-assets.mjs",
+    "vault:check": "node scripts/vault/check.mjs",
+    "vault:sync": "node scripts/vault/sync-obsidian.mjs"
   },
   "dependencies": {
     "@astrojs/check": "0.9.11",
@@ -28,9 +30,11 @@
     "astro": "7.4.1",
     "github-slugger": "2.0.0",
     "katex": "0.16.47",
+    "mermaid": "12.1.0",
     "preact": "11.0.1",
     "prismjs": "1.30.0",
     "satteri": "0.10.5",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "yaml": "2.9.1"
   }
 }

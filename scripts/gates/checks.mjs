@@ -212,8 +212,9 @@ export async function pageGates(opts = {}) {
     .filter((el) => !skip(el) && visible(el) && !srOnly(el) && !inlineInText(el));
   const min = win.innerWidth < 768 ? 44 : 24;
   // the footer's links are 32px below 768 (owner, 23 Oct 2026: the space
-  // between them no larger than the text); above WCAG 2.5.8's 24px
-  const minOf = (el) => (min === 44 && el.closest('.site-footer-links') ? 32 : min);
+  // between them no larger than the text); above WCAG 2.5.8's 24px. A
+  // document's tag row likewise keeps 24px (12px text, 12px of air)
+  const minOf = (el) => (min === 44 && el.closest('.site-footer-links') ? 32 : min === 44 && el.closest('.doc-tags') ? 24 : min);
   const smallT = targets.filter((el) => { const r = el.getBoundingClientRect(), m = minOf(el); return r.width < m - 0.5 || r.height < m - 0.5; })
     .map((el) => { const r = el.getBoundingClientRect(); return `${desc(el)} · ${Math.round(r.width * 10) / 10}×${Math.round(r.height * 10) / 10}`; });
   out.push(result('G-05', `Targets ≥ ${min}px`, smallT, targets.length, `${targets.length} targets, all at least ${min}px`, `%n targets smaller than ${min}px`));
@@ -623,8 +624,11 @@ export function staticGates(pagePath, f, ctx) {
   out.push(result('L-01', lOff, checked, `${checked} internal references, all resolve${pendingNote}`, `%n internal references do not resolve${pendingNote}`, { pending: Array.from(pendingHits) }));
 
   // L-02 · hreflang: every /en/ and /de/ page (and any page that declares
-  // alternates) carries en, de and x-default; its own-language alternate is
-  // itself; the other-language alternate exists, has that lang and points back
+  // alternates) carries its own language and x-default; its own-language
+  // alternate is itself; a declared other-language alternate exists, has
+  // that lang and points back. A page without a twin (a note written in
+  // one language, a tag page; owner, 23 Oct 2026) declares no other-
+  // language alternate, and its x-default is itself.
   const tree = /^\/(en|de)\//.exec(pagePath);
   if (redirect) out.push(skipped('L-02', 'redirect page'));
   else if (!tree && !f.alternates.length) out.push(skipped('L-02', 'not under /en/ or /de/ and declares no alternates'));
@@ -635,8 +639,8 @@ export function staticGates(pagePath, f, ctx) {
     const localOf = (href) => { const c = classifyRef(href, pagePath, site, base); return c.kind === 'local' && !c.outside ? normPath(c.path) : null; };
     const by = {};
     for (const a of f.alternates) (by[a.hreflang] ||= []).push(a.href);
-    for (const h of ['en', 'de', 'x-default']) {
-      if (!by[h]) hOff.push(`no hreflang="${h}" alternate`);
+    for (const h of [own, other, 'x-default']) {
+      if (!by[h]) { if (h !== other) hOff.push(`no hreflang="${h}" alternate`); }
       else if (by[h].length > 1) hOff.push(`${by[h].length} hreflang="${h}" alternates`);
     }
     for (const [h, hrefs] of Object.entries(by)) {

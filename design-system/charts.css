@@ -24,7 +24,7 @@
    A centred figure (Figure 03) adds <span class="ev-mid"></span> to the
    track and positions each fill with --x.
    In a document the figure comes from a > [!bars] callout as
-   <figure class="evidence" data-width="wide"> (src/content/README.md):
+   <figure class="evidence" data-width="wide"> (vault/_guide/Syntax reference.md):
    it takes the wide track, and the FLOW rules of base.css set the space
    above it. Its own margin is therefore zero at no specificity (:where),
    so those rules win and the UA margin of <figure> still goes. */
