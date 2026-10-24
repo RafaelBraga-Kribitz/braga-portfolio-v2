@@ -182,8 +182,9 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
   margin: 0; display: grid; grid-template-columns: fit-content(40%) minmax(0, 1fr);
   column-gap: 32px; border-top: var(--rule-open);
 }
+/* every term and value is underlined in its own column, the last too: a
+   split rule belongs to its row, it does not close the block (owner, 24 Oct 2026) */
 .callout[data-callout="spec"] dt, .callout[data-callout="spec"] dd { margin: 0; padding-block: 10px; border-bottom: var(--rule); }
-.callout[data-callout="spec"] dl > :nth-last-child(-n + 2) { border-bottom: 0; }   /* the last term and value: rules open, never close */
 .callout[data-callout="spec"] dt {
   font: 400 var(--t-mono-sm) / 1.5 var(--font-mono);
   letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--ink-2);

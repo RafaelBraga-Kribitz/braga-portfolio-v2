@@ -439,7 +439,9 @@ export async function pageGates(opts = {}) {
   // (a top or bottom border ≥ 1px, 120px or wider once the segments a
   // table row draws cell by cell are joined) must not face the next rule
   // below it across nothing but empty space: a block ends in white space
-  // and the next block's rule separates. Boxes (a border on the left and
+  // and the next block's rule separates. A split rule (cells ruled one by
+  // one with a gap between, as in a spec list) underlines its row and may
+  // stand over empty space (owner, 24 Oct 2026). Boxes (a border on the left and
   // the right too: a button, an input) and a chart's own axes (.ev-bars,
   // .fig-matrix) are not rules. Content is rendered
   // text, a replaced element (img, svg, video, canvas, input, button,
@@ -462,10 +464,11 @@ export async function pageGates(opts = {}) {
   }
   segs.sort((p, q) => p.y - q.y || p.x1 - q.x1);
   for (let i = 0; i < segs.length; i++) { const L = segs[i]; if (L.dead) continue;
-    for (let j = i + 1; j < segs.length && Math.abs(segs[j].y - L.y) < 0.6; j++) { const M = segs[j]; if (!M.dead && M.x1 <= L.x2 + 40 && M.x2 >= L.x1) { L.x1 = Math.min(L.x1, M.x1); L.x2 = Math.max(L.x2, M.x2); M.dead = true; } } }
+    for (let j = i + 1; j < segs.length && Math.abs(segs[j].y - L.y) < 0.6; j++) { const M = segs[j]; if (!M.dead && M.x1 <= L.x2 + 40 && M.x2 >= L.x1) { if (M.x1 > L.x2 + 1) L.split = true; L.x1 = Math.min(L.x1, M.x1); L.x2 = Math.max(L.x2, M.x2); M.dead = true; } } }
   segs = segs.filter((l) => !l.dead && l.x2 - l.x1 >= 120);
   const rOff = [];
   for (const a of segs) {
+    if (a.split) continue;   // a row ruled column by column (a spec list) underlines its cells; it does not close the block
     let b = null;
     for (const c of segs) {
       if (c.y <= a.y + 2) continue;
