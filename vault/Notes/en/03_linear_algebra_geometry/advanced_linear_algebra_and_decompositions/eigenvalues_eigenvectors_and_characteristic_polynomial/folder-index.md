@@ -1,0 +1,10 @@
+---
+title: "Eigenvalues Eigenvectors And Characteristic Polynomial"
+layout: notes-folder-index
+permalink: /notes/03_linear_algebra_geometry/advanced_linear_algebra_and_decompositions/eigenvalues_eigenvectors_and_characteristic_polynomial/index.html
+folderPath: 03_linear_algebra_geometry/advanced_linear_algebra_and_decompositions/eigenvalues_eigenvectors_and_characteristic_polynomial
+eleventyExcludeFromCollections: true
+share_status: draft
+publish_target: note
+boundary: public
+---

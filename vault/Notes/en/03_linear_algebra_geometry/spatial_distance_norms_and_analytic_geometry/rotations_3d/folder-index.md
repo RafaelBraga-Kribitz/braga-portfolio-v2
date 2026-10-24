@@ -1,0 +1,10 @@
+---
+title: "Rotations 3d"
+layout: notes-folder-index
+permalink: /notes/03_linear_algebra_geometry/spatial_distance_norms_and_analytic_geometry/rotations_3d/index.html
+folderPath: 03_linear_algebra_geometry/spatial_distance_norms_and_analytic_geometry/rotations_3d
+eleventyExcludeFromCollections: true
+share_status: draft
+publish_target: note
+boundary: public
+---
