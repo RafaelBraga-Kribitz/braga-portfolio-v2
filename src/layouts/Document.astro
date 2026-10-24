@@ -6,6 +6,16 @@
 //
 //   <header class="doc-opener grid">…</header>
 //   <div class="grid">
+//
+// With a portrait (About; owner, 24 Oct 2026) the two columns run on their
+// own: the left (div.doc-side) holds the trail, the portrait and the
+// contents rail; the article opens with the header (title, lead, meta), so
+// the body follows the lead however tall the portrait is:
+//
+//   <div class="grid doc-split">
+//     <div class="col-3 doc-side">trail · figure.portrait · nav.toc</div>
+//     <article class="doc col-9"><header class="doc-opener">…</header> …</article>
+//   </div>
 //     <nav class="toc col-3">…</nav>
 //     <article class="doc col-9">[metric strip] [details.toc-compact] <Content/>
 //       [div.doc-close] <footer class="doc-end">…</footer></article>
@@ -88,10 +98,16 @@ const sections = headings.filter((h) => h.depth === 2 && h.slug !== 'footnote-la
 const toc = sections.map((h, i) => ({ n: String(i + 1).padStart(2, '0'), title: h.text, href: `#${h.slug}` }));
 ---
 <Base lang={lang} page={page} title={title} description={description} current={current} hasCode={hasCode} noindex={noindex} ogType="article" prevDoc={prevDoc} nextDoc={nextDoc} twinPath={twinPath} seoTitle={seoTitle} seoDescription={seoDescription} canonicalUrl={canonicalUrl} ogImage={cover && { src: cover.src, alt: cover.alt }}>
-  <DocOpener lang={lang} grid trail={trail} title={heading ?? title} lead={lead} meta={meta} draft={draft} portrait={portrait} />
-  <div class="grid">
-    {toc.length > 0 && <Toc class="col-3" lang={lang} items={toc} />}
-    <article class:list={['doc', 'col-9', toc.length === 0 && 'col-start-4']} lang={bodyLang && bodyLang !== lang ? bodyLang : undefined}>
+  {!portrait && <DocOpener lang={lang} grid trail={trail} title={heading ?? title} lead={lead} meta={meta} draft={draft} />}
+  <div class:list={['grid', portrait && 'doc-split']}>
+    {portrait ? (
+      <div class="col-3 doc-side">
+        <DocOpener lang={lang} part="side" trail={trail} title={heading ?? title} portrait={portrait} />
+        {toc.length > 0 && <Toc lang={lang} items={toc} />}
+      </div>
+    ) : toc.length > 0 && <Toc class="col-3" lang={lang} items={toc} />}
+    <article class:list={['doc', 'col-9', !portrait && toc.length === 0 && 'col-start-4']} lang={bodyLang && bodyLang !== lang ? bodyLang : undefined}>
+      {portrait && <DocOpener lang={lang} part="main" trail={trail} title={heading ?? title} lead={lead} meta={meta} draft={draft} />}
       {cover && (
         <figure class="media doc-cover"><img src={withBase(cover.src)} alt={cover.alt} width={cover.width} height={cover.height} decoding="async" /></figure>
       )}

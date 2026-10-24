@@ -5,6 +5,7 @@ summary: "Rafael Braga-Kribitz, Marketing Data Analyst: background, approach, sk
 lead: "Marketing Data Analyst building the measurement and decision systems behind where marketing budget goes. The domain knowledge comes from having run the campaigns, not just modelled them."
 translationStatus: approved
 publish: true
+footnotes: side
 ---
 
 # About Me

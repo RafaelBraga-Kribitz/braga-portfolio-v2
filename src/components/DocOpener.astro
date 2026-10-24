@@ -40,13 +40,38 @@ interface Props {
       23 Oct 2026). Without `src` the frame shows empty, labelled, at the
       same 4:5 size, until src/assets/portrait.jpg exists. */
   portrait?: { src?: string; alt: string; caption: string; empty: string };
+  /** Split placement (the About page; owner, 24 Oct 2026): `side` renders
+      only the trail and the portrait, for the left column beside the
+      article; `main` renders the stacked header without its trail, at the
+      top of article.doc, so the body follows the lead whatever the
+      portrait's height. */
+  part?: 'side' | 'main';
   id?: string;
 }
 
-const { lang, trail, numeral, title, lead, meta = [], draft = false, grid = false, id, portrait } = Astro.props;
+const { lang, trail, numeral, title, lead, meta = [], draft = false, grid = false, id, portrait, part } = Astro.props;
 const hasMeta = meta.length > 0 || draft;
 ---
-{grid ? (
+{part === 'side' ? (
+  <Fragment>
+    <p class="doc-trail">
+      {trail.map((c, i) => (
+        <Fragment>
+          {i > 0 && <span class="glyph" aria-hidden="true">{c.sep ?? '→'}</span>}
+          {c.href ? <a href={c.href}>{c.label}</a> : c.current ? <b>{c.label}</b> : <span>{c.label}</span>}
+        </Fragment>
+      ))}
+    </p>
+    {portrait && (
+      <figure class="portrait">
+        {portrait.src
+          ? <img src={portrait.src} alt={portrait.alt} width="800" height="1000" decoding="async" />
+          : <div class="portrait-empty"><span class="label">{portrait.empty}</span></div>}
+        <figcaption class="label">{portrait.caption}</figcaption>
+      </figure>
+    )}
+  </Fragment>
+) : grid ? (
   <header class="doc-opener grid" id={id}>
     <div class="col-3">
       <p class="doc-trail">
@@ -91,6 +116,7 @@ const hasMeta = meta.length > 0 || draft;
   </header>
 ) : (
   <header class="doc-opener" id={id}>
+    {part !== 'main' && (
     <p class="doc-trail">
       {trail.map((c, i) => (
         <Fragment>
@@ -99,6 +125,7 @@ const hasMeta = meta.length > 0 || draft;
         </Fragment>
       ))}
     </p>
+    )}
     {numeral ? (
       <div class="doc-numeral-row"><span class="doc-numeral" aria-hidden="true">{numeral}</span><h1>{title}</h1></div>
     ) : (

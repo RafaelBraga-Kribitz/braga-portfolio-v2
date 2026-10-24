@@ -17,6 +17,7 @@ import tables from './src/lib/rehype/tables.mjs';
 import code from './src/lib/rehype/code.mjs';
 import math from './src/lib/rehype/math.mjs';
 import headings from './src/lib/rehype/headings.mjs';
+import sidenotes from './src/lib/remark/sidenotes.mjs';
 import footnotes from './src/lib/rehype/footnotes.mjs';
 import links from './src/lib/rehype/links.mjs';
 import vaultMedia from './src/integrations/vault-media.mjs';
@@ -67,7 +68,7 @@ export default defineConfig({
       // (src/lib/remark/diagrams.mjs), Obsidian's syntax (the H1 title, [[links]], ![[embeds]], #tags,
       // %%comments%%, Dataview fields, tasks; src/lib/remark/obsidian.mjs),
       // then ==marks== and callouts (bars included: the evidence figure)
-      mdastPlugins: [mathGuard, codeLang, diagrams, obsidian, callouts],
+      mdastPlugins: [mathGuard, codeLang, diagrams, obsidian, sidenotes, callouts],
       // the rehype phase, in order. headings and footnotes are factories,
       // passed uncalled: Sätteri calls them once per document, so each page
       // gets its own slugger and its own language.
