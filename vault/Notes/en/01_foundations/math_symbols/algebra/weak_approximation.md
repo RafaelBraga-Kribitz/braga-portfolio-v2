@@ -1,104 +1,168 @@
 ---
-title: Weak approximation
+publish: true
 date: '2026-04-16'
-wordCount: 846
-slug: weak_approximation
-permalink: /notes/01_foundations/math_symbols/algebra/weak_approximation/index.html
-share_status: draft
-publish_target: note
-boundary: public
+tags:
+- foundations
 ---
-# $\sim$
+
+# Weak approximation
+
+$$
+\sim
+$$
+
 ## Deep Breakdown
+
 What it tells me *(Situation Awareness)*:
-$\sim$ (the tilde) carries **two distinct meanings** in mathematics and statistics, and you need to distinguish them by context: 1. **"Distributed as"** (probability/statistics): $X \sim \mathcal{N}(\mu, \sigma^2)$ means "the random variable $X$ follows a Normal distribution with mean $\mu$ and variance $\sigma^2$."
-2. **"Asymptotically equivalent to"** (analysis): $f(n) \sim g(n)$ means $\lim_{n \to \infty} f(n)/g(n) = 1$. As $n$ grows, $f$ and $g$ become indistinguishable in relative terms. In DA/DS, the first usage (distribution notation) is by far the more common one. You will see $\sim$ in probability models, Bayesian priors, and any time a random variable is declared.
-### Flowchart (Mermaid)
-``` mermaid
-flowchart TD A["Encounter tilde (~) symbol"] --> B{"What is the context?"} B -- "Probability / statistics" --> C["Distributed as: X ~ Distribution(params)"] B -- "Mathematical analysis" --> D["Asymptotically equivalent: f(n) ~ g(n) as n -> inf"] C --> E["Example: X ~ N(0,1) means X is standard Normal"] C --> F["Example: errors ~ N(0, sigma^2) is a regression assumption"] D --> G["Example: ln(n!) ~ n*ln(n) - n (Stirling's approximation)"] E --> H["Tells you: what kind of randomness governs X"] F --> H G --> I["Tells you: f grows at same rate as g for large n"]
+$\sim$ (the tilde) carries **two distinct meanings** in mathematics and statistics, and you need to distinguish them by context:
+
+1. **"Distributed as"** (probability/statistics): $X \sim \mathcal{N}(\mu, \sigma^2)$ means "the random variable $X$ follows a Normal distribution with mean $\mu$ and variance $\sigma^2$."
+2. **"Asymptotically equivalent to"** (analysis): $f(n) \sim g(n)$ means $\lim_{n \to \infty} f(n)/g(n) = 1$.
+
+As $n$ grows, $f$ and $g$ become indistinguishable in relative terms. In DA/DS, the first usage (distribution notation) is by far the more common one. You will see $\sim$ in probability models, Bayesian priors, and any time a random variable is declared.
+
+## Flowchart
+
+```mermaid
+flowchart TD
+    A["Encounter tilde (~) symbol"] --> B{"What is the context?"} B -- "Probability / statistics" --> C["Distributed as: X ~ Distribution(params)"] B -- "Mathematical analysis" --> D["Asymptotically equivalent: f(n) ~ g(n) as n -> inf"]
+    C --> E["Example: X ~ N(0,1) means X is standard Normal"]
+    C --> F["Example: errors ~ N(0, sigma^2) is a regression assumption"]
+    D --> G["Example: ln(n!) ~ n*ln(n) - n (Stirling's approximation)"]
+    E --> H["Tells you: what kind of randomness governs X"]
+    F --> H
+    G --> I["Tells you: f grows at same rate as g for large n"]
 ```
-### Real-World use:
-#### Situation it is used
+
+## Real-world use
+
+### Where it is used
+
 Declaring the distribution of a random variable in a model, writing down model assumptions (linear regression assumes errors $\varepsilon \sim \mathcal{N}(0, \sigma^2)$), Bayesian priors ($\theta \sim \text{Beta}(1, 1)$), and in algorithm complexity analysis (asymptotic equivalence).
-#### Problem it solves
+
+### Problem it solves
+
 When you define a probabilistic model, you need to specify what distribution each random variable follows and with what parameters. $X \sim \mathcal{N}(0, 1)$ says everything about the distribution of $X$ in one compact expression: the distribution family (Normal), the location parameter ($\mu = 0$), and the scale parameter ($\sigma^2 = 1$). Without this notation, you would need a paragraph to specify the same information.
-#### How it solves the problem
+
+### How it solves the problem
+
 $X \sim \mathcal{N}(\mu, \sigma^2)$ encodes three pieces of information: (1) $X$ is a continuous random variable, (2) it follows the Normal distribution, (3) with these specific parameters. You can then draw samples from $X$, compute its expected value ($\mu$), variance ($\sigma^2$), and apply the normal distribution's CDF and PDF.
-#### Example of it used in the Working Context as DA/DS for a Business
+
+### Example in a business
+
 In a linear regression model, the standard assumptions are written as:
-$$y_i = \mathbf{x}_i^\top \boldsymbol{\beta} + \varepsilon_i, \quad \varepsilon_i \sim \mathcal{N}(0, \sigma^2)$$ The $\sim$ notation compactly encodes: "the residual $\varepsilon_i$ for each observation is drawn from a Normal distribution centered at zero with variance $\sigma^2$." This assumption justifies OLS, guarantees that p-values are valid, and underpins confidence intervals.
-### The Formula (Fragment-First)
-Breaking the notation: - $X$: a random variable (an outcome that varies according to some distribution).
+
+$$
+y_i = \mathbf{x}_i^\top \boldsymbol{\beta} + \varepsilon_i, \quad \varepsilon_i \sim \mathcal{N}(0, \sigma^2)
+$$
+
+The $\sim$ notation compactly encodes: "the residual $\varepsilon_i$ for each observation is drawn from a Normal distribution centered at zero with variance $\sigma^2$." This assumption justifies OLS, guarantees that p-values are valid, and underpins confidence intervals.
+
+## The formula, piece by piece
+
+Breaking the notation:
+
+- $X$: a random variable (an outcome that varies according to some distribution).
 - $\sim$: "is distributed as" or "follows the distribution."
 - $\mathcal{N}$: the Normal (Gaussian) distribution. Other common distribution symbols: $\text{Bern}(p)$ (Bernoulli), $\text{Bin}(n, p)$ (Binomial), $\text{Poisson}(\lambda)$, $\text{Uniform}(a, b)$, $\text{Beta}(\alpha, \beta)$, $\text{Gamma}(\alpha, \beta)$.
-- $(\mu, \sigma^2)$: the parameters. Convention: $\mathcal{N}(\text{mean}, \text{variance})$. Common notation:
+- $(\mu, \sigma^2)$: the parameters. Convention: $\mathcal{N}(\text{mean}, \text{variance})$.
+
+Common notation:
 - $X \sim \mathcal{N}(\mu, \sigma^2)$: Normal (Gaussian)
 - $X \sim \text{Bern}(p)$: Bernoulli with probability $p$
 - $X \sim \text{Bin}(n, p)$: Binomial, $n$ trials, probability $p$
 - $X \sim \text{Poisson}(\lambda)$: Poisson with rate $\lambda$
 - $X \sim \text{Uniform}(a, b)$: Uniform over $[a, b]$
-- $\mathbf{X} \sim \mathcal{N}(\boldsymbol{\mu}, \boldsymbol{\Sigma})$: Multivariate Normal **Asymptotic equivalence** (second usage): $f(n) \sim g(n)$ means $\lim_{n \to \infty} f(n)/g(n) = 1$. Stronger than Big-O (same rate with same leading coefficient).
-### Formula-to-English Translation
-"$X \sim \mathcal{N}(\mu, \sigma^2)$ means: the random variable $X$ is generated by drawing from a Normal distribution with mean $\mu$ (center) and variance $\sigma^2$ (spread). If you collected many values of $X$, they would form a bell curve centered at $\mu$, with 68% of values within one standard deviation $\sigma$ of the mean." ### Critical Concepts
+- $\mathbf{X} \sim \mathcal{N}(\boldsymbol{\mu}, \boldsymbol{\Sigma})$: Multivariate Normal **Asymptotic equivalence** (second usage): $f(n) \sim g(n)$ means $\lim_{n \to \infty} f(n)/g(n) = 1$.
+
+Stronger than Big-O (same rate with same leading coefficient).
+
+## The formula in words
+
+"$X \sim \mathcal{N}(\mu, \sigma^2)$ means: the random variable $X$ is generated by drawing from a Normal distribution with mean $\mu$ (center) and variance $\sigma^2$ (spread). If you collected many values of $X$, they would form a bell curve centered at $\mu$, with 68% of values within one standard deviation $\sigma$ of the mean."
+
+## Critical Concepts
+
 1. **Distribution family vs. parameters**: $\mathcal{N}(\mu, \sigma^2)$ is the family; $\mu$ and $\sigma^2$ are the specific instance. Changing parameters while keeping $\sim \mathcal{N}$ means the shape stays Gaussian but shifts or stretches.
 2. **$\mathcal{N}(\mu, \sigma^2)$ vs. $\mathcal{N}(\mu, \sigma)$**: be careful. Some authors parametrize the Normal by standard deviation $\sigma$; others by variance $\sigma^2$. Always check the convention in the source.
 3. **i.i.d.**: "independently and identically distributed." $X_1, \ldots, X_n \overset{\text{i.i.d.}}{\sim} \mathcal{N}(\mu, \sigma^2)$ means all $n$ samples are drawn independently from the same Normal.
 4. **Tilde in R formulas**: in R, `~` is the formula operator (e.g., `y ~ x` in `lm()` specifies a regression formula). This is unrelated to the mathematical distribution notation, though the visual symbol is the same.
-5. **Model assumptions**: in frequentist statistics, $\varepsilon \sim \mathcal{N}(0, \sigma^2)$ is an assumption, not a fact. Checking whether residuals actually follow this distribution is a key step in model validation.
-### Step-by-Step Manual Calculation (Tiny/Simplist Example)
-Task: draw 5 samples from $X \sim \mathcal{N}(0, 1)$ manually using the standard normal table. *Step 1: State what the distribution tells you*
-$X \sim \mathcal{N}(0, 1)$: mean is 0, standard deviation is 1. The PDF is $f(x) = \frac{1}{\sqrt{2\pi}} e^{-x^2/2}$. Most values fall in $[-3, 3]$. *Step 2: Conceptualize sampling*
-To sample, you pick a random probability $u \in (0, 1)$ and apply the inverse CDF (quantile function): $x = \Phi^{-1}(u)$. For $u = 0.50$: $x = 0$ (median = mean for Normal). For $u = 0.84$: $x \approx 1.0$ (about 1 standard deviation above mean). *Step 3: In practice, use a computer*
+5. **Model assumptions**: in frequentist statistics, $\varepsilon \sim \mathcal{N}(0, \sigma^2)$ is an assumption, not a fact.
+
+Checking whether residuals actually follow this distribution is a key step in model validation.
+
+## Step-by-step calculation (tiny example)
+
+Task: draw 5 samples from $X \sim \mathcal{N}(0, 1)$ manually using the standard normal table.
+
+*Step 1: State what the distribution tells you*
+$X \sim \mathcal{N}(0, 1)$: mean is 0, standard deviation is 1. The PDF is $f(x) = \frac{1}{\sqrt{2\pi}} e^{-x^2/2}$. Most values fall in $[-3, 3]$.
+
+*Step 2: Conceptualize sampling*
+To sample, you pick a random probability $u \in (0, 1)$ and apply the inverse CDF (quantile function): $x = \Phi^{-1}(u)$. For $u = 0.50$: $x = 0$ (median = mean for Normal). For $u = 0.84$: $x \approx 1.0$ (about 1 standard deviation above mean).
+
+*Step 3: In practice, use a computer*
 Real sampling is done with `np.random.normal(0, 1, size=5)` in Python or `rnorm(5, mean=0, sd=1)` in R. Manual table lookup is only for understanding.
-### Real Application Examples
-#### Beginner friendly Example [Python]
-``` python
+
+## Code examples
+
+### Beginner example (Python)
+
+```python
 import numpy as np
-from scipy import stats # X ~ N(0, 1): standard Normal distribution
+from scipy import stats   # X ~ N(0, 1): standard Normal distribution
 np.random.seed(42)
-samples = np.random.normal(loc=0, scale=1, size=1000) print(f"X ~ N(0, 1)")
-print(f"Sample mean: {samples.mean():.4f}") # should be ~0
-print(f"Sample std: {samples.std():.4f}") # should be ~1 # X ~ Bernoulli(p=0.3)
+samples = np.random.normal(loc=0, scale=1, size=1000)
+print(f"X ~ N(0, 1)")
+print(f"Sample mean: {samples.mean():.4f}")   # should be ~0
+print(f"Sample std: {samples.std():.4f}")   # should be ~1 # X ~ Bernoulli(p=0.3)
 bern_samples = np.random.binomial(1, p=0.3, size=1000)
 print(f"\nX ~ Bern(0.3)")
-print(f"Sample mean (proportion of 1s): {bern_samples.mean():.4f}") # ~0.3 # X ~ Poisson(lambda=5)
+print(f"Sample mean (proportion of 1s): {bern_samples.mean():.4f}")   # ~0.3 # X ~ Poisson(lambda=5)
 pois_samples = np.random.poisson(lam=5, size=1000)
 print(f"\nX ~ Poisson(5)")
-print(f"Sample mean: {pois_samples.mean():.4f}") # ~5
-print(f"Sample var: {pois_samples.var():.4f}") # ~5 (mean = var for Poisson)
+print(f"Sample mean: {pois_samples.mean():.4f}")   # ~5
+print(f"Sample var: {pois_samples.var():.4f}")   # ~5 (mean = var for Poisson)
 ```
-#### Beginner friendly Example [R]
-``` r
-set.seed(42) # X ~ N(0, 1) in R: rnorm(n, mean, sd)
+
+### Beginner example (R)
+
+```r
+set.seed(42)  # X ~ N(0, 1) in R: rnorm(n, mean, sd)
 samples_normal <- rnorm(1000, mean = 0, sd = 1)
 cat("X ~ N(0, 1)\n")
-cat("Mean:", mean(samples_normal), "\n") # ~0
-cat("SD: ", sd(samples_normal), "\n") # ~1 # X ~ Bernoulli(0.3) in R (use rbinom with size=1)
+cat("Mean:", mean(samples_normal), "\n")  # ~0
+cat("SD: ", sd(samples_normal), "\n")  # ~1 # X ~ Bernoulli(0.3) in R (use rbinom with
+size=1)
 samples_bern <- rbinom(1000, size = 1, prob = 0.3)
 cat("\nX ~ Bern(0.3)\n")
-cat("Proportion of 1s:", mean(samples_bern), "\n") # ~0.3 # X ~ Poisson(5)
+cat("Proportion of 1s:", mean(samples_bern), "\n")  # ~0.3 # X ~ Poisson(5)
 samples_pois <- rpois(1000, lambda = 5)
 cat("\nX ~ Poisson(5)\n")
-cat("Mean:", mean(samples_pois), "\n") # ~5
-cat("Var: ", var(samples_pois), "\n") # ~5
+cat("Mean:", mean(samples_pois), "\n")  # ~5
+cat("Var: ", var(samples_pois), "\n")  # ~5
 ```
-#### Final Professional Example [Python]
-``` python
+
+### Professional example (Python)
+
+```python
 import numpy as np
 import pandas as pd
-from scipy import stats # Scenario: linear regression residual analysis
+from scipy import stats   # Scenario: linear regression residual analysis
 # Assumption: errors ~ N(0, sigma^2)
-# After fitting, check whether residuals actually follow this distribution np.random.seed(42) # Generate data from a true linear model with normal errors
+# After fitting, check whether residuals actually follow this distribution
+np.random.seed(42)   # Generate data from a true linear model with normal errors
 n = 200
 x = np.linspace(0, 10, n)
 beta_0, beta_1, sigma = 2.0, 3.0, 1.5
-epsilon = np.random.normal(0, sigma, size=n) # epsilon ~ N(0, sigma^2)
-y = beta_0 + beta_1 * x + epsilon # OLS estimates
+epsilon = np.random.normal(0, sigma, size=n)   # epsilon ~ N(0, sigma^2)
+y = beta_0 + beta_1 * x + epsilon   # OLS estimates
 beta_1_hat = np.cov(x, y)[0, 1] / np.var(x)
-beta_0_hat = np.mean(y) - beta_1_hat * np.mean(x) # Residuals
+beta_0_hat = np.mean(y) - beta_1_hat * np.mean(x)   # Residuals
 y_pred = beta_0_hat + beta_1_hat * x
-residuals = y - y_pred # Check normality of residuals using Shapiro-Wilk test
-stat, p_value = stats.shapiro(residuals[:50]) # Shapiro-Wilk works best for n<=50 print(f"Fitted model: y = {beta_0_hat:.3f} + {beta_1_hat:.3f}*x")
+residuals = y - y_pred   # Check normality of residuals using Shapiro-Wilk test
+stat, p_value = stats.shapiro(residuals[:50])   # Shapiro-Wilk works best for n<=50
+print(f"Fitted model: y = {beta_0_hat:.3f} + {beta_1_hat:.3f}*x")
 print(f"Residual mean: {residuals.mean():.4f} (should be ~0)")
 print(f"Residual std: {residuals.std():.4f} (should be ~{sigma})")
 print(f"\nShapiro-Wilk test (H0: residuals ~ N):")
@@ -106,17 +170,22 @@ print(f" Statistic: {stat:.4f}")
 print(f" p-value: {p_value:.4f}")
 print(f" Conclusion: {'fail to reject H0 (normal)' if p_value > 0.05 else 'reject H0 (not normal)'}")
 ```
-#### Final Professional Example [R]
-``` r
-# Linear regression residual analysis: check residuals ~ N(0, sigma^2) set.seed(42)
+
+### Professional example (R)
+
+```r
+# Linear regression residual analysis: check residuals ~ N(0, sigma^2)
+set.seed(42)
 n <- 200
 x <- seq(0, 10, length.out = n)
 beta_0 <- 2; beta_1 <- 3; sigma <- 1.5
 epsilon <- rnorm(n, 0, sigma)
-y <- beta_0 + beta_1 * x + epsilon fit <- lm(y ~ x)
+y <- beta_0 + beta_1 * x + epsilon
+fit <- lm(y ~ x)
 beta_0_hat <- coef(fit)[1]
 beta_1_hat <- coef(fit)[2]
-residuals <- residuals(fit) cat(sprintf("Fitted model: y = %.3f + %.3f*x\n", beta_0_hat, beta_1_hat))
+residuals <- residuals(fit)
+cat(sprintf("Fitted model: y = %.3f + %.3f*x\n", beta_0_hat, beta_1_hat))
 cat(sprintf("Residual mean: %.4f (should be ~0)\n", mean(residuals)))
 cat(sprintf("Residual std: %.4f (should be ~%.1f)\n", sd(residuals), sigma))
 sw <- shapiro.test(residuals[1:50])
@@ -125,5 +194,7 @@ cat(sprintf(" Statistic: %.4f\n", sw$statistic))
 cat(sprintf(" p-value: %.4f\n", sw$p.value))
 cat(" Conclusion:", ifelse(sw$p.value > 0.05, "fail to reject H0 (normal)", "reject H0 (not normal)"), "\n")
 ```
+
 ---
-AIO pag 30 of 286
+
+*Source: AIO p. 30 of 286*
