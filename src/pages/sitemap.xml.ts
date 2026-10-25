@@ -12,7 +12,7 @@ import { routePair, absolute, legalPageIds, type PageId, type StaticPageId } fro
 import { slugLanguages, pageOf, legalOf } from '../lib/collections';
 
 /** Pages built in both languages from code alone. */
-const ALWAYS: readonly StaticPageId[] = ['home', 'work', 'writing', 'tools', 'tools.confusion-matrix', 'tools.ab-sample-size'];
+const ALWAYS: readonly StaticPageId[] = ['home', 'work', 'writing', 'notes', 'tools', 'tools.confusion-matrix', 'tools.ab-sample-size'];
 
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
@@ -28,6 +28,7 @@ export const GET: APIRoute = async () => {
   }
   for (const [slug, set] of await slugLanguages('projects')) pages.push({ id: `work.${slug}`, langs: LANGS.filter((l) => set.has(l)) });
   for (const [slug, set] of await slugLanguages('writing')) pages.push({ id: `writing.${slug}`, langs: LANGS.filter((l) => set.has(l)) });
+  for (const [slug, set] of await slugLanguages('notes')) pages.push({ id: `notes.${slug}`, langs: LANGS.filter((l) => set.has(l)) });
 
   const urls = pages.flatMap(({ id, langs }) => {
     const pair = routePair(id);

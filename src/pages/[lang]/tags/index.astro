@@ -9,7 +9,7 @@ import { t, isDraftLang, type Lang } from '@/lib/i18n';
 import StatusMark from '@/components/StatusMark.astro';
 import { withBase } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
-import { projectsOf, writingOf, tagPath } from '@/lib/collections';
+import { projectsOf, writingOf, libraryOf, tagPath } from '@/lib/collections';
 
 export function getStaticPaths() {
   return LANGS.map((lang) => ({ params: { lang } }));
@@ -17,7 +17,8 @@ export function getStaticPaths() {
 
 const lang = Astro.params.lang as Lang;
 const counts = new Map<string, number>();
-for (const e of [...(await projectsOf(lang)), ...(await writingOf(lang))]) for (const tag of e.data.tags) counts.set(tag, (counts.get(tag) ?? 0) + 1);
+const notes = (await libraryOf(lang)).flatMap((a) => a.rows.map((r) => r.entry));
+for (const e of [...(await projectsOf(lang)), ...(await writingOf(lang)), ...notes]) for (const tag of e.data.tags) counts.set(tag, (counts.get(tag) ?? 0) + 1);
 const tags = [...counts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
 const count = (n: number) => (n === 1 ? t(lang, 'tags.count-one') : t(lang, 'tags.count').replace('{n}', String(n)));
 ---

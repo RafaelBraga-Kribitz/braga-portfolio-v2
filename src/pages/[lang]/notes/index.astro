@@ -1,0 +1,57 @@
+---
+// 02 · Notes — the library index (owner, 25 Oct 2026): Site pattern 03
+// (Index) once per area of the folder tree. The page heading (h1) with the
+// count, a listing of the areas that leads to their sections, then one
+// section per area: its heading (the area's title as the claim, its topics
+// as the prose) and the listing of its notes, coded <area>-<nnn>, with the
+// subtopic as the meta. The notes are written in English; the German page
+// keeps them in English (textLang) under German chrome.
+import Base from '@/layouts/Base.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import Listing from '@/components/Listing.astro';
+import ListingRow from '@/components/ListingRow.astro';
+import { t, type Lang } from '@/lib/i18n';
+import { route, noteRoute } from '@/lib/routes';
+import { LANGS } from '@/lib/site';
+import { libraryOf } from '@/lib/collections';
+
+export function getStaticPaths() {
+  return LANGS.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Lang;
+// a language without notes of its own shows the English library
+const own = await libraryOf(lang);
+const areas = own.length ? own : await libraryOf('en');
+const textLang: Lang = own.length ? lang : 'en';
+const total = areas.reduce((n, a) => n + a.rows.length, 0);
+const prose = t(lang, 'notes.prose').replace('{n}', String(total)).replace('{k}', String(areas.length));
+const anchor = (code: string) => `area-${code}`;
+---
+<Base lang={lang} page="notes" title={t(lang, 'notes.word')} description={prose} current="02">
+  <section class="section">
+    <SectionHeading number="02" word={t(lang, 'notes.word')} claim={t(lang, 'notes.claim')} prose={prose} link={{ href: route('writing', lang), label: t(lang, 'all-writing') }} as="h1" />
+    {areas.length > 0 && (
+      <Listing head={{ index: t(lang, 'index'), title: t(lang, 'notes.areas'), meta: '', trail: '' }}>
+        {areas.map((a) => (
+          <ListingRow code={a.code} title={a.title} sub={a.topics.join(' · ')} meta={[t(lang, 'notes.count').replace('{n}', String(a.rows.length))]} lang={lang} textLang={textLang} href={`#${anchor(a.code)}`} />
+        ))}
+      </Listing>
+    )}
+  </section>
+  {areas.map((a) => (
+    <section class="section" id={anchor(a.code)}>
+      <SectionHeading
+        number={a.code}
+        word={t(lang, 'notes.word')}
+        claim={a.title}
+        prose={t(lang, 'notes.area-prose').replace('{n}', String(a.rows.length)).replace('{k}', String(a.topics.length)).replace('{topics}', a.topics.join(', '))}
+      />
+      <Listing head={{ index: t(lang, 'index'), title: t(lang, 'title'), meta: t(lang, 'notes.topic'), trail: '' }}>
+        {a.rows.map((r) => (
+          <ListingRow code={r.code} title={r.entry.data.title} meta={[r.subtopic || r.topic]} lang={lang} textLang={textLang} href={noteRoute(r.entry.data.slug, r.entry.data.lang)} />
+        ))}
+      </Listing>
+    </section>
+  ))}
+</Base>

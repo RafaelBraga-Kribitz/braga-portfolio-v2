@@ -26,7 +26,7 @@ const linksOf = (note) => new Set([...proseOnly(note.body).matchAll(/\[\[([^\]|#
  * @param {any[]} notes all notes of the vault index @param {any} note
  */
 export function related(notes, note, { limit = 3, min = 0.06 } = {}) {
-  const pool = notes.filter((n) => n.live && n.url && (n.place?.collection === 'projects' || n.place?.collection === 'writing') && n.place.lang === note.place?.lang);
+  const pool = notes.filter((n) => n.live && n.url && ['projects', 'writing', 'notes'].includes(n.place?.collection) && n.place.lang === note.place?.lang);
   if (pool.length < 2) return [];
   const vecs = new Map(pool.map((n) => [n, terms(n)]));
   const df = new Map();

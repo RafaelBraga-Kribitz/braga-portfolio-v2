@@ -1,0 +1,79 @@
+---
+// 02 · A note of the library — the document template as the essays use it
+// (writing/[slug].astro): the opener (trail "02 Writing → Notes → 04-017",
+// title, meta: area · subtopic · Published · reading time), the contents
+// rail and the body, the end bar: ← All notes · § END · the next note in
+// library order, wrapping to the first. One page per published note per
+// language it is written in (the library is English; a German note would
+// pair by slug).
+import Document from '@/layouts/Document.astro';
+import { render } from 'astro:content';
+import { t, formatDate, otherLang, type Lang } from '@/lib/i18n';
+import { route, noteRoute } from '@/lib/routes';
+import { LANGS } from '@/lib/site';
+import { libraryOf, nextOf, prevOf, readingMinutes, vaultExtras, type NoteRow, type NoteArea } from '@/lib/collections';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const lang of LANGS) {
+    const areas = await libraryOf(lang);
+    const rows = areas.flatMap((a) => a.rows.map((r) => ({ ...r, id: r.entry.id, area: a })));
+    const others = (await libraryOf(otherLang(lang))).flatMap((a) => a.rows);
+    for (const row of rows) {
+      const twin = others.find((o) => o.entry.data.slug === row.entry.data.slug);
+      paths.push({ params: { lang, slug: row.entry.data.slug }, props: { row, rows, twinPath: twin ? noteRoute(twin.entry.data.slug, twin.entry.data.lang) : null } });
+    }
+  }
+  return paths;
+}
+
+type Row = NoteRow & { id: string; area: NoteArea };
+interface Props { row: Row; rows: Row[]; twinPath: string | null }
+
+const { row, rows, twinPath } = Astro.props;
+const lang = Astro.params.lang as Lang;
+const entry = row.entry;
+const d = entry.data;
+const extras = vaultExtras(entry, lang);
+const { Content, headings, remarkPluginFrontmatter } = await render(entry);
+const next = nextOf(rows, row);
+const prev = prevOf(rows, row);
+
+const meta = [
+  { text: row.area.title },
+  ...(row.subtopic ? [{ text: row.subtopic }] : []),
+  { text: `${t(lang, 'published')} ${formatDate(d.date, lang)}` },
+  { text: t(lang, 'min-read').replace('{n}', String(readingMinutes(entry.body))) },
+  ...(d.updated ? [{ text: `${t(lang, 'updated')} ${formatDate(d.updated, lang)}` }] : []),
+];
+---
+<Document
+  lang={lang}
+  page={`notes.${d.slug}`}
+  title={d.title}
+  description={d.summary}
+  current="02"
+  hasCode={remarkPluginFrontmatter?.hasCode === true}
+  trail={[
+    { label: `02 ${t(lang, 'door.writing')}`, href: route('writing', lang) },
+    { label: t(lang, 'notes.word'), href: `${route('notes', lang)}#area-${row.area.code}` },
+    { label: row.code, current: true },
+  ]}
+  lead={d.lead}
+  meta={meta}
+  draft={d.translationStatus === 'draft'}
+  headings={headings}
+  prev={{ href: route('notes', lang), label: t(lang, 'all-notes') }}
+  next={next && { href: noteRoute(next.entry.data.slug, lang), label: `${next.code} ${next.entry.data.title}` }}
+  nextDoc={next && noteRoute(next.entry.data.slug, lang)}
+  twinPath={twinPath}
+  seoTitle={d.seo_title}
+  seoDescription={d.seo_description}
+  canonicalUrl={d.canonical}
+  cover={extras.cover}
+  tags={extras.tags}
+  related={extras.related}
+  prevDoc={prev && noteRoute(prev.entry.data.slug, lang)}
+>
+  <Content />
+</Document>

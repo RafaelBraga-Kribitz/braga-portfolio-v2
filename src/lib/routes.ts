@@ -1,7 +1,7 @@
 // The page registry of BUILD-BRIEF §4. Every page exists under /en/ and
 // /de/ with the same path except the German legal slugs. Project and
-// essay routes are generated from slugs; "work.<slug>" and
-// "writing.<slug>" are valid page ids.
+// essay routes are generated from slugs; "work.<slug>",
+// "writing.<slug>" and "notes.<slug>" are valid page ids.
 //
 // Base path (DEPLOY.md): the table below holds paths from the site root
 // ("/en/work/"); every function that hands a URL to a template, a feed or
@@ -31,6 +31,7 @@ export type StaticPageId =
   | 'work'
   | 'about'
   | 'writing'
+  | 'notes'
   | 'tools'
   | 'tools.confusion-matrix'
   | 'tools.ab-sample-size'
@@ -41,7 +42,7 @@ export type StaticPageId =
   | 'system'
   | 'notfound';
 
-export type PageId = StaticPageId | `work.${string}` | `writing.${string}`;
+export type PageId = StaticPageId | `work.${string}` | `writing.${string}` | `notes.${string}`;
 export interface RoutePair { en: string; de: string }
 
 /** The legal pages, in footer order. Their German paths differ from the English ones. */
@@ -54,6 +55,8 @@ export const routes: Record<StaticPageId, RoutePair> = {
   work: { en: '/en/work/', de: '/de/work/' },
   about: { en: '/en/about/', de: '/de/about/' },
   writing: { en: '/en/writing/', de: '/de/writing/' },
+  // the notes library (owner, 25 Oct 2026): under Writing, its own index
+  notes: { en: '/en/notes/', de: '/de/notes/' },
   tools: { en: '/en/tools/', de: '/de/tools/' },
   'tools.confusion-matrix': { en: '/en/tools/confusion-matrix/', de: '/de/tools/confusion-matrix/' },
   'tools.ab-sample-size': { en: '/en/tools/ab-sample-size/', de: '/de/tools/ab-sample-size/' },
@@ -95,6 +98,11 @@ export function writingRoute(slug: string, lang: Lang): string {
   return withBase(`/${lang}/writing/${slug}/`);
 }
 
+/** A note of the library: /<lang>/notes/<slug>/. */
+export function noteRoute(slug: string, lang: Lang): string {
+  return withBase(`/${lang}/notes/${slug}/`);
+}
+
 /** Both language paths of a page id, with the base. Throws on an unknown id. */
 export function routePair(pageId: PageId): RoutePair {
   if (pageId in routes) {
@@ -108,6 +116,10 @@ export function routePair(pageId: PageId): RoutePair {
   if (pageId.startsWith('writing.')) {
     const slug = pageId.slice('writing.'.length);
     return { en: writingRoute(slug, 'en'), de: writingRoute(slug, 'de') };
+  }
+  if (pageId.startsWith('notes.')) {
+    const slug = pageId.slice('notes.'.length);
+    return { en: noteRoute(slug, 'en'), de: noteRoute(slug, 'de') };
   }
   throw new Error(`routes: unknown page id "${pageId}"`);
 }

@@ -9,7 +9,7 @@
 //
 //   Projects/{en,de}/…   → /<lang>/work/<slug>/        (collection projects)
 //   Essays/{en,de}/…     → /<lang>/writing/<slug>/     (writing, kind essay)
-//   Notes/{en,de}/…      → /<lang>/writing/<slug>/     (writing, kind note)
+//   Notes/{en,de}/…      → /<lang>/notes/<slug>/       (notes, the library)
 //   Pages/{en,de}/…      → /<lang>/about/, /<lang>/system/
 //   Legal/{en,de}/…      → the Impressum, privacy and accessibility pages
 //
@@ -23,7 +23,7 @@ import { parse as parseYaml } from 'yaml';
 export const SITE_FOLDERS = {
   Projects: { collection: 'projects' },
   Essays: { collection: 'writing', kind: 'essay' },
-  Notes: { collection: 'writing', kind: 'note' },
+  Notes: { collection: 'notes', kind: 'note' },
   Pages: { collection: 'pages' },
   Legal: { collection: 'legal' },
 };
@@ -190,6 +190,7 @@ export function pathOf(note) {
   const { lang, slug, page } = note.data;
   if (p.collection === 'projects') return `/${lang}/work/${slug}/`;
   if (p.collection === 'writing') return `/${lang}/writing/${slug}/`;
+  if (p.collection === 'notes') return `/${lang}/notes/${slug}/`;
   if (p.collection === 'pages') return `/${lang}/${slug}/`;
   if (p.collection === 'legal') return LEGAL_PATHS[page]?.[lang];
   return undefined;
