@@ -3,6 +3,7 @@ publish: true
 date: '2026-04-16'
 tags:
 - calculus
+slug: division-limits-of-functions
 ---
 
 # Division
@@ -104,31 +105,40 @@ def classify_limit_form(lim_f: float, lim_g: float, tol: float = 1e-8) -> str:
         return "0/0 indeterminate: need L'Hopital or algebraic simplification"
     else:
         return f"c/0 form ({lim_f:.4f}/0): diverges to +/-infinity"
-    examples = [ {"name": "(x^2-4)/(x+1) at x=2", "f": lambda x: x**2 - 4, "g": lambda x: x + 1, "a": 2.0, "analytic": 0.0},   # 0/3 = 0
-        {"name": "(x^2-1)/(x-1) at x=1", "f": lambda x: x**2 - 1, "g": lambda x: x - 1, "a": 1.0, "analytic": 2.0},   # factor: x+1 -> 2
-        {"name": "sin(x)/x at x=0", "f": np.sin, "g": lambda x: x, "a": 0.0, "analytic": 1.0},   # standard limit
-        {"name": "ln(1+x)/x at x=0", "f": lambda x: np.log(1 + x), "g": lambda x: x, "a": 0.0, "analytic": 1.0},   # ln(1+x)/x -> 1
-    ]
-    print("Limit Quotient Law: lim[f/g] = lim[f] / lim[g] (if lim[g] != 0)")
+
+
+examples = [
+    {"name": "(x^2-4)/(x+1) at x=2", "f": lambda x: x**2 - 4, "g": lambda x: x + 1, "a": 2.0, "analytic": 0.0},       # 0/3 = 0
+    {"name": "(x^2-1)/(x-1) at x=1", "f": lambda x: x**2 - 1, "g": lambda x: x - 1, "a": 1.0, "analytic": 2.0},       # factor: x+1 -> 2
+    {"name": "sin(x)/x at x=0", "f": np.sin, "g": lambda x: x, "a": 0.0, "analytic": 1.0},                            # standard limit
+    {"name": "ln(1+x)/x at x=0", "f": lambda x: np.log(1 + x), "g": lambda x: x, "a": 0.0, "analytic": 1.0},         # ln(1+x)/x -> 1
+]
+print("Limit Quotient Law: lim[f/g] = lim[f] / lim[g] (if lim[g] != 0)")
 print(f"\n{'Example':>32} {'lim f':>8} {'lim g':>8} {'lim(f/g)':>10} {'Analytic':>10}")
 for ex in examples:
     lim_f = numerical_limit(ex["f"], ex["a"])
-lim_g = numerical_limit(ex["g"], ex["a"])
-lim_quot = numerical_limit(lambda x: ex["f"](x) / ex["g"](x), ex["a"])
-print(f"{ex['name']:>32} {lim_f:>8.4f} {lim_g:>8.4f} {lim_quot:>10.4f} {ex['analytic']:>10.4f}")
-print(f" Form: {classify_limit_form(lim_f, lim_g)}")
+    lim_g = numerical_limit(ex["g"], ex["a"])
+    lim_quot = numerical_limit(lambda x: ex["f"](x) / ex["g"](x), ex["a"])
+    print(f"{ex['name']:>32} {lim_f:>8.4f} {lim_g:>8.4f} {lim_quot:>10.4f} {ex['analytic']:>10.4f}")
+    print(f" Form: {classify_limit_form(lim_f, lim_g)}")
 ```
 
 ### Beginner example (R)
 
 ```r
-# Limit quotient law:
-lim[f(x)/g(x)] = lim[f(x)] / lim[g(x)] (if lim[g] != 0)
-numerical_limit <- function(fn, a, h = 1e-7) { 0.5 * (fn(a + h) + fn(a - h))
+# Limit quotient law: lim[f(x)/g(x)] = lim[f(x)] / lim[g(x)] (if lim[g] != 0)
+numerical_limit <- function(fn, a, h = 1e-7) {
+  0.5 * (fn(a + h) + fn(a - h))
 }
-examples <- list( list(name = "(x^2-4)/(x+1), a=2", f = function(x) x^2 - 4, g = function(x) x + 1, a = 2, analytic = 0), list(name = "(x^2-1)/(x-1), a=1", f = function(x) x^2 - 1, g = function(x) x - 1, a = 1, analytic = 2), list(name = "sin(x)/x, a=0", f = sin, g = function(x) x, a = 0, analytic = 1), list(name = "log(1+x)/x, a=0", f = function(x) log(1 + x), g = function(x) x, a = 0, analytic = 1)
-) cat(sprintf("%-32s %-8s %-8s %-10s %-10s\n", "Example", "lim f", "lim g", "lim(f/g)", "Analytic"))
-for (ex in examples) { lim_f <- numerical_limit(ex$f, ex$a)
+examples <- list(
+  list(name = "(x^2-4)/(x+1), a=2", f = function(x) x^2 - 4, g = function(x) x + 1, a = 2, analytic = 0),
+  list(name = "(x^2-1)/(x-1), a=1", f = function(x) x^2 - 1, g = function(x) x - 1, a = 1, analytic = 2),
+  list(name = "sin(x)/x, a=0", f = sin, g = function(x) x, a = 0, analytic = 1),
+  list(name = "log(1+x)/x, a=0", f = function(x) log(1 + x), g = function(x) x, a = 0, analytic = 1)
+)
+cat(sprintf("%-32s %-8s %-8s %-10s %-10s\n", "Example", "lim f", "lim g", "lim(f/g)", "Analytic"))
+for (ex in examples) {
+  lim_f <- numerical_limit(ex$f, ex$a)
   lim_g <- numerical_limit(ex$g, ex$a)
   lim_quot <- numerical_limit(function(x) ex$f(x) / ex$g(x), ex$a)
   cat(sprintf("%-32s %-8.4f %-8.4f %-10.4f %-10.4f\n", ex$name, lim_f, lim_g, lim_quot, ex$analytic))
@@ -142,7 +152,9 @@ import numpy as np
 from sklearn.datasets import make_classification
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
-np.random.seed(42)   # -- Limit quotient law: learning rate schedule decay and ratio analysis --
+np.random.seed(42)
+
+# -- Limit quotient law: learning rate schedule decay and ratio analysis --
 # Use case: A DS compares three LR schedules and examines their limit behavior
 # using the quotient law. Specifically:
 # 1) Step decay: alpha_t = alpha_0 / (1 + lambda * t) -> 0/inf = 0
@@ -167,13 +179,18 @@ def schedule_inv_sqrt(t: np.ndarray) -> np.ndarray:
 def schedule_poly_ratio(t: np.ndarray) -> np.ndarray:
     """alpha_0 * (1+t)^p / (1+t)^q = alpha_0 * (1+t)^(p-q). Limit depends on p-q."""
     return ALPHA_0 * (1.0 + t) ** (p_exp - q_exp)
+
+
 alpha_step = schedule_step(t_vals)
 alpha_inv_sqrt = schedule_inv_sqrt(t_vals)
-alpha_poly = schedule_poly_ratio(t_vals)   # Quotient ratios: which decays faster?
+alpha_poly = schedule_poly_ratio(t_vals)
+
+# Quotient ratios: which decays faster?
 # ratio_step_vs_isqrt = alpha_step / alpha_inv_sqrt = sqrt(1+t) / (1+lambda*t)
 # As t->inf: numerator ~ sqrt(t), denominator ~ lambda*t, ratio -> 0 (step decays faster)
-ratio_step_vs_isqrt = alpha_step / alpha_inv_sqrt   #
-ratio_isqrt_vs_poly = alpha_inv_sqrt / alpha_poly
+ratio_step_vs_isqrt = alpha_step / alpha_inv_sqrt
+
+# ratio_isqrt_vs_poly = alpha_inv_sqrt / alpha_poly
 # = alpha_0/sqrt(1+t) / alpha_0*(1+t)^(p-q)
 # = (1+t)^(-(1/2)) / (1+t)^(p-q)
 # = (1+t)^(-(1/2) - (p-q)) = (1+t)^(q-p-0.5)
@@ -181,10 +198,13 @@ ratio_isqrt_vs_poly = alpha_inv_sqrt / alpha_poly
 ratio_isqrt_vs_poly = alpha_inv_sqrt / alpha_poly
 print("Limit Quotient Law: Learning Rate Schedule Comparison")
 print(f"\nSchedules: step (lambda={LAMBDA}), inverse-sqrt, polynomial (p={p_exp}, q={q_exp})")
-print(f"\n{'t':>7} {'step':>10} {'inv-sqrt':>10} {'poly':>10} " f"{'ratio S/IS':>12} {'ratio IS/P':>12}")
+print(f"\n{'t':>7} {'step':>10} {'inv-sqrt':>10} {'poly':>10} "
+      f"{'ratio S/IS':>12} {'ratio IS/P':>12}")
 for t_check in [1, 10, 100, 500, 1000, 5000]:
     idx = t_check - 1
-print(f"{t_check:>7} {alpha_step[idx]:>10.6f} {alpha_inv_sqrt[idx]:>10.6f} " f"{alpha_poly[idx]:>10.6f} " f"{ratio_step_vs_isqrt[idx]:>12.6f} {ratio_isqrt_vs_poly[idx]:>12.6f}")
+    print(f"{t_check:>7} {alpha_step[idx]:>10.6f} {alpha_inv_sqrt[idx]:>10.6f} "
+          f"{alpha_poly[idx]:>10.6f} "
+          f"{ratio_step_vs_isqrt[idx]:>12.6f} {ratio_isqrt_vs_poly[idx]:>12.6f}")
 print(f"\nQuotient law analysis:")
 print(f" lim_{{t->inf}} [step / inv-sqrt]:")
 print(f" = lim sqrt(1+t) / (1 + lambda*t)")

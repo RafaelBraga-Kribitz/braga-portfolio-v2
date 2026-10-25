@@ -97,17 +97,25 @@ Verify: $A \cdot A^{-1} = \frac{1}{11}\begin{bmatrix}5-6 & 10-10 \\ 3-3 & 6+5\en
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # -- 2x2 determinant: formula, invertibility, and geometric meaning ---
-A = np.array([[5.0, -2.0], [3.0, 1.0]])   # Manual formula
+import numpy as np
+
+# -- 2x2 determinant: formula, invertibility, and geometric meaning ---
+A = np.array([[5.0, -2.0], [3.0, 1.0]])
+
+# Manual formula
 det_manual = A[0, 0] * A[1, 1] - A[0, 1] * A[1, 0]
 det_numpy = float(np.linalg.det(A))
 print(f"A:\n{A}")
 print(f"\ndet(A) via formula : {det_manual}")
 print(f"det(A) via numpy : {det_numpy:.6f}")
-print(f"Invertible: {not np.isclose(det_numpy, 0)}")   # 2x2 inverse formula: (1/det) * [[a22, -a12], [-a21, a11]]
-A_inv_manual = (1 / det_manual) * np.array([[ A[1,1], -A[0,1]], [-A[1,0], A[0,0]]])
+print(f"Invertible: {not np.isclose(det_numpy, 0)}")
+
+# 2x2 inverse formula: (1/det) * [[a22, -a12], [-a21, a11]]
+A_inv_manual = (1 / det_manual) * np.array([[A[1, 1], -A[0, 1]], [-A[1, 0], A[0, 0]]])
 print(f"\nInverse (manual formula):\n{A_inv_manual.round(4)}")
-print(f"A @ A_inv = I: {np.allclose(A @ A_inv_manual, np.eye(2))}")   # Singular matrix example
+print(f"A @ A_inv = I: {np.allclose(A @ A_inv_manual, np.eye(2))}")
+
+# Singular matrix example
 A_sing = np.array([[2.0, 4.0], [1.0, 2.0]])   # row 2 = 0.5 * row 1
 det_sing = float(np.linalg.det(A_sing))
 print(f"\nSingular matrix A_sing det: {det_sing:.6f} (should be ~0)")
@@ -118,15 +126,21 @@ print(f"Linear dependence check: row2 = 0.5 * row1: {np.allclose(A_sing[1], 0.5 
 
 ```r
 # -- 2x2 determinant: formula, invertibility, and inverse check -------
-A <- matrix(c(5, -2, 3, 1), nrow = 2, byrow = TRUE)  # Manual formula
+A <- matrix(c(5, -2, 3, 1), nrow = 2, byrow = TRUE)
+
+# Manual formula
 det_manual <- A[1,1] * A[2,2] - A[1,2] * A[2,1]
 det_r <- det(A)
 cat(sprintf("det(A) via formula: %.4f\n", det_manual))
 cat(sprintf("det(A) via det(): %.4f\n", det_r))
-cat(sprintf("Invertible: %s\n", !isTRUE(all.equal(det_r, 0))))  # 2x2 inverse via formula
+cat(sprintf("Invertible: %s\n", !isTRUE(all.equal(det_r, 0))))
+
+# 2x2 inverse via formula
 A_inv <- (1 / det_manual) * matrix(c(A[2,2], -A[2,1], -A[1,2], A[1,1]), nrow = 2, byrow = TRUE)
 cat("\nInverse:\n"); print(round(A_inv, 4))
-cat(sprintf("A %%*%% A_inv == I: %s\n", isTRUE(all.equal(A %*% A_inv, diag(2)))))  # Singular matrix
+cat(sprintf("A %%*%% A_inv == I: %s\n", isTRUE(all.equal(A %*% A_inv, diag(2)))))
+
+# Singular matrix
 A_sing <- matrix(c(2, 4, 1, 2), nrow = 2, byrow = TRUE)
 cat(sprintf("\nSingular det: %.6f (should be 0)\n", det(A_sing)))
 ```
@@ -136,33 +150,48 @@ cat(sprintf("\nSingular det: %.6f (should be 0)\n", det(A_sing)))
 ```python
 import numpy as np
 import pandas as pd
-np.random.seed(42)   # -- Business scenario: pairwise feature collinearity check via 2x2 determinants
+np.random.seed(42)
+
+# -- Business scenario: pairwise feature collinearity check via 2x2 determinants
 # For each pair of features, compute the 2x2 correlation sub-matrix determinant.
 # det = 1 - r^2; near zero means near-collinear (VIF analog for pairs).
 N_OBS = 200
 CHANNEL_NAMES = ["tv", "digital", "search", "social", "print"]
 N_CHANNELS = len(CHANNEL_NAMES)
-COLLINEARITY_THRESHOLD = 0.05   # det < 0.05 means r > ~0.975 # Simulate with some near-collinear channels
+COLLINEARITY_THRESHOLD = 0.05   # det < 0.05 means r > ~0.975
+
+# Simulate with some near-collinear channels
 base = np.random.normal(0, 1, N_OBS)
-X = np.column_stack([ base + np.random.normal(0, 0.5, N_OBS),   # tv
-    (near-collinear with digital) base + np.random.normal(0, 0.6, N_OBS),   # digital
-    (near-collinear with tv) np.random.normal(0, 1, N_OBS),   # search
-    (independent) np.random.normal(0, 1, N_OBS),   # social
-    (independent) 0.95 * np.random.normal(0, 1, N_OBS) + np.random.normal(0, 0.1, N_OBS),   # print
-    (borderline) ])   # Compute correlation matrix
+X = np.column_stack([
+    base + np.random.normal(0, 0.5, N_OBS),   # tv (near-collinear with digital)
+    base + np.random.normal(0, 0.6, N_OBS),   # digital (near-collinear with tv)
+    np.random.normal(0, 1, N_OBS),            # search (independent)
+    np.random.normal(0, 1, N_OBS),            # social (independent)
+    0.95 * np.random.normal(0, 1, N_OBS) + np.random.normal(0, 0.1, N_OBS),   # print (borderline)
+])
+
+# Compute correlation matrix
 X_std = (X - X.mean(axis=0)) / X.std(axis=0)
-corr = X_std.T @ X_std / (N_OBS - 1)   # Pairwise 2x2 determinants
+corr = X_std.T @ X_std / (N_OBS - 1)
+
+# Pairwise 2x2 determinants
 records = []
 for i in range(N_CHANNELS):
     for j in range(i + 1, N_CHANNELS):
         r = float(corr[i, j])
-    det = 1 - r**2   # 2x2 correlation sub-matrix determinant
-records.append({ "pair": f"{CHANNEL_NAMES[i]} vs {CHANNEL_NAMES[j]}", "correlation_r": round(r, 4), "det_2x2": round(det, 4), "collinear": det < COLLINEARITY_THRESHOLD, })
+        det = 1 - r**2   # 2x2 correlation sub-matrix determinant
+        records.append({
+            "pair": f"{CHANNEL_NAMES[i]} vs {CHANNEL_NAMES[j]}",
+            "correlation_r": round(r, 4),
+            "det_2x2": round(det, 4),
+            "collinear": det < COLLINEARITY_THRESHOLD,
+        })
+
 result_df = pd.DataFrame(records)
 print("Pairwise feature collinearity via 2x2 determinant (det = 1 - r^2):")
 print(result_df.to_string(index=False))
 print(f"\nPairs flagged as near-collinear (det < {COLLINEARITY_THRESHOLD}):")
-print(result_df[result_df["collinear"]]"pair", "correlation_r", "det_2x2".to_string(index=False))
+print(result_df[result_df["collinear"]][["pair", "correlation_r", "det_2x2"]].to_string(index=False))
 print("\nInterpretation: det(2x2 corr sub-matrix) = 1 - r^2; near zero means the pair spans a near-degenerate plane and will cause multicollinearity in regression.")
 ```
 

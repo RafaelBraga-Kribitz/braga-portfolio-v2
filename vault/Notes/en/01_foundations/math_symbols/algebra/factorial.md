@@ -102,19 +102,24 @@ There are exactly $120$ ways to arrange 5 distinct items (say, books on a shelf)
 ### Beginner example (Python)
 
 ```python
-import math   # Python's
-math.factorial()
+import math
+
+# Python's math.factorial()
 print(math.factorial(0))   # 1 (0! = 1)
 print(math.factorial(1))   # 1
 print(math.factorial(5))   # 120
-print(math.factorial(10))   # 3628800 # Manual implementation to understand the recursion
+print(math.factorial(10))  # 3628800
 
+# Manual implementation to understand the recursion
 def factorial(n: int) -> int:
     """n! = n * (n-1) * ... * 1, with 0! = 1."""
     if n == 0 or n == 1:
         return 1
     return n * factorial(n - 1)
-print(factorial(5))   # 120 # Log factorial (numerically safe for large n)
+
+print(factorial(5))   # 120
+
+# Log factorial (numerically safe for large n)
 log_factorial_10 = sum(math.log(k) for k in range(1, 11))
 print(f"ln(10!) = {log_factorial_10:.4f}")
 print(f"ln(10!) = {math.log(math.factorial(10)):.4f}")   # Same
@@ -127,11 +132,16 @@ print(f"ln(10!) = {math.log(math.factorial(10)):.4f}")   # Same
 factorial(0)  # 1
 factorial(1)  # 1
 factorial(5)  # 120
-factorial(10)  # 3628800 # Manual recursive version
-my_factorial <- function(n) { if (n == 0 || n == 1)
-  return(1) n * my_factorial(n - 1)
+factorial(10)  # 3628800
+
+# Manual recursive version
+my_factorial <- function(n) {
+  if (n == 0 || n == 1) return(1)
+  n * my_factorial(n - 1)
 }
-my_factorial(5)  # 120 # Log factorial (safer for large n)
+my_factorial(5)  # 120
+
+# Log factorial (safer for large n)
 lfactorial(10)  # log factorial: log(10!) in R
 ```
 
@@ -139,16 +149,29 @@ lfactorial(10)  # log factorial: log(10!) in R
 
 ```python
 import math
-import numpy as np   # Scenario: computing Poisson PMF from scratch to understand where factorial is used
-# P(X = k) = e^(-lambda) * lambda^k / k! def poisson_pmf(k: int, lam: float) -> float: """ Poisson probability mass function. P(X=k) = e^(-lambda) * lambda^k / k! Uses log-space arithmetic to avoid overflow for large k. """ log_prob = -lam + k * math.log(lam) - math.lgamma(k + 1)
-# math.lgamma(k+1) = ln(k!) via the Gamma function: Gamma(k+1) = k! return math.exp(log_prob)
+import numpy as np
+
+# Scenario: computing Poisson PMF from scratch to understand where factorial is used
+# P(X = k) = e^(-lambda) * lambda^k / k!
+def poisson_pmf(k: int, lam: float) -> float:
+    """
+    Poisson probability mass function.
+    P(X=k) = e^(-lambda) * lambda^k / k!
+    Uses log-space arithmetic to avoid overflow for large k.
+    """
+    log_prob = -lam + k * math.log(lam) - math.lgamma(k + 1)
+    # math.lgamma(k+1) = ln(k!) via the Gamma function: Gamma(k+1) = k!
+    return math.exp(log_prob)
+
 # Lambda = 3 (average 3 events per interval)
 lam = 3.0
 print(f"Poisson PMF with lambda={lam}:")
 for k in range(0, 10):
     prob = poisson_pmf(k, lam)
-bar = "#" * int(prob * 100)
-print(f" P(X={k:2d}) = {prob:.4f} {bar}")   # Verify: probabilities sum to ~1
+    bar = "#" * int(prob * 100)
+    print(f" P(X={k:2d}) = {prob:.4f} {bar}")
+
+# Verify: probabilities sum to ~1
 total = sum(poisson_pmf(k, lam) for k in range(0, 50))
 print(f"\nSum of first 50 terms: {total:.6f}")   # Should be ~1.0
 ```
@@ -156,12 +179,16 @@ print(f"\nSum of first 50 terms: {total:.6f}")   # Should be ~1.0
 ### Professional example (R)
 
 ```r
-# Scenario: Poisson PMF from scratch; P(X=k) = e^(-lambda) * lambda^k / k! # Uses log-space: lgamma(k+1) = ln(k!)
-poisson_pmf <- function(k, lam) { log_prob <- -lam + k * log(lam) - lgamma(k + 1) exp(log_prob)
+# Scenario: Poisson PMF from scratch; P(X=k) = e^(-lambda) * lambda^k / k!
+# Uses log-space: lgamma(k+1) = ln(k!)
+poisson_pmf <- function(k, lam) {
+  log_prob <- -lam + k * log(lam) - lgamma(k + 1)
+  exp(log_prob)
 }
 lam <- 3.0
 cat("Poisson PMF with lambda=", lam, ":\n", sep = "")
-for (k in 0:9) { prob <- poisson_pmf(k, lam)
+for (k in 0:9) {
+  prob <- poisson_pmf(k, lam)
   bar <- strrep("#", as.integer(prob * 100))
   cat(sprintf(" P(X=%2d) = %.4f %s\n", k, prob, bar))
 }

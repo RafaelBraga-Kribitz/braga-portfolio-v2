@@ -119,8 +119,12 @@ v <- c(7, -2, 4, 1, -3)
 cat("v :", v, "\n")
 cat("v + 0 :", v + zero_vec, "\n")
 cat("Equal? :", isTRUE(all.equal(v + zero_vec, v)), "\n")
-cat("|zero_vec|:", sqrt(sum(zero_vec^2)), "\n")  # Additive inverse
-cat("v + (-v) :", v + (-v), "\n")  # Near-zero test
+cat("|zero_vec|:", sqrt(sum(zero_vec^2)), "\n")
+
+# Additive inverse
+cat("v + (-v) :", v + (-v), "\n")
+
+# Near-zero test
 epsilon <- 1e-8
 small_v <- c(1e-9, -2e-10, 3e-10, 0, 1e-11)
 cat("small_v near zero?", sqrt(sum(small_v^2)) < epsilon, "\n")
@@ -131,27 +135,37 @@ cat("small_v near zero?", sqrt(sum(small_v^2)) < epsilon, "\n")
 ```python
 import numpy as np
 import pandas as pd
-np.random.seed(42)   # -- Business scenario: convergence monitoring via weight update norms ---
+np.random.seed(42)
+
+# -- Business scenario: convergence monitoring via weight update norms ---
 # Track whether weight update vectors approach the zero vector during training.
 # Stop when the L2 norm of the update drops below tolerance.
 N_PARAMS = 10
 N_EPOCHS = 50
 LR = 0.1
-TOLERANCE = 1e-4   # Simulate a convex loss: true weights to converge to
+TOLERANCE = 1e-4
+
+# Simulate a convex loss: true weights to converge to
 w_true = np.random.randn(N_PARAMS)
 w = np.zeros(N_PARAMS)   # initialize to zero vector
 convergence_log = []
 for epoch in range(N_EPOCHS):
     gradient = 2 * (w - w_true) + np.random.normal(0, 0.01, N_PARAMS)   # noisy gradient
-delta_w = -LR * gradient
-w_new = w + delta_w
-delta_norm = np.linalg.norm(delta_w)   # norm of update vector (-> 0 at convergence)
-distance_from_true = np.linalg.norm(w_new - w_true)
-convergence_log.append({ "epoch": epoch + 1, "delta_w_norm": round(delta_norm, 6), "dist_from_true": round(distance_from_true, 6), "converged": delta_norm < TOLERANCE, })
-w = w_new
-if delta_norm < TOLERANCE:
-    print(f"Converged at epoch {epoch+1}: |delta_w| = {delta_norm:.2e} < {TOLERANCE}")
-break
+    delta_w = -LR * gradient
+    w_new = w + delta_w
+    delta_norm = np.linalg.norm(delta_w)   # norm of update vector (-> 0 at convergence)
+    distance_from_true = np.linalg.norm(w_new - w_true)
+    convergence_log.append({
+        "epoch": epoch + 1,
+        "delta_w_norm": round(delta_norm, 6),
+        "dist_from_true": round(distance_from_true, 6),
+        "converged": delta_norm < TOLERANCE,
+    })
+    w = w_new
+    if delta_norm < TOLERANCE:
+        print(f"Converged at epoch {epoch+1}: |delta_w| = {delta_norm:.2e} < {TOLERANCE}")
+        break
+
 log_df = pd.DataFrame(convergence_log)
 print(log_df.tail(10).to_string(index=False))
 print(f"\nFinal weight update vector (-> zero): {np.linalg.norm(w - w_true):.6f} from true")
@@ -168,11 +182,14 @@ LR <- 0.1
 TOLERANCE <- 1e-4
 w_true <- rnorm(N_PARAMS)
 w <- numeric(N_PARAMS)
-for (epoch in 1:N_EPOCHS) { gradient <- 2 * (w - w_true) + rnorm(N_PARAMS, 0, 0.01)
+for (epoch in 1:N_EPOCHS) {
+  gradient <- 2 * (w - w_true) + rnorm(N_PARAMS, 0, 0.01)
   delta_w <- -LR * gradient
   w <- w + delta_w
   delta_norm <- sqrt(sum(delta_w^2))
-  if (delta_norm < TOLERANCE) { cat(sprintf("Converged at epoch %d: |delta_w| = %.2e\n", epoch, delta_norm)) break
+  if (delta_norm < TOLERANCE) {
+    cat(sprintf("Converged at epoch %d: |delta_w| = %.2e\n", epoch, delta_norm))
+    break
   }
 }
 cat(sprintf("Final dist from true: %.6f\n", sqrt(sum((w - w_true)^2))))

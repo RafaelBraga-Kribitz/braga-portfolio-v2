@@ -107,25 +107,26 @@ A full rotation returns to the starting point.
 ### Beginner example (Python)
 
 ```python
-# Euler's Formula: e^(ix) =
-cos(x) + i*sin(x)
+# Euler's Formula: e^(ix) = cos(x) + i*sin(x)
 import numpy as np
+
 angles = [0, np.pi/6, np.pi/4, np.pi/2, np.pi, 3*np.pi/2, 2*np.pi]
 labels = ["0", "π/6", "π/4", "π/2", "π", "3π/2", "2π"]
 print("Euler's Formula: e^(ix) = cos(x) + i·sin(x)")
 print(f"{'x':>6} {'e^(ix)':>18} {'cos+i·sin':>18} {'|e^(ix)|':>10}")
 for x, label in zip(angles, labels):
-    euler = np.exp(1j * x)   # e^(ix) via NumPy
-trig = np.cos(x) + 1j * np.sin(x)   #
-cos(x) + i*sin(x)
-modulus = abs(euler)
-equal = abs(euler - trig) < 1e-10
-print(f" {label:>4} {str(euler.round(4)):>18} {str(trig.round(4)):>18} {modulus:.4f} ✓" if equal else "MISMATCH")   # DFT basis functions via Euler's formula
+    euler = np.exp(1j * x)              # e^(ix) via NumPy
+    trig = np.cos(x) + 1j * np.sin(x)   # cos(x) + i*sin(x)
+    modulus = abs(euler)
+    equal = abs(euler - trig) < 1e-10
+    print(f" {label:>4} {str(euler.round(4)):>18} {str(trig.round(4)):>18} {modulus:.4f} ✓" if equal else "MISMATCH")
+
+# DFT basis functions via Euler's formula
 N = 8
 print(f"\nDFT basis functions e^(-i·2π·k·n/N) for N={N}, n=0..7 and k=0,1,2:")
 for k in range(3):
     basis = np.array([np.exp(-1j * 2 * np.pi * k * n / N) for n in range(N)])
-print(f" k={k}: {np.round(basis, 3)}")
+    print(f" k={k}: {np.round(basis, 3)}")
 ```
 
 ### Beginner example (R)
@@ -135,7 +136,8 @@ print(f" k={k}: {np.round(basis, 3)}")
 angles <- c(0, pi/6, pi/4, pi/2, pi, 3*pi/2, 2*pi)
 labels <- c("0", "π/6", "π/4", "π/2", "π", "3π/2", "2π")
 cat("Euler's Formula: e^(ix) = cos(x) + i·sin(x):\n")
-for (idx in seq_along(angles)) { x <- angles[idx]
+for (idx in seq_along(angles)) {
+  x <- angles[idx]
   euln <- exp(1i * x)
   trig <- cos(x) + 1i * sin(x)
   cat(sprintf(" x=%-5s e^(ix)=%.4f+%.4fi |e^(ix)|=%.4f\n", labels[idx], Re(euln), Im(euln), Mod(euln)))
@@ -146,24 +148,67 @@ for (idx in seq_along(angles)) { x <- angles[idx]
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: Fourier decomposition of a sales time series
+import pandas as pd
+
+# Scenario: Fourier decomposition of a sales time series
 # FFT coefficients ARE Euler's formula applied at discrete frequencies
 np.random.seed(42)
-N = 120   # 10 years monthly
+N = 120  # 10 years monthly
 t_months = np.arange(N)
-sales = (50_000 + 500 * t_months   # linear trend + 10_000 * np.cos(2*np.pi * t_months/12) # annual cycle + 3_000 * np.cos(2*np.pi * t_months/3) # quarterly cycle + np.random.normal(0, 1_500, N)) # noise # DFT via FFT: X[k] = sum_n x[n] * e^(-i*2π*kn/N)
- fft_raw = np.fft.rfft(sales) freqs = np.fft.rfftfreq(N, d=1)   # cycles per month # Each coefficient is: Re[X[k]] = cos component, Im[X[k]] = sin component
- amplitudes = np.abs(fft_raw) phases = np.angle(fft_raw) print("Fourier Decomposition via Euler's Formula (e^(ix) = cos(x) + i·sin(x))") print("=" * 70) print(f" {'k':>3} {'freq (cpm)':>12} {'period (mo)':>12} {'amplitude':>12} {'phase (deg)':>12}")   # Show components for meaningful frequencies
- for k in range(1, len(fft_raw)): f = freqs[k] if f == 0: continue period = 1 / f amp = amplitudes[k] phase = np.degrees(phases[k]) if amp > 2000:   # only significant components print(f"
-{k:>3} {f:>12.4f} {period:>12.1f} {amp:>12.1f} {phase:>12.1f}") print() print(" Euler's formula makes this explicit:") print(" X[k] = Σ x[n]·(cos(2πkn/N) - i·sin(2πkn/N))") print(" = Σ x[n]·cos(...) - i·Σ x[n]·sin(...)") print(" Re[X[k]] = cosine projection = how much 'cosine at freq k' is in signal") print(" Im[X[k]] = sine projection = how much 'sine at freq k' is in signal") print()   # Demonstrate: manual DFT for k=10
-(1/12 months = annual cycle) k_annual = round(N / 12) basis_cos = np.cos(2 * np.pi * k_annual * t_months / N) basis_sin = np.sin(2 * np.pi * k_annual * t_months / N) X_re_manual = np.sum(sales * basis_cos) X_im_manual = np.sum(sales * (-basis_sin)) X_fft = fft_raw[k_annual] print(f"Manual DFT at annual frequency (k={k_annual}):") print(f" Re[X[{k_annual}]] manual = {X_re_manual:.1f} | fft = {X_fft.real:.1f}") print(f" Im[X[{k_annual}]] manual = {X_im_manual:.1f} | fft = {X_fft.imag:.1f}") print(f" Amplitude = |X[{k_annual}]| = {abs(X_fft):.1f}")
+sales = (
+    50_000 + 500 * t_months                          # linear trend
+    + 10_000 * np.cos(2 * np.pi * t_months / 12)     # annual cycle
+    + 3_000 * np.cos(2 * np.pi * t_months / 3)       # quarterly cycle
+    + np.random.normal(0, 1_500, N)                  # noise
+)
+
+# DFT via FFT: X[k] = sum_n x[n] * e^(-i*2π*kn/N)
+fft_raw = np.fft.rfft(sales)
+freqs = np.fft.rfftfreq(N, d=1)  # cycles per month
+
+# Each coefficient is: Re[X[k]] = cos component, Im[X[k]] = sin component
+amplitudes = np.abs(fft_raw)
+phases = np.angle(fft_raw)
+print("Fourier Decomposition via Euler's Formula (e^(ix) = cos(x) + i·sin(x))")
+print("=" * 70)
+print(f" {'k':>3} {'freq (cpm)':>12} {'period (mo)':>12} {'amplitude':>12} {'phase (deg)':>12}")
+
+# Show components for meaningful frequencies
+for k in range(1, len(fft_raw)):
+    f = freqs[k]
+    if f == 0:
+        continue
+    period = 1 / f
+    amp = amplitudes[k]
+    phase = np.degrees(phases[k])
+    if amp > 2000:  # only significant components
+        print(f" {k:>3} {f:>12.4f} {period:>12.1f} {amp:>12.1f} {phase:>12.1f}")
+
+print()
+print(" Euler's formula makes this explicit:")
+print(" X[k] = Σ x[n]·(cos(2πkn/N) - i·sin(2πkn/N))")
+print(" = Σ x[n]·cos(...) - i·Σ x[n]·sin(...)")
+print(" Re[X[k]] = cosine projection = how much 'cosine at freq k' is in signal")
+print(" Im[X[k]] = sine projection = how much 'sine at freq k' is in signal")
+print()
+
+# Demonstrate: manual DFT for k=10 (1/12 months = annual cycle)
+k_annual = round(N / 12)
+basis_cos = np.cos(2 * np.pi * k_annual * t_months / N)
+basis_sin = np.sin(2 * np.pi * k_annual * t_months / N)
+X_re_manual = np.sum(sales * basis_cos)
+X_im_manual = np.sum(sales * (-basis_sin))
+X_fft = fft_raw[k_annual]
+print(f"Manual DFT at annual frequency (k={k_annual}):")
+print(f" Re[X[{k_annual}]] manual = {X_re_manual:.1f} | fft = {X_fft.real:.1f}")
+print(f" Im[X[{k_annual}]] manual = {X_im_manual:.1f} | fft = {X_fft.imag:.1f}")
+print(f" Amplitude = |X[{k_annual}]| = {abs(X_fft):.1f}")
 ```
 
 ### Professional example (R)
 
 ```r
-# Manual DFT via Euler's formula:
-Re = sum(x*cos), Im = -sum(x*sin)
+# Manual DFT via Euler's formula: Re = sum(x*cos), Im = -sum(x*sin)
 set.seed(42)
 N <- 60
 t_months <- 0:(N - 1)

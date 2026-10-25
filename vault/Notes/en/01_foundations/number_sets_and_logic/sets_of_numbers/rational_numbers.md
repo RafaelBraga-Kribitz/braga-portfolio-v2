@@ -104,19 +104,37 @@ If total is $\$1$, count is $3$: $\frac{1}{3} = 0.\overline{3} \in \mathbb{Q}$ (
 # Rational numbers ℚ = {a/b | a ∈ ℤ, b ∈ ℤ, b ≠ 0}
 from fractions import Fraction
 import pandas as pd
-import numpy as np   # Exact rational arithmetic with Fraction
+import numpy as np
+
+# Exact rational arithmetic with Fraction
 f1 = Fraction(1, 3)
 f2 = Fraction(1, 6)
 print(f"1/3 + 1/6 = {f1 + f2} (exact: {float(f1 + f2)})")
-print(f"1/3 × 6/1 = {f1 * Fraction(6, 1)} (exact)")   # Floating-point approximation (NOT exact ℚ)
+print(f"1/3 × 6/1 = {f1 * Fraction(6, 1)} (exact)")
+
+# Floating-point approximation (NOT exact ℚ)
 print(f"\nFloat trap: 0.1 + 0.2 = {0.1 + 0.2} (expected 0.3)")
-print(f"Exact via Fraction: {Fraction('0.1') + Fraction('0.2')}")   # DA use: conversion rates and averages (rational results)
+print(f"Exact via Fraction: {Fraction('0.1') + Fraction('0.2')}")
+
+# DA use: conversion rates and averages (rational results)
 np.random.seed(42)
-df = pd.DataFrame({ "campaign": ["A", "B", "C", "D"], "visits": np.random.randint(100, 5000, 4), "conversions": np.random.randint(5, 200, 4), "revenue": np.random.randint(500, 20_000, 4),
-})   # Guard division: NULLIF equivalent in pandas
-df["conversion_rate"] = np.where( df["visits"] > 0, df["conversions"] / df["visits"],   # rational number np.nan,
+df = pd.DataFrame({
+    "campaign": ["A", "B", "C", "D"],
+    "visits": np.random.randint(100, 5000, 4),
+    "conversions": np.random.randint(5, 200, 4),
+    "revenue": np.random.randint(500, 20_000, 4),
+})
+
+# Guard division: NULLIF equivalent in pandas
+df["conversion_rate"] = np.where(
+    df["visits"] > 0,
+    df["conversions"] / df["visits"],  # rational number
+    np.nan,
 )
-df["avg_order_value"] = np.where( df["conversions"] > 0, df["revenue"] / df["conversions"],   # rational number np.nan,
+df["avg_order_value"] = np.where(
+    df["conversions"] > 0,
+    df["revenue"] / df["conversions"],  # rational number
+    np.nan,
 )
 print("\nCampaign Metrics (rational numbers):")
 print(df.to_string(index=False))
@@ -126,18 +144,33 @@ print(f"\nconversion_rate dtype: {df['conversion_rate'].dtype} ← float64 (appr
 ### Beginner example (R)
 
 ```r
-# Rational numbers in R # R stores rationals as double-precision float by default
+# Rational numbers in R
+# R stores rationals as double-precision float by default
 cat("1/3 =", 1/3, "\n")
 cat("1/4 =", 1/4, "\n")
 cat("Float trap: 0.1 + 0.2 =", 0.1 + 0.2, "\n")
 cat("Exact check: 0.1 + 0.2 == 0.3:", 0.1 + 0.2 == 0.3, "\n")
-cat("Safe check (all.equal):", isTRUE(all.equal(0.1 + 0.2, 0.3)), "\n")  # Conversion rates: guarded division (avoid /0)
+cat("Safe check (all.equal):", isTRUE(all.equal(0.1 + 0.2, 0.3)), "\n")
+
+# Conversion rates: guarded division (avoid /0)
 set.seed(42)
-df <- data.frame( campaign = c("A", "B", "C", "D"), visits = sample(100:5000, 4), conversions = sample(5:200, 4), revenue = sample(500:20000, 4)
-) df$conversion_rate <- ifelse( df$visits > 0, df$conversions / df$visits,  # ℚ result NA_real_
+df <- data.frame(
+  campaign = c("A", "B", "C", "D"),
+  visits = sample(100:5000, 4),
+  conversions = sample(5:200, 4),
+  revenue = sample(500:20000, 4)
 )
-df$avg_order_value <- ifelse( df$conversions > 0, df$revenue / df$conversions,  # ℚ result NA_real_
-) cat("\nCampaign metrics (rational numbers):\n")
+df$conversion_rate <- ifelse(
+  df$visits > 0,
+  df$conversions / df$visits,  # ℚ result
+  NA_real_
+)
+df$avg_order_value <- ifelse(
+  df$conversions > 0,
+  df$revenue / df$conversions,  # ℚ result
+  NA_real_
+)
+cat("\nCampaign metrics (rational numbers):\n")
 print(df)
 ```
 

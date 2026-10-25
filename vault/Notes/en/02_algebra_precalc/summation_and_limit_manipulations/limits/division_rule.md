@@ -91,18 +91,20 @@ $\lim_{x \to \infty} \dfrac{3x^2 + 2x}{x^2 - 5} = \dfrac{3}{1} = 3$.
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # Division rule:
-lim[f(x)/g(x)] = lim
-f(x) / lim
-g(x), provided lim
-g(x) != 0
+import numpy as np
+
+# Division rule: lim[f(x)/g(x)] = lim f(x) / lim g(x), provided lim g(x) != 0
 # Verify: lim(x->inf) (3x^2 + 2x) / (x^2 - 5) = 3/1 = 3
+
 
 def f(x: float) -> float:
     return 3 * x**2 + 2 * x
 
+
 def g(x: float) -> float:
     return x**2 - 5
+
+
 x_values = [10, 100, 1000, 10000, 100000]
 print("lim(x->inf) (3x^2 + 2x) / (x^2 - 5)")
 print("After dividing by x^2: lim (3 + 2/x) / (1 - 5/x^2) = 3/1 = 3")
@@ -111,7 +113,9 @@ print(f"{'x':>10} | {'f(x)':>15} | {'g(x)':>15} | {'ratio f/g':>12} | {'-> 3?':>
 print("-" * 65)
 for x in x_values:
     ratio = f(x) / g(x)
-print(f"{x:>10} | {f(x):>15,.0f} | {g(x):>15,.0f} | {ratio:>12.8f} | {abs(ratio - 3) < 0.01}")   # Demonstration: when denominator limit = 0, the rule fails
+    print(f"{x:>10} | {f(x):>15,.0f} | {g(x):>15,.0f} | {ratio:>12.8f} | {abs(ratio - 3) < 0.01}")
+
+# Demonstration: when denominator limit = 0, the rule fails
 print("\nFailed case: lim(x->0) x / sin(x)")
 print("Both numerator and denominator -> 0 (indeterminate 0/0)")
 print("Need L'Hopital: the limit is actually 1, not 0/0")
@@ -123,15 +127,15 @@ for x in x_small_values:
 ### Beginner example (R)
 
 ```r
-# Division rule:
-lim[f/g] = lim f / lim g, provided lim g != 0
+# Division rule: lim[f/g] = lim f / lim g, provided lim g != 0
 f <- function(x) 3 * x^2 + 2 * x
 g <- function(x) x^2 - 5
 x_values <- c(10, 100, 1000, 10000, 100000)
 cat("lim(x->inf) (3x^2 + 2x)/(x^2 - 5) -> 3\n\n")
 cat(sprintf("%10s | %12s\n", "x", "f(x)/g(x)"))
 cat(strrep("-", 25), "\n")
-for (x in x_values) { cat(sprintf("%10.0f | %12.8f\n", x, f(x) / g(x)))
+for (x in x_values) {
+  cat(sprintf("%10.0f | %12.8f\n", x, f(x) / g(x)))
 }
 ```
 

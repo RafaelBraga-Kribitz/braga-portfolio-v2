@@ -3,6 +3,7 @@ publish: true
 date: '2026-04-16'
 tags:
 - calculus
+slug: multiplication-limits-of-functions
 ---
 
 # Multiplication
@@ -96,9 +97,11 @@ $\lim_{x\to 0} \frac{\sin x}{x} \cdot e^x = 1 \cdot 1 = 1$. *Verify:* at $x = 0.
 ```python
 import numpy as np
 
+
 def numerical_limit(fn, a: float, h: float = 1e-7) -> float:
     """Approximate lim_{x->a} fn(x)."""
     return 0.5 * (fn(a + h) + fn(a - h))
+
 
 def verify_product_law(f, g, a: float) -> dict:
     """Verify lim[f*g] = lim[f] * lim[g]."""
@@ -106,40 +109,64 @@ def verify_product_law(f, g, a: float) -> dict:
     lim_g = numerical_limit(g, a)
     lim_product = numerical_limit(lambda x: f(x) * g(x), a)
     law_result = lim_f * lim_g
-    return { "lim_f": lim_f, "lim_g": lim_g, "lim(f*g)": lim_product, "lim_f * lim_g": law_result, "error": abs(lim_product - law_result), }
-examples = [ {"name": "sin(x)/x * exp(x), a=0", "f": lambda x: np.sin(x) / x, "g": np.exp, "a": 0.0}, {"name": "(x^2-4)/(x-2) * cos(x), a=2", "f": lambda x: (x**2 - 4) / (x - 2),   # -> 4 as x->2
-    "g": np.cos, "a": 2.0}, {"name": "x^3 * (1+x), a=1", "f": lambda x: x**3, "g": lambda x: 1 + x, "a": 1.0}, {"name": "exp(x) * ln(x), a=1", "f": np.exp, "g": np.log, "a": 1.0},
+    return {
+        "lim_f": lim_f,
+        "lim_g": lim_g,
+        "lim(f*g)": lim_product,
+        "lim_f * lim_g": law_result,
+        "error": abs(lim_product - law_result),
+    }
+
+
+examples = [
+    {"name": "sin(x)/x * exp(x), a=0", "f": lambda x: np.sin(x) / x, "g": np.exp, "a": 0.0},
+    {"name": "(x^2-4)/(x-2) * cos(x), a=2",
+     "f": lambda x: (x**2 - 4) / (x - 2),  # -> 4 as x->2
+     "g": np.cos, "a": 2.0},
+    {"name": "x^3 * (1+x), a=1", "f": lambda x: x**3, "g": lambda x: 1 + x, "a": 1.0},
+    {"name": "exp(x) * ln(x), a=1", "f": np.exp, "g": np.log, "a": 1.0},
 ]
 print("Limit Product Law: lim[f * g] = lim[f] * lim[g]")
 print(f"\n{'Example':>36} {'lim f':>8} {'lim g':>8} {'lim(fg)':>9} {'f*g law':>9} {'Error':>10}")
 for ex in examples:
     res = verify_product_law(ex["f"], ex["g"], ex["a"])
-print(f"{ex['name']:>36} {res['lim_f']:>8.4f} {res['lim_g']:>8.4f} " f"{res['lim(f*g)']:>9.4f} {res['lim_f * lim_g']:>9.4f} {res['error']:>10.2e}")   # Power law: lim[f(x)^n] = [lim f(x)]^n
+    print(f"{ex['name']:>36} {res['lim_f']:>8.4f} {res['lim_g']:>8.4f} "
+          f"{res['lim(f*g)']:>9.4f} {res['lim_f * lim_g']:>9.4f} {res['error']:>10.2e}")
+
+# Power law: lim[f(x)^n] = [lim f(x)]^n
 print("\n--- Power law: lim[f(x)^n] = [lim f(x)]^n ---")
 f_eg = lambda x: 1 + x
 a_eg = 2.0
-lim_f_eg = numerical_limit(f_eg, a_eg)   # -> 3
+lim_f_eg = numerical_limit(f_eg, a_eg)  # -> 3
 for n in [2, 3, 4]:
     lim_power = numerical_limit(lambda x: f_eg(x)**n, a_eg)
-law_power = lim_f_eg**n
-print(f" n={n}: lim[(1+x)^{n}] at x->2 = {lim_power:.5f}, [lim(1+x)]^{n} = {law_power:.5f}")
+    law_power = lim_f_eg**n
+    print(f" n={n}: lim[(1+x)^{n}] at x->2 = {lim_power:.5f}, [lim(1+x)]^{n} = {law_power:.5f}")
 ```
 
 ### Beginner example (R)
 
 ```r
-# Limit product law:
-lim[f(x) * g(x)] = lim[f(x)] * lim[g(x)]
-numerical_limit <- function(fn, a, h = 1e-7) { 0.5 * (fn(a + h) + fn(a - h))
+# Limit product law: lim[f(x) * g(x)] = lim[f(x)] * lim[g(x)]
+numerical_limit <- function(fn, a, h = 1e-7) {
+  0.5 * (fn(a + h) + fn(a - h))
 }
-verify_product_law <- function(f, g, a) { lim_f <- numerical_limit(f, a)
+verify_product_law <- function(f, g, a) {
+  lim_f <- numerical_limit(f, a)
   lim_g <- numerical_limit(g, a)
   lim_prod <- numerical_limit(function(x) f(x) * g(x), a)
-  law_val <- lim_f * lim_g list(lim_f = lim_f, lim_g = lim_g, lim_prod = lim_prod, law_val = law_val, error = abs(lim_prod - law_val))
+  law_val <- lim_f * lim_g
+  list(lim_f = lim_f, lim_g = lim_g, lim_prod = lim_prod, law_val = law_val,
+       error = abs(lim_prod - law_val))
 }
-examples <- list( list(name = "sin(x)/x * exp(x), a=0", f = function(x) sin(x) / x, g = exp, a = 0), list(name = "x^3 * (1+x), a=1", f = function(x) x^3, g = function(x) 1 + x, a = 1), list(name = "exp(x)*log(x), a=1", f = exp, g = log, a = 1)
-) cat(sprintf("%-36s %-8s %-8s %-10s %-10s\n", "Example", "lim f", "lim g", "lim(fg)", "f*g law"))
-for (ex in examples) { r <- verify_product_law(ex$f, ex$g, ex$a)
+examples <- list(
+  list(name = "sin(x)/x * exp(x), a=0", f = function(x) sin(x) / x, g = exp, a = 0),
+  list(name = "x^3 * (1+x), a=1", f = function(x) x^3, g = function(x) 1 + x, a = 1),
+  list(name = "exp(x)*log(x), a=1", f = exp, g = log, a = 1)
+)
+cat(sprintf("%-36s %-8s %-8s %-10s %-10s\n", "Example", "lim f", "lim g", "lim(fg)", "f*g law"))
+for (ex in examples) {
+  r <- verify_product_law(ex$f, ex$g, ex$a)
   cat(sprintf("%-36s %-8.4f %-8.4f %-10.4f %-10.4f\n", ex$name, r$lim_f, r$lim_g, r$lim_prod, r$law_val))
 }
 ```
@@ -150,7 +177,9 @@ for (ex in examples) { r <- verify_product_law(ex$f, ex$g, ex$a)
 import numpy as np
 from sklearn.datasets import make_regression
 from sklearn.preprocessing import StandardScaler
-np.random.seed(42)   # -- Limit product law: momentum term decay in Adam optimizer --
+np.random.seed(42)
+
+# -- Limit product law: momentum term decay in Adam optimizer --
 # Use case: a DS analyzes how the momentum term beta^t * m_0 in Adam
 # decays to 0 as t -> infinity. Each step is a product: beta * previous moment.
 # lim_{t->inf} beta^t = 0 for |beta| < 1. By repeated product law:
@@ -159,40 +188,48 @@ np.random.seed(42)   # -- Limit product law: momentum term decay in Adam optimiz
 #
 # This confirms that the bias correction in Adam (1 - beta^t) -> 1 as t grows,
 # meaning Adam's moment estimates become unbiased at large t.
-BETA1 = 0.9   # Adam momentum parameter
-BETA2 = 0.999   # Adam second moment parameter
+BETA1 = 0.9    # Adam momentum parameter
+BETA2 = 0.999  # Adam second moment parameter
 EPS = 1e-8
 LR = 0.01
-N_STEPS = 200   # Synthetic regression task
+N_STEPS = 200
+
+# Synthetic regression task
 X_raw, y = make_regression(n_samples=100, n_features=4, noise=0.5, random_state=42)
 scaler = StandardScaler()
 X = scaler.fit_transform(X_raw)
 y = y / y.std()
 w = np.zeros(X.shape[1])
 
+
 def mse_and_gradient(w_vec: np.ndarray) -> tuple:
     """MSE loss and gradient."""
     residuals = y - X @ w_vec
     loss = float(np.mean(residuals**2))
     grad = -2.0 / len(y) * X.T @ residuals
-    return loss, grad   # Adam optimizer tracking
-m = np.zeros_like(w)   # first moment
-v = np.zeros_like(w)   # second moment
+    return loss, grad
+
+
+# Adam optimizer tracking
+m = np.zeros_like(w)  # first moment
+v = np.zeros_like(w)  # second moment
 losses = []
-beta1_powers = []   # beta1^t -- track product law decay
-beta2_powers = []   # beta2^t
+beta1_powers = []  # beta1^t -- track product law decay
+beta2_powers = []  # beta2^t
 for t in range(1, N_STEPS + 1):
     loss, grad = mse_and_gradient(w)
-losses.append(loss)
-m = BETA1 * m + (1 - BETA1) * grad
-v = BETA2 * v + (1 - BETA2) * grad**2   # Bias correction: uses (1 - beta^t) -- dependent on product law decay
-beta1_t = BETA1**t
-beta2_t = BETA2**t
-beta1_powers.append(beta1_t)
-beta2_powers.append(beta2_t)
-m_hat = m / (1 - beta1_t)   # corrected: as t->inf, denominator -> 1
-v_hat = v / (1 - beta2_t)
-w = w - LR * m_hat / (np.sqrt(v_hat) + EPS)
+    losses.append(loss)
+    m = BETA1 * m + (1 - BETA1) * grad
+    v = BETA2 * v + (1 - BETA2) * grad**2
+
+    # Bias correction: uses (1 - beta^t) -- dependent on product law decay
+    beta1_t = BETA1**t
+    beta2_t = BETA2**t
+    beta1_powers.append(beta1_t)
+    beta2_powers.append(beta2_t)
+    m_hat = m / (1 - beta1_t)  # corrected: as t->inf, denominator -> 1
+    v_hat = v / (1 - beta2_t)
+    w = w - LR * m_hat / (np.sqrt(v_hat) + EPS)
 print("Limit Product Law: Adam Optimizer Momentum Decay")
 print(f"\nbeta1 = {BETA1}, beta2 = {BETA2}")
 print(f"\nProduct law: lim_{{t->inf}} beta^t = 0 for |beta| < 1")
@@ -200,8 +237,9 @@ print(f" This makes the bias correction (1 - beta^t) -> 1 at large t")
 print(f"\nStep beta1^t (product decay) beta2^t Bias-corr1 Bias-corr2 Loss")
 for t in [1, 2, 5, 10, 20, 50, 100, 200]:
     b1t = BETA1**t
-b2t = BETA2**t
-print(f"{t:>5} {b1t:>22.6f} {b2t:>8.6f} " f"{1-b1t:>10.6f} {1-b2t:>10.6f} {losses[t-1]:>8.5f}")
+    b2t = BETA2**t
+    print(f"{t:>5} {b1t:>22.6f} {b2t:>8.6f} "
+          f"{1-b1t:>10.6f} {1-b2t:>10.6f} {losses[t-1]:>8.5f}")
 print(f"\nlim_{{t->200}} beta1^t = {beta1_powers[-1]:.2e} (product law -> 0 confirmed)")
 print(f"Final loss: {losses[-1]:.5f}")
 ```

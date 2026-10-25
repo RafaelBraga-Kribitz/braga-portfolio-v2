@@ -15,16 +15,16 @@ $$
 
 What it tells me *(Situation Awareness)*:
 The Brahmagupta-Fibonacci identity states that the product of two sums of squares is itself expressible as a sum of two squares in two distinct ways. The formula arises naturally from complex number multiplication:
-# $(a + bi)(c + di) = (ac - bd) + (ad + bc)i$
+$(a + bi)(c + di) = (ac - bd) + (ad + bc)i$
 and since
-# $|z_1|^2 |z_2|^2 = |z_1 z_2|^2$
+$|z_1|^2 |z_2|^2 = |z_1 z_2|^2$
 we get
-# $(a^2+b^2)(c^2+d^2) = (ac-bd)^2 + (ad+bc)^2$ The second form with
-# $(ac+bd)$
+$(a^2+b^2)(c^2+d^2) = (ac-bd)^2 + (ad+bc)^2$ The second form with
+$(ac+bd)$
 and
-# $(ad-bc)$
+$(ad-bc)$
 comes from the conjugate product. In DA/DS, this identity appears in: understanding why the L2 norm of the product of two complex-valued signals equals the product of their individual L2 norms, Fourier transform magnitude properties
-# ($|X \cdot Y|^2 = |X|^2 |Y|^2$),
+($|X \cdot Y|^2 = |X|^2 |Y|^2$),
 pairwise distance computations, the structure of correlation coefficients, and the Cauchy-Schwarz inequality derivation. It also explains why multiplying two "sum of squares" quantities (like the total sum of squares in ANOVA, or norms in vector spaces) stays as a sum of squares.
 
 ## Flowchart
@@ -48,22 +48,22 @@ flowchart TD
 ### Where it is used
 
 Fourier/signal processing: if signal $X$ has L2 norm
-# $\|X\|_2^2 = a^2 + b^2$
+$\|X\|_2^2 = a^2 + b^2$
 (sum of squared real and imaginary parts), the product of two spectra satisfies the identity.
 
 Cauchy-Schwarz inequality:
-# $(a_1 b_1 + a_2 b_2)^2 \le (a_1^2 + a_2^2)(b_1^2 + b_2^2)$
+$(a_1 b_1 + a_2 b_2)^2 \le (a_1^2 + a_2^2)(b_1^2 + b_2^2)$
 — the right-hand side is
-# $(a^2+b^2)(c^2+d^2)$
+$(a^2+b^2)(c^2+d^2)$
 and the left is
-# $(ac+bd)^2$
+$(ac+bd)^2$
 (one of the terms).
 Correlation coefficient derivation: Pearson's
-# $r^2 \le 1$
+$r^2 \le 1$
 is a consequence.
 
 Complex modulus:
-# $|z_1 \cdot z_2| = |z_1| \cdot |z_2|$.
+$|z_1 \cdot z_2| = |z_1| \cdot |z_2|$.
 
 ### Problem it solves
 
@@ -72,11 +72,11 @@ Given two quantities that are each expressed as sums of squares (norms, energies
 ### How it solves the problem
 
 Direct proof by expansion:
-# $(ac-bd)^2 + (ad+bc)^2 = a^2c^2 - 2abcd + b^2d^2 + a^2d^2 + 2abcd + b^2c^2 = a^2c^2 + a^2d^2 + b^2c^2 + b^2d^2 = a^2(c^2+d^2) + b^2(c^2+d^2) = (a^2+b^2)(c^2+d^2)$
+$(ac-bd)^2 + (ad+bc)^2 = a^2c^2 - 2abcd + b^2d^2 + a^2d^2 + 2abcd + b^2c^2 = a^2c^2 + a^2d^2 + b^2c^2 + b^2d^2 = a^2(c^2+d^2) + b^2(c^2+d^2) = (a^2+b^2)(c^2+d^2)$
 The cross terms $\pm 2abcd$ cancel. The elegant motivation: complex multiplication
-# $(a+bi)(c+di) = (ac-bd) + (ad+bc)i$,
+$(a+bi)(c+di) = (ac-bd) + (ad+bc)i$,
 and
-# $|z|^2 = \text{Re}(z)^2 + \text{Im}(z)^2$, so $|z_1|^2 |z_2|^2 = |z_1 z_2|^2$
+$|z|^2 = \text{Re}(z)^2 + \text{Im}(z)^2$, so $|z_1|^2 |z_2|^2 = |z_1 z_2|^2$
 
 ### Example in a business
 
@@ -111,7 +111,7 @@ This is exactly $\|\mathbf{u}\|^2 \|\mathbf{v}\|^2 \ge (\mathbf{u} \cdot \mathbf
 4. **Generalization to Gaussian integers**: the identity underlies the ring of Gaussian integers $\mathbb{Z}[i]$ — the "sums of squares" form a multiplicatively closed set.
 5. **Correlation coefficient bound**:
 Pearson's
-# $r = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum(x_i-\bar{x})^2 \cdot \sum(y_i-\bar{y})^2}}$
+$r = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum(x_i-\bar{x})^2 \cdot \sum(y_i-\bar{y})^2}}$
 The denominator is a product of L2 norms; $r^2 \le 1$ follows from Cauchy-Schwarz, which is a consequence of this identity.
 
 ## Step-by-step calculation (tiny example)

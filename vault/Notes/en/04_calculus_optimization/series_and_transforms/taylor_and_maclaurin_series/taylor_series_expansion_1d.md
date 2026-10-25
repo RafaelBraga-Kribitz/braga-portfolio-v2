@@ -103,61 +103,91 @@ True: ln(1.5) ≈ 0.4055. Error ≈ 0.011. Good for 3 terms.
 
 ```python
 """
-Taylor Series Expansion: f(x) = sum f^(k)(x_0)/k! * (x-x_0)^k Applied to approximating
-ln(x) around
-x_0=1 and analyzing
+Taylor Series Expansion: f(x) = sum f^(k)(x_0)/k! * (x-x_0)^k
+
+Applied to approximating ln(x) around x_0=1 and analyzing
 how truncation error grows with distance from x_0.
-""" import numpy as np
+"""
+import numpy as np
 import math
 from typing import Callable
 
-def taylor_approximation( deriv_values_at_x0: list[float], x_val: float, x_0: float,
-) -> float:
-    """Compute Taylor approximation given precomputed derivatives at x_0. Parameters ---------- deriv_values_at_x0 : list of f(x_0), f'(x_0), f''(x_0), ... x_val : evaluation point x x_0 : expansion point Returns ------- float: sum_{k=0}^{N} f^(k)(x_0)/k! * (x-x_0)^k """
-    displacement = x_val - x_0
-    return sum( deriv / math.factorial(k) * displacement**k for k, deriv in enumerate(deriv_values_at_x0) )   # Derivatives of ln(x) at x_0 = 1: d^k/dx^k ln(x) = (-1)^(k+1) * (k-1)! / x^k for k>=1
-# At x_0=1: derivative of order k = (-1)^(k+1) * (k-1)!
 
+def taylor_approximation(
+    deriv_values_at_x0: list[float],
+    x_val: float,
+    x_0: float,
+) -> float:
+    """
+    Compute Taylor approximation given precomputed derivatives at x_0.
+
+    Parameters
+    ----------
+    deriv_values_at_x0 : list of f(x_0), f'(x_0), f''(x_0), ...
+    x_val : evaluation point x
+    x_0 : expansion point
+
+    Returns
+    -------
+    float: sum_{k=0}^{N} f^(k)(x_0)/k! * (x-x_0)^k
+    """
+    displacement = x_val - x_0
+    return sum(
+        deriv / math.factorial(k) * displacement**k
+        for k, deriv in enumerate(deriv_values_at_x0)
+    )
+
+
+# Derivatives of ln(x) at x_0 = 1: d^k/dx^k ln(x) = (-1)^(k+1) * (k-1)! / x^k for k>=1
+# At x_0=1: derivative of order k = (-1)^(k+1) * (k-1)!
 def ln_derivatives_at_1(num_derivs: int) -> list[float]:
     """Return f(1), f'(1), f''(1), ..., f^(n)(1) for f(x) = ln(x)."""
     derivs = [0.0]   # f(1) = ln(1) = 0
     for k in range(1, num_derivs + 1):
         deriv = (-1)**(k + 1) * math.factorial(k - 1)
-    derivs.append(float(deriv))
+        derivs.append(float(deriv))
     return derivs
+
+
 x0 = 1.0
 derivs = ln_derivatives_at_1(num_derivs=5)
 print("Taylor expansion of ln(x) around x_0=1:")
 print(f"{'x':>6} | {'true ln(x)':>12} | {'N=2 approx':>12} | {'N=5 approx':>12}")
 for x_test in [1.1, 1.25, 1.5, 1.75, 2.0]:
     true_val = math.log(x_test)
-approx_2 = taylor_approximation(derivs[:3], x_test, x0)
-approx_5 = taylor_approximation(derivs[:6], x_test, x0)
-print(f"{x_test:>6.2f} | {true_val:>12.8f} | {approx_2:>12.8f} | {approx_5:>12.8f}")
+    approx_2 = taylor_approximation(derivs[:3], x_test, x0)
+    approx_5 = taylor_approximation(derivs[:6], x_test, x0)
+    print(f"{x_test:>6.2f} | {true_val:>12.8f} | {approx_2:>12.8f} | {approx_5:>12.8f}")
 ```
 
 ### Beginner example (R)
 
 ```r
 # Taylor Series for linearization of a nonlinear cost function
-# Used in sensitivity analysis: how much does cost change per unit parameter change? # Quadratic cost function: C(q) = a*q^2 + b*q + c
+# Used in sensitivity analysis: how much does cost change per unit parameter change?
+
+# Quadratic cost function: C(q) = a*q^2 + b*q + c
 PARAM_A <- 0.5
 PARAM_B <- 10.0
 PARAM_C <- 100.0
 cost_func <- function(q) PARAM_A * q^2 + PARAM_B * q + PARAM_C
 cost_deriv <- function(q) 2 * PARAM_A * q + PARAM_B  # C'(q)
-cost_second <- function(q) 2 * PARAM_A  # C''(q) = constant # Taylor expansion around
-q_0 = 20
+cost_second <- function(q) 2 * PARAM_A  # C''(q) = constant
+
+# Taylor expansion around q_0 = 20
 q_0 <- 20
 C_0 <- cost_func(q_0)
 C_prime_0 <- cost_deriv(q_0)
 C_double_prime_0 <- cost_second(q_0)
-taylor_approx <- function(q) { delta <- q - q_0 C_0 + C_prime_0 * delta + (C_double_prime_0 / 2) * delta^2
+taylor_approx <- function(q) {
+  delta <- q - q_0
+  C_0 + C_prime_0 * delta + (C_double_prime_0 / 2) * delta^2
 }
 q_test <- c(18, 19, 20, 21, 22, 25)
 cat("q | True C(q) | Taylor (order 2) | Error\n")
 cat(paste(rep("-", 55), collapse=""), "\n")
-for (q in q_test) { true_c <- cost_func(q)
+for (q in q_test) {
+  true_c <- cost_func(q)
   approx_c <- taylor_approx(q)
   cat(sprintf("%4.0f | %10.4f | %16.4f | %.6f\n", q, true_c, approx_c, abs(true_c - approx_c)))
 }
@@ -167,8 +197,16 @@ for (q in q_test) { true_c <- cost_func(q)
 
 ```python
 """
-Taylor Series for Newton's Method optimization. Business context: A pricing team minimizes total revenue loss function L(p) — a nonlinear function of price p. Newton's method uses the second-order Taylor expansion around the current price estimate to find the optimal price analytically at each step, converging much faster than gradient descent.
-""" import numpy as np # Revenue loss as function of price: L(p) = (p - p_opt)^4 + (p - p_opt)^2
+Taylor Series for Newton's Method optimization.
+
+Business context: A pricing team minimizes total revenue loss function L(p) —
+a nonlinear function of price p. Newton's method uses the second-order Taylor
+expansion around the current price estimate to find the optimal price
+analytically at each step, converging much faster than gradient descent.
+"""
+import numpy as np
+
+# Revenue loss as function of price: L(p) = (p - p_opt)^4 + (p - p_opt)^2
 # Optimal price = p_opt, but assume we don't know it
 P_OPT: float = 25.0   # true optimal price (€)
 P_INIT: float = 15.0   # initial guess
@@ -195,17 +233,21 @@ def newton_step(price: float) -> float:
     grad = loss_gradient(price)
     hess = loss_hessian(price)
     if abs(hess) < 1e-12:
-        return price   # avoid division by near-zero Hessian return price - grad / hess print(f"Newton's Method for optimal pricing (true p_opt = €{P_OPT:.2f}):")
+        return price   # avoid division by near-zero Hessian
+    return price - grad / hess
+
+
+print(f"Newton's Method for optimal pricing (true p_opt = €{P_OPT:.2f}):")
 print(f"{'Iter':>5} | {'Price':>10} | {'Loss':>12} | {'|Gradient|':>12}")
 current_price = P_INIT
 for iteration in range(MAX_ITERATIONS):
     current_loss = loss_function(current_price)
-current_grad = abs(loss_gradient(current_price))
-print(f"{iteration:>5} | €{current_price:>9.6f} | {current_loss:>12.8f} | {current_grad:>12.2e}")
-if current_grad < CONVERGENCE_TOL:
-    print(f"\nConverged at iteration {iteration}!")
-break
-current_price = newton_step(current_price)
+    current_grad = abs(loss_gradient(current_price))
+    print(f"{iteration:>5} | €{current_price:>9.6f} | {current_loss:>12.8f} | {current_grad:>12.2e}")
+    if current_grad < CONVERGENCE_TOL:
+        print(f"\nConverged at iteration {iteration}!")
+        break
+    current_price = newton_step(current_price)
 print(f"\nFound optimal price: €{current_price:.6f} (true: €{P_OPT:.6f})")
 ```
 

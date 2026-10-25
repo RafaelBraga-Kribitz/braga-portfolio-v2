@@ -102,16 +102,21 @@ MAE $= 2.2 \ge 0$. ✓ If all residuals were zero: MAE $= 0$.
 
 ```python
 # Non-negativity property of absolute value: |a| >= 0
-import math   # Basic verification
+import math
+
+# Basic verification
 test_values = [-100.0, -1.5, -0.001, 0.0, 0.001, 1.5, 100.0]
 print("Verifying |a| >= 0:")
 print(f"{'a':>10} {'|a|':>10} {'|a|>=0':>8}")
 for a in test_values:
-    print(f"{a:>10.4f} {abs(a):>10.4f} {str(abs(a) >= 0):>8}")   # |a| = 0 iff
-a = 0
+    print(f"{a:>10.4f} {abs(a):>10.4f} {str(abs(a) >= 0):>8}")
+
+# |a| = 0 iff a = 0
 print("\n|a| = 0 iff a = 0:")
 for a in [-3.0, 0.0, 1.5]:
-    print(f" |{a}| = {abs(a)} → a is zero: {a == 0}")   # MAE demonstration: absolute value prevents error cancellation
+    print(f" |{a}| = {abs(a)} → a is zero: {a == 0}")
+
+# MAE demonstration: absolute value prevents error cancellation
 predictions = [10.0, 22.0, 15.0, 8.0, 30.0]
 actuals = [7.0, 27.0, 13.0, 8.0, 29.0]
 residuals = [a - p for p, a in zip(predictions, actuals)]
@@ -129,15 +134,21 @@ print(f"All |e_i| >= 0: {all(e >= 0 for e in abs_errors)}")
 ### Beginner example (R)
 
 ```r
-# Non-negativity of absolute value: |a| >= 0 # Basic verification
+# Non-negativity of absolute value: |a| >= 0
+# Basic verification
 test_values <- c(-100, -1.5, -0.001, 0, 0.001, 1.5, 100)
 cat("Verifying |a| >= 0:\n")
-for (a in test_values) { cat(sprintf(" a=%8.4f |a|=%8.4f |a|>=0: %s\n", a, abs(a), abs(a) >= 0))
-}  # |a| = 0 iff
-a = 0
+for (a in test_values) {
+  cat(sprintf(" a=%8.4f |a|=%8.4f |a|>=0: %s\n", a, abs(a), abs(a) >= 0))
+}
+
+# |a| = 0 iff a = 0
 cat("\n|a| = 0 iff a = 0:\n")
-for (a in c(-3, 0, 1.5)) { cat(sprintf(" |%.1f| = %.1f → a is zero: %s\n", a, abs(a), a == 0))
-}  # MAE: absolute value prevents cancellation
+for (a in c(-3, 0, 1.5)) {
+  cat(sprintf(" |%.1f| = %.1f → a is zero: %s\n", a, abs(a), a == 0))
+}
+
+# MAE: absolute value prevents cancellation
 predictions <- c(10, 22, 15, 8, 30)
 actuals <- c(7, 27, 13, 8, 29)
 residuals <- actuals - predictions
@@ -154,24 +165,54 @@ cat(sprintf("All |e_i| >= 0: %s\n", all(abs_errors >= 0)))
 
 ```python
 import pandas as pd
-import numpy as np   # Scenario: forecast evaluation comparing mean error vs. MAE
+import numpy as np
+
+# Scenario: forecast evaluation comparing mean error vs. MAE
 # Demonstrates why |e_i| >= 0 matters: mean error (signed) can mask a biased model
 # MAE (non-negative by construction) always reflects true error magnitude
 np.random.seed(42)
-N_PERIODS = 60   # Simulate actuals and a biased but partially-canceling forecast
-actuals = np.random.normal(1000, 80, N_PERIODS)
-predictions = actuals + np.random.normal(5, 50, N_PERIODS)   # slight positive bias
+N_PERIODS = 60
 
-def compute_error_metrics( actuals: np.ndarray, predictions: np.ndarray ) -> dict:
-    """ Compute signed and absolute forecast error metrics. Args: actuals: Array of actual observed values. predictions: Array of forecasted values. Returns: Dictionary with ME, MAE, RMSE, and non-negativity assertions. """
+# Simulate actuals and a biased but partially-canceling forecast
+actuals = np.random.normal(1000, 80, N_PERIODS)
+predictions = actuals + np.random.normal(5, 50, N_PERIODS)  # slight positive bias
+
+
+def compute_error_metrics(actuals: np.ndarray, predictions: np.ndarray) -> dict:
+    """Compute signed and absolute forecast error metrics.
+
+    Args:
+        actuals: Array of actual observed values.
+        predictions: Array of forecasted values.
+
+    Returns:
+        Dictionary with ME, MAE, RMSE, and non-negativity assertions.
+    """
     residuals = actuals - predictions
-    abs_errors = np.abs(residuals)   # |e_i| >= 0 for all i assert (abs_errors >= 0).all(), "Absolute errors must be non-negative — computation error." return { "n": len(residuals), "mean_error": float(residuals.mean()), # can cancel — misleading "mae": float(abs_errors.mean()), # cannot cancel — always >= 0 "rmse": float(np.sqrt((residuals**2).mean())), "max_abs_error": float(abs_errors.max()), "min_abs_error": float(abs_errors.min()), # always >= 0 "mae_is_nonneg": float(abs_errors.mean()) >= 0, "all_nonneg": bool((abs_errors >= 0).all()), }
-    metrics = compute_error_metrics(actuals, predictions)
-    print("Forecast Error Report: Non-Negativity of |e_i|")
+    abs_errors = np.abs(residuals)
+    # |e_i| >= 0 for all i
+    assert (abs_errors >= 0).all(), "Absolute errors must be non-negative — computation error."
+    return {
+        "n": len(residuals),
+        "mean_error": float(residuals.mean()),         # can cancel — misleading
+        "mae": float(abs_errors.mean()),               # cannot cancel — always >= 0
+        "rmse": float(np.sqrt((residuals**2).mean())),
+        "max_abs_error": float(abs_errors.max()),
+        "min_abs_error": float(abs_errors.min()),      # always >= 0
+        "mae_is_nonneg": float(abs_errors.mean()) >= 0,
+        "all_nonneg": bool((abs_errors >= 0).all()),
+    }
+
+
+metrics = compute_error_metrics(actuals, predictions)
+print("Forecast Error Report: Non-Negativity of |e_i|")
 print("=" * 72)
 for key, value in metrics.items():
     print(f" {key:<20}: {value}")
-print( f"\nNote: ME = {metrics['mean_error']:.2f} (close to zero, suggests unbiased)," f" but MAE = {metrics['mae']:.2f} (actual average error magnitude)." )
+print(
+    f"\nNote: ME = {metrics['mean_error']:.2f} (close to zero, suggests unbiased),"
+    f" but MAE = {metrics['mae']:.2f} (actual average error magnitude)."
+)
 ```
 
 ### Professional example (R)
@@ -184,11 +225,18 @@ actuals <- rnorm(N_PERIODS, 1000, 80)
 predictions <- actuals + rnorm(N_PERIODS, 5, 50)
 residuals <- actuals - predictions
 abs_errors <- abs(residuals)
-metrics <- list( n = length(residuals), mean_error = mean(residuals), mae = mean(abs_errors), rmse = sqrt(mean(residuals^2)), max_abs_error = max(abs_errors), min_abs_error = min(abs_errors), all_nonneg = all(abs_errors >= 0)
+metrics <- list(
+  n = length(residuals),
+  mean_error = mean(residuals),
+  mae = mean(abs_errors),
+  rmse = sqrt(mean(residuals^2)),
+  max_abs_error = max(abs_errors),
+  min_abs_error = min(abs_errors),
+  all_nonneg = all(abs_errors >= 0)
 )
 cat("Forecast Error Report: Non-Negativity of |e_i|\n")
 for (nm in names(metrics))
-cat(sprintf(" %-20s: %s\n", nm, metricsnm))
+  cat(sprintf(" %-20s: %s\n", nm, metrics[[nm]]))
 cat(sprintf("\nNote: ME = %.2f; MAE = %.2f (average error magnitude).\n", metrics$mean_error, metrics$mae))
 ```
 

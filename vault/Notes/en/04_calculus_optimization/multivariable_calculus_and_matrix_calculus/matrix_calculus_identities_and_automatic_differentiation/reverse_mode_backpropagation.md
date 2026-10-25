@@ -121,8 +121,11 @@ $\bar{x}_2 = \bar{v}_1 \cdot x_1 = 14 \cdot 2 = 28$ Verify: $f = (x_1 x_2 + x_3)
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # Manual reverse-mode backprop on a tiny 2-node computation graph
+import numpy as np
+
+# Manual reverse-mode backprop on a tiny 2-node computation graph
 # f(x1, x2, x3) = (x1 * x2 + x3)^2
+
 
 def forward(x1: float, x2: float, x3: float) -> dict:
     """Forward pass: store intermediate values."""
@@ -131,29 +134,46 @@ def forward(x1: float, x2: float, x3: float) -> dict:
     f = v2 ** 2   # squaring node
     return {"v1": v1, "v2": v2, "f": f, "x1": x1, "x2": x2, "x3": x3}
 
+
 def backward(cache: dict) -> dict:
-    """Backward pass: reverse-mode backprop. Returns gradients df/dx1, df/dx2, df/dx3. """
+    """Backward pass: reverse-mode backprop.
+
+    Returns gradients df/dx1, df/dx2, df/dx3.
+    """
     v2 = cache["v2"]
     x1 = cache["x1"]
-    x2 = cache["x2"]   # Initialize: df/df = 1
-    grad_f = 1.0   # df/dv2 = 2 * v2 (chain rule through squaring)
-    grad_v2 = grad_f * 2.0 * v2   # df/dv1 = df/dv2 * dv2/dv1 = df/dv2 * 1 (sum node)
-    grad_v1 = grad_v2 * 1.0   # df/dx3 = df/dv2 * dv2/dx3 = df/dv2 * 1 (sum node)
-    grad_x3 = grad_v2 * 1.0   # df/dx1 = df/dv1 * dv1/dx1 = df/dv1 * x2 (multiply node)
-    grad_x1 = grad_v1 * x2   # df/dx2 = df/dv1 * dv1/dx2 = df/dv1 * x1 (multiply node)
+    x2 = cache["x2"]
+    # Initialize: df/df = 1
+    grad_f = 1.0
+    # df/dv2 = 2 * v2 (chain rule through squaring)
+    grad_v2 = grad_f * 2.0 * v2
+    # df/dv1 = df/dv2 * dv2/dv1 = df/dv2 * 1 (sum node)
+    grad_v1 = grad_v2 * 1.0
+    # df/dx3 = df/dv2 * dv2/dx3 = df/dv2 * 1 (sum node)
+    grad_x3 = grad_v2 * 1.0
+    # df/dx1 = df/dv1 * dv1/dx1 = df/dv1 * x2 (multiply node)
+    grad_x1 = grad_v1 * x2
+    # df/dx2 = df/dv1 * dv1/dx2 = df/dv1 * x1 (multiply node)
     grad_x2 = grad_v1 * x1
-    return {"grad_x1": grad_x1, "grad_x2": grad_x2, "grad_x3": grad_x3}   # Evaluate at x1=2, x2=3,
-x3=1
+    return {"grad_x1": grad_x1, "grad_x2": grad_x2, "grad_x3": grad_x3}
+
+
+# Evaluate at x1=2, x2=3, x3=1
 cache = forward(2.0, 3.0, 1.0)
 grads = backward(cache)
 print(f"f(2, 3, 1) = {cache['f']}")
 print(f"df/dx1 = {grads['grad_x1']} (expected: 42)")
 print(f"df/dx2 = {grads['grad_x2']} (expected: 28)")
-print(f"df/dx3 = {grads['grad_x3']} (expected: 14)")   # Numerical verification
+print(f"df/dx3 = {grads['grad_x3']} (expected: 14)")
+
+# Numerical verification
 h = 1e-5
+
 
 def f_fn(x1, x2, x3):
     return (x1 * x2 + x3)**2
+
+
 num_dx1 = (f_fn(2+h, 3, 1) - f_fn(2-h, 3, 1)) / (2*h)
 num_dx2 = (f_fn(2, 3+h, 1) - f_fn(2, 3-h, 1)) / (2*h)
 num_dx3 = (f_fn(2, 3, 1+h) - f_fn(2, 3, 1-h)) / (2*h)
@@ -163,15 +183,17 @@ print(f"\nNumerical: df/dx1={num_dx1:.2f}, df/dx2={num_dx2:.2f}, df/dx3={num_dx3
 ### Beginner example (R)
 
 ```r
-# Reverse-mode backprop: f(x1, x2, x3) = (x1 * x2 + x3)^2 # Forward pass
+# Reverse-mode backprop: f(x1, x2, x3) = (x1 * x2 + x3)^2
+# Forward pass
 x1 <- 2.0; x2 <- 3.0; x3 <- 1.0
 v1 <- x1 * x2  # = 6
 v2 <- v1 + x3  # = 7
 f <- v2^2  # = 49
-cat("Forward pass: v1 =", v1, ", v2 =", v2, ", f =", f, "\n")  # Backward pass (reverse-mode)
+cat("Forward pass: v1 =", v1, ", v2 =", v2, ", f =", f, "\n")
+
+# Backward pass (reverse-mode)
 grad_f <- 1.0  # df/df = 1
-grad_v2 <- grad_f * 2 * v2  # df/dv2 = 2 *
-v2 = 14
+grad_v2 <- grad_f * 2 * v2  # df/dv2 = 2 * v2 = 14
 grad_v1 <- grad_v2 * 1.0  # df/dv1 (sum node)
 grad_x3 <- grad_v2 * 1.0  # df/dx3 (sum node)
 grad_x1 <- grad_v1 * x2  # df/dx1 = df/dv1 * x2
@@ -179,7 +201,9 @@ grad_x2 <- grad_v1 * x1  # df/dx2 = df/dv1 * x1
 cat("\nBackward pass (reverse-mode):\n")
 cat(" df/dx1 =", grad_x1, " (expected: 42)\n")
 cat(" df/dx2 =", grad_x2, " (expected: 28)\n")
-cat(" df/dx3 =", grad_x3, " (expected: 14)\n")  # Numerical verification
+cat(" df/dx3 =", grad_x3, " (expected: 14)\n")
+
+# Numerical verification
 h <- 1e-5
 f_fn <- function(x1, x2, x3) (x1*x2 + x3)^2
 cat("\nNumerical gradients:\n")
@@ -192,68 +216,102 @@ cat(" df/dx3:", (f_fn(x1, x2, x3+h) - f_fn(x1, x2, x3-h)) / (2*h), "\n")
 
 ```python
 """
-Manual reverse-mode backpropagation through a two-layer neural network. Architecture: x -> z1 = W1@x -> a1 = sigmoid(z1) -> z2 = W2@a1 + b2 -> L = BCE(z2, y) Forward
-pass: compute and store z1, a1, z2, p.
-Backward
-pass (reverse-mode, one pass): delta2 = p - y (dL/dz2, upstream gradient through BCE+sigmoid) dL/dW2 = delta2 @ a1^T (outer product) dL/db2 = delta2 dL/da1 = W2^T @ delta2 (backprop through linear layer)
-delta1 = dL/da1 * sigma'(z1) (backprop through sigmoid, element-wise) dL/dW1 = delta1 @ x^T (outer product) dL/db1 = delta1 All computed in one backward pass — cost is O(forward pass), not O(n_params).
+Manual reverse-mode backpropagation through a two-layer neural network.
+
+Architecture:
+    x -> z1 = W1@x -> a1 = sigmoid(z1) -> z2 = W2@a1 + b2 -> L = BCE(z2, y)
+
+Forward pass: compute and store z1, a1, z2, p.
+
+Backward pass (reverse-mode, one pass):
+    delta2 = p - y                (dL/dz2, upstream gradient through BCE+sigmoid)
+    dL/dW2 = delta2 @ a1^T        (outer product)
+    dL/db2 = delta2
+    dL/da1 = W2^T @ delta2        (backprop through linear layer)
+    delta1 = dL/da1 * sigma'(z1)  (backprop through sigmoid, element-wise)
+    dL/dW1 = delta1 @ x^T         (outer product)
+    dL/db1 = delta1
+
+All computed in one backward pass — cost is O(forward pass), not O(n_params).
 We verify all gradients against numerical finite differences.
 """
 import numpy as np
+
 RANDOM_SEED = 42
-rng = np.random.default_rng(RANDOM_SEED)   # Network dimensions
-N_IN, N_HIDDEN, N_OUT = 6, 4, 1   # Random parameters
+rng = np.random.default_rng(RANDOM_SEED)
+
+# Network dimensions
+N_IN, N_HIDDEN, N_OUT = 6, 4, 1
+
+# Random parameters
 W1 = rng.standard_normal((N_HIDDEN, N_IN)) * 0.5
 b1 = np.zeros(N_HIDDEN)
 W2 = rng.standard_normal((N_OUT, N_HIDDEN)) * 0.5
-b2 = np.zeros(N_OUT)   # Single data point
+b2 = np.zeros(N_OUT)
+
+# Single data point
 x = rng.standard_normal(N_IN)
 y = np.array([1.0])
+
 
 def sigmoid(z: np.ndarray) -> np.ndarray:
     return 1.0 / (1.0 + np.exp(-np.clip(z, -500, 500)))
 
+
 def bce_loss(p: np.ndarray, y_true: np.ndarray) -> float:
     p_clip = np.clip(p, 1e-12, 1.0 - 1e-12)
-    return float(-np.mean(y_true * np.log(p_clip) + (1 - y_true) * np.log(1 - p_clip)))   # ---- Forward pass ----
+    return float(-np.mean(y_true * np.log(p_clip) + (1 - y_true) * np.log(1 - p_clip)))
+
+
+# ---- Forward pass ----
 z1 = W1 @ x + b1   # shape (N_HIDDEN,)
 a1 = sigmoid(z1)   # shape (N_HIDDEN,)
 z2 = W2 @ a1 + b2   # shape (N_OUT,)
 p = sigmoid(z2)   # shape (N_OUT,)
-loss = bce_loss(p, y)   # ---- Backward pass (reverse-mode) ----
-# dL/dz2: combined BCE + sigmoid
-derivative = p - y
+loss = bce_loss(p, y)
+
+# ---- Backward pass (reverse-mode) ----
+# dL/dz2: combined BCE + sigmoid derivative = p - y
 delta2 = p - y   # shape (N_OUT,)
 grad_W2 = np.outer(delta2, a1)   # shape (N_OUT, N_HIDDEN)
-grad_b2 = delta2.copy()   # shape (N_OUT,) # dL/da1 via W2 layer
-grad_a1 = W2.T @ delta2   # shape (N_HIDDEN,) # dL/dz1: through sigmoid (element-wise)
-sigma_prime_z1 = a1 * (1.0 - a1)   # sigma'(z1) =
-sigma(z1)(1 - sigma(z1))
+grad_b2 = delta2.copy()   # shape (N_OUT,)
+# dL/da1 via W2 layer
+grad_a1 = W2.T @ delta2   # shape (N_HIDDEN,)
+# dL/dz1: through sigmoid (element-wise)
+sigma_prime_z1 = a1 * (1.0 - a1)   # sigma'(z1) = sigma(z1)(1 - sigma(z1))
 delta1 = grad_a1 * sigma_prime_z1   # shape (N_HIDDEN,)
 grad_W1 = np.outer(delta1, x)   # shape (N_HIDDEN, N_IN)
-grad_b1 = delta1.copy()   # shape (N_HIDDEN,) # ---- Numerical gradient check ----
+grad_b1 = delta1.copy()   # shape (N_HIDDEN,)
 
+
+# ---- Numerical gradient check ----
 def full_loss(w1, b1_, w2, b2_, x_, y_):
     z1_ = w1 @ x_ + b1_
     a1_ = sigmoid(z1_)
     z2_ = w2 @ a1_ + b2_
     p_ = sigmoid(z2_)
     return bce_loss(p_, y_)
+
+
 h = 1e-5
-max_errors = {}   # Check W2
+max_errors = {}
+
+# Check W2
 grad_W2_num = np.zeros_like(W2)
 for i in range(N_OUT):
     for j in range(N_HIDDEN):
         W2p = W2.copy(); W2p[i, j] += h
-    W2m = W2.copy(); W2m[i, j] -= h
-grad_W2_num[i, j] = (full_loss(W1, b1, W2p, b2, x, y) - full_loss(W1, b1, W2m, b2, x, y)) / (2 * h)
-max_errors["W2"] = np.abs(grad_W2 - grad_W2_num).max()   # Check W1
+        W2m = W2.copy(); W2m[i, j] -= h
+        grad_W2_num[i, j] = (full_loss(W1, b1, W2p, b2, x, y) - full_loss(W1, b1, W2m, b2, x, y)) / (2 * h)
+max_errors["W2"] = np.abs(grad_W2 - grad_W2_num).max()
+
+# Check W1
 grad_W1_num = np.zeros_like(W1)
 for i in range(N_HIDDEN):
     for j in range(N_IN):
         W1p = W1.copy(); W1p[i, j] += h
-    W1m = W1.copy(); W1m[i, j] -= h
-grad_W1_num[i, j] = (full_loss(W1p, b1, W2, b2, x, y) - full_loss(W1m, b1, W2, b2, x, y)) / (2 * h)
+        W1m = W1.copy(); W1m[i, j] -= h
+        grad_W1_num[i, j] = (full_loss(W1p, b1, W2, b2, x, y) - full_loss(W1m, b1, W2, b2, x, y)) / (2 * h)
 max_errors["W1"] = np.abs(grad_W1 - grad_W1_num).max()
 print("=== Reverse-Mode Backpropagation: 2-Layer MLP ===")
 print(f" Loss = {loss:.6f}")

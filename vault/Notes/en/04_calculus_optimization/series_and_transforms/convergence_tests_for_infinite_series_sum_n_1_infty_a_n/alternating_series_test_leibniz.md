@@ -97,32 +97,60 @@ True sum = ln(2) ≈ 0.6931. S_4 = 1 - 0.5 + 0.333 - 0.25 = 0.583. Error bound: 
 """
 Alternating Series Test (Leibniz criterion).
 Numerically verify both conditions and confirm convergence.
-""" import numpy as np
+"""
+import numpy as np
 from typing import Callable
 
-def leibniz_test( term_func: Callable[[np.ndarray], np.ndarray], check_indices: np.ndarray | None = None,
+
+def leibniz_test(
+    term_func: Callable[[np.ndarray], np.ndarray],
+    check_indices: np.ndarray | None = None,
 ) -> dict:
-    """Apply Leibniz criterion to an alternating series. Parameters ---------- term_func : function mapping n (array) to |a_n| (positive terms) check_indices : range of n values to verify conditions Returns ------- dict with: decreasing_ok, limit_zero, conclusion """
+    """Apply Leibniz criterion to an alternating series.
+
+    Parameters
+    ----------
+    term_func : function mapping n (array) to |a_n| (positive terms)
+    check_indices : range of n values to verify conditions
+
+    Returns
+    -------
+    dict with: decreasing_ok, limit_zero, conclusion
+    """
     if check_indices is None:
         check_indices = np.arange(1, 1001)
-        terms = term_func(check_indices)
-        next_terms = term_func(check_indices + 1)
-        decreasing_ok = bool(np.all(next_terms <= terms + 1e-12))
-        apparent_limit = terms[-1]
-        limit_zero = bool(abs(apparent_limit) < 1e-6)
-        if decreasing_ok and limit_zero:
-            conclusion = "CONVERGES (Leibniz conditions satisfied)"
-        elif not decreasing_ok:
-            conclusion = "INCONCLUSIVE: terms not monotone decreasing"
-        else:
-            conclusion = "DIVERGES: terms do not go to zero"
-        return { "decreasing_ok": decreasing_ok, "limit_zero": limit_zero, "apparent_limit": apparent_limit, "conclusion": conclusion, }   # Test 1: a_n = 1/n → alternating harmonic → CONVERGES
+    terms = term_func(check_indices)
+    next_terms = term_func(check_indices + 1)
+    decreasing_ok = bool(np.all(next_terms <= terms + 1e-12))
+    apparent_limit = terms[-1]
+    limit_zero = bool(abs(apparent_limit) < 1e-6)
+    if decreasing_ok and limit_zero:
+        conclusion = "CONVERGES (Leibniz conditions satisfied)"
+    elif not decreasing_ok:
+        conclusion = "INCONCLUSIVE: terms not monotone decreasing"
+    else:
+        conclusion = "DIVERGES: terms do not go to zero"
+    return {
+        "decreasing_ok": decreasing_ok,
+        "limit_zero": limit_zero,
+        "apparent_limit": apparent_limit,
+        "conclusion": conclusion,
+    }
+
+
+# Test 1: a_n = 1/n → alternating harmonic → CONVERGES
 r1 = leibniz_test(lambda n: 1.0 / n)
-print(f"a_n = 1/n: {r1['conclusion']}")   # Test 2: a_n = 1/n^2 → CONVERGES (also absolutely)
+print(f"a_n = 1/n: {r1['conclusion']}")
+
+# Test 2: a_n = 1/n^2 → CONVERGES (also absolutely)
 r2 = leibniz_test(lambda n: 1.0 / n**2)
-print(f"a_n = 1/n^2: {r2['conclusion']}")   # Test 3: a_n = 1 + 1/n → limit = 1 ≠ 0 → DIVERGES
+print(f"a_n = 1/n^2: {r2['conclusion']}")
+
+# Test 3: a_n = 1 + 1/n → limit = 1 ≠ 0 → DIVERGES
 r3 = leibniz_test(lambda n: 1.0 + 1.0 / n)
-print(f"a_n = 1 + 1/n: {r3['conclusion']}")   # Test 4: a_n = n/(n^2+1) → CONVERGES (terms decrease to 0)
+print(f"a_n = 1 + 1/n: {r3['conclusion']}")
+
+# Test 4: a_n = n/(n^2+1) → CONVERGES (terms decrease to 0)
 r4 = leibniz_test(lambda n: n / (n**2 + 1.0))
 print(f"a_n = n/(n^2+1): {r4['conclusion']}")
 ```
@@ -131,21 +159,24 @@ print(f"a_n = n/(n^2+1): {r4['conclusion']}")
 
 ```r
 # Leibniz criterion: verify conditions for alternating series
-leibniz_test <- function(term_func, series_name, n_check = 1:1000) {  # Check conditions for alternating series convergence
+leibniz_test <- function(term_func, series_name, n_check = 1:1000) {
+  # Check conditions for alternating series convergence
   terms <- term_func(n_check)
   next_terms <- term_func(n_check + 1)
   decreasing_ok <- all(next_terms <= terms + 1e-12)
   limit_value <- term_func(1e6)
   limit_zero <- abs(limit_value) < 1e-6
-  if (decreasing_ok && limit_zero) { verdict <- "CONVERGES"
+  if (decreasing_ok && limit_zero) {
+    verdict <- "CONVERGES"
+  } else if (!decreasing_ok) {
+    verdict <- "INCONCLUSIVE (not monotone)"
+  } else {
+    verdict <- "DIVERGES (limit != 0)"
   }
-  else
-  if (!decreasing_ok) { verdict <- "INCONCLUSIVE (not monotone)"
-  }
-  else { verdict <- "DIVERGES (limit != 0)"
-  }
-  cat(sprintf("%-30s decrease=%s lim=%.2e → %s\n", series_name, ifelse(decreasing_ok, "YES", "NO"), limit_value, verdict))
-} leibniz_test(function(n) 1 / n, "a_n = 1/n (alternating harmonic)")
+  cat(sprintf("%-30s decrease=%s lim=%.2e → %s\n", series_name,
+              ifelse(decreasing_ok, "YES", "NO"), limit_value, verdict))
+}
+leibniz_test(function(n) 1 / n, "a_n = 1/n (alternating harmonic)")
 leibniz_test(function(n) 1 / n^2, "a_n = 1/n^2")
 leibniz_test(function(n) 1 / log(n+1), "a_n = 1/log(n+1)")
 leibniz_test(function(n) 1 + 1/n, "a_n = 1 + 1/n")
@@ -156,30 +187,45 @@ leibniz_test(function(n) 1 + 1/n, "a_n = 1 + 1/n")
 ```python
 """
 Leibniz test applied to verifying convergence of a custom
-feature importance alternating expansion in a boosting pipeline. Context: Gradient boosting residuals alternate in sign for some tree configurations. This checks whether the residual sequence satisfies Leibniz conditions, as a diagnostic.
-""" import numpy as np
+feature importance alternating expansion in a boosting pipeline.
+
+Context: Gradient boosting residuals alternate in sign for some tree configurations.
+This checks whether the residual sequence satisfies Leibniz conditions, as a diagnostic.
+"""
+import numpy as np
 from sklearn.datasets import make_regression
 from sklearn.tree import DecisionTreeRegressor
+
 RNG_SEED: int = 42
 NUM_TREES: int = 30
 LEARNING_RATE: float = 0.1
 
-def train_gradient_boosting_residuals( num_trees: int, learning_rate: float, seed: int,
+
+def train_gradient_boosting_residuals(
+    num_trees: int,
+    learning_rate: float,
+    seed: int,
 ) -> np.ndarray:
     """Simulate gradient boosting and return per-tree mean absolute residuals."""
     rng = np.random.default_rng(seed)
-    x_data, y_data = make_regression( n_samples=500, n_features=10, noise=10.0, random_state=seed )
+    x_data, y_data = make_regression(
+        n_samples=500, n_features=10, noise=10.0, random_state=seed
+    )
     predictions = np.zeros_like(y_data)
     mean_abs_residuals = np.empty(num_trees)
     for tree_idx in range(num_trees):
         residuals = y_data - predictions
-    tree = DecisionTreeRegressor(max_depth=3, random_state=seed + tree_idx)
-    tree.fit(x_data, residuals)
-    update = learning_rate * tree.predict(x_data)
-    predictions += update
-    mean_abs_residuals[tree_idx] = np.mean(np.abs(residuals))
+        tree = DecisionTreeRegressor(max_depth=3, random_state=seed + tree_idx)
+        tree.fit(x_data, residuals)
+        update = learning_rate * tree.predict(x_data)
+        predictions += update
+        mean_abs_residuals[tree_idx] = np.mean(np.abs(residuals))
     return mean_abs_residuals
-residuals_sequence = train_gradient_boosting_residuals(NUM_TREES, LEARNING_RATE, RNG_SEED)   # Check Leibniz conditions on residual sequence
+
+
+residuals_sequence = train_gradient_boosting_residuals(NUM_TREES, LEARNING_RATE, RNG_SEED)
+
+# Check Leibniz conditions on residual sequence
 decreasing = np.all(np.diff(residuals_sequence) <= 0)
 limit_value = residuals_sequence[-1]
 goes_to_zero = limit_value < 1.0   # rough threshold

@@ -62,7 +62,7 @@ A data scientist estimates a 10-asset covariance matrix from only 8 weeks of dat
 ## The formula in words
 
 "The matrix never stretches any direction to a negative value, but it may map some directions to zero — meaning those directions are in the null space and carry no information." Tiny numeric example: $A = \begin{bmatrix}1 & 1 \\ 1 & 1\end{bmatrix}$ (rank 1, PSD but not PD).
-$x^T A x = [a,b]\begin{bmatrix}1&1\\1&1\end{bmatrix}\begin{bmatrix}a\b\end{bmatrix} = (a+b)^2 \geq 0$ ✓.
+$x^T A x = [a,b]\begin{bmatrix}1&1\\1&1\end{bmatrix}\begin{bmatrix}a\\b\end{bmatrix} = (a+b)^2 \geq 0$ ✓.
 But take $x = [1, -1]^T$: $(1 + (-1))^2 = 0$. Non-zero $x$ gives zero ✓, confirming PSD (not PD).
 Eigenvalues: $\lambda_1 = 2$, $\lambda_2 = 0$ (one zero eigenvalue, matrix is singular).
 

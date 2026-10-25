@@ -133,23 +133,39 @@ $(3-1)^3 = 2^3 = 8$. Formula: $27 - 27 + 9 - 1 = 8$. ✓
 from math import comb
 
 def expand_binomial(n: int, a: float, b: float, sign: int = 1) -> list[tuple[float, int, int]]:
-    """ Compute all n+1 terms of (a + sign*b)^n. Args: n: Power. a: First base. b: Second base (positive value). sign: +1 for (a+b)^n, -1 for (a-b)^n. Returns: List of (coefficient, a_power, b_power) tuples. """
+    """Compute all n+1 terms of (a + sign*b)^n.
+
+    Args:
+        n: Power.
+        a: First base.
+        b: Second base (positive value).
+        sign: +1 for (a+b)^n, -1 for (a-b)^n.
+
+    Returns:
+        List of (coefficient, a_power, b_power) tuples.
+    """
     terms = []
     for k in range(n + 1):
         coeff = comb(n, k) * (a ** (n - k)) * (b ** k) * (sign ** k)
-    terms.append((coeff, n - k, k))
-    return terms   # (3 - x)^3 at
-x = 1
+        terms.append((coeff, n - k, k))
+    return terms
+
+
+# (3 ± x)^3 at x = 1
 n_val = 3; a_val = 3.0; b_val = 1.0
 plus_terms = expand_binomial(n_val, a_val, b_val, sign=+1)
 minus_terms = expand_binomial(n_val, a_val, b_val, sign=-1)
 print(f"(3 + x)^3 at x={b_val}: {[round(t[0], 2) for t in plus_terms]} sum={sum(t[0] for t in plus_terms):.1f} direct={(a_val+b_val)**n_val:.1f}")
-print(f"(3 - x)^3 at x={b_val}: {[round(t[0], 2) for t in minus_terms]} sum={sum(t[0] for t in minus_terms):.1f} direct={(a_val-b_val)**n_val:.1f}")   # Key degree-2 case: variance composition
+print(f"(3 - x)^3 at x={b_val}: {[round(t[0], 2) for t in minus_terms]} sum={sum(t[0] for t in minus_terms):.1f} direct={(a_val-b_val)**n_val:.1f}")
+
+# Key degree-2 case: variance composition
 print("\nDegree-2 expansions:")
 for sign_val, label in [(+1, "(a+b)²"), (-1, "(a-b)²")]:
     a2, b2 = 5.0, 3.0
-terms2 = expand_binomial(2, a2, b2, sign=sign_val)
-print(f" {label}: a²={terms2[0][0]:.1f} ±2ab={terms2[1][0]:.1f} b²={terms2[2][0]:.1f} sum={sum(t[0] for t in terms2):.1f} direct={(a2 + sign_val*b2)**2:.1f}")   # MSE = Bias² + Variance via (bias + noise)^2
+    terms2 = expand_binomial(2, a2, b2, sign=sign_val)
+    print(f" {label}: a²={terms2[0][0]:.1f} ±2ab={terms2[1][0]:.1f} b²={terms2[2][0]:.1f} sum={sum(t[0] for t in terms2):.1f} direct={(a2 + sign_val*b2)**2:.1f}")
+
+# MSE = Bias² + Variance via (bias + noise)^2
 bias = 2.5
 noise_samples = [1.0, -0.5, 2.0, -1.5, 0.5]   # zero-mean noise
 squared_errors = [(bias + v)**2 for v in noise_samples]
@@ -165,14 +181,18 @@ print(f" MSE = {mse:.4f} | bias² + variance ≈ {decomposed:.4f}")
 
 ```r
 # Expanded binomial formula in R
-expand_binomial <- function(n, a, b, sign = 1) { sapply(0:n, function(k) choose(n, k) * a^(n - k) * b^k * sign^k)
-}  # (3 ± x)^3 at
-x=1
+expand_binomial <- function(n, a, b, sign = 1) {
+  sapply(0:n, function(k) choose(n, k) * a^(n - k) * b^k * sign^k)
+}
+
+# (3 ± x)^3 at x = 1
 n_val <- 3; a_val <- 3.0; b_val <- 1.0
 plus_terms <- expand_binomial(n_val, a_val, b_val, sign = 1)
 minus_terms <- expand_binomial(n_val, a_val, b_val, sign = -1)
 cat(sprintf("(3+x)^3 terms: %s sum=%.1f direct=%.1f\n", paste(round(plus_terms, 2), collapse=", "), sum(plus_terms), (a_val + b_val)^n_val))
-cat(sprintf("(3-x)^3 terms: %s sum=%.1f direct=%.1f\n", paste(round(minus_terms, 2), collapse=", "), sum(minus_terms), (a_val - b_val)^n_val))  # Degree-2: MSE decomposition
+cat(sprintf("(3-x)^3 terms: %s sum=%.1f direct=%.1f\n", paste(round(minus_terms, 2), collapse=", "), sum(minus_terms), (a_val - b_val)^n_val))
+
+# Degree-2: MSE decomposition
 bias <- 2.5
 noise <- c(1.0, -0.5, 2.0, -1.5, 0.5)
 squared_errors <- (bias + noise)^2
@@ -186,7 +206,9 @@ cat(sprintf("\nMSE = %.4f | bias^2 + variance = %.4f\n", mse, bias^2 + var_term)
 ```python
 import numpy as np
 import pandas as pd
-from math import comb   # Scenario: Bias-Variance tradeoff — empirical MSE decomposition
+from math import comb
+
+# Scenario: Bias-Variance tradeoff — empirical MSE decomposition
 # Demonstrates that MSE = Bias² + Variance via the degree-2 binomial expansion
 # Simulates multiple model complexities with different bias-variance trade-offs
 np.random.seed(42)
@@ -194,25 +216,52 @@ N_BOOTSTRAP = 1_000
 N_SAMPLES = 100
 TRUE_THETA = 5.0
 
-def simulate_estimator( n: int, true_value: float, bias: float, noise_std: float, n_boot: int ) -> dict:
-    """ Simulate an estimator with known bias and variance, and compute MSE decomposition. Args: n: Sample size per bootstrap run. true_value: True parameter value. bias: Systematic bias of the estimator. noise_std: Standard deviation of the estimator's sampling noise. n_boot: Number of bootstrap replications. Returns: Dictionary with empirical MSE, bias², variance, decomposed MSE, and match flag. """
+def simulate_estimator(n: int, true_value: float, bias: float, noise_std: float, n_boot: int) -> dict:
+    """Simulate an estimator with known bias and variance, and compute MSE decomposition.
+
+    Args:
+        n: Sample size per bootstrap run.
+        true_value: True parameter value.
+        bias: Systematic bias of the estimator.
+        noise_std: Standard deviation of the estimator's sampling noise.
+        n_boot: Number of bootstrap replications.
+
+    Returns:
+        Dictionary with empirical MSE, bias², variance, decomposed MSE, and match flag.
+    """
     estimates = true_value + bias + np.random.normal(0, noise_std, n_boot)
-    errors = estimates - true_value   #
-    e_i = bias + noise_i
+    errors = estimates - true_value   # e_i = bias + noise_i
     squared_errors = errors ** 2   # (bias + noise)^2
     empirical_mse = squared_errors.mean()
     empirical_bias = errors.mean()   # E[e] ≈ bias
-    empirical_var = estimates.var(ddof=0)   #
-    Var(estimator)   # Binomial expansion: E[(bias+noise)^2] = bias^2 + 2*bias*E[noise] + E[noise^2] # Since E[noise] = 0: MSE = bias^2 + Var
+    empirical_var = estimates.var(ddof=0)   # Var(estimator)
+
+    # Binomial expansion: E[(bias+noise)^2] = bias^2 + 2*bias*E[noise] + E[noise^2]
+    # Since E[noise] = 0: MSE = bias^2 + Var
     decomposed_mse = empirical_bias**2 + empirical_var
     match = abs(empirical_mse - decomposed_mse) < 0.01
-    return { "bias": bias, "noise_std": noise_std, "empirical_mse": round(empirical_mse, 4), "bias_sq": round(empirical_bias**2, 4), "variance": round(empirical_var, 4), "decomposed_mse": round(decomposed_mse, 4), "match": match, }   # Simulate across bias-variance trade-off spectrum
-scenarios = [ {"bias": 3.0, "noise_std": 0.5},   # high bias, low variance
+    return {
+        "bias": bias,
+        "noise_std": noise_std,
+        "empirical_mse": round(empirical_mse, 4),
+        "bias_sq": round(empirical_bias**2, 4),
+        "variance": round(empirical_var, 4),
+        "decomposed_mse": round(decomposed_mse, 4),
+        "match": match,
+    }
+
+
+# Simulate across bias-variance trade-off spectrum
+scenarios = [
+    {"bias": 3.0, "noise_std": 0.5},   # high bias, low variance
     {"bias": 1.5, "noise_std": 1.5},   # balanced
     {"bias": 0.5, "noise_std": 3.0},   # low bias, high variance
     {"bias": 0.1, "noise_std": 4.5},   # very low bias, very high variance
 ]
-rows = [ simulate_estimator(N_SAMPLES, TRUE_THETA, s["bias"], s["noise_std"], N_BOOTSTRAP) for s in scenarios ]
+rows = [
+    simulate_estimator(N_SAMPLES, TRUE_THETA, s["bias"], s["noise_std"], N_BOOTSTRAP)
+    for s in scenarios
+]
 report = pd.DataFrame(rows)
 print("Bias-Variance Decomposition: MSE = Bias² + Variance (from (b+v)^2 expansion)")
 print("=" * 72)
@@ -223,16 +272,22 @@ print("\nAll match (MSE ≈ Bias² + Variance):", report["match"].all())
 ### Professional example (R)
 
 ```r
-#
-MSE = Bias² + Variance (from (b+v)^2 expansion)
+# MSE = Bias² + Variance (from (b+v)^2 expansion)
 set.seed(42)
 N_SAMPLES <- 500
 TRUE_THETA <- 10
-simulate <- function(bias, noise_std) { est <- TRUE_THETA + bias + rnorm(N_SAMPLES, 0, noise_std)
+simulate <- function(bias, noise_std) {
+  est <- TRUE_THETA + bias + rnorm(N_SAMPLES, 0, noise_std)
   empirical_bias <- mean(est) - TRUE_THETA
   empirical_var <- mean((est - mean(est))^2)
   empirical_mse <- mean((est - TRUE_THETA)^2)
-  decomposed_mse <- empirical_bias^2 + empirical_var data.frame(bias = bias, noise_std = noise_std, empirical_mse = round(empirical_mse, 4), bias_sq = round(empirical_bias^2, 4), variance = round(empirical_var, 4), decomposed_mse = round(decomposed_mse, 4), match = abs(empirical_mse - decomposed_mse) < 0.01)
+  decomposed_mse <- empirical_bias^2 + empirical_var
+  data.frame(bias = bias, noise_std = noise_std,
+             empirical_mse = round(empirical_mse, 4),
+             bias_sq = round(empirical_bias^2, 4),
+             variance = round(empirical_var, 4),
+             decomposed_mse = round(decomposed_mse, 4),
+             match = abs(empirical_mse - decomposed_mse) < 0.01)
 }
 report <- do.call(rbind, lapply(list(c(3, 0.5), c(1.5, 1.5), c(0.5, 3), c(0.1, 4.5)), function(x) simulate(x[1], x[2])))
 cat("MSE = Bias² + Variance\n")

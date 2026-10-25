@@ -78,10 +78,13 @@ $P(-1 \leq Z \leq 1) = \Phi(1) - \Phi(-1) = 0.8413 - 0.1587 = 0.6827$
 
 ```python
 from scipy.stats import norm, lognorm
-import numpy as np   # P(-1 ≤ Z ≤ 1) for standard normal
+import numpy as np
+
+# P(-1 ≤ Z ≤ 1) for standard normal
 p_1sigma = norm.cdf(1) - norm.cdf(-1)
-print(f"P(-1 ≤ Z ≤ 1) = {p_1sigma:.4f}")   # 0.6827 # P(3 ≤ session ≤ 10) for
-lognormal(s=0.8, scale=exp(1.5))
+print(f"P(-1 ≤ Z ≤ 1) = {p_1sigma:.4f}")  # 0.6827
+
+# P(3 ≤ session ≤ 10) for lognormal(s=0.8, scale=exp(1.5))
 lognorm_dist = lognorm(s=0.8, scale=np.exp(1.5))
 p_engaged = lognorm_dist.cdf(10) - lognorm_dist.cdf(3)
 print(f"P(3 ≤ session ≤ 10 min) = {p_engaged:.4f}")
@@ -91,7 +94,9 @@ print(f"P(3 ≤ session ≤ 10 min) = {p_engaged:.4f}")
 
 ```r
 p_1sigma <- pnorm(1) - pnorm(-1)
-cat(sprintf("P(-1 ≤ Z ≤ 1) = %.4f\n", p_1sigma))  # 0.6827 # Lognormal session duration
+cat(sprintf("P(-1 ≤ Z ≤ 1) = %.4f\n", p_1sigma))  # 0.6827
+
+# Lognormal session duration
 p_engaged <- plnorm(10, meanlog=1.5, sdlog=0.8) - plnorm(3, meanlog=1.5, sdlog=0.8)
 cat(sprintf("P(3 ≤ session ≤ 10 min) = %.4f\n", p_engaged))
 ```
@@ -102,8 +107,9 @@ cat(sprintf("P(3 ≤ session ≤ 10 min) = %.4f\n", p_engaged))
 import numpy as np
 from scipy.stats import lognorm
 from dataclasses import dataclass
-@dataclass
 
+
+@dataclass
 class EngagementThresholds:
     """Business-defined engagement tiers for session duration."""
     bounce_max: float = 1.0
@@ -111,19 +117,37 @@ class EngagementThresholds:
     engaged_max: float = 10.0
     power_max: float = float("inf")
 
-def session_engagement_distribution( meanlog: float, sdlog: float, thresholds: EngagementThresholds | None = None ) -> dict[str, float]:
-    """Compute session tier probabilities from a lognormal model. Args: meanlog: Lognormal mean parameter (log-scale). sdlog: Lognormal std parameter (log-scale). thresholds: Business-defined tier boundaries in minutes. Returns: Dict with probability for each engagement tier. """
+
+def session_engagement_distribution(
+    meanlog: float, sdlog: float, thresholds: EngagementThresholds | None = None
+) -> dict[str, float]:
+    """Compute session tier probabilities from a lognormal model.
+
+    Args:
+        meanlog: Lognormal mean parameter (log-scale).
+        sdlog: Lognormal std parameter (log-scale).
+        thresholds: Business-defined tier boundaries in minutes.
+
+    Returns:
+        Dict with probability for each engagement tier.
+    """
     if thresholds is None:
         thresholds = EngagementThresholds()
     dist = lognorm(s=sdlog, scale=np.exp(meanlog))
     boundaries = [0, thresholds.bounce_max, thresholds.low_max, thresholds.engaged_max, np.inf]
     tier_names = ["bounce", "low", "engaged", "power_user"]
-    return { name: float(dist.cdf(upper) - dist.cdf(lower)) for name, lower, upper in zip(tier_names, boundaries[:-1], boundaries[1:]) }   # Session analytics
+    return {
+        name: float(dist.cdf(upper) - dist.cdf(lower))
+        for name, lower, upper in zip(tier_names, boundaries[:-1], boundaries[1:])
+    }
+
+
+# Session analytics
 result = session_engagement_distribution(meanlog=1.5, sdlog=0.8)
 print("Session engagement tier distribution:")
 for tier, prob in result.items():
     bar = "#" * int(prob * 40)
-print(f" {tier:<15}: {prob:.4f} ({prob*100:.1f}%) {bar}")
+    print(f" {tier:<15}: {prob:.4f} ({prob*100:.1f}%) {bar}")
 ```
 
 ---

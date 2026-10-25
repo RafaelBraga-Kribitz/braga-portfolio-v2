@@ -43,7 +43,7 @@ $A \subset B \iff A \subseteq B \land A \neq B$. In Python: `set_A < set_B` (the
 
 ### Example in a business
 
-Feature selection audit: model v1 uses features $A = \{\text{age, income, tenure}\}$. The full feature space is $B = \{\text{age, income, tenure, city, product_cat}\}$. $A \subset B$ is True — $A$ is a proper subset of $B$, which is expected (the model uses a reduced feature set). If a "new simplified model" returns $A = B$ (all features), the simplification failed.
+Feature selection audit: model v1 uses features $A = \{\text{age, income, tenure}\}$. The full feature space is $B = \{\text{age, income, tenure, city, product\_cat}\}$. $A \subset B$ is True — $A$ is a proper subset of $B$, which is expected (the model uses a reduced feature set). If a "new simplified model" returns $A = B$ (all features), the simplification failed.
 
 ## The formula, piece by piece
 
@@ -77,7 +77,7 @@ Related notation:
 Task: verify that a selected feature set is a proper subset of all available features.
 
 *Step 1: Define the sets*
-All features: $B = \{\text{"age"}, \text{"income"}, \text{"tenure"}, \text{"city"}, \text{"product_cat"}\}$, $|B| = 5$.
+All features: $B = \{\text{"age"}, \text{"income"}, \text{"tenure"}, \text{"city"}, \text{"product\_cat"}\}$, $|B| = 5$.
 Selected features: $A = \{\text{"age"}, \text{"income"}, \text{"tenure"}\}$, $|A| = 3$.
 
 *Step 2: Check A ⊆ B*
@@ -90,7 +90,7 @@ $A \subseteq B$ is True.
 $A = \{age, income, tenure\}$, $B = \{age, income, tenure, city, product_cat\}$. $A \neq B$ because $B$ has "city" and "product\_cat" not in $A$.
 
 *Step 4: Conclusion*
-$A \subset B$ is True. The selected feature set is a proper subset of all features. Feature selection removed 2 features. $|A| = 3 < |B| = 5$. Dropped features: $B \setminus A = \{\text{"city"}, \text{"product_cat"}\}$.
+$A \subset B$ is True. The selected feature set is a proper subset of all features. Feature selection removed 2 features. $|A| = 3 < |B| = 5$. Dropped features: $B \setminus A = \{\text{"city"}, \text{"product\_cat"}\}$.
 
 ## Code examples
 
@@ -130,19 +130,25 @@ print("→ Selector returned the full feature set — no reduction occurred!")
 # Proper subset in R
 A <- c(1, 2, 3)
 B <- c(1, 2, 3, 4, 5)
-C <- c(1, 2, 3)  # equal to A # In R, proper
-subset = (A ⊆ B) AND (length differs or not setequal)
-is_subset_proper <- function(set_a, set_b) { all(set_a %in% set_b) && !setequal(set_a, set_b)
+C <- c(1, 2, 3)  # equal to A
+
+# In R, proper subset = (A ⊆ B) AND (length differs or not setequal)
+is_subset_proper <- function(set_a, set_b) {
+  all(set_a %in% set_b) && !setequal(set_a, set_b)
 }
 cat(sprintf("A ⊂ B: %s\n", is_subset_proper(A, B)))  # TRUE
 cat(sprintf("A ⊂ C: %s\n", is_subset_proper(A, C)))  # FALSE (equal)
-cat(sprintf("B ⊂ A: %s\n", is_subset_proper(B, A)))  # FALSE (B > A) # Feature selection check
+cat(sprintf("B ⊂ A: %s\n", is_subset_proper(B, A)))  # FALSE (B > A)
+
+# Feature selection check
 all_features <- c("age", "income", "tenure", "city", "product_cat")
 selected_features <- c("age", "income", "tenure")
 proper_subset_flag <- is_subset_proper(selected_features, all_features)
 dropped <- setdiff(all_features, selected_features)
 cat(sprintf("\nProper subset check: %s\n", proper_subset_flag))
-cat("Dropped features:", dropped, "\n")  # No-op selector
+cat("Dropped features:", dropped, "\n")
+
+# No-op selector
 no_selection <- all_features
 cat(sprintf("\nNo-op selector ⊂ all_features: %s\n", is_subset_proper(no_selection, all_features)))  # FALSE
 ```
@@ -151,29 +157,67 @@ cat(sprintf("\nNo-op selector ⊂ all_features: %s\n", is_subset_proper(no_selec
 
 ```python
 import pandas as pd
-import numpy as np   # Scenario: validate proper subset relationships across a modeling pipeline
+import numpy as np
+
+# Scenario: validate proper subset relationships across a modeling pipeline
 # 1) Each customer segment ⊂ full customer base (strict containment)
 # 2) Selected features ⊂ all features (feature selector actually reduced features)
 # 3) Sample ⊂ population (sampling actually produced a subset)
 np.random.seed(42)
 N = 1000
-population_ids = set(range(1, N + 1))   # Customer segments (should each be a proper subset of population)
+population_ids = set(range(1, N + 1))
+
+# Customer segments (should each be a proper subset of population)
 premium_ids = set(np.random.choice(list(population_ids), 200, replace=False))
 standard_ids = set(np.random.choice(list(population_ids), 500, replace=False))
-trial_ids = set(np.random.choice(list(population_ids), 150, replace=False))   # Features
+trial_ids = set(np.random.choice(list(population_ids), 150, replace=False))
+
+# Features
 all_features = {"age", "income", "tenure", "city", "channel", "product_cat", "recency", "frequency", "monetary"}
 selected_features = {"age", "income", "tenure", "recency", "frequency", "monetary"}
-bad_selector = all_features.copy()   # no-op selector # Sample
+bad_selector = all_features.copy()   # no-op selector
+
+# Sample
 sample_ids = set(np.random.choice(list(population_ids), 300, replace=False))
 
+
 def check_proper_subset(set_a: set, set_b: set, label: str) -> dict:
-    """ Check if set_a ⊂ set_b (proper subset). Args: set_a: Candidate set. set_b: Reference set. label: Description of the check. Returns: Dict with check result and diagnostic info. """
+    """
+    Check if set_a ⊂ set_b (proper subset).
+
+    Args:
+        set_a: Candidate set.
+        set_b: Reference set.
+        label: Description of the check.
+
+    Returns:
+        Dict with check result and diagnostic info.
+    """
     is_sub = set_a <= set_b
     is_proper = set_a < set_b
-    violations = set_a - set_b   # elements in A not in B extra_in_b = set_b - set_a # elements in B but not A (expected if proper) return { "check": label, "A⊆B": is_sub, "A⊂B": is_proper, "|A|": len(set_a), "|B|": len(set_b), "A\\B (violations)": len(violations), "B\\A (extra in B)": len(extra_in_b), "status": "PASS" if is_proper else ("EQUAL" if is_sub else "FAIL"), }
-    checks = [ check_proper_subset(premium_ids, population_ids, "premium ⊂ population"), check_proper_subset(standard_ids, population_ids, "standard ⊂ population"), check_proper_subset(trial_ids, population_ids, "trial ⊂ population"), check_proper_subset(selected_features, all_features, "selected_features ⊂ all_features"), check_proper_subset(bad_selector, all_features, "bad_selector ⊂ all_features"), check_proper_subset(sample_ids, population_ids, "sample ⊂ population"),
-    ]
-    report = pd.DataFrame(checks)
+    violations = set_a - set_b    # elements in A not in B
+    extra_in_b = set_b - set_a    # elements in B but not A (expected if proper)
+    return {
+        "check": label,
+        "A⊆B": is_sub,
+        "A⊂B": is_proper,
+        "|A|": len(set_a),
+        "|B|": len(set_b),
+        "A\\B (violations)": len(violations),
+        "B\\A (extra in B)": len(extra_in_b),
+        "status": "PASS" if is_proper else ("EQUAL" if is_sub else "FAIL"),
+    }
+
+
+checks = [
+    check_proper_subset(premium_ids, population_ids, "premium ⊂ population"),
+    check_proper_subset(standard_ids, population_ids, "standard ⊂ population"),
+    check_proper_subset(trial_ids, population_ids, "trial ⊂ population"),
+    check_proper_subset(selected_features, all_features, "selected_features ⊂ all_features"),
+    check_proper_subset(bad_selector, all_features, "bad_selector ⊂ all_features"),
+    check_proper_subset(sample_ids, population_ids, "sample ⊂ population"),
+]
+report = pd.DataFrame(checks)
 print("Proper Subset Validation Report (A ⊂ B)")
 print("=" * 70)
 print(report.to_string(index=False))
@@ -185,8 +229,11 @@ print(f"\n{pass_count}/{len(report)} checks are proper subsets.")
 
 ```r
 # Proper subset validation: A ⊂ B iff A ⊆ B and A ≠ B
-check_proper_subset <- function(A, B, label) { is_subset <- all(A %in% B)
-  is_proper <- is_subset && (length(setdiff(B, A)) > 0) data.frame(check = label, is_subset = is_subset, is_proper = is_proper, status = if (is_proper) "PASS" else "FAIL")
+check_proper_subset <- function(A, B, label) {
+  is_subset <- all(A %in% B)
+  is_proper <- is_subset && (length(setdiff(B, A)) > 0)
+  data.frame(check = label, is_subset = is_subset, is_proper = is_proper,
+             status = if (is_proper) "PASS" else "FAIL")
 }
 population_ids <- 1:1000
 premium_ids <- sample(population_ids, 200)

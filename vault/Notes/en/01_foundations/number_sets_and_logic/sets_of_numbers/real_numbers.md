@@ -108,23 +108,33 @@ The sequence lives entirely in $\mathbb{Q}$ (each $a_n$ is rational), but the li
 ```python
 # Real numbers ℝ = ℚ ∪ Irrationals
 import numpy as np
-import pandas as pd   # float64 is Python's approximation of ℝ
+import pandas as pd
+
+# float64 is Python's approximation of ℝ
 print("Real number (float64) properties:")
 print(f" Max float64: {np.finfo(np.float64).max:.3e}")
 print(f" Min positive: {np.finfo(np.float64).tiny:.3e}")
 print(f" Machine eps: {np.finfo(np.float64).eps:.3e}")
-print(f" Precision: ~{np.finfo(np.float64).precision} significant decimal digits")   # Special float values (outside ℝ mathematically)
+print(f" Precision: ~{np.finfo(np.float64).precision} significant decimal digits")
+
+# Special float values (outside ℝ mathematically)
 print("\nSpecial float values:")
 print(f" np.inf: {np.inf} (overflow — not in ℝ)")
 print(f" -np.inf: {-np.inf} (overflow — not in ℝ)")
-print(f" np.nan: {np.nan} (undefined — not in ℝ)")   # Convergence to e: sequence (1 + 1/n)^n
+print(f" np.nan: {np.nan} (undefined — not in ℝ)")
+
+# Convergence to e: sequence (1 + 1/n)^n
 print("\nSequence (1 + 1/n)^n converging to e (irrational):")
 for n in [1, 10, 100, 1_000, 10_000, 100_000]:
     val = (1 + 1/n) ** n
-print(f" n={n:>8}: {val:.8f} (e = {np.e:.8f})")   # Typical DA use: continuous features in a real dataset
+    print(f" n={n:>8}: {val:.8f} (e = {np.e:.8f})")
+
+# Typical DA use: continuous features in a real dataset
 np.random.seed(42)
-df = pd.DataFrame({ "price": np.random.uniform(10.0, 1000.0, 100).round(2), "probability": np.random.beta(2, 5, 100),   #
-    (0,1) ⊂ ℝ "log_value": np.log(np.random.uniform(1, 100, 100)),   # ℝ, can be negative
+df = pd.DataFrame({
+    "price": np.random.uniform(10.0, 1000.0, 100).round(2),
+    "probability": np.random.beta(2, 5, 100),                # (0,1) ⊂ ℝ
+    "log_value": np.log(np.random.uniform(1, 100, 100)),     # ℝ, can be negative
 })
 print("\nReal-valued columns (float64):")
 print(df.dtypes)
@@ -138,17 +148,27 @@ print(df.describe().round(4))
 cat("R numeric type is double (float64, approximation of ℝ):\n")
 cat(sprintf(" Max: %.3e\n", .Machine$double.xmax))
 cat(sprintf(" Smallest pos:%.3e\n", .Machine$double.xmin))
-cat(sprintf(" Machine eps: %.3e\n", .Machine$double.eps))  # Special values
+cat(sprintf(" Machine eps: %.3e\n", .Machine$double.eps))
+
+# Special values
 cat("\nSpecial float values (outside ℝ):\n")
 cat(sprintf(" Inf: %s\n", Inf))
 cat(sprintf(" -Inf: %s\n", -Inf))
-cat(sprintf(" NaN: %s\n", NaN))  # Convergence to e
+cat(sprintf(" NaN: %s\n", NaN))
+
+# Convergence to e
 cat("\nSequence (1 + 1/n)^n → e:\n")
-for (n in c(1, 10, 100, 1000, 10000)) { val <- (1 + 1/n)^n
+for (n in c(1, 10, 100, 1000, 10000)) {
+  val <- (1 + 1/n)^n
   cat(sprintf(" n=%6d: %.8f (e = %.8f)\n", n, val, exp(1)))
-}  # Real-valued columns in a dataframe
+}
+
+# Real-valued columns in a dataframe
 set.seed(42)
-df <- data.frame( price = round(runif(100, 10, 1000), 2), probability = rbeta(100, 2, 5), log_value = log(runif(100, 1, 100))
+df <- data.frame(
+  price = round(runif(100, 10, 1000), 2),
+  probability = rbeta(100, 2, 5),
+  log_value = log(runif(100, 1, 100))
 )
 cat("\nColumn types (all numeric = double = ℝ approx):\n")
 print(sapply(df, class))
@@ -159,30 +179,57 @@ print(summary(df))
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: audit a real-valued feature matrix for data quality issues
+import pandas as pd
+
+# Scenario: audit a real-valued feature matrix for data quality issues
 # Common ℝ-related problems: NaN, ±Inf, extreme values, precision loss
 np.random.seed(42)
-N, D = 500, 8   # Simulate a feature matrix with intentional issues
+N, D = 500, 8
+
+# Simulate a feature matrix with intentional issues
 features = np.random.randn(N, D).astype(np.float64)
-col_names = [f"feature_{i}" for i in range(D)]   # Inject issues
-features[0, 0] = np.nan   # NaN (undefined)
-features[1, 1] = np.inf   # +Inf (overflow)
-features[2, 2] = -np.inf   # -Inf (underflow/overflow)
+col_names = [f"feature_{i}" for i in range(D)]
+
+# Inject issues
+features[0, 0] = np.nan       # NaN (undefined)
+features[1, 1] = np.inf       # +Inf (overflow)
+features[2, 2] = -np.inf      # -Inf (underflow/overflow)
 features[3, 3] = 1e308 * 10   # Overflow → Inf
-features[4, 4] = 1e-320   # Denormalized (underflow region)
+features[4, 4] = 1e-320       # Denormalized (underflow region)
 df = pd.DataFrame(features, columns=col_names)
 
+
 def audit_real_columns(df: pd.DataFrame) -> pd.DataFrame:
-    """ Audit a DataFrame of real-valued (ℝ) columns for numerical issues. Args: df: DataFrame with float64 columns. Returns: Summary DataFrame with counts of NaN, Inf, -Inf, and extreme values. """
+    """Audit a DataFrame of real-valued (ℝ) columns for numerical issues.
+
+    Args:
+        df: DataFrame with float64 columns.
+
+    Returns:
+        Summary DataFrame with counts of NaN, Inf, -Inf, and extreme values.
+    """
     report_rows = []
     for col in df.columns:
         col_data = df[col]
-    report_rows.append({ "column": col, "dtype": str(col_data.dtype), "nan_count": int(col_data.isna().sum()), "inf_count": int(np.isinf(col_data).sum()), "finite_count": int(np.isfinite(col_data).sum()), "mean": round(float(col_data[np.isfinite(col_data)].mean()), 4), "std": round(float(col_data[np.isfinite(col_data)].std()), 4), })
+        finite = col_data[np.isfinite(col_data)]
+        report_rows.append({
+            "column": col,
+            "dtype": str(col_data.dtype),
+            "nan_count": int(col_data.isna().sum()),
+            "inf_count": int(np.isinf(col_data).sum()),
+            "finite_count": int(np.isfinite(col_data).sum()),
+            "mean": round(float(finite.mean()), 4),
+            "std": round(float(finite.std()), 4),
+        })
     return pd.DataFrame(report_rows)
+
+
 report = audit_real_columns(df)
 print("Real-Valued Feature Matrix Audit (ℝ → float64)")
 print("=" * 58)
-print(report.to_string(index=False))   # Fix: replace non-finite values before modeling
+print(report.to_string(index=False))
+
+# Fix: replace non-finite values before modeling
 df_clean = df.replace([np.inf, -np.inf], np.nan)
 nan_before = df.isna().sum().sum()
 nan_after = df_clean.isna().sum().sum()

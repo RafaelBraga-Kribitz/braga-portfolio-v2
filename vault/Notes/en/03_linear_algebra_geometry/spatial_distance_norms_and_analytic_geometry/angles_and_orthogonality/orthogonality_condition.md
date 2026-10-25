@@ -3,6 +3,7 @@ publish: true
 date: '2026-04-16'
 tags:
 - linear-algebra
+slug: orthogonality-condition-angles-and-orthogonality
 ---
 
 # Orthogonality condition
@@ -91,7 +92,10 @@ $\|x+y\|^2 = \|(3,1,5)\|^2 = 9+1+25 = 35 = 5+30$. $\checkmark$ (Pythagorean theo
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # -- Orthogonality check: inner product == 0 --- # Standard basis vectors
+import numpy as np
+
+# -- Orthogonality check: inner product == 0 ---
+# Standard basis vectors
 e1 = np.array([1.0, 0.0, 0.0])
 e2 = np.array([0.0, 1.0, 0.0])
 e3 = np.array([0.0, 0.0, 1.0])
@@ -100,11 +104,15 @@ for i, u in enumerate([e1, e2, e3]):
     for j, v in enumerate([e1, e2, e3]):
         if i < j:
             ip = np.dot(u, v)
-        print(f" <e{i+1}, e{j+1}> = {ip:.4f} orthogonal: {np.isclose(ip, 0)}")   # Custom vectors
+            print(f" <e{i+1}, e{j+1}> = {ip:.4f} orthogonal: {np.isclose(ip, 0)}")
+
+# Custom vectors
 x = np.array([2.0, -1.0, 0.0])
 y = np.array([1.0, 2.0, 5.0])
 ip = np.dot(x, y)
-print(f"\n<x, y> = {ip:.4f} orthogonal: {np.isclose(ip, 0)}")   # Pythagorean theorem verification
+print(f"\n<x, y> = {ip:.4f} orthogonal: {np.isclose(ip, 0)}")
+
+# Pythagorean theorem verification
 print(f"Pythagorean check: ||x||^2 + ||y||^2 = {np.dot(x,x) + np.dot(y,y):.4f}")
 print(f" ||x+y||^2 = {np.dot(x+y, x+y):.4f}")
 ```
@@ -117,7 +125,9 @@ x <- c(2, -1, 0)
 y <- c(1, 2, 5)
 inner_product <- sum(x * y)
 cat(sprintf("<x, y> = %.4f\n", inner_product))
-cat(sprintf("Orthogonal: %s\n", isTRUE(all.equal(inner_product, 0))))  # Pythagorean theorem
+cat(sprintf("Orthogonal: %s\n", isTRUE(all.equal(inner_product, 0))))
+
+# Pythagorean theorem
 cat(sprintf("||x||^2 + ||y||^2 = %.4f\n", sum(x^2) + sum(y^2)))
 cat(sprintf("||x+y||^2 = %.4f\n", sum((x+y)^2)))
 ```
@@ -129,11 +139,15 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
-np.random.seed(42)   # -- Business scenario: verify PCA components are orthogonal ---
+np.random.seed(42)
+
+# -- Business scenario: verify PCA components are orthogonal ---
 # PCA components must be mutually orthogonal by construction.
 # This validates the orthogonality condition in a real DS workflow.
 N_SAMPLES = 500
-N_FEATURES = 5   # Correlated feature data (simulated customer metrics)
+N_FEATURES = 5
+
+# Correlated feature data (simulated customer metrics)
 raw_data = np.random.randn(N_SAMPLES, N_FEATURES)
 raw_data[:, 1] += 0.8 * raw_data[:, 0]   # feature1 correlated with feature0
 raw_data[:, 2] += 0.5 * raw_data[:, 0]   # feature2 partially correlated
@@ -141,16 +155,18 @@ scaler = StandardScaler()
 data_scaled = scaler.fit_transform(raw_data)
 pca = PCA(n_components=N_FEATURES)
 pca.fit(data_scaled)
-components = pca.components_   # shape: (n_components, n_features) # Verify orthogonality: <component_i, component_j> should be 0 for i != j
+components = pca.components_   # shape: (n_components, n_features)
+
+# Verify orthogonality: <component_i, component_j> should be 0 for i != j
 print("PCA component orthogonality check:")
 violations = 0
 for i in range(N_FEATURES):
     for j in range(i + 1, N_FEATURES):
         ip = np.dot(components[i], components[j])
-    is_ortho = np.isclose(ip, 0, atol=1e-10)
-if not is_ortho:
-    violations += 1
-print(f" <PC{i+1}, PC{j+1}> = {ip:.2e} orthogonal: {is_ortho}")
+        is_ortho = np.isclose(ip, 0, atol=1e-10)
+        if not is_ortho:
+            violations += 1
+        print(f" <PC{i+1}, PC{j+1}> = {ip:.2e} orthogonal: {is_ortho}")
 print(f"\nTotal violations: {violations} (expected: 0)")
 print(f"Variance explained per component: {np.round(pca.explained_variance_ratio_, 4)}")
 print("\nConclusion: PCA components are mutually orthogonal by construction.")

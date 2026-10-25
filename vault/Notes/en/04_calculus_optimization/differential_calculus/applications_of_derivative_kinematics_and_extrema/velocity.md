@@ -98,17 +98,31 @@ import numpy as np
 
 def compute_velocity(s_fn, t: float, h: float = 1e-7) -> float:
     """Instantaneous velocity via central finite difference: ds/dt ≈ [s(t+h)-s(t-h)]/(2h)."""
-    return (s_fn(t + h) - s_fn(t - h)) / (2 * h)   # Position function examples
-examples = [ {"name": "s = 3t^3 - 12t + 1", "s_fn": lambda t: 3*t**3 - 12*t + 1, "analytic": lambda t: 9*t**2 - 12}, {"name": "s = sin(2t) + t", "s_fn": lambda t: np.sin(2*t) + t, "analytic": lambda t: 2*np.cos(2*t) + 1}, {"name": "s = exp(-0.5t)*cos(t)", "s_fn": lambda t: np.exp(-0.5*t)*np.cos(t), "analytic": lambda t: np.exp(-0.5*t)*(-0.5*np.cos(t) - np.sin(t))},
+    return (s_fn(t + h) - s_fn(t - h)) / (2 * h)
+
+
+# Position function examples
+examples = [
+    {"name": "s = 3t^3 - 12t + 1",
+     "s_fn": lambda t: 3*t**3 - 12*t + 1,
+     "analytic": lambda t: 9*t**2 - 12},
+    {"name": "s = sin(2t) + t",
+     "s_fn": lambda t: np.sin(2*t) + t,
+     "analytic": lambda t: 2*np.cos(2*t) + 1},
+    {"name": "s = exp(-0.5t)*cos(t)",
+     "s_fn": lambda t: np.exp(-0.5*t)*np.cos(t),
+     "analytic": lambda t: np.exp(-0.5*t)*(-0.5*np.cos(t) - np.sin(t))},
 ]
 print("Velocity: v(t) = ds/dt")
 print(f"\n{'Function':>28} {'t':>5} {'Analytic v':>12} {'Numerical v':>12} {'Match':>7}")
 for ex in examples:
     for t_val in [0.5, 1.5, 3.0]:
         v_analytic = ex["analytic"](t_val)
-    v_numerical = compute_velocity(ex["s_fn"], t_val)
-match = abs(v_analytic - v_numerical) < 1e-5
-print(f"{ex['name']:>28} {t_val:>5.2f} {v_analytic:>12.6f} {v_numerical:>12.6f} {str(match):>7}")   # Discrete velocity for a time series
+        v_numerical = compute_velocity(ex["s_fn"], t_val)
+        match = abs(v_analytic - v_numerical) < 1e-5
+        print(f"{ex['name']:>28} {t_val:>5.2f} {v_analytic:>12.6f} {v_numerical:>12.6f} {str(match):>7}")
+
+# Discrete velocity for a time series
 print(f"\n--- Discrete velocity: first difference of a DAU time series ---")
 np.random.seed(42)
 n_days = 20
@@ -117,29 +131,38 @@ velocity = np.diff(dau)   # first difference = discrete velocity
 print(f"{'Day':>5} {'DAU':>9} {'Velocity (dDAU/dt)':>20} {'Direction':>12}")
 for i in range(min(10, n_days - 1)):
     direction = "growing" if velocity[i] > 0 else "declining"
-print(f"{i+1:>5} {dau[i]:>9.1f} {velocity[i]:>20.2f} {direction:>12}")
+    print(f"{i+1:>5} {dau[i]:>9.1f} {velocity[i]:>20.2f} {direction:>12}")
 ```
 
 ### Beginner example (R)
 
 ```r
 # Velocity: v(t) = ds/dt
-compute_velocity <- function(s_fn, t, h = 1e-7) { (s_fn(t + h) - s_fn(t - h)) / (2 * h)
+compute_velocity <- function(s_fn, t, h = 1e-7) {
+  (s_fn(t + h) - s_fn(t - h)) / (2 * h)
 }
-examples <- list( list(name = "s = 3t^3-12t+1", s_fn = function(t) 3*t^3 - 12*t + 1, analytic = function(t) 9*t^2 - 12), list(name = "s = sin(2t)+t", s_fn = function(t) sin(2*t) + t, analytic = function(t) 2*cos(2*t) + 1)
-) cat("Velocity: v(t) = ds/dt\n\n")
+examples <- list(
+  list(name = "s = 3t^3-12t+1", s_fn = function(t) 3*t^3 - 12*t + 1, analytic = function(t) 9*t^2 - 12),
+  list(name = "s = sin(2t)+t", s_fn = function(t) sin(2*t) + t, analytic = function(t) 2*cos(2*t) + 1)
+)
+cat("Velocity: v(t) = ds/dt\n\n")
 cat(sprintf("%-28s %-5s %-12s %-12s\n", "Function", "t", "Analytic v", "Numerical v"))
-for (ex in examples) { for (t_val in c(0.5, 1.5, 3.0)) { v_an <- ex$analytic(t_val)
+for (ex in examples) {
+  for (t_val in c(0.5, 1.5, 3.0)) {
+    v_an <- ex$analytic(t_val)
     v_nu <- compute_velocity(ex$s_fn, t_val)
     cat(sprintf("%-28s %-5.2f %-12.6f %-12.6f\n", ex$name, t_val, v_an, v_nu))
   }
-}  # Discrete velocity (first difference)
+}
+
+# Discrete velocity (first difference)
 cat("\n--- Discrete velocity: diff() as ds/dt ---\n")
 set.seed(42)
 dau <- 10000 + cumsum(rnorm(15, mean=50, sd=100))
 vel <- diff(dau)
 cat(sprintf("%-5s %-9s %-20s\n", "Day", "DAU", "Velocity"))
-for (i in 1:min(8, length(vel))) { cat(sprintf("%-5d %-9.1f %-20.2f\n", i, dau[i], vel[i]))
+for (i in 1:min(8, length(vel))) {
+  cat(sprintf("%-5d %-9.1f %-20.2f\n", i, dau[i], vel[i]))
 }
 ```
 
@@ -149,7 +172,9 @@ for (i in 1:min(8, length(vel))) { cat(sprintf("%-5d %-9.1f %-20.2f\n", i, dau[i
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 from sklearn.datasets import make_regression
-np.random.seed(42)   # -- Velocity: gradient descent with momentum -- the literal velocity interpretation --
+np.random.seed(42)
+
+# -- Velocity: gradient descent with momentum -- the literal velocity interpretation --
 # Use case: A DS implements SGD with momentum and tracks the weight "velocity"
 # over training. In this framework:
 # w(t) = position (model weights at training step t)
@@ -171,26 +196,32 @@ def mse_and_grad(w: np.ndarray, X: np.ndarray, y: np.ndarray) -> tuple:
     loss = float(np.mean(r**2))
     grad = -2.0 / len(y) * X.T @ r
     return loss, grad
+
+
 X_raw, y = make_regression(n_samples=N, n_features=DIM, noise=0.5, random_state=42)
 scaler = StandardScaler()
 X = scaler.fit_transform(X_raw)
-y = y / y.std()   # SGD with momentum: tracks position w, velocity v, and speed |v|
+y = y / y.std()
+
+# SGD with momentum: tracks position w, velocity v, and speed |v|
 w_momentum = np.zeros(DIM)
 v = np.zeros(DIM)
 w_vanilla = np.zeros(DIM)
 losses_mom = []
 losses_van = []
-speeds = []   # |v(t)|: speed of weight trajectory
+speeds = []  # |v(t)|: speed of weight trajectory
 for step in range(N_STEPS):
     # Momentum update
     loss_m, grad_m = mse_and_grad(w_momentum, X, y)
-v = BETA * v - ALPHA * grad_m   # velocity update: momentum decays + gradient drives
-w_momentum = w_momentum + v   # position update: integrate velocity
-losses_mom.append(loss_m)
-speeds.append(float(np.linalg.norm(v)))   # Vanilla SGD (no momentum)
-loss_v, grad_v = mse_and_grad(w_vanilla, X, y)
-w_vanilla = w_vanilla - ALPHA * grad_v
-losses_van.append(loss_v)
+    v = BETA * v - ALPHA * grad_m  # velocity update: momentum decays + gradient drives
+    w_momentum = w_momentum + v    # position update: integrate velocity
+    losses_mom.append(loss_m)
+    speeds.append(float(np.linalg.norm(v)))
+
+    # Vanilla SGD (no momentum)
+    loss_v, grad_v = mse_and_grad(w_vanilla, X, y)
+    w_vanilla = w_vanilla - ALPHA * grad_v
+    losses_van.append(loss_v)
 print("Velocity = ds/dt: SGD with Momentum as Physical Kinematics")
 print(f"\nN={N}, DIM={DIM}, alpha={ALPHA}, beta={BETA}, steps={N_STEPS}")
 print(f"\nPhysical interpretation:")

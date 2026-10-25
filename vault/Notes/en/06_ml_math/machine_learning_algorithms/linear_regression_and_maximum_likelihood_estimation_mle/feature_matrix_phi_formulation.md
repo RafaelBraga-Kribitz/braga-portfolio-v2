@@ -102,12 +102,16 @@ import numpy as np
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
 x = np.array([1, 2, 3, 4, 5], dtype=float).reshape(-1, 1)
-y = np.array([1.0, 4.0, 9.0, 16.1, 25.2])   # Build Phi with degree-2 polynomial features
+y = np.array([1.0, 4.0, 9.0, 16.1, 25.2])
+
+# Build Phi with degree-2 polynomial features
 poly = PolynomialFeatures(degree=2, include_bias=True)
 Phi = poly.fit_transform(x)
 theta = np.linalg.solve(Phi.T @ Phi, Phi.T @ y)
 print("Phi feature names:", poly.get_feature_names_out())
-print(f"Theta: {theta.round(4)}")   # sklearn LinearRegression on Phi
+print(f"Theta: {theta.round(4)}")
+
+# sklearn LinearRegression on Phi
 lr = LinearRegression(fit_intercept=False)
 lr.fit(Phi, y)
 print(f"sklearn theta: {lr.coef_.round(4)}")
@@ -117,10 +121,14 @@ print(f"sklearn theta: {lr.coef_.round(4)}")
 
 ```r
 x <- c(1, 2, 3, 4, 5)
-y <- c(1.0, 4.0, 9.0, 16.1, 25.2)  # Build Phi: design matrix with polynomial features
+y <- c(1.0, 4.0, 9.0, 16.1, 25.2)
+
+# Build Phi: design matrix with polynomial features
 Phi <- cbind(1, x, x^2)
 theta <- solve(t(Phi) %*% Phi, t(Phi) %*% y)
-cat("Theta (intercept, linear, quadratic):", round(theta, 4), "\n")  # Using poly() in lm for comparison
+cat("Theta (intercept, linear, quadratic):", round(theta, 4), "\n")
+
+# Using poly() in lm for comparison
 fit <- lm(y ~ poly(x, degree = 2, raw = TRUE))
 cat("lm coefficients:", round(coef(fit), 4), "\n")
 ```
@@ -128,7 +136,6 @@ cat("lm coefficients:", round(coef(fit), 4), "\n")
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
 import pandas as pd
 from sklearn.metrics import r2_score, mean_absolute_error
@@ -136,16 +143,31 @@ from sklearn.preprocessing import PolynomialFeatures
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model import Ridge
 
-def fit_basis_regression( x_train: np.ndarray, y_train: np.ndarray, x_test: np.ndarray, y_test: np.ndarray, max_degree: int = 5, ridge_alpha: float = 0.01,
+
+def fit_basis_regression(
+    x_train: np.ndarray,
+    y_train: np.ndarray,
+    x_test: np.ndarray,
+    y_test: np.ndarray,
+    max_degree: int = 5,
+    ridge_alpha: float = 0.01,
 ) -> pd.DataFrame:
     # Fit polynomial basis regression for degrees 1..max_degree and compare.
     rows = []
     for degree in range(1, max_degree + 1):
-        pipeline = Pipeline([ ("poly", PolynomialFeatures(degree=degree, include_bias=True)), ("ridge", Ridge(alpha=ridge_alpha, fit_intercept=False)), ])
-    pipeline.fit(x_train.reshape(-1, 1), y_train)
-    y_pred = pipeline.predict(x_test.reshape(-1, 1))
-    rows.append({ "degree": degree, "r2": round(r2_score(y_test, y_pred), 4), "mae": round(mean_absolute_error(y_test, y_pred), 4), })
+        pipeline = Pipeline([
+            ("poly", PolynomialFeatures(degree=degree, include_bias=True)),
+            ("ridge", Ridge(alpha=ridge_alpha, fit_intercept=False)),
+        ])
+        pipeline.fit(x_train.reshape(-1, 1), y_train)
+        y_pred = pipeline.predict(x_test.reshape(-1, 1))
+        rows.append({
+            "degree": degree,
+            "r2": round(r2_score(y_test, y_pred), 4),
+            "mae": round(mean_absolute_error(y_test, y_pred), 4),
+        })
     return pd.DataFrame(rows)
+
 
 if __name__ == "__main__":
     rng = np.random.default_rng(seed=42)

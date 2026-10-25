@@ -92,9 +92,18 @@ $\sqrt{4} = 2 \quad \because \quad 2 \times 2 = 4$ and $2 > 0$ (we take the posi
 # The ∵ symbol does not appear in Python code.
 # In code, you document the same logical chain with comments.
 # Example: proving that a number is positive
-# because it is the result of squaring another number def is_positive_squared(x: float) -> bool: """ Returns True because x**2 is always >= 0 for real x. (∵ squaring a real number cannot produce a negative result) """ squared = x ** 2
-# squared >= 0 ∵ x**2 = x * x, and a number times itself is non-negative return squared >= 0 print(is_positive_squared(-5))
-# True (∵ (-5)^2 = 25 >= 0)
+# because it is the result of squaring another number
+def is_positive_squared(x: float) -> bool:
+    """Returns True because x**2 is always >= 0 for real x.
+
+    (∵ squaring a real number cannot produce a negative result)
+    """
+    squared = x ** 2
+    # squared >= 0 ∵ x**2 = x * x, and a number times itself is non-negative
+    return squared >= 0
+
+
+print(is_positive_squared(-5))  # True (∵ (-5)^2 = 25 >= 0)
 print(is_positive_squared(0))   # True (∵ 0^2 = 0 >= 0)
 print(is_positive_squared(3))   # True (∵ 3^2 = 9 >= 0)
 ```
@@ -103,13 +112,15 @@ print(is_positive_squared(3))   # True (∵ 3^2 = 9 >= 0)
 
 ```r
 # In R, the same logical documentation goes into comments.
-# Example: proving non-negativity of variance # Variance is always >= 0
+# Example: proving non-negativity of variance
+# Variance is always >= 0
 # ∵ Var(X) = E[(X - mu)^2]
 # and squared quantities are always non-negative
 compute_variance <- function(x) {  # x is a numeric vector
   mu <- mean(x)
   deviations_squared <- (x - mu)^2  # always >= 0 ∵ squaring removes sign
-  variance <- mean(deviations_squared) variance
+  variance <- mean(deviations_squared)
+  variance
 }
 values <- c(2, 4, 4, 4, 5, 5, 7, 9)
 cat("Variance:", compute_variance(values), "\n")  # 4

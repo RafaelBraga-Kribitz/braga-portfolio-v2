@@ -104,20 +104,25 @@ $a = 100.001, b = 100.000$: $|a - b| = 0.001$. $\bigl| |a| - |b| \bigr| = 0.001$
 
 ```python
 # Reverse triangle inequality: |a - b| >= ||a| - |b||
-import math   # Basic verification across multiple cases
-cases = [ ( 8.0, -3.0),   # opposite signs — gap > lower bound
-    ( 8.0, 3.0),   # same sign, large sep — equality expected
-    ( 8.0, 5.0),   # same sign
-    (-5.0, -9.0),   # both negative
-    (100.001, 100.000),   # near-equality — catastrophic cancellation scenario
+import math
+
+# Basic verification across multiple cases
+cases = [
+    (8.0, -3.0),         # opposite signs — gap > lower bound
+    (8.0, 3.0),          # same sign, large sep — equality expected
+    (8.0, 5.0),          # same sign
+    (-5.0, -9.0),        # both negative
+    (100.001, 100.000),  # near-equality — catastrophic cancellation scenario
 ]
 print(f"{'a':>10} {'b':>10} {'|a-b|':>10} {'||a|-|b||':>12} {'holds':>6} {'equal':>6}")
 for a, b in cases:
     left = abs(a - b)
-right = abs(abs(a) - abs(b))
-holds = left >= right - 1e-12
-equal = math.isclose(left, right, rel_tol=1e-9)
-print(f"{a:>10.4f} {b:>10.4f} {left:>10.6f} {right:>12.6f} {str(holds):>6} {str(equal):>6}")   # Catastrophic cancellation: large values, tiny difference
+    right = abs(abs(a) - abs(b))
+    holds = left >= right - 1e-12
+    equal = math.isclose(left, right, rel_tol=1e-9)
+    print(f"{a:>10.4f} {b:>10.4f} {left:>10.6f} {right:>12.6f} {str(holds):>6} {str(equal):>6}")
+
+# Catastrophic cancellation: large values, tiny difference
 a = 1_000_000.001
 b = 1_000_000.000
 diff = a - b
@@ -126,35 +131,44 @@ print(f"\nCatastrophic cancellation example:")
 print(f" a = {a} b = {b}")
 print(f" |a - b| = {diff} (tiny)")
 print(f" lower bound = {lower_bound} (also tiny — the bound is tight)")
-print(f" Warning: float64 may lose precision here!")   # Random verification
+print(f" Warning: float64 may lose precision here!")
+
+# Random verification
 import random
+
 random.seed(42)
 N_TESTS = 10_000
 FLOAT_TOL = 1e-10
 violations = 0
 for _ in range(N_TESTS):
     a = random.uniform(-100, 100)
-b = random.uniform(-100, 100)
-if abs(a - b) < abs(abs(a) - abs(b)) - FLOAT_TOL:
-    violations += 1
+    b = random.uniform(-100, 100)
+    if abs(a - b) < abs(abs(a) - abs(b)) - FLOAT_TOL:
+        violations += 1
 print(f"\nRandom test: {N_TESTS} pairs — violations: {violations}")
 ```
 
 ### Beginner example (R)
 
 ```r
-# Reverse triangle inequality: |a-b| >= ||a|-|b|| # Verification table
+# Reverse triangle inequality: |a-b| >= ||a|-|b||
+# Verification table
 cases <- list(c(8, -3), c(8, 3), c(8, 5), c(-5, -9), c(100.001, 100.000))
 cat(sprintf("%-10s %-10s %-10s %-12s %-6s\n", "a", "b", "|a-b|", "||a|-|b||", "holds"))
-for (p in cases) { a <- p[1]; b <- p[2]
+for (p in cases) {
+  a <- p[1]; b <- p[2]
   left <- abs(a - b)
   right <- abs(abs(a) - abs(b))
   holds <- left >= right - 1e-12
   cat(sprintf("%-10.4f %-10.4f %-10.6f %-12.6f %-6s\n", a, b, left, right, holds))
-}  # Catastrophic cancellation check
+}
+
+# Catastrophic cancellation check
 a <- 1000000.001; b <- 1000000.000
 cat(sprintf("\nCatastrophic cancellation:\n"))
-cat(sprintf(" |a - b| = %e lower bound = %e\n", abs(a - b), abs(abs(a) - abs(b))))  # Random verification
+cat(sprintf(" |a - b| = %e lower bound = %e\n", abs(a - b), abs(abs(a) - abs(b))))
+
+# Random verification
 set.seed(42)
 N_TESTS <- 10000
 a_vals <- runif(N_TESTS, -100, 100)
@@ -167,7 +181,9 @@ cat(sprintf("\nRandom test: %d pairs — violations: %d\n", N_TESTS, violations)
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: segment distance analysis using the reverse triangle inequality
+import pandas as pd
+
+# Scenario: segment distance analysis using the reverse triangle inequality
 # Verify that pairwise absolute differences between segment means are always
 # at least the absolute difference of their magnitudes (lower bound check)
 # Also flag potential catastrophic cancellation: cases where means are nearly equal
@@ -177,24 +193,52 @@ CANCEL_TOL = 0.05   # flag if ||a| - |b|| / |a - b| > 1 - CANCEL_TOL (nearly tig
 segment_means = np.array([-85.0, -30.0, -5.0, 0.0, 8.0, 20.0, 75.0, 120.0])
 segment_names = [f"seg_{i+1}" for i in range(N_SEGMENTS)]
 
-def reverse_triangle_check( values: np.ndarray, names: list[str],
+
+def reverse_triangle_check(
+    values: np.ndarray,
+    names: list[str],
 ) -> pd.DataFrame:
-    """ For all pairs, verify: |a - b| >= ||a| - |b|| (reverse triangle inequality). Args: values: 1-D array of real values to compare pairwise. names: Labels for each value. Returns: DataFrame with pair labels, |a-b|, lower bound, holds flag, and tightness ratio. """
+    """
+    For all pairs, verify: |a - b| >= ||a| - |b|| (reverse triangle inequality).
+
+    Args:
+        values: 1-D array of real values to compare pairwise.
+        names: Labels for each value.
+
+    Returns:
+        DataFrame with pair labels, |a-b|, lower bound, holds flag, and tightness ratio.
+    """
     rows = []
     n = len(values)
     for i in range(n):
         for j in range(i + 1, n):
             a, b = values[i], values[j]
-        dist = abs(a - b)
-    lb = abs(abs(a) - abs(b))
-    holds = dist >= lb - 1e-12
-    tightness = lb / dist if dist > 0 else 1.0   # lb/dist → 1 means tight
-    rows.append({ "pair": f"{names[i]} vs {names[j]}", "a": a, "b": b, "|a-b|": dist, "lower_bound": lb, "holds": holds, "tightness": tightness, "near_cancel": tightness > 1 - CANCEL_TOL, })
+            dist = abs(a - b)
+            lb = abs(abs(a) - abs(b))
+            holds = dist >= lb - 1e-12
+            tightness = lb / dist if dist > 0 else 1.0   # lb/dist → 1 means tight
+            rows.append({
+                "pair": f"{names[i]} vs {names[j]}",
+                "a": a,
+                "b": b,
+                "|a-b|": dist,
+                "lower_bound": lb,
+                "holds": holds,
+                "tightness": tightness,
+                "near_cancel": tightness > 1 - CANCEL_TOL,
+            })
     return pd.DataFrame(rows)
+
+
 report = reverse_triangle_check(segment_means, segment_names)
 print("Reverse Triangle Inequality: |a - b| >= ||a| - |b||")
 print("=" * 72)
-print(reporta-b|", "lower_bound", "holds", "tightness".round(4).to_string(index=False)) violations = (~report["holds"]).sum() near_cancels = report["near_cancel"].sum() print(f"\nViolations: {violations}") print(f"Near-tight pairs: {near_cancels} (tightness > {1 - CANCEL_TOL:.2f} — cancellation risk)") print(report[report["near_cancel"]]a-b|", "lower_bound", "tightness".to_string(index=False))
+print(report[["pair", "|a-b|", "lower_bound", "holds", "tightness"]].round(4).to_string(index=False))
+violations = (~report["holds"]).sum()
+near_cancels = report["near_cancel"].sum()
+print(f"\nViolations: {violations}")
+print(f"Near-tight pairs: {near_cancels} (tightness > {1 - CANCEL_TOL:.2f} — cancellation risk)")
+print(report[report["near_cancel"]][["pair", "|a-b|", "lower_bound", "tightness"]].to_string(index=False))
 ```
 
 ### Professional example (R)
@@ -205,11 +249,20 @@ segment_means <- c(-12.5, 8.3, -4.1, 15.0, -2.0)
 segment_names <- paste0("seg_", LETTERS[1:5])
 CANCEL_TOL <- 0.05
 rows <- list()
-for (i in 1:(length(segment_means)-1)) { for (j in (i+1):length(segment_means)) { a <- segment_means[i]; b <- segment_means[j]
+for (i in 1:(length(segment_means)-1)) {
+  for (j in (i+1):length(segment_means)) {
+    a <- segment_means[i]; b <- segment_means[j]
     dist <- abs(a - b)
     lb <- abs(abs(a) - abs(b))
-    tightness <- if (dist > 0) lb / dist
-    else 1 rowslength(rows)+1 <- data.frame( pair = paste(segment_names[i], "vs", segment_names[j]), dist = dist, lower_bound = lb, holds = dist >= lb - 1e-12, tightness = tightness, near_cancel = tightness > 1 - CANCEL_TOL )
+    tightness <- if (dist > 0) lb / dist else 1
+    rows[[length(rows)+1]] <- data.frame(
+      pair = paste(segment_names[i], "vs", segment_names[j]),
+      dist = dist,
+      lower_bound = lb,
+      holds = dist >= lb - 1e-12,
+      tightness = tightness,
+      near_cancel = tightness > 1 - CANCEL_TOL
+    )
   }
 }
 report <- do.call(rbind, rows)

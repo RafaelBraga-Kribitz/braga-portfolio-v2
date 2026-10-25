@@ -98,7 +98,10 @@ import numpy as np
 from scipy import integrate
 
 def verify_constant_multiple_rule(f, c: float, a: float, b: float) -> None:
-    """ Numerically verify: integral(c*f) = c * integral(f) on [a, b]. Uses scipy.integrate.quad for accurate numerical integration. """
+    """Numerically verify: integral(c*f) = c * integral(f) on [a, b].
+
+    Uses scipy.integrate.quad for accurate numerical integration.
+    """
     integral_cf, err_cf = integrate.quad(lambda x: c * f(x), a, b)
     integral_f, err_f = integrate.quad(f, a, b)
     c_times_integral = c * integral_f
@@ -106,50 +109,65 @@ def verify_constant_multiple_rule(f, c: float, a: float, b: float) -> None:
     print(f" integral(c*f): {integral_cf:.8f}")
     print(f" c * integral(f): {c_times_integral:.8f}")
     print(f" Difference: {abs(integral_cf - c_times_integral):.2e} Match: {match}")
-    print("Constant Multiple Rule: integral(c*f) = c * integral(f)")   # Example 1: 5*e^(3x) from 0 to 1
+
+
+print("Constant Multiple Rule: integral(c*f) = c * integral(f)")
+
+# Example 1: 5*e^(3x) from 0 to 1
 print("\nf(x) = e^(3x), c = 5, [0, 1]")
 print(f"Analytic: 5 * (e^3 - 1)/3 = {5 * (np.exp(3) - 1) / 3:.8f}")
-verify_constant_multiple_rule(lambda x: np.exp(3 * x), c=5.0, a=0.0, b=1.0)   # Example 2: probability density normalization
+verify_constant_multiple_rule(lambda x: np.exp(3 * x), c=5.0, a=0.0, b=1.0)
+
+# Example 2: probability density normalization
 print("\n--- Normalization: p(x) = (1/Z) * unnormalized density ---")
-lam = 2.0   # exponential distribution rate
+lam = 2.0  # exponential distribution rate
 # Unnormalized density: f(x) = e^(-lam*x) on [0, inf)
 z, _ = integrate.quad(lambda x: np.exp(-lam * x), 0, np.inf)
 print(f"Unnormalized: f(x) = exp(-{lam}x)")
 print(f"Normalizing constant Z = {z:.6f} (should be 1/lambda = {1/lam:.6f})")
 integral_normalized, _ = integrate.quad(lambda x: (1/z) * np.exp(-lam * x), 0, np.inf)
-print(f"integral(p(x)) = (1/Z)*Z = {integral_normalized:.8f} (should be 1.0)")   # Example 3: E[cX] = c*E[X] via numerical integration
+print(f"integral(p(x)) = (1/Z)*Z = {integral_normalized:.8f} (should be 1.0)")
+
+# Example 3: E[cX] = c*E[X] via numerical integration
 print("\n--- E[cX] = c*E[X] ---")
-MEAN_TRUE = 1 / lam   # exponential mean = 1/lambda
+MEAN_TRUE = 1 / lam  # exponential mean = 1/lambda
 for c_scale in [0.5, 2.0, 10.0]:
     ex, _ = integrate.quad(lambda x: x * lam * np.exp(-lam * x), 0, 20)
-ecx, _ = integrate.quad(lambda x: c_scale * x * lam * np.exp(-lam * x), 0, 20)
-print(f" c = {c_scale}: E[X] = {ex:.5f}, E[{c_scale}X] = {ecx:.5f} " f"(c*E[X] = {c_scale * ex:.5f}) Match: {abs(ecx - c_scale * ex) < 1e-6}")
+    ecx, _ = integrate.quad(lambda x: c_scale * x * lam * np.exp(-lam * x), 0, 20)
+    print(f" c = {c_scale}: E[X] = {ex:.5f}, E[{c_scale}X] = {ecx:.5f} "
+          f"(c*E[X] = {c_scale * ex:.5f}) Match: {abs(ecx - c_scale * ex) < 1e-6}")
 ```
 
 ### Beginner example (R)
 
 ```r
 # Constant Multiple Rule: integral(c*f) = c * integral(f)
-verify_constant_multiple <- function(f, c, a, b) { int_cf <- integrate(function(x) c * f(x), lower = a, upper = b)$value
+verify_constant_multiple <- function(f, c, a, b) {
+  int_cf <- integrate(function(x) c * f(x), lower = a, upper = b)$value
   int_f <- integrate(f, lower = a, upper = b)$value
   cat(sprintf(" integral(c*f) = %.8f\n", int_cf))
   cat(sprintf(" c*integral(f) = %.8f\n", c * int_f))
   cat(sprintf(" Difference = %.2e\n\n", abs(int_cf - c * int_f)))
 }
-cat("Constant Multiple Rule\n\n")  # f(x) = exp(3x),
-c = 5
+cat("Constant Multiple Rule\n\n")
+
+# f(x) = exp(3x), c = 5
 cat("f(x) = exp(3x), c=5, [0,1]\n")
 analytic <- 5 * (exp(3) - 1) / 3
 cat(sprintf("Analytic: %.8f\n", analytic))
-verify_constant_multiple(function(x) exp(3 * x), c = 5, a = 0, b = 1)  # Normalization
+verify_constant_multiple(function(x) exp(3 * x), c = 5, a = 0, b = 1)
+
+# Normalization
 lam <- 2.0
 Z <- integrate(function(x) exp(-lam * x), lower = 0, upper = Inf)$value
 cat(sprintf("Normalization: Z = %.6f = 1/lambda = %.6f\n", Z, 1/lam))
 int_norm <- integrate(function(x) (1/Z) * exp(-lam * x), lower = 0, upper = Inf)$value
-cat(sprintf("integral(p(x)) = %.8f (should be 1)\n\n", int_norm))  #
-E[cX] = c*E[X]
+cat(sprintf("integral(p(x)) = %.8f (should be 1)\n\n", int_norm))
+
+# E[cX] = c*E[X]
 cat("E[cX] = c*E[X]:\n")
-for (c_val in c(0.5, 2, 10)) { ex <- integrate(function(x) x * lam * exp(-lam * x), lower = 0, upper = 20)$value
+for (c_val in c(0.5, 2, 10)) {
+  ex <- integrate(function(x) x * lam * exp(-lam * x), lower = 0, upper = 20)$value
   ecx <- integrate(function(x) c_val * x * lam * exp(-lam * x), lower = 0, upper = 20)$value
   cat(sprintf(" c=%.1f: E[X]=%.5f, E[cX]=%.5f, c*E[X]=%.5f\n", c_val, ex, ecx, c_val * ex))
 }
@@ -162,7 +180,9 @@ import numpy as np
 from scipy import integrate
 from sklearn.datasets import make_regression
 from sklearn.preprocessing import StandardScaler
-np.random.seed(42)   # -- Constant Multiple Rule: gradient flow scaling and variance of scaled features --
+np.random.seed(42)
+
+# -- Constant Multiple Rule: gradient flow scaling and variance of scaled features --
 # Two connected applications:
 # (A) Feature scaling: Var[c*X] = c^2 * Var[X], integral form via constant multiple rule
 # Scaling features by c scales variance by c^2 (not c) -- critical for LR selection
@@ -174,34 +194,41 @@ N = 200
 DIM = 4
 X_raw, y = make_regression(n_samples=N, n_features=DIM, noise=0.5, random_state=42)
 y = y / y.std()
-print("Constant Multiple Rule: Feature Scaling and Gradient Flow")   # Part A: Var[c*X] = c^2 * Var[X]
+print("Constant Multiple Rule: Feature Scaling and Gradient Flow")
+
+# Part A: Var[c*X] = c^2 * Var[X]
 print("\n--- Part A: Var[c*X] = c^2 * Var[X] (constant multiple rule in variance) ---")
 print(f"{'Feature':>10} {'Std(X)':>10} {'c':>6} {'Std(cX)':>10} {'c*Std(X)':>12} {'Match':>8}")
 for i in range(DIM):
     feature = X_raw[:, i]
-std_x = feature.std()
-for c in [0.1, 2.0, 10.0]:
-    std_cx = (c * feature).std()
-c_std_x = abs(c) * std_x
-match = abs(std_cx - c_std_x) < 1e-8
-print(f" feat[{i}] {std_x:>10.4f} {c:>6.1f} {std_cx:>10.4f} {c_std_x:>12.4f} {str(match):>8}")
-break   # just show first feature # Part B: Gradient flow integral: Delta_w = -alpha * grad(w_0) + O(alpha^2)
+    std_x = feature.std()
+    for c in [0.1, 2.0, 10.0]:
+        std_cx = (c * feature).std()
+        c_std_x = abs(c) * std_x
+        match = abs(std_cx - c_std_x) < 1e-8
+        print(f" feat[{i}] {std_x:>10.4f} {c:>6.1f} {std_cx:>10.4f} {c_std_x:>12.4f} {str(match):>8}")
+    break  # just show first feature
+
+# Part B: Gradient flow integral: Delta_w = -alpha * grad(w_0) + O(alpha^2)
 print("\n--- Part B: Learning rate as constant in gradient flow integral ---")
 scaler = StandardScaler()
 X = scaler.fit_transform(X_raw)
 w0 = np.zeros(DIM)
-grad0 = X.T @ (X @ w0 - y) / N   # initial gradient # For quadratic loss: w(T) = exp(-T * X^TX/N) * w0 + (I - exp(-T * X^TX/N)) * w*
+grad0 = X.T @ (X @ w0 - y) / N  # initial gradient
+# For quadratic loss: w(T) = exp(-T * X^TX/N) * w0 + (I - exp(-T * X^TX/N)) * w*
 # First-order: w(alpha) ≈ w0 - alpha * grad0 (constant multiple rule on gradient integral)
 # Verify: numerical vs. analytic first-order approximation
 print(f"Initial gradient norm: {np.linalg.norm(grad0):.6f}")
 print(f"\n{'alpha':>8} {'|Delta_w| analytic':>20} {'|Delta_w| exact (GD1)':>22} {'Match':>8}")
 for alpha in [0.001, 0.01, 0.05, 0.1, 0.5]:
     # First-order (constant multiple rule): Delta_w ≈ -alpha * grad0
-    dw_analytic = alpha * np.linalg.norm(grad0)   # Exact one-step gradient descent
-w1 = w0 - alpha * grad0
-dw_exact = np.linalg.norm(w1 - w0)   # They should match (they are identical: dw_exact = alpha * ||grad0||)
-match = abs(dw_analytic - dw_exact) < 1e-10
-print(f"{alpha:>8.3f} {dw_analytic:>20.8f} {dw_exact:>22.8f} {str(match):>8}")
+    dw_analytic = alpha * np.linalg.norm(grad0)
+    # Exact one-step gradient descent
+    w1 = w0 - alpha * grad0
+    dw_exact = np.linalg.norm(w1 - w0)
+    # They should match (they are identical: dw_exact = alpha * ||grad0||)
+    match = abs(dw_analytic - dw_exact) < 1e-10
+    print(f"{alpha:>8.3f} {dw_analytic:>20.8f} {dw_exact:>22.8f} {str(match):>8}")
 print(f"\nConclusion: gradient descent step = alpha * gradient is the constant multiple")
 print(f"rule: scaling the gradient by alpha is equivalent to factoring alpha outside")
 print(f"the integral of the gradient flow over step size alpha.")

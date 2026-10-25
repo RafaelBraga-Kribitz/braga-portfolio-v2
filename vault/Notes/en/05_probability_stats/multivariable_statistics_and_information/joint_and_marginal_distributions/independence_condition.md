@@ -96,11 +96,17 @@ If $f(0,0) = 0.40 \ne 0.50 \times 0.70 = 0.35$, independence fails.
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # Joint PMF: independent case
-joint_pmf = np.array([ [0.35, 0.15], [0.35, 0.15],
+import numpy as np
+
+# Joint PMF: independent case
+joint_pmf = np.array([
+    [0.35, 0.15],
+    [0.35, 0.15],
 ])
 marginal_x = joint_pmf.sum(axis=1)   # row sums
-marginal_y = joint_pmf.sum(axis=0)   # col sums # Expected under independence: outer product of marginals
+marginal_y = joint_pmf.sum(axis=0)   # col sums
+
+# Expected under independence: outer product of marginals
 expected_if_independent = np.outer(marginal_x, marginal_y)
 print("Joint PMF:"); print(joint_pmf)
 print("\nExpected under independence:"); print(expected_if_independent.round(4))
@@ -122,23 +128,38 @@ cat("Are X and Y independent?", is_independent, "\n")
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
 import pandas as pd
 from scipy.stats import chi2_contingency
 
-def test_independence( df: pd.DataFrame, col_x: str, col_y: str, alpha: float = 0.05 ) -> dict[str, float | bool | str]:
+
+def test_independence(
+    df: pd.DataFrame, col_x: str, col_y: str, alpha: float = 0.05
+) -> dict[str, float | bool | str]:
     # Chi-square test for independence between two categorical variables.
     # Returns test statistic, p-value, degrees of freedom, and interpretation.
     contingency_table = pd.crosstab(df[col_x], df[col_y])
     chi2_stat, p_value, dof, expected = chi2_contingency(contingency_table)
     max_deviation = np.max(np.abs(contingency_table.values - expected) / expected)
-    return { "chi2_statistic": round(float(chi2_stat), 4), "p_value": round(float(p_value), 6), "degrees_of_freedom": int(dof), "reject_independence": p_value < alpha, "max_relative_deviation": round(float(max_deviation), 4), "conclusion": ( f"DEPENDENT (p={p_value:.4f} < {alpha})" if p_value < alpha else f"Cannot reject independence (p={p_value:.4f} >= {alpha})" ), }
+    return {
+        "chi2_statistic": round(float(chi2_stat), 4),
+        "p_value": round(float(p_value), 6),
+        "degrees_of_freedom": int(dof),
+        "reject_independence": p_value < alpha,
+        "max_relative_deviation": round(float(max_deviation), 4),
+        "conclusion": (
+            f"DEPENDENT (p={p_value:.4f} < {alpha})"
+            if p_value < alpha
+            else f"Cannot reject independence (p={p_value:.4f} >= {alpha})"
+        ),
+    }
+
 
 if __name__ == "__main__":
     rng = np.random.default_rng(seed=42)
     n = 5_000
-    device_choices = rng.choice(["mobile", "desktop"], size=n, p=[0.60, 0.40])   # Desktop users purchase more: dependence induced
+    device_choices = rng.choice(["mobile", "desktop"], size=n, p=[0.60, 0.40])
+    # Desktop users purchase more: dependence induced
     purchase_probs = np.where(device_choices == "desktop", 0.45, 0.20)
     purchase_choices = (rng.random(n) < purchase_probs).astype(str)
     purchase_choices = np.where(purchase_choices == "True", "yes", "no")

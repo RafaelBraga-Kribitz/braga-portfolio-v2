@@ -94,33 +94,56 @@ $L = 1/2 < 1$ → **CONVERGES absolutely** by Root Test. *Verification*: $\sum_{
 
 ```python
 """
-Root
-Test: L = lim |a_n|^(1/n)
+Root Test: L = lim |a_n|^(1/n)
 Converges if L < 1, diverges if L > 1, inconclusive if L = 1.
-""" import numpy as np
+"""
+import numpy as np
 from typing import Callable
 
-def root_test( term_func: Callable[[np.ndarray], np.ndarray], large_n_values: np.ndarray | None = None,
+
+def root_test(
+    term_func: Callable[[np.ndarray], np.ndarray],
+    large_n_values: np.ndarray | None = None,
 ) -> dict:
-    """Apply Root Test numerically. Parameters ---------- term_func : maps n (array of floats) to |a_n| large_n_values : n values to estimate the limit Returns ------- dict with limiting_root and conclusion """
+    """Apply Root Test numerically.
+
+    Parameters
+    ----------
+    term_func : maps n (array of floats) to |a_n|
+    large_n_values : n values to estimate the limit
+
+    Returns
+    -------
+    dict with limiting_root and conclusion
+    """
     if large_n_values is None:
-        large_n_values = np.array([100.0, 1000.0, 10000.0, 100000.0])   # Compute via log to avoid numerical overflow: |a_n|^(1/n) = exp(log|a_n|/n)
-        log_terms = np.log(np.abs(term_func(large_n_values)) + 1e-300)
-        nth_roots = np.exp(log_terms / large_n_values)
-        limiting_root = float(nth_roots[-1])
-        if limiting_root < 0.9999:
-            conclusion = f"CONVERGES absolutely (L = {limiting_root:.6f} < 1)"
-        elif limiting_root > 1.0001:
-            conclusion = f"DIVERGES (L = {limiting_root:.6f} > 1)"
-        else:
-            conclusion = f"INCONCLUSIVE (L ≈ 1.0, try another test)"
-        return {"limiting_root": limiting_root, "conclusion": conclusion}   # Test 1: (n / (2n+1))^n → L = 1/2 → converges
+        large_n_values = np.array([100.0, 1000.0, 10000.0, 100000.0])
+    # Compute via log to avoid numerical overflow: |a_n|^(1/n) = exp(log|a_n|/n)
+    log_terms = np.log(np.abs(term_func(large_n_values)) + 1e-300)
+    nth_roots = np.exp(log_terms / large_n_values)
+    limiting_root = float(nth_roots[-1])
+    if limiting_root < 0.9999:
+        conclusion = f"CONVERGES absolutely (L = {limiting_root:.6f} < 1)"
+    elif limiting_root > 1.0001:
+        conclusion = f"DIVERGES (L = {limiting_root:.6f} > 1)"
+    else:
+        conclusion = f"INCONCLUSIVE (L ≈ 1.0, try another test)"
+    return {"limiting_root": limiting_root, "conclusion": conclusion}
+
+
+# Test 1: (n / (2n+1))^n → L = 1/2 → converges
 result1 = root_test(lambda n: (n / (2.0 * n + 1.0))**n)
-print(f"(n/(2n+1))^n: {result1['conclusion']}")   # Test 2: (2n / n)^n = 2^n → L = 2 → diverges
+print(f"(n/(2n+1))^n: {result1['conclusion']}")
+
+# Test 2: (2n / n)^n = 2^n → L = 2 → diverges
 result2 = root_test(lambda n: 2.0**n)
-print(f"2^n: {result2['conclusion']}")   # Test 3: 1/n^2 → L = 1 → inconclusive (p-series, actually converges)
+print(f"2^n: {result2['conclusion']}")
+
+# Test 3: 1/n^2 → L = 1 → inconclusive (p-series, actually converges)
 result3 = root_test(lambda n: 1.0 / n**2)
-print(f"1/n^2: {result3['conclusion']}")   # Test 4: (1/n)^n → L = 0 → converges
+print(f"1/n^2: {result3['conclusion']}")
+
+# Test 4: (1/n)^n → L = 0 → converges
 result4 = root_test(lambda n: (1.0 / n)**n)
 print(f"(1/n)^n: {result4['conclusion']}")
 ```
@@ -128,25 +151,25 @@ print(f"(1/n)^n: {result4['conclusion']}")
 ### Beginner example (R)
 
 ```r
-# Root Test:
-L = lim |a_n|^(1/n)
+# Root Test: L = lim |a_n|^(1/n)
 # Uses log trick to avoid overflow: |a_n|^(1/n) = exp(log|a_n| / n)
-root_test <- function(term_func, series_name) { large_n <- c(100, 1000, 10000, 100000)
+root_test <- function(term_func, series_name) {
+  large_n <- c(100, 1000, 10000, 100000)
   log_terms <- log(abs(term_func(large_n)) + 1e-300)
   nth_roots <- exp(log_terms / large_n)
   l_val <- tail(nth_roots, 1)
-  if (is.nan(l_val) || is.infinite(l_val)) { verdict <- "ERROR"
-  }
-  else
-  if (l_val < 0.9999) { verdict <- sprintf("CONVERGES (L=%.6f)", l_val)
-  }
-  else
-  if (l_val > 1.0001) { verdict <- sprintf("DIVERGES (L=%.6f)", l_val)
-  }
-  else { verdict <- "INCONCLUSIVE (L≈1)"
+  if (is.nan(l_val) || is.infinite(l_val)) {
+    verdict <- "ERROR"
+  } else if (l_val < 0.9999) {
+    verdict <- sprintf("CONVERGES (L=%.6f)", l_val)
+  } else if (l_val > 1.0001) {
+    verdict <- sprintf("DIVERGES (L=%.6f)", l_val)
+  } else {
+    verdict <- "INCONCLUSIVE (L≈1)"
   }
   cat(sprintf("%-30s → %s\n", series_name, verdict))
-} root_test(function(n) (n / (2*n + 1))^n, "(n/(2n+1))^n")
+}
+root_test(function(n) (n / (2*n + 1))^n, "(n/(2n+1))^n")
 root_test(function(n) 2^n, "2^n")
 root_test(function(n) 1 / n^2, "1/n^2 (inconclusive)")
 root_test(function(n) (1/n)^n, "(1/n)^n")
@@ -158,21 +181,63 @@ root_test(function(n) (log(n)/n)^n, "(log(n)/n)^n")
 ```python
 """
 Root Test for computing the radius of convergence of a neural network
-feature expansion (RBF/Taylor-style power series). Business context: A recommender system uses a polynomial feature expansion sum_n c_n * x^n to approximate a kernel function. The analyst needs the radius of convergence R to know the safe input normalization range for the model.
-""" import numpy as np def cauchy_hadamard_radius( coefficients: np.ndarray, n_offset: int = 0,
-) -> float: """Compute radius of convergence via Cauchy-Hadamard formula. R = 1 / limsup |c_n|^(1/n) Parameters ---------- coefficients : array of |c_n| values (c_0, c_1, ..., c_N) n_offset : starting index (usually 0 or 1) Returns ------- float : radius of convergence R (inf if limsup = 0) """ indices = np.arange(n_offset, n_offset + len(coefficients), dtype=float)   # Avoid log(0): only consider nonzero coefficients
-nonzero_mask = coefficients > 1e-300 if not np.any(nonzero_mask): return float("inf") log_roots = np.log(coefficients[nonzero_mask]) / indices[nonzero_mask] limsup_log_root = np.max(log_roots[-20:])   # limsup via tail max
-limsup_root = np.exp(limsup_log_root) if limsup_root == 0: return float("inf") return 1.0 / limsup_root   # Simulate polynomial kernel coefficients: c_n = 1/n! (exponential kernel e^x)
-NUM_TERMS: int = 50
+feature expansion (RBF/Taylor-style power series).
+
+Business context: A recommender system uses a polynomial feature expansion
+sum_n c_n * x^n to approximate a kernel function. The analyst needs the
+radius of convergence R to know the safe input normalization range for the model.
+"""
 import math
-exp_kernel_coeffs = np.array([1.0 / math.factorial(n) for n in range(NUM_TERMS)]) radius_exp = cauchy_hadamard_radius(exp_kernel_coeffs)
-print(f"Exponential kernel (c_n = 1/n!): R = {radius_exp:.2f} (expected: inf)")   # Geometric kernel: c_n = (0.5)^n → R = 1/0.5 = 2
+
+import numpy as np
+
+
+def cauchy_hadamard_radius(
+    coefficients: np.ndarray,
+    n_offset: int = 0,
+) -> float:
+    """Compute radius of convergence via Cauchy-Hadamard formula.
+
+    R = 1 / limsup |c_n|^(1/n)
+
+    Parameters
+    ----------
+    coefficients : array of |c_n| values (c_0, c_1, ..., c_N)
+    n_offset : starting index (usually 0 or 1)
+
+    Returns
+    -------
+    float : radius of convergence R (inf if limsup = 0)
+    """
+    indices = np.arange(n_offset, n_offset + len(coefficients), dtype=float)
+    # Avoid log(0): only consider nonzero coefficients (and n >= 1, since 1/n is undefined at n = 0)
+    nonzero_mask = (coefficients > 1e-300) & (indices > 0)
+    if not np.any(nonzero_mask):
+        return float("inf")
+    log_roots = np.log(coefficients[nonzero_mask]) / indices[nonzero_mask]
+    limsup_log_root = np.max(log_roots[-20:])   # limsup via tail max
+    limsup_root = np.exp(limsup_log_root)
+    if limsup_root == 0:
+        return float("inf")
+    return 1.0 / limsup_root
+
+
+# Simulate polynomial kernel coefficients: c_n = 1/n! (exponential kernel e^x)
+NUM_TERMS: int = 50
+exp_kernel_coeffs = np.array([1.0 / math.factorial(n) for n in range(NUM_TERMS)])
+radius_exp = cauchy_hadamard_radius(exp_kernel_coeffs)
+print(f"Exponential kernel (c_n = 1/n!): R = {radius_exp:.2f} (expected: inf)")
+
+# Geometric kernel: c_n = (0.5)^n → R = 1/0.5 = 2
 geometric_coeffs = 0.5**np.arange(NUM_TERMS, dtype=float)
 radius_geom = cauchy_hadamard_radius(geometric_coeffs)
-print(f"Geometric kernel (c_n = 0.5^n): R = {radius_geom:.4f} (expected: 2.0)")   # Diverging kernel: c_n = n! (diverges everywhere except x=0)
+print(f"Geometric kernel (c_n = 0.5^n): R = {radius_geom:.4f} (expected: 2.0)")
+
+# Diverging kernel: c_n = n! (diverges everywhere except x=0)
 factorial_coeffs = np.array([float(math.factorial(n)) for n in range(20)])
 radius_fact = cauchy_hadamard_radius(factorial_coeffs)
-print(f"Factorial kernel (c_n = n!): R = {radius_fact:.6f} (expected: 0.0)") print(f"\nRecommendation: normalize inputs to |x| < R_effective = {min(radius_geom, 2.0):.2f}")
+print(f"Factorial kernel (c_n = n!): R = {radius_fact:.6f} (expected: 0.0)")
+print(f"\nRecommendation: normalize inputs to |x| < R_effective = {min(radius_geom, 2.0):.2f}")
 ```
 
 ---

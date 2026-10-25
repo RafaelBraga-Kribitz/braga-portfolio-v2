@@ -99,7 +99,9 @@ $C = 2\pi(4) = 8\pi \approx 25.13$.
 
 ```python
 import numpy as np
-import matplotlib.pyplot as plt   # -- Circle: equation, inside/outside check, area, circumference -------
+import matplotlib.pyplot as plt
+
+# -- Circle: equation, inside/outside check, area, circumference -------
 CENTER_X, CENTER_Y, RADIUS = 2.0, 3.0, 5.0
 
 def classify_point(px: float, py: float, cx: float, cy: float, r: float) -> str:
@@ -112,11 +114,13 @@ def classify_point(px: float, py: float, cx: float, cy: float, r: float) -> str:
         return "inside"
     else:
         return "outside"
-    test_points = [(6.0, 6.0), (3.0, 4.0), (8.0, 8.0), (2.0, 3.0)]
+
+
+test_points = [(6.0, 6.0), (3.0, 4.0), (8.0, 8.0), (2.0, 3.0)]
 for pt in test_points:
     status = classify_point(pt[0], pt[1], CENTER_X, CENTER_Y, RADIUS)
-dist_sq = (pt[0] - CENTER_X)**2 + (pt[1] - CENTER_Y)**2
-print(f" Point {pt}: (x-a)^2 + (y-b)^2 = {dist_sq:.1f}, R^2 = {RADIUS**2:.1f} -> {status}")
+    dist_sq = (pt[0] - CENTER_X)**2 + (pt[1] - CENTER_Y)**2
+    print(f" Point {pt}: (x-a)^2 + (y-b)^2 = {dist_sq:.1f}, R^2 = {RADIUS**2:.1f} -> {status}")
 area = np.pi * RADIUS ** 2
 circ = 2 * np.pi * RADIUS
 print(f"\nArea (pi*R^2) = {area:.4f}")
@@ -128,15 +132,16 @@ print(f"Circumference (2*pi*R) = {circ:.4f}")
 ```r
 # -- Circle: equation, inside/outside check, area, circumference -------
 CENTER_X <- 2.0; CENTER_Y <- 3.0; RADIUS <- 5.0
-classify_point <- function(px, py, cx, cy, r) { dist_sq <- (px - cx)^2 + (py - cy)^2
+classify_point <- function(px, py, cx, cy, r) {
+  dist_sq <- (px - cx)^2 + (py - cy)^2
   r_sq <- r^2
   if (isTRUE(all.equal(dist_sq, r_sq))) "on circle"
-  else
-  if (dist_sq < r_sq) "inside"
+  else if (dist_sq < r_sq) "inside"
   else "outside"
 }
 test_points <- list(c(6, 6), c(3, 4), c(8, 8), c(2, 3))
-for (pt in test_points) { dist_sq <- (pt[1] - CENTER_X)^2 + (pt[2] - CENTER_Y)^2
+for (pt in test_points) {
+  dist_sq <- (pt[1] - CENTER_X)^2 + (pt[2] - CENTER_Y)^2
   status <- classify_point(pt[1], pt[2], CENTER_X, CENTER_Y, RADIUS)
   cat(sprintf(" Point (%.0f, %.0f): dist^2 = %.1f, R^2 = %.1f -> %s\n", pt[1], pt[2], dist_sq, RADIUS^2, status))
 }
@@ -151,36 +156,54 @@ cat(sprintf("Circumference (2*pi*R) = %.4f\n", circ))
 ```python
 import numpy as np
 import pandas as pd
-np.random.seed(42)   # -- Business scenario: retail trade area overlap analysis
+np.random.seed(42)
+
+# -- Business scenario: retail trade area overlap analysis
 # 5 store locations, each with a 5-km circular trade area.
 # Count customers falling in each store's area; flag overlapping catchments.
 N_STORES = 5
 N_CUSTOMERS = 2000
-TRADE_RADIUS = 5.0   # km # Store locations (lat/lon approximated as km offsets from city center)
-store_coords = np.array([ [ 0.0, 0.0],   # downtown
-    [ 4.0, 3.0],   # north-east
-    [-4.0, 2.0],   # north-west
+TRADE_RADIUS = 5.0   # km
+
+# Store locations (lat/lon approximated as km offsets from city center)
+store_coords = np.array([
+    [ 0.0,  0.0],   # downtown
+    [ 4.0,  3.0],   # north-east
+    [-4.0,  2.0],   # north-west
     [ 3.0, -4.0],   # south-east
     [-2.0, -5.0],   # south
-])   # Simulate customer locations (clustered around city center)
-customer_coords = np.random.normal(0, 4.0, size=(N_CUSTOMERS, 2))   # For each store, count customers within trade area
+])
+
+# Simulate customer locations (clustered around city center)
+customer_coords = np.random.normal(0, 4.0, size=(N_CUSTOMERS, 2))
+
+# For each store, count customers within trade area
 results = []
 for store_idx, (cx, cy) in enumerate(store_coords):
     dist_sq = (customer_coords[:, 0] - cx)**2 + (customer_coords[:, 1] - cy)**2
-in_area = dist_sq <= TRADE_RADIUS**2
-n_in_area = int(np.sum(in_area))
-coverage_a = np.pi * TRADE_RADIUS**2
-results.append({ "store_id": store_idx + 1, "center_x_km": cx, "center_y_km": cy, "customers_in_area": n_in_area, "coverage_area_km2": round(coverage_a, 2), "customer_density": round(n_in_area / coverage_a, 4), })
+    in_area = dist_sq <= TRADE_RADIUS**2
+    n_in_area = int(np.sum(in_area))
+    coverage_a = np.pi * TRADE_RADIUS**2
+    results.append({
+        "store_id": store_idx + 1,
+        "center_x_km": cx,
+        "center_y_km": cy,
+        "customers_in_area": n_in_area,
+        "coverage_area_km2": round(coverage_a, 2),
+        "customer_density": round(n_in_area / coverage_a, 4),
+    })
 df = pd.DataFrame(results)
 print(f"Trade radius: {TRADE_RADIUS} km | Coverage area per store: {np.pi*TRADE_RADIUS**2:.2f} km^2")
 print(f"\nStore trade area summary:")
-print(df.to_string(index=False))   # Check pairwise overlap: two circles overlap if distance between centers < 2R
+print(df.to_string(index=False))
+
+# Check pairwise overlap: two circles overlap if distance between centers < 2R
 print(f"\nPairwise overlap check (circles overlap if center distance < 2*R = {2*TRADE_RADIUS:.1f} km):")
 for i in range(N_STORES):
     for j in range(i + 1, N_STORES):
         d = float(np.linalg.norm(store_coords[i] - store_coords[j]))
-    overlap = d < 2 * TRADE_RADIUS
-print(f" Store {i+1} <-> Store {j+1}: center dist = {d:.2f} km -> {'OVERLAP' if overlap else 'no overlap'}")
+        overlap = d < 2 * TRADE_RADIUS
+        print(f" Store {i+1} <-> Store {j+1}: center dist = {d:.2f} km -> {'OVERLAP' if overlap else 'no overlap'}")
 ```
 
 ---

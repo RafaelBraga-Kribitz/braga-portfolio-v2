@@ -129,27 +129,38 @@ $$
 
 ```python
 """
-Demonstrate IBP numerically: int_0^2 x * exp(x) dx. Analytic result via
-IBP: u = x, dv = e^x dx -> du = dx, v = e^x int x*e^x
-dx = x*e^x - int e^x
-dx = x*e^x - e^x + C = e^x(x-1) + C Definite: [e^x(x-1)]_0^2 = e^2(1) - e^0(-1) = e^2 + 1
+Demonstrate IBP numerically: int_0^2 x * exp(x) dx.
+
+Analytic result via IBP: u = x, dv = e^x dx -> du = dx, v = e^x
+    int x*e^x dx = x*e^x - int e^x dx = x*e^x - e^x + C = e^x(x-1) + C
+Definite: [e^x(x-1)]_0^2 = e^2(1) - e^0(-1) = e^2 + 1
 """
 import numpy as np
 from scipy import integrate
 
+
 def integrand(x: float) -> float:
     """Product of polynomial and exponential: x * e^x."""
-    return x * np.exp(x)   # Numerical
-area_numerical, error_est = integrate.quad(integrand, 0, 2)   # Analytic via IBP: antiderivative F(x) = e^x(x - 1)
+    return x * np.exp(x)
 
+
+# Numerical
+area_numerical, error_est = integrate.quad(integrand, 0, 2)
+
+
+# Analytic via IBP: antiderivative F(x) = e^x(x - 1)
 def antiderivative(x: float) -> float:
     return np.exp(x) * (x - 1)
+
+
 area_analytic = antiderivative(2) - antiderivative(0)
 # = e^2 * (2-1) - e^0 * (0-1) = e^2 + 1
 print(f"Numerical (scipy.quad): {area_numerical:.8f}")
 print(f"Analytic (IBP, e^2 + 1): {area_analytic:.8f}")
 print(f"Match: {abs(area_numerical - area_analytic) < 1e-8}")
-print(f"e^2 + 1 = {np.exp(2) + 1:.8f}")   # Verify IBP formula at a point: d/dx[e^x(x-1)] should equal x*e^x
+print(f"e^2 + 1 = {np.exp(2) + 1:.8f}")
+
+# Verify IBP formula at a point: d/dx[e^x(x-1)] should equal x*e^x
 x_check = 1.5
 h = 1e-7
 deriv_numerical = (antiderivative(x_check + h) - antiderivative(x_check - h)) / (2 * h)
@@ -165,14 +176,20 @@ print(f" Match: {abs(deriv_numerical - deriv_exact) < 1e-5}")
 ```r
 # IBP: int_0^2 x * exp(x) dx
 # Analytic: [e^x(x-1)]_0^2 = e^2*(2-1) - e^0*(0-1) = e^2 + 1
-integrand <- function(x) x * exp(x)  # Numerical
-result_numerical <- integrate(integrand, lower = 0, upper = 2)$value  # Analytic antiderivative F(x) = e^x * (x - 1)
+integrand <- function(x) x * exp(x)
+
+# Numerical
+result_numerical <- integrate(integrand, lower = 0, upper = 2)$value
+
+# Analytic antiderivative F(x) = e^x * (x - 1)
 antiderivative <- function(x) exp(x) * (x - 1)
 result_analytic <- antiderivative(2) - antiderivative(0)  # e^2 + 1
 cat("Numerical (integrate):", result_numerical, "\n")  # ~8.389056
 cat("Analytic (IBP): ", result_analytic, "\n")  # ~8.389056
 cat("e^2 + 1 = ", exp(2) + 1, "\n")  # ~8.389056
-cat("Match:", isTRUE(all.equal(result_numerical, result_analytic, tol = 1e-7)), "\n")  # Derivative check: d/dx [e^x(x-1)] should be x*e^x
+cat("Match:", isTRUE(all.equal(result_numerical, result_analytic, tol = 1e-7)), "\n")
+
+# Derivative check: d/dx [e^x(x-1)] should be x*e^x
 x_check <- 1.5
 h <- 1e-7
 deriv_num <- (antiderivative(x_check + h) - antiderivative(x_check - h)) / (2 * h)
@@ -187,20 +204,73 @@ cat(" Match:", isTRUE(all.equal(deriv_num, deriv_exact, tol = 1e-5)), "\n")
 
 ```python
 """
-IBP in survival
-analysis: E[T] = int_0^inf
-S(t) dt. Where
-S(t) = P(T > t) is the survival function. This identity is derived via
-IBP: E[T] = int_0^inf t * f(t) dt
-u = t, dv = f(t) dt
-du = dt, v = -S(t) [since S'(t) = -f(t)] IBP: [t*(-S(t))]_0^inf + int_0^inf S(t) dt = 0 + int_0^inf S(t) dt [boundary term vanishes: t*S(t) -> 0 as t->inf] For Exp(lambda): S(t) = e^{-lambda*t} E[T] = int_0^inf e^{-lambda*t} dt = 1/lambda. Business use: Expected Customer Lifetime = 1 / monthly_churn_rate. We verify the IBP identity numerically for two distributions. """ import numpy as np from scipy import integrate, stats from sklearn.linear_model import LinearRegression def expected_lifetime_direct(pdf_fn: object, t_max: float = 200.0) -> float: """E[T] via direct definition: int t * f(t) dt.""" result, _ = integrate.quad(lambda t: t * pdf_fn(t), 0, t_max) return result def expected_lifetime_survival(survival_fn: object, t_max: float = 200.0) -> float: """E[T] via IBP identity: int S(t) dt [S = survival function].""" result, _ = integrate.quad(survival_fn, 0, t_max) return result   # --- Exponential distribution: Exp(lambda=0.1) -> E[T] = 10 months ---
- LAMBDA_EXP = 0.1 exp_dist = stats.expon(scale=1.0 / LAMBDA_EXP) e_t_direct_exp = expected_lifetime_direct(exp_dist.pdf) e_t_survival_exp = expected_lifetime_survival(exp_dist.sf)   # sf = survival function
- e_t_analytic_exp = 1.0 / LAMBDA_EXP   # = 10 print("=== Exponential(lambda=0.1) ===")
- print(f" E[T] direct (int t*f(t) dt): {e_t_direct_exp:.4f}") print(f" E[T] IBP (int S(t) dt): {e_t_survival_exp:.4f}") print(f" E[T] analytic (1/lambda): {e_t_analytic_exp:.4f}") print(f" IBP identity holds: {abs(e_t_direct_exp - e_t_survival_exp) < 0.01}")   # --- Weibull distribution: shape=2, scale=5 -> E[T] = 5*Gamma(1.5) = 5*sqrt(pi)/2 ---
- SHAPE_W = 2.0 SCALE_W = 5.0 weibull_dist = stats.weibull_min(c=SHAPE_W, scale=SCALE_W) e_t_analytic_weibull = SCALE_W * float(np.math.gamma(1 + 1.0 / SHAPE_W)) e_t_direct_w = expected_lifetime_direct(weibull_dist.pdf, t_max=50.0) e_t_survival_w = expected_lifetime_survival(weibull_dist.sf, t_max=50.0) print("\n=== Weibull(shape=2, scale=5) ===") print(f" E[T] direct (int t*f(t) dt): {e_t_direct_w:.4f}") print(f" E[T] IBP (int S(t) dt): {e_t_survival_w:.4f}") print(f" E[T] analytic (scale*Gamma(1+1/shape)): {e_t_analytic_weibull:.4f}") print(f" IBP identity holds: {abs(e_t_direct_w - e_t_survival_w) < 0.01}")   # --- Business implication ---
- monthly_churn_rate = LAMBDA_EXP   # 10% churn per month
- avg_revenue_per_month = 50.0   # euros
- expected_ltv = avg_revenue_per_month / monthly_churn_rate print(f"\n=== Business Calculation ===") print(f" Monthly churn rate: {monthly_churn_rate:.0%}") print(f" Avg revenue/month: EUR {avg_revenue_per_month:.2f}") print(f" Expected LTV = rev/churn: EUR {expected_ltv:.2f}") print(f" [Derived via IBP: E[T] = int_0^inf S(t) dt = 1/lambda]")
+IBP in survival analysis: E[T] = int_0^inf S(t) dt.
+
+Where S(t) = P(T > t) is the survival function. This identity is derived via IBP:
+    E[T] = int_0^inf t * f(t) dt
+    u = t,   dv = f(t) dt
+    du = dt, v = -S(t)   [since S'(t) = -f(t)]
+    IBP: [t*(-S(t))]_0^inf + int_0^inf S(t) dt = 0 + int_0^inf S(t) dt
+    [boundary term vanishes: t*S(t) -> 0 as t->inf]
+
+For Exp(lambda): S(t) = e^{-lambda*t}
+    E[T] = int_0^inf e^{-lambda*t} dt = 1/lambda.
+
+Business use: Expected Customer Lifetime = 1 / monthly_churn_rate.
+We verify the IBP identity numerically for two distributions.
+"""
+import math
+
+import numpy as np
+from scipy import integrate, stats
+
+
+def expected_lifetime_direct(pdf_fn: object, t_max: float = 200.0) -> float:
+    """E[T] via direct definition: int t * f(t) dt."""
+    result, _ = integrate.quad(lambda t: t * pdf_fn(t), 0, t_max)
+    return result
+
+
+def expected_lifetime_survival(survival_fn: object, t_max: float = 200.0) -> float:
+    """E[T] via IBP identity: int S(t) dt [S = survival function]."""
+    result, _ = integrate.quad(survival_fn, 0, t_max)
+    return result
+
+
+# --- Exponential distribution: Exp(lambda=0.1) -> E[T] = 10 months ---
+LAMBDA_EXP = 0.1
+exp_dist = stats.expon(scale=1.0 / LAMBDA_EXP)
+e_t_direct_exp = expected_lifetime_direct(exp_dist.pdf)
+e_t_survival_exp = expected_lifetime_survival(exp_dist.sf)   # sf = survival function
+e_t_analytic_exp = 1.0 / LAMBDA_EXP   # = 10
+print("=== Exponential(lambda=0.1) ===")
+print(f" E[T] direct (int t*f(t) dt): {e_t_direct_exp:.4f}")
+print(f" E[T] IBP (int S(t) dt): {e_t_survival_exp:.4f}")
+print(f" E[T] analytic (1/lambda): {e_t_analytic_exp:.4f}")
+print(f" IBP identity holds: {abs(e_t_direct_exp - e_t_survival_exp) < 0.01}")
+
+# --- Weibull distribution: shape=2, scale=5 -> E[T] = 5*Gamma(1.5) = 5*sqrt(pi)/2 ---
+SHAPE_W = 2.0
+SCALE_W = 5.0
+weibull_dist = stats.weibull_min(c=SHAPE_W, scale=SCALE_W)
+e_t_analytic_weibull = SCALE_W * math.gamma(1 + 1.0 / SHAPE_W)
+e_t_direct_w = expected_lifetime_direct(weibull_dist.pdf, t_max=50.0)
+e_t_survival_w = expected_lifetime_survival(weibull_dist.sf, t_max=50.0)
+print("\n=== Weibull(shape=2, scale=5) ===")
+print(f" E[T] direct (int t*f(t) dt): {e_t_direct_w:.4f}")
+print(f" E[T] IBP (int S(t) dt): {e_t_survival_w:.4f}")
+print(f" E[T] analytic (scale*Gamma(1+1/shape)): {e_t_analytic_weibull:.4f}")
+print(f" IBP identity holds: {abs(e_t_direct_w - e_t_survival_w) < 0.01}")
+
+# --- Business implication ---
+monthly_churn_rate = LAMBDA_EXP   # 10% churn per month
+avg_revenue_per_month = 50.0      # euros
+expected_ltv = avg_revenue_per_month / monthly_churn_rate
+print(f"\n=== Business Calculation ===")
+print(f" Monthly churn rate: {monthly_churn_rate:.0%}")
+print(f" Avg revenue/month: EUR {avg_revenue_per_month:.2f}")
+print(f" Expected LTV = rev/churn: EUR {expected_ltv:.2f}")
+print(f" [Derived via IBP: E[T] = int_0^inf S(t) dt = 1/lambda]")
 ```
 
 ---

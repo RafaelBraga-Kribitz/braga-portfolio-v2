@@ -109,28 +109,39 @@ def expand_cube_plus(a: float, b: float) -> float:
 
 def expand_cube_minus(a: float, b: float) -> float:
     """Return (a - b)³ using the explicit expansion."""
-    return a**3 - 3 * a**2 * b + 3 * a * b**2 - b**3   # Verify against direct computation
+    return a**3 - 3 * a**2 * b + 3 * a * b**2 - b**3
+
+
+# Verify against direct computation
 pairs = [(2.0, 3.0), (5.0, 1.0), (-1.0, 4.0), (0.5, 0.25)]
 print("Perfect cube expansion verification")
 print(f"{'a':>6} {'b':>6} {'(a+b)³ direct':>14} {'expanded':>10} {'match':>6}")
 for a, b in pairs:
     direct = (a + b) ** 3
-expanded = expand_cube_plus(a, b)
-print(f"{a:>6.2f} {b:>6.2f} {direct:>14.4f} {expanded:>10.4f} {str(abs(direct - expanded) < 1e-10):>6}")
+    expanded = expand_cube_plus(a, b)
+    print(f"{a:>6.2f} {b:>6.2f} {direct:>14.4f} {expanded:>10.4f} {str(abs(direct - expanded) < 1e-10):>6}")
+
 print(f"\n{'a':>6} {'b':>6} {'(a-b)³ direct':>14} {'expanded':>10} {'match':>6}")
 for a, b in pairs:
     direct = (a - b) ** 3
-expanded = expand_cube_minus(a, b)
-print(f"{a:>6.2f} {b:>6.2f} {direct:>14.4f} {expanded:>10.4f} {str(abs(direct - expanded) < 1e-10):>6}")   # TRAP: (a+b)³ ≠ a³ + b³
+    expanded = expand_cube_minus(a, b)
+    print(f"{a:>6.2f} {b:>6.2f} {direct:>14.4f} {expanded:>10.4f} {str(abs(direct - expanded) < 1e-10):>6}")
+
+# TRAP: (a+b)³ ≠ a³ + b³
 a, b = 2.0, 3.0
 print(f"\nTRAP: (a+b)³ vs a³+b³ for a={a}, b={b}")
 print(f" (a+b)³ = {(a+b)**3:.0f}")
 print(f" a³ + b³ = {a**3 + b**3:.0f} (NOT the same!)")
-print(f" Middle terms 3a²b + 3ab² = {3*a**2*b + 3*a*b**2:.0f}")   # Skewness: E[(X-μ)³] computational formula
+print(f" Middle terms 3a²b + 3ab² = {3*a**2*b + 3*a*b**2:.0f}")
+
+# Skewness: E[(X-μ)³] computational formula
 import numpy as np
+
 np.random.seed(42)
 data = np.random.exponential(scale=2.0, size=1000)   # right-skewed
-mu = data.mean()   # Two methods
+mu = data.mean()
+
+# Two methods
 skew_direct = np.mean((data - mu) ** 3)
 skew_expand = np.mean(data**3) - 3 * mu * np.mean(data**2) + 2 * mu**3
 print(f"\nThird central moment (skewness numerator):")
@@ -148,11 +159,14 @@ expand_cube_minus <- function(a, b) a^3 - 3*a^2*b + 3*a*b^2 - b^3
 pairs <- list(c(2,3), c(5,1), c(-1,4), c(0.5,0.25))
 cat("Plus case: (a+b)³\n")
 cat(sprintf("%-6s %-6s %-14s %-10s %s\n", "a", "b", "(a+b)³ direct", "expanded", "match"))
-for (p in pairs) { a <- p[1]; b <- p[2]
+for (p in pairs) {
+  a <- p[1]; b <- p[2]
   direct <- (a + b)^3
   expanded <- expand_cube_plus(a, b)
   cat(sprintf("%-6.2f %-6.2f %-14.4f %-10.4f %s\n", a, b, direct, expanded, abs(direct - expanded) < 1e-10))
-}  # Skewness via expansion
+}
+
+# Skewness via expansion
 set.seed(42)
 data <- rexp(1000, rate = 0.5)  # right-skewed
 mu <- mean(data)
@@ -168,65 +182,91 @@ cat(sprintf(" Match: %s\n", abs(skew_direct - skew_expand) < 1e-8))
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: single-pass skewness computation using (x - μ)³ expansion
+import pandas as pd
+
+# Scenario: single-pass skewness computation using (x - μ)³ expansion
 # Accumulate sum_x, sum_x2, sum_x3 in one pass; compute 3rd central moment
 # using the identity: E[(X-μ)³] = E[X³] - 3μE[X²] + 2μ³
 
+
 class OnlineMomentsTracker:
-    """ Single-pass tracker for the first three raw moments (E[X], E[X²], E[X³]). Uses the cubic expansion to compute the third central moment (skewness numerator) without a second pass over the data. """
+    """
+    Single-pass tracker for the first three raw moments (E[X], E[X²], E[X³]).
+    Uses the cubic expansion to compute the third central moment
+    (skewness numerator) without a second pass over the data.
+    """
 
-def __init__(self) -> None:
-    self._n: int = 0
-    self._sum1: float = 0.0   # sum of x self._sum2: float = 0.0 # sum of x² self._sum3: float = 0.0 # sum of x³
+    def __init__(self) -> None:
+        self._n: int = 0
+        self._sum1: float = 0.0   # sum of x
+        self._sum2: float = 0.0   # sum of x²
+        self._sum3: float = 0.0   # sum of x³
 
-def update(self, x: float) -> None:
-    """Add one observation."""
-    self._n += 1
-    self._sum1 += x
-    self._sum2 += x * x
-    self._sum3 += x * x * x
-@property
+    def update(self, x: float) -> None:
+        """Add one observation."""
+        self._n += 1
+        self._sum1 += x
+        self._sum2 += x * x
+        self._sum3 += x * x * x
 
-def mean(self) -> float:
-    """E[X]."""
-    return self._sum1 / self._n if self._n > 0 else 0.0
-@property
+    @property
+    def mean(self) -> float:
+        """E[X]."""
+        return self._sum1 / self._n if self._n > 0 else 0.0
 
-def variance(self) -> float:
-    """E[X²] - (E[X])²."""
-    mu = self.mean
-    return self._sum2 / self._n - mu ** 2
-@property
+    @property
+    def variance(self) -> float:
+        """E[X²] - (E[X])²."""
+        mu = self.mean
+        return self._sum2 / self._n - mu ** 2
 
-def third_central_moment(self) -> float:
-    """ E[(X-μ)³] = E[X³] - 3μE[X²] + 2μ³. Uses (a-b)³ expansion with a=X, b=μ, applied to expectations. """
-    mu = self.mean
-    ex2 = self._sum2 / self._n
-    ex3 = self._sum3 / self._n
-    return ex3 - 3 * mu * ex2 + 2 * mu ** 3
-@property
+    @property
+    def third_central_moment(self) -> float:
+        """
+        E[(X-μ)³] = E[X³] - 3μE[X²] + 2μ³.
+        Uses (a-b)³ expansion with a=X, b=μ, applied to expectations.
+        """
+        mu = self.mean
+        ex2 = self._sum2 / self._n
+        ex3 = self._sum3 / self._n
+        return ex3 - 3 * mu * ex2 + 2 * mu ** 3
 
-def skewness(self) -> float:
-    """Standardized skewness: third central moment / std³."""
-    std = self.variance ** 0.5
-    if std < 1e-12:
-        return 0.0
-    return self.third_central_moment / std ** 3   # Compare single-pass vs two-pass for multiple distributions
+    @property
+    def skewness(self) -> float:
+        """Standardized skewness: third central moment / std³."""
+        std = self.variance ** 0.5
+        if std < 1e-12:
+            return 0.0
+        return self.third_central_moment / std ** 3
+
+
+# Compare single-pass vs two-pass for multiple distributions
 np.random.seed(42)
 N = 10_000
-distributions = { "normal (0,1)": np.random.normal(0, 1, N), "exponential (λ=1)": np.random.exponential(1, N), "chi-squared (df=3)": np.random.chisquare(3, N),
+distributions = {
+    "normal (0,1)": np.random.normal(0, 1, N),
+    "exponential (λ=1)": np.random.exponential(1, N),
+    "chi-squared (df=3)": np.random.chisquare(3, N),
 }
 rows = []
 for dist_name, samples in distributions.items():
     # Single-pass
     tracker = OnlineMomentsTracker()
-for x in samples:
-    tracker.update(float(x))
-skew_single_pass = tracker.skewness   # Two-pass reference (numpy)
-mu_ref = samples.mean()
-std_ref = samples.std()
-skew_ref = np.mean((samples - mu_ref) ** 3) / std_ref ** 3
-rows.append({ "distribution": dist_name, "skew_single": round(skew_single_pass, 6), "skew_two_pass": round(skew_ref, 6), "error": abs(skew_single_pass - skew_ref), })
+    for x in samples:
+        tracker.update(float(x))
+    skew_single_pass = tracker.skewness
+
+    # Two-pass reference (numpy)
+    mu_ref = samples.mean()
+    std_ref = samples.std()
+    skew_ref = np.mean((samples - mu_ref) ** 3) / std_ref ** 3
+    rows.append({
+        "distribution": dist_name,
+        "skew_single": round(skew_single_pass, 6),
+        "skew_two_pass": round(skew_ref, 6),
+        "error": abs(skew_single_pass - skew_ref),
+    })
+
 report = pd.DataFrame(rows)
 print("Single-Pass Skewness via (x-μ)³ Expansion: E[(X-μ)³] = E[X³] - 3μE[X²] + 2μ³")
 print("=" * 72)
@@ -237,20 +277,29 @@ print(f"\nAll errors < 1e-6: {(report['error'] < 1e-6).all()}")
 ### Professional example (R)
 
 ```r
-# Single-pass skewness:
-E[(X-μ)³] = E[X³] - 3μE[X²] + 2μ³
+# Single-pass skewness: E[(X-μ)³] = E[X³] - 3μE[X²] + 2μ³
 set.seed(42)
 N <- 10000
-samples <- list( "normal" = rnorm(N), "exponential" = rexp(N), "chisq" = rchisq(N, 3)
+samples <- list(
+  "normal" = rnorm(N),
+  "exponential" = rexp(N),
+  "chisq" = rchisq(N, 3)
 )
-single_pass_skew <- function(x) { n <- length(x)
+single_pass_skew <- function(x) {
+  n <- length(x)
   sum_x <- sum(x); sum_x2 <- sum(x^2); sum_x3 <- sum(x^3)
   mu <- sum_x / n
   ex2 <- sum_x2 / n; ex3 <- sum_x3 / n
   third_central <- ex3 - 3*mu*ex2 + 2*mu^3
-  std <- sqrt(ex2 - mu^2) third_central / (std^3 + 1e-12)
+  std <- sqrt(ex2 - mu^2)
+  third_central / (std^3 + 1e-12)
 }
-report <- do.call(rbind, lapply(names(samples), function(nm) { x <- samplesnm skew_s <- single_pass_skew(x) skew_ref <- mean((x - mean(x))^3) / (sd(x)^3 + 1e-12) data.frame(distribution = nm, skew_single = round(skew_s, 6), skew_two_pass = round(skew_ref, 6), error = abs(skew_s - skew_ref))
+report <- do.call(rbind, lapply(names(samples), function(nm) {
+  x <- samples[[nm]]
+  skew_s <- single_pass_skew(x)
+  skew_ref <- mean((x - mean(x))^3) / (sd(x)^3 + 1e-12)
+  data.frame(distribution = nm, skew_single = round(skew_s, 6),
+             skew_two_pass = round(skew_ref, 6), error = abs(skew_s - skew_ref))
 }))
 cat("Single-Pass Skewness via (x-μ)³ expansion\n")
 print(report)

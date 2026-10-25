@@ -3,6 +3,7 @@ publish: true
 date: '2026-04-16'
 tags:
 - probability-statistics
+slug: cumulative-distribution-function-cdf-continuous-random-variables-crvs
 ---
 
 # Cumulative Distribution Function (CDF)

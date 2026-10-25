@@ -115,7 +115,9 @@ XTX <- t(X) %*% X
 XTy <- t(X) %*% y
 theta <- solve(XTX, XTy)
 cat("Intercept:", round(theta[1], 4), "\n")
-cat("Slope: ", round(theta[2], 4), "\n")  # Using lm() for verification
+cat("Slope: ", round(theta[2], 4), "\n")
+
+# Using lm() for verification
 fit <- lm(y ~ x)
 cat("lm coefficients:", round(coef(fit), 4), "\n")
 ```
@@ -123,18 +125,25 @@ cat("lm coefficients:", round(coef(fit), 4), "\n")
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 from dataclasses import dataclass
 import numpy as np
 import pandas as pd
 from scipy import linalg
 from sklearn.metrics import r2_score, mean_absolute_error
+
+
 @dataclass
-
 class OLSResult:
-    coefficients: np.ndarray intercept: float r2: float mae: float condition_number: float rank: int
+    coefficients: np.ndarray
+    intercept: float
+    r2: float
+    mae: float
+    condition_number: float
+    rank: int
 
-def fit_ols_normal_equations( X: np.ndarray, y: np.ndarray, add_intercept: bool = True,
+
+def fit_ols_normal_equations(
+    X: np.ndarray, y: np.ndarray, add_intercept: bool = True,
 ) -> OLSResult:
     # Fit OLS via normal equations using scipy.linalg.solve (stable over explicit inv).
     if add_intercept:
@@ -146,7 +155,15 @@ def fit_ols_normal_equations( X: np.ndarray, y: np.ndarray, add_intercept: bool 
     y_pred = X @ theta
     intercept = float(theta[0]) if add_intercept else 0.0
     coefficients = theta[1:] if add_intercept else theta
-    return OLSResult( coefficients=coefficients.round(6), intercept=round(intercept, 6), r2=round(r2_score(y, y_pred), 6), mae=round(mean_absolute_error(y, y_pred), 6), condition_number=round(cond, 2), rank=int(np.linalg.matrix_rank(XTX)), )
+    return OLSResult(
+        coefficients=coefficients.round(6),
+        intercept=round(intercept, 6),
+        r2=round(r2_score(y, y_pred), 6),
+        mae=round(mean_absolute_error(y, y_pred), 6),
+        condition_number=round(cond, 2),
+        rank=int(np.linalg.matrix_rank(XTX)),
+    )
+
 
 if __name__ == "__main__":
     rng = np.random.default_rng(seed=42)

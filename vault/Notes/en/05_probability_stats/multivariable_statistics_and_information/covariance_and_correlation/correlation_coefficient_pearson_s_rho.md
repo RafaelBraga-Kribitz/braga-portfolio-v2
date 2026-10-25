@@ -100,7 +100,9 @@ $\rho = 1.0$: perfect positive linear relationship, as expected ($Y = X + 1$).
 ```python
 import numpy as np
 ad_spend = [100, 200, 300, 400, 500]
-revenue = [210, 420, 590, 810, 1005]   # Manual Pearson r
+revenue = [210, 420, 590, 810, 1005]
+
+# Manual Pearson r
 mean_ad = sum(ad_spend) / len(ad_spend)
 mean_rev = sum(revenue) / len(revenue)
 numerator = sum((a - mean_ad) * (r - mean_rev) for a, r in zip(ad_spend, revenue))
@@ -125,33 +127,45 @@ cat("p-value: ", round(test_result$p.value, 6), "\n")
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
 import pandas as pd
 from scipy import stats
 
-def flag_multicollinear_features( df: pd.DataFrame, threshold: float = 0.85 ) -> list[tuple[str, str, float]]:
+
+def flag_multicollinear_features(
+    df: pd.DataFrame, threshold: float = 0.85
+) -> list[tuple[str, str, float]]:
     # Identify feature pairs with |r| > threshold for multicollinearity review.
-    # Returns list of (feature_a, feature_b, pearson_r) sorted by |r| descending. corr_matrix = df.corr(method="pearson") flagged: list[tuple[str, str, float]] = []
+    # Returns list of (feature_a, feature_b, pearson_r) sorted by |r| descending.
+    corr_matrix = df.corr(method="pearson")
+    flagged: list[tuple[str, str, float]] = []
     cols = list(corr_matrix.columns)
     for i, col_i in enumerate(cols):
         for col_j in cols[i + 1:]:
             r_val = float(corr_matrix.loc[col_i, col_j])
-        if abs(r_val) > threshold:
-            flagged.append((col_i, col_j, round(r_val, 4)))
-        return sorted(flagged, key=lambda t: abs(t[2]), reverse=True)
+            if abs(r_val) > threshold:
+                flagged.append((col_i, col_j, round(r_val, 4)))
+    return sorted(flagged, key=lambda t: abs(t[2]), reverse=True)
 
-def pearson_with_significance( x: np.ndarray, y: np.ndarray, alpha: float = 0.05 ) -> dict[str, float | bool]:
+
+def pearson_with_significance(
+    x: np.ndarray, y: np.ndarray, alpha: float = 0.05
+) -> dict[str, float | bool]:
     # Return Pearson r, p-value, and significance flag.
     r_val, p_val = stats.pearsonr(x, y)
     return {"r": round(float(r_val), 4), "p_value": round(float(p_val), 6), "significant": p_val < alpha}
+
 
 if __name__ == "__main__":
     rng = np.random.default_rng(seed=42)
     n = 200
     base_spend = rng.normal(5000, 800, n)
-    feature_df = pd.DataFrame({ "ad_spend": base_spend, "clicks": 0.9 * base_spend + rng.normal(0, 200, n),   # highly collinear
-        "ctr": rng.uniform(0.01, 0.05, n), "revenue": rng.normal(15000, 2000, n), })
+    feature_df = pd.DataFrame({
+        "ad_spend": base_spend,
+        "clicks": 0.9 * base_spend + rng.normal(0, 200, n),   # highly collinear
+        "ctr": rng.uniform(0.01, 0.05, n),
+        "revenue": rng.normal(15000, 2000, n),
+    })
     print("Flagged multicollinear pairs (|r| > 0.85):")
     for pair in flag_multicollinear_features(feature_df, threshold=0.85):
         print(f" {pair[0]} vs {pair[1]}: r = {pair[2]}")

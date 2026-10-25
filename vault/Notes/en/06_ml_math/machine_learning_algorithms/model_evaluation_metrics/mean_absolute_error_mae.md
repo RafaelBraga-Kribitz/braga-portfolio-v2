@@ -106,7 +106,9 @@ import numpy as np
 y_true = np.array([100, 80, 120, 90, 110])
 y_pred = np.array([95, 88, 115, 93, 102])
 mae = mean_absolute_error(y_true, y_pred)
-print(f"MAE: {mae:.4f}")   # Manual verification
+print(f"MAE: {mae:.4f}")
+
+# Manual verification
 manual_mae = np.mean(np.abs(y_true - y_pred))
 print(f"Manual MAE: {manual_mae:.4f}")
 ```
@@ -117,7 +119,9 @@ print(f"Manual MAE: {manual_mae:.4f}")
 y_true <- c(100, 80, 120, 90, 110)
 y_pred <- c(95, 88, 115, 93, 102)
 mae <- mean(abs(y_true - y_pred))
-cat("MAE:", round(mae, 4), "\n")  # Also compute mean error (bias check)
+cat("MAE:", round(mae, 4), "\n")
+
+# Also compute mean error (bias check)
 me <- mean(y_true - y_pred)
 cat("Mean Error (bias):", round(me, 4), "\n")
 ```
@@ -125,17 +129,25 @@ cat("Mean Error (bias):", round(me, 4), "\n")
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 from dataclasses import dataclass
+
 import numpy as np
 import pandas as pd
 from sklearn.metrics import mean_absolute_error, mean_squared_error
+
+
 @dataclass
-
 class RegressionErrorSummary:
-    mae: float rmse: float mean_error: float median_absolute_error: float pct_within_5pct: float outlier_share: float
+    mae: float
+    rmse: float
+    mean_error: float
+    median_absolute_error: float
+    pct_within_5pct: float
+    outlier_share: float
 
-def regression_error_summary( y_true: np.ndarray, y_pred: np.ndarray, outlier_multiplier: float = 3.0,
+
+def regression_error_summary(
+    y_true: np.ndarray, y_pred: np.ndarray, outlier_multiplier: float = 3.0,
 ) -> RegressionErrorSummary:
     # Comprehensive regression error analysis beyond a single metric.
     residuals = y_true - y_pred
@@ -143,22 +155,47 @@ def regression_error_summary( y_true: np.ndarray, y_pred: np.ndarray, outlier_mu
     mae = float(mean_absolute_error(y_true, y_pred))
     rmse = float(np.sqrt(mean_squared_error(y_true, y_pred)))
     mean_err = float(residuals.mean())
-    median_ae = float(np.median(abs_residuals))   # Percentage of predictions within 5% of the true value
-    pct_within_5 = float((abs_residuals / np.maximum(np.abs(y_true), 1e-9) < 0.05).mean())   # Fraction of samples with error > outlier_multiplier * MAE
+    median_ae = float(np.median(abs_residuals))
+    # Percentage of predictions within 5% of the true value
+    pct_within_5 = float((abs_residuals / np.maximum(np.abs(y_true), 1e-9) < 0.05).mean())
+    # Fraction of samples with error > outlier_multiplier * MAE
     outlier_share = float((abs_residuals > outlier_multiplier * mae).mean())
-    return RegressionErrorSummary( mae=round(mae, 6), rmse=round(rmse, 6), mean_error=round(mean_err, 6), median_absolute_error=round(median_ae, 6), pct_within_5pct=round(pct_within_5, 4), outlier_share=round(outlier_share, 4), )
+    return RegressionErrorSummary(
+        mae=round(mae, 6),
+        rmse=round(rmse, 6),
+        mean_error=round(mean_err, 6),
+        median_absolute_error=round(median_ae, 6),
+        pct_within_5pct=round(pct_within_5, 4),
+        outlier_share=round(outlier_share, 4),
+    )
 
-def segment_mae_report( y_true: np.ndarray, y_pred: np.ndarray, segments: pd.Series,
+
+def segment_mae_report(
+    y_true: np.ndarray, y_pred: np.ndarray, segments: pd.Series,
 ) -> pd.DataFrame:
     # Compute MAE per segment (e.g., product category, region).
-    df = pd.DataFrame({ "y_true": y_true, "y_pred": y_pred, "segment": segments, })
-    return ( df.groupby("segment") .apply(lambda g: pd.Series({ "n": len(g), "mae": round(mean_absolute_error(g["y_true"], g["y_pred"]), 4), })) .reset_index() .sort_values("mae", ascending=False) )
+    df = pd.DataFrame({
+        "y_true": y_true,
+        "y_pred": y_pred,
+        "segment": segments,
+    })
+    return (
+        df.groupby("segment")
+        .apply(lambda g: pd.Series({
+            "n": len(g),
+            "mae": round(mean_absolute_error(g["y_true"], g["y_pred"]), 4),
+        }))
+        .reset_index()
+        .sort_values("mae", ascending=False)
+    )
+
 
 if __name__ == "__main__":
     rng = np.random.default_rng(seed=42)
     n = 1_000
     y_true_sim = rng.uniform(50, 500, n)
-    noise = rng.normal(0, 20, n)   # Inject 5% outlier errors
+    noise = rng.normal(0, 20, n)
+    # Inject 5% outlier errors
     outlier_mask = rng.random(n) < 0.05
     noise[outlier_mask] *= 8
     y_pred_sim = y_true_sim + noise

@@ -101,16 +101,20 @@ def is_inside_ellipsoid(point: np.ndarray, a: float, b: float, c: float) -> bool
     """Check if a 3D point is inside/on the ellipsoid."""
     x, y, z = point
     return float(x**2/a**2 + y**2/b**2 + z**2/c**2) <= 1.0
+
+
 a, b, c = 4.0, 3.0, 2.0
 print(f"Semi-axes: a={a}, b={b}, c={c}")
 print(f"Volume = (4/3)*pi*a*b*c = {ellipsoid_volume(a, b, c):.4f}")
-test_points = [ np.array([2.0, 1.0, 1.0]), np.array([4.0, 0.0, 0.0]),   # on boundary
-    (x-axis endpoint) np.array([3.0, 2.0, 1.5]),
+test_points = [
+    np.array([2.0, 1.0, 1.0]),
+    np.array([4.0, 0.0, 0.0]),  # on boundary (x-axis endpoint)
+    np.array([3.0, 2.0, 1.5]),
 ]
 for pt in test_points:
     val = pt[0]**2/a**2 + pt[1]**2/b**2 + pt[2]**2/c**2
-inside = is_inside_ellipsoid(pt, a, b, c)
-print(f" {pt}: normalized_sum = {val:.4f} -> {'inside' if inside else 'outside/boundary'}")
+    inside = is_inside_ellipsoid(pt, a, b, c)
+    print(f" {pt}: normalized_sum = {val:.4f} -> {'inside' if inside else 'outside/boundary'}")
 ```
 
 ### Beginner example (R)
@@ -118,12 +122,14 @@ print(f" {pt}: normalized_sum = {val:.4f} -> {'inside' if inside else 'outside/b
 ```r
 # -- Ellipsoid volume and point classification ---
 ellipsoid_volume <- function(a, b, c) (4 / 3) * pi * a * b * c
-is_inside_ellipsoid <- function(point, a, b, c) { (point[1]^2 / a^2 + point[2]^2 / b^2 + point[3]^2 / c^2) <= 1
+is_inside_ellipsoid <- function(point, a, b, c) {
+  (point[1]^2 / a^2 + point[2]^2 / b^2 + point[3]^2 / c^2) <= 1
 }
 a <- 4; b <- 3; c <- 2
 cat(sprintf("Volume = %.4f\n", ellipsoid_volume(a, b, c)))
 test_pts <- list(c(2, 1, 1), c(4, 0, 0), c(3, 2, 1.5))
-for (pt in test_pts) { val <- pt[1]^2/a^2 + pt[2]^2/b^2 + pt[3]^2/c^2
+for (pt in test_pts) {
+  val <- pt[1]^2/a^2 + pt[2]^2/b^2 + pt[3]^2/c^2
   status <- ifelse(is_inside_ellipsoid(pt, a, b, c), "inside", "outside")
   cat(sprintf(" (%.1f, %.1f, %.1f): normalized_sum=%.4f -> %s\n", pt[1], pt[2], pt[3], val, status))
 }
@@ -135,21 +141,35 @@ for (pt in test_pts) { val <- pt[1]^2/a^2 + pt[2]^2/b^2 + pt[3]^2/c^2
 import numpy as np
 import pandas as pd
 from scipy.stats import chi2
-np.random.seed(42)   # -- Business scenario: 3D Gaussian confidence ellipsoid for sensor anomaly detection ---
+np.random.seed(42)
+
+# -- Business scenario: 3D Gaussian confidence ellipsoid for sensor anomaly detection ---
 N_TRAIN = 300
-D = 3   # Simulate correlated 3D normal data
+D = 3
+
+# Simulate correlated 3D normal data
 Sigma_true = np.array([[4.0, 1.5, 0.5], [1.5, 2.0, 0.3], [0.5, 0.3, 1.0]])
 mu_true = np.array([2.0, 1.0, 0.5])
 L = np.linalg.cholesky(Sigma_true)
-X_train = np.random.randn(N_TRAIN, D) @ L.T + mu_true   # Estimate mean and covariance
+X_train = np.random.randn(N_TRAIN, D) @ L.T + mu_true
+
+# Estimate mean and covariance
 mu_hat = X_train.mean(axis=0)
-Sigma_hat = np.cov(X_train.T)   # Eigendecomposition: ellipsoid axes aligned to eigenvectors
-eigenvalues, eigenvectors = np.linalg.eigh(Sigma_hat)   # sorted ascending # Chi-squared threshold for 99% at
-D=3
+Sigma_hat = np.cov(X_train.T)
+
+# Eigendecomposition: ellipsoid axes aligned to eigenvectors
+eigenvalues, eigenvectors = np.linalg.eigh(Sigma_hat)  # sorted ascending
+
+# Chi-squared threshold for 99% at D=3
 chi2_threshold = chi2.ppf(0.99, df=D)
-semi_axes = np.sqrt(eigenvalues * chi2_threshold)   # Volume of the 99% confidence ellipsoid
+semi_axes = np.sqrt(eigenvalues * chi2_threshold)
+
+# Volume of the 99% confidence ellipsoid
 volume_99pct = (4.0 / 3.0) * np.pi * np.prod(semi_axes)
-results = pd.DataFrame({ "component": [f"PC{i+1}" for i in range(D)], "eigenvalue": eigenvalues.round(4), "semi_axis": semi_axes.round(4),
+results = pd.DataFrame({
+    "component": [f"PC{i+1}" for i in range(D)],
+    "eigenvalue": eigenvalues.round(4),
+    "semi_axis": semi_axes.round(4),
 })
 print(f"3D Gaussian confidence ellipsoid (99%, chi2_threshold={chi2_threshold:.2f}):")
 print(results.to_string(index=False))

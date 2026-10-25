@@ -109,15 +109,18 @@ def softplus(x: float) -> float:
 
 def softplus_derivative(x: float) -> float:
     """d/dx log(1+e^x) = e^x / (1+e^x) = sigmoid(x)."""
-    return sigmoid(x)   # Verify numerically
+    return sigmoid(x)
+
+
+# Verify numerically
 x_vals = np.linspace(-4, 4, 9)
 h = 1e-7
 print(f"{'x':>6} {'sigma(x)':>10} {'sigma_deriv':>12} {'numerical':>12} {'match':>7}")
 for x in x_vals:
     analytic = sigmoid_derivative(x)
-numerical = (sigmoid(x + h) - sigmoid(x - h)) / (2 * h)
-match = abs(analytic - numerical) < 1e-6
-print(f"{x:>6.1f} {sigmoid(x):>10.5f} {analytic:>12.6f} {numerical:>12.6f} {str(match):>7}")
+    numerical = (sigmoid(x + h) - sigmoid(x - h)) / (2 * h)
+    match = abs(analytic - numerical) < 1e-6
+    print(f"{x:>6.1f} {sigmoid(x):>10.5f} {analytic:>12.6f} {numerical:>12.6f} {str(match):>7}")
 print(f"\nNote: max sigma'(x) = 0.25 at x=0 -> vanishing gradient risk in deep nets")
 ```
 
@@ -126,12 +129,15 @@ print(f"\nNote: max sigma'(x) = 0.25 at x=0 -> vanishing gradient risk in deep n
 ```r
 # d/dx(e^x) = e^x; applied to sigmoid and its derivative
 sigmoid <- function(x) 1 / (1 + exp(-x))
-sigmoid_deriv <- function(x) { s <- sigmoid(x); s * (1 - s)
+sigmoid_deriv <- function(x) {
+  s <- sigmoid(x)
+  s * (1 - s)
 }
 x_vals <- seq(-4, 4, by = 1)
 h <- 1e-7
 cat(sprintf("%-6s %-10s %-12s %-12s\n", "x", "sigma(x)", "sigma'(x)", "numerical"))
-for (x in x_vals) { analytic <- sigmoid_deriv(x)
+for (x in x_vals) {
+  analytic <- sigmoid_deriv(x)
   numerical <- (sigmoid(x + h) - sigmoid(x - h)) / (2 * h)
   cat(sprintf("%-6.1f %-10.5f %-12.6f %-12.6f\n", x, sigmoid(x), analytic, numerical))
 }
@@ -143,19 +149,28 @@ for (x in x_vals) { analytic <- sigmoid_deriv(x)
 import numpy as np
 from sklearn.datasets import make_classification
 from sklearn.preprocessing import StandardScaler
-np.random.seed(42)   # -- Manual backprop through sigmoid: shows d/dx(e^x)=e^x in action -----------
-X_raw, y = make_classification(n_samples=500, n_features=4, n_informative=3, random_state=42)
+np.random.seed(42)
+
+# -- Manual backprop through sigmoid: shows d/dx(e^x)=e^x in action -----------
+X_raw, y = make_classification(
+    n_samples=500, n_features=4, n_informative=3, n_redundant=1, random_state=42
+)
 scaler = StandardScaler()
 X = scaler.fit_transform(X_raw)
 N, D = X.shape
 
+
 def sigmoid(z: np.ndarray) -> np.ndarray:
     return 1 / (1 + np.exp(-np.clip(z, -500, 500)))
+
 
 def sigmoid_deriv(z: np.ndarray) -> np.ndarray:
     """Gradient of sigmoid: sigma(z)*(1-sigma(z)). Uses d/dx(e^x)=e^x."""
     s = sigmoid(z)
-    return s * (1 - s)   # One hidden layer: X -> sigmoid -> output -> binary cross-entropy
+    return s * (1 - s)
+
+
+# One hidden layer: X -> sigmoid -> output -> binary cross-entropy
 W1 = np.random.randn(D, 8) * 0.1
 W2 = np.random.randn(8, 1) * 0.1
 LEARNING_RATE = 0.1
@@ -163,19 +178,25 @@ N_ITER = 500
 losses = []
 for step in range(N_ITER):
     # Forward pass
-    z1 = X @ W1   # (N, 8) a1 = sigmoid(z1) # (N, 8) -- uses e^x
-z2 = a1 @ W2   # (N, 1)
-p = sigmoid(z2).ravel()   # (N,) # Binary cross-entropy loss
-loss = -np.mean(y * np.log(p + 1e-9) + (1 - y) * np.log(1 - p + 1e-9))
-losses.append(loss)   # Backprop -- d/dx(e^x)=e^x drives sigmoid_deriv at each layer
-d_p = (p - y) / N   # (N,)
-d_z2 = d_p * sigmoid_deriv(z2.ravel())   # (N,) <- sigma'(z2)
-d_W2 = a1.T @ d_z2[:, None]   # (8, 1)
-d_a1 = d_z2[:, None] @ W2.T   # (N, 8)
-d_z1 = d_a1 * sigmoid_deriv(z1)   # (N, 8) <- sigma'(z1)
-d_W1 = X.T @ d_z1   # (D, 8)
-W1 -= LEARNING_RATE * d_W1
-W2 -= LEARNING_RATE * d_W2
+    z1 = X @ W1             # (N, 8)
+    a1 = sigmoid(z1)        # (N, 8) -- uses e^x
+    z2 = a1 @ W2            # (N, 1)
+    p = sigmoid(z2).ravel() # (N,)
+
+    # Binary cross-entropy loss
+    loss = -np.mean(y * np.log(p + 1e-9) + (1 - y) * np.log(1 - p + 1e-9))
+    losses.append(loss)
+
+    # Backprop -- d/dx(e^x)=e^x drives sigmoid_deriv at each layer
+    d_p = (p - y) / N                        # (N,)
+    d_z2 = d_p * sigmoid_deriv(z2.ravel())   # (N,) <- sigma'(z2)
+    d_W2 = a1.T @ d_z2[:, None]              # (8, 1)
+    d_a1 = d_z2[:, None] @ W2.T              # (N, 8)
+    d_z1 = d_a1 * sigmoid_deriv(z1)          # (N, 8) <- sigma'(z1)
+    d_W1 = X.T @ d_z1                        # (D, 8)
+    W1 -= LEARNING_RATE * d_W1
+    W2 -= LEARNING_RATE * d_W2
+
 z1_final = X @ W1
 a1_final = sigmoid(z1_final)
 p_final = sigmoid(a1_final @ W2).ravel()

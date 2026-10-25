@@ -143,8 +143,7 @@ $$
 
 ```python
 ngdp = 1100.0
-deflator = 125.0   # index
-level, base = 100
+deflator = 125.0  # index level, base = 100
 rgdp = ngdp / (deflator / 100.0)
 print("Real GDP (conceptual units):", round(rgdp, 2))
 ```
@@ -161,23 +160,36 @@ cat("Real GDP (conceptual units):", round(rgdp, 2), "\n")
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import pandas as pd
+
 RANDOM_SEED = 42
 
-def add_real_gdp( frame: pd.DataFrame, ngdp_col: str = "ngdp", deflator_col: str = "gdp_deflator", out_col: str = "rgdp",
+
+def add_real_gdp(
+    frame: pd.DataFrame,
+    ngdp_col: str = "ngdp",
+    deflator_col: str = "gdp_deflator",
+    out_col: str = "rgdp",
 ) -> pd.DataFrame:
     """Compute real GDP from nominal GDP and a GDP deflator (index, base 100)."""
     result = frame.copy()
     result[out_col] = result[ngdp_col] / (result[deflator_col] / 100.0)
     return result
 
+
 def main() -> None:
     rng = pd.Series(range(4))
-    _ = RANDOM_SEED   # reserved for reproducible extensions (e.g. synthetic data)
-    df = pd.DataFrame( { "quarter": ["Q1", "Q2", "Q3", "Q4"], "ngdp": [1000.0, 1020.0, 1055.0, 1080.0], "gdp_deflator": [100.0, 101.0, 103.0, 104.0], } )
+    _ = RANDOM_SEED  # reserved for reproducible extensions (e.g. synthetic data)
+    df = pd.DataFrame(
+        {
+            "quarter": ["Q1", "Q2", "Q3", "Q4"],
+            "ngdp": [1000.0, 1020.0, 1055.0, 1080.0],
+            "gdp_deflator": [100.0, 101.0, 103.0, 104.0],
+        }
+    )
     out = add_real_gdp(df)
     print(out)
+
 
 if __name__ == "__main__":
     main()

@@ -102,20 +102,33 @@ $\{\text{country} \mid \text{country} \in \text{transactions}\} = \{\text{"AT"},
 A = {1, 2, 3, 4, 5}
 print(f"A = {A}")
 print(f"|A| = {len(A)}")
-print(f"Type: {type(A)}")   # Sets remove duplicates automatically
+print(f"Type: {type(A)}")
+
+# Sets remove duplicates automatically
 raw_list = [1, 2, 2, 3, 3, 3, 4]
 deduplicated = set(raw_list)
 print(f"\nRaw list: {raw_list} (len = {len(raw_list)})")
-print(f"As set: {deduplicated} (len = {len(deduplicated)})")   # Unordered: equality ignores insertion order
-print(f"\n{{1,2,3}} == {{3,1,2}}: {{1,2,3} == {3,1,2}}")   # True # CRITICAL: {} is a dict, not a set!
+print(f"As set: {deduplicated} (len = {len(deduplicated)})")
+
+# Unordered: equality ignores insertion order
+print(f"\n{{1,2,3}} == {{3,1,2}}: { {1, 2, 3} == {3, 1, 2} }")  # True
+
+# CRITICAL: {} is a dict, not a set!
 empty_dict = {}
 empty_set = set()
 print(f"\ntype({{}}) = {type(empty_dict)} ← DICT, not set!")
-print(f"type(set()) = {type(empty_set)} ← correct empty set")   # Set comprehension (mirror of set-builder notation)
+print(f"type(set()) = {type(empty_set)} ← correct empty set")
+
+# Set comprehension (mirror of set-builder notation)
 squares = {x**2 for x in range(6)}
-print(f"\nSet comprehension {{x² : x ∈ {{0..5}}}} = {squares}")   # Pandas: set semantics on a DataFrame column
+print(f"\nSet comprehension {{x² : x ∈ {{0..5}}}} = {squares}")
+
+# Pandas: set semantics on a DataFrame column
 import pandas as pd
-df = pd.DataFrame({ "country": ["AT", "DE", "AT", "US", "DE", "AT", "GB"], "revenue": [100, 200, 150, 300, 80, 90, 400],
+
+df = pd.DataFrame({
+    "country": ["AT", "DE", "AT", "US", "DE", "AT", "GB"],
+    "revenue": [100, 200, 150, 300, 80, 90, 400],
 })
 unique_countries = set(df["country"])
 print(f"\nColumn values (with duplicates): {df['country'].tolist()}")
@@ -128,20 +141,32 @@ print(f"SQL DISTINCT equivalent — same result: {set(df['country'].unique())}")
 ### Beginner example (R)
 
 ```r
-# Set definition in R (using unique() and set functions) # Roster form (vector in R; sets use unique())
+# Set definition in R (using unique() and set functions)
+# Roster form (vector in R; sets use unique())
 raw_vec <- c(1, 2, 2, 3, 3, 3, 4)
 unique_set <- unique(raw_vec)
 cat("Raw vector:", raw_vec, "\n")
 cat("Unique (set):", unique_set, "\n")
-cat("Cardinality:", length(unique_set), "\n")  # Unordered equality: setequal()
+cat("Cardinality:", length(unique_set), "\n")
+
+# Unordered equality: setequal()
 A <- c(1, 2, 3)
 B <- c(3, 1, 2)
-cat(sprintf("\nsetequal({1,2,3}, {3,1,2}): %s\n", setequal(A, B)))  # TRUE # Set-builder equivalent: filter + unique
-transactions <- data.frame( country = c("AT", "DE", "AT", "US", "DE", "AT", "GB"), revenue = c(100, 200, 150, 300, 80, 90, 400), stringsAsFactors = FALSE
-)  # Set of all countries appearing in transactions
+cat(sprintf("\nsetequal({1,2,3}, {3,1,2}): %s\n", setequal(A, B)))  # TRUE
+
+# Set-builder equivalent: filter + unique
+transactions <- data.frame(
+  country = c("AT", "DE", "AT", "US", "DE", "AT", "GB"),
+  revenue = c(100, 200, 150, 300, 80, 90, 400),
+  stringsAsFactors = FALSE
+)
+
+# Set of all countries appearing in transactions
 country_set <- unique(transactions$country)
 cat("\nAll distinct countries:", country_set, "\n")
-cat("Cardinality:", length(country_set), "\n")  # Set-builder: countries with revenue > 200
+cat("Cardinality:", length(country_set), "\n")
+
+# Set-builder: countries with revenue > 200
 high_rev_countries <- unique(transactions$country[transactions$revenue > 200])
 cat("Countries with revenue > 200:", high_rev_countries, "\n")
 ```
@@ -151,26 +176,55 @@ cat("Countries with revenue > 200:", high_rev_countries, "\n")
 ```python
 import pandas as pd
 import numpy as np
-from typing import Any   # Scenario: multi-column deduplication and uniqueness audit using set semantics
+from typing import Any
+
+# Scenario: multi-column deduplication and uniqueness audit using set semantics
 np.random.seed(42)
-N = 500   # Simulate transaction log with intentional duplicates
-raw_df = pd.DataFrame({ "transaction_id": np.random.randint(1, 200, N),   # IDs repeat
-    (duplicates) "customer_email": np.random.choice( ["a@x.com", "b@x.com", "c@x.com", "d@x.com", "e@x.com"], N ), "country": np.random.choice(["AT", "DE", "US", "GB", "CH"], N), "channel": np.random.choice(["organic", "paid", "email"], N), "revenue": np.random.uniform(10, 1000, N).round(2),
+N = 500
+
+# Simulate transaction log with intentional duplicates
+raw_df = pd.DataFrame({
+    "transaction_id": np.random.randint(1, 200, N),  # IDs repeat (duplicates)
+    "customer_email": np.random.choice(
+        ["a@x.com", "b@x.com", "c@x.com", "d@x.com", "e@x.com"], N
+    ),
+    "country": np.random.choice(["AT", "DE", "US", "GB", "CH"], N),
+    "channel": np.random.choice(["organic", "paid", "email"], N),
+    "revenue": np.random.uniform(10, 1000, N).round(2),
 })
 
+
 def set_audit(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
-    """ Report cardinality (unique set size) for specified columns. Args: df: Input DataFrame. columns: List of column names to audit. Returns: DataFrame with column name, total values, unique values, and duplicate count. """
+    """Report cardinality (unique set size) for specified columns.
+
+    Args:
+        df: Input DataFrame.
+        columns: List of column names to audit.
+
+    Returns:
+        DataFrame with column name, total values, unique values, and duplicate count.
+    """
     rows = []
     for col in columns:
         total = len(df[col])
-    unique = len(set(df[col]))   # set semantics: dedup + unordered
-    dupes = total - unique
-    rows.append({ "column": col, "total_values": total, "unique_values": unique, "duplicates": dupes, "duplicate_pct": round(dupes / total * 100, 1), })
+        unique = len(set(df[col]))  # set semantics: dedup + unordered
+        dupes = total - unique
+        rows.append({
+            "column": col,
+            "total_values": total,
+            "unique_values": unique,
+            "duplicates": dupes,
+            "duplicate_pct": round(dupes / total * 100, 1),
+        })
     return pd.DataFrame(rows)
+
+
 audit = set_audit(raw_df, ["transaction_id", "customer_email", "country", "channel"])
 print("Set Cardinality Audit (uniqueness via set semantics)")
 print("=" * 60)
-print(audit.to_string(index=False))   # Set-builder: customers who purchased in both AT and DE
+print(audit.to_string(index=False))
+
+# Set-builder: customers who purchased in both AT and DE
 at_customers = set(raw_df[raw_df["country"] == "AT"]["customer_email"])
 de_customers = set(raw_df[raw_df["country"] == "DE"]["customer_email"])
 cross_market = at_customers & de_customers   # set intersection

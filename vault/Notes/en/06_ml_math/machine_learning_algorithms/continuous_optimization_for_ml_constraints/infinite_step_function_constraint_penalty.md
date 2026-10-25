@@ -103,12 +103,18 @@ def objective(x):
     return float((x[0] - 3.0) ** 2)
 
 def gradient(x):
-    return np.array([2.0 * (x[0] - 3.0)])   # Hard constraint: x <= 2
+    return np.array([2.0 * (x[0] - 3.0)])
+
+
+# Hard constraint: x <= 2
 constraints = [{"type": "ineq", "fun": lambda x: 2.0 - x[0]}]
-result = minimize( objective, x0=[0.0], jac=gradient, method="SLSQP", constraints=constraints,
+result = minimize(
+    objective, x0=[0.0], jac=gradient, method="SLSQP", constraints=constraints,
 )
 print(f"Optimal x: {result.x[0]:.4f} (expected: 2.0)")
-print(f"Optimal f: {result.fun:.4f} (expected: 1.0)")   # Without constraint
+print(f"Optimal f: {result.fun:.4f} (expected: 1.0)")
+
+# Without constraint
 result_unc = minimize(objective, x0=[0.0], jac=gradient, method="BFGS")
 print(f"Unconstrained x: {result_unc.x[0]:.4f} (expected: 3.0)")
 ```
@@ -119,7 +125,9 @@ print(f"Unconstrained x: {result_unc.x[0]:.4f} (expected: 3.0)")
 # min (x - 3)^2 subject to x <= 2, encoded as -x >= -2
 objective <- function(x) (x - 3)^2
 gradient <- function(x) 2 * (x - 3)
-result <- constrOptim( theta = 0.0, f = objective, grad = gradient, ui = matrix(-1, nrow = 1), ci = -2.0, method = "BFGS"
+result <- constrOptim(
+  theta = 0.0, f = objective, grad = gradient,
+  ui = matrix(-1, nrow = 1), ci = -2.0, method = "BFGS"
 )
 cat("Optimal x:", round(result$par, 4), "(expected 2.0)\n")
 cat("Optimal f:", round(result$value, 4), "(expected 1.0)\n")
@@ -128,33 +136,51 @@ cat("Optimal f:", round(result$value, 4), "(expected 1.0)\n")
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
 from scipy.optimize import minimize
 
-def penalty_method( f: object, g_constraints: list[object], x0: np.ndarray, rho_sequence: list[float], tol: float = 1e-7,
+
+def penalty_method(
+    f: object,
+    g_constraints: list[object],
+    x0: np.ndarray,
+    rho_sequence: list[float],
+    tol: float = 1e-7,
 ) -> dict[str, object]:
-    # Penalty method approximating indicator 1(g_i(x)) with rho *
-    max(0, g_i(x))^2.   # As rho increases, constraint satisfaction improves.
+    # Penalty method approximating indicator 1(g_i(x)) with rho * max(0, g_i(x))^2.
+    # As rho increases, constraint satisfaction improves.
     x = x0.copy()
     history = []
     for rho in rho_sequence:
 
-def penalised_obj(x_inner):
-    return float(f(x_inner)) + rho * sum( max(0.0, float(g(x_inner))) ** 2 for g in g_constraints )
-result = minimize(penalised_obj, x, method="BFGS", tol=tol)
-x = result.x
-violations = [max(0.0, float(g(x))) for g in g_constraints]
-history.append({ "rho": rho, "f_value": round(float(f(x)), 6), "max_violation": round(max(violations, default=0.0), 8), })
-return {"x_opt": x.round(6), "history": history}
+        def penalised_obj(x_inner):
+            return float(f(x_inner)) + rho * sum(
+                max(0.0, float(g(x_inner))) ** 2 for g in g_constraints
+            )
+
+        result = minimize(penalised_obj, x, method="BFGS", tol=tol)
+        x = result.x
+        violations = [max(0.0, float(g(x))) for g in g_constraints]
+        history.append({
+            "rho": rho,
+            "f_value": round(float(f(x)), 6),
+            "max_violation": round(max(violations, default=0.0), 8),
+        })
+    return {"x_opt": x.round(6), "history": history}
+
 
 if __name__ == "__main__":
     # min (x1-2)^2 + (x2-3)^2 s.t. x1 + x2 <= 4, x1 >= 0, x2 >= 0
     f_obj = lambda x: (x[0] - 2.0) ** 2 + (x[1] - 3.0) ** 2
-    g1 = lambda x: x[0] + x[1] - 4.0   # x1+x2 <= 4
-    g2 = lambda x: -x[0]   # x1 >= 0
-    g3 = lambda x: -x[1]   # x2 >= 0
-    result = penalty_method( f=f_obj, g_constraints=[g1, g2, g3], x0=np.array([1.0, 1.0]), rho_sequence=[1, 10, 100, 1000], )
+    g1 = lambda x: x[0] + x[1] - 4.0  # x1+x2 <= 4
+    g2 = lambda x: -x[0]              # x1 >= 0
+    g3 = lambda x: -x[1]              # x2 >= 0
+    result = penalty_method(
+        f=f_obj,
+        g_constraints=[g1, g2, g3],
+        x0=np.array([1.0, 1.0]),
+        rho_sequence=[1, 10, 100, 1000],
+    )
     print("Penalty method result:")
     print(f" Optimal x: {result['x_opt']}")
     print(" Convergence history:")

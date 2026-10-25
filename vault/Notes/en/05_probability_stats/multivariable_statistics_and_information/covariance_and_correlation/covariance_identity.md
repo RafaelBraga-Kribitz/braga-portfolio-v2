@@ -93,8 +93,9 @@ Deviations: $(-1,-2),(0,0),(1,2)$; products: $2,0,2$; mean $= 4/3$ ✓
 ```python
 import numpy as np
 x_values = [1, 2, 3, 4, 5]
-y_values = [3, 5, 7, 9, 11]   #
-Cov = E[XY] - E[X] * E[Y]
+y_values = [3, 5, 7, 9, 11]
+
+# Cov = E[XY] - E[X] * E[Y]
 e_xy = np.mean([x * y for x, y in zip(x_values, y_values)])
 e_x = np.mean(x_values)
 e_y = np.mean(y_values)
@@ -120,38 +121,39 @@ cat("Cov(X,Y) via identity:", cov_identity, "\n")
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
+
 
 class StreamingCovariance:
     # Online single-pass covariance estimator using the identity formula.
     # Accumulates sufficient statistics without storing observations,
     # suitable for large-scale or real-time data pipelines.
 
-def __init__(self) -> None:
-    self._n: int = 0
-    self._sum_x: float = 0.0
-    self._sum_y: float = 0.0
-    self._sum_xy: float = 0.0
+    def __init__(self) -> None:
+        self._n: int = 0
+        self._sum_x: float = 0.0
+        self._sum_y: float = 0.0
+        self._sum_xy: float = 0.0
 
-def update(self, x: float, y: float) -> None:
-    self._n += 1
-    self._sum_x += x
-    self._sum_y += y
-    self._sum_xy += x * y
+    def update(self, x: float, y: float) -> None:
+        self._n += 1
+        self._sum_x += x
+        self._sum_y += y
+        self._sum_xy += x * y
 
-def covariance(self) -> float:
-    # Population covariance via identity: E[XY] - E[X]*E[Y]
-    if self._n < 2:
-        raise ValueError("Need at least 2 observations.")
-    mean_x = self._sum_x / self._n
-    mean_y = self._sum_y / self._n
-    mean_xy = self._sum_xy / self._n
-    return mean_xy - mean_x * mean_y
+    def covariance(self) -> float:
+        # Population covariance via identity: E[XY] - E[X]*E[Y]
+        if self._n < 2:
+            raise ValueError("Need at least 2 observations.")
+        mean_x = self._sum_x / self._n
+        mean_y = self._sum_y / self._n
+        mean_xy = self._sum_xy / self._n
+        return mean_xy - mean_x * mean_y
 
-def sample_covariance(self) -> float:
-    # Bessel-corrected sample covariance (ddof=1)
-    return self.covariance() * self._n / (self._n - 1)
+    def sample_covariance(self) -> float:
+        # Bessel-corrected sample covariance (ddof=1)
+        return self.covariance() * self._n / (self._n - 1)
+
 
 if __name__ == "__main__":
     rng = np.random.default_rng(seed=42)

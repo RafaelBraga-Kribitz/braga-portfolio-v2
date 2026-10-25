@@ -69,7 +69,7 @@ Relationship: $\lfloor x \rfloor \leq x \leq \lceil x \rceil$ always holds.
 2. **Integers are unchanged**: $\lceil n \rceil = n$ for any integer $n$.
 3. **Negative numbers behave counterintuitively**: $\lceil -2.7 \rceil = -2$, not $-3$. "Up" for a negative number means less negative (closer to zero).
 4. **Ceiling vs. floor vs. round**: `round(10.3) = 10` (banker's rounding), `floor(10.3) = 10`, `ceil(10.3) = 11`. They are different functions for different needs.
-5. **Batch count formula**: $\text{num_batches} = \lceil n / k \rceil$ is the canonical way to compute how many complete-or-partial batches of size $k$ cover $n$ items.
+5. **Batch count formula**: $\text{num\_batches} = \lceil n / k \rceil$ is the canonical way to compute how many complete-or-partial batches of size $k$ cover $n$ items.
 
 ## Step-by-step calculation (tiny example)
 

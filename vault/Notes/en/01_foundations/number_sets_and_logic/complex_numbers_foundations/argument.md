@@ -102,15 +102,19 @@ This is correctly in the second quadrant.
 
 ```python
 # Argument (phase angle) of complex numbers
-# Use np.angle() or np.arctan2() — NOT
-np.arctan()
+# Use np.angle() or np.arctan2() — NOT np.arctan()
 import numpy as np
+
 z_values = [1 + 0j, 0 + 1j, -1 + 0j, 0 - 1j, 1 + 1j, -1 + 1j, -1 - 1j, 1 - 1j]
 labels = ["right", "up", "left", "down", "1st Q", "2nd Q", "3rd Q", "4th Q"]
 print("Argument (phase angle) in radians and degrees:")
 print(f"{'z':>10} {'label':>6} {'angle_rad':>10} {'angle_deg':>10}")
 for z, label in zip(z_values, labels):
-    angle_rad = np.angle(z)   # atan2-based: correct all quadrants angle_deg = np.degrees(angle_rad) print(f" {str(z):>8} {label:>6} {angle_rad:>10.4f} {angle_deg:>10.2f}°") # Danger: arctan alone fails for left half-plane
+    angle_rad = np.angle(z)  # atan2-based: correct all quadrants
+    angle_deg = np.degrees(angle_rad)
+    print(f" {str(z):>8} {label:>6} {angle_rad:>10.4f} {angle_deg:>10.2f}°")
+
+# Danger: arctan alone fails for left half-plane
 print("\nDangerous: np.arctan(b/a) fails for a < 0:")
 z = -1 + 1j
 wrong = np.arctan(z.imag / z.real)   # wrong quadrant
@@ -125,7 +129,8 @@ print(f" z = {z}: arctan(b/a) = {wrong:.4f} rad | angle(z) = {right:.4f} rad ←
 z_values <- c(1+0i, 0+1i, -1+0i, 0-1i, 1+1i, -1+1i, -1-1i, 1-1i)
 labels <- c("right","up","left","down","Q1","Q2","Q3","Q4")
 cat("Argument (phase) in radians and degrees:\n")
-for (i in seq_along(z_values)) { z <- z_values[i]
+for (i in seq_along(z_values)) {
+  z <- z_values[i]
   phase_rad <- Arg(z)
   phase_deg <- phase_rad * 180 / pi
   cat(sprintf(" %s (%s): %.4f rad = %.2f°\n", z, labels[i], phase_rad, phase_deg))
@@ -136,24 +141,36 @@ for (i in seq_along(z_values)) { z <- z_values[i]
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: Phase analysis of FFT to detect time-series lag between two signals
+import pandas as pd
+
+# Scenario: Phase analysis of FFT to detect time-series lag between two signals
 np.random.seed(42)
 n = 256
-t = np.linspace(0, 1, n, endpoint=False)   # 1 second, 256 samples # Signal A: 3 Hz sine wave (reference)
+t = np.linspace(0, 1, n, endpoint=False)  # 1 second, 256 samples
+
+# Signal A: 3 Hz sine wave (reference)
 # Signal B: same but phase-shifted by π/4 radians (= 1/8th period lag)
-freq = 3.0   # Hz
-phase_shift = np.pi / 4   # true lag to detect
+freq = 3.0               # Hz
+phase_shift = np.pi / 4  # true lag to detect
 signal_a = np.sin(2 * np.pi * freq * t)
-signal_b = np.sin(2 * np.pi * freq * t - phase_shift) + 0.1 * np.random.randn(n)   # FFT
+signal_b = np.sin(2 * np.pi * freq * t - phase_shift) + 0.1 * np.random.randn(n)
+
+# FFT
 fft_a = np.fft.rfft(signal_a)
 fft_b = np.fft.rfft(signal_b)
-freqs = np.fft.rfftfreq(n, d=1/n)   # Hz # Phase of each signal at each frequency
-phase_a = np.angle(fft_a)   # atan2-based, radians
-phase_b = np.angle(fft_b)   # Phase difference → lag
-phase_diff = phase_b - phase_a   # B lags A by this amount (radians)
+freqs = np.fft.rfftfreq(n, d=1/n)  # Hz
+
+# Phase of each signal at each frequency
+phase_a = np.angle(fft_a)  # atan2-based, radians
+phase_b = np.angle(fft_b)
+
+# Phase difference → lag
+phase_diff = phase_b - phase_a  # B lags A by this amount (radians)
 # Wrap to [-π, π]
-phase_diff = (phase_diff + np.pi) % (2 * np.pi) - np.pi   # Find dominant frequency bin
-dominant_bin = np.argmax(np.abs(fft_a)[1:]) + 1   # exclude DC
+phase_diff = (phase_diff + np.pi) % (2 * np.pi) - np.pi
+
+# Find dominant frequency bin
+dominant_bin = np.argmax(np.abs(fft_a)[1:]) + 1  # exclude DC
 dominant_freq = freqs[dominant_bin]
 detected_lag_rad = phase_diff[dominant_bin]
 detected_lag_sec = detected_lag_rad / (2 * np.pi * dominant_freq)
@@ -164,8 +181,16 @@ print(f" True phase shift: {phase_shift:.4f} rad ({np.degrees(phase_shift):.1f}�
 print(f" Detected phase diff: {detected_lag_rad:.4f} rad ({np.degrees(detected_lag_rad):.1f}°)")
 print(f" True lag: {phase_shift / (2*np.pi*freq)*1000:.2f} ms")
 print(f" Detected lag: {detected_lag_sec*1000:.2f} ms")
-print()   # Summary table: phases at top 5 frequencies
-df = pd.DataFrame({ "freq_hz": freqs[:20], "amp_a": np.abs(fft_a[:20]).round(2), "phase_a_deg": np.degrees(phase_a[:20]).round(1), "amp_b": np.abs(fft_b[:20]).round(2), "phase_b_deg": np.degrees(phase_b[:20]).round(1), "phase_diff_deg": np.degrees(phase_diff[:20]).round(1),
+print()
+
+# Summary table: phases at top 5 frequencies
+df = pd.DataFrame({
+    "freq_hz": freqs[:20],
+    "amp_a": np.abs(fft_a[:20]).round(2),
+    "phase_a_deg": np.degrees(phase_a[:20]).round(1),
+    "amp_b": np.abs(fft_b[:20]).round(2),
+    "phase_b_deg": np.degrees(phase_b[:20]).round(1),
+    "phase_diff_deg": np.degrees(phase_diff[:20]).round(1),
 }).sort_values("amp_a", ascending=False).head(5)
 print("Top frequency components by amplitude:")
 print(df.to_string(index=False))
@@ -185,7 +210,10 @@ freqs <- (0:99) / 100
 phase_a <- Arg(fft_a)
 phase_b <- Arg(fft_b)
 phase_diff <- Arg(fft_b / fft_a)
-df <- data.frame( freq_hz = freqs[1:20], amp_a = round(Mod(fft_a[1:20]), 2), phase_a_deg = round(180 * phase_a[1:20] / pi, 1)
+df <- data.frame(
+  freq_hz = freqs[1:20],
+  amp_a = round(Mod(fft_a[1:20]), 2),
+  phase_a_deg = round(180 * phase_a[1:20] / pi, 1)
 )
 df <- df[order(-df$amp_a), ]
 cat("Top frequency components by amplitude:\n")

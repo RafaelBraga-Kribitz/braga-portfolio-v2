@@ -90,15 +90,21 @@ $\int_0^1 (x + 1/2) \, dx = [x^2/2 + x/2]_0^1 = 1/2 + 1/2 = 1.0$ ✓
 
 ```python
 import numpy as np
-from scipy import integrate   # Joint PDF: f(x,y) = x + y on [0,1] x [0,1]
+from scipy import integrate
 
+
+# Joint PDF: f(x,y) = x + y on [0,1] x [0,1]
 def joint_pdf(y: float, x: float) -> float:
-    return x + y   # Compute marginal f_X(x) numerically for several x values
+    return x + y
+
+
+# Compute marginal f_X(x) numerically for several x values
 x_grid = np.linspace(0, 1, 6)
 for x_val in x_grid:
-    marginal, _ = integrate.quad(joint_pdf, 0, 1, args=(x_val,))   # Analytical: f_X(x) = x + 0.5
-analytical = x_val + 0.5
-print(f"x={x_val:.2f}: f_X(x) = {marginal:.4f} (analytical: {analytical:.4f})")
+    marginal, _ = integrate.quad(joint_pdf, 0, 1, args=(x_val,))
+    # Analytical: f_X(x) = x + 0.5
+    analytical = x_val + 0.5
+    print(f"x={x_val:.2f}: f_X(x) = {marginal:.4f} (analytical: {analytical:.4f})")
 ```
 
 ### Beginner example (R)
@@ -107,7 +113,8 @@ print(f"x={x_val:.2f}: f_X(x) = {marginal:.4f} (analytical: {analytical:.4f})")
 # Marginal f_X(x) = integrate f(x,y) dy from 0 to 1
 joint_pdf <- function(y, x_val) x_val + y
 x_grid <- seq(0, 1, by = 0.2)
-for (x_val in x_grid) { result <- integrate(joint_pdf, lower = 0, upper = 1, x_val = x_val)
+for (x_val in x_grid) {
+  result <- integrate(joint_pdf, lower = 0, upper = 1, x_val = x_val)
   cat(sprintf("x=%.1f: f_X(x) = %.4f (analytical: %.4f)\n", x_val, result$value, x_val + 0.5))
 }
 ```
@@ -115,12 +122,17 @@ for (x_val in x_grid) { result <- integrate(joint_pdf, lower = 0, upper = 1, x_v
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
 from scipy import integrate
 from scipy.stats import multivariate_normal
 
-def bivariate_gaussian_marginal_x( x_grid: np.ndarray, mean: list[float], cov: list[list[float]], y_lower: float = -10.0, y_upper: float = 10.0,
+
+def bivariate_gaussian_marginal_x(
+    x_grid: np.ndarray,
+    mean: list[float],
+    cov: list[list[float]],
+    y_lower: float = -10.0,
+    y_upper: float = 10.0,
 ) -> np.ndarray:
     # Compute marginal PDF of X by numerically integrating the bivariate Gaussian.
     # For bivariate Gaussian, this recovers N(mean_x, sigma_x^2) analytically.
@@ -128,10 +140,12 @@ def bivariate_gaussian_marginal_x( x_grid: np.ndarray, mean: list[float], cov: l
     marginal_densities = np.zeros_like(x_grid, dtype=float)
     for i, x_val in enumerate(x_grid):
 
-def integrand(y: float) -> float:
-    return dist.pdf([x_val, y])
-marginal_densities[i], _ = integrate.quad(integrand, y_lower, y_upper)
-return marginal_densities
+        def integrand(y: float) -> float:
+            return dist.pdf([x_val, y])
+
+        marginal_densities[i], _ = integrate.quad(integrand, y_lower, y_upper)
+    return marginal_densities
+
 
 if __name__ == "__main__":
     from scipy.stats import norm

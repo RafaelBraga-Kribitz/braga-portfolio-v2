@@ -96,15 +96,20 @@ For non-convex: convergence to $\mathbb{E}[\|\nabla f\|^2] \le O(1/\sqrt{T})$.
 ```python
 import numpy as np
 
-def sgd_step( theta: np.ndarray, grad: np.ndarray, learning_rate: float,
+
+def sgd_step(
+    theta: np.ndarray, grad: np.ndarray, learning_rate: float,
 ) -> np.ndarray:
     """Single SGD update step."""
     return theta - learning_rate * grad
+
 
 def compute_gradient(theta: np.ndarray, x: np.ndarray, y: float) -> np.ndarray:
     """Gradient of squared loss L(theta; x, y) = (theta^T x - y)^2."""
     residual = float(theta @ x) - y
     return 2 * residual * x
+
+
 np.random.seed(42)
 n, d = 200, 5
 X = np.random.randn(n, d)
@@ -117,16 +122,17 @@ BATCH_SIZE = 16
 loss_history = []
 for epoch in range(N_EPOCHS):
     perm = np.random.permutation(n)
-epoch_loss = 0.0
-for start in range(0, n, BATCH_SIZE):
-    batch_idx = perm[start:start + BATCH_SIZE]
-X_batch = X[batch_idx]
-y_batch = y[batch_idx]   # Mini-batch gradient (average over batch)
-grad = sum(compute_gradient(theta, X_batch[j], y_batch[j]) for j in range(len(batch_idx))) / len(batch_idx)
-theta = sgd_step(theta, grad, LEARNING_RATE)
-epoch_loss += np.mean((X_batch @ theta - y_batch)**2)
-loss_history.append(epoch_loss / (n // BATCH_SIZE))
-print(f"Epoch {epoch+1:>2}: train MSE = {loss_history[-1]:.4f}")
+    epoch_loss = 0.0
+    for start in range(0, n, BATCH_SIZE):
+        batch_idx = perm[start:start + BATCH_SIZE]
+        X_batch = X[batch_idx]
+        y_batch = y[batch_idx]
+        # Mini-batch gradient (average over batch)
+        grad = sum(compute_gradient(theta, X_batch[j], y_batch[j]) for j in range(len(batch_idx))) / len(batch_idx)
+        theta = sgd_step(theta, grad, LEARNING_RATE)
+        epoch_loss += np.mean((X_batch @ theta - y_batch)**2)
+    loss_history.append(epoch_loss / (n // BATCH_SIZE))
+    print(f"Epoch {epoch+1:>2}: train MSE = {loss_history[-1]:.4f}")
 print(f"\nEstimated theta: {theta.round(3)}")
 print(f"True theta: {true_theta}")
 ```
@@ -135,12 +141,15 @@ print(f"True theta: {true_theta}")
 
 ```r
 # Stochastic Gradient Descent for linear regression
-sgd_linear <- function(X, y, lr = 0.01, n_epochs = 10, batch_size = 16) { n <- nrow(X); d <- ncol(X)
+sgd_linear <- function(X, y, lr = 0.01, n_epochs = 10, batch_size = 16) {
+  n <- nrow(X); d <- ncol(X)
   theta <- numeric(d)
   loss_history <- numeric(n_epochs)
-  for (epoch in seq_len(n_epochs)) { perm <- sample(n)
+  for (epoch in seq_len(n_epochs)) {
+    perm <- sample(n)
     total_loss <- 0; n_batches <- 0
-    for (start in seq(1, n, by = batch_size)) { idx <- perm[start:min(start + batch_size - 1, n)]
+    for (start in seq(1, n, by = batch_size)) {
+      idx <- perm[start:min(start + batch_size - 1, n)]
       X_b <- X[idx, , drop = FALSE]
       y_b <- y[idx]
       residuals <- X_b %*% theta - y_b
@@ -151,7 +160,8 @@ sgd_linear <- function(X, y, lr = 0.01, n_epochs = 10, batch_size = 16) { n <- n
     }
     loss_history[epoch] <- total_loss / n_batches
     cat(sprintf("Epoch %2d: MSE = %.4f\n", epoch, loss_history[epoch]))
-  } list(theta = theta, loss = loss_history)
+  }
+  list(theta = theta, loss = loss_history)
 }
 set.seed(42)
 n <- 200; d <- 5
@@ -170,47 +180,59 @@ import numpy as np
 from sklearn.datasets import make_classification
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import roc_auc_score
-np.random.seed(42)   # -- SGD with learning rate schedule for logistic regression ------------------
+np.random.seed(42)
+
+# -- SGD with learning rate schedule for logistic regression ------------------
 N, D = 5000, 20
-X_raw, y_raw = make_classification( n_samples=N, n_features=D, n_informative=10, random_state=42 )
+X_raw, y_raw = make_classification(n_samples=N, n_features=D, n_informative=10, random_state=42)
 scaler = StandardScaler()
 X = scaler.fit_transform(X_raw)
-y = y_raw * 2 - 1   # {-1, +1} # Hyperparameters
+y = y_raw * 2 - 1   # {-1, +1}
+
+# Hyperparameters
 BATCH_SIZE = 64
 N_EPOCHS = 30
 ETA_0 = 0.1
-LAMBDA_REG = 0.001   # Learning rate schedule: polynomial decay
-eta_t = eta_0 / (1 + gamma*t)
+LAMBDA_REG = 0.001
+
+# Learning rate schedule: polynomial decay eta_t = eta_0 / (1 + gamma*t)
 DECAY_GAMMA = 0.01
+
 
 def sigmoid(z: np.ndarray) -> np.ndarray:
     return 1.0 / (1.0 + np.exp(-np.clip(z, -50, 50)))
+
 
 def logistic_grad(theta: np.ndarray, X_b: np.ndarray, y_b: np.ndarray) -> np.ndarray:
     margins = y_b * (X_b @ theta)
     weights = -y_b * sigmoid(-margins)
     return X_b.T @ weights / len(y_b) + LAMBDA_REG * theta
 
+
 def auc_score(theta: np.ndarray) -> float:
     return roc_auc_score(y_raw, X @ theta)
+
+
 theta = np.zeros(D)
 n_updates = 0
 auc_history = []
 for epoch in range(N_EPOCHS):
     perm = np.random.permutation(N)
-for start in range(0, N, BATCH_SIZE):
-    batch_idx = perm[start:start + BATCH_SIZE]
-X_batch = X[batch_idx]
-y_batch = y[batch_idx]   # Decaying learning rate
-eta_t = ETA_0 / (1 + DECAY_GAMMA * n_updates)   # SGD update
-g = logistic_grad(theta, X_batch, y_batch)
-theta = theta - eta_t * g
-n_updates += 1
-auc = auc_score(theta)
-auc_history.append(auc)
-if (epoch + 1) % 5 == 0:
-    eta_current = ETA_0 / (1 + DECAY_GAMMA * n_updates)
-print(f"Epoch {epoch+1:>3}: AUC = {auc:.4f}, eta = {eta_current:.5f}")
+    for start in range(0, N, BATCH_SIZE):
+        batch_idx = perm[start:start + BATCH_SIZE]
+        X_batch = X[batch_idx]
+        y_batch = y[batch_idx]
+        # Decaying learning rate
+        eta_t = ETA_0 / (1 + DECAY_GAMMA * n_updates)
+        # SGD update
+        g = logistic_grad(theta, X_batch, y_batch)
+        theta = theta - eta_t * g
+        n_updates += 1
+    auc = auc_score(theta)
+    auc_history.append(auc)
+    if (epoch + 1) % 5 == 0:
+        eta_current = ETA_0 / (1 + DECAY_GAMMA * n_updates)
+        print(f"Epoch {epoch+1:>3}: AUC = {auc:.4f}, eta = {eta_current:.5f}")
 print(f"\nTotal SGD updates: {n_updates}")
 print(f"Final AUC: {auc_history[-1]:.4f}")
 print(f"Updates per epoch: {N // BATCH_SIZE}")

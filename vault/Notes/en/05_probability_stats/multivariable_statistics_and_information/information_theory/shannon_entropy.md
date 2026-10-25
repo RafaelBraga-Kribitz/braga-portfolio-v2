@@ -94,13 +94,19 @@ You need 2 bits on average to encode the outcome of a fair 4-sided die roll (mak
 
 ```python
 import numpy as np
-from scipy.stats import entropy as scipy_entropy   # Distribution of customer churn classes
-# Labels: [retained, churned], probabilities
-probs = np.array([0.85, 0.15])   # Manual entropy (bits)
+from scipy.stats import entropy as scipy_entropy
 
+# Distribution of customer churn classes
+# Labels: [retained, churned], probabilities
+probs = np.array([0.85, 0.15])
+
+
+# Manual entropy (bits)
 def shannon_entropy_bits(p: np.ndarray) -> float:
     p_nonzero = p[p > 0]
     return -np.sum(p_nonzero * np.log2(p_nonzero))
+
+
 h_manual = shannon_entropy_bits(probs)
 h_scipy = scipy_entropy(probs, base=2)   # scipy uses natural log by default; base=2 for bits
 print(f"H(X) manual: {h_manual:.4f} bits")
@@ -111,8 +117,12 @@ print(f"Max entropy for 2 classes: {np.log2(2):.4f} bits (uniform)")
 ### Beginner example (R)
 
 ```r
-probs <- c(0.85, 0.15)  # Shannon entropy in bits
-shannon_entropy <- function(p_vec) { p_nonzero <- p_vec[p_vec > 0] -sum(p_nonzero * log2(p_nonzero))
+probs <- c(0.85, 0.15)
+
+# Shannon entropy in bits
+shannon_entropy <- function(p_vec) {
+  p_nonzero <- p_vec[p_vec > 0]
+  -sum(p_nonzero * log2(p_nonzero))
 }
 h_x <- shannon_entropy(probs)
 cat("H(X):", round(h_x, 4), "bits\n")
@@ -123,16 +133,18 @@ cat("Entropy as fraction of max:", round(h_x / log2(2), 4), "\n")
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
 import pandas as pd
+
 
 def shannon_entropy(p: np.ndarray, base: float = 2.0) -> float:
     # Shannon entropy H(X) in bits (base=2) or nats (base=e).
     p_nonzero = p[p > 0]
     return float(-np.sum(p_nonzero * np.log(p_nonzero) / np.log(base)))
 
-def information_gain( parent_counts: np.ndarray, child_counts_list: list[np.ndarray],
+
+def information_gain(
+    parent_counts: np.ndarray, child_counts_list: list[np.ndarray],
 ) -> float:
     # Information gain = H(parent) - weighted average H(children).
     # Used by decision tree split selection.
@@ -142,24 +154,36 @@ def information_gain( parent_counts: np.ndarray, child_counts_list: list[np.ndar
     weighted_child_entropy = 0.0
     for child_counts in child_counts_list:
         n_child = child_counts.sum()
-    child_probs = child_counts / n_child
-    weighted_child_entropy += (n_child / n_parent) * shannon_entropy(child_probs)
+        child_probs = child_counts / n_child
+        weighted_child_entropy += (n_child / n_parent) * shannon_entropy(child_probs)
     return float(parent_entropy - weighted_child_entropy)
 
-def feature_entropy_ranking( df: pd.DataFrame, target_col: str, feature_cols: list[str] ) -> pd.DataFrame:
+
+def feature_entropy_ranking(
+    df: pd.DataFrame, target_col: str, feature_cols: list[str]
+) -> pd.DataFrame:
     # Rank features by information gain with respect to target.
     rows = []
     target_counts = np.array(df[target_col].value_counts().values, dtype=float)
     for col in feature_cols:
-        child_arrays = [ np.array(group[target_col].value_counts().values, dtype=float) for _, group in df.groupby(col) ]
-    ig = information_gain(target_counts, child_arrays)
-    rows.append({"feature": col, "information_gain_bits": round(ig, 6)})
+        child_arrays = [
+            np.array(group[target_col].value_counts().values, dtype=float)
+            for _, group in df.groupby(col)
+        ]
+        ig = information_gain(target_counts, child_arrays)
+        rows.append({"feature": col, "information_gain_bits": round(ig, 6)})
     return pd.DataFrame(rows).sort_values("information_gain_bits", ascending=False)
+
 
 if __name__ == "__main__":
     rng = np.random.default_rng(seed=42)
     n = 2_000
-    sample_df = pd.DataFrame({ "device": rng.choice(["mobile", "desktop"], size=n, p=[0.6, 0.4]), "time_of_day": rng.choice(["morning", "afternoon", "evening"], size=n), "churned": rng.choice(["yes", "no"], size=n, p=[0.25, 0.75]), })   # Induce correlation: desktop users churn less
+    sample_df = pd.DataFrame({
+        "device": rng.choice(["mobile", "desktop"], size=n, p=[0.6, 0.4]),
+        "time_of_day": rng.choice(["morning", "afternoon", "evening"], size=n),
+        "churned": rng.choice(["yes", "no"], size=n, p=[0.25, 0.75]),
+    })
+    # Induce correlation: desktop users churn less
     mask = (sample_df["device"] == "desktop") & (rng.random(n) < 0.15)
     sample_df.loc[mask, "churned"] = "no"
     print("Feature ranking by information gain for 'churned':")

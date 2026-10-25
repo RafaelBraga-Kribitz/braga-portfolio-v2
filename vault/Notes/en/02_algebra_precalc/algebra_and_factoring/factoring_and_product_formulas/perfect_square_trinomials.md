@@ -112,36 +112,46 @@ def square_plus(a: float, b: float) -> float:
 
 def square_minus(a: float, b: float) -> float:
     """Return (a - b)² using the expansion."""
-    return a**2 - 2 * a * b + b**2   # Verification
+    return a**2 - 2 * a * b + b**2
+
+# Verification
 pairs = [(3.0, 2.0), (5.0, 4.0), (-1.0, 3.0), (0.5, 0.25)]
 print("Perfect square trinomial verification")
 print(f"{'a':>6} {'b':>6} {'(a+b)² direct':>14} {'expanded':>10} {'match':>6}")
 for a, b in pairs:
     direct = (a + b) ** 2
-expanded = square_plus(a, b)
-print(f"{a:>6.2f} {b:>6.2f} {direct:>14.4f} {expanded:>10.4f} {str(abs(direct - expanded) < 1e-10):>6}")   # TRAP: (a+b)² ≠ a² + b²
+    expanded = square_plus(a, b)
+    print(f"{a:>6.2f} {b:>6.2f} {direct:>14.4f} {expanded:>10.4f} {str(abs(direct - expanded) < 1e-10):>6}")
+
+# TRAP: (a+b)² ≠ a² + b²
 a, b = 3.0, 4.0
 print(f"\nTRAP: (a+b)² vs a²+b² for a={a}, b={b}")
 print(f" (a+b)² = {(a+b)**2:.0f}")
 print(f" a² + b² = {a**2 + b**2:.0f} (NOT the same!)")
-print(f" Middle term 2ab = {2*a*b:.0f}")   # Variance: E[(X-μ)²] = E[X²] - μ² via perfect square expansion
+print(f" Middle term 2ab = {2*a*b:.0f}")
+
+# Variance: E[(X-μ)²] = E[X²] - μ² via perfect square expansion
 import numpy as np
+
 np.random.seed(42)
 data = np.array([2.0, 4.0, 6.0, 8.0, 10.0, 3.0, 7.0])
 mu = data.mean()
 var_definition = np.mean((data - mu) ** 2)
 var_expansion = np.mean(data**2) - 2 * mu * mu + mu**2   # full expansion
-var_formula = np.mean(data**2) - mu**2   # simplified (since E[X]=μ) print(f"\nVariance computation (n={len(data)}, μ={mu:.4f}):")
+var_formula = np.mean(data**2) - mu**2                   # simplified (since E[X]=μ)
+print(f"\nVariance computation (n={len(data)}, μ={mu:.4f}):")
 print(f" E[(X-μ)²] definition: {var_definition:.6f}")
 print(f" Via full expansion: {var_expansion:.6f}")
 print(f" Simplified formula: {var_formula:.6f}")
-print(f" All match: {abs(var_definition - var_formula) < 1e-10 and abs(var_expansion - var_formula) < 1e-10}")   # Completing the square: x² + px
+print(f" All match: {abs(var_definition - var_formula) < 1e-10 and abs(var_expansion - var_formula) < 1e-10}")
+
+# Completing the square: x² + px
 p = 6.0
 print(f"\nCompleting the square: x²+{p:.0f}x = (x+{p/2:.0f})² - {(p/2)**2:.0f}")
 for x in [1.0, 2.0, -3.0]:
     lhs = x**2 + p * x
-rhs = (x + p / 2) ** 2 - (p / 2) ** 2
-print(f" x={x:5.1f} lhs={lhs:8.2f} rhs={rhs:8.2f} match={abs(lhs-rhs)<1e-10}")
+    rhs = (x + p / 2) ** 2 - (p / 2) ** 2
+    print(f" x={x:5.1f} lhs={lhs:8.2f} rhs={rhs:8.2f} match={abs(lhs-rhs)<1e-10}")
 ```
 
 ### Beginner example (R)
@@ -152,20 +162,26 @@ square_plus <- function(a, b) a^2 + 2*a*b + b^2
 square_minus <- function(a, b) a^2 - 2*a*b + b^2
 pairs <- list(c(3,2), c(5,4), c(-1,3), c(0.5,0.25))
 cat("Plus case: (a+b)²\n")
-for (p in pairs) { a <- p[1]; b <- p[2]
+for (p in pairs) {
+  a <- p[1]; b <- p[2]
   direct <- (a + b)^2
   expanded <- square_plus(a, b)
   cat(sprintf(" a=%.2f b=%.2f direct=%.4f expanded=%.4f match=%s\n", a, b, direct, expanded, abs(direct - expanded) < 1e-10))
-}  # Variance
+}
+
+# Variance
 data <- c(2, 4, 6, 8, 10, 3, 7)
 mu_val <- mean(data)
 var_def <- mean((data - mu_val)^2)
 var_formula <- mean(data^2) - mu_val^2
-cat(sprintf("\nVariance: E[(X-μ)²] definition=%.6f formula=%.6f match=%s\n", var_def, var_formula, abs(var_def - var_formula) < 1e-10))  # Completing the square
+cat(sprintf("\nVariance: E[(X-μ)²] definition=%.6f formula=%.6f match=%s\n", var_def, var_formula, abs(var_def - var_formula) < 1e-10))
+
+# Completing the square
 x_vals <- c(-3, 0, 1, 2, 5)
 p_val <- 6
 cat(sprintf("\nCompleting the square: x² + %.0fx = (x+%.0f)² - %.0f\n", p_val, p_val/2, (p_val/2)^2))
-for (x in x_vals) { lhs <- x^2 + p_val * x
+for (x in x_vals) {
+  lhs <- x^2 + p_val * x
   rhs <- (x + p_val/2)^2 - (p_val/2)^2
   cat(sprintf(" x=%3.0f lhs=%6.2f rhs=%6.2f match=%s\n", x, lhs, rhs, abs(lhs - rhs) < 1e-10))
 }
@@ -175,71 +191,96 @@ for (x in x_vals) { lhs <- x^2 + p_val * x
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: single-pass variance and MSE computation using (a-b)² expansion
+import pandas as pd
+
+# Scenario: single-pass variance and MSE computation using (a-b)² expansion
 # Accumulate sum(y), sum(y²), sum(ŷ), sum(ŷ²), sum(ŷy) in one pass
 # Then use: MSE = E[ŷ²] - 2E[ŷy] + E[y²] via (ŷ-y)² expansion
 
+
 class OnlineRegressionMetrics:
-    """ Single-pass accumulator for regression metrics using the (a-b)² identity. Tracks: MSE = E[(ŷ - y)²] = E[ŷ²] - 2E[ŷy] + E[y²] Var(residual) = E[(ŷ-y - mean(ŷ-y))²] Args: None """
+    """Single-pass accumulator for regression metrics using the (a-b)² identity.
 
-def __init__(self) -> None:
-    self._n: int = 0
-    self._sum_y: float = 0.0
-    self._sum_y2: float = 0.0
-    self._sum_yhat: float = 0.0
-    self._sum_yhat2: float = 0.0
-    self._sum_yyhat: float = 0.0
+    Tracks:
+        MSE = E[(ŷ - y)²] = E[ŷ²] - 2E[ŷy] + E[y²]
+        Var(residual) = E[(ŷ-y - mean(ŷ-y))²]
 
-def update(self, y_true: float, y_pred: float) -> None:
-    """Add one (true, predicted) pair."""
-    self._n += 1
-    self._sum_y += y_true
-    self._sum_y2 += y_true * y_true
-    self._sum_yhat += y_pred
-    self._sum_yhat2 += y_pred * y_pred
-    self._sum_yyhat += y_true * y_pred
-@property
+    Args:
+        None
+    """
 
-def mse(self) -> float:
-    """ MSE = E[(ŷ-y)²] = E[ŷ²] - 2E[ŷy] + E[y²] via perfect square expansion. """
-    if self._n == 0:
-        return 0.0
-    e_yhat2 = self._sum_yhat2 / self._n
-    e_yyhat = self._sum_yyhat / self._n
-    e_y2 = self._sum_y2 / self._n
-    return e_yhat2 - 2 * e_yyhat + e_y2
-@property
+    def __init__(self) -> None:
+        self._n: int = 0
+        self._sum_y: float = 0.0
+        self._sum_y2: float = 0.0
+        self._sum_yhat: float = 0.0
+        self._sum_yhat2: float = 0.0
+        self._sum_yyhat: float = 0.0
 
-def mean_error(self) -> float:
-    """Mean signed error E[ŷ - y] = E[ŷ] - E[y]."""
-    if self._n == 0:
-        return 0.0
-    return (self._sum_yhat - self._sum_y) / self._n
-@property
+    def update(self, y_true: float, y_pred: float) -> None:
+        """Add one (true, predicted) pair."""
+        self._n += 1
+        self._sum_y += y_true
+        self._sum_y2 += y_true * y_true
+        self._sum_yhat += y_pred
+        self._sum_yhat2 += y_pred * y_pred
+        self._sum_yyhat += y_true * y_pred
 
-def bias_squared(self) -> float:
-    """bias² = (E[ŷ] - E[y])² = (mean_error)²."""
-    return self.mean_error ** 2
-@property
+    @property
+    def mse(self) -> float:
+        """MSE = E[(ŷ-y)²] = E[ŷ²] - 2E[ŷy] + E[y²] via perfect square expansion."""
+        if self._n == 0:
+            return 0.0
+        e_yhat2 = self._sum_yhat2 / self._n
+        e_yyhat = self._sum_yyhat / self._n
+        e_y2 = self._sum_y2 / self._n
+        return e_yhat2 - 2 * e_yyhat + e_y2
 
-def variance_of_predictions(self) -> float:
-    """Var(ŷ) = E[ŷ²] - (E[ŷ])²."""
-    if self._n == 0:
-        return 0.0
-    e_yhat2 = self._sum_yhat2 / self._n
-    e_yhat = self._sum_yhat / self._n
-    return e_yhat2 - e_yhat ** 2   # Simulate predictions from three hypothetical models
+    @property
+    def mean_error(self) -> float:
+        """Mean signed error E[ŷ - y] = E[ŷ] - E[y]."""
+        if self._n == 0:
+            return 0.0
+        return (self._sum_yhat - self._sum_y) / self._n
+
+    @property
+    def bias_squared(self) -> float:
+        """bias² = (E[ŷ] - E[y])² = (mean_error)²."""
+        return self.mean_error ** 2
+
+    @property
+    def variance_of_predictions(self) -> float:
+        """Var(ŷ) = E[ŷ²] - (E[ŷ])²."""
+        if self._n == 0:
+            return 0.0
+        e_yhat2 = self._sum_yhat2 / self._n
+        e_yhat = self._sum_yhat / self._n
+        return e_yhat2 - e_yhat ** 2
+
+
+# Simulate predictions from three hypothetical models
 np.random.seed(42)
 N = 5_000
 y_true = np.random.normal(50, 10, N)
-models = { "unbiased_low_var": y_true + np.random.normal(0, 2, N), "biased_low_var": y_true + 5 + np.random.normal(0, 2, N), "unbiased_high_var": y_true + np.random.normal(0, 8, N),
+models = {
+    "unbiased_low_var": y_true + np.random.normal(0, 2, N),
+    "biased_low_var": y_true + 5 + np.random.normal(0, 2, N),
+    "unbiased_high_var": y_true + np.random.normal(0, 8, N),
 }
 rows = []
 for model_name, y_pred in models.items():
     tracker = OnlineRegressionMetrics()
-for y_t, y_p in zip(y_true, y_pred):
-    tracker.update(float(y_t), float(y_p))
-mse_direct = np.mean((y_pred - y_true) ** 2)   # reference rows.append({ "model": model_name, "mse_formula": round(tracker.mse, 4), "mse_direct": round(mse_direct, 4), "bias²": round(tracker.bias_squared, 4), "var_pred": round(tracker.variance_of_predictions, 4), "error": abs(tracker.mse - mse_direct), })
+    for y_t, y_p in zip(y_true, y_pred):
+        tracker.update(float(y_t), float(y_p))
+    mse_direct = np.mean((y_pred - y_true) ** 2)   # reference
+    rows.append({
+        "model": model_name,
+        "mse_formula": round(tracker.mse, 4),
+        "mse_direct": round(mse_direct, 4),
+        "bias²": round(tracker.bias_squared, 4),
+        "var_pred": round(tracker.variance_of_predictions, 4),
+        "error": abs(tracker.mse - mse_direct),
+    })
 report = pd.DataFrame(rows)
 print("Single-Pass MSE via (ŷ-y)² Expansion: MSE = E[ŷ²] - 2E[ŷy] + E[y²]")
 print("=" * 72)
@@ -250,8 +291,7 @@ print(f"\nAll errors < 1e-8: {(report['error'] < 1e-8).all()}")
 ### Professional example (R)
 
 ```r
-# Single-pass MSE via (ŷ-y)² expansion:
-MSE = E[ŷ²] - 2E[ŷy] + E[y²]
+# Single-pass MSE via (ŷ-y)² expansion: MSE = E[ŷ²] - 2E[ŷy] + E[y²]
 set.seed(42)
 N <- 200
 y_true <- 2 + 0.5 * (1:N) + rnorm(N, 0, 2)

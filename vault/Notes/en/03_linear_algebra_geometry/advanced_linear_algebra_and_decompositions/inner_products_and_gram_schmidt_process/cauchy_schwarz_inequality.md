@@ -96,7 +96,9 @@ Interpretation: the two vectors point in moderately similar directions; a cosine
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # -- Verify Cauchy-Schwarz and compute cosine similarity ---------------
+import numpy as np
+
+# -- Verify Cauchy-Schwarz and compute cosine similarity ---------------
 x = np.array([1.0, 2.0, 2.0])
 y = np.array([2.0, 1.0, 0.0])
 inner_product = float(x @ y)
@@ -111,8 +113,9 @@ print(f"||y|| = {norm_y:.4f}")
 print(f"||x|| * ||y|| = {cs_bound:.4f}")
 print(f"\nCauchy-Schwarz: |<x,y>| = {abs(inner_product):.4f} <= {cs_bound:.4f}: {abs(inner_product) <= cs_bound + 1e-10}")
 print(f"Cosine similarity = {cosine_sim:.4f}")
-print(f"Angle between vectors = {angle_deg:.2f} degrees")   # Demonstrate equality
-case: y = c * x (collinear)
+print(f"Angle between vectors = {angle_deg:.2f} degrees")
+
+# Demonstrate equality case: y = c * x (collinear)
 y_collinear = 2.0 * x
 inner_col = float(x @ y_collinear)
 bound_col = float(np.linalg.norm(x) * np.linalg.norm(y_collinear))
@@ -138,7 +141,9 @@ cat(sprintf("||y|| = %.4f\n", norm_y))
 cat(sprintf("||x|| * ||y|| = %.4f\n", cs_bound))
 cat(sprintf("\nCauchy-Schwarz: |<x,y>| = %.4f <= %.4f: %s\n", abs(inner_product), cs_bound, abs(inner_product) <= cs_bound + 1e-10))
 cat(sprintf("Cosine similarity = %.4f\n", cosine_sim))
-cat(sprintf("Angle between vectors = %.2f degrees\n", angle_deg))  # Collinear equality case
+cat(sprintf("Angle between vectors = %.2f degrees\n", angle_deg))
+
+# Collinear equality case
 y_col <- 2 * x
 inner_col <- sum(x * y_col)
 bound_col <- sqrt(sum(x^2)) * sqrt(sum(y_col^2))
@@ -150,18 +155,26 @@ cat(sprintf("\nCollinear case: |<x, 2x>| = %.4f, bound = %.4f, equal: %s\n", abs
 ```python
 import numpy as np
 import pandas as pd
-np.random.seed(42)   # -- Business scenario: semantic similarity ranking of product embeddings
+np.random.seed(42)
+
+# -- Business scenario: semantic similarity ranking of product embeddings
 # 500 product descriptions are embedded in 64 dimensions.
 # Rank all products by cosine similarity to a query embedding.
 N_PRODUCTS = 500
 EMBED_DIM = 64
 TOP_K = 5
-product_ids = [f"prod_{i:03d}" for i in range(N_PRODUCTS)]   # Simulate query and product embeddings (unit-normalized, as from a sentence encoder)
+product_ids = [f"prod_{i:03d}" for i in range(N_PRODUCTS)]
+
+# Simulate query and product embeddings (unit-normalized, as from a sentence encoder)
 query_raw = np.random.normal(size=EMBED_DIM)
 query_vec = query_raw / np.linalg.norm(query_raw)
 product_raw = np.random.normal(size=(N_PRODUCTS, EMBED_DIM))
-product_vecs = product_raw / np.linalg.norm(product_raw, axis=1, keepdims=True)   # Compute dot products (= cosine similarity since all vectors are unit-norm)
-dot_products = product_vecs @ query_vec   # Verify Cauchy-Schwarz holds for all pairs
+product_vecs = product_raw / np.linalg.norm(product_raw, axis=1, keepdims=True)
+
+# Compute dot products (= cosine similarity since all vectors are unit-norm)
+dot_products = product_vecs @ query_vec
+
+# Verify Cauchy-Schwarz holds for all pairs
 norms_q = np.linalg.norm(query_vec)   # 1.0 (unit-normalized)
 norms_p = np.linalg.norm(product_vecs, axis=1)   # all 1.0
 bounds = norms_q * norms_p
@@ -169,9 +182,13 @@ violations = int(np.sum(np.abs(dot_products) > bounds + 1e-10))
 print(f"Query norm: {norms_q:.6f} (should be 1.0)")
 print(f"Max product norm deviation from 1: {np.max(np.abs(norms_p - 1.0)):.2e}")
 print(f"Cauchy-Schwarz violations: {violations} (should be 0)")
-print(f"All cosine scores in [-1,1]: {bool(np.all(np.abs(dot_products) <= 1.0 + 1e-10))}")   # Retrieve top-K products by cosine similarity
+print(f"All cosine scores in [-1,1]: {bool(np.all(np.abs(dot_products) <= 1.0 + 1e-10))}")
+
+# Retrieve top-K products by cosine similarity
 top_k_idx = np.argsort(dot_products)[::-1][:TOP_K]
-result_df = pd.DataFrame({ "product_id": [product_ids[i] for i in top_k_idx], "cosine_similarity": dot_products[top_k_idx].round(4),
+result_df = pd.DataFrame({
+    "product_id": [product_ids[i] for i in top_k_idx],
+    "cosine_similarity": dot_products[top_k_idx].round(4),
 })
 print(f"\nTop-{TOP_K} products by semantic similarity to query:")
 print(result_df.to_string(index=False))

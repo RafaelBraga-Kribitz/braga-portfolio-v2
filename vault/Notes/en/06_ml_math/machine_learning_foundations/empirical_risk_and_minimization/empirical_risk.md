@@ -432,7 +432,7 @@ $$
 ## References and Standard Results
 
 - Empirical risk definition, $R_{\mathrm{emp}}(f)=\frac{1}{n}\sum_{i=1}^{n}L(y_i,f(x_i))$
-- Expected risk definition, $R(f)=\mathbb{E}\[L(Y,f(X))\]$
+- Expected risk definition, $R(f)=\mathbb{E}[L(Y,f(X))]$
 - Empirical Risk Minimization principle, $\hat{f}=\arg\min_{f \in \mathcal{F}} R_{\mathrm{emp}}(f)$
 - Squared loss as a regression special case
 - 0–1 loss as a classification special case

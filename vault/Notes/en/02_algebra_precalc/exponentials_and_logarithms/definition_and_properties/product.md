@@ -3,6 +3,7 @@ publish: true
 date: '2026-04-16'
 tags:
 - algebra
+slug: product-definition-and-properties
 ---
 
 # Product
@@ -110,17 +111,20 @@ $\ln(0.02304) \approx -3.7706$. ✓ No underflow: $0.02304$ is fine here, but wi
 ### Beginner example (Python)
 
 ```python
-# Product rule for logs: log_a(xy) =
-log_a(x) + log_a(y)
+# Product rule for logs: log_a(xy) = log_a(x) + log_a(y)
 import math
-import numpy as np   # Verify the product rule
+import numpy as np
+
+# Verify the product rule
 print("Product rule verification: ln(xy) = ln(x) + ln(y)")
 pairs = [(2.0, 3.0), (5.0, 7.0), (0.1, 0.9), (1.5, 4.0), (100.0, 0.01)]
 print(f"{'x':>8} {'y':>8} {'ln(xy)':>10} {'ln(x)+ln(y)':>14} {'match':>6}")
 for x, y in pairs:
     direct = math.log(x * y)
-rule_form = math.log(x) + math.log(y)
-print(f"{x:>8.4f} {y:>8.4f} {direct:>10.6f} {rule_form:>14.6f} {str(abs(direct - rule_form) < 1e-10):>6}")   # Generalization: log-likelihood of IID Bernoulli observations
+    rule_form = math.log(x) + math.log(y)
+    print(f"{x:>8.4f} {y:>8.4f} {direct:>10.6f} {rule_form:>14.6f} {str(abs(direct - rule_form) < 1e-10):>6}")
+
+# Generalization: log-likelihood of IID Bernoulli observations
 print("\nBernoulli log-likelihood: ln(L) = sum_i ln(p^x_i * (1-p)^(1-x_i))")
 p = 0.4
 obs = np.array([1, 0, 1, 1, 0, 1, 0, 0, 1, 1])   # 10 observations
@@ -129,12 +133,15 @@ ll_sum = sum(x * math.log(p) + (1 - x) * math.log(1 - p) for x in obs)
 print(f" Observations: {obs.tolist()}")
 print(f" Log-likelihood (product then log): {ll_product:.6f}")
 print(f" Log-likelihood (sum of logs): {ll_sum:.6f}")
-print(f" Match: {abs(ll_product - ll_sum) < 1e-10}")   # TRAP: ln(x + y) ≠
-ln(x) + ln(y)
+print(f" Match: {abs(ll_product - ll_sum) < 1e-10}")
+
+# TRAP: ln(x + y) ≠ ln(x) + ln(y)
 x_val, y_val = 3.0, 5.0
 print(f"\nTRAP: ln({x_val}+{y_val}) = ln({x_val+y_val}) = {math.log(x_val + y_val):.6f}")
 print(f" ln({x_val}) + ln({y_val}) = ln({x_val*y_val}) = {math.log(x_val) + math.log(y_val):.6f}")
-print(f" Difference: {abs(math.log(x_val + y_val) - (math.log(x_val) + math.log(y_val))):.6f}")   # Underflow demonstration
+print(f" Difference: {abs(math.log(x_val + y_val) - (math.log(x_val) + math.log(y_val))):.6f}")
+
+# Underflow demonstration
 print("\nNumerical stability: products vs log-sums")
 n = 500
 p_val = 0.3
@@ -148,19 +155,25 @@ print(f" Log-sum n*ln(p): {log_sum:.4f} (no underflow)")
 ### Beginner example (R)
 
 ```r
-# Product rule in R: log_a(xy) = log_a(x) + log_a(y) # Verify
+# Product rule in R: log_a(xy) = log_a(x) + log_a(y)
+# Verify
 cat("Product rule verification: ln(xy) = ln(x) + ln(y)\n")
 pairs <- list(c(2,3), c(5,7), c(0.1,0.9), c(1.5,4))
 cat(sprintf("%-8s %-8s %-10s %-14s %s\n", "x", "y", "ln(xy)", "ln(x)+ln(y)", "match"))
-for (p in pairs) { x <- p[1]; y <- p[2]
+for (p in pairs) {
+  x <- p[1]; y <- p[2]
   direct <- log(x * y)
   rule_form <- log(x) + log(y)
   cat(sprintf("%-8.4f %-8.4f %-10.6f %-14.6f %s\n", x, y, direct, rule_form, abs(direct - rule_form) < 1e-10))
-}  # Bernoulli log-likelihood
+}
+
+# Bernoulli log-likelihood
 p_hat <- 0.4
 obs <- c(1, 0, 1, 1, 0, 1, 0, 0, 1, 1)
 ll_sum <- sum(obs * log(p_hat) + (1 - obs) * log(1 - p_hat))
-cat(sprintf("\nBernoulli log-likelihood (sum of logs): %.6f\n", ll_sum))  # Underflow demo
+cat(sprintf("\nBernoulli log-likelihood (sum of logs): %.6f\n", ll_sum))
+
+# Underflow demo
 n_obs <- 500; p_val <- 0.3
 product_val <- p_val^n_obs
 log_sum_val <- n_obs * log(p_val)
@@ -174,7 +187,9 @@ cat(sprintf("Log-sum: n*ln(p) = %.4f (no underflow)\n", log_sum_val))
 import numpy as np
 import pandas as pd
 import math
-from typing import Callable   # Scenario: compare three models on a binary classification task using
+from typing import Callable
+
+# Scenario: compare three models on a binary classification task using
 # log-likelihood (product rule converts product of probs to sum of log-probs)
 # Demonstrate the numerical stability advantage and accuracy comparison
 np.random.seed(42)
@@ -182,30 +197,68 @@ N_SAMPLES = 1000
 TRUE_P = 0.35   # true positive rate (Bernoulli parameter)
 labels = np.random.binomial(1, TRUE_P, N_SAMPLES)
 
+
 def log_likelihood_bernoulli(labels: np.ndarray, predicted_p: float) -> float:
-    """ Compute Bernoulli log-likelihood using the product rule. ln L(p) = sum_i [y_i * ln(p) + (1-y_i) * ln(1-p)] Applies: ln(prod_i p^y_i * (1-p)^(1-y_i)) = sum_i [y_i*ln(p) + (1-y_i)*ln(1-p)] Args: labels: Binary outcome array (0 or 1). predicted_p: Predicted probability (0 < p < 1). Returns: Log-likelihood value. """
+    """
+    Compute Bernoulli log-likelihood using the product rule.
+
+    ln L(p) = sum_i [y_i * ln(p) + (1-y_i) * ln(1-p)]
+    Applies: ln(prod_i p^y_i * (1-p)^(1-y_i)) = sum_i [y_i*ln(p) + (1-y_i)*ln(1-p)]
+
+    Args:
+        labels: Binary outcome array (0 or 1).
+        predicted_p: Predicted probability (0 < p < 1).
+
+    Returns:
+        Log-likelihood value.
+    """
     if not (0 < predicted_p < 1):
         raise ValueError("predicted_p must be strictly between 0 and 1")
     log_p = math.log(predicted_p)
     log_one_m_p = math.log(1 - predicted_p)
     return float(np.sum(labels * log_p + (1 - labels) * log_one_m_p))
 
+
 def product_rule_verification(labels: np.ndarray, p: float) -> dict:
-    """ Verify that the product of probabilities equals exp(sum of log-probs). Args: labels: Binary outcome array. p: Probability parameter. Returns: Dictionary with comparison data. """
+    """
+    Verify that the product of probabilities equals exp(sum of log-probs).
+
+    Args:
+        labels: Binary outcome array.
+        p: Probability parameter.
+
+    Returns:
+        Dictionary with comparison data.
+    """
     log_probs = labels * math.log(p) + (1 - labels) * math.log(1 - p)
     sum_log = float(log_probs.sum())
     exp_sum_log = math.exp(sum_log) if sum_log > -700 else 0.0   # avoid underflow in exp
-    return {"sum_of_logs": sum_log, "exp_of_sum": exp_sum_log}   # Evaluate log-likelihood over a grid of p values
+    return {"sum_of_logs": sum_log, "exp_of_sum": exp_sum_log}
+
+
+# Evaluate log-likelihood over a grid of p values
 p_grid = np.linspace(0.1, 0.9, 200)
 lls = np.array([log_likelihood_bernoulli(labels, p) for p in p_grid])
-best_p = p_grid[np.argmax(lls)]   # Compare models
-model_predictions = { "true_p (oracle)": TRUE_P, "MLE estimate": labels.mean(), "overestimate": 0.6, "underestimate": 0.15,
+best_p = p_grid[np.argmax(lls)]
+
+# Compare models
+model_predictions = {
+    "true_p (oracle)": TRUE_P,
+    "MLE estimate": labels.mean(),
+    "overestimate": 0.6,
+    "underestimate": 0.15,
 }
 rows = []
 for model_name, pred_p in model_predictions.items():
     ll = log_likelihood_bernoulli(labels, pred_p)
-verification = product_rule_verification(labels, pred_p)
-rows.append({ "model": model_name, "predicted_p": round(pred_p, 4), "log_likelihood": round(ll, 4), "rank": None, })
+    verification = product_rule_verification(labels, pred_p)
+    rows.append({
+        "model": model_name,
+        "predicted_p": round(pred_p, 4),
+        "log_likelihood": round(ll, 4),
+        "rank": None,
+    })
+
 results_df = pd.DataFrame(rows)
 results_df["rank"] = results_df["log_likelihood"].rank(ascending=False).astype(int)
 results_df = results_df.sort_values("rank")

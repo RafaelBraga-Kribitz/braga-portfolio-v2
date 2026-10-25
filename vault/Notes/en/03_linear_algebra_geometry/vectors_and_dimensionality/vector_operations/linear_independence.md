@@ -47,7 +47,7 @@ Testing linear independence: form the matrix $X$ with the vectors as columns, co
 
 ### Example in a business
 
-A DS builds a regression model with features: `total_spend`, `avg_basket_size`, `n_transactions`, and `revenue` (which equals `total_spend`). The last feature is an exact linear combination of the first: $\text{revenue} = 1 \cdot \text{total_spend}$. The four columns are linearly dependent. The design matrix is rank-deficient, `np.linalg.lstsq` will warn about rank deficiency, and coefficients will be unreliable. Solution: remove the redundant feature.
+A DS builds a regression model with features: `total_spend`, `avg_basket_size`, `n_transactions`, and `revenue` (which equals `total_spend`). The last feature is an exact linear combination of the first: $\text{revenue} = 1 \cdot \text{total\_spend}$. The four columns are linearly dependent. The design matrix is rank-deficient, `np.linalg.lstsq` will warn about rank deficiency, and coefficients will be unreliable. Solution: remove the redundant feature.
 
 ## The formula, piece by piece
 

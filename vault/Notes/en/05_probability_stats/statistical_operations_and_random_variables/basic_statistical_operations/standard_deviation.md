@@ -84,7 +84,9 @@ session_durations = np.array([1.2, 3.4, 4.5, 5.1, 6.7, 2.3, 4.8, 3.9])
 mu = session_durations.mean()
 sigma = session_durations.std()   # population std
 print(f"Mean: {mu:.2f} min")
-print(f"Std Dev: {sigma:.2f} min")   # Outlier detection: flag > 2 sigma from mean
+print(f"Std Dev: {sigma:.2f} min")
+
+# Outlier detection: flag > 2 sigma from mean
 outliers = session_durations[np.abs(session_durations - mu) > 2 * sigma]
 print(f"Outliers (>2σ): {outliers}")
 ```
@@ -105,8 +107,21 @@ cat(sprintf("Std Dev (population): %.2f min\n", sigma_pop))
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 
-def standardize_features( data: np.ndarray, feature_names: list[str] | None = None ) -> tuple[np.ndarray, dict[str, float]]:
-    """Standardize features to zero mean and unit variance. Applies z-score normalization: (x - μ) / σ. Args: data: 2-D array (n_samples, n_features). feature_names: Optional names for reporting. Returns: Tuple of (scaled_data, stats_dict with mean and std per feature). """
+def standardize_features(
+    data: np.ndarray, feature_names: list[str] | None = None
+) -> tuple[np.ndarray, dict[str, float]]:
+    """
+    Standardize features to zero mean and unit variance.
+
+    Applies z-score normalization: (x - μ) / σ.
+
+    Args:
+        data: 2-D array (n_samples, n_features).
+        feature_names: Optional names for reporting.
+
+    Returns:
+        Tuple of (scaled_data, stats_dict with mean and std per feature).
+    """
     means = data.mean(axis=0)
     stds = data.std(axis=0)
     if np.any(stds == 0):
@@ -115,11 +130,15 @@ def standardize_features( data: np.ndarray, feature_names: list[str] | None = No
     stats = {}
     for idx, (m, s) in enumerate(zip(means, stds)):
         name = feature_names[idx] if feature_names else f"feature_{idx}"
-    stats[name] = {"mean": float(m), "std": float(s)}
+        stats[name] = {"mean": float(m), "std": float(s)}
     return scaled, stats
+
+
 rng = np.random.default_rng(seed=42)
-raw_features = rng.normal(100, 5, 0.03, 20, 1.5, 0.01, size=(1000, 3))
-scaled_features, feature_stats = standardize_features( raw_features, feature_names=["revenue", "sessions", "ctr"] )
+raw_features = rng.normal([100, 5, 0.03], [20, 1.5, 0.01], size=(1000, 3))
+scaled_features, feature_stats = standardize_features(
+    raw_features, feature_names=["revenue", "sessions", "ctr"]
+)
 print("Feature standardization stats:")
 for feat, stats in feature_stats.items():
     print(f" {feat}: μ={stats['mean']:.4f}, σ={stats['std']:.4f}")

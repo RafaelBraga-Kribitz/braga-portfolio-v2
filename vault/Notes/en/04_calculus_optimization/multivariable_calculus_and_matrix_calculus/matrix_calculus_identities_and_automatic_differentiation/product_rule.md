@@ -3,6 +3,7 @@ publish: true
 date: '2026-04-16'
 tags:
 - calculus
+slug: product-rule-matrix-calculus-identities-and-automatic-differentiation
 ---
 
 # Product Rule
@@ -136,18 +137,23 @@ At $x = 0$: $\sigma(0) = 0.5$, $\sigma'(0) = 0.5 \times 0.5 = 0.25$.
 ```python
 import numpy as np
 
+
 def sigmoid(x: np.ndarray) -> np.ndarray:
     """Numerically stable sigmoid."""
     return 1.0 / (1.0 + np.exp(-np.clip(x, -500, 500)))
+
 
 def sigmoid_derivative_product_rule(x: np.ndarray) -> np.ndarray:
     """sigma'(x) = sigma(x) * (1 - sigma(x)) -- derived via product/quotient rule."""
     s = sigmoid(x)
     return s * (1.0 - s)
 
+
 def numerical_derivative(fn, x: np.ndarray, h: float = 1e-5) -> np.ndarray:
     """Centered finite difference."""
     return (fn(x + h) - fn(x - h)) / (2 * h)
+
+
 x_test = np.array([-2.0, -1.0, 0.0, 1.0, 2.0])
 sig_vals = sigmoid(x_test)
 sig_prime_analytic = sigmoid_derivative_product_rule(x_test)
@@ -156,17 +162,20 @@ print("Sigmoid derivative via product rule: sigma'(x) = sigma(x) * (1 - sigma(x)
 print(f"{'x':>6} | {'sigma(x)':>10} | {'Analytic':>12} | {'Numerical':>12} | {'Error':>10}")
 print("-" * 58)
 for xi, s, a, n in zip(x_test, sig_vals, sig_prime_analytic, sig_prime_numerical):
-    print(f"{xi:>6.1f} | {s:>10.6f} | {a:>12.8f} | {n:>12.8f} | {abs(a-n):>10.2e}")   # Product rule example: h(x) = x^2 *
-sin(x)
-# h'(x) = 2x * sin(x) + x^2 *
-cos(x)
+    print(f"{xi:>6.1f} | {s:>10.6f} | {a:>12.8f} | {n:>12.8f} | {abs(a-n):>10.2e}")
 
+
+# Product rule example: h(x) = x^2 * sin(x)
+# h'(x) = 2x * sin(x) + x^2 * cos(x)
 def h_fn(x: np.ndarray) -> np.ndarray:
     return x**2 * np.sin(x)
+
 
 def h_prime_analytic(x: np.ndarray) -> np.ndarray:
     """Product rule: d/dx(x^2 * sin(x)) = 2x*sin(x) + x^2*cos(x)."""
     return 2.0 * x * np.sin(x) + x**2 * np.cos(x)
+
+
 x2 = np.linspace(-3, 3, 5)
 h_ana = h_prime_analytic(x2)
 h_num = numerical_derivative(h_fn, x2)
@@ -178,14 +187,20 @@ print(f"Max error: {np.abs(h_ana - h_num).max():.2e}")
 
 ```r
 # Product rule: d/dx(f(x)*g(x)) = f'(x)*g(x) + f(x)*g'(x)
-sigmoid <- function(x) 1 / (1 + exp(-x))  # sigma'(x) = sigma(x) * (1 - sigma(x))
-sigmoid_deriv <- function(x) sigmoid(x) * (1 - sigmoid(x))  # Numerical check
+sigmoid <- function(x) 1 / (1 + exp(-x))
+
+# sigma'(x) = sigma(x) * (1 - sigma(x))
+sigmoid_deriv <- function(x) sigmoid(x) * (1 - sigmoid(x))
+
+# Numerical check
 num_deriv <- function(fn, x, h = 1e-5) (fn(x + h) - fn(x - h)) / (2 * h)
 x_test <- c(-2, -1, 0, 1, 2)
 analytic <- sigmoid_deriv(x_test)
 numerical <- num_deriv(sigmoid, x_test)
 cat("Sigmoid derivative via product rule:\n")
-cat(sprintf(" x = %5.1f: analytic = %.6f, numerical = %.6f\n", x_test, analytic, numerical))  # Product rule: h(x) = x^2 * sin(x), h'(x) = 2x*sin(x) + x^2*cos(x)
+cat(sprintf(" x = %5.1f: analytic = %.6f, numerical = %.6f\n", x_test, analytic, numerical))
+
+# Product rule: h(x) = x^2 * sin(x), h'(x) = 2x*sin(x) + x^2*cos(x)
 h_fn <- function(x) x^2 * sin(x)
 h_prime <- function(x) 2 * x * sin(x) + x^2 * cos(x)  # product rule
 x2 <- seq(-pi, pi, length.out = 5)
@@ -197,43 +212,67 @@ cat(sprintf(" Max error: %.2e\n", max(abs(h_prime(x2) - num_deriv(h_fn, x2)))))
 
 ```python
 """
-Product rule in ML: sigmoid gate derivative and LSTM output gate backprop. In an LSTM output
-gate: o_t = sigma(z_o) * tanh(c_t) - z_o = W_o h_{t-1} + b_o (linear pre-activation) - The product rule governs how gradients split across
-sigma(z_o) and tanh(c_t) We demonstrate: 1. Sigmoid derivative via product/quotient rule 2. Gradient through element-wise product (product rule applied element-wise) 3. Numerical verification
+Product rule in ML: sigmoid gate derivative and LSTM output gate backprop.
+
+In an LSTM output gate:
+    h_t = o_t * tanh(c_t), with o_t = sigma(z_o)
+  - z_o = W_o h_{t-1} + b_o (linear pre-activation)
+  - The product rule governs how gradients split across sigma(z_o) and tanh(c_t)
+
+We demonstrate:
+  1. Sigmoid derivative via product/quotient rule
+  2. Gradient through element-wise product (product rule applied element-wise)
+  3. Numerical verification
 """
 import numpy as np
+
 RANDOM_SEED = 42
 rng = np.random.default_rng(RANDOM_SEED)
+
 
 def sigmoid(z: np.ndarray) -> np.ndarray:
     return 1.0 / (1.0 + np.exp(-np.clip(z, -500, 500)))
 
+
 def tanh_fn(c: np.ndarray) -> np.ndarray:
-    return np.tanh(c)   # Simulated LSTM output
-gate: h_t = o_t * tanh(c_t)
+    return np.tanh(c)
+
+
+# Simulated LSTM output gate: h_t = o_t * tanh(c_t)
 HIDDEN_DIM = 4
-z_o = rng.standard_normal(HIDDEN_DIM)   # pre-activation of output gate
-c_t = rng.standard_normal(HIDDEN_DIM)   # cell state
-o_t = sigmoid(z_o)   # output gate activations
-tanh_c = tanh_fn(c_t)   # tanh of cell state
-h_t = o_t * tanh_c   # LSTM output: element-wise product # Upstream gradient (dL/d h_t)
-upstream_grad = rng.standard_normal(HIDDEN_DIM)   # Product rule: d/dz_o (o_t * tanh_c) applied element-wise
+z_o = rng.standard_normal(HIDDEN_DIM)  # pre-activation of output gate
+c_t = rng.standard_normal(HIDDEN_DIM)  # cell state
+o_t = sigmoid(z_o)                     # output gate activations
+tanh_c = tanh_fn(c_t)                  # tanh of cell state
+h_t = o_t * tanh_c                     # LSTM output: element-wise product
+
+# Upstream gradient (dL/d h_t)
+upstream_grad = rng.standard_normal(HIDDEN_DIM)
+
+# Product rule: d/dz_o (o_t * tanh_c) applied element-wise
 # dL/d z_o[i] = upstream[i] * tanh_c[i] * sigma'(z_o[i])
-sigma_prime_z = sigmoid(z_o) * (1.0 - sigmoid(z_o))   # product/quotient rule
-grad_z_o_analytic = upstream_grad * tanh_c * sigma_prime_z   # dL/d
-c_t[i] = upstream[i] * o_t[i] * (1 - tanh(c_t[i])^2)
-tanh_prime_c = 1.0 - tanh_c**2   # d/dc tanh(c) = 1 - tanh^2(c)
-grad_c_t_analytic = upstream_grad * o_t * tanh_prime_c   # Numerical verification via finite differences
+sigma_prime_z = sigmoid(z_o) * (1.0 - sigmoid(z_o))  # product/quotient rule
+grad_z_o_analytic = upstream_grad * tanh_c * sigma_prime_z
+
+# dL/d c_t[i] = upstream[i] * o_t[i] * (1 - tanh(c_t[i])^2)
+tanh_prime_c = 1.0 - tanh_c**2  # d/dc tanh(c) = 1 - tanh^2(c)
+grad_c_t_analytic = upstream_grad * o_t * tanh_prime_c
+
+# Numerical verification via finite differences
 h = 1e-5
+
 
 def output_gate_loss(z_o_in: np.ndarray, c_t_in: np.ndarray) -> float:
     return float(np.dot(upstream_grad, sigmoid(z_o_in) * tanh_fn(c_t_in)))
+
+
 grad_z_o_numerical = np.zeros(HIDDEN_DIM)
 grad_c_t_numerical = np.zeros(HIDDEN_DIM)
 for i in range(HIDDEN_DIM):
-    e_i = np.zeros(HIDDEN_DIM); e_i[i] = h
-grad_z_o_numerical[i] = (output_gate_loss(z_o + e_i, c_t) - output_gate_loss(z_o - e_i, c_t)) / (2 * h)
-grad_c_t_numerical[i] = (output_gate_loss(z_o, c_t + e_i) - output_gate_loss(z_o, c_t - e_i)) / (2 * h)
+    e_i = np.zeros(HIDDEN_DIM)
+    e_i[i] = h
+    grad_z_o_numerical[i] = (output_gate_loss(z_o + e_i, c_t) - output_gate_loss(z_o - e_i, c_t)) / (2 * h)
+    grad_c_t_numerical[i] = (output_gate_loss(z_o, c_t + e_i) - output_gate_loss(z_o, c_t - e_i)) / (2 * h)
 print("=== LSTM Output Gate: Product Rule Backpropagation ===")
 print(f" h_t = sigma(z_o) * tanh(c_t) (element-wise product)")
 print()

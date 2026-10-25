@@ -81,18 +81,20 @@ $\lim_{x \to 3} (x^2 - 2x) = 9 - 6 = 3$. Verify: $f(3) = 9 - 6 = 3$ (the functio
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # Limit addition rule:
-lim[f(x) + g(x)] = lim
-f(x) + lim
-g(x)
-# Verify numerically by approaching
-a = 3
+import numpy as np
+
+# Limit addition rule: lim[f(x) + g(x)] = lim f(x) + lim g(x)
+# Verify numerically by approaching a = 3
+
 
 def f(x: np.ndarray) -> np.ndarray:
     return x ** 2
 
+
 def g(x: np.ndarray) -> np.ndarray:
     return 2 * x
+
+
 TARGET_A = 3.0
 epsilons = [0.1, 0.01, 0.001, 0.0001]
 print("Numerical verification: lim(x->3) [x^2 - 2x] = lim x^2 - lim 2x = 9 - 6 = 3")
@@ -101,8 +103,10 @@ print(f"{'epsilon':>12} | {'f(a+eps)':>12} | {'g(a+eps)':>12} | {'f-g at a+eps':
 print("-" * 70)
 for eps in epsilons:
     x_val = TARGET_A + eps
-combined = f(x_val) - g(x_val)
-print(f"{eps:>12.4f} | {f(x_val):>12.6f} | {g(x_val):>12.6f} | {combined:>14.8f} | {f(x_val)-g(x_val):>12.8f}")   # Expected limits
+    combined = f(x_val) - g(x_val)
+    print(f"{eps:>12.4f} | {f(x_val):>12.6f} | {g(x_val):>12.6f} | {combined:>14.8f} | {f(x_val)-g(x_val):>12.8f}")
+
+# Expected limits
 lim_f = TARGET_A ** 2
 lim_g = 2 * TARGET_A
 print(f"\nlim f = {lim_f}, lim g = {lim_g}, lim f - lim g = {lim_f - lim_g}")
@@ -112,8 +116,7 @@ print("As epsilon shrinks to 0, f(a+eps) - g(a+eps) -> 3 from above. Rule confir
 ### Beginner example (R)
 
 ```r
-# Limit addition rule:
-lim[f(x) + g(x)] = lim f(x) + lim g(x)
+# Limit addition rule: lim[f(x) + g(x)] = lim f(x) + lim g(x)
 f <- function(x) x^2
 g <- function(x) 2 * x
 TARGET_A <- 3
@@ -121,7 +124,8 @@ epsilons <- c(0.1, 0.01, 0.001, 0.0001)
 cat(sprintf("Approaching x = %g from above: f(x) - g(x) -> f(a) - g(a)\n\n", TARGET_A))
 cat(sprintf("%12s | %12s | %12s | %14s\n", "epsilon", "f(a+eps)", "g(a+eps)", "f-g at a+eps"))
 cat(strrep("-", 55), "\n")
-for (eps in epsilons) { x_val <- TARGET_A + eps
+for (eps in epsilons) {
+  x_val <- TARGET_A + eps
   cat(sprintf("%12.4f | %12.6f | %12.6f | %14.8f\n", eps, f(x_val), g(x_val), f(x_val) - g(x_val)))
 }
 cat(sprintf("\nlim f = %.1f, lim g = %.1f, lim(f-g) = %.1f\n", f(TARGET_A), g(TARGET_A), f(TARGET_A)-g(TARGET_A)))
@@ -131,7 +135,9 @@ cat(sprintf("\nlim f = %.1f, lim g = %.1f, lim(f-g) = %.1f\n", f(TARGET_A), g(TA
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: asymptotic complexity analysis for two competing algorithm implementations
+import pandas as pd
+
+# Scenario: asymptotic complexity analysis for two competing algorithm implementations
 # T1(n) = 2n^2 + n (naive implementation)
 # T2(n) = 3n + 100 (linear implementation)
 # Analyze component behavior as n -> inf by splitting limits
@@ -140,14 +146,25 @@ results = []
 for n in n_values:
     # T1 components: 2n^2 and n
     t1_quadratic = 2 * n**2
-t1_linear = n
-t1_total = t1_quadratic + t1_linear   # T2 components: 3n and 100
-t2_linear = 3 * n
-t2_constant = 100
-t2_total = t2_linear + t2_constant   # Ratio T1/T2: does T2 scale better?
-ratio = t1_total / t2_total
-results.append({ "n": n, "T1_total": t1_total, "T2_total": t2_total, "ratio_T1_T2": round(ratio, 2),   # lim(T1/n^2) as n->inf: split numerator, divide by n^2 #
-    (2n^2 + n)/n^2 = 2 + 1/n -> 2 + 0 = 2 by addition rule "T1_per_n2": round(t1_total / n**2, 6), })
+    t1_linear = n
+    t1_total = t1_quadratic + t1_linear
+
+    # T2 components: 3n and 100
+    t2_linear = 3 * n
+    t2_constant = 100
+    t2_total = t2_linear + t2_constant
+
+    # Ratio T1/T2: does T2 scale better?
+    ratio = t1_total / t2_total
+    results.append({
+        "n": n,
+        "T1_total": t1_total,
+        "T2_total": t2_total,
+        "ratio_T1_T2": round(ratio, 2),
+        # lim(T1/n^2) as n->inf: split numerator, divide by n^2
+        # (2n^2 + n)/n^2 = 2 + 1/n -> 2 + 0 = 2 by addition rule
+        "T1_per_n2": round(t1_total / n**2, 6),
+    })
 df = pd.DataFrame(results)
 print("Asymptotic Analysis: Limit Addition Rule on Algorithm Complexity")
 print("T1(n) = 2n^2 + n | T2(n) = 3n + 100")

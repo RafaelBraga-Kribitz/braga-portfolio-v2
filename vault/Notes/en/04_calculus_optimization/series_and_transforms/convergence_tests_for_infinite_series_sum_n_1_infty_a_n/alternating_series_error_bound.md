@@ -92,26 +92,48 @@ Need a_{N+1} = 1/(N+1) < 0.001 → N+1 > 1000 → N ≥ 1000. This series conver
 
 ```python
 """
-Alternating series error bound: |S - S_N| <= a_(N+1) Applied to computing
-ln(1+x) via alternating series
+Alternating series error bound: |S - S_N| <= a_(N+1)
+
+Applied to computing ln(1+x) via alternating series
 and finding the minimum N for a given precision target.
-""" import math
+"""
+import math
 from typing import Callable
 
-def alternating_series_sum_with_bound( term_func: Callable[[int], float], precision_target: float, max_terms: int = 10_000,
+
+def alternating_series_sum_with_bound(
+    term_func: Callable[[int], float],
+    precision_target: float,
+    max_terms: int = 10_000,
 ) -> tuple[float, float, int]:
-    """Sum alternating series until error bound < precision_target. Parameters ---------- term_func : function returning |a_n| for term index n (1-based) precision_target: stop when a_(N+1) < this value max_terms : hard cap on iterations Returns ------- tuple of (partial_sum, error_bound, num_terms_used) """
+    """Sum alternating series until error bound < precision_target.
+
+    Parameters
+    ----------
+    term_func : function returning |a_n| for term index n (1-based)
+    precision_target: stop when a_(N+1) < this value
+    max_terms : hard cap on iterations
+
+    Returns
+    -------
+    tuple of (partial_sum, error_bound, num_terms_used)
+    """
     partial_sum = 0.0
     for num_terms in range(1, max_terms + 1):
         sign = (-1.0) ** (num_terms + 1)
-    partial_sum += sign * term_func(num_terms)
-    next_term = term_func(num_terms + 1)
-    if next_term < precision_target:
-        return partial_sum, next_term, num_terms
-    return partial_sum, term_func(max_terms + 1), max_terms   # ln(1+x) = x - x^2/2 + x^3/3 - ... for |x| <= 1
+        partial_sum += sign * term_func(num_terms)
+        next_term = term_func(num_terms + 1)
+        if next_term < precision_target:
+            return partial_sum, next_term, num_terms
+    return partial_sum, term_func(max_terms + 1), max_terms
+
+
+# ln(1+x) = x - x^2/2 + x^3/3 - ... for |x| <= 1
 X_VALUE = 0.5
 PRECISION_TARGET = 1e-6
-approx_ln, error_bound, terms_used = alternating_series_sum_with_bound( term_func=lambda n: X_VALUE**n / n, precision_target=PRECISION_TARGET,
+approx_ln, error_bound, terms_used = alternating_series_sum_with_bound(
+    term_func=lambda n: X_VALUE**n / n,
+    precision_target=PRECISION_TARGET,
 )
 true_ln = math.log(1.0 + X_VALUE)
 actual_error = abs(true_ln - approx_ln)
@@ -127,21 +149,33 @@ print(f"Actual error = {actual_error:.2e} (bound holds: {actual_error <= error_b
 ```r
 # Alternating series error bound applied to sin(x) via Maclaurin series
 # sin(x) = x - x^3/3! + x^5/5! - x^7/7! + ...
-alternating_sin_approx <- function(x_val, precision_target = 1e-8) {  # Sum Maclaurin series for sin(x) until error bound < precision_target # Returns list with approx, error_bound, terms_used, actual_error
+alternating_sin_approx <- function(x_val, precision_target = 1e-8) {
+  # Sum Maclaurin series for sin(x) until error bound < precision_target
+  # Returns list with approx, error_bound, terms_used, actual_error
   partial_sum <- 0
-  k <- 0  #
-  k = 0, 1, 2, ... → term is (-1)^k * x^(2k+1) / (2k+1)! repeat { term_abs <- abs(x_val)^(2 * k + 1) / factorial(2 * k + 1)
+  k <- 0  # k = 0, 1, 2, ... → term is (-1)^k * x^(2k+1) / (2k+1)!
+  repeat {
+    term_abs <- abs(x_val)^(2 * k + 1) / factorial(2 * k + 1)
     sign_val <- (-1)^k
-    partial_sum <- partial_sum + sign_val * term_abs * sign(x_val)^(2 * k + 1)  # Error
-    bound = next term
+    partial_sum <- partial_sum + sign_val * term_abs * sign(x_val)^(2 * k + 1)
+    # Error bound = next term
     next_term <- abs(x_val)^(2 * k + 3) / factorial(2 * k + 3)
     k <- k + 1
-    if (next_term < precision_target || k > 50) { break
+    if (next_term < precision_target || k > 50) {
+      break
     }
-  } list( approx = partial_sum, error_bound = next_term, terms_used = k, actual_error = abs(sin(x_val) - partial_sum) )
+  }
+  list(
+    approx = partial_sum,
+    error_bound = next_term,
+    terms_used = k,
+    actual_error = abs(sin(x_val) - partial_sum)
+  )
 }
-for (x in c(0.1, 0.5, 1.0, pi / 4)) { result <- alternating_sin_approx(x, precision_target = 1e-10)
-  cat(sprintf( "x=%.4f: approx=%.10f, bound=%.2e, actual_err=%.2e, N=%d\n", x, result$approx, result$error_bound, result$actual_error, result$terms_used ))
+for (x in c(0.1, 0.5, 1.0, pi / 4)) {
+  result <- alternating_sin_approx(x, precision_target = 1e-10)
+  cat(sprintf("x=%.4f: approx=%.10f, bound=%.2e, actual_err=%.2e, N=%d\n",
+              x, result$approx, result$error_bound, result$actual_error, result$terms_used))
 }
 ```
 
@@ -149,37 +183,50 @@ for (x in c(0.1, 0.5, 1.0, pi / 4)) { result <- alternating_sin_approx(x, precis
 
 ```python
 """
-Alternating series error bound
-for fast feature hashing approximation. Business context:
-    A feature hashing trick uses sin/cos approximation (RBF kernel via Fourier). The analyst needs to know how many Fourier features suffice to keep kernel approximation error < 1% for the given input range.
-""" import numpy as np
+Alternating series error bound for fast feature hashing approximation.
+
+Business context:
+    A feature hashing trick uses sin/cos approximation (RBF kernel via Fourier).
+    The analyst needs to know how many Fourier features suffice to keep kernel
+    approximation error < 1% for the given input range.
+"""
+import numpy as np
 import math
+
 INPUT_RANGE_MAX: float = 2.0   # maximum |x| in feature vector
 PRECISION_TARGET: float = 0.001
 MAX_TERMS: int = 50
 
-def maclaurin_cos_with_error_bound( x_val: float, precision_target: float,
+
+def maclaurin_cos_with_error_bound(
+    x_val: float, precision_target: float,
 ) -> tuple[float, float, int]:
-    """Approximate cos(x) via Maclaurin series with alternating error bound. cos(x) = 1 - x^2/2! + x^4/4! - x^6/6! + ... """
+    """Approximate cos(x) via Maclaurin series with alternating error bound.
+
+    cos(x) = 1 - x^2/2! + x^4/4! - x^6/6! + ...
+    """
     partial_sum = 0.0
     for k in range(MAX_TERMS):
         exponent = 2 * k
-    term = (x_val**exponent) / math.factorial(exponent)
-    sign = (-1.0) ** k
-    partial_sum += sign * term
-    next_exp = 2 * (k + 1)
-    next_term = (abs(x_val) ** next_exp) / math.factorial(next_exp)
-    if next_term < precision_target:
-        return partial_sum, next_term, k + 1
-    return partial_sum, float("inf"), MAX_TERMS   # Find minimum terms needed across the full input range
+        term = (x_val**exponent) / math.factorial(exponent)
+        sign = (-1.0) ** k
+        partial_sum += sign * term
+        next_exp = 2 * (k + 1)
+        next_term = (abs(x_val) ** next_exp) / math.factorial(next_exp)
+        if next_term < precision_target:
+            return partial_sum, next_term, k + 1
+    return partial_sum, float("inf"), MAX_TERMS
+
+
+# Find minimum terms needed across the full input range
 x_values = np.linspace(0.0, INPUT_RANGE_MAX, 20)
 max_terms_needed = 0
 for x_val in x_values:
     _, bound, num_terms = maclaurin_cos_with_error_bound(x_val, PRECISION_TARGET)
-max_terms_needed = max(max_terms_needed, num_terms)
-true_cos = math.cos(x_val)
-approx_cos, _, _ = maclaurin_cos_with_error_bound(x_val, PRECISION_TARGET)
-actual_err = abs(true_cos - approx_cos)
+    max_terms_needed = max(max_terms_needed, num_terms)
+    true_cos = math.cos(x_val)
+    approx_cos, _, _ = maclaurin_cos_with_error_bound(x_val, PRECISION_TARGET)
+    actual_err = abs(true_cos - approx_cos)
 print(f"Max input magnitude : {INPUT_RANGE_MAX}")
 print(f"Required precision : {PRECISION_TARGET}")
 print(f"Max Maclaurin terms needed across range: {max_terms_needed}")

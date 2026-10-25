@@ -96,26 +96,36 @@ The optimal is only slightly smaller here because $r=3$ was already close to the
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # -- Cylinder: volume, surface area, and optimal proportion ----------
+import numpy as np
+
+# -- Cylinder: volume, surface area, and optimal proportion ----------
+
 
 def cylinder_volume(r: float, h: float) -> float:
     """Volume of a right circular cylinder."""
     return np.pi * r**2 * h
 
+
 def cylinder_surface(r: float, h: float) -> float:
     """Total surface area of a closed cylinder."""
     return 2 * np.pi * r * (r + h)
+
+
 print("Cylinder V and S for various (r, h):")
 for r, h in [(2, 5), (3, 8), (5, 1), (3, 6)]:
     v = cylinder_volume(r, h)
-s = cylinder_surface(r, h)
-print(f" r={r}, h={h}: V={v:.2f}, S={s:.2f}, h/r={h/r:.2f}")   # Optimal cylinder: minimize S for fixed V
+    s = cylinder_surface(r, h)
+    print(f" r={r}, h={h}: V={v:.2f}, S={s:.2f}, h/r={h/r:.2f}")
 
+
+# Optimal cylinder: minimize S for fixed V
 def optimal_cylinder(target_volume: float):
     """Find optimal r and h minimizing surface area for a given volume."""
     r_opt = (target_volume / (2 * np.pi)) ** (1/3)
     h_opt = 2 * r_opt
     return r_opt, h_opt, cylinder_surface(r_opt, h_opt)
+
+
 target_v = 100.0
 r_opt, h_opt, s_opt = optimal_cylinder(target_v)
 print(f"\nOptimal cylinder for V={target_v:.0f}:")
@@ -131,9 +141,12 @@ cylinder_volume <- function(r, h) pi * r^2 * h
 cylinder_surface <- function(r, h) 2 * pi * r * (r + h)
 cat("Cylinder V and S for various (r, h):\n")
 params <- list(c(2,5), c(3,8), c(5,1), c(3,6))
-for (p in params) { r <- p[1]; h <- p[2]
+for (p in params) {
+  r <- p[1]; h <- p[2]
   cat(sprintf(" r=%g, h=%g: V=%.2f, S=%.2f, h/r=%.2f\n", r, h, cylinder_volume(r,h), cylinder_surface(r,h), h/r))
-}  # Optimal cylinder
+}
+
+# Optimal cylinder
 target_v <- 100.0
 r_opt <- (target_v / (2 * pi))^(1/3)
 h_opt <- 2 * r_opt
@@ -146,29 +159,45 @@ cat(sprintf("Verify V: %.4f\n", cylinder_volume(r_opt, h_opt)))
 
 ```python
 import numpy as np
-import pandas as pd   # -- Business scenario: minimize tank material cost for a set of storage volumes
+import pandas as pd
+
+# -- Business scenario: minimize tank material cost for a set of storage volumes
 # A logistics firm needs cylindrical tanks for 5 products with different volume targets.
-# Steel costs EUR 80 / m^2. Find optimal dimensions and compare to a "tall thin" design. STEEL_COST_PER_M2 = 80.0
-# EUR per m^2 VOLUME_TARGETS_M3 = [2.0, 5.0, 10.0, 20.0, 50.0]
-# m^3
+# Steel costs EUR 80 / m^2. Find optimal dimensions and compare to a "tall thin" design.
+STEEL_COST_PER_M2 = 80.0                        # EUR per m^2
+VOLUME_TARGETS_M3 = [2.0, 5.0, 10.0, 20.0, 50.0]  # m^3
 PRODUCT_NAMES = ["Lubricant A", "Solvent B", "Fertiliser C", "Acid D", "Water E"]
+
 
 def optimal_cylinder(v: float):
     r = (v / (2 * np.pi)) ** (1/3)
     h = 2 * r
     return r, h
 
+
 def tall_thin_cylinder(v: float):
-    r = 0.3   # fixed narrow radius (0.3 m)
+    r = 0.3  # fixed narrow radius (0.3 m)
     h = v / (np.pi * r**2)
     return r, h
+
+
 rows = []
 for name, v in zip(PRODUCT_NAMES, VOLUME_TARGETS_M3):
     r_opt, h_opt = optimal_cylinder(v)
-r_thin, h_thin = tall_thin_cylinder(v)
-s_opt = 2 * np.pi * r_opt * (r_opt + h_opt)
-s_thin = 2 * np.pi * r_thin * (r_thin + h_thin)
-rows.append({ "product": name, "volume_m3": v, "opt_r_m": round(r_opt, 3), "opt_h_m": round(h_opt, 3), "opt_surface_m2": round(s_opt, 2), "opt_cost_eur": round(s_opt * STEEL_COST_PER_M2, 0), "thin_surface_m2": round(s_thin, 2), "thin_cost_eur": round(s_thin * STEEL_COST_PER_M2, 0), "savings_eur": round((s_thin - s_opt) * STEEL_COST_PER_M2, 0), })
+    r_thin, h_thin = tall_thin_cylinder(v)
+    s_opt = 2 * np.pi * r_opt * (r_opt + h_opt)
+    s_thin = 2 * np.pi * r_thin * (r_thin + h_thin)
+    rows.append({
+        "product": name,
+        "volume_m3": v,
+        "opt_r_m": round(r_opt, 3),
+        "opt_h_m": round(h_opt, 3),
+        "opt_surface_m2": round(s_opt, 2),
+        "opt_cost_eur": round(s_opt * STEEL_COST_PER_M2, 0),
+        "thin_surface_m2": round(s_thin, 2),
+        "thin_cost_eur": round(s_thin * STEEL_COST_PER_M2, 0),
+        "savings_eur": round((s_thin - s_opt) * STEEL_COST_PER_M2, 0),
+    })
 df = pd.DataFrame(rows)
 print("Optimal vs tall-thin cylinder: material cost comparison")
 print(df.to_string(index=False))

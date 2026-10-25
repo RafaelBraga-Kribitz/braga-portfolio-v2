@@ -103,36 +103,55 @@ Verify: $3 \times 0.6931 + 2 \times 1.0986 = 2.0794 + 2.1972 = 4.2766$. ✓
 ### Beginner example (Python)
 
 ```python
-# Power rule for logs: log_a(x^n) = n *
-log_a(x)
+# Power rule for logs: log_a(x^n) = n * log_a(x)
 import math
 import numpy as np
 
+
 def log_power_rule(x: float, n: float, base: float = math.e) -> float:
-    """ Apply the power rule: log_base(x^n) = n * log_base(x). Args: x: Argument (x > 0). n: Exponent (any real number). base: Logarithm base (default: e for natural log). Returns: n * log_base(x). """
-    return n * math.log(x, base)   # Verify rule: log_a(x^n) vs direct computation
-math.log(x**n, a)
-test_cases = [ (4.0, 2.0, math.e),   # ln(16) = 2*ln(4)
-    (2.0, 3.0, 2.0),   # log_2(8) = 3
+    """
+    Apply the power rule: log_base(x^n) = n * log_base(x).
+
+    Args:
+        x: Argument (x > 0).
+        n: Exponent (any real number).
+        base: Logarithm base (default: e for natural log).
+
+    Returns:
+        n * log_base(x).
+    """
+    return n * math.log(x, base)
+
+
+# Verify rule: log_a(x^n) vs direct computation math.log(x**n, a)
+test_cases = [
+    (4.0, 2.0, math.e),    # ln(16) = 2*ln(4)
+    (2.0, 3.0, 2.0),       # log_2(8) = 3
     (5.0, -1.0, math.e),   # ln(1/5) = -ln(5)
-    (9.0, 0.5, math.e),   # ln(3) = 0.5*ln(9)
-    (2.0, 5.0, 10.0),   # log10(32) = 5*log10(2)
+    (9.0, 0.5, math.e),    # ln(3) = 0.5*ln(9)
+    (2.0, 5.0, 10.0),      # log10(32) = 5*log10(2)
 ]
 print("Power rule: log_a(x^n) = n * log_a(x)")
 print(f"{'x':>6} {'n':>5} {'base':>6} {'direct':>10} {'rule':>10} {'match':>6}")
 for x, n, base in test_cases:
     direct = math.log(x**n, base)
-rule = log_power_rule(x, n, base)
-print(f"{x:>6.2f} {n:>5.1f} {base:>6.4f} {direct:>10.6f} {rule:>10.6f} {str(abs(direct - rule) < 1e-10):>6}")   # Special cases
+    rule = log_power_rule(x, n, base)
+    print(f"{x:>6.2f} {n:>5.1f} {base:>6.4f} {direct:>10.6f} {rule:>10.6f} {str(abs(direct - rule) < 1e-10):>6}")
+
+# Special cases
 print("\nSpecial cases:")
 x = 4.0
 print(f" Reciprocal: ln(1/{x}) = -ln({x}) = {math.log(1/x):.6f} = {-math.log(x):.6f}")
 print(f" Sqrt: ln(sqrt({x})) = 0.5*ln({x}) = {math.log(math.sqrt(x)):.6f} = {0.5*math.log(x):.6f}")
-print(f" Square: ln({x}^2) = 2*ln({x}) = {math.log(x**2):.6f} = {2*math.log(x):.6f}")   # Reverse direction: combine n*ln(x) → ln(x^n)
+print(f" Square: ln({x}^2) = 2*ln({x}) = {math.log(x**2):.6f} = {2*math.log(x):.6f}")
+
+# Reverse direction: combine n*ln(x) → ln(x^n)
 print("\nReverse: combine 3*ln(2) + 2*ln(3) = ln(2^3 * 3^2) = ln(72)")
 combined = 3 * math.log(2) + 2 * math.log(3)
 direct = math.log(72)
-print(f" Computed: {combined:.6f} Direct: {direct:.6f} Match: {abs(combined - direct) < 1e-10}")   # Gaussian log-likelihood simplification
+print(f" Computed: {combined:.6f} Direct: {direct:.6f} Match: {abs(combined - direct) < 1e-10}")
+
+# Gaussian log-likelihood simplification
 print("\nGaussian log-likelihood: -n*ln(sigma) from ln(sigma^(-n))")
 sigma = 2.5
 n = 100
@@ -145,15 +164,26 @@ print(f" sigma={sigma}, n={n}: ln(sigma^(-n))={direct_term:.6f} -n*ln(sigma)={ru
 
 ```r
 # Power rule in R: log_a(x^n) = n * log_a(x)
-log_power_rule <- function(x, n, base = exp(1)) { n * log(x, base = base)
-}  # Verify
-test_cases <- list( c(x=4, n=2, base=exp(1)), c(x=2, n=3, base=2), c(x=5, n=-1, base=exp(1)), c(x=9, n=0.5, base=exp(1))
-) cat(sprintf("%-6s %-5s %-8s %-10s %-10s %s\n", "x", "n", "base", "direct", "rule", "match"))
-for (tc in test_cases) { x <- tc["x"]; n <- tc["n"]; base <- tc["base"]
+log_power_rule <- function(x, n, base = exp(1)) {
+  n * log(x, base = base)
+}
+
+# Verify
+test_cases <- list(
+  c(x=4, n=2, base=exp(1)),
+  c(x=2, n=3, base=2),
+  c(x=5, n=-1, base=exp(1)),
+  c(x=9, n=0.5, base=exp(1))
+)
+cat(sprintf("%-6s %-5s %-8s %-10s %-10s %s\n", "x", "n", "base", "direct", "rule", "match"))
+for (tc in test_cases) {
+  x <- tc["x"]; n <- tc["n"]; base <- tc["base"]
   direct <- log(x^n, base = base)
   rule <- log_power_rule(x, n, base)
   cat(sprintf("%-6.2f %-5.1f %-8.4f %-10.6f %-10.6f %s\n", x, n, base, direct, rule, abs(direct - rule) < 1e-10))
-}  # Gaussian simplification
+}
+
+# Gaussian simplification
 sigma <- 2.5; n_obs <- 100
 direct_ll_term <- log(sigma^(-n_obs))
 rule_ll_term <- -n_obs * log(sigma)
@@ -167,7 +197,9 @@ cat(sprintf(" direct=%.6f rule=%.6f match=%s\n", direct_ll_term, rule_ll_term, a
 import numpy as np
 import pandas as pd
 import math
-from typing import NamedTuple   # Scenario: compute and decompose the normal log-likelihood using the power rule
+from typing import NamedTuple
+
+# Scenario: compute and decompose the normal log-likelihood using the power rule
 # Demonstrates how ln(sigma^2) = 2*ln(sigma) and ln(sigma^{-n}) = -n*ln(sigma)
 # simplify the MLE derivation and gradient computation
 np.random.seed(42)
@@ -176,25 +208,57 @@ TRUE_MU = 5.0
 TRUE_SD = 2.0
 data = np.random.normal(TRUE_MU, TRUE_SD, N_OBS)
 
-class NormalLogLikelihood(NamedTuple):
-    """Components of the normal log-likelihood, separated using the power rule.""" constant_term: float   # -(n/2)*ln(2*pi) sigma_term: float # -n*ln(sigma) via power rule: ln(sigma^{-n}) = -n*ln(sigma) residual_term: float # -(1/(2*sigma^2)) * sum((xi - mu)^2) total: float # sum of all terms
 
-def compute_normal_log_likelihood( data: np.ndarray, mu: float, sigma: float,
+class NormalLogLikelihood(NamedTuple):
+    """Components of the normal log-likelihood, separated using the power rule."""
+    constant_term: float   # -(n/2)*ln(2*pi)
+    sigma_term: float      # -n*ln(sigma) via power rule: ln(sigma^{-n}) = -n*ln(sigma)
+    residual_term: float   # -(1/(2*sigma^2)) * sum((xi - mu)^2)
+    total: float           # sum of all terms
+
+
+def compute_normal_log_likelihood(
+    data: np.ndarray,
+    mu: float,
+    sigma: float,
 ) -> NormalLogLikelihood:
-    """ Compute the decomposed normal log-likelihood. Applies power rule: ln(sigma^{-n}) = -n*ln(sigma) [n = len(data)] ln((2*pi*sigma^2)^{-n/2}) = -(n/2)*ln(2*pi) - n*ln(sigma) Args: data: Observed data array. mu: Mean parameter. sigma: Standard deviation parameter (sigma > 0). Returns: NormalLogLikelihood with decomposed terms and total. """
+    """
+    Compute the decomposed normal log-likelihood.
+
+    Applies power rule:
+        ln(sigma^{-n}) = -n*ln(sigma)   [n = len(data)]
+        ln((2*pi*sigma^2)^{-n/2}) = -(n/2)*ln(2*pi) - n*ln(sigma)
+
+    Args:
+        data: Observed data array.
+        mu: Mean parameter.
+        sigma: Standard deviation parameter (sigma > 0).
+
+    Returns:
+        NormalLogLikelihood with decomposed terms and total.
+    """
     n = len(data)
     constant_term = -(n / 2) * math.log(2 * math.pi)
     sigma_term = -n * math.log(sigma)   # power rule: ln(sigma^{-n}) = -n*ln(sigma)
     residual_term = -0.5 * np.sum((data - mu) ** 2) / sigma**2
     total = constant_term + sigma_term + residual_term
-    return NormalLogLikelihood(constant_term, sigma_term, residual_term, total)   # Evaluate MLE grid
+    return NormalLogLikelihood(constant_term, sigma_term, residual_term, total)
+
+
+# Evaluate MLE grid
 sigma_grid = np.linspace(0.5, 5.0, 80)
 mu_hat = data.mean()   # MLE for mu = sample mean
 results = [compute_normal_log_likelihood(data, mu_hat, s) for s in sigma_grid]
 totals = np.array([r.total for r in results])
 best_sigma = sigma_grid[np.argmax(totals)]
-best_ll = results[np.argmax(totals)]   # Power rule verification: ln(sigma^2) vs 2*ln(sigma)
-power_check = pd.DataFrame({ "sigma": sigma_grid[::10].round(3), "ln(sigma^2)": np.log(sigma_grid[::10] ** 2).round(6), "2*ln(sigma)": (2 * np.log(sigma_grid[::10])).round(6), "difference": (np.log(sigma_grid[::10]**2) - 2*np.log(sigma_grid[::10])).round(12),
+best_ll = results[np.argmax(totals)]
+
+# Power rule verification: ln(sigma^2) vs 2*ln(sigma)
+power_check = pd.DataFrame({
+    "sigma": sigma_grid[::10].round(3),
+    "ln(sigma^2)": np.log(sigma_grid[::10] ** 2).round(6),
+    "2*ln(sigma)": (2 * np.log(sigma_grid[::10])).round(6),
+    "difference": (np.log(sigma_grid[::10]**2) - 2*np.log(sigma_grid[::10])).round(12),
 })
 print("Normal log-likelihood with power rule: ln(sigma^{-n}) = -n*ln(sigma)")
 print("=" * 68)

@@ -95,16 +95,19 @@ $J(A, B) = |A \cap B| / |A \cup B| = 2 / 6 \approx 0.333$. The sets share about 
 ### Beginner example (Python)
 
 ```python
-# Intersection in Python: A & B or
-A.intersection(B)
+# Intersection in Python: A & B or A.intersection(B)
 A = {1, 2, 3, 4}
 B = {3, 4, 5, 6}
 intersection = A & B
 print(f"A = {A}")
 print(f"B = {B}")
-print(f"A ∩ B = {intersection}")   # {3, 4} # Jaccard similarity
+print(f"A ∩ B = {intersection}")   # {3, 4}
+
+# Jaccard similarity
 jaccard = len(A & B) / len(A | B)
-print(f"Jaccard similarity: {len(A & B)} / {len(A | B)} = {jaccard:.4f}")   # Practical: find common user IDs in two systems
+print(f"Jaccard similarity: {len(A & B)} / {len(A | B)} = {jaccard:.4f}")
+
+# Practical: find common user IDs in two systems
 users_crm = {"alice", "bob", "carol", "dave"}
 users_product = {"carol", "dave", "eve", "frank"}
 common_users = users_crm & users_product
@@ -123,7 +126,9 @@ inter <- intersect(A, B)
 cat("A ∩ B =", inter, "\n")  # 3 4
 union_ab <- union(A, B)
 jaccard <- length(inter) / length(union_ab)
-cat(sprintf("Jaccard similarity: %d / %d = %.4f\n", length(inter), length(union_ab), jaccard))  # Common users
+cat(sprintf("Jaccard similarity: %d / %d = %.4f\n", length(inter), length(union_ab), jaccard))
+
+# Common users
 users_crm <- c("alice", "bob", "carol", "dave")
 users_product <- c("carol", "dave", "eve", "frank")
 common <- intersect(users_crm, users_product)
@@ -136,12 +141,20 @@ cat("Product only:", setdiff(users_product, users_crm), "\n")
 
 ```python
 import pandas as pd
-import numpy as np   # Scenario: cross-sell analysis using set intersection
+import numpy as np
+
+# Scenario: cross-sell analysis using set intersection
 # + feature consistency check before model deployment
 np.random.seed(42)
-ALL_CUSTOMERS = list(range(1, 5_001))   # Customers who bought laptops
-laptop_buyers = set(np.random.choice(ALL_CUSTOMERS, size=1_200, replace=False))   # Customers who bought monitors
-monitor_buyers = set(np.random.choice(ALL_CUSTOMERS, size=900, replace=False))   # Cross-sell analysis
+ALL_CUSTOMERS = list(range(1, 5_001))
+
+# Customers who bought laptops
+laptop_buyers = set(np.random.choice(ALL_CUSTOMERS, size=1_200, replace=False))
+
+# Customers who bought monitors
+monitor_buyers = set(np.random.choice(ALL_CUSTOMERS, size=900, replace=False))
+
+# Cross-sell analysis
 both_bought = laptop_buyers & monitor_buyers
 laptop_only = laptop_buyers - monitor_buyers
 monitor_only = monitor_buyers - laptop_buyers
@@ -156,7 +169,9 @@ print(f" Laptop only: {len(laptop_only):>5,}")
 print(f" Monitor only: {len(monitor_only):>5,}")
 print(f" Cross-sell rate: {cross_sell_rate:.1%} (|A∩B| / |A|)")
 print(f" Jaccard similarity: {jaccard_sim:.4f}")
-print()   # Feature consistency check
+print()
+
+# Feature consistency check
 train_features = {"age", "income", "tenure", "city", "product_cat"}
 serving_features = {"age", "income", "tenure", "city"}   # missing one feature
 common_features = train_features & serving_features
@@ -187,7 +202,7 @@ cat(" Serving:", paste(sort(serving_features), collapse = ", "), "\n")
 cat(" Common: ", paste(sort(common_features), collapse = ", "), "\n")
 cat(" Missing in serving:", paste(sort(missing_in_serving), collapse = ", "), "\n")
 if (length(missing_in_serving) > 0)
-cat(" WARNING: model expects these at serving time!\n")
+  cat(" WARNING: model expects these at serving time!\n")
 ```
 
 ---

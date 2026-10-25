@@ -137,7 +137,7 @@ one_hot_memory_gb = len(df) * len(user_ids) * 1 / (8 * 1e9)   # 1-bit cells
 embedding_memory_gb = len(user_ids) * 32 * 4 / 1e9   # 32-dim float32 print(f"User ID one-hot memory estimate: {one_hot_memory_gb:.2f} GB ← infeasible")
 print(f"User ID embedding (dim=32): {embedding_memory_gb:.4f} GB ← feasible")   # Countable vs uncountable in Python
 integers = range(10**9)   # countable — enumerable in principle
-floats = np.linspace(0, 1, 10**9)   # finite sample from an uncountable domain
+floats = np.linspace(0, 1, 10**6)   # finite sample from an uncountable domain (10**9 floats would take 8 GB)
 print(f"\nInteger range (countable): type={type(integers)}, len representable")
 print(f"Float sample (from ℝ ≈ 𝔠): {len(floats)} samples, but domain is uncountable")
 print(f"Distinct floats in sample: {len(set(floats[:100]))}")   # each unique

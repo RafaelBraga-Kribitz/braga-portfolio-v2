@@ -104,8 +104,12 @@ The two local minima at $x = \pm 2$ are equal (by symmetry). $f(0) = 3$ is a loc
 import numpy as np
 from scipy.optimize import brentq
 
-def find_critical_points( f_prime, search_range: tuple[float, float], n_grid: int = 1000 ) -> list[float]:
-    """ Numerically find zeros of f_prime in search_range using sign-change bracketing. Returns list of critical point x-values. """
+
+def find_critical_points(f_prime, search_range: tuple[float, float], n_grid: int = 1000) -> list[float]:
+    """Numerically find zeros of f_prime in search_range using sign-change bracketing.
+
+    Returns list of critical point x-values.
+    """
     x_grid = np.linspace(search_range[0], search_range[1], n_grid)
     fp_vals = f_prime(x_grid)
     critical_points = []
@@ -114,7 +118,8 @@ def find_critical_points( f_prime, search_range: tuple[float, float], n_grid: in
             # sign change: zero crossing
             x_crit = brentq(f_prime, x_grid[i], x_grid[i + 1])
             critical_points.append(x_crit)
-            return critical_points
+    return critical_points
+
 
 def classify_critical_point(f_double_prime, x_crit: float) -> str:
     """Second derivative test classification."""
@@ -124,7 +129,10 @@ def classify_critical_point(f_double_prime, x_crit: float) -> str:
     elif fpp < -1e-8:
         return "local maximum"
     else:
-        return "inconclusive (f''=0)"   # Example 1: polynomial
+        return "inconclusive (f''=0)"
+
+
+# Example 1: polynomial
 f = lambda x: x**4 - 8*x**2 + 3
 f_prime = lambda x: 4*x**3 - 16*x
 f_prime2 = lambda x: 12*x**2 - 16
@@ -134,20 +142,24 @@ print(f"f'(x) = 4x^3 - 16x")
 print(f"\n{'x_crit':>10} {'f(x_crit)':>12} {'f''(x_crit)':>14} {'Type':>20}")
 for x_crit in find_critical_points(f_prime, (-3.0, 3.0)):
     classification = classify_critical_point(f_prime2, x_crit)
-print(f"{x_crit:>10.4f} {f(x_crit):>12.4f} {f_prime2(x_crit):>14.4f} {classification:>20}")   # Example 2: non-differentiable critical point (L1 = |x|)
+    print(f"{x_crit:>10.4f} {f(x_crit):>12.4f} {f_prime2(x_crit):>14.4f} {classification:>20}")
+
+# Example 2: non-differentiable critical point (L1 = |x|)
 print(f"\n--- Non-differentiable critical point: f(x) = |x| at x=0 ---")
 print(f"f'(0) does not exist (left derivative = -1, right derivative = +1)")
 print(f"Subgradient at x=0: [-1, 1]. x=0 is still a critical point.")
-print(f"f(0) = 0 is the global minimum.")   # Gradient norm as convergence indicator
+print(f"f(0) = 0 is the global minimum.")
+
+# Gradient norm as convergence indicator
 print(f"\n--- Gradient norm toward critical point (gradient descent on f) ---")
 x = 3.0   # start far from critical point
 lr = 0.05
 print(f"{'Step':>6} {'x':>8} {'f(x)':>10} {'f_prime(x)':>12} {'|grad|':>10}")
 for step in range(20):
     grad = f_prime(x)
-if step % 4 == 0:
-    print(f"{step:>6} {x:>8.4f} {f(x):>10.4f} {grad:>12.4f} {abs(grad):>10.4f}")
-x -= lr * grad
+    if step % 4 == 0:
+        print(f"{step:>6} {x:>8.4f} {f(x):>10.4f} {grad:>12.4f} {abs(grad):>10.4f}")
+    x -= lr * grad
 print(f" Converged to x = {x:.4f}, |grad| = {abs(f_prime(x)):.2e}")
 ```
 
@@ -157,26 +169,31 @@ print(f" Converged to x = {x:.4f}, |grad| = {abs(f_prime(x)):.2e}")
 # Critical points: f'(x_0) = 0 or f'(x_0) undefined
 f <- function(x) x^4 - 8*x^2 + 3
 f_prime <- function(x) 4*x^3 - 16*x
-f_pp <- function(x) 12*x^2 - 16  # Find zeros of f' numerically using sign changes on a grid
+f_pp <- function(x) 12*x^2 - 16
+
+# Find zeros of f' numerically using sign changes on a grid
 x_grid <- seq(-3, 3, length.out = 1000)
 fp_vals <- f_prime(x_grid)
 cat("Critical Points: f'(x) = 4x^3 - 16x\n\n")
 cat(sprintf("%-10s %-12s %-14s %-20s\n", "x_crit", "f(x_crit)", "f''(x_crit)", "Type"))
-for (i in 1:(length(x_grid) - 1)) { if (fp_vals[i] * fp_vals[i + 1] < 0) { x_crit <- uniroot(f_prime, lower = x_grid[i], upper = x_grid[i + 1])$root
+for (i in 1:(length(x_grid) - 1)) {
+  if (fp_vals[i] * fp_vals[i + 1] < 0) {
+    x_crit <- uniroot(f_prime, lower = x_grid[i], upper = x_grid[i + 1])$root
     fpp <- f_pp(x_crit)
-    type <- if (fpp > 1e-8) "local minimum"
-    else
-    if (fpp < -1e-8) "local maximum"
-    else "inconclusive"
+    type <- if (fpp > 1e-8) "local minimum" else if (fpp < -1e-8) "local maximum" else "inconclusive"
     cat(sprintf("%-10.4f %-12.4f %-14.4f %-20s\n", x_crit, f(x_crit), fpp, type))
   }
-}  # Gradient descent convergence to critical point
+}
+
+# Gradient descent convergence to critical point
 cat("\n--- Gradient descent convergence ---\n")
 x <- 3.0
 lr <- 0.05
 cat(sprintf("%-6s %-8s %-10s %-12s\n", "Step", "x", "f(x)", "|grad|"))
-for (step in 0:19) { grad <- f_prime(x)
-  if (step %% 4 == 0) { cat(sprintf("%-6d %-8.4f %-10.4f %-12.4f\n", step, x, f(x), abs(grad)))
+for (step in 0:19) {
+  grad <- f_prime(x)
+  if (step %% 4 == 0) {
+    cat(sprintf("%-6d %-8.4f %-10.4f %-12.4f\n", step, x, f(x), abs(grad)))
   }
   x <- x - lr * grad
 }
@@ -189,19 +206,80 @@ cat(sprintf("Converged: x = %.4f, |grad| = %.2e\n", x, abs(f_prime(x))))
 import numpy as np
 from sklearn.datasets import make_classification
 from sklearn.preprocessing import StandardScaler
-np.random.seed(42)   # -- Critical points: gradient norm and saddle-point diagnosis in logistic regression --
+np.random.seed(42)
+
+# -- Critical points: gradient norm and saddle-point diagnosis in logistic regression --
 # Use case: A DS trains logistic regression and diagnoses the optimization landscape
 # at convergence: is the gradient truly near zero? Is the critical point a minimum
 # (Hessian positive definite) or a saddle point (Hessian indefinite)?
 #
 # MLE critical point condition: dL/dw = X^T(y - sigma(Xw)) = 0
-# Second-order check: Hessian H = X^T
-diag(p*(1-p)) X (always PSD for log-reg,
-  # so critical point is always a global minimum -- no saddle points in convex loss) N = 300
- DIM = 5 X_raw, y = make_classification( n_samples=N, n_features=DIM, n_informative=DIM, n_redundant=0, random_state=42 ) scaler = StandardScaler() X = scaler.fit_transform(X_raw) def sigmoid(z: np.ndarray) -> np.ndarray: """Numerically stable sigmoid.""" return np.where(z >= 0, 1.0 / (1.0 + np.exp(-z)), np.exp(z) / (1.0 + np.exp(z))) def log_loss_grad(w: np.ndarray, X: np.ndarray, y: np.ndarray) -> tuple[float, np.ndarray]: """Binary cross-entropy loss and score function gradient.""" p = sigmoid(X @ w) p = np.clip(p, 1e-12, 1 - 1e-12) loss = -float(np.mean(y * np.log(p) + (1 - y) * np.log(1 - p))) grad = X.T @ (p - y) / len(y)   # gradient = 0 at MLE critical point return loss, grad def log_loss_hessian(w: np.ndarray, X: np.ndarray) -> np.ndarray:
-"""Hessian H = X^T diag(p*(1-p)) X / N. PSD => global minimum, no saddles.""" p = sigmoid(X @ w) weights = p * (1 - p) return (X * weights[:, None]).T @ X / len(X)   # Gradient descent to find the critical point
-(MLE) ALPHA = 0.5 N_STEPS = 200 w = np.zeros(DIM) losses = [] grad_norms = [] for step in range(N_STEPS): loss, grad = log_loss_grad(w, X, y) losses.append(loss) grad_norms.append(float(np.linalg.norm(grad))) w -= ALPHA * grad   # Evaluate at converged critical point
- loss_final, grad_final = log_loss_grad(w, X, y) H = log_loss_hessian(w, X) eigenvalues = np.linalg.eigvalsh(H) print("Critical Points: Loss Landscape Diagnosis for Logistic Regression MLE") print(f"\nN={N}, DIM={DIM}, alpha={ALPHA}, steps={N_STEPS}") print(f"\nConvergence to critical point (gradient -> 0):") print(f"{'Step':>6} {'Loss':>10} {'|grad|':>12} {'Status':>25}") for step in [0, 10, 30, 50, 100, 199]: status = "near critical point" if grad_norms[step] < 0.01 else "converging" print(f"{step+1:>6} {losses[step]:>10.6f} {grad_norms[step]:>12.8f} {status:>25}") print(f"\nCritical point diagnosis (second-order test):") print(f" Gradient norm at convergence: {np.linalg.norm(grad_final):.2e} (~ 0: critical point reached)") print(f" Hessian eigenvalues: {np.round(eigenvalues, 4)}") print(f" All eigenvalues positive: {np.all(eigenvalues > 0)}") print(f" Conclusion: {'Global minimum (PSD Hessian, convex loss)' if np.all(eigenvalues > 0) else 'Saddle point (indefinite Hessian)'}") print(f"\nNote: logistic regression has a CONVEX loss -> only one critical point") print(f" -> no saddle points; no local minima distinct from the global minimum.") print(f" Neural networks are NON-convex: exponentially many saddle points exist.") print(f" In high dimensions, |eigenvalues of H with mixed sign| >> |all-positive H|.")
+# Second-order check: Hessian H = X^T diag(p*(1-p)) X (always PSD for log-reg,
+# so critical point is always a global minimum -- no saddle points in convex loss)
+N = 300
+DIM = 5
+X_raw, y = make_classification(
+    n_samples=N, n_features=DIM, n_informative=DIM, n_redundant=0, random_state=42
+)
+scaler = StandardScaler()
+X = scaler.fit_transform(X_raw)
+
+
+def sigmoid(z: np.ndarray) -> np.ndarray:
+    """Numerically stable sigmoid."""
+    return np.where(z >= 0, 1.0 / (1.0 + np.exp(-z)), np.exp(z) / (1.0 + np.exp(z)))
+
+
+def log_loss_grad(w: np.ndarray, X: np.ndarray, y: np.ndarray) -> tuple[float, np.ndarray]:
+    """Binary cross-entropy loss and score function gradient."""
+    p = sigmoid(X @ w)
+    p = np.clip(p, 1e-12, 1 - 1e-12)
+    loss = -float(np.mean(y * np.log(p) + (1 - y) * np.log(1 - p)))
+    grad = X.T @ (p - y) / len(y)   # gradient = 0 at MLE critical point
+    return loss, grad
+
+
+def log_loss_hessian(w: np.ndarray, X: np.ndarray) -> np.ndarray:
+    """Hessian H = X^T diag(p*(1-p)) X / N. PSD => global minimum, no saddles."""
+    p = sigmoid(X @ w)
+    weights = p * (1 - p)
+    return (X * weights[:, None]).T @ X / len(X)
+
+
+# Gradient descent to find the critical point (MLE)
+ALPHA = 0.5
+N_STEPS = 200
+w = np.zeros(DIM)
+losses = []
+grad_norms = []
+for step in range(N_STEPS):
+    loss, grad = log_loss_grad(w, X, y)
+    losses.append(loss)
+    grad_norms.append(float(np.linalg.norm(grad)))
+    w -= ALPHA * grad
+
+# Evaluate at converged critical point
+loss_final, grad_final = log_loss_grad(w, X, y)
+H = log_loss_hessian(w, X)
+eigenvalues = np.linalg.eigvalsh(H)
+
+print("Critical Points: Loss Landscape Diagnosis for Logistic Regression MLE")
+print(f"\nN={N}, DIM={DIM}, alpha={ALPHA}, steps={N_STEPS}")
+print(f"\nConvergence to critical point (gradient -> 0):")
+print(f"{'Step':>6} {'Loss':>10} {'|grad|':>12} {'Status':>25}")
+for step in [0, 10, 30, 50, 100, 199]:
+    status = "near critical point" if grad_norms[step] < 0.01 else "converging"
+    print(f"{step+1:>6} {losses[step]:>10.6f} {grad_norms[step]:>12.8f} {status:>25}")
+
+print(f"\nCritical point diagnosis (second-order test):")
+print(f" Gradient norm at convergence: {np.linalg.norm(grad_final):.2e} (~ 0: critical point reached)")
+print(f" Hessian eigenvalues: {np.round(eigenvalues, 4)}")
+print(f" All eigenvalues positive: {np.all(eigenvalues > 0)}")
+print(f" Conclusion: {'Global minimum (PSD Hessian, convex loss)' if np.all(eigenvalues > 0) else 'Saddle point (indefinite Hessian)'}")
+print(f"\nNote: logistic regression has a CONVEX loss -> only one critical point")
+print(f" -> no saddle points; no local minima distinct from the global minimum.")
+print(f" Neural networks are NON-convex: exponentially many saddle points exist.")
+print(f" In high dimensions, |eigenvalues of H with mixed sign| >> |all-positive H|.")
 ```
 
 ---

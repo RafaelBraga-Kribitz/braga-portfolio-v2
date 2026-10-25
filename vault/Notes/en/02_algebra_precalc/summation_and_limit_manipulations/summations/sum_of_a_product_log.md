@@ -81,18 +81,27 @@ $-0.6856 \approx -0.6852$. Confirmed (tiny rounding from intermediate steps). $\
 ### Beginner example (Python)
 
 ```python
-import math   # ln(product f(n)) = sum of
-ln(f(n))
-probs = [0.8, 0.9, 0.7, 0.95, 0.6]   # Direct product (can underflow for many small probs)
-direct_product = math.prod(probs)   # Log-sum form (numerically stable)
-log_sum = sum(math.log(p) for p in probs)   # Recover product via exp
+import math
+
+# ln(product f(n)) = sum of ln(f(n))
+probs = [0.8, 0.9, 0.7, 0.95, 0.6]
+
+# Direct product (can underflow for many small probs)
+direct_product = math.prod(probs)
+
+# Log-sum form (numerically stable)
+log_sum = sum(math.log(p) for p in probs)
+
+# Recover product via exp
 product_via_log = math.exp(log_sum)
 print(f"Probabilities: {probs}")
 print(f"Direct product: {direct_product:.8f}")
 print(f"ln(product): {math.log(direct_product):.8f}")
 print(f"Sum of ln(p): {log_sum:.8f}")
 print(f"exp(log_sum): {product_via_log:.8f}")
-print(f"Identity holds: {math.isclose(math.log(direct_product), log_sum)}")   # Underflow demo: 1000 small probabilities
+print(f"Identity holds: {math.isclose(math.log(direct_product), log_sum)}")
+
+# Underflow demo: 1000 small probabilities
 print("\nUnderflow demo with 1000 probabilities of 0.99:")
 probs_large = [0.99] * 1000
 product_large = math.prod(probs_large)
@@ -114,7 +123,9 @@ cat(sprintf("Direct product: %.8f\n", direct_product))
 cat(sprintf("ln(product): %.8f\n", log(direct_product)))
 cat(sprintf("Sum of ln(p): %.8f\n", log_sum))
 cat(sprintf("exp(log_sum): %.8f\n", product_via_log))
-cat(sprintf("Identity holds: %s\n", isTRUE(all.equal(log(direct_product), log_sum))))  # Underflow demo
+cat(sprintf("Identity holds: %s\n", isTRUE(all.equal(log(direct_product), log_sum))))
+
+# Underflow demo
 probs_large <- rep(0.99, 1000)
 cat(sprintf("\nDirect product of 1000 * 0.99: %.6f\n", prod(probs_large)))
 cat(sprintf("Log-sum form: %.6f, exp = %.6f\n", sum(log(probs_large)), exp(sum(log(probs_large)))))
@@ -124,22 +135,29 @@ cat(sprintf("Log-sum form: %.6f, exp = %.6f\n", sum(log(probs_large)), exp(sum(l
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: log-likelihood evaluation for a simple Bernoulli model
+import pandas as pd
+
+# Scenario: log-likelihood evaluation for a simple Bernoulli model
 # We have N independent binary outcomes (converted = 1, not = 0)
 # Likelihood: product of p^y * (1-p)^(1-y) for each observation
 # Log-likelihood: sum of y*log(p) + (1-y)*log(1-p) -- numerically stable
 np.random.seed(42)
 TRUE_CONVERSION_RATE = 0.15
 N_OBSERVATIONS = 500
-outcomes = np.random.binomial(1, TRUE_CONVERSION_RATE, N_OBSERVATIONS)   # Evaluate log-likelihood at several candidate rates p
+outcomes = np.random.binomial(1, TRUE_CONVERSION_RATE, N_OBSERVATIONS)
+
+# Evaluate log-likelihood at several candidate rates p
 candidate_rates = np.arange(0.05, 0.35, 0.01)
 log_likelihoods = []
 for p in candidate_rates:
     # log-likelihood: sum of log P(y_i | p) using the identity
     # ln product P(y_i|p) = sum ln P(y_i|p)
     log_prob_per_obs = outcomes * np.log(p) + (1 - outcomes) * np.log(1 - p)
-log_lik = log_prob_per_obs.sum()
-log_likelihoods.append({ "candidate_rate": round(p, 2), "log_likelihood": round(log_lik, 4), })
+    log_lik = log_prob_per_obs.sum()
+    log_likelihoods.append({
+        "candidate_rate": round(p, 2),
+        "log_likelihood": round(log_lik, 4),
+    })
 df = pd.DataFrame(log_likelihoods)
 best_row = df.loc[df["log_likelihood"].idxmax()]
 print("Bernoulli Log-Likelihood: ln(product P) = sum ln(P)")

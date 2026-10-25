@@ -98,18 +98,27 @@ $\text{Churn rate} = \frac{|A^c|}{|U|} = \frac{18}{100} = 18\%$. Without definin
 ```python
 # U — the universal set (full domain/population)
 # Define U and work with subsets
-U = set(range(1, 101))   # all user IDs 1-100 retained = {1, 2, 5, 7, 8, 10, 12, 14, 15, 17, 20, 22, 23, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95} churned = U - retained # complement: A^c = U \ A
+import pandas as pd
+import numpy as np
+
+U = set(range(1, 101))   # all user IDs 1-100
+retained = {1, 2, 5, 7, 8, 10, 12, 14, 15, 17, 20, 22, 23, 25, 30, 35, 40,
+            45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95}
+churned = U - retained   # complement: A^c = U \ A
 print(f"|U| = {len(U)}")
 print(f"|A| (retained) = {len(retained)}")
 print(f"|Aᶜ| (churned) = {len(churned)}")
-print(f"Churn rate = {len(churned)/len(U):.1%}")   # Verify: A ∪ Aᶜ = U and A ∩ Aᶜ = ∅
+print(f"Churn rate = {len(churned)/len(U):.1%}")
+
+# Verify: A ∪ Aᶜ = U and A ∩ Aᶜ = ∅
 print(f"\nA ∪ Aᶜ = U: {retained | churned == U}")
-print(f"A ∩ Aᶜ = ∅: {retained & churned == set()}")   # Pandas: universal set = full DataFrame
-import pandas as pd
-import numpy as np
+print(f"A ∩ Aᶜ = ∅: {retained & churned == set()}")
+
+# Pandas: universal set = full DataFrame
 np.random.seed(42)
 df_all_users = pd.DataFrame({   # U = all users
-    "user_id": range(1, 101), "segment": np.random.choice(["premium", "standard", "trial"], 100),
+    "user_id": range(1, 101),
+    "segment": np.random.choice(["premium", "standard", "trial"], 100),
 })
 premium_mask = df_all_users["segment"] == "premium"
 df_premium = df_all_users[premium_mask]   # subset A
@@ -123,18 +132,19 @@ print(f"Coverage: {len(df_premium)/len(df_all_users):.1%}")
 ### Beginner example (R)
 
 ```r
-# Universal set in R #
-U = all user IDs
+# Universal set in R
+# U = all user IDs
 U <- 1:100
 retained <- c(1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90)
-churned <- setdiff(U, retained)  # complement
-Aᶜ = U \ A
+churned <- setdiff(U, retained)  # complement Aᶜ = U \ A
 cat(sprintf("|U|: %d\n", length(U)))
 cat(sprintf("|A| retained: %d\n", length(retained)))
 cat(sprintf("|Aᶜ| churned: %d\n", length(churned)))
 cat(sprintf("Churn rate: %.1f%%\n", 100 * length(churned) / length(U)))
 cat(sprintf("\nA ∪ Aᶜ = U: %s\n", setequal(union(retained, churned), U)))
-cat(sprintf("A ∩ Aᶜ = ∅: %s\n", length(intersect(retained, churned)) == 0))  # Complete date-product grid (U = all date × product combinations)
+cat(sprintf("A ∩ Aᶜ = ∅: %s\n", length(intersect(retained, churned)) == 0))
+
+# Complete date-product grid (U = all date × product combinations)
 dates <- seq.Date(as.Date("2024-01-01"), by = "day", length.out = 5)
 products <- c("A", "B", "C")
 U_grid <- expand.grid(date = dates, product = products)
@@ -147,20 +157,36 @@ cat("(This is the 'universal set' for a complete sales report)\n")
 ```python
 import pandas as pd
 import numpy as np
-from itertools import product as cartesian_product   # Scenario: build a complete reporting grid using the universal set concept
+from itertools import product as cartesian_product
+
+# Scenario: build a complete reporting grid using the universal set concept
 # U = all (date × product × channel) combinations for a full month
 np.random.seed(42)
 dates = pd.date_range("2024-01-01", "2024-01-31", freq="D")
 products = ["Widget_A", "Widget_B", "Widget_C", "Widget_D"]
-channels = ["organic", "paid", "email"]   # Define U: the complete universal set of combinations
+channels = ["organic", "paid", "email"]
+
+# Define U: the complete universal set of combinations
 U_combinations = list(cartesian_product(dates, products, channels))
 U_df = pd.DataFrame(U_combinations, columns=["date", "product", "channel"])
 print(f"Universal set |U| = {len(dates)} dates × {len(products)} products × {len(channels)} channels")
-print(f" |U| = {len(U_df)} rows\n")   # Simulate sparse actual data (subset A ⊂ U)
+print(f" |U| = {len(U_df)} rows\n")
+
+# Simulate sparse actual data (subset A ⊂ U)
 n_actual = 200
-actual_df = pd.DataFrame({ "date": np.random.choice(dates, n_actual), "product": np.random.choice(products, n_actual), "channel": np.random.choice(channels, n_actual), "revenue": np.random.uniform(10, 500, n_actual).round(2),
-}).drop_duplicates(subset=["date", "product", "channel"])   # Merge: complete grid with zeros for missing combinations (Aᶜ = U \ A)
-complete_df = ( U_df .merge(actual_df, on=["date", "product", "channel"], how="left") .fillna({"revenue": 0.0}) )
+actual_df = pd.DataFrame({
+    "date": np.random.choice(dates, n_actual),
+    "product": np.random.choice(products, n_actual),
+    "channel": np.random.choice(channels, n_actual),
+    "revenue": np.random.uniform(10, 500, n_actual).round(2),
+}).drop_duplicates(subset=["date", "product", "channel"])
+
+# Merge: complete grid with zeros for missing combinations (Aᶜ = U \ A)
+complete_df = (
+    U_df
+    .merge(actual_df, on=["date", "product", "channel"], how="left")
+    .fillna({"revenue": 0.0})
+)
 actual_rows = (complete_df["revenue"] > 0).sum()
 missing_rows = (complete_df["revenue"] == 0).sum()
 print("Coverage Report (U = full grid, A = rows with actual data)")
@@ -175,8 +201,7 @@ print(f" Without U (zero-fill), {missing_rows} combinations would be missing fro
 ### Professional example (R)
 
 ```r
-# Universal set
-U = full grid; merge with actuals and zero-fill (A complement)
+# Universal set U = full grid; merge with actuals and zero-fill (A complement)
 dates <- seq(as.Date("2024-01-01"), as.Date("2024-01-07"), by = "day")
 products <- c("P1", "P2")
 channels <- c("email", "display")

@@ -106,8 +106,12 @@ def least_squares_loss(theta: np.ndarray, X: np.ndarray, y: np.ndarray) -> float
 
 def ls_gradient(theta: np.ndarray, X: np.ndarray, y: np.ndarray) -> np.ndarray:
     return -2.0 / len(y) * X.T @ (y - X @ theta)
+
+
 print(f"Loss at theta={theta}: {least_squares_loss(theta, X, y):.4f}")
-print(f"Gradient at theta={theta}: {ls_gradient(theta, X, y)}")   # Optimal theta
+print(f"Gradient at theta={theta}: {ls_gradient(theta, X, y)}")
+
+# Optimal theta
 theta_opt = np.linalg.solve(X.T @ X, X.T @ y)
 print(f"Optimal theta: {theta_opt[0]:.4f}")
 print(f"Optimal loss: {least_squares_loss(theta_opt, X, y):.6f}")
@@ -119,7 +123,9 @@ print(f"Optimal loss: {least_squares_loss(theta_opt, X, y):.6f}")
 X <- matrix(c(1, 2, 3, 4), ncol = 1)
 y <- c(2.0, 3.5, 5.0, 6.5)
 theta <- 1.5
-least_squares_loss <- function(theta, X, y) { residuals <- y - X %*% theta mean(residuals^2)
+least_squares_loss <- function(theta, X, y) {
+  residuals <- y - X %*% theta
+  mean(residuals^2)
 }
 cat("Loss at theta=1.5:", round(least_squares_loss(theta, X, y), 4), "\n")
 theta_opt <- solve(t(X) %*% X, t(X) %*% y)
@@ -130,14 +136,20 @@ cat("Optimal loss:", round(least_squares_loss(theta_opt, X, y), 6), "\n")
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
 import pandas as pd
+
 LEARNING_RATE = 0.01
 MAX_ITERATIONS = 1_000
 CONVERGENCE_TOL = 1e-6
 
-def gradient_descent_ols( X: np.ndarray, y: np.ndarray, learning_rate: float = LEARNING_RATE, max_iter: int = MAX_ITERATIONS, tol: float = CONVERGENCE_TOL,
+
+def gradient_descent_ols(
+    X: np.ndarray,
+    y: np.ndarray,
+    learning_rate: float = LEARNING_RATE,
+    max_iter: int = MAX_ITERATIONS,
+    tol: float = CONVERGENCE_TOL,
 ) -> dict[str, object]:
     # Train OLS by gradient descent, tracking loss per iteration.
     n, p = X.shape
@@ -145,14 +157,21 @@ def gradient_descent_ols( X: np.ndarray, y: np.ndarray, learning_rate: float = L
     history = []
     for iteration in range(max_iter):
         residuals = y - X @ theta
-    loss = float(np.mean(residuals ** 2))
-    gradient = -2.0 / n * X.T @ residuals
-    history.append({"iteration": iteration, "loss": round(loss, 8)})
-    if np.linalg.norm(gradient) < tol:
-        break
-    theta -= learning_rate * gradient
+        loss = float(np.mean(residuals ** 2))
+        gradient = -2.0 / n * X.T @ residuals
+        history.append({"iteration": iteration, "loss": round(loss, 8)})
+        if np.linalg.norm(gradient) < tol:
+            break
+        theta -= learning_rate * gradient
     theta_analytical = np.linalg.solve(X.T @ X, X.T @ y)
-    return { "theta_gd": theta.round(6), "theta_analytical": theta_analytical.round(6), "final_loss": round(float(np.mean((y - X @ theta) ** 2)), 8), "iterations": len(history), "history_df": pd.DataFrame(history), }
+    return {
+        "theta_gd": theta.round(6),
+        "theta_analytical": theta_analytical.round(6),
+        "final_loss": round(float(np.mean((y - X @ theta) ** 2)), 8),
+        "iterations": len(history),
+        "history_df": pd.DataFrame(history),
+    }
+
 
 if __name__ == "__main__":
     rng = np.random.default_rng(seed=42)

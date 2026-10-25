@@ -3,6 +3,7 @@ publish: true
 date: '2026-04-16'
 tags:
 - calculus
+slug: sum-rule-definition-and-properties-of-the-derivative
 ---
 
 # Sum Rule
@@ -106,15 +107,21 @@ def f(x: float) -> float:
 
 def f_prime(x: float) -> float:
     """f'(x) = 20x^3 - 6x + 2 (sum rule applied term by term)."""
-    return 20*x**3 - 6*x + 2   # Verify numerically
+    return 20*x**3 - 6*x + 2
+
+
+# Verify numerically
 h = 1e-7
 x_vals = [-2.0, -1.0, 0.0, 1.0, 2.0]
-print(f"{'x':>6} {'Analytic f\\'(x)':>16} {'Numerical':>12} {'Match':>7}")
+analytic_label = "Analytic f'(x)"
+print(f"{'x':>6} {analytic_label:>16} {'Numerical':>12} {'Match':>7}")
 for x in x_vals:
     analytic = f_prime(x)
-numerical = (f(x + h) - f(x - h)) / (2 * h)
-match = abs(analytic - numerical) < 1e-5
-print(f"{x:>6.1f} {analytic:>16.6f} {numerical:>12.6f} {str(match):>7}")   # Multi-component loss gradient: sum rule
+    numerical = (f(x + h) - f(x - h)) / (2 * h)
+    match = abs(analytic - numerical) < 1e-5
+    print(f"{x:>6.1f} {analytic:>16.6f} {numerical:>12.6f} {str(match):>7}")
+
+# Multi-component loss gradient: sum rule
 print("\nSum rule for multi-component loss gradient:")
 y = np.array([1.0, 2.0, 3.0, 4.0])
 y_pred = np.array([1.2, 1.8, 3.3, 3.7])
@@ -137,9 +144,12 @@ f_prime <- function(x) 20*x^3 - 6*x + 2
 h <- 1e-7
 x_vals <- c(-2, -1, 0, 1, 2)
 cat(sprintf("%-6s %-16s %-12s\n", "x", "Analytic f'(x)", "Numerical"))
-for (x in x_vals) { numerical <- (f(x + h) - f(x - h)) / (2 * h)
+for (x in x_vals) {
+  numerical <- (f(x + h) - f(x - h)) / (2 * h)
   cat(sprintf("%-6.1f %-16.6f %-12.6f\n", x, f_prime(x), numerical))
-}  # Regularized loss gradient: sum rule
+}
+
+# Regularized loss gradient: sum rule
 cat("\nRegularized loss gradient = gradient_data + lambda * gradient_reg\n")
 w <- c(1.0, -0.5, 2.0)
 grad_data <- c(-0.3, 0.1, -0.2)  # hypothetical data gradient
@@ -158,7 +168,9 @@ import numpy as np
 from sklearn.datasets import make_regression, make_classification
 from sklearn.preprocessing import StandardScaler
 import functools
-np.random.seed(42)   # -- Sum rule: gradient of composite loss (regression + auxiliary classification) --
+np.random.seed(42)
+
+# -- Sum rule: gradient of composite loss (regression + auxiliary classification) --
 # Use case: a DS trains a model with a primary MSE loss and an auxiliary
 # binary classification loss. Gradient uses sum rule component-by-component.
 N, D = 400, 5
@@ -182,12 +194,21 @@ def bce_gradient(w: np.ndarray, X: np.ndarray, y: np.ndarray) -> np.ndarray:
     p = sigmoid(X @ w)
     return X.T @ (p - y) / N
 
-def composite_gradient( w: np.ndarray, X: np.ndarray, y_reg: np.ndarray, y_cls: np.ndarray, alpha: float, beta: float,
+def composite_gradient(
+    w: np.ndarray,
+    X: np.ndarray,
+    y_reg: np.ndarray,
+    y_cls: np.ndarray,
+    alpha: float,
+    beta: float,
 ) -> np.ndarray:
     """grad(alpha*MSE + beta*BCE) = alpha*grad_MSE + beta*grad_BCE (sum rule)."""
     g_mse = mse_gradient(w, X, y_reg)
     g_bce = bce_gradient(w, X, y_cls)
-    return alpha * g_mse + beta * g_bce   # Compare: gradient descent with only MSE vs composite loss
+    return alpha * g_mse + beta * g_bce
+
+
+# Compare: gradient descent with only MSE vs composite loss
 ALPHA = 0.6
 BETA = 0.4
 LR = 0.05
@@ -196,13 +217,15 @@ w_mse_only = np.zeros(D)
 w_composite = np.zeros(D)
 for _ in range(N_ITER):
     w_mse_only -= LR * mse_gradient(w_mse_only, X, y_reg)
-w_composite -= LR * composite_gradient(w_composite, X, y_reg, y_cls, ALPHA, BETA)
+    w_composite -= LR * composite_gradient(w_composite, X, y_reg, y_cls, ALPHA, BETA)
 print("Sum Rule: gradient of composite loss (MSE + BCE)")
 print(f"\nalpha={ALPHA}, beta={BETA}")
 print(f"grad(alpha*L_MSE + beta*L_BCE) = alpha*grad_MSE + beta*grad_BCE\n")
 print(f"{'Param':>8} {'w_true':>10} {'w_mse_only':>12} {'w_composite':>13}")
 for j in range(D):
-    print(f"{'w['+str(j)+']':>8} {w_true[j]:>10.4f} {w_mse_only[j]:>12.4f} {w_composite[j]:>13.4f}")   # Final gradient decomposition at composite solution
+    print(f"{'w['+str(j)+']':>8} {w_true[j]:>10.4f} {w_mse_only[j]:>12.4f} {w_composite[j]:>13.4f}")
+
+# Final gradient decomposition at composite solution
 g_mse_final = mse_gradient(w_composite, X, y_reg)
 g_bce_final = bce_gradient(w_composite, X, y_cls)
 g_total = ALPHA * g_mse_final + BETA * g_bce_final

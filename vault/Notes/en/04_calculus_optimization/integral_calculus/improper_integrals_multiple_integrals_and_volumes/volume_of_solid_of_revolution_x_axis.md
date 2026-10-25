@@ -112,42 +112,56 @@ The solid (a paraboloid of revolution) has volume $8\pi \approx 25.13$ cubic uni
 import numpy as np
 from scipy import integrate
 
+
 def f(x: float) -> float:
     """Curve to revolve: y = sqrt(x)."""
     return np.sqrt(x)
 
+
 def disk_integrand(x: float) -> float:
     """Disk area at x: pi * [f(x)]^2 = pi * x."""
-    return np.pi * f(x)**2   # Numerical integration
-volume_numerical, error = integrate.quad(disk_integrand, 0, 4)   # Analytic: V = pi * integral_0^4 x dx = pi * [x^2/2]_0^4 = 8*pi
+    return np.pi * f(x)**2
+
+
+# Numerical integration
+volume_numerical, error = integrate.quad(disk_integrand, 0, 4)
+
+# Analytic: V = pi * integral_0^4 x dx = pi * [x^2/2]_0^4 = 8*pi
 volume_analytic = 8 * np.pi
 print(f"Volume (disk method, numerical): {volume_numerical:.6f}")
 print(f"Volume (disk method, analytic): {volume_analytic:.6f}")
 print(f"8*pi = {8 * np.pi:.6f}")
-print(f"Match: {abs(volume_numerical - volume_analytic) < 1e-8}")   # Riemann disk sum (visual intuition)
+print(f"Match: {abs(volume_numerical - volume_analytic) < 1e-8}")
+
+# Riemann disk sum (visual intuition)
 N = 10_000
 x_vals = np.linspace(0, 4, N)
 dx = 4.0 / (N - 1)
 disk_areas = np.pi * f(x_vals)**2
 volume_riemann = float(np.sum(disk_areas) * dx)
-print(f"\nRiemann disk sum (N={N}): {volume_riemann:.6f}")   # Sphere verification: revolve y = sqrt(r^2 - x^2) from -r to r
+print(f"\nRiemann disk sum (N={N}): {volume_riemann:.6f}")
+
+# Sphere verification: revolve y = sqrt(r^2 - x^2) from -r to r
 R = 3.0
-volume_sphere_numerical, _ = integrate.quad( lambda x: np.pi * (R**2 - x**2), -R, R )
+volume_sphere_numerical, _ = integrate.quad(lambda x: np.pi * (R**2 - x**2), -R, R)
 volume_sphere_analytic = (4.0 / 3.0) * np.pi * R**3
-print(f"\nSphere (r={R}): numerical = {volume_sphere_numerical:.4f}, " f"analytic = {volume_sphere_analytic:.4f}")
+print(f"\nSphere (r={R}): numerical = {volume_sphere_numerical:.4f}, "
+      f"analytic = {volume_sphere_analytic:.4f}")
 ```
 
 ### Beginner example (R)
 
 ```r
-# Volume of solid of revolution:
-y = sqrt(x), x in [0, 4], around x-axis
+# Volume of solid of revolution: y = sqrt(x), x in [0, 4], around x-axis
 f <- function(x) sqrt(x)
-disk_integrand <- function(x) pi * f(x)^2  # pi * x # Numerical integration
+disk_integrand <- function(x) pi * f(x)^2  # pi * x
+
+# Numerical integration
 result <- integrate(disk_integrand, lower = 0, upper = 4)
 cat("Volume (numerical):", result$value, "\n")  # ~25.1327
-cat("8*pi = ", 8 * pi, "\n")  # ~25.1327 # Sphere verification:
-y = sqrt(r^2 - x^2)
+cat("8*pi = ", 8 * pi, "\n")  # ~25.1327
+
+# Sphere verification: y = sqrt(r^2 - x^2)
 r <- 3
 vol_sphere <- integrate(function(x) pi * (r^2 - x^2), -r, r)$value
 cat("Sphere volume (numerical):", vol_sphere, "\n")
@@ -158,31 +172,37 @@ cat("Sphere volume (4/3*pi*r^3):", (4/3) * pi * r^3, "\n")
 
 ```python
 """
-Gaussian solid of revolution as intuition
-for multivariate normal normalizing constant. The univariate standard normal PDF is:
+Gaussian solid of revolution as intuition for multivariate normal normalizing constant.
+
+The univariate standard normal PDF is:
     f(x) = (1/sqrt(2*pi)) * exp(-x^2/2).
-Revolving
-f(x) around the x-axis generates a 3D solid.
-Volume = pi * integral_{-inf}^{inf} [f(x)]^2
-dx = pi * (1/(2*pi)) * integral_{-inf}^{inf}
-exp(-x^2)
-dx = pi * (1/(2*pi)) * sqrt(pi) = sqrt(pi) / 2 This connects to the Gaussian integral: integral
-exp(-x^2)
-dx = sqrt(pi),
-which underlies the bivariate normal normalizing constant. We compute this numerically and compare to the analytic result,
+Revolving f(x) around the x-axis generates a 3D solid.
+
+    Volume = pi * integral_{-inf}^{inf} [f(x)]^2 dx
+           = pi * (1/(2*pi)) * integral_{-inf}^{inf} exp(-x^2) dx
+           = pi * (1/(2*pi)) * sqrt(pi)
+           = sqrt(pi) / 2
+
+This connects to the Gaussian integral: integral exp(-x^2) dx = sqrt(pi),
+which underlies the bivariate normal normalizing constant.
+
+We compute this numerically and compare to the analytic result,
 then visualize the solid cross-sections as a matplotlib plot.
 """
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import integrate
 
+
 def normal_pdf(x: float, sigma: float = 1.0) -> float:
     """Univariate standard normal PDF."""
-    return (1.0 / (sigma * np.sqrt(2 * np.pi))) * np.exp(-0.5 * (x / sigma)**2)   # Volume of Gaussian solid of revolution (improper integral)
+    return (1.0 / (sigma * np.sqrt(2 * np.pi))) * np.exp(-0.5 * (x / sigma)**2)
+
+
+# Volume of Gaussian solid of revolution (improper integral)
 SIGMA = 1.0
-volume_num, err = integrate.quad( lambda x: np.pi * normal_pdf(x, SIGMA)**2, -np.inf, np.inf )
-volume_analytic = np.sqrt(np.pi) / 2   # = pi * (1/(2*pi)) *
-sqrt(pi)
+volume_num, err = integrate.quad(lambda x: np.pi * normal_pdf(x, SIGMA)**2, -np.inf, np.inf)
+volume_analytic = np.sqrt(np.pi) / 2  # = pi * (1/(2*pi)) * sqrt(pi)
 print("=== Gaussian Solid of Revolution ===")
 print(f"f(x) = Normal PDF with sigma={SIGMA}")
 print(f"Volume = pi * int_{{-inf}}^{{inf}} [f(x)]^2 dx")
@@ -190,20 +210,27 @@ print(f" Numerical: {volume_num:.8f}")
 print(f" Analytic: {volume_analytic:.8f} [= sqrt(pi)/2]")
 print(f" sqrt(pi)/2: {np.sqrt(np.pi)/2:.8f}")
 print(f" Match: {abs(volume_num - volume_analytic) < 1e-8}")
-print()   # Gaussian integral connection: int exp(-x^2)
-dx = sqrt(pi)
+print()
+
+# Gaussian integral connection: int exp(-x^2) dx = sqrt(pi)
 gaussian_integral, _ = integrate.quad(lambda x: np.exp(-x**2), -np.inf, np.inf)
 print(f"Gaussian integral int exp(-x^2) dx = {gaussian_integral:.6f} (expected: sqrt(pi) = {np.sqrt(np.pi):.6f})")
-print()   # Visualization: disk cross-sections
+print()
+
+# Visualization: disk cross-sections
 x_plot = np.linspace(-3, 3, 300)
 y_plot = normal_pdf(x_plot, SIGMA)
-fig, axes = plt.subplots(1, 2, figsize=(12, 4))   # Left: the curve being revolved
+fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+
+# Left: the curve being revolved
 axes[0].plot(x_plot, y_plot, "b-", linewidth=2, label="Normal PDF")
 axes[0].fill_between(x_plot, 0, y_plot, alpha=0.2, color="blue")
 axes[0].set_title("Curve to revolve: Normal PDF", fontsize=11)
 axes[0].set_xlabel("x")
 axes[0].set_ylabel("y = f(x)")
-axes[0].legend()   # Right: disk areas pi*y^2 vs x (integrand of volume formula)
+axes[0].legend()
+
+# Right: disk areas pi*y^2 vs x (integrand of volume formula)
 disk_areas = np.pi * y_plot**2
 axes[1].plot(x_plot, disk_areas, "r-", linewidth=2)
 axes[1].fill_between(x_plot, 0, disk_areas, alpha=0.2, color="red")

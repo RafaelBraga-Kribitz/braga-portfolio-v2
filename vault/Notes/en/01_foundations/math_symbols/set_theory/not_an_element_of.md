@@ -103,14 +103,21 @@ values = ["approved", "PENDING", "rejected", "cancelled", None, "pending"]
 print("Membership negation check:")
 for v in values:
     in_set = v in A
-not_in = v not in A
-print(f" {str(v):>12} ∈ A: {str(in_set):>5} ∉ A: {str(not_in):>5}")
+    not_in = v not in A
+    print(f" {str(v):>12} ∈ A: {str(in_set):>5} ∉ A: {str(not_in):>5}")
+
 import pandas as pd
 import numpy as np
+
 np.random.seed(42)
 VALID_CURRENCIES = {"EUR", "USD", "GBP", "CHF"}
-df = pd.DataFrame({ "transaction_id": range(1, 9), "currency": ["EUR", "USD", "BTC", "GBP", None, "XYZ", "CHF", "ETH"], "amount": np.random.uniform(100, 5000, 8).round(2),
-})   # x ∉ A: flag invalid currencies
+df = pd.DataFrame({
+    "transaction_id": range(1, 9),
+    "currency": ["EUR", "USD", "BTC", "GBP", None, "XYZ", "CHF", "ETH"],
+    "amount": np.random.uniform(100, 5000, 8).round(2),
+})
+
+# x ∉ A: flag invalid currencies
 df["is_invalid_currency"] = ~df["currency"].isin(VALID_CURRENCIES)
 print("\nCurrency validation (∉ VALID_CURRENCIES = flagged):")
 print(df.to_string(index=False))
@@ -127,10 +134,21 @@ valid_currencies <- c("EUR", "USD", "GBP", "CHF")
 currencies <- c("EUR", "USD", "BTC", "GBP", NA, "XYZ", "CHF", "ETH")
 not_in_valid <- !(currencies %in% valid_currencies)
 cat("Currency membership check:\n")
-for (i in seq_along(currencies)) { cat(sprintf(" %-8s ∈ A: %-5s ∉ A: %-5s\n", ifelse(is.na(currencies[i]), "NA", currencies[i]), !not_in_valid[i], not_in_valid[i]))
-}  # Filter invalid rows
-df <- data.frame( transaction_id = 1:8, currency = currencies, amount = round(runif(8, 100, 5000), 2), stringsAsFactors = FALSE
-) df$is_invalid <- !(df$currency %in% valid_currencies) cat("\nTransactions with invalid currency (∉ valid set):\n")
+for (i in seq_along(currencies)) {
+  cat(sprintf(" %-8s ∈ A: %-5s ∉ A: %-5s\n",
+              ifelse(is.na(currencies[i]), "NA", currencies[i]),
+              !not_in_valid[i], not_in_valid[i]))
+}
+
+# Filter invalid rows
+df <- data.frame(
+  transaction_id = 1:8,
+  currency = currencies,
+  amount = round(runif(8, 100, 5000), 2),
+  stringsAsFactors = FALSE
+)
+df$is_invalid <- !(df$currency %in% valid_currencies)
+cat("\nTransactions with invalid currency (∉ valid set):\n")
 print(df[df$is_invalid, ])
 ```
 
@@ -138,31 +156,67 @@ print(df[df$is_invalid, ])
 
 ```python
 import pandas as pd
-import numpy as np   # Scenario: multi-level exclusion filtering (∉ A pattern)
+import numpy as np
+
+# Scenario: multi-level exclusion filtering (∉ A pattern)
 # Use case: clean a web analytics dataset
 np.random.seed(42)
 N = 500
 KNOWN_BOTS = {"googlebot", "bingbot", "scrapy", "wget", "curl"}
-EXCLUDED_COUNTRIES = {"XX", "ZZ", "??"}   # placeholder/invalid country codes
+EXCLUDED_COUNTRIES = {"XX", "ZZ", "??"}  # placeholder/invalid country codes
 VALID_EVENTS = {"pageview", "click", "purchase", "signup"}
-raw_df = pd.DataFrame({ "session_id": range(1, N + 1), "user_agent": np.random.choice( ["chrome", "firefox", "safari", "googlebot", "scrapy", "curl"], N, p=[0.4, 0.25, 0.2, 0.08, 0.04, 0.03], ), "country": np.random.choice(["AT", "DE", "US", "XX", "ZZ", "GB"], N, p=[0.3, 0.25, 0.2, 0.1, 0.1, 0.05]), "event_type": np.random.choice( ["pageview", "click", "purchase", "signup", "unknown", "bot_ping"], N, p=[0.4, 0.3, 0.1, 0.1, 0.05, 0.05], ), "revenue": np.where( np.random.rand(N) < 0.1, np.random.uniform(10, 500, N).round(2), 0.0, ),
+
+raw_df = pd.DataFrame({
+    "session_id": range(1, N + 1),
+    "user_agent": np.random.choice(
+        ["chrome", "firefox", "safari", "googlebot", "scrapy", "curl"], N,
+        p=[0.4, 0.25, 0.2, 0.08, 0.04, 0.03],
+    ),
+    "country": np.random.choice(["AT", "DE", "US", "XX", "ZZ", "GB"], N,
+                                p=[0.3, 0.25, 0.2, 0.1, 0.1, 0.05]),
+    "event_type": np.random.choice(
+        ["pageview", "click", "purchase", "signup", "unknown", "bot_ping"], N,
+        p=[0.4, 0.3, 0.1, 0.1, 0.05, 0.05],
+    ),
+    "revenue": np.where(
+        np.random.rand(N) < 0.1,
+        np.random.uniform(10, 500, N).round(2),
+        0.0,
+    ),
 })
 
+
 def apply_exclusion_filters(df: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
-    """ Apply exclusion filters based on set non-membership (x ∉ A). Args: df: Raw DataFrame. Returns: Cleaned DataFrame and a dict of per-filter exclusion counts. """
+    """Apply exclusion filters based on set non-membership (x ∉ A).
+
+    Args:
+        df: Raw DataFrame.
+
+    Returns:
+        Cleaned DataFrame and a dict of per-filter exclusion counts.
+    """
     initial_count = len(df)
-    exclusion_log: dict[str, int] = {}   # x ∉ KNOWN_BOTS bot_mask = df["user_agent"].isin(KNOWN_BOTS) exclusion_log["bots (user_agent ∉ allowed)"] =
-    int(bot_mask.sum())
-    df = df[~bot_mask]   # x ∉ EXCLUDED_COUNTRIES
+    exclusion_log: dict[str, int] = {}
+
+    # x ∉ KNOWN_BOTS
+    bot_mask = df["user_agent"].isin(KNOWN_BOTS)
+    exclusion_log["bots (user_agent ∉ allowed)"] = int(bot_mask.sum())
+    df = df[~bot_mask]
+
+    # x ∉ EXCLUDED_COUNTRIES
     country_mask = df["country"].isin(EXCLUDED_COUNTRIES)
     exclusion_log["invalid country (∉ valid codes)"] = int(country_mask.sum())
-    df = df[~country_mask]   # x ∉ VALID_EVENTS
+    df = df[~country_mask]
+
+    # x ∉ VALID_EVENTS
     event_mask = ~df["event_type"].isin(VALID_EVENTS)
     exclusion_log["unknown events (∉ valid types)"] = int(event_mask.sum())
     df = df[~event_mask]
     exclusion_log["total excluded"] = initial_count - len(df)
     exclusion_log["total remaining"] = len(df)
     return df.reset_index(drop=True), exclusion_log
+
+
 clean_df, log = apply_exclusion_filters(raw_df)
 print("Exclusion Filter Report (x ∉ A pattern)")
 print("=" * 46)
@@ -176,16 +230,22 @@ for reason, count in log.items():
 # Exclusion filter: drop rows where x ∉ valid set
 VALID_EVENTS <- c("click", "purchase", "view")
 set.seed(42)
-raw_df <- data.frame( event_id = 1:200, event_type = sample(c("click", "purchase", "view", "spam", "unknown"), 200, replace = TRUE)
+raw_df <- data.frame(
+  event_id = 1:200,
+  event_type = sample(c("click", "purchase", "view", "spam", "unknown"), 200, replace = TRUE)
 )
 initial_count <- nrow(raw_df)
 event_mask <- !raw_df$event_type %in% VALID_EVENTS
 clean_df <- raw_df[!event_mask, ]
-exclusion_log <- list( "unknown events (∉ valid types)" = sum(event_mask), "total excluded" = initial_count - nrow(clean_df), "total remaining" = nrow(clean_df)
+exclusion_log <- list(
+  "unknown events (∉ valid types)" = sum(event_mask),
+  "total excluded" = initial_count - nrow(clean_df),
+  "total remaining" = nrow(clean_df)
 )
 cat("Exclusion Filter Report (x ∉ A pattern)\n")
-for (reason in names(exclusion_log))
-cat(" ", reason, ": ", exclusion_logreason, "\n", sep = "")
+for (reason in names(exclusion_log)) {
+  cat(" ", reason, ": ", exclusion_log[[reason]], "\n", sep = "")
+}
 ```
 
 ---

@@ -101,13 +101,17 @@ Positive covariance confirms X and Y increase together (as expected: $Y = X + 1$
 ```python
 import numpy as np
 x_values = [1, 3, 5, 7, 9]
-y_values = [2, 4, 6, 8, 10]   # Manual population covariance (ddof=0)
+y_values = [2, 4, 6, 8, 10]
+
+# Manual population covariance (ddof=0)
 mean_x = sum(x_values) / len(x_values)
 mean_y = sum(y_values) / len(y_values)
 deviations = [(x - mean_x) * (y - mean_y) for x, y in zip(x_values, y_values)]
 covariance_pop = sum(deviations) / len(deviations)
 print(f"Mean X: {mean_x}, Mean Y: {mean_y}")
-print(f"Population covariance (manual): {covariance_pop:.4f}")   # numpy cov() uses sample (ddof=1) by default; pass ddof=0 for population
+print(f"Population covariance (manual): {covariance_pop:.4f}")
+
+# numpy cov() uses sample (ddof=1) by default; pass ddof=0 for population
 cov_matrix = np.cov(x_values, y_values, ddof=0)
 print(f"numpy population cov: {cov_matrix[0, 1]:.4f}")
 ```
@@ -116,9 +120,13 @@ print(f"numpy population cov: {cov_matrix[0, 1]:.4f}")
 
 ```r
 x_values <- c(1, 3, 5, 7, 9)
-y_values <- c(2, 4, 6, 8, 10)  # R's cov() uses sample (n-1) by default
+y_values <- c(2, 4, 6, 8, 10)
+
+# R's cov() uses sample (n-1) by default
 sample_cov <- cov(x_values, y_values)
-cat("Sample covariance (n-1):", sample_cov, "\n")  # Population covariance (n)
+cat("Sample covariance (n-1):", sample_cov, "\n")
+
+# Population covariance (n)
 n <- length(x_values)
 pop_cov <- sum((x_values - mean(x_values)) * (y_values - mean(y_values))) / n
 cat("Population covariance (n):", pop_cov, "\n")
@@ -127,25 +135,33 @@ cat("Population covariance (n):", pop_cov, "\n")
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
 import pandas as pd
 from dataclasses import dataclass
+
+
 @dataclass
-
 class CovarianceAnalysis:
-    # Pairwise covariance analysis for marketing channel metrics. data: pd.DataFrame
+    # Pairwise covariance analysis for marketing channel metrics.
+    data: pd.DataFrame
 
-def population_covariance_matrix(self) -> pd.DataFrame:
-    # Return population covariance matrix (ddof=0).
-    return self.data.cov(ddof=0)
+    def population_covariance_matrix(self) -> pd.DataFrame:
+        # Return population covariance matrix (ddof=0).
+        return self.data.cov(ddof=0)
 
-def top_covarying_pairs(self, top_n: int = 5) -> pd.Series:
-    # Return the top-n off-diagonal covariance pairs by absolute value.
-    cov_matrix = self.population_covariance_matrix()
-    upper_triangle = np.triu(np.ones(cov_matrix.shape, dtype=bool), k=1)
-    pairs = ( cov_matrix .where(upper_triangle) .stack() .abs() .sort_values(ascending=False) )
-    return pairs.head(top_n)
+    def top_covarying_pairs(self, top_n: int = 5) -> pd.Series:
+        # Return the top-n off-diagonal covariance pairs by absolute value.
+        cov_matrix = self.population_covariance_matrix()
+        upper_triangle = np.triu(np.ones(cov_matrix.shape, dtype=bool), k=1)
+        pairs = (
+            cov_matrix
+            .where(upper_triangle)
+            .stack()
+            .abs()
+            .sort_values(ascending=False)
+        )
+        return pairs.head(top_n)
+
 
 def build_marketing_covariance_report(df: pd.DataFrame) -> None:
     analysis = CovarianceAnalysis(data=df)
@@ -154,10 +170,16 @@ def build_marketing_covariance_report(df: pd.DataFrame) -> None:
     print("\nTop covarying metric pairs (absolute value):")
     print(analysis.top_covarying_pairs())
 
+
 if __name__ == "__main__":
     rng = np.random.default_rng(seed=42)
     n_days = 90
-    marketing_df = pd.DataFrame({ "ad_spend": rng.normal(loc=5000, scale=800, size=n_days), "clicks": rng.normal(loc=2000, scale=300, size=n_days), "conversions": rng.normal(loc=120, scale=20, size=n_days), "revenue": rng.normal(loc=15000, scale=2000, size=n_days), })
+    marketing_df = pd.DataFrame({
+        "ad_spend": rng.normal(loc=5000, scale=800, size=n_days),
+        "clicks": rng.normal(loc=2000, scale=300, size=n_days),
+        "conversions": rng.normal(loc=120, scale=20, size=n_days),
+        "revenue": rng.normal(loc=15000, scale=2000, size=n_days),
+    })
     build_marketing_covariance_report(marketing_df)
 ```
 

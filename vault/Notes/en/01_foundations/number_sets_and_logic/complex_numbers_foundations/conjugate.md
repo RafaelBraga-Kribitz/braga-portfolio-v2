@@ -106,8 +106,10 @@ z_values = [3 + 2j, -1 + 4j, 5 + 0j, 0 + 3j]
 print("Complex conjugates:")
 for z in z_values:
     conj_z = z.conjugate()
-product = z * conj_z
-print(f" z={z:>7} conj={conj_z:>7} z×conj={product} |z|²={abs(z)**2:.1f}")   # Complex division using conjugate
+    product = z * conj_z
+    print(f" z={z:>7} conj={conj_z:>7} z×conj={product} |z|²={abs(z)**2:.1f}")
+
+# Complex division using conjugate
 z1 = 3 + 2j
 z2 = 1 + 1j
 print(f"\nDivision: ({z1}) / ({z2})")
@@ -119,7 +121,9 @@ result_manual = numerator / denominator.real
 result_direct = z1 / z2
 print(f" Via conjugate: {result_manual}")
 print(f" Direct: {result_direct}")
-print(f" Equal: {abs(result_manual - result_direct) < 1e-10}")   # FFT conjugate symmetry for real input
+print(f" Equal: {abs(result_manual - result_direct) < 1e-10}")
+
+# FFT conjugate symmetry for real input
 signal = np.array([1.0, 2.0, 3.0, 2.0, 1.0, 0.0, -1.0, 0.0])
 fft = np.fft.fft(signal)
 n = len(signal)
@@ -134,10 +138,13 @@ for k in range(1, 4):
 # Complex conjugate in R: Conj()
 z_values <- c(3+2i, -1+4i, 5+0i, 0+3i)
 cat("Complex conjugates:\n")
-for (z in z_values) { conj_z <- Conj(z)
+for (z in z_values) {
+  conj_z <- Conj(z)
   product <- z * conj_z
   cat(sprintf(" z=%s conj=%s z×conj=%s |z|²=%.1f\n", z, conj_z, product, Mod(z)^2))
-}  # Complex division
+}
+
+# Complex division
 z1 <- 3 + 2i
 z2 <- 1 + 1i
 result <- z1 / z2
@@ -148,28 +155,54 @@ cat(sprintf("\n(%s) / (%s) = %s\n", z1, z2, result))
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: FFT-based frequency analysis exploiting conjugate symmetry
+import pandas as pd
+
+# Scenario: FFT-based frequency analysis exploiting conjugate symmetry
 # and computing a power spectral density
 np.random.seed(42)
-n = 128   # power of 2 for efficient FFT # Simulate ECG-like signal: 1 Hz + 2 Hz + noise
-t = np.linspace(0, 1, n, endpoint=False)   # 1 second
-signal = (np.sin(2 * np.pi * 1 * t)   # 1 Hz component + 0.5 * np.sin(2 * np.pi * 2 * t) # 2 Hz + 0.2 * np.random.randn(n)) # Full FFT and rfft
-(exploits conjugate symmetry) fft_full = np.fft.fft(signal)   # n complex values
- fft_real = np.fft.rfft(signal)   # only n/2 + 1 values
-(conjugate symmetry)   # Verify symmetry: X[k] = conj(X[N-k])
- print("FFT Conjugate Symmetry Verification") print("=" * 42) symmetry_check = [abs(fft_full[k] - np.conj(fft_full[n-k])) < 1e-10 for k in range(1, n/2)] print(f" X[k] = conj(X[N-k]) for all k=1..{n/2-1}: {all(symmetry_check)}") print(f" Full FFT length: {len(fft_full)}") print(f" rfft length: {len(fft_real)} (= n/2 + 1 = {n/2+1})") print()   # Power spectral density via conjugate: PSD[k] = X[k] × conj(X[k]) = |X[k]|²
- freqs = np.fft.rfftfreq(n, d=1/n)   # Hz
- psd = (fft_real * np.conj(fft_real)).real / n   # PSD using conjugate product
- psd_check = np.abs(fft_real)**2 / n   # via modulus print("PSD: X[k]×conj(X[k]) == |X[k]|²")
- print(f" Methods agree: {np.allclose(psd, psd_check)}") print()   # Top frequency components
- df_psd = pd.DataFrame({"freq_hz": freqs, "power": psd}) top5 = df_psd.sort_values("power", ascending=False).head(6) print("Top frequency components by power:") print(top5.to_string(index=False)) print("\n → Strong peaks at 1 Hz and 2 Hz (as designed)")
+n = 128  # power of 2 for efficient FFT
+
+# Simulate ECG-like signal: 1 Hz + 2 Hz + noise
+t = np.linspace(0, 1, n, endpoint=False)  # 1 second
+signal = (
+    np.sin(2 * np.pi * 1 * t)            # 1 Hz component
+    + 0.5 * np.sin(2 * np.pi * 2 * t)    # 2 Hz
+    + 0.2 * np.random.randn(n)           # noise
+)
+
+# Full FFT and rfft (exploits conjugate symmetry)
+fft_full = np.fft.fft(signal)   # n complex values
+fft_real = np.fft.rfft(signal)  # only n/2 + 1 values (conjugate symmetry)
+
+# Verify symmetry: X[k] = conj(X[N-k])
+print("FFT Conjugate Symmetry Verification")
+print("=" * 42)
+symmetry_check = [abs(fft_full[k] - np.conj(fft_full[n - k])) < 1e-10 for k in range(1, n // 2)]
+print(f" X[k] = conj(X[N-k]) for all k=1..{n // 2 - 1}: {all(symmetry_check)}")
+print(f" Full FFT length: {len(fft_full)}")
+print(f" rfft length: {len(fft_real)} (= n/2 + 1 = {n // 2 + 1})")
+print()
+
+# Power spectral density via conjugate: PSD[k] = X[k] × conj(X[k]) = |X[k]|²
+freqs = np.fft.rfftfreq(n, d=1 / n)             # Hz
+psd = (fft_real * np.conj(fft_real)).real / n   # PSD using conjugate product
+psd_check = np.abs(fft_real) ** 2 / n           # via modulus
+print("PSD: X[k]×conj(X[k]) == |X[k]|²")
+print(f" Methods agree: {np.allclose(psd, psd_check)}")
+print()
+
+# Top frequency components
+df_psd = pd.DataFrame({"freq_hz": freqs, "power": psd})
+top5 = df_psd.sort_values("power", ascending=False).head(6)
+print("Top frequency components by power:")
+print(top5.to_string(index=False))
+print("\n → Strong peaks at 1 Hz and 2 Hz (as designed)")
 ```
 
 ### Professional example (R)
 
 ```r
-#
-PSD = X[k] × Conj(X[k]) = |X[k]|²
+# PSD = X[k] × Conj(X[k]) = |X[k]|²
 set.seed(42)
 t <- seq(0, 2, by = 0.01)
 x <- sin(2 * pi * 1 * t) + 0.5 * sin(2 * pi * 2 * t)

@@ -98,18 +98,24 @@ Point $(2\sqrt{2}, \sqrt{2})$: $\frac{(2\sqrt{2})^2}{16} + \frac{(\sqrt{2})^2}{4
 
 ```python
 import numpy as np
-import matplotlib.pyplot as plt   # -- Ellipse: equation, points on boundary, area -----------------------
+import matplotlib.pyplot as plt
+
+# -- Ellipse: equation, points on boundary, area -----------------------
 A_SEMI = 5.0   # semi-major axis (x direction)
-B_SEMI = 3.0   # semi-minor axis (y direction) # Parametric form: x = a*cos(t),
-y = b*sin(t)
+B_SEMI = 3.0   # semi-minor axis (y direction)
+
+# Parametric form: x = a*cos(t), y = b*sin(t)
 t = np.linspace(0, 2 * np.pi, 500)
 x_ellipse = A_SEMI * np.cos(t)
-y_ellipse = B_SEMI * np.sin(t)   # Check a few specific points
+y_ellipse = B_SEMI * np.sin(t)
+
+# Check a few specific points
 test_points = np.array([[5.0, 0.0], [0.0, 3.0], [3.0, 2.4]])
 for pt in test_points:
     val = (pt[0] / A_SEMI)**2 + (pt[1] / B_SEMI)**2
-status = "on ellipse" if np.isclose(val, 1.0) else ("inside" if val < 1 else "outside")
-print(f" Point ({pt[0]:.1f}, {pt[1]:.1f}): x^2/a^2 + y^2/b^2 = {val:.4f} -> {status}")
+    status = "on ellipse" if np.isclose(val, 1.0) else ("inside" if val < 1 else "outside")
+    print(f" Point ({pt[0]:.1f}, {pt[1]:.1f}): x^2/a^2 + y^2/b^2 = {val:.4f} -> {status}")
+
 area = np.pi * A_SEMI * B_SEMI
 eccentricity = np.sqrt(1 - (B_SEMI / A_SEMI)**2)
 print(f"\nSemi-axes: a={A_SEMI}, b={B_SEMI}")
@@ -122,17 +128,19 @@ print(f"Eccentricity e = {eccentricity:.4f} (0=circle, ~1=very elongated)")
 ```r
 # -- Ellipse: equation, points on boundary, area -----------------------
 A_SEMI <- 5.0
-B_SEMI <- 3.0  # Parametric form
+B_SEMI <- 3.0
+
+# Parametric form
 t <- seq(0, 2 * pi, length.out = 500)
 x_ell <- A_SEMI * cos(t)
-y_ell <- B_SEMI * sin(t)  # Check points
+y_ell <- B_SEMI * sin(t)
+
+# Check points
 test_pts <- rbind(c(5, 0), c(0, 3), c(3, 2.4))
-for (i in seq_len(nrow(test_pts))) { pt <- test_pts[i, ]
+for (i in seq_len(nrow(test_pts))) {
+  pt <- test_pts[i, ]
   val <- (pt[1] / A_SEMI)^2 + (pt[2] / B_SEMI)^2
-  status <- if (isTRUE(all.equal(val, 1.0))) "on ellipse"
-  else
-  if (val < 1) "inside"
-  else "outside"
+  status <- if (isTRUE(all.equal(val, 1.0))) "on ellipse" else if (val < 1) "inside" else "outside"
   cat(sprintf(" Point (%.1f, %.1f): val = %.4f -> %s\n", pt[1], pt[2], val, status))
 }
 area <- pi * A_SEMI * B_SEMI

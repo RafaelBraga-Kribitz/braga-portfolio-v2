@@ -93,17 +93,74 @@ The impulse at t=1 injects 1 unit of signal. By t=5 (4 seconds later), only 13.5
 
 ```python
 """
-Green[['s Function G(t, t']]) = exp(lambda*(t-t[[')) * Heaviside(t-t']]) Applied to modeling the time-decaying effect of a marketing event.
-""" import numpy as np def greens_function( time: float | np.ndarray, impulse_time: float, decay_rate: float,
-) -> float | np.ndarray: """Evaluate Green[['s function for first-order linear ODE dx/dt = lambda*x. G(t, t']]) = exp(lambda*(t-t[[')) for t > t']], else 0 Parameters ---------- time : evaluation time(s) t impulse_time : time of impulse t' decay_rate : system parameter lambda (negative = stable decay) Returns ------- float or np.ndarray: Green's function value(s) """ delta_t = np.asarray(time, dtype=float) - impulse_time response = np.where( delta_t >= 0, np.exp(decay_rate * delta_t), 0.0, ) return float(response) if np.ndim(time) == 0 else response def compute_adstock( spend_series: np.ndarray, decay_rate: float,
-) -> np.ndarray: """Compute adstock (convolution of spend with exponential impulse response). adstock[t] = sum_{t[['=0}^{t} spend[t']]] * G(t, t') = sum_{t[['=0}^{t} spend[t']]] * exp(decay_rate*(t-t')) This is the discrete convolution with an exponential kernel. """ num_steps = len(spend_series) adstock = np.zeros(num_steps) for current_time in range(num_steps): for past_time in range(current_time + 1): adstock[current_time] += ( spend_series[past_time] * greens_function(current_time, past_time, decay_rate) ) return adstock DECAY_RATE_TV = -0.1   # TV ad: slow decay (lambda = -0.1 per week)
-DECAY_RATE_SOCIAL = -0.5   # Social media: fast decay # Weekly ad spend: burst in weeks 3 and 7
+Green's Function G(t, t') = exp(lambda*(t-t')) * Heaviside(t-t')
+Applied to modeling the time-decaying effect of a marketing event.
+"""
+import numpy as np
+
+
+def greens_function(
+    time: float | np.ndarray, impulse_time: float, decay_rate: float,
+) -> float | np.ndarray:
+    """
+    Evaluate Green's function for first-order linear ODE dx/dt = lambda*x.
+
+    G(t, t') = exp(lambda*(t-t')) for t > t', else 0
+
+    Parameters
+    ----------
+    time : evaluation time(s) t
+    impulse_time : time of impulse t'
+    decay_rate : system parameter lambda (negative = stable decay)
+
+    Returns
+    -------
+    float or np.ndarray: Green's function value(s)
+    """
+    delta_t = np.asarray(time, dtype=float) - impulse_time
+    response = np.where(
+        delta_t >= 0,
+        np.exp(decay_rate * delta_t),
+        0.0,
+    )
+    return float(response) if np.ndim(time) == 0 else response
+
+
+def compute_adstock(
+    spend_series: np.ndarray, decay_rate: float,
+) -> np.ndarray:
+    """
+    Compute adstock (convolution of spend with exponential impulse response).
+
+    adstock[t] = sum_{t'=0}^{t} spend[t'] * G(t, t')
+               = sum_{t'=0}^{t} spend[t'] * exp(decay_rate*(t-t'))
+
+    This is the discrete convolution with an exponential kernel.
+    """
+    num_steps = len(spend_series)
+    adstock = np.zeros(num_steps)
+    for current_time in range(num_steps):
+        for past_time in range(current_time + 1):
+            adstock[current_time] += (
+                spend_series[past_time] * greens_function(current_time, past_time, decay_rate)
+            )
+    return adstock
+
+
+DECAY_RATE_TV = -0.1       # TV ad: slow decay (lambda = -0.1 per week)
+DECAY_RATE_SOCIAL = -0.5   # Social media: fast decay
+
+# Weekly ad spend: burst in weeks 3 and 7
 weekly_spend = np.zeros(12)
 weekly_spend[3] = 100_000   # €100k TV campaign in week 3
-weekly_spend[7] = 50_000   # €50k social campaign in week 7
+weekly_spend[7] = 50_000    # €50k social campaign in week 7
 adstock_tv = compute_adstock(weekly_spend, DECAY_RATE_TV)
-adstock_social = compute_adstock(weekly_spend, DECAY_RATE_SOCIAL) print("Week | Spend (€) | TV adstock | Social adstock")
-for week_idx in range(12): print(f" {week_idx:2d} | {weekly_spend[week_idx]:9,.0f} " f"| {adstock_tv[week_idx]:10,.0f} | {adstock_social[week_idx]:14,.0f}")
+adstock_social = compute_adstock(weekly_spend, DECAY_RATE_SOCIAL)
+
+print("Week | Spend (€) | TV adstock | Social adstock")
+for week_idx in range(12):
+    print(f" {week_idx:2d} | {weekly_spend[week_idx]:9,.0f} "
+          f"| {adstock_tv[week_idx]:10,.0f} | {adstock_social[week_idx]:14,.0f}")
 ```
 
 ### Beginner example (R)
@@ -111,24 +168,32 @@ for week_idx in range(12): print(f" {week_idx:2d} | {weekly_spend[week_idx]:9,.0
 ```r
 # Green's Function for impulse response analysis
 # Applied to customer lifetime value with exponential decay
-greens_function <- function(t, t_prime, decay_rate) {  # G(t, t') = exp(decay_rate * (t - t')) for t >= t', else 0
-  delta_t <- t - t_prime ifelse(delta_t >= 0, exp(decay_rate * delta_t), 0)
+greens_function <- function(t, t_prime, decay_rate) {
+  # G(t, t') = exp(decay_rate * (t - t')) for t >= t', else 0
+  delta_t <- t - t_prime
+  ifelse(delta_t >= 0, exp(decay_rate * delta_t), 0)
 }
-compute_clv_from_acquisition <- function( acquisition_times, acquisition_values, decay_rate, eval_times
-) {  # Compute CLV at each eval time via superposition of Green's function responses sapply(eval_times,
-  function(t_eval) { sum(acquisition_values * greens_function(t_eval, acquisition_times, decay_rate)) })
-}  # 3 acquisition events: 100 customers at
-t=0, 50 at
-t=2, 80 at
-t=5
+compute_clv_from_acquisition <- function(
+  acquisition_times, acquisition_values, decay_rate, eval_times
+) {
+  # Compute CLV at each eval time via superposition of Green's function responses
+  sapply(eval_times, function(t_eval) {
+    sum(acquisition_values * greens_function(t_eval, acquisition_times, decay_rate))
+  })
+}
+
+# 3 acquisition events: 100 customers at t=0, 50 at t=2, 80 at t=5
 acq_times <- c(0, 2, 5)
 acq_values <- c(100, 50, 80)  # customer LTV units
 DECAY_RATE <- -0.2  # 20% decay per time unit
 eval_times <- seq(0, 20, by = 1)
-total_value <- compute_clv_from_acquisition( acq_times, acq_values, DECAY_RATE, eval_times
-) cat("Time | Total CLV contribution\n")
+total_value <- compute_clv_from_acquisition(
+  acq_times, acq_values, DECAY_RATE, eval_times
+)
+cat("Time | Total CLV contribution\n")
 cat("-" , rep("-", 30), "\n")
-for (i in seq_along(eval_times)) { cat(sprintf("t=%2d | %.2f\n", eval_times[i], total_value[i]))
+for (i in seq_along(eval_times)) {
+  cat(sprintf("t=%2d | %.2f\n", eval_times[i], total_value[i]))
 }
 ```
 
@@ -136,34 +201,64 @@ for (i in seq_along(eval_times)) { cat(sprintf("t=%2d | %.2f\n", eval_times[i], 
 
 ```python
 """
-Green's Function for marketing mix modeling: adstock via convolution. Business context: A media planning team models the persistent brand awareness effect of TV, digital, and OOH advertising. Each channel has a different decay rate (lambda). Total awareness at any time is the sum of convolutions of each channel's spend with its Green's function.
-""" import numpy as np
+Green's Function for marketing mix modeling: adstock via convolution.
+
+Business context: A media planning team models the persistent brand awareness
+effect of TV, digital, and OOH advertising. Each channel has a different decay
+rate (lambda). Total awareness at any time is the sum of convolutions of each
+channel's spend with its Green's function.
+"""
+import numpy as np
 import pandas as pd
 from scipy.signal import lfilter
+
 NUM_WEEKS: int = 52
 RNG_SEED: int = 42
-CHANNEL_PARAMS: dict[str, dict] = { "tv": {"weekly_budget_eur": 150_000, "decay_lambda": -0.10}, "digital": {"weekly_budget_eur": 80_000, "decay_lambda": -0.40}, "ooh": {"weekly_budget_eur": 50_000, "decay_lambda": -0.15},
+CHANNEL_PARAMS: dict[str, dict] = {
+    "tv": {"weekly_budget_eur": 150_000, "decay_lambda": -0.10},
+    "digital": {"weekly_budget_eur": 80_000, "decay_lambda": -0.40},
+    "ooh": {"weekly_budget_eur": 50_000, "decay_lambda": -0.15},
 }
 
-def exponential_adstock( spend_series: np.ndarray, decay_lambda: float, num_lags: int = 52,
+
+def exponential_adstock(
+    spend_series: np.ndarray, decay_lambda: float, num_lags: int = 52,
 ) -> np.ndarray:
-    """Compute adstock via exponential Green's function convolution. Uses discrete convolution: adstock[t] = sum_{k=0}^{num_lags} spend[t-k] * exp(lambda*k) Implemented efficiently via lfilter for O(N) computation. """   # IIR filter coefficient: a[0]*y[t] = b[0]*x[t] + a[1]*y[t-1] # y[t] = x[t] + exp(lambda)*y[t-1] matches exponential kernel
-    decay_per_step = float(np.exp(decay_lambda))   # lfilter: b = [1], a = [1, -decay] →
-    y[t] = x[t] + decay*y[t-1]
+    """
+    Compute adstock via exponential Green's function convolution.
+
+    Uses discrete convolution:
+        adstock[t] = sum_{k=0}^{num_lags} spend[t-k] * exp(lambda*k)
+    Implemented efficiently via lfilter for O(N) computation.
+    """
+    # IIR filter coefficient: a[0]*y[t] = b[0]*x[t] + a[1]*y[t-1]
+    # y[t] = x[t] + exp(lambda)*y[t-1] matches exponential kernel
+    decay_per_step = float(np.exp(decay_lambda))
+    # lfilter: b = [1], a = [1, -decay] → y[t] = x[t] + decay*y[t-1]
     return lfilter([1.0], [1.0, -decay_per_step], spend_series)
+
+
 rng = np.random.default_rng(RNG_SEED)
 weeks = np.arange(NUM_WEEKS)
 channel_results = {}
 for channel_name, params in CHANNEL_PARAMS.items():
     base_spend = params["weekly_budget_eur"]
-noise = rng.normal(0, base_spend * 0.1, NUM_WEEKS)
-spend = np.maximum(base_spend + noise, 0.0)
-adstock = exponential_adstock(spend, params["decay_lambda"])
-channel_results[channel_name] = { "spend": spend, "adstock": adstock, "peak_adstock_week": int(np.argmax(adstock)), "total_spend_eur": float(spend.sum()), }
+    noise = rng.normal(0, base_spend * 0.1, NUM_WEEKS)
+    spend = np.maximum(base_spend + noise, 0.0)
+    adstock = exponential_adstock(spend, params["decay_lambda"])
+    channel_results[channel_name] = {
+        "spend": spend,
+        "adstock": adstock,
+        "peak_adstock_week": int(np.argmax(adstock)),
+        "total_spend_eur": float(spend.sum()),
+    }
+
 total_adstock = sum(res["adstock"] for res in channel_results.values())
 print("Channel Mix Model Summary:")
 for ch, res in channel_results.items():
-    print(f" {ch.upper():<10}: total spend €{res['total_spend_eur']:>12,.0f} " f"| peak adstock week {res['peak_adstock_week']:2d} " f"| lambda={CHANNEL_PARAMS[ch]['decay_lambda']:.2f}")
+    print(f" {ch.upper():<10}: total spend €{res['total_spend_eur']:>12,.0f} "
+          f"| peak adstock week {res['peak_adstock_week']:2d} "
+          f"| lambda={CHANNEL_PARAMS[ch]['decay_lambda']:.2f}")
 print(f"\nTotal awareness index range: [{total_adstock.min():.0f}, {total_adstock.max():.0f}]")
 ```
 

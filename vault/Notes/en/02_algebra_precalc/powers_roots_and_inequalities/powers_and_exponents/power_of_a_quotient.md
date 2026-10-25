@@ -120,19 +120,31 @@ cat(sprintf(" = %.10f\n", (numerator/denominator)^(-m)))
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: geometric mean of conversion rate ratio across campaigns
+import pandas as pd
+
+# Scenario: geometric mean of conversion rate ratio across campaigns
 # Each campaign has a rate ratio: clicks / impressions
-# Geometric mean of ratios over n
-periods = (ratio_1 * ratio_2 * ... * ratio_n)^(1/n)
+# Geometric mean of ratios over n periods = (ratio_1 * ratio_2 * ... * ratio_n)^(1/n)
 # For a single campaign over n periods: (p/q)^(1/n) = p^(1/n) / q^(1/n)
 np.random.seed(42)
 num_periods = 6
-campaigns = pd.DataFrame({ "campaign": ["A", "B", "C"], "total_clicks": [1200, 850, 2100], "total_impressions": [20000, 9000, 35000], "periods": [num_periods, num_periods, num_periods],
-})   # Power of a quotient: (clicks/impressions)^(1/n)
+campaigns = pd.DataFrame({
+    "campaign": ["A", "B", "C"],
+    "total_clicks": [1200, 850, 2100],
+    "total_impressions": [20000, 9000, 35000],
+    "periods": [num_periods, num_periods, num_periods],
+})
+
+# Power of a quotient: (clicks/impressions)^(1/n)
 campaigns["rate"] = campaigns["total_clicks"] / campaigns["total_impressions"]
 campaigns["geo_mean_rate_combined"] = campaigns["rate"] ** (1 / campaigns["periods"])
-campaigns["geo_mean_rate_distributed"] = ( campaigns["total_clicks"] ** (1 / campaigns["periods"]) / campaigns["total_impressions"] ** (1 / campaigns["periods"]) )
-campaigns["match"] = np.isclose( campaigns["geo_mean_rate_combined"], campaigns["geo_mean_rate_distributed"] )
+campaigns["geo_mean_rate_distributed"] = (
+    campaigns["total_clicks"] ** (1 / campaigns["periods"])
+    / campaigns["total_impressions"] ** (1 / campaigns["periods"])
+)
+campaigns["match"] = np.isclose(
+    campaigns["geo_mean_rate_combined"], campaigns["geo_mean_rate_distributed"]
+)
 print("Geometric Mean of Conversion Rate: (clicks/impressions)^(1/n)")
 print(f"Periods: {num_periods}")
 print()
@@ -146,7 +158,11 @@ print(f"\nAll match (quotient rule verified): {campaigns['match'].all()}")
 # Geometric mean of conversion rate: (clicks/impressions)^(1/n) = p^(1/n) / q^(1/n)
 set.seed(42)
 num_periods <- 6
-campaigns <- data.frame( campaign = c("A", "B", "C"), total_clicks = c(1200, 850, 2100), total_impressions = c(20000, 9000, 35000), periods = num_periods
+campaigns <- data.frame(
+  campaign = c("A", "B", "C"),
+  total_clicks = c(1200, 850, 2100),
+  total_impressions = c(20000, 9000, 35000),
+  periods = num_periods
 )
 campaigns$rate <- campaigns$total_clicks / campaigns$total_impressions
 campaigns$geo_mean_combined <- campaigns$rate^(1 / campaigns$periods)

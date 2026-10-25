@@ -119,7 +119,9 @@ cat(sprintf("\nCommon mistake: (%d+%d)^%d = %d vs %d^%d + %d^%d = %d (not equal!
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: L2 norm scaling — how norm changes when features are scaled
+import pandas as pd
+
+# Scenario: L2 norm scaling — how norm changes when features are scaled
 # || c * x ||^2 = c^2 * || x ||^2 (power of a product rule)
 np.random.seed(42)
 FEATURE_DIM = 5
@@ -129,8 +131,14 @@ scales = [0.5, 1.0, 2.0, 5.0, 10.0]
 results = []
 for c in scales:
     X_scaled = c * X
-norm_sq_direct = np.sum((X_scaled)**2, axis=1).mean()   # ||c*x||^2 norm_sq_rule = (c**2) * np.sum(X**2, axis=1).mean() # c^2 * ||x||^2
-results.append({ "scale_c": c, "norm_sq_direct": norm_sq_direct, "norm_sq_rule": norm_sq_rule, "match": np.isclose(norm_sq_direct, norm_sq_rule), })
+    norm_sq_direct = np.sum((X_scaled)**2, axis=1).mean()   # ||c*x||^2
+    norm_sq_rule = (c**2) * np.sum(X**2, axis=1).mean()     # c^2 * ||x||^2
+    results.append({
+        "scale_c": c,
+        "norm_sq_direct": norm_sq_direct,
+        "norm_sq_rule": norm_sq_rule,
+        "match": np.isclose(norm_sq_direct, norm_sq_rule),
+    })
 df = pd.DataFrame(results)
 print("L2 Norm Scaling: ||c * x||^2 = c^2 * ||x||^2")
 print("(Power of a product rule: (c * x_i)^2 = c^2 * x_i^2)")
@@ -148,7 +156,12 @@ FEATURE_DIM <- 5
 num_samples <- 100
 X <- matrix(rnorm(num_samples * FEATURE_DIM), nrow = num_samples)
 scales <- c(0.5, 1, 2, 5, 10)
-results <- lapply(scales, function(c) { X_scaled <- c * X norm_sq_direct <- mean(rowSums(X_scaled^2)) norm_sq_rule <- c^2 * mean(rowSums(X^2)) data.frame(scale_c = c, norm_sq_direct = norm_sq_direct, norm_sq_rule = norm_sq_rule, match = abs(norm_sq_direct - norm_sq_rule) < 1e-10)
+results <- lapply(scales, function(c) {
+  X_scaled <- c * X
+  norm_sq_direct <- mean(rowSums(X_scaled^2))
+  norm_sq_rule <- c^2 * mean(rowSums(X^2))
+  data.frame(scale_c = c, norm_sq_direct = norm_sq_direct, norm_sq_rule = norm_sq_rule,
+             match = abs(norm_sq_direct - norm_sq_rule) < 1e-10)
 })
 df <- do.call(rbind, results)
 cat("L2 Norm Scaling: ||c*x||^2 = c^2 * ||x||^2\n")

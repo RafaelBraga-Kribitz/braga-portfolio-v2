@@ -125,16 +125,23 @@ print(f"Zero deltas (flat): {(df['delta'] == 0).sum()}")
 ### Beginner example (R)
 
 ```r
-# Integers ℤ in R # Base R integer type covers ℤ (within machine limits)
+# Integers ℤ in R
+# Base R integer type covers ℤ (within machine limits)
 a <- 7L
 b <- -3L
 cat(sprintf("Closed under +: %d + %d = %d\n", a, b, a + b))
 cat(sprintf("Closed under -: %d - %d = %d\n", a, b, a - b))
 cat(sprintf("Closed under ×: %d × %d = %d\n", a, b, a * b))
-cat(sprintf("NOT closed /: %d / %d = %.4f (use %% %% for modulo)\n", a, b, a / b))  # Period-over-period delta
+cat(sprintf("NOT closed /: %d / %d = %.4f (use %% %% for modulo)\n", a, b, a / b))
+
+# Period-over-period delta
 set.seed(42)
-df <- data.frame( product = c("A", "B", "C", "D", "E"), revenue_m1 = sample(100L:2000L, 5L), revenue_m2 = sample(100L:2000L, 5L)
-) df$delta <- df$revenue_m2 - df$revenue_m1
+df <- data.frame(
+  product = c("A", "B", "C", "D", "E"),
+  revenue_m1 = sample(100L:2000L, 5L),
+  revenue_m2 = sample(100L:2000L, 5L)
+)
+df$delta <- df$revenue_m2 - df$revenue_m1
 df$direction <- ifelse(df$delta > 0L, "growth", ifelse(df$delta == 0L, "flat", "decline"))
 cat("\nPeriod-over-Period Revenue Delta:\n")
 print(df)
@@ -145,37 +152,61 @@ cat(sprintf("\nGrowth: %d | Flat: %d | Decline: %d\n", sum(df$delta > 0L), sum(d
 
 ```python
 import pandas as pd
-import numpy as np   # Scenario: signed integer metrics in a time-series KPI report
+import numpy as np
+
+# Scenario: signed integer metrics in a time-series KPI report
 # Key insight: change metrics live in ℤ — they must allow negatives
 np.random.seed(42)
 N_DAYS = 90
 dates = pd.date_range("2024-01-01", periods=N_DAYS, freq="D")
-df = pd.DataFrame({ "date": dates, "sessions": np.random.randint(100, 5000, N_DAYS), "revenue": np.random.randint(500, 20_000, N_DAYS), "errors": np.random.randint(0, 100, N_DAYS),
+df = pd.DataFrame({
+    "date": dates,
+    "sessions": np.random.randint(100, 5000, N_DAYS),
+    "revenue": np.random.randint(500, 20_000, N_DAYS),
+    "errors": np.random.randint(0, 100, N_DAYS),
 })
 
+
 def compute_deltas(df: pd.DataFrame, columns: list[str]) -> pd.DataFrame:
-    """ Compute day-over-day integer deltas for specified columns. Args: df: DataFrame sorted by date ascending. columns: Numeric columns to diff. Returns: DataFrame with new delta columns (dtype int64, ℤ). """
+    """
+    Compute day-over-day integer deltas for specified columns.
+
+    Args:
+        df: DataFrame sorted by date ascending.
+        columns: Numeric columns to diff.
+
+    Returns:
+        DataFrame with new delta columns (dtype int64, ℤ).
+    """
     result = df.copy()
     for col in columns:
         delta_col = f"{col}_delta"
-    result[delta_col] = result[col].diff().fillna(0).astype("int64")
+        result[delta_col] = result[col].diff().fillna(0).astype("int64")
     return result
-df = compute_deltas(df, columns=["sessions", "revenue", "errors"])   # Verify integer dtype (ℤ semantics) and allow negatives
+
+
+df = compute_deltas(df, columns=["sessions", "revenue", "errors"])
+
+# Verify integer dtype (ℤ semantics) and allow negatives
 for col in ["sessions_delta", "revenue_delta", "errors_delta"]:
     assert df[col].dtype == "int64", f"{col} must be int64"
+
 print("Daily KPI Report with Integer Deltas (ℤ)")
 print("=" * 50)
 print(f" Shape: {df.shape}")
-print(f" Delta dtypes: {df'sessions_delta','revenue_delta','errors_delta'.dtypes.to_dict()}")   # Summary: range and sign distribution
+print(f" Delta dtypes: {df[['sessions_delta', 'revenue_delta', 'errors_delta']].dtypes.to_dict()}")
+
+# Summary: range and sign distribution
 for col in ["sessions_delta", "revenue_delta", "errors_delta"]:
     pos = (df[col] > 0).sum()
-neg = (df[col] < 0).sum()
-zero = (df[col] == 0).sum()
-print(f"\n {col}:")
-print(f" Range: [{df[col].min()}, {df[col].max()}] ← spans ℤ (negative to positive)[[")
-print(f"]] Up / Flat / Down: {pos} / {zero} / {neg}")
+    neg = (df[col] < 0).sum()
+    zero = (df[col] == 0).sum()
+    print(f"\n {col}:")
+    print(f" Range: [{df[col].min()}, {df[col].max()}] ← spans ℤ (negative to positive)")
+    print(f" Up / Flat / Down: {pos} / {zero} / {neg}")
+
 print("\nSample (last 5 days):")
-print(df.tail(5)[["date", "sessions", "sessions_delta", "revenue", "revenue_delta"]] .to_string(index=False))
+print(df.tail(5)[["date", "sessions", "sessions_delta", "revenue", "revenue_delta"]].to_string(index=False))
 ```
 
 ### Professional example (R)

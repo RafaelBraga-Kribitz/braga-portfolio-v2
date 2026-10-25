@@ -79,26 +79,26 @@ $E[Y] = 2 \times E[X] - 3 = 2 \times 3.5 - 3 = 7 - 3 = 4$
 
 ```python
 import numpy as np
-from scipy.stats import binom   # Commission model: agent gets 20% of deal value, minus $500 overhead
+from scipy.stats import binom
+
+# Commission model: agent gets 20% of deal value, minus $500 overhead
 n_deals = 10
 p_close = 0.3
 avg_deal_value = 5000
-E_deals = n_deals * p_close   #
-E[Binomial(10, 0.3)] = 3
-a = avg_deal_value * 0.20   # commission rate
-b = -500   # overhead cost
+E_deals = n_deals * p_close  # E[Binomial(10, 0.3)] = 3
+a = avg_deal_value * 0.20    # commission rate
+b = -500                     # overhead cost
 E_agent_revenue = a * E_deals + b
-print(f"E[agent revenue] = ${E_agent_revenue:,.2f}")   # $2,500
+print(f"E[agent revenue] = ${E_agent_revenue:,.2f}")  # $2,500
 ```
 
 ### Beginner example (R)
 
 ```r
 n_deals <- 10; p_close <- 0.3; avg_deal <- 5000
-e_deals <- n_deals * p_close  #
-E[Binom(10, 0.3)] = 3
+e_deals <- n_deals * p_close  # E[Binom(10, 0.3)] = 3
 e_revenue <- (avg_deal * 0.20) * e_deals + (-500)
-cat(sprintf("E[agent revenue] = $%,.2f\n", e_revenue))
+cat(sprintf("E[agent revenue] = $%s\n", formatC(e_revenue, format = "f", digits = 2, big.mark = ",")))
 ```
 
 ### Professional example (Python)
@@ -108,12 +108,31 @@ import numpy as np
 from scipy.stats import binom, norm
 
 def portfolio_expected_return( asset_weights: np.ndarray, expected_returns: np.ndarray, risk_free_rate: float = 0.02 ) -> dict[str, float]:
-    """Compute expected portfolio return using linearity of expectation. E[portfolio] = sum_i(w_i * E[r_i]) = w^T * mu. Uses linearity: no independence assumption needed. Args: asset_weights: w_i, portfolio weights (sum to 1). expected_returns: E[r_i], expected return per asset. risk_free_rate: Risk-free rate for excess return. Returns: Dict with portfolio expected return and excess return. """
+    """Compute expected portfolio return using linearity of expectation.
+
+    E[portfolio] = sum_i(w_i * E[r_i]) = w^T * mu.
+    Uses linearity: no independence assumption needed.
+
+    Args:
+        asset_weights: w_i, portfolio weights (sum to 1).
+        expected_returns: E[r_i], expected return per asset.
+        risk_free_rate: Risk-free rate for excess return.
+
+    Returns:
+        Dict with portfolio expected return and excess return.
+    """
     if abs(asset_weights.sum() - 1.0) > 1e-6:
         raise ValueError(f"Weights sum to {asset_weights.sum():.4f}, must equal 1")
     expected_portfolio = float(np.dot(asset_weights, expected_returns))
     excess_return = expected_portfolio - risk_free_rate
-    return { "expected_return": expected_portfolio, "excess_return": excess_return, "sharpe_numerator": excess_return, }   # 4-asset portfolio
+    return {
+        "expected_return": expected_portfolio,
+        "excess_return": excess_return,
+        "sharpe_numerator": excess_return,
+    }
+
+
+# 4-asset portfolio
 weights = np.array([0.40, 0.30, 0.20, 0.10])
 expected_returns = np.array([0.12, 0.08, 0.15, 0.05])
 result = portfolio_expected_return(weights, expected_returns)

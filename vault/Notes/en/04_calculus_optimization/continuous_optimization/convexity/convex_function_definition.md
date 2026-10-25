@@ -103,43 +103,57 @@ $20 \ge 16$. $\checkmark$
 ```python
 import numpy as np
 
-def is_convex_chord_test( func, x_val: float, y_val: float, t_val: float, tol: float = 1e-9,
+def is_convex_chord_test(
+    func,
+    x_val: float,
+    y_val: float,
+    t_val: float,
+    tol: float = 1e-9,
 ) -> bool:
     """Check the convexity chord inequality at specific points."""
     blend_point = t_val * x_val + (1 - t_val) * y_val
     lhs = func(blend_point)
     rhs = t_val * func(x_val) + (1 - t_val) * func(y_val)
-    return lhs <= rhs + tol   # Test f(x) = x^2 (convex)
+    return lhs <= rhs + tol
 
+
+# Test f(x) = x^2 (convex)
 def quadratic(x: float) -> float:
-    return x**2   # Test f(x) = -x^2 (concave, NOT convex)
+    return x**2
 
+
+# Test f(x) = -x^2 (concave, NOT convex)
 def neg_quadratic(x: float) -> float:
     return -(x**2)
+
+
 test_pairs = [(0, 4, 0.5), (1, 5, 0.3), (-2, 3, 0.7)]
 print("Convexity chord test:")
 for x, y, t in test_pairs:
     result_quad = is_convex_chord_test(quadratic, x, y, t)
-result_neg = is_convex_chord_test(neg_quadratic, x, y, t)
-print(f" x={x}, y={y}, t={t}")
-print(f" x^2 passes chord test: {result_quad}")
-print(f" -x^2 passes chord test: {result_neg}")
+    result_neg = is_convex_chord_test(neg_quadratic, x, y, t)
+    print(f" x={x}, y={y}, t={t}")
+    print(f" x^2 passes chord test: {result_quad}")
+    print(f" -x^2 passes chord test: {result_neg}")
 ```
 
 ### Beginner example (R)
 
 ```r
 # Convex function chord test: f(tx + (1-t)y) <= tf(x) + (1-t)f(y)
-is_convex_chord_test <- function(f, x_val, y_val, t_val, tol = 1e-9) { blend_point <- t_val * x_val + (1 - t_val) * y_val
+is_convex_chord_test <- function(f, x_val, y_val, t_val, tol = 1e-9) {
+  blend_point <- t_val * x_val + (1 - t_val) * y_val
   lhs <- f(blend_point)
-  rhs <- t_val * f(x_val) + (1 - t_val) * f(y_val) lhs <= rhs + tol
+  rhs <- t_val * f(x_val) + (1 - t_val) * f(y_val)
+  lhs <= rhs + tol
 }
 quadratic <- function(x) x^2
 neg_quadratic <- function(x) -(x^2)
 log_loss_f <- function(x) log(1 + exp(-x))  # log-loss (convex)
 test_cases <- list(c(0, 4, 0.5), c(1, 5, 0.3), c(-2, 3, 0.7))
 cat("Chord test results:\n")
-for (tc in test_cases) { x <- tc[1]; y <- tc[2]; t <- tc[3]
+for (tc in test_cases) {
+  x <- tc[1]; y <- tc[2]; t <- tc[3]
   cat(sprintf(" x=%g, y=%g, t=%g:\n", x, y, t))
   cat(sprintf(" x^2 convex: %s\n", is_convex_chord_test(quadratic, x, y, t)))
   cat(sprintf(" -x^2 convex: %s\n", is_convex_chord_test(neg_quadratic, x, y, t)))
@@ -152,19 +166,22 @@ for (tc in test_cases) { x <- tc[1]; y <- tc[2]; t <- tc[3]
 ```python
 import numpy as np
 from scipy.optimize import minimize
-np.random.seed(42)   # -- Verify convexity of a custom loss and optimize it --------------------------
+np.random.seed(42)
+
+# -- Verify convexity of a custom loss and optimize it --------------------------
 # Business case: fit a robust pricing model using a convex composite loss
-# L(y_hat, y) = w1 * (y - y_hat)^2 + w2 *
-max(0, y_hat - y)
+# L(y_hat, y) = w1 * (y - y_hat)^2 + w2 * max(0, y_hat - y)
 # (MSE penalizes all errors; hinge term adds extra cost for over-predictions)
 W1 = 1.0   # weight for squared error
 W2 = 2.0   # weight for over-prediction penalty (asymmetric cost)
+
 
 def composite_loss(y_hat: float, y: float) -> float:
     """Custom convex composite loss: MSE + over-prediction hinge."""
     squared_term = W1 * (y - y_hat) ** 2
     hinge_term = W2 * max(0.0, y_hat - y)
     return squared_term + hinge_term
+
 
 def verify_convexity_in_y_hat(y_true: float, n_checks: int = 200) -> bool:
     """Numerically verify chord inequality over a grid of (x, y_hat, t) triples."""
@@ -174,26 +191,36 @@ def verify_convexity_in_y_hat(y_true: float, n_checks: int = 200) -> bool:
         for t in t_grid:
             for y_h in y_hat_grid:
                 blend = t * x_h + (1 - t) * y_h
-            lhs = composite_loss(blend, y_true)
-        rhs = t * composite_loss(x_h, y_true) + (1 - t) * composite_loss(y_h, y_true)
-    if lhs > rhs + 1e-8:
-        return False
+                lhs = composite_loss(blend, y_true)
+                rhs = t * composite_loss(x_h, y_true) + (1 - t) * composite_loss(y_h, y_true)
+                if lhs > rhs + 1e-8:
+                    return False
     return True
+
+
 y_observed = 10.0
-print(f"Composite loss convex in y_hat? {verify_convexity_in_y_hat(y_observed)}")   # Optimize: find y_hat* that minimizes expected composite loss over training data
+print(f"Composite loss convex in y_hat? {verify_convexity_in_y_hat(y_observed)}")
+
+# Optimize: find y_hat* that minimizes expected composite loss over training data
 np.random.seed(42)
 y_true_samples = 10.0 + np.random.randn(100) * 2.0
+
 
 def mean_composite_loss(y_hat_arr: np.ndarray) -> float:
     y_hat = y_hat_arr[0]
     return float(np.mean([composite_loss(y_hat, y) for y in y_true_samples]))
+
+
 result = minimize(mean_composite_loss, x0=[8.0], method="Nelder-Mead")
-y_hat_optimal = result.x[0]   # Analytical comparison: MSE-only optimum is the mean
+y_hat_optimal = result.x[0]
+
+# Analytical comparison: MSE-only optimum is the mean
 mean_y = y_true_samples.mean()
 print(f"\nTrue mean of y: {mean_y:.4f}")
 print(f"MSE-only optimum (mean): {mean_y:.4f}")
 print(f"Composite loss optimum: {y_hat_optimal:.4f}")
-print("(Composite optimum < mean: extra hinge cost pulls estimate down," " avoiding over-predictions)")
+print("(Composite optimum < mean: extra hinge cost pulls estimate down,"
+      " avoiding over-predictions)")
 ```
 
 ---

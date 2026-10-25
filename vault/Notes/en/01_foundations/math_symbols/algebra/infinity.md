@@ -97,20 +97,26 @@ $\lim_{n \to \infty} \frac{1}{n} = 0$. No matter how large $n$ is, $1/n > 0$. Bu
 ### Beginner example (Python)
 
 ```python
-import math   # Python's representation of infinity
+import math
+
+# Python's representation of infinity
 pos_inf = float('inf')
 neg_inf = float('-inf')
-print(pos_inf)   # inf
-print(neg_inf)   # -inf
+print(pos_inf)           # inf
+print(neg_inf)           # -inf
 print(pos_inf > 1e308)   # True: larger than the largest float
-print(1 / pos_inf)   # 0.0
-print(pos_inf + 100)   # inf # Sentinel pattern: find the minimum value in a list
+print(1 / pos_inf)       # 0.0
+print(pos_inf + 100)     # inf
+
+# Sentinel pattern: find the minimum value in a list
 values = [3.5, 1.2, 7.8, 2.1, 0.9]
-best = float('inf')   # start at positive infinity
+best = float('inf')  # start at positive infinity
 for val in values:
     if val < best:
         best = val
-    print(f"Minimum: {best}")   # 0.9 # Limit demonstration
+print(f"Minimum: {best}")  # 0.9
+
+# Limit demonstration
 print("\n1/n approaches 0 as n grows:")
 for n in [1, 10, 100, 1_000, 10_000]:
     print(f" 1/{n} = {1/n:.8f}")
@@ -126,12 +132,13 @@ print(pos_inf)  # Inf
 print(neg_inf)  # -Inf
 print(pos_inf > 1e308)  # TRUE
 print(1 / pos_inf)  # 0
-print(is.infinite(Inf))  # TRUE # Sentinel pattern: initialize
-best_score = -Inf for maximization
+print(is.infinite(Inf))  # TRUE
+
+# Sentinel pattern: initialize best_score = -Inf for maximization
 scores <- c(0.85, 0.92, 0.78, 0.96, 0.88)
 best_score <- -Inf
-for (score in scores) { if (score > best_score)
-  best_score <- score
+for (score in scores) {
+  if (score > best_score) best_score <- score
 }
 cat("Best score:", best_score, "\n")  # 0.96
 ```
@@ -140,14 +147,20 @@ cat("Best score:", best_score, "\n")  # 0.96
 
 ```python
 import numpy as np
-from scipy import stats   # Scenario: integrating a probability density over an infinite domain
+from scipy import integrate, stats
+
+# Scenario: integrating a probability density over an infinite domain
 # Normal distribution PDF integrates to 1 over (-inf, +inf)
 mu = 0.0
 sigma = 1.0
-normal_dist = stats.norm(loc=mu, scale=sigma)   # Numerical integration over a "practically infinite" range
+normal_dist = stats.norm(loc=mu, scale=sigma)
+
+# Numerical integration over an infinite range
 # True integral is from -inf to +inf = 1.0
-result, error = stats.norm.expect(func=lambda x: 1, loc=mu, scale=sigma)
-print(f"Integral of N(0,1) PDF over (-inf, +inf) = {result:.6f}")   # 1.000000 # Practical: use infinity in clipping / outlier removal bounds
+result, error = integrate.quad(normal_dist.pdf, -np.inf, np.inf)
+print(f"Integral of N(0,1) PDF over (-inf, +inf) = {result:.6f}")  # 1.000000
+
+# Practical: use infinity in clipping / outlier removal bounds
 # Keep values within [mu - 3*sigma, mu + 3*sigma] (3-sigma rule)
 LOWER_BOUND = mu - 3 * sigma   # = -3.0
 UPPER_BOUND = mu + 3 * sigma   # = +3.0
@@ -162,9 +175,12 @@ print(f"Values outside [{LOWER_BOUND}, {UPPER_BOUND}]: {outside} ({outside/len(d
 ### Professional example (R)
 
 ```r
-# Scenario: integral of N(0,1) PDF over (-inf, +inf) = 1 # integrate() uses finite bounds; use wide range to approximate (-Inf, Inf)
+# Scenario: integral of N(0,1) PDF over (-inf, +inf) = 1
+# integrate() accepts infinite bounds directly
 result <- integrate(function(x) dnorm(x, 0, 1), -Inf, Inf)
-cat(sprintf("Integral of N(0,1) PDF over (-inf, +inf) = %.6f\n", result$value))  # Practical: clip to 3-sigma bounds
+cat(sprintf("Integral of N(0,1) PDF over (-inf, +inf) = %.6f\n", result$value))
+
+# Practical: clip to 3-sigma bounds
 mu <- 0
 sigma <- 1
 LOWER_BOUND <- mu - 3 * sigma

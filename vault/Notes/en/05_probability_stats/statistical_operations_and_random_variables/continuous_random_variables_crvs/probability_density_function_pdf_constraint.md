@@ -108,13 +108,44 @@ import numpy as np
 from scipy.integrate import quad
 from scipy.stats import gaussian_kde
 
-def validate_pdf( pdf_func: callable, support_lower: float = -np.inf, support_upper: float = np.inf, tolerance: float = 1e-4 ) -> dict[str, bool | float]:
-    """Validate that a function satisfies PDF axioms. Args: pdf_func: Candidate PDF function f(x). support_lower: Lower bound of support. support_upper: Upper bound of support. tolerance: Tolerance for normalization check. Returns: Dict with normalization integral, non-negativity check, and validity. """
-    integral, int_error = quad(pdf_func, support_lower, support_upper, limit=200)   # Sample 1000 points to check non-negativity
-    check_points = np.linspace( max(support_lower, -100), min(support_upper, 100), 1000 )
+def validate_pdf(
+    pdf_func: callable,
+    support_lower: float = -np.inf,
+    support_upper: float = np.inf,
+    tolerance: float = 1e-4,
+) -> dict[str, bool | float]:
+    """
+    Validate that a function satisfies PDF axioms.
+
+    Args:
+        pdf_func: Candidate PDF function f(x).
+        support_lower: Lower bound of support.
+        support_upper: Upper bound of support.
+        tolerance: Tolerance for normalization check.
+
+    Returns:
+        Dict with normalization integral, non-negativity check, and validity.
+    """
+    # quad needs a scalar; gaussian_kde returns a length-1 array for a scalar x
+    integral, int_error = quad(
+        lambda x: np.asarray(pdf_func(x)).item(), support_lower, support_upper, limit=200
+    )
+    # Sample 1000 points to check non-negativity
+    check_points = np.linspace(
+        max(support_lower, -100), min(support_upper, 100), 1000
+    )
     all_nonneg = bool(np.all(pdf_func(check_points) >= -1e-10))
     normalized = abs(integral - 1.0) < tolerance
-    return { "integral": integral, "integral_error": int_error, "all_nonneg": all_nonneg, "normalized": normalized, "valid_pdf": all_nonneg and normalized, }   # Test KDE density
+    return {
+        "integral": integral,
+        "integral_error": int_error,
+        "all_nonneg": all_nonneg,
+        "normalized": normalized,
+        "valid_pdf": all_nonneg and normalized,
+    }
+
+
+# Test KDE density
 rng = np.random.default_rng(seed=42)
 sample_data = rng.lognormal(3, 1, 500)
 kde = gaussian_kde(sample_data)

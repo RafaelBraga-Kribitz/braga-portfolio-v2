@@ -97,23 +97,40 @@ $\|v\|^2 = 4+0+9 = 13$. $\|R_3 v\|^2 = 1+3+9 = 13$. $\checkmark$
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # -- Rotation matrix R3(theta) around the z-axis (yaw) ---
+import numpy as np
+
+# -- Rotation matrix R3(theta) around the z-axis (yaw) ---
+
 
 def rotation_z(theta_deg: float) -> np.ndarray:
     """Return 3x3 rotation matrix for rotation around z-axis by theta_deg degrees."""
     theta = np.radians(theta_deg)
     c, s = np.cos(theta), np.sin(theta)
-    return np.array([ [ c, -s, 0.0], [ s, c, 0.0], [0.0, 0.0, 1.0], ])   # Apply rotation to several test vectors
-test_vectors = [ np.array([1.0, 0.0, 0.0]), np.array([0.0, 1.0, 0.0]), np.array([1.0, 1.0, 3.0]),
+    return np.array([
+        [ c, -s, 0.0],
+        [ s,  c, 0.0],
+        [0.0, 0.0, 1.0],
+    ])
+
+
+# Apply rotation to several test vectors
+test_vectors = [
+    np.array([1.0, 0.0, 0.0]),
+    np.array([0.0, 1.0, 0.0]),
+    np.array([1.0, 1.0, 3.0]),
 ]
 for theta in [45, 90, 180]:
     R3 = rotation_z(theta)
-print(f"\ntheta = {theta}°:")
-for v in test_vectors:
-    v_rot = R3 @ v
-print(f" {v} -> {v_rot.round(4)}")   # Show embedding of 2D rotation
+    print(f"\ntheta = {theta}°:")
+    for v in test_vectors:
+        v_rot = R3 @ v
+        print(f" {v} -> {v_rot.round(4)}")
+
+# Show embedding of 2D rotation
 print(f"\n2D rotation block (top-left 2x2 of R3(30)):")
-print(rotation_z(30)[:2, :2].round(4))   # Verify orthogonality and determinant
+print(rotation_z(30)[:2, :2].round(4))
+
+# Verify orthogonality and determinant
 R3 = rotation_z(37)
 print(f"\nOrthogonal: {np.allclose(R3.T @ R3, np.eye(3))}")
 print(f"det = 1: {np.isclose(np.linalg.det(R3), 1.0)}")
@@ -123,10 +140,13 @@ print(f"det = 1: {np.isclose(np.linalg.det(R3), 1.0)}")
 
 ```r
 # -- Rotation around z-axis ---
-rotation_z <- function(theta_deg) { t <- theta_deg * pi / 180 matrix(c(cos(t), sin(t), 0, -sin(t), cos(t), 0, 0, 0, 1), nrow=3, ncol=3, byrow=TRUE)
+rotation_z <- function(theta_deg) {
+  t <- theta_deg * pi / 180
+  matrix(c(cos(t), sin(t), 0, -sin(t), cos(t), 0, 0, 0, 1), nrow=3, ncol=3, byrow=TRUE)
 }
 v <- c(1, 0, 0)
-for (angle in c(0, 45, 90, 180)) { R3 <- rotation_z(angle)
+for (angle in c(0, 45, 90, 180)) {
+  R3 <- rotation_z(angle)
   v_rot <- R3 %*% v
   cat(sprintf("theta=%d: (%.4f, %.4f, %.4f)\n", angle, v_rot[1], v_rot[2], v_rot[3]))
 }
@@ -137,27 +157,47 @@ for (angle in c(0, 45, 90, 180)) { R3 <- rotation_z(angle)
 ```python
 import numpy as np
 import pandas as pd
-np.random.seed(42)   # -- Business scenario: yaw augmentation for LiDAR point clouds ---
+np.random.seed(42)
+
+# -- Business scenario: yaw augmentation for LiDAR point clouds ---
 # Rotate top-down LiDAR points around z-axis to create orientation-augmented data.
+
 
 def rotation_z(theta_deg: float) -> np.ndarray:
     """3x3 rotation matrix around z-axis."""
     t = np.radians(theta_deg)
     c, s = np.cos(t), np.sin(t)
-    return np.array([[c,-s,0],[s,c,0],[0,0,1]])
+    return np.array([[c, -s, 0], [s, c, 0], [0, 0, 1]])
+
+
 N_POINTS = 300
-YAW_ANGLES = [0, 45, 90, 135, 180, 225, 270, 315]   # 8 augmented orientations # Simulated top-down LiDAR: mostly horizontal plane
-point_cloud = np.column_stack([ np.random.uniform(-5, 5, N_POINTS), np.random.uniform(-5, 5, N_POINTS), np.random.exponential(0.2, N_POINTS),   # small z
-    (mostly flat) ])
+YAW_ANGLES = [0, 45, 90, 135, 180, 225, 270, 315]  # 8 augmented orientations
+
+# Simulated top-down LiDAR: mostly horizontal plane
+point_cloud = np.column_stack([
+    np.random.uniform(-5, 5, N_POINTS),
+    np.random.uniform(-5, 5, N_POINTS),
+    np.random.exponential(0.2, N_POINTS),  # small z (mostly flat)
+])
 results = []
 for yaw in YAW_ANGLES:
     R3 = rotation_z(yaw)
-pts_rot = point_cloud @ R3.T   # Verify z-coordinate unchanged (within float precision)
-z_preserved = np.allclose(point_cloud[:, 2], pts_rot[:, 2])   # Verify distances from origin preserved
-orig_dists = np.linalg.norm(point_cloud, axis=1)
-rot_dists = np.linalg.norm(pts_rot, axis=1)
-dist_ok = np.allclose(orig_dists, rot_dists)
-results.append({ "yaw_deg": yaw, "z_unchanged": z_preserved, "dist_preserved": dist_ok, "mean_x_rot": round(pts_rot[:, 0].mean(), 4), "mean_y_rot": round(pts_rot[:, 1].mean(), 4), })
+    pts_rot = point_cloud @ R3.T
+
+    # Verify z-coordinate unchanged (within float precision)
+    z_preserved = np.allclose(point_cloud[:, 2], pts_rot[:, 2])
+
+    # Verify distances from origin preserved
+    orig_dists = np.linalg.norm(point_cloud, axis=1)
+    rot_dists = np.linalg.norm(pts_rot, axis=1)
+    dist_ok = np.allclose(orig_dists, rot_dists)
+    results.append({
+        "yaw_deg": yaw,
+        "z_unchanged": z_preserved,
+        "dist_preserved": dist_ok,
+        "mean_x_rot": round(pts_rot[:, 0].mean(), 4),
+        "mean_y_rot": round(pts_rot[:, 1].mean(), 4),
+    })
 df = pd.DataFrame(results)
 print("Yaw augmentation (rotation around z-axis):")
 print(df.to_string(index=False))

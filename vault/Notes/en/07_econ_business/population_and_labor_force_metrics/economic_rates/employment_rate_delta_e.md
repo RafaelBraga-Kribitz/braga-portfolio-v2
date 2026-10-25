@@ -9,7 +9,11 @@ tags:
 
 Employment Rate ($\Delta E\%$)
 
-# $\text{Employment Rate}_t = \left(\frac{E_t}{WAP_t}\right)\times 100,\quad \Delta E\% = \text{Employment Rate}_t - \text{Employment Rate}_{t-1}$ We are working on the employment rate, defined as $\text{Employment Rate}_t = \left(\frac{E_t}{WAP_t}\right)\times 100$, where $E_t$ is the number of employed people and $WAP_t$ is the working-age population in period $t$. When the focus is change, we use $\Delta E\% = \text{Employment Rate}_t - \text{Employment Rate}_{t-1}$ for percentage-point change across periods. The setting is labor market measurement under ILO/OECD-style definitions, where the denominator is the working-age population and the metric captures the share of working-age people who are employed.
+$$
+\text{Employment Rate}_t = \left(\frac{E_t}{WAP_t}\right)\times 100,\quad \Delta E\% = \text{Employment Rate}_t - \text{Employment Rate}_{t-1}
+$$
+
+We are working on the employment rate, defined as $\text{Employment Rate}_t = \left(\frac{E_t}{WAP_t}\right)\times 100$, where $E_t$ is the number of employed people and $WAP_t$ is the working-age population in period $t$. When the focus is change, we use $\Delta E\% = \text{Employment Rate}_t - \text{Employment Rate}_{t-1}$ for percentage-point change across periods. The setting is labor market measurement under ILO/OECD-style definitions, where the denominator is the working-age population and the metric captures the share of working-age people who are employed.
 
 ## Deep Breakdown
 

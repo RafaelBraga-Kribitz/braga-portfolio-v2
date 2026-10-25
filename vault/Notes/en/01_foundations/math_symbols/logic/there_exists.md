@@ -40,7 +40,7 @@ $\exists x \in S: P(x)$ is proven by exhibiting one concrete element (called a *
 
 ### Example in a business
 
-Data pipeline assertion: "if $\exists$ row $r$ in the staging table such that $r.\text{user_id}$ is NULL, the pipeline must halt and alert." Translated into pandas: `assert not df["user_id"].isna().any()`. The `.any()` method evaluates $\exists$. In SQL: `SELECT * FROM orders WHERE EXISTS (SELECT 1 FROM refunds WHERE refunds.order_id = orders.id)`. This retrieves all orders that have at least one refund record: exactly $\exists$.
+Data pipeline assertion: "if $\exists$ row $r$ in the staging table such that $r.\text{user\_id}$ is NULL, the pipeline must halt and alert." Translated into pandas: `assert not df["user_id"].isna().any()`. The `.any()` method evaluates $\exists$. In SQL: `SELECT * FROM orders WHERE EXISTS (SELECT 1 FROM refunds WHERE refunds.order_id = orders.id)`. This retrieves all orders that have at least one refund record: exactly $\exists$.
 
 ## The formula, piece by piece
 

@@ -3,6 +3,7 @@ publish: true
 date: '2026-04-16'
 tags:
 - probability-statistics
+slug: expected-value-common-continuous-distributions
 ---
 
 # Expected Value

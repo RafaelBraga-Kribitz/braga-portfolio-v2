@@ -121,7 +121,9 @@ proj_vector <- scalar_proj * b
 residual <- x - proj_vector
 cat(sprintf("lambda = %.4f\n", scalar_proj))
 cat(sprintf("pi_U(x) = (%g, %g)\n", proj_vector[1], proj_vector[2]))
-cat(sprintf("b^T residual = %.10f\n", sum(b * residual)))  # Projection matrix
+cat(sprintf("b^T residual = %.10f\n", sum(b * residual)))
+
+# Projection matrix
 P_b <- outer(b, b) / sum(b * b)
 cat("Projection matrix P_b:\n")
 print(round(P_b, 4))
@@ -133,24 +135,36 @@ print(round(P_b, 4))
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
-np.random.seed(42)   # -- Business scenario: project customer data onto first PCA direction ---
+np.random.seed(42)
+
+# -- Business scenario: project customer data onto first PCA direction ---
 # Each customer has 3 RFM features. Project each onto the first PCA direction.
 N_CUSTOMERS = 200
-rfm_raw = np.column_stack([ np.random.exponential(30, N_CUSTOMERS),   # recency
-    (days since last purchase) np.random.poisson(10, N_CUSTOMERS),   # frequency
-    (purchases/month) np.random.lognormal(4, 1, N_CUSTOMERS),   # monetary
-    (spend in euros) ])
+rfm_raw = np.column_stack([
+    np.random.exponential(30, N_CUSTOMERS),   # recency (days since last purchase)
+    np.random.poisson(10, N_CUSTOMERS),       # frequency (purchases/month)
+    np.random.lognormal(4, 1, N_CUSTOMERS),   # monetary (spend in euros)
+])
 scaler = StandardScaler()
-rfm_scaled = scaler.fit_transform(rfm_raw)   # First PCA direction: eigenvector of largest eigenvalue of covariance matrix
+rfm_scaled = scaler.fit_transform(rfm_raw)
+
+# First PCA direction: eigenvector of largest eigenvalue of covariance matrix
 cov_matrix = np.cov(rfm_scaled.T)
 eigenvalues, eigenvectors = np.linalg.eigh(cov_matrix)
-b_first_pc = eigenvectors[:, -1]   # largest eigenvalue direction # Project each customer onto this 1D subspace
+b_first_pc = eigenvectors[:, -1]   # largest eigenvalue direction
+
+# Project each customer onto this 1D subspace
 scalar_scores = rfm_scaled @ b_first_pc / np.dot(b_first_pc, b_first_pc)
-proj_vectors = np.outer(scalar_scores, b_first_pc)   # Explained variance: ||pi_U(x)||^2 / ||x||^2
+proj_vectors = np.outer(scalar_scores, b_first_pc)
+
+# Explained variance: ||pi_U(x)||^2 / ||x||^2
 proj_norms_sq = np.sum(proj_vectors**2, axis=1)
 orig_norms_sq = np.sum(rfm_scaled**2, axis=1)
 explained_ratio = proj_norms_sq / orig_norms_sq
-results = pd.DataFrame({ "customer": range(N_CUSTOMERS), "pc1_score": scalar_scores.round(3), "explained_ratio": explained_ratio.round(3),
+results = pd.DataFrame({
+    "customer": range(N_CUSTOMERS),
+    "pc1_score": scalar_scores.round(3),
+    "explained_ratio": explained_ratio.round(3),
 })
 print(f"First PCA direction b: {b_first_pc.round(4)}")
 print(f"\nMean explained variance (1D projection): {explained_ratio.mean():.3f}")

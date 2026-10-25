@@ -90,9 +90,13 @@ If the model had been certain: $q = [0,1,0]$ then $H(p,q) = -\ln(1) = 0$ (perfec
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # True one-hot labels and model softmax predictions
+import numpy as np
+
+# True one-hot labels and model softmax predictions
 true_labels = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
-predictions = np.array([[0.8, 0.1, 0.1], [0.2, 0.7, 0.1], [0.1, 0.2, 0.7]])   # Cross-entropy per sample (natural log = nats)
+predictions = np.array([[0.8, 0.1, 0.1], [0.2, 0.7, 0.1], [0.1, 0.2, 0.7]])
+
+# Cross-entropy per sample (natural log = nats)
 epsilon = 1e-9
 log_preds = np.log(np.clip(predictions, epsilon, 1.0))
 per_sample_ce = -np.sum(true_labels * log_preds, axis=1)
@@ -104,7 +108,9 @@ print("Mean cross-entropy loss: ", per_sample_ce.mean().round(4))
 
 ```r
 # Binary cross-entropy for a single prediction
-binary_cross_entropy <- function(y_true, y_pred, epsilon = 1e-9) { y_pred_clipped <- pmax(pmin(y_pred, 1 - epsilon), epsilon) -(y_true * log(y_pred_clipped) + (1 - y_true) * log(1 - y_pred_clipped))
+binary_cross_entropy <- function(y_true, y_pred, epsilon = 1e-9) {
+  y_pred_clipped <- pmax(pmin(y_pred, 1 - epsilon), epsilon)
+  -(y_true * log(y_pred_clipped) + (1 - y_true) * log(1 - y_pred_clipped))
 }
 y_true_vec <- c(1, 0, 1, 1, 0)
 y_pred_vec <- c(0.9, 0.2, 0.8, 0.6, 0.4)
@@ -116,12 +122,15 @@ cat("Mean BCE loss: ", round(mean(losses), 4), "\n")
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
 import pandas as pd
-EPSILON = 1e-9   # numerical stability floor
 
-def categorical_cross_entropy( y_true: np.ndarray, y_pred: np.ndarray,
+EPSILON = 1e-9  # numerical stability floor
+
+
+def categorical_cross_entropy(
+    y_true: np.ndarray,
+    y_pred: np.ndarray,
 ) -> np.ndarray:
     # Per-sample categorical cross-entropy loss (nats).
     # y_true: (n_samples, n_classes) one-hot encoded
@@ -129,30 +138,48 @@ def categorical_cross_entropy( y_true: np.ndarray, y_pred: np.ndarray,
     log_probs = np.log(np.clip(y_pred, EPSILON, 1.0))
     return -np.sum(y_true * log_probs, axis=1)
 
-def binary_cross_entropy( y_true: np.ndarray, y_pred: np.ndarray,
+
+def binary_cross_entropy(
+    y_true: np.ndarray,
+    y_pred: np.ndarray,
 ) -> np.ndarray:
     # Per-sample binary cross-entropy loss (nats).
     y_pred_clipped = np.clip(y_pred, EPSILON, 1.0 - EPSILON)
     return -(y_true * np.log(y_pred_clipped) + (1 - y_true) * np.log(1 - y_pred_clipped))
 
-def training_loss_summary( y_true: np.ndarray, y_pred: np.ndarray, task: str = "binary",
+
+def training_loss_summary(
+    y_true: np.ndarray,
+    y_pred: np.ndarray,
+    task: str = "binary",
 ) -> dict[str, float]:
     # Compute mean loss, std, and percentile breakdown for a prediction batch.
     if task == "binary":
         losses = binary_cross_entropy(y_true, y_pred)
     else:
         losses = categorical_cross_entropy(y_true, y_pred)
-    return { "mean_loss": round(float(losses.mean()), 6), "std_loss": round(float(losses.std()), 6), "median_loss": round(float(np.median(losses)), 6), "p90_loss": round(float(np.percentile(losses, 90)), 6), "max_loss": round(float(losses.max()), 6), }
+    return {
+        "mean_loss": round(float(losses.mean()), 6),
+        "std_loss": round(float(losses.std()), 6),
+        "median_loss": round(float(np.median(losses)), 6),
+        "p90_loss": round(float(np.percentile(losses, 90)), 6),
+        "max_loss": round(float(losses.max()), 6),
+    }
+
 
 if __name__ == "__main__":
     rng = np.random.default_rng(seed=42)
-    n_samples = 1_000   # Simulate a reasonably calibrated binary classifier
+    n_samples = 1_000
+
+    # Simulate a reasonably calibrated binary classifier
     y_true_bin = rng.integers(0, 2, n_samples).astype(float)
     y_pred_bin = np.clip(y_true_bin + rng.normal(0, 0.3, n_samples), 0.05, 0.95)
     summary = training_loss_summary(y_true_bin, y_pred_bin, task="binary")
     print("Binary cross-entropy summary (simulated predictions):")
     for key, val in summary.items():
-        print(f" {key}: {val}")   # Demonstrate: perfect predictions give near-zero loss
+        print(f" {key}: {val}")
+
+    # Demonstrate: perfect predictions give near-zero loss
     perfect_pred = np.clip(y_true_bin, 0.999, 0.999) + np.clip(1 - y_true_bin, 0, 0) * 0.001
     perfect_summary = training_loss_summary(y_true_bin, perfect_pred, task="binary")
     print(f"\nPerfect model mean loss: {perfect_summary['mean_loss']}")

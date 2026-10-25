@@ -95,25 +95,50 @@ y_3 = 2.25 + 0.5 × 2.25 = **3.375** (exact: e^{1.5} ≈ 4.4817, error = 1.107) 
 
 ```python
 """
-Euler's Forward Method: y_(n+1) = y_n + h * f(x_n, y_n) Applied to solving dy/dx = y (exact solution: y = e^x).
+Euler's Forward Method: y_(n+1) = y_n + h * f(x_n, y_n)
+
+Applied to solving dy/dx = y (exact solution: y = e^x).
 Demonstrates the accuracy vs. step size tradeoff.
-""" import numpy as np
+"""
+import numpy as np
 import math
 from typing import Callable
 
-def euler_forward( ode_func: Callable[[float, float], float], x_start: float, x_end: float, y_initial: float, step_size: float,
+
+def euler_forward(
+    ode_func: Callable[[float, float], float],
+    x_start: float,
+    x_end: float,
+    y_initial: float,
+    step_size: float,
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Solve ODE dy/dx = ode_func(x, y) using Euler's forward method. Parameters ---------- ode_func : right-hand side f(x, y) of the ODE x_start : initial x value x_end : final x value y_initial : initial condition y(x_start) = y_initial step_size : step size h (smaller = more accurate) Returns ------- tuple of (x_values, y_values) arrays """
-    num_steps = int((x_end - x_start) / step_size) + 1
+    """Solve ODE dy/dx = ode_func(x, y) using Euler's forward method.
+
+    Parameters
+    ----------
+    ode_func : right-hand side f(x, y) of the ODE
+    x_start : initial x value
+    x_end : final x value
+    y_initial : initial condition y(x_start) = y_initial
+    step_size : step size h (smaller = more accurate)
+
+    Returns
+    -------
+    tuple of (x_values, y_values) arrays
+    """
+    num_steps = int(round((x_end - x_start) / step_size)) + 1
     x_values = np.linspace(x_start, x_end, num_steps)
     y_values = np.empty(num_steps)
     y_values[0] = y_initial
     for step_idx in range(1, num_steps):
         x_current = x_values[step_idx - 1]
-    y_current = y_values[step_idx - 1]
-    slope = ode_func(x_current, y_current)
-    y_values[step_idx] = y_current + step_size * slope
-    return x_values, y_values   # ODE: dy/dx = y, exact solution y = e^x
+        y_current = y_values[step_idx - 1]
+        slope = ode_func(x_current, y_current)
+        y_values[step_idx] = y_current + step_size * slope
+    return x_values, y_values
+
+
+# ODE: dy/dx = y, exact solution y = e^x
 ode_dy_dx = lambda x_val, y_val: y_val
 step_sizes = [0.5, 0.1, 0.01]
 x_eval = 1.0
@@ -122,9 +147,9 @@ print("Step size | Euler approx at x=1 | Error")
 print("-" * 45)
 for h in step_sizes:
     x_arr, y_arr = euler_forward(ode_dy_dx, 0.0, x_eval, 1.0, h)
-euler_approx = y_arr[-1]
-error = abs(euler_approx - exact_value)
-print(f" h={h:<6} | {euler_approx:.8f} | {error:.2e}")
+    euler_approx = y_arr[-1]
+    error = abs(euler_approx - exact_value)
+    print(f" h={h:<6} | {euler_approx:.8f} | {error:.2e}")
 print(f"\nExact e^1 = {exact_value:.8f}")
 ```
 
@@ -133,15 +158,21 @@ print(f"\nExact e^1 = {exact_value:.8f}")
 ```r
 # Euler's Forward Method: y_(n+1) = y_n + h * f(x_n, y_n)
 # Applied to logistic growth: dy/dt = r * y * (1 - y/K)
-euler_forward <- function(ode_func, t_start, t_end, y_initial, step_size) {  # Numerically solve dy/dt = ode_func(t, y) using Euler's method # Returns data.frame with t and y columns
+euler_forward <- function(ode_func, t_start, t_end, y_initial, step_size) {
+  # Numerically solve dy/dt = ode_func(t, y) using Euler's method
+  # Returns data.frame with t and y columns
   t_values <- seq(t_start, t_end, by = step_size)
   y_values <- numeric(length(t_values))
   y_values[1] <- y_initial
-  for (i in seq(2, length(t_values))) { t_curr <- t_values[i - 1]
+  for (i in seq(2, length(t_values))) {
+    t_curr <- t_values[i - 1]
     y_curr <- y_values[i - 1]
     y_values[i] <- y_curr + step_size * ode_func(t_curr, y_curr)
-  } data.frame(t = t_values, y = y_values)
-}  # Logistic growth: population saturates at carrying capacity K
+  }
+  data.frame(t = t_values, y = y_values)
+}
+
+# Logistic growth: population saturates at carrying capacity K
 GROWTH_RATE <- 0.5
 CARRYING_CAPACITY <- 100
 logistic_rhs <- function(t, y) GROWTH_RATE * y * (1 - y / CARRYING_CAPACITY)
@@ -156,26 +187,53 @@ cat(sprintf("t=20 : y = %.2f (approaches K=%d)\n", tail(solution$y, 1), CARRYING
 
 ```python
 """
-Euler's Forward Method for SIR epidemic simulation. Business context: A healthcare analytics team models the spread of a seasonal illness through a workforce of N employees to estimate peak sick days, optimal intervention timing, and impact of vaccination campaigns.
-""" import numpy as np
+Euler's Forward Method for SIR epidemic simulation.
+
+Business context: A healthcare analytics team models the spread of a seasonal
+illness through a workforce of N employees to estimate peak sick days, optimal
+intervention timing, and impact of vaccination campaigns.
+"""
+import numpy as np
 import pandas as pd
+
 POPULATION_SIZE: int = 5_000
 INITIAL_INFECTED: int = 10
-BETA_TRANSMISSION: float = 0.0003   # transmission rate per contact
-GAMMA_RECOVERY: float = 0.05   # recovery rate (1/gamma = avg days infected)
+BETA_TRANSMISSION: float = 0.0003  # transmission rate per contact
+GAMMA_RECOVERY: float = 0.05       # recovery rate (1/gamma = avg days infected)
 TIME_END_DAYS: float = 200.0
 STEP_SIZE_DAYS: float = 0.1
 
-def sir_model( state: np.ndarray, beta: float, gamma: float, population: int,
+
+def sir_model(
+    state: np.ndarray, beta: float, gamma: float, population: int,
 ) -> np.ndarray:
-    """Right-hand side of SIR ODE system. Parameters ---------- state : [S, I, R] current compartment sizes beta : transmission rate gamma : recovery rate population : total population (constant) Returns ------- np.ndarray : [dS/dt, dI/dt, dR/dt] """
+    """Right-hand side of SIR ODE system.
+
+    Parameters
+    ----------
+    state : [S, I, R] current compartment sizes
+    beta : transmission rate
+    gamma : recovery rate
+    population : total population (constant)
+
+    Returns
+    -------
+    np.ndarray : [dS/dt, dI/dt, dR/dt]
+    """
     susceptible, infected, recovered = state
     d_susceptible = -beta * susceptible * infected
     d_infected = beta * susceptible * infected - gamma * infected
     d_recovered = gamma * infected
     return np.array([d_susceptible, d_infected, d_recovered])
 
-def simulate_sir_euler( beta: float, gamma: float, population: int, initial_infected: int, time_end: float, step_size: float,
+
+def simulate_sir_euler(
+    beta: float,
+    gamma: float,
+    population: int,
+    initial_infected: int,
+    time_end: float,
+    step_size: float,
 ) -> pd.DataFrame:
     """Simulate SIR model using Euler's forward method."""
     num_steps = int(time_end / step_size) + 1
@@ -185,11 +243,20 @@ def simulate_sir_euler( beta: float, gamma: float, population: int, initial_infe
     states[0] = [initial_susceptible, float(initial_infected), 0.0]
     for step_idx in range(1, num_steps):
         current_state = states[step_idx - 1]
-    current_time = time_values[step_idx - 1]
-    derivative = sir_model(current_state, beta, gamma, population)
-    states[step_idx] = current_state + step_size * derivative
-    return pd.DataFrame({ "day": time_values, "susceptible": states[:, 0], "infected": states[:, 1], "recovered": states[:, 2], })
-results_df = simulate_sir_euler( BETA_TRANSMISSION, GAMMA_RECOVERY, POPULATION_SIZE, INITIAL_INFECTED, TIME_END_DAYS, STEP_SIZE_DAYS,
+        current_time = time_values[step_idx - 1]
+        derivative = sir_model(current_state, beta, gamma, population)
+        states[step_idx] = current_state + step_size * derivative
+    return pd.DataFrame({
+        "day": time_values,
+        "susceptible": states[:, 0],
+        "infected": states[:, 1],
+        "recovered": states[:, 2],
+    })
+
+
+results_df = simulate_sir_euler(
+    BETA_TRANSMISSION, GAMMA_RECOVERY, POPULATION_SIZE,
+    INITIAL_INFECTED, TIME_END_DAYS, STEP_SIZE_DAYS,
 )
 peak_day = results_df.loc[results_df["infected"].idxmax(), "day"]
 peak_infected = results_df["infected"].max()

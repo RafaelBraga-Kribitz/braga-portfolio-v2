@@ -104,17 +104,21 @@ More conservative but provably convergent.
 ```python
 import numpy as np
 
-def ewma_second_moment( gradients: list, beta2: float = 0.999,
+def ewma_second_moment(
+    gradients: list, beta2: float = 0.999,
 ) -> tuple:
     """Compute EWMA second moment v_t and bias-corrected v_hat_t."""
     v = 0.0
     moments, moments_corrected = [], []
     for t, g in enumerate(gradients, start=1):
         v = beta2 * v + (1 - beta2) * g**2
-    v_hat = v / (1 - beta2**t)
-    moments.append(v)
-    moments_corrected.append(v_hat)
-    return moments, moments_corrected   # Example: 10 gradient steps
+        v_hat = v / (1 - beta2**t)
+        moments.append(v)
+        moments_corrected.append(v_hat)
+    return moments, moments_corrected
+
+
+# Example: 10 gradient steps
 gradients = [0.5, -0.3, 0.8, 0.2, -0.6, 1.0, -0.4, 0.7, 0.1, -0.2]
 v_raw, v_corrected = ewma_second_moment(gradients, beta2=0.999)
 print(f"{'t':>3} {'g_t':>8} {'g_t^2':>8} {'v_t (raw)':>12} {'v_hat_t (corrected)':>20}")
@@ -129,20 +133,24 @@ print(f"\nEffective window (1/(1-beta2)): {1/(1-0.999):.0f} steps")
 
 ```r
 # Adam second moment: EWMA of squared gradients with bias correction
-ewma_second_moment <- function(gradients, beta2 = 0.999) { v <- 0
+ewma_second_moment <- function(gradients, beta2 = 0.999) {
+  v <- 0
   v_list <- numeric(length(gradients))
   vhat_list <- numeric(length(gradients))
-  for (t in seq_along(gradients)) { g <- gradientst
+  for (t in seq_along(gradients)) {
+    g <- gradients[t]
     v <- beta2 * v + (1 - beta2) * g^2
     v_hat <- v / (1 - beta2^t)
     v_list[t] <- v
     vhat_list[t] <- v_hat
-  } list(v = v_list, v_hat = vhat_list)
+  }
+  list(v = v_list, v_hat = vhat_list)
 }
 grads <- c(0.5, -0.3, 0.8, 0.2, -0.6, 1.0, -0.4, 0.7, 0.1, -0.2)
 result <- ewma_second_moment(grads, beta2 = 0.999)
 cat(sprintf("%-3s %-8s %-8s %-12s %-20s\n", "t", "g_t", "g_t^2", "v_t (raw)", "v_hat_t (corrected)"))
-for (t in seq_along(grads)) { cat(sprintf("%-3d %-8.3f %-8.4f %-12.6f %-20.5f\n", t, grads[t], grads[t]^2, result$v[t], result$v_hat[t]))
+for (t in seq_along(grads)) {
+  cat(sprintf("%-3d %-8.3f %-8.4f %-12.6f %-20.5f\n", t, grads[t], grads[t]^2, result$v[t], result$v_hat[t]))
 }
 cat(sprintf("\nEffective window: %.0f steps\n", 1 / (1 - 0.999)))
 ```
@@ -151,36 +159,51 @@ cat(sprintf("\nEffective window: %.0f steps\n", 1 / (1 - 0.999)))
 
 ```python
 import numpy as np
-np.random.seed(42)   # -- Visualize how v_t adapts LR differently across sparse vs dense parameters --
+np.random.seed(42)
+
+# -- Visualize how v_t adapts LR differently across sparse vs dense parameters --
 # Scenario: parameter A = frequent (large, dense gradients)
 # parameter B = sparse (mostly zero, occasional large gradient)
 N_STEPS = 300
 BETA2 = 0.999
 EPSILON = 1e-8
-ETA = 0.001   # Simulate gradient streams
-rng = np.random.default_rng(42)   # Dense parameter: gradients sampled N(0, 1) every step
-grads_dense = rng.normal(0, 1.0, N_STEPS)   # Sparse parameter: gradient is 0 most steps, large occasionally (5% sparsity)
+ETA = 0.001
+
+# Simulate gradient streams
+rng = np.random.default_rng(42)
+
+# Dense parameter: gradients sampled N(0, 1) every step
+grads_dense = rng.normal(0, 1.0, N_STEPS)
+
+# Sparse parameter: gradient is 0 most steps, large occasionally (5% sparsity)
 sparsity_mask = rng.binomial(1, 0.05, N_STEPS).astype(float)
 grads_sparse = sparsity_mask * rng.normal(0, 2.0, N_STEPS)
 
-def compute_effective_lr( gradients: np.ndarray, beta2: float = 0.999, eta: float = 0.001, epsilon: float = 1e-8,
+
+def compute_effective_lr(
+    gradients: np.ndarray, beta2: float = 0.999, eta: float = 0.001, epsilon: float = 1e-8,
 ) -> tuple:
     """Return v_hat and effective_lr = eta / (sqrt(v_hat) + epsilon) at each step."""
     v = 0.0
     v_hats, eff_lrs = [], []
     for t, g in enumerate(gradients, start=1):
         v = beta2 * v + (1 - beta2) * g**2
-    v_hat = v / (1 - beta2**t)
-    eff_lr = eta / (np.sqrt(v_hat) + epsilon)
-    v_hats.append(v_hat)
-    eff_lrs.append(eff_lr)
+        v_hat = v / (1 - beta2**t)
+        eff_lr = eta / (np.sqrt(v_hat) + epsilon)
+        v_hats.append(v_hat)
+        eff_lrs.append(eff_lr)
     return np.array(v_hats), np.array(eff_lrs)
+
+
 v_hat_dense, eff_lr_dense = compute_effective_lr(grads_dense, BETA2, ETA, EPSILON)
 v_hat_sparse, eff_lr_sparse = compute_effective_lr(grads_sparse, BETA2, ETA, EPSILON)
 print("Adam Second Moment: Effective LR Adaptation (dense vs sparse gradients)")
 print(f"\n{'Step':>6} {'v_hat (dense)':>15} {'eff_LR (dense)':>16} {'v_hat (sparse)':>16} {'eff_LR (sparse)':>17}")
 for step in [9, 29, 99, 199, 299]:
-    print( f"{step+1:>6} {v_hat_dense[step]:>15.6f} {eff_lr_dense[step]:>16.6f} " f"{v_hat_sparse[step]:>16.6f} {eff_lr_sparse[step]:>17.6f}" )
+    print(
+        f"{step+1:>6} {v_hat_dense[step]:>15.6f} {eff_lr_dense[step]:>16.6f} "
+        f"{v_hat_sparse[step]:>16.6f} {eff_lr_sparse[step]:>17.6f}"
+    )
 print(f"\nMean effective LR (dense): {eff_lr_dense.mean():.6f}")
 print(f"Mean effective LR (sparse): {eff_lr_sparse.mean():.6f}")
 print(f"LR ratio sparse/dense: {eff_lr_sparse.mean()/eff_lr_dense.mean():.2f}x")

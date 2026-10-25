@@ -3,6 +3,7 @@ publish: true
 date: '2026-04-16'
 tags:
 - calculus
+slug: sum-rule-matrix-calculus-identities-and-automatic-differentiation
 ---
 
 # Sum Rule
@@ -127,9 +128,10 @@ $$
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # Sum rule example: h(x) = f(x) + g(x)
-# f(x) = x^3, g(x) =
-sin(x)
+import numpy as np
+
+# Sum rule example: h(x) = f(x) + g(x)
+# f(x) = x^3, g(x) = sin(x)
 # h'(x) = 3x^2 + cos(x) (sum of individual derivatives)
 
 def h_fn(x: np.ndarray) -> np.ndarray:
@@ -147,26 +149,36 @@ numerical = numerical_derivative(h_fn, x_test)
 print("Sum rule: d/dx(x^3 + sin(x)) = 3x^2 + cos(x)")
 print(f"{'x':>5} | {'Analytic':>12} | {'Numerical':>12} | {'Error':>10}")
 for xi, a, n in zip(x_test, analytic, numerical):
-    print(f"{xi:>5.1f} | {a:>12.8f} | {n:>12.8f} | {abs(a-n):>10.2e}")   # Gradient sum rule on vectors:
-nabla(f(w) + g(w))
+    print(f"{xi:>5.1f} | {a:>12.8f} | {n:>12.8f} | {abs(a-n):>10.2e}")
+
+# Gradient sum rule on vectors: nabla(f(w) + g(w))
 # f(w) = ||Xw - y||^2, g(w) = lambda * ||w||^2
 np.random.seed(42)
 n_samples, n_features = 50, 4
 X = np.random.randn(n_samples, n_features)
 y = np.random.randn(n_samples)
 w = np.random.randn(n_features)
-LAMBDA = 0.5   # Individual gradients
-grad_data = 2.0 * X.T @ (X @ w - y)
-grad_reg = 2.0 * LAMBDA * w   # Sum rule: total gradient = sum of individual gradients
-grad_total = grad_data + grad_reg   # Verify numerically
+LAMBDA = 0.5
 
+# Individual gradients
+grad_data = 2.0 * X.T @ (X @ w - y)
+grad_reg = 2.0 * LAMBDA * w
+
+# Sum rule: total gradient = sum of individual gradients
+grad_total = grad_data + grad_reg
+
+
+# Verify numerically
 def ridge_loss(w_in: np.ndarray) -> float:
     return float(np.sum((X @ w_in - y)**2) + LAMBDA * np.dot(w_in, w_in))
+
+
 grad_numerical = np.zeros(n_features)
 h = 1e-5
 for i in range(n_features):
-    e_i = np.zeros(n_features); e_i[i] = h
-grad_numerical[i] = (ridge_loss(w + e_i) - ridge_loss(w - e_i)) / (2 * h)
+    e_i = np.zeros(n_features)
+    e_i[i] = h
+    grad_numerical[i] = (ridge_loss(w + e_i) - ridge_loss(w - e_i)) / (2 * h)
 print(f"\nRidge gradient (sum rule): nabla(||Xw-y||^2 + lambda||w||^2)")
 print(f" Analytic: {grad_total.round(4)}")
 print(f" Numerical: {grad_numerical.round(4)}")
@@ -176,26 +188,36 @@ print(f" Max error: {np.abs(grad_total - grad_numerical).max():.2e}")
 ### Beginner example (R)
 
 ```r
-# Sum rule: d/dx(f(x) + g(x)) = f'(x) + g'(x) # Example: h(x) = x^3 + sin(x), h'(x) = 3x^2 + cos(x)
+# Sum rule: d/dx(f(x) + g(x)) = f'(x) + g'(x)
+# Example: h(x) = x^3 + sin(x), h'(x) = 3x^2 + cos(x)
 h_fn <- function(x) x^3 + sin(x)
 h_prime <- function(x) 3 * x^2 + cos(x)  # sum rule applied
 num_deriv <- function(fn, x, h = 1e-5) (fn(x + h) - fn(x - h)) / (2 * h)
 x_test <- c(-2, -1, 0, 1, 2)
 cat("Sum rule: d/dx(x^3 + sin(x)) = 3x^2 + cos(x)\n")
-cat(sprintf(" x=%4.1f: analytic=%.6f, numerical=%.6f\n", x_test, h_prime(x_test), num_deriv(h_fn, x_test)))  # Ridge regression gradient: nabla(||Xw-y||^2 + lambda||w||^2)
+cat(sprintf(" x=%4.1f: analytic=%.6f, numerical=%.6f\n", x_test, h_prime(x_test), num_deriv(h_fn, x_test)))
+
+# Ridge regression gradient: nabla(||Xw-y||^2 + lambda||w||^2)
 set.seed(42)
 n_obs <- 50; n_feat <- 4
 X <- matrix(rnorm(n_obs * n_feat), nrow = n_obs)
 y <- rnorm(n_obs)
 w <- rnorm(n_feat)
-lambda <- 0.5  # Sum rule: add both gradients
+lambda <- 0.5
+
+# Sum rule: add both gradients
 grad_data <- 2 * t(X) %*% (X %*% w - y)
 grad_reg <- 2 * lambda * w
-grad_total <- grad_data + grad_reg  # sum rule # Numerical check
+grad_total <- grad_data + grad_reg  # sum rule
+
+# Numerical check
 ridge_loss <- function(w_in) sum((X %*% w_in - y)^2) + lambda * sum(w_in^2)
 h <- 1e-5
-num_grad <- sapply(1:n_feat, function(i) { e_i <- rep(0, n_feat); e_i[i] <- h (ridge_loss(w + e_i) - ridge_loss(w - e_i)) / (2 * h)
-}) cat("\nRidge gradient (sum rule):\n")
+num_grad <- sapply(1:n_feat, function(i) {
+  e_i <- rep(0, n_feat); e_i[i] <- h
+  (ridge_loss(w + e_i) - ridge_loss(w - e_i)) / (2 * h)
+})
+cat("\nRidge gradient (sum rule):\n")
 cat(" Analytic: ", as.vector(round(grad_total, 4)), "\n")
 cat(" Numerical:", round(num_grad, 4), "\n")
 cat(" Max error:", max(abs(as.vector(grad_total) - num_grad)), "\n")
@@ -205,13 +227,21 @@ cat(" Max error:", max(abs(as.vector(grad_total) - num_grad)), "\n")
 
 ```python
 """
-Sum rule in practice: multi-task learning gradient and residual connection. Scenario 1: Multi-task e-commerce model
-L_total = L_CTR + alpha * L_CVR + beta * L2_reg Gradient is the sum of three independent gradient terms. Scenario 2: ResNet skip connection
-y = x + F(x) => dy/dx = I + dF/dx (Jacobian sum rule) Gradients flow unchanged through identity path (vanishing gradient solution).
+Sum rule in practice: multi-task learning gradient and residual connection.
+
+Scenario 1: Multi-task e-commerce model
+    L_total = L_CTR + alpha * L_CVR + beta * L2_reg
+    Gradient is the sum of three independent gradient terms.
+
+Scenario 2: ResNet skip connection
+    y = x + F(x) => dy/dx = I + dF/dx (Jacobian sum rule)
+    Gradients flow unchanged through identity path (vanishing gradient solution).
 """
 import numpy as np
 RANDOM_SEED = 42
-rng = np.random.default_rng(RANDOM_SEED)   # ---- Scenario 1: Multi-task gradient ----
+rng = np.random.default_rng(RANDOM_SEED)
+
+# ---- Scenario 1: Multi-task gradient ----
 N_SAMPLES, N_FEATURES = 200, 6
 X = rng.standard_normal((N_SAMPLES, N_FEATURES))
 # Targets: CTR (binary) and CVR (binary), different ground truths
@@ -230,10 +260,14 @@ def bce_loss_and_grad(w_in: np.ndarray, x_in: np.ndarray, y_in: np.ndarray):
     loss = float(-np.mean(y_in * np.log(prob) + (1 - y_in) * np.log(1 - prob)))
     grad = x_in.T @ (prob - y_in) / len(y_in)
     return loss, grad
+
+
 loss_ctr, grad_ctr = bce_loss_and_grad(w, X, y_ctr)
 loss_cvr, grad_cvr = bce_loss_and_grad(w, X, y_cvr)
 loss_l2 = float(np.dot(w, w))
-grad_l2 = 2.0 * w   # Sum rule: total gradient = weighted sum of individual gradients
+grad_l2 = 2.0 * w
+
+# Sum rule: total gradient = weighted sum of individual gradients
 loss_total = loss_ctr + ALPHA_CVR * loss_cvr + BETA_L2 * loss_l2
 grad_total = grad_ctr + ALPHA_CVR * grad_cvr + BETA_L2 * grad_l2
 print("=== Multi-Task Loss: Sum Rule ===")
@@ -242,23 +276,30 @@ print(f" L_CTR={loss_ctr:.4f}, L_CVR={loss_cvr:.4f}, L2={loss_l2:.4f}")
 print(f" L_total={loss_total:.4f}")
 print(f" grad_total = grad_CTR + {ALPHA_CVR}*grad_CVR + {BETA_L2}*grad_L2")
 print(f" ||grad_total|| = {np.linalg.norm(grad_total):.4f}")
-print()   # ---- Scenario 2: ResNet skip connection Jacobian ----
+print()
+
+# ---- Scenario 2: ResNet skip connection Jacobian ----
 # y = x + F(x), F(x) = tanh(Wx) (simple 1-layer residual block)
 DIM = 4
 W_res = rng.standard_normal((DIM, DIM)) * 0.5
 x0 = rng.standard_normal(DIM)
 
+
 def residual_block(x_in: np.ndarray) -> np.ndarray:
-    return x_in + np.tanh(W_res @ x_in)   # Analytic Jacobian via sum
-rule: J = I + J_F
-J_F = (1.0 - np.tanh(W_res @ x0)**2)[:, None] * W_res   # Jacobian of
-tanh(Wx)
-J_analytic = np.eye(DIM) + J_F   # sum rule: J(x + F(x)) = I + J_F # Numerical Jacobian
+    return x_in + np.tanh(W_res @ x_in)
+
+
+# Analytic Jacobian via sum rule: J = I + J_F
+J_F = (1.0 - np.tanh(W_res @ x0)**2)[:, None] * W_res   # Jacobian of tanh(Wx)
+J_analytic = np.eye(DIM) + J_F   # sum rule: J(x + F(x)) = I + J_F
+
+# Numerical Jacobian
 h = 1e-5
 J_numerical = np.zeros((DIM, DIM))
 for j in range(DIM):
-    e_j = np.zeros(DIM); e_j[j] = h
-J_numerical[:, j] = (residual_block(x0 + e_j) - residual_block(x0 - e_j)) / (2 * h)
+    e_j = np.zeros(DIM)
+    e_j[j] = h
+    J_numerical[:, j] = (residual_block(x0 + e_j) - residual_block(x0 - e_j)) / (2 * h)
 print("=== ResNet Skip Connection: Jacobian Sum Rule ===")
 print(f" y = x + tanh(Wx), J = I + J_tanh(Wx)")
 print(f" Max error (analytic vs numerical): {np.abs(J_analytic - J_numerical).max():.2e}")

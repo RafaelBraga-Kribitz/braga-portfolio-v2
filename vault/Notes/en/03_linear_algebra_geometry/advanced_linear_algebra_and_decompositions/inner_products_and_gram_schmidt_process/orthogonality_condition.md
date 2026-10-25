@@ -3,6 +3,7 @@ publish: true
 date: '2026-04-16'
 tags:
 - linear-algebra
+slug: orthogonality-condition-inner-products-and-gram-schmidt-process
 ---
 
 # Orthogonality Condition

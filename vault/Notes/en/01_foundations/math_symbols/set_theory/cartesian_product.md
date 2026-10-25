@@ -75,7 +75,7 @@ Generalizations:
 
 ## Step-by-step calculation (tiny example)
 
-Task: build a complete sales grid for $A = \{\text{Jan}, \text{Feb}\}$ and $B = \{\text{Product_X}, \text{Product_Y}, \text{Product_Z}\}$.
+Task: build a complete sales grid for $A = \{\text{Jan}, \text{Feb}\}$ and $B = \{\text{Product\_X}, \text{Product\_Y}, \text{Product\_Z}\}$.
 
 *Step 1: Identify sizes*
 $|A| = 2$ (months), $|B| = 3$ (products). Expected grid size: $2 \times 3 = 6$ rows.

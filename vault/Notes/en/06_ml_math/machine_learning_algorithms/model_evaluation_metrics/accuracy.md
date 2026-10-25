@@ -365,6 +365,6 @@ $$
 - Accuracy definition as proportion of correct classifications
 - Non-negativity of confusion-matrix counts
 - Partition of finite labeled observations into $TP$, $TN$, $FP$, and $FN$
-- Bound result that a ratio of correct-count to total-count lies in $\[0,1\]$
+- Bound result that a ratio of correct-count to total-count lies in $[0,1]$
 - Standard classification metrics: Precision, Recall, and F1 score
 - Class imbalance warning in model evaluation

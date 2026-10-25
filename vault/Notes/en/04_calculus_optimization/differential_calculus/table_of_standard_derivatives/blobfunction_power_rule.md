@@ -96,34 +96,42 @@ $= (-2/3)[1 \cdot 1 + 1 \cdot 2 + 1 \cdot 3] = (-2/3) \cdot 6 = -4$. *Verify:* $
 ```python
 import numpy as np
 
+
 def blob_power_rule(f_x: float, f_prime_x: float, n: float) -> float:
     """d/dx[f(x)]^n = n * [f(x)]^(n-1) * f'(x)."""
-    return n * f_x**(n - 1) * f_prime_x   # Example: f(x) = 3x^2 + 1,
-n = 3, at
-x = 1
+    return n * f_x**(n - 1) * f_prime_x
+
+
+# Example: f(x) = 3x^2 + 1, n = 3, at x = 1
 x = 1.0
 f_x = 3 * x**2 + 1   # = 4
 f_prime_x = 6 * x   # = 6
 n = 3.0
 result = blob_power_rule(f_x, f_prime_x, n)
-print(f"d/dx[(3x^2+1)^3] at x=1: {result}")   # 288 # Verify numerically
+print(f"d/dx[(3x^2+1)^3] at x=1: {result}")   # 288
+
+# Verify numerically
 h = 1e-7
 numerical = ((3*(x+h)**2+1)**3 - (3*(x-h)**2+1)**3) / (2*h)
-print(f"Numerical check: {numerical:.4f}")   # Important special cases
+print(f"Numerical check: {numerical:.4f}")
+
+# Important special cases
 print("\nSpecial cases:")
-# n = 2: MSE term (y - wx)^2 with y=3, w=1,
-x=2
+# n = 2: MSE term (y - wx)^2 with y=3, w=1, x=2
 y_val, w_val, x_val = 3.0, 1.0, 2.0
-f_x2 = y_val - w_val * x_val   #
-residual = 1
+f_x2 = y_val - w_val * x_val   # residual = 1
 f_prime_x2 = -x_val   # d/dw(y - wx) = -x
 mse_grad = blob_power_rule(f_x2, f_prime_x2, 2.0)
-print(f" MSE n=2: d/dw(y-wx)^2 = 2*(y-wx)*(-x) = {mse_grad:.2f}")   # n = 1/2: sqrt(x^2 + 1)
+print(f" MSE n=2: d/dw(y-wx)^2 = 2*(y-wx)*(-x) = {mse_grad:.2f}")
+
+# n = 1/2: sqrt(x^2 + 1)
 x3 = 2.0
 f_x3 = x3**2 + 1   # 5
 f_prime_x3 = 2 * x3   # 4
 sqrt_grad = blob_power_rule(f_x3, f_prime_x3, 0.5)
-print(f" sqrt n=0.5: d/dx(sqrt(x^2+1)) at x=2 = {sqrt_grad:.4f}")   # n = -1: 1/(x^2 + 1)
+print(f" sqrt n=0.5: d/dx(sqrt(x^2+1)) at x=2 = {sqrt_grad:.4f}")
+
+# n = -1: 1/(x^2 + 1)
 recip_grad = blob_power_rule(f_x3, f_prime_x3, -1.0)
 print(f" reciprocal n=-1: d/dx(1/(x^2+1)) at x=2 = {recip_grad:.4f}")
 ```
@@ -132,18 +140,24 @@ print(f" reciprocal n=-1: d/dx(1/(x^2+1)) at x=2 = {recip_grad:.4f}")
 
 ```r
 # d/dx[f(x)]^n = n * f(x)^(n-1) * f'(x)
-blob_power_rule <- function(f_x, f_prime_x, n) { n * f_x^(n - 1) * f_prime_x
-}  # Verify d/dx[(3x^2+1)^3] at
-x=1
+blob_power_rule <- function(f_x, f_prime_x, n) {
+  n * f_x^(n - 1) * f_prime_x
+}
+
+# Verify d/dx[(3x^2+1)^3] at x=1
 x <- 1.0
 f_x <- 3*x^2 + 1
 f_prime_x <- 6*x
-cat(sprintf("d/dx[(3x^2+1)^3] at x=1: %.4f\n", blob_power_rule(f_x, f_prime_x, 3)))  # MSE gradient
+cat(sprintf("d/dx[(3x^2+1)^3] at x=1: %.4f\n", blob_power_rule(f_x, f_prime_x, 3)))
+
+# MSE gradient
 cat("\nMSE gradient d/dw sum((y - wx)^2):\n")
 y_vec <- c(2, 3, 4); x_vec <- c(1, 2, 3); w <- 1.0
 residuals <- y_vec - w * x_vec
 grad_mse <- (-2/3) * sum(residuals * x_vec)
-cat(sprintf(" w=%g, gradient = %.4f\n", w, grad_mse))  # L2 norm gradient: d/dw ||w||_2 = w / ||w||
+cat(sprintf(" w=%g, gradient = %.4f\n", w, grad_mse))
+
+# L2 norm gradient: d/dw ||w||_2 = w / ||w||
 w_vec <- c(1.0, 2.0, 3.0)
 l2_norm <- sqrt(sum(w_vec^2))
 l2_grad <- w_vec / l2_norm
@@ -155,7 +169,9 @@ cat(sprintf("\nL2 norm gradient (n=0.5 blob): %.4f %.4f %.4f\n", l2_grad[1], l2_
 ```python
 import numpy as np
 from sklearn.datasets import make_regression
-np.random.seed(42)   # -- Manual MSE and Huber loss gradient: n=2 and composite blob rules --
+np.random.seed(42)
+
+# -- Manual MSE and Huber loss gradient: n=2 and composite blob rules --
 # Use case: a DS implements custom loss functions from scratch to understand
 # how blob power rule drives every squared-error gradient computation.
 N, D = 300, 5
@@ -165,24 +181,39 @@ D_FULL = D + 1
 w = np.zeros(D_FULL)
 DELTA = 1.0   # Huber transition point
 
+
 def mse_loss_and_gradient(w: np.ndarray, X: np.ndarray, y: np.ndarray) -> tuple:
-    """MSE loss and gradient using blob power rule (n=2). L = (1/N) * ||y - Xw||^2 = (1/N) * [r]^2, r = y - Xw. Gradient: dL/dw = (2/N) * [r]^(2-1) * dr/dw = (-2/N) * X^T (y - Xw). """
+    """MSE loss and gradient using blob power rule (n=2).
+
+    L = (1/N) * ||y - Xw||^2 = (1/N) * [r]^2, r = y - Xw.
+    Gradient: dL/dw = (2/N) * [r]^(2-1) * dr/dw = (-2/N) * X^T (y - Xw).
+    """
     residuals = y - X @ w
-    loss = float(np.mean(residuals**2))   # Blob rule: n=2, f(w) = residuals, f'(w) = -X (d/dw(y - Xw) = -X)
+    loss = float(np.mean(residuals**2))
+    # Blob rule: n=2, f(w) = residuals, f'(w) = -X (d/dw(y - Xw) = -X)
     gradient = -2.0 / N * X.T @ residuals
     return loss, gradient
 
-def huber_loss_and_gradient( w: np.ndarray, X: np.ndarray, y: np.ndarray, delta: float = DELTA ) -> tuple:
-    """Huber loss and gradient. Huber(r) = r^2/2 if |r| <= delta, else delta*(|r| - delta/2). Gradient uses blob rule (n=2) for quadratic region; sign function for linear region. """
+
+def huber_loss_and_gradient(w: np.ndarray, X: np.ndarray, y: np.ndarray, delta: float = DELTA) -> tuple:
+    """Huber loss and gradient.
+
+    Huber(r) = r^2/2 if |r| <= delta, else delta*(|r| - delta/2).
+    Gradient uses blob rule (n=2) for quadratic region; sign function for linear region.
+    """
     residuals = y - X @ w
     abs_r = np.abs(residuals)
     quadratic_mask = abs_r <= delta
     huber_values = np.where(quadratic_mask, 0.5 * residuals**2, delta * (abs_r - 0.5 * delta))
-    loss = float(np.mean(huber_values))   # Gradient: for quadratic region: d/dw(0.5*r^2) = r * (-x) [blob n=2] # for linear region: d/dw(delta*|r|) = delta *
-    sign(r) * (-x)
+    loss = float(np.mean(huber_values))
+    # Gradient: for quadratic region: d/dw(0.5*r^2) = r * (-x) [blob n=2]
+    # for linear region: d/dw(delta*|r|) = delta * sign(r) * (-x)
     pseudo_residuals = np.where(quadratic_mask, residuals, delta * np.sign(residuals))
     gradient = -1.0 / N * X.T @ pseudo_residuals
-    return loss, gradient   # Gradient descent comparison: MSE vs Huber
+    return loss, gradient
+
+
+# Gradient descent comparison: MSE vs Huber
 print("Blob Power Rule (n=2): MSE gradient = -2/N * X^T * residuals")
 N_ITER = 200
 LR = 1e-3
@@ -190,9 +221,9 @@ w_mse = np.zeros(D_FULL)
 w_huber = np.zeros(D_FULL)
 for _ in range(N_ITER):
     _, g_mse = mse_loss_and_gradient(w_mse, X, y)
-_, g_huber = huber_loss_and_gradient(w_huber, X, y)
-w_mse -= LR * g_mse
-w_huber -= LR * g_huber
+    _, g_huber = huber_loss_and_gradient(w_huber, X, y)
+    w_mse -= LR * g_mse
+    w_huber -= LR * g_huber
 mse_final, _ = mse_loss_and_gradient(w_mse, X, y)
 huber_final, _ = huber_loss_and_gradient(w_huber, X, y)
 mse_on_huber_w, _ = mse_loss_and_gradient(w_huber, X, y)

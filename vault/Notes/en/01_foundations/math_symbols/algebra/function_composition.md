@@ -104,19 +104,26 @@ def g(x: float) -> float:
 
 def f(z: float) -> float:
     """Outer function: add 3."""
-    return z + 3   # f composed with g: apply g first, then f
+    return z + 3
 
+# f composed with g: apply g first, then f
 def compose_f_g(x: float) -> float:
     """(f o g)(x) = f(g(x))"""
     return f(g(x))
-print(compose_f_g(4))   # f(g(4)) = f(16) = 19 # Using functools.reduce for general composition
+
+print(compose_f_g(4))   # f(g(4)) = f(16) = 19
+
+# Using functools.reduce for general composition
 from functools import reduce
 
 def compose(*functions):
     """Compose multiple functions: rightmost is applied first."""
     return reduce(lambda f_outer, g_inner: lambda x: f_outer(g_inner(x)), functions)
+
 pipeline = compose(f, g)   # f(g(x))
-print(pipeline(4))   # 19 # Reverse: g composed with f
+print(pipeline(4))   # 19
+
+# Reverse: g composed with f
 reverse_pipeline = compose(g, f)   # g(f(x))
 print(reverse_pipeline(4))   # g(f(4)) = g(7) = 49
 ```
@@ -126,12 +133,18 @@ print(reverse_pipeline(4))   # g(f(4)) = g(7) = 49
 ```r
 # Function composition in R
 g <- function(x) x^2  # inner function
-f <- function(z) z + 3  # outer function # Manual composition
+f <- function(z) z + 3  # outer function
+
+# Manual composition
 f_of_g <- function(x) f(g(x))
-print(f_of_g(4))  # 19 # Using magrittr pipe for composition (pipeline style, left-to-right)
+print(f_of_g(4))  # 19
+
+# Using magrittr pipe for composition (pipeline style, left-to-right)
 library(magrittr)
 result <- 4 %>% g() %>% f()  # apply g first, then f
-print(result)  # 19 # Native R pipe (R 4.1+) - same semantics
+print(result)  # 19
+
+# Native R pipe (R 4.1+) - same semantics
 result_native <- 4 |> g() |> f()
 print(result_native)  # 19
 ```
@@ -144,17 +157,23 @@ from sklearn.preprocessing import StandardScaler, PowerTransformer
 from sklearn.linear_model import LogisticRegression
 from sklearn.datasets import make_classification
 from sklearn.model_selection import train_test_split
-import numpy as np   # Scikit-learn Pipeline IS function composition:
-# pipeline(x) =
-model(power_transform(scale(x)))
+import numpy as np
+
+# Scikit-learn Pipeline IS function composition:
+# pipeline(x) = model(power_transform(scale(x)))
 np.random.seed(42)
 X, y = make_classification(n_samples=500, n_features=10, random_state=42)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)   # Define the composed pipeline: step 1 -> step 2 -> step 3 (left to right = outer to inner)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Define the composed pipeline: step 1 -> step 2 -> step 3 (left to right = outer to inner)
 # Note: Pipeline applies steps left to right, which is g -> f order (left = first applied)
-pipeline = Pipeline([ ("scaler", StandardScaler()),   # g: standardize features
-    ("transformer", PowerTransformer()),   # h: stabilize variance
+pipeline = Pipeline([
+    ("scaler", StandardScaler()),           # g: standardize features
+    ("transformer", PowerTransformer()),    # h: stabilize variance
     ("classifier", LogisticRegression()),   # f: classify
-])   # fit() and predict() apply the composition chain internally
+])
+
+# fit() and predict() apply the composition chain internally
 pipeline.fit(X_train, y_train)
 accuracy = pipeline.score(X_test, y_test)
 print(f"Pipeline accuracy: {accuracy:.4f}")
@@ -165,12 +184,18 @@ print(f"= (f ∘ h ∘ g)(x) applied to each row of X_test")
 ### Professional example (R)
 
 ```r
-# Pipeline as function composition: pipeline(x) = predict(transform(scale(x))) # Compose two functions: (f ∘ g)(x) = f(g(x))
-compose2 <- function(f, g)
-function(x) f(g(x))
+# Pipeline as function composition: pipeline(x) = predict(transform(scale(x)))
+
+# Compose two functions: (f ∘ g)(x) = f(g(x))
+compose2 <- function(f, g) function(x) f(g(x))
+
 # Compose many: rightmost applied first
-compose <- function(...) { fns <- list(...) Reduce(compose2, fns)
-}  # Example: scale -> clip -> round (data prep pipeline)
+compose <- function(...) {
+  fns <- list(...)
+  Reduce(compose2, fns)
+}
+
+# Example: scale -> clip -> round (data prep pipeline)
 scale_01 <- function(x) (x - min(x)) / (max(x) - min(x))
 clip_01 <- function(x) pmin(pmax(x, 0), 1)
 round_2 <- function(x) round(x, 2)

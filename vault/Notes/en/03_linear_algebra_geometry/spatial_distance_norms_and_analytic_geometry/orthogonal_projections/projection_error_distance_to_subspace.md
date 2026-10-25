@@ -93,20 +93,25 @@ $14 = 8 + 6$. $\checkmark$
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # -- Distance from a vector to a subspace ---
+import numpy as np
+
+# -- Distance from a vector to a subspace ---
 # Subspace: span of b (1D)
 b = np.array([1.0, 1.0, 0.0]) / np.sqrt(2)   # unit vector
 x = np.array([3.0, 1.0, 2.0])
-proj = np.dot(b, x) * b   #
-pi_U(x)
+proj = np.dot(b, x) * b   # pi_U(x)
 residual = x - proj
 dist = np.linalg.norm(residual)
 print(f"Projection pi_U(x): {proj.round(4)}")
 print(f"Residual: {residual.round(4)}")
-print(f"Distance d(x, U): {dist:.4f}")   # Pythagorean verification
+print(f"Distance d(x, U): {dist:.4f}")
+
+# Pythagorean verification
 norm_x_sq = np.dot(x, x)
 norm_proj_sq = np.dot(proj, proj)
-print(f"\nPythagorean check: ||x||^2 = {norm_x_sq:.4f} = ||proj||^2 + d^2 = {norm_proj_sq:.4f} + {dist**2:.4f} = {norm_proj_sq + dist**2:.4f}")   # 2D subspace: span of two orthonormal vectors
+print(f"\nPythagorean check: ||x||^2 = {norm_x_sq:.4f} = ||proj||^2 + d^2 = {norm_proj_sq:.4f} + {dist**2:.4f} = {norm_proj_sq + dist**2:.4f}")
+
+# 2D subspace: span of two orthonormal vectors
 b2 = np.array([0.0, 0.0, 1.0])
 B = np.column_stack([b, b2])
 P = B @ B.T
@@ -135,26 +140,39 @@ cat(sprintf("Pythagorean: ||x||^2 = %.4f = %.4f + %.4f\n", sum(x^2), sum(proj^2)
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
-np.random.seed(42)   # -- Business scenario: PCA-based anomaly detection ---
+np.random.seed(42)
+
+# -- Business scenario: PCA-based anomaly detection ---
 # Flag customers whose behavior cannot be explained by the normal subspace.
 N_TRAIN = 500
 N_TEST = 50
-D = 6   # Training data: normal customers
+D = 6
+
+# Training data: normal customers
 X_train = np.random.randn(N_TRAIN, D)
 X_train[:, 1] += 0.8 * X_train[:, 0]   # correlation in normal data
 scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X_train)   # PCA: top 3 components define the "normal" subspace
+X_scaled = scaler.fit_transform(X_train)
+
+# PCA: top 3 components define the "normal" subspace
 _, _, Vt = np.linalg.svd(X_scaled, full_matrices=False)
-V3 = Vt[:3].T   # orthonormal basis (D x 3)
-P_normal = V3 @ V3.T   # projection matrix (D x D) # Reconstruction error threshold: 99th percentile of training errors
+V3 = Vt[:3].T          # orthonormal basis (D x 3)
+P_normal = V3 @ V3.T   # projection matrix (D x D)
+
+# Reconstruction error threshold: 99th percentile of training errors
 train_errors = np.linalg.norm(X_scaled - X_scaled @ P_normal, axis=1)
-threshold = np.percentile(train_errors, 99)   # Test data: mostly normal, a few anomalies
+threshold = np.percentile(train_errors, 99)
+
+# Test data: mostly normal, a few anomalies
 X_test = np.random.randn(N_TEST, D)
 X_test[:5] *= 5.0   # inject 5 anomalies
 X_test_scaled = scaler.transform(X_test)
 test_errors = np.linalg.norm(X_test_scaled - X_test_scaled @ P_normal, axis=1)
 is_anomaly = test_errors > threshold
-results = pd.DataFrame({ "test_obs": range(N_TEST), "recon_error": test_errors.round(4), "is_anomaly": is_anomaly,
+results = pd.DataFrame({
+    "test_obs": range(N_TEST),
+    "recon_error": test_errors.round(4),
+    "is_anomaly": is_anomaly,
 })
 print(f"Normal subspace: top-3 PCA components")
 print(f"Anomaly threshold (99th pct of train): {threshold:.4f}")

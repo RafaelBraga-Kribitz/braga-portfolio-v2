@@ -3,6 +3,7 @@ publish: true
 date: '2026-04-16'
 tags:
 - calculus
+slug: tangent-table-of-standard-derivatives
 ---
 
 # Tangent
@@ -96,23 +97,27 @@ def tan_deriv(x: float) -> float:
 
 def arctan_deriv(x: float) -> float:
     """d/dx(arctan(x)) = 1/(1+x^2). Inverse of d/dx(tan)=sec^2."""
-    return 1 / (1 + x**2)   # Verify numerically
+    return 1 / (1 + x**2)
+
+
+# Verify numerically
 x_vals = np.linspace(-1.2, 1.2, 7)   # avoid pi/2 singularity
 h = 1e-7
 print("d/dx(tan(x)) = sec^2(x) verification")
 print(f"{'x':>8} {'sec^2(x)':>10} {'numerical':>12} {'match':>7}")
 for x in x_vals:
     analytic = tan_deriv(x)
-numerical = (np.tan(x + h) - np.tan(x - h)) / (2 * h)
-match = abs(analytic - numerical) < 1e-4
-print(f"{x:>8.3f} {analytic:>10.5f} {numerical:>12.5f} {str(match):>7}")
+    numerical = (np.tan(x + h) - np.tan(x - h)) / (2 * h)
+    match = abs(analytic - numerical) < 1e-4
+    print(f"{x:>8.3f} {analytic:>10.5f} {numerical:>12.5f} {str(match):>7}")
+
 print("\nd/dx(arctan(x)) = 1/(1+x^2) verification")
 x_wide = np.linspace(-4, 4, 7)
 print(f"{'x':>8} {'1/(1+x^2)':>12} {'numerical':>12}")
 for x in x_wide:
     analytic = arctan_deriv(x)
-numerical = (np.arctan(x + h) - np.arctan(x - h)) / (2 * h)
-print(f"{x:>8.2f} {analytic:>12.6f} {numerical:>12.6f}")
+    numerical = (np.arctan(x + h) - np.arctan(x - h)) / (2 * h)
+    print(f"{x:>8.2f} {analytic:>12.6f} {numerical:>12.6f}")
 ```
 
 ### Beginner example (R)
@@ -124,7 +129,8 @@ arctan_deriv <- function(x) 1 / (1 + x^2)
 x_vals <- seq(-1.2, 1.2, length.out = 7)
 h <- 1e-7
 cat(sprintf("%-8s %-10s %-12s\n", "x", "sec^2(x)", "numerical"))
-for (x in x_vals) { analytic <- tan_deriv(x)
+for (x in x_vals) {
+  analytic <- tan_deriv(x)
   numerical <- (tan(x + h) - tan(x - h)) / (2 * h)
   cat(sprintf("%-8.3f %-10.5f %-12.5f\n", x, analytic, numerical))
 }
@@ -136,9 +142,10 @@ for (x in x_vals) { analytic <- tan_deriv(x)
 import numpy as np
 from sklearn.datasets import make_regression
 from sklearn.preprocessing import StandardScaler
-np.random.seed(42)   # -- arctan feature scaling: bounded nonlinear transformation with known gradient
-# Use case: bounded regression output feature phi(x) =
-arctan(x/scale)
+np.random.seed(42)
+
+# -- arctan feature scaling: bounded nonlinear transformation with known gradient
+# Use case: bounded regression output feature phi(x) = arctan(x/scale)
 # maps unbounded real -> (-pi/2, pi/2); gradient = scale/(scale^2 + x^2)
 X_raw, y = make_regression(n_samples=400, n_features=4, noise=5.0, random_state=42)
 scaler = StandardScaler()
@@ -151,10 +158,18 @@ def arctan_features(X_in: np.ndarray, scale: float = SCALE) -> np.ndarray:
     return np.arctan(X_in / scale)
 
 def arctan_feature_gradient(X_in: np.ndarray, scale: float = SCALE) -> np.ndarray:
-    """Element-wise gradient: d/dx(arctan(x/scale)) = (1/scale) / (1 + (x/scale)^2) = scale / (scale^2 + x^2). Uses d/dx(tan(x)) = sec^2(x) via inverse function theorem. """
+    """Element-wise gradient of the arctan feature.
+
+    d/dx(arctan(x/scale)) = (1/scale) / (1 + (x/scale)^2) = scale / (scale^2 + x^2).
+    Uses d/dx(tan(x)) = sec^2(x) via inverse function theorem.
+    """
     return scale / (scale**2 + X_in**2)
+
+
 X_phi = arctan_features(X)
-d_phi_dx = arctan_feature_gradient(X)   # Simple linear model on arctan features
+d_phi_dx = arctan_feature_gradient(X)
+
+# Simple linear model on arctan features
 w = np.linalg.lstsq(np.hstack([np.ones((N, 1)), X_phi]), y, rcond=None)[0]
 bias, weights = w[0], w[1:]
 y_pred = bias + X_phi @ weights

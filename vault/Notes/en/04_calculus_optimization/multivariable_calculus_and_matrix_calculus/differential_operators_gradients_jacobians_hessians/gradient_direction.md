@@ -75,7 +75,7 @@ $$
 - **Perpendicular to level curves**: on a level curve $f(\mathbf{x}) = c$, moving along the curve means $df = 0 = \nabla f \cdot d\mathbf{x}$, so $\nabla f \perp d\mathbf{x}$ for any tangential move. The gradient is always perpendicular to the level curve.
 - **Gradient norm as convergence signal**: in training, plot $\|\nabla_w L\|$ vs. epoch. Decreasing gradient norm signals convergence toward a stationary point.
 - **Vanishing gradients**: in deep networks, gradients can become very small ($\|\nabla f\| \approx 0$) due to repeated multiplication of small Jacobians (sigmoid saturation). ReLU activations mitigate this.
-- **Exploding gradients**: in RNNs, gradients can become very large. Gradient clipping caps $\|\nabla f\|$ at a threshold: $\nabla f \leftarrow \nabla f \cdot \min(1, \text{clip_norm}/\|\nabla f\|)$.
+- **Exploding gradients**: in RNNs, gradients can become very large. Gradient clipping caps $\|\nabla f\|$ at a threshold: $\nabla f \leftarrow \nabla f \cdot \min(1, \text{clip\_norm}/\|\nabla f\|)$.
 - **Step size matters**: the gradient only tells direction.
 
 If $\alpha$ is too large, the step overshoots the minimum; if too small, convergence is slow. Line search or adaptive methods (Adam) address this.
@@ -111,13 +111,18 @@ $f(0.9, 0.6) = 0.81 + 4(0.36) = 0.81 + 1.44 = 2.25$ ✓ (decreased significantly
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def f(x: np.ndarray) -> float:
     """f(x, y) = x^2 + 4y^2 (elliptic paraboloid, minimum at origin)."""
     return float(x[0]**2 + 4.0 * x[1]**2)
 
+
 def grad_f(x: np.ndarray) -> np.ndarray:
     """Gradient: [2x, 8y]."""
-    return np.array([2.0 * x[0], 8.0 * x[1]])   # At point (1, 1): steepest direction and magnitude
+    return np.array([2.0 * x[0], 8.0 * x[1]])
+
+
+# At point (1, 1): steepest direction and magnitude
 x0 = np.array([1.0, 1.0])
 g = grad_f(x0)
 magnitude = float(np.linalg.norm(g))
@@ -127,19 +132,23 @@ print(f"At x = {x0}:")
 print(f" Gradient: {g}")
 print(f" Steepest slope: {magnitude:.4f} (magnitude)")
 print(f" Ascent direction: {unit_ascent}")
-print(f" Descent direction: {unit_descent}")   # Directional derivative in a few directions
-angles = [0, 30, 90, 180]   # degrees relative to x-axis
+print(f" Descent direction: {unit_descent}")
+
+# Directional derivative in a few directions
+angles = [0, 30, 90, 180]  # degrees relative to x-axis
 for angle_deg in angles:
     angle_rad = np.radians(angle_deg)
-u = np.array([np.cos(angle_rad), np.sin(angle_rad)])
-dir_deriv = float(np.dot(g, u))
-print(f" D_{angle_deg:>3}deg f = {dir_deriv:>8.4f}")   # Gradient descent trajectory
+    u = np.array([np.cos(angle_rad), np.sin(angle_rad)])
+    dir_deriv = float(np.dot(g, u))
+    print(f" D_{angle_deg:>3}deg f = {dir_deriv:>8.4f}")
+
+# Gradient descent trajectory
 ALPHA = 0.05
 x_path = [x0.copy()]
 x_current = x0.copy()
 for _ in range(30):
     x_current = x_current - ALPHA * grad_f(x_current)
-x_path.append(x_current.copy())
+    x_path.append(x_current.copy())
 x_path = np.array(x_path)
 print(f"\nGradient descent path (last 5 points):")
 for pt in x_path[-5:]:
@@ -157,10 +166,13 @@ g <- grad_f(x0)
 magnitude <- sqrt(sum(g^2))
 cat("Gradient at (1,1): ", g, "\n")  # 2 8
 cat("Steepest slope mag: ", magnitude, "\n")  # ~8.25
-cat("Ascent direction: ", g / magnitude, "\n")  # Gradient descent
+cat("Ascent direction: ", g / magnitude, "\n")
+
+# Gradient descent
 alpha <- 0.05
 x_current <- x0
-for (i in 1:30) { x_current <- x_current - alpha * grad_f(x_current)
+for (i in 1:30) {
+  x_current <- x_current - alpha * grad_f(x_current)
 }
 cat("After 30 GD steps: x =", x_current, "f =", f(x_current), "\n")
 ```
@@ -169,8 +181,12 @@ cat("After 30 GD steps: x =", x_current, "f =", f(x_current), "\n")
 
 ```python
 """
-Gradient direction and gradient norm as training diagnostics. We train a logistic regression model with vanilla gradient descent and
-track: (1) loss, (2) gradient norm, (3) angle between consecutive gradients. Key insights:
+Gradient direction and gradient norm as training diagnostics.
+
+We train a logistic regression model with vanilla gradient descent and
+track: (1) loss, (2) gradient norm, (3) angle between consecutive gradients.
+
+Key insights:
 - Decreasing gradient norm -> approaching stationary point.
 - Angle between consecutive gradients > 90 deg -> oscillation (LR too high).
 - Gradient norm at convergence should be near 0.
@@ -182,19 +198,27 @@ from sklearn.preprocessing import StandardScaler
 RANDOM_SEED = 42
 rng = np.random.default_rng(RANDOM_SEED)
 
+
 def sigmoid(z: np.ndarray) -> np.ndarray:
     return 1.0 / (1.0 + np.exp(-np.clip(z, -500, 500)))
+
 
 def cross_entropy(w: np.ndarray, x: np.ndarray, y: np.ndarray) -> float:
     prob = np.clip(sigmoid(x @ w), 1e-12, 1 - 1e-12)
     return float(-np.mean(y * np.log(prob) + (1 - y) * np.log(1 - prob)))
 
+
 def grad_ce(w: np.ndarray, x: np.ndarray, y: np.ndarray) -> np.ndarray:
-    return x.T @ (sigmoid(x @ w) - y) / len(y)   # Data
+    return x.T @ (sigmoid(x @ w) - y) / len(y)
+
+
+# Data
 x_raw, y_data = make_classification(n_samples=1000, n_features=8, n_informative=5, random_state=RANDOM_SEED)
 x_train, x_test, y_train, y_test = train_test_split(x_raw, y_data, test_size=0.3, random_state=RANDOM_SEED)
 scaler = StandardScaler()
-x_train_s = scaler.fit_transform(x_train)   # Gradient descent with diagnostics
+x_train_s = scaler.fit_transform(x_train)
+
+# Gradient descent with diagnostics
 ALPHA = 0.3
 N_EPOCHS = 200
 w = rng.standard_normal(x_train_s.shape[1]) * 0.01
@@ -202,18 +226,26 @@ prev_grad = None
 history = {"epoch": [], "loss": [], "grad_norm": [], "angle_deg": []}
 for epoch in range(N_EPOCHS):
     loss = cross_entropy(w, x_train_s, y_train)
-g = grad_ce(w, x_train_s, y_train)
-grad_norm = float(np.linalg.norm(g))
-angle_deg = float("nan")
-if prev_grad is not None:
-    cos_angle = float(np.dot(g, prev_grad) / (np.linalg.norm(g) * np.linalg.norm(prev_grad) + 1e-12))
-angle_deg = float(np.degrees(np.arccos(np.clip(cos_angle, -1, 1)))) history["epoch"].append(epoch) history["loss"].append(loss) history["grad_norm"].append(grad_norm) history["angle_deg"].append(angle_deg)
-prev_grad = g.copy()
-w = w - ALPHA * g
+    g = grad_ce(w, x_train_s, y_train)
+    grad_norm = float(np.linalg.norm(g))
+    angle_deg = float("nan")
+    if prev_grad is not None:
+        cos_angle = float(np.dot(g, prev_grad) / (np.linalg.norm(g) * np.linalg.norm(prev_grad) + 1e-12))
+        angle_deg = float(np.degrees(np.arccos(np.clip(cos_angle, -1, 1))))
+    history["epoch"].append(epoch)
+    history["loss"].append(loss)
+    history["grad_norm"].append(grad_norm)
+    history["angle_deg"].append(angle_deg)
+    prev_grad = g.copy()
+    w = w - ALPHA * g
+
 print("Gradient direction diagnostics (selected epochs):")
 print(f" {'Epoch':>6} | {'Loss':>10} | {'||grad||':>10} | {'Angle (deg)':>12}")
 for idx in [0, 10, 50, 100, 199]:
-    print(f" {history['epoch'][idx]:>6} | " f"{history['loss'][idx]:>10.6f} | " f"{history['grad_norm'][idx]:>10.6f} | " f"{str(round(history['angle_deg'][idx], 2)):>12}")
+    print(f" {history['epoch'][idx]:>6} | "
+          f"{history['loss'][idx]:>10.6f} | "
+          f"{history['grad_norm'][idx]:>10.6f} | "
+          f"{str(round(history['angle_deg'][idx], 2)):>12}")
 print(f"\nConvergence: ||grad|| at epoch 199 = {history['grad_norm'][-1]:.6f}")
 print(f" (should be near 0 for well-converged model)")
 print(f"\nNote: angle between consecutive gradients near 0 = consistent direction = stable convergence")

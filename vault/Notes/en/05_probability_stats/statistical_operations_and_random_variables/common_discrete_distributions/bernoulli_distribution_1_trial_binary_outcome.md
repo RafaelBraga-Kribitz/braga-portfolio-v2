@@ -108,15 +108,38 @@ cat(sprintf("E[X] = %.4f | Var[X] = %.6f\n", p_ctr, p_ctr*(1-p_ctr)))
 import numpy as np
 from scipy.stats import bernoulli, norm
 
-def conversion_rate_mle_and_ci( observations: np.ndarray, confidence_level: float = 0.95 ) -> dict[str, float]:
-    """Estimate Bernoulli p via MLE with asymptotic confidence interval. MLE: p_hat = sample mean. CI uses Normal approximation (Wilson better for small n). Args: observations: Binary array (0/1 outcomes). confidence_level: Desired CI coverage. Returns: Dict with MLE, standard error, and confidence interval. """
+def conversion_rate_mle_and_ci(
+    observations: np.ndarray,
+    confidence_level: float = 0.95,
+) -> dict[str, float]:
+    """Estimate Bernoulli p via MLE with asymptotic confidence interval.
+
+    MLE: p_hat = sample mean.
+    CI uses Normal approximation (Wilson better for small n).
+
+    Args:
+        observations: Binary array (0/1 outcomes).
+        confidence_level: Desired CI coverage.
+
+    Returns:
+        Dict with MLE, standard error, and confidence interval.
+    """
     n = len(observations)
     p_hat = observations.mean()
     se = np.sqrt(p_hat * (1 - p_hat) / n)
     z_alpha = norm.ppf(1 - (1 - confidence_level) / 2)
-    return { "n": n, "p_hat": float(p_hat), "se": float(se), "ci_lower": float(max(0, p_hat - z_alpha * se)), "ci_upper": float(min(1, p_hat + z_alpha * se)), "margin_of_error": float(z_alpha * se), }
+    return {
+        "n": n,
+        "p_hat": float(p_hat),
+        "se": float(se),
+        "ci_lower": float(max(0, p_hat - z_alpha * se)),
+        "ci_upper": float(min(1, p_hat + z_alpha * se)),
+        "margin_of_error": float(z_alpha * se),
+    }
+
+
 rng = np.random.default_rng(seed=42)
-clicks = rng.bernoulli(p=0.047, size=10_000)
+clicks = bernoulli.rvs(p=0.047, size=10_000, random_state=rng)
 result = conversion_rate_mle_and_ci(clicks)
 print("CTR Estimation (Bernoulli MLE):")
 for key, val in result.items():

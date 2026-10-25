@@ -105,16 +105,24 @@ Converging to $(0, 0)$. Note: large step for $w_2$ term ($8w_2$) causes oscillat
 ```python
 import numpy as np
 
-def gradient_descent_step( x: np.ndarray, grad: np.ndarray, learning_rate: float,
+def gradient_descent_step(
+    x: np.ndarray,
+    grad: np.ndarray,
+    learning_rate: float,
 ) -> np.ndarray:
     """Single gradient descent update: x_{i+1} = x_i - gamma * grad."""
-    return x - learning_rate * grad   # f(w) = w1^2 + 4*w2^2; gradient = (2w1, 8w2)
+    return x - learning_rate * grad
 
+
+# f(w) = w1^2 + 4*w2^2; gradient = (2w1, 8w2)
 def f(w: np.ndarray) -> float:
     return w[0]**2 + 4 * w[1]**2
 
+
 def grad_f(w: np.ndarray) -> np.ndarray:
     return np.array([2 * w[0], 8 * w[1]])
+
+
 LEARNING_RATE = 0.2
 N_STEPS = 10
 w = np.array([3.0, 2.0])
@@ -122,8 +130,8 @@ print(f"Gradient descent: f(w) = w1^2 + 4*w2^2, gamma={LEARNING_RATE}")
 print(f"{'Step':>4} {'w1':>8} {'w2':>8} {'f(w)':>10} {'||grad||':>10}")
 for step in range(N_STEPS):
     g = grad_f(w)
-print(f"{step:>4} {w[0]:>8.4f} {w[1]:>8.4f} {f(w):>10.4f} {np.linalg.norm(g):>10.4f}")
-w = gradient_descent_step(w, g, LEARNING_RATE)
+    print(f"{step:>4} {w[0]:>8.4f} {w[1]:>8.4f} {f(w):>10.4f} {np.linalg.norm(g):>10.4f}")
+    w = gradient_descent_step(w, g, LEARNING_RATE)
 print(f"\nFinal w* = {w}, f(w*) = {f(w):.2e}")
 ```
 
@@ -138,7 +146,8 @@ LEARNING_RATE <- 0.2
 N_STEPS <- 10
 w <- c(3, 2)
 cat(sprintf("%-4s %-8s %-8s %-10s %-10s\n", "Step", "w1", "w2", "f(w)", "||grad||"))
-for (step in 0:(N_STEPS-1)) { g <- grad_f(w)
+for (step in 0:(N_STEPS-1)) {
+  g <- grad_f(w)
   cat(sprintf("%-4d %-8.4f %-8.4f %-10.4f %-10.4f\n", step, w[1], w[2], f(w), sqrt(sum(g^2))))
   w <- gd_step(w, g, LEARNING_RATE)
 }
@@ -152,7 +161,9 @@ import numpy as np
 from sklearn.datasets import make_classification
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import roc_auc_score
-np.random.seed(42)   # -- Full gradient descent with learning rate schedule for logistic regression --
+np.random.seed(42)
+
+# -- Full gradient descent with learning rate schedule for logistic regression --
 N_SAMPLES = 800
 X_raw, y_raw = make_classification(n_samples=N_SAMPLES, n_features=8, n_informative=5, random_state=42)
 scaler = StandardScaler()
@@ -168,33 +179,42 @@ def log_loss_with_reg(w: np.ndarray) -> float:
 
 def log_loss_gradient(w: np.ndarray) -> np.ndarray:
     margins = y * (X @ w)
-    sigmoid_neg = 1 / (1 + np.exp(margins))   #
-    sigmoid(-margin)
-    return -1/N * X.T @ (y * sigmoid_neg) + 2 * LAMBDA_REG * w   # Learning rate schedules to compare
+    sigmoid_neg = 1 / (1 + np.exp(margins))   # sigmoid(-margin)
+    return -1/N * X.T @ (y * sigmoid_neg) + 2 * LAMBDA_REG * w
 
+
+# Learning rate schedules to compare
 def constant_lr(step: int, lr0: float = 0.5) -> float:
     return lr0
+
 
 def step_decay(step: int, lr0: float = 0.5, decay: float = 0.5, drop_every: int = 50) -> float:
     return lr0 * (decay ** (step // drop_every))
 
+
 def sqrt_decay(step: int, lr0: float = 0.5) -> float:
     return lr0 / np.sqrt(step + 1)
-schedules = { "constant": constant_lr, "step decay": step_decay, "sqrt decay": sqrt_decay,
+
+
+schedules = {
+    "constant": constant_lr,
+    "step decay": step_decay,
+    "sqrt decay": sqrt_decay,
 }
 N_ITER = 300
 results = {}
 for name, lr_func in schedules.items():
     w = np.zeros(D)
-losses = []
-for step in range(N_ITER):
-    gamma = lr_func(step)
-g = log_loss_gradient(w)   # Core update rule: x_{i+1} = x_i - gamma_i * grad f(x_i)
-w = w - gamma * g
-losses.append(log_loss_with_reg(w))
-y_score = X @ w
-auc = roc_auc_score(y_raw, y_score)
-results[name] = {"w": w, "final_loss": losses[-1], "auc": auc, "losses": losses}
+    losses = []
+    for step in range(N_ITER):
+        gamma = lr_func(step)
+        g = log_loss_gradient(w)
+        # Core update rule: x_{i+1} = x_i - gamma_i * grad f(x_i)
+        w = w - gamma * g
+        losses.append(log_loss_with_reg(w))
+    y_score = X @ w
+    auc = roc_auc_score(y_raw, y_score)
+    results[name] = {"w": w, "final_loss": losses[-1], "auc": auc, "losses": losses}
 print(f"{'Schedule':<15} {'Final Loss':>12} {'AUC':>8}")
 for name, res in results.items():
     print(f"{name:<15} {res['final_loss']:>12.6f} {res['auc']:>8.4f}")

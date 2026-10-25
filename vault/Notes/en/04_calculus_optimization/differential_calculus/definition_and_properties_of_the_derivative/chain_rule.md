@@ -97,18 +97,46 @@ $d/dx[\ln(\sin x)] = (1/\sin x) \cdot \cos x = \cos x / \sin x = \cot x$. *Verif
 ```python
 import numpy as np
 
+
 def chain_rule_demo(outer_f, outer_f_prime, inner_f, inner_f_prime, x: float) -> float:
     """Chain rule: d/dx[outer(inner(x))] = outer'(inner(x)) * inner'(x)."""
     inner_val = inner_f(x)
-    return outer_f_prime(inner_val) * inner_f_prime(x)   # Example compositions and their chain rule derivatives
-compositions = [ { "name": "exp(3x^2)", "outer": np.exp, "outer_prime": np.exp, "inner": lambda x: 3 * x**2, "inner_prime": lambda x: 6 * x, "analytic": lambda x: np.exp(3 * x**2) * 6 * x, }, { "name": "sin(x^2)", "outer": np.sin, "outer_prime": np.cos, "inner": lambda x: x**2, "inner_prime": lambda x: 2 * x, "analytic": lambda x: np.cos(x**2) * 2 * x, }, { "name": "ln(sin(x))", "outer": np.log, "outer_prime": lambda u: 1 / u, "inner": np.sin, "inner_prime": np.cos, "analytic": lambda x: np.cos(x) / np.sin(x), }, { "name": "sqrt(1+x^2)", "outer": np.sqrt, "outer_prime": lambda u: 0.5 / np.sqrt(u), "inner": lambda x: 1 + x**2, "inner_prime": lambda x: 2 * x, "analytic": lambda x: x / np.sqrt(1 + x**2), },
+    return outer_f_prime(inner_val) * inner_f_prime(x)
+
+
+# Example compositions and their chain rule derivatives
+compositions = [
+    {
+        "name": "exp(3x^2)",
+        "outer": np.exp, "outer_prime": np.exp,
+        "inner": lambda x: 3 * x**2, "inner_prime": lambda x: 6 * x,
+        "analytic": lambda x: np.exp(3 * x**2) * 6 * x,
+    },
+    {
+        "name": "sin(x^2)",
+        "outer": np.sin, "outer_prime": np.cos,
+        "inner": lambda x: x**2, "inner_prime": lambda x: 2 * x,
+        "analytic": lambda x: np.cos(x**2) * 2 * x,
+    },
+    {
+        "name": "ln(sin(x))",
+        "outer": np.log, "outer_prime": lambda u: 1 / u,
+        "inner": np.sin, "inner_prime": np.cos,
+        "analytic": lambda x: np.cos(x) / np.sin(x),
+    },
+    {
+        "name": "sqrt(1+x^2)",
+        "outer": np.sqrt, "outer_prime": lambda u: 0.5 / np.sqrt(u),
+        "inner": lambda x: 1 + x**2, "inner_prime": lambda x: 2 * x,
+        "analytic": lambda x: x / np.sqrt(1 + x**2),
+    },
 ]
 h = 1e-7
 print(f"{'Function':>18} {'x':>5} {'Chain rule':>12} {'Analytic':>12} {'Numerical':>12} {'Match':>7}")
 for comp in compositions:
     for x in [0.5, 1.0]:
         try:
-            chain = chain_rule_demo( comp["outer"], comp["outer_prime"], comp["inner"], comp["inner_prime"], x )
+            chain = chain_rule_demo(comp["outer"], comp["outer_prime"], comp["inner"], comp["inner_prime"], x)
             analytic = comp["analytic"](x)
             numerical = (comp["outer"](comp["inner"](x + h)) - comp["outer"](comp["inner"](x - h))) / (2 * h)
             match = abs(chain - numerical) < 1e-5
@@ -121,14 +149,28 @@ for comp in compositions:
 
 ```r
 # Chain rule: d/dx[g(f(x))] = g'(f(x)) * f'(x)
-chain_rule <- function(outer_prime, inner_f, inner_prime, x) { outer_prime(inner_f(x)) * inner_prime(x)
+chain_rule <- function(outer_prime, inner_f, inner_prime, x) {
+  outer_prime(inner_f(x)) * inner_prime(x)
 }
-compositions <- list( list( name = "exp(3x^2)", outer_prime = exp, inner_f = function(x) 3 * x^2, inner_prime = function(x) 6 * x, analytic = function(x) exp(3 * x^2) * 6 * x ), list( name = "sin(x^2)", outer_prime = cos, inner_f = function(x) x^2, inner_prime = function(x) 2 * x, analytic = function(x) cos(x^2) * 2 * x ), list( name = "ln(sin(x))", outer_prime = function(u) 1 / u, inner_f = sin, inner_prime = cos, analytic = function(x) cos(x) / sin(x) )
-) h <- 1e-7
+compositions <- list(
+  list(name = "exp(3x^2)", outer_prime = exp,
+       inner_f = function(x) 3 * x^2, inner_prime = function(x) 6 * x,
+       analytic = function(x) exp(3 * x^2) * 6 * x),
+  list(name = "sin(x^2)", outer_prime = cos,
+       inner_f = function(x) x^2, inner_prime = function(x) 2 * x,
+       analytic = function(x) cos(x^2) * 2 * x),
+  list(name = "ln(sin(x))", outer_prime = function(u) 1 / u,
+       inner_f = sin, inner_prime = cos,
+       analytic = function(x) cos(x) / sin(x))
+)
+h <- 1e-7
 cat(sprintf("%-18s %-5s %-12s %-12s\n", "Function", "x", "Chain rule", "Analytic"))
-for (comp in compositions) { for (x in c(0.5, 1.0)) { chain_val <- tryCatch(chain_rule(comp$outer_prime, comp$inner_f, comp$inner_prime, x), error = function(e) NA)
+for (comp in compositions) {
+  for (x in c(0.5, 1.0)) {
+    chain_val <- tryCatch(chain_rule(comp$outer_prime, comp$inner_f, comp$inner_prime, x), error = function(e) NA)
     analytic_val <- tryCatch(comp$analytic(x), error = function(e) NA)
-    if (!is.na(chain_val) && !is.na(analytic_val)) { cat(sprintf("%-18s %-5.2f %-12.6f %-12.6f\n", comp$name, x, chain_val, analytic_val))
+    if (!is.na(chain_val) && !is.na(analytic_val)) {
+      cat(sprintf("%-18s %-5.2f %-12.6f %-12.6f\n", comp$name, x, chain_val, analytic_val))
     }
   }
 }
@@ -140,7 +182,9 @@ for (comp in compositions) { for (x in c(0.5, 1.0)) { chain_val <- tryCatch(chai
 import numpy as np
 from sklearn.datasets import make_classification
 from sklearn.preprocessing import StandardScaler
-np.random.seed(42)   # -- Backpropagation via chain rule: two-layer sigmoid network, manual forward + backward --
+np.random.seed(42)
+
+# -- Backpropagation via chain rule: two-layer sigmoid network, manual forward + backward --
 # Use case: a DS implements backprop from scratch to understand why autograd works.
 # The backward pass is exactly the chain rule applied from output to input.
 HIDDEN_SIZE = 8
@@ -149,23 +193,31 @@ OUTPUT_SIZE = 1
 LEARN_RATE = 0.05
 N_EPOCHS = 200
 
+
 def sigmoid(z: np.ndarray) -> np.ndarray:
     """Numerically stable sigmoid."""
     return np.where(z >= 0, 1 / (1 + np.exp(-z)), np.exp(z) / (1 + np.exp(z)))
+
 
 def sigmoid_prime(z: np.ndarray) -> np.ndarray:
     """d/dz sigmoid(z) = sigmoid(z)*(1-sigmoid(z)). Chain rule inner derivative."""
     s = sigmoid(z)
     return s * (1.0 - s)
 
+
 def bce_loss(y_pred: np.ndarray, y_true: np.ndarray) -> float:
     """Binary cross-entropy."""
     p = np.clip(y_pred, 1e-10, 1 - 1e-10)
-    return float(-np.mean(y_true * np.log(p) + (1 - y_true) * np.log(1 - p)))   # Data
+    return float(-np.mean(y_true * np.log(p) + (1 - y_true) * np.log(1 - p)))
+
+
+# Data
 X_raw, y = make_classification(n_samples=200, n_features=INPUT_SIZE, random_state=42)
 scaler = StandardScaler()
 X = scaler.fit_transform(X_raw)
-y = y.astype(float).reshape(-1, 1)   # Parameters
+y = y.astype(float).reshape(-1, 1)
+
+# Parameters
 W1 = np.random.randn(INPUT_SIZE, HIDDEN_SIZE) * 0.1
 b1 = np.zeros((1, HIDDEN_SIZE))
 W2 = np.random.randn(HIDDEN_SIZE, OUTPUT_SIZE) * 0.1
@@ -174,25 +226,40 @@ losses = []
 for epoch in range(N_EPOCHS):
     # --- Forward pass ---
     Z1 = X @ W1 + b1   # linear: INPUT_SIZE -> HIDDEN_SIZE
-A1 = sigmoid(Z1)   # activation: chain rule
-outer = sigmoid
-Z2 = A1 @ W2 + b2   # linear: HIDDEN_SIZE -> OUTPUT_SIZE
-A2 = sigmoid(Z2)   # output activation
-loss = bce_loss(A2, y)
-losses.append(loss)   # --- Backward pass (chain rule, layer by layer) ---
-N = X.shape[0]   # dL/dA2: outer derivative of BCE loss w.r.t. predicted probability dL_dA2 = (A2 - y) / N # combined gradient for BCE + sigmoid output: (p - y) / N # dA2/dZ2: sigmoid'(Z2) — chain rule: d/dZ2[sigmoid(Z2)] = sigmoid'(Z2)
-dA2_dZ2 = sigmoid_prime(Z2)   # dL/dZ2 = dL/dA2 * dA2/dZ2 (chain rule, element-wise)
-dL_dZ2 = dL_dA2 * dA2_dZ2   # dL/dW2 and dL/db2 from linear layer
-dL_dW2 = A1.T @ dL_dZ2
-dL_db2 = dL_dZ2.sum(axis=0, keepdims=True)   # dL/dA1 = dL/dZ2 @ W2.T (chain rule through linear layer) dL_dA1 = dL_dZ2 @ W2.T # dA1/dZ1: sigmoid'(Z1) — chain rule
-dA1_dZ1 = sigmoid_prime(Z1)   # dL/dZ1 = dL/dA1 * dA1/dZ1 (chain rule)
-dL_dZ1 = dL_dA1 * dA1_dZ1   # dL/dW1 and dL/db1
-dL_dW1 = X.T @ dL_dZ1
-dL_db1 = dL_dZ1.sum(axis=0, keepdims=True)   # Gradient descent update
-W2 -= LEARN_RATE * dL_dW2
-b2 -= LEARN_RATE * dL_db2
-W1 -= LEARN_RATE * dL_dW1
-b1 -= LEARN_RATE * dL_db1   # Evaluate
+    A1 = sigmoid(Z1)   # activation: chain rule outer = sigmoid
+    Z2 = A1 @ W2 + b2   # linear: HIDDEN_SIZE -> OUTPUT_SIZE
+    A2 = sigmoid(Z2)   # output activation
+    loss = bce_loss(A2, y)
+    losses.append(loss)
+
+    # --- Backward pass (chain rule, layer by layer) ---
+    N = X.shape[0]
+    # dL/dA2: outer derivative of BCE loss w.r.t. predicted probability
+    dL_dA2 = (A2 - y) / N   # combined gradient for BCE + sigmoid output: (p - y) / N
+    # dA2/dZ2: sigmoid'(Z2) — chain rule: d/dZ2[sigmoid(Z2)] = sigmoid'(Z2)
+    dA2_dZ2 = sigmoid_prime(Z2)
+    # dL/dZ2 = dL/dA2 * dA2/dZ2 (chain rule, element-wise)
+    dL_dZ2 = dL_dA2 * dA2_dZ2
+    # dL/dW2 and dL/db2 from linear layer
+    dL_dW2 = A1.T @ dL_dZ2
+    dL_db2 = dL_dZ2.sum(axis=0, keepdims=True)
+    # dL/dA1 = dL/dZ2 @ W2.T (chain rule through linear layer)
+    dL_dA1 = dL_dZ2 @ W2.T
+    # dA1/dZ1: sigmoid'(Z1) — chain rule
+    dA1_dZ1 = sigmoid_prime(Z1)
+    # dL/dZ1 = dL/dA1 * dA1/dZ1 (chain rule)
+    dL_dZ1 = dL_dA1 * dA1_dZ1
+    # dL/dW1 and dL/db1
+    dL_dW1 = X.T @ dL_dZ1
+    dL_db1 = dL_dZ1.sum(axis=0, keepdims=True)
+
+    # Gradient descent update
+    W2 -= LEARN_RATE * dL_dW2
+    b2 -= LEARN_RATE * dL_db2
+    W1 -= LEARN_RATE * dL_dW1
+    b1 -= LEARN_RATE * dL_db1
+
+# Evaluate
 final_preds = sigmoid(sigmoid(X @ W1 + b1) @ W2 + b2).flatten()
 accuracy = float(np.mean((final_preds > 0.5).astype(float) == y.flatten()))
 print("Chain Rule: Manual Backpropagation through 2-Layer Sigmoid Network")

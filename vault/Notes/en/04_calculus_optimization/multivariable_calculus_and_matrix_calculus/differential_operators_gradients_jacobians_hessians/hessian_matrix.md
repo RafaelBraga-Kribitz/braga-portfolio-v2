@@ -114,13 +114,16 @@ Mixed signs: the Hessian is **indefinite**. The origin (where $\nabla f = 0$) is
 ```python
 import numpy as np
 
+
 def f(x: np.ndarray) -> float:
     """f(x1, x2) = x1^2 + 4*x1*x2 + 3*x2^2."""
     return float(x[0]**2 + 4.0 * x[0] * x[1] + 3.0 * x[1]**2)
 
+
 def analytic_hessian() -> np.ndarray:
     """Hessian of f (constant for this quadratic)."""
     return np.array([[2.0, 4.0], [4.0, 6.0]])
+
 
 def numerical_hessian(fn, x: np.ndarray, h: float = 1e-4) -> np.ndarray:
     """Numerical Hessian via centered finite differences."""
@@ -128,10 +131,15 @@ def numerical_hessian(fn, x: np.ndarray, h: float = 1e-4) -> np.ndarray:
     hess = np.zeros((n, n))
     for i in range(n):
         for j in range(n):
-            e_i = np.zeros(n); e_i[i] = h
-        e_j = np.zeros(n); e_j[j] = h
-    hess[i, j] = (fn(x + e_i + e_j) - fn(x + e_i - e_j) - fn(x - e_i + e_j) + fn(x - e_i - e_j)) / (4 * h**2)
+            e_i = np.zeros(n)
+            e_i[i] = h
+            e_j = np.zeros(n)
+            e_j[j] = h
+            hess[i, j] = (fn(x + e_i + e_j) - fn(x + e_i - e_j)
+                          - fn(x - e_i + e_j) + fn(x - e_i - e_j)) / (4 * h**2)
     return hess
+
+
 x0 = np.array([1.0, 2.0])
 h_analytic = analytic_hessian()
 h_numerical = numerical_hessian(f, x0)
@@ -155,17 +163,21 @@ print(f"Condition number: {condition_number:.2f}")
 ### Beginner example (R)
 
 ```r
-f <- function(x) x[1]^2 + 4 * x[1] * x[2] + 3 * x[2]^2  # Analytic Hessian
+f <- function(x) x[1]^2 + 4 * x[1] * x[2] + 3 * x[2]^2
+
+# Analytic Hessian
 H_analytic <- matrix(c(2, 4, 4, 6), nrow = 2, byrow = TRUE)
-cat("Analytic Hessian:\n"); print(H_analytic)  # Eigenvalues and classification
+cat("Analytic Hessian:\n"); print(H_analytic)
+
+# Eigenvalues and classification
 ev <- eigen(H_analytic)$values
 cat("Eigenvalues:", ev, "\n")
-if (all(ev > 0)) { cat("Classification: Positive Definite -> local minimum\n")
-}
-else
-if (all(ev < 0)) { cat("Classification: Negative Definite -> local maximum\n")
-}
-else { cat("Classification: Indefinite -> saddle point\n")
+if (all(ev > 0)) {
+  cat("Classification: Positive Definite -> local minimum\n")
+} else if (all(ev < 0)) {
+  cat("Classification: Negative Definite -> local maximum\n")
+} else {
+  cat("Classification: Indefinite -> saddle point\n")
 }
 cat("Condition number:", max(abs(ev)) / min(abs(ev)), "\n")
 ```
@@ -174,11 +186,15 @@ cat("Condition number:", max(abs(ev)) / min(abs(ev)), "\n")
 
 ```python
 """
-Hessian of logistic regression log-likelihood: Fisher information and MLE covariance. At the MLE w_hat, the log-likelihood is maximized.
-The Hessian
-H = -X^T W X (where W = diag(p_i * (1-p_i))) is negative definite.
-The inverse Fisher information (X^T W X)^{-1} gives the MLE covariance: Cov(w_hat) ≈ (X^T W X)^{-1} Standard errors
-for each coefficient:
+Hessian of logistic regression log-likelihood: Fisher information and MLE covariance.
+
+At the MLE w_hat, the log-likelihood is maximized.
+The Hessian H = -X^T W X (where W = diag(p_i * (1-p_i))) is negative definite.
+The inverse Fisher information (X^T W X)^{-1} gives the MLE covariance:
+
+    Cov(w_hat) ≈ (X^T W X)^{-1}
+
+Standard errors for each coefficient:
     se(w_j) = sqrt(Cov[j,j]).
 This is used for confidence intervals and p-values in logistic regression.
 """
@@ -188,23 +204,37 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 RANDOM_SEED = 42
-x_raw, y_data = make_classification(n_samples=1000, n_features=5, n_informative=4, random_state=RANDOM_SEED)
+x_raw, y_data = make_classification(n_samples=1000, n_features=5, n_informative=4,
+                                    n_redundant=0, random_state=RANDOM_SEED)
 x_train, _, y_train, _ = train_test_split(x_raw, y_data, test_size=0.3, random_state=RANDOM_SEED)
 scaler = StandardScaler()
-x_train_s = scaler.fit_transform(x_train)   # Fit logistic regression to get MLE weights
+x_train_s = scaler.fit_transform(x_train)
+
+# Fit logistic regression to get MLE weights
 lr = LogisticRegression(C=1e6, solver="lbfgs", max_iter=1000, random_state=RANDOM_SEED)
 lr.fit(x_train_s, y_train)
-w_hat = lr.coef_[0]   # MLE weights
+w_hat = lr.coef_[0]  # MLE weights
+
 
 def sigmoid(z: np.ndarray) -> np.ndarray:
-    return 1.0 / (1.0 + np.exp(-np.clip(z, -500, 500)))   # Hessian of log-likelihood: H = -X^T W X
+    return 1.0 / (1.0 + np.exp(-np.clip(z, -500, 500)))
+
+
+# Hessian of log-likelihood: H = -X^T W X
 prob = sigmoid(x_train_s @ w_hat)
-W_diag = prob * (1.0 - prob)   # weight for each sample # H = -X^T W X (negative definite at MLE)
-hessian_loglik = -x_train_s.T @ (W_diag[:, None] * x_train_s)   # Fisher information: I(w) = X^T W
-X = -H
-fisher_info = -hessian_loglik   # MLE covariance: Cov(w_hat) ≈ (X^T W X)^{-1}
+W_diag = prob * (1.0 - prob)  # weight for each sample
+
+# H = -X^T W X (negative definite at MLE)
+hessian_loglik = -x_train_s.T @ (W_diag[:, None] * x_train_s)
+
+# Fisher information: I(w) = X^T W X = -H
+fisher_info = -hessian_loglik
+
+# MLE covariance: Cov(w_hat) ≈ (X^T W X)^{-1}
 mle_cov = np.linalg.inv(fisher_info)
-standard_errors = np.sqrt(np.diag(mle_cov))   # Eigenvalues of Hessian (all should be negative at MLE)
+standard_errors = np.sqrt(np.diag(mle_cov))
+
+# Eigenvalues of Hessian (all should be negative at MLE)
 eigenvalues = np.linalg.eigvalsh(hessian_loglik)
 print("=== Logistic Regression MLE: Hessian Analysis ===")
 print(f" Hessian eigenvalues: {eigenvalues}")
@@ -216,8 +246,8 @@ print(" MLE coefficient standard errors (via Hessian):")
 print(f" {'j':>3} | {'w_hat[j]':>12} | {'se(w_j)':>12} | {'95% CI':>24}")
 for j in range(len(w_hat)):
     lo = w_hat[j] - 1.96 * standard_errors[j]
-hi = w_hat[j] + 1.96 * standard_errors[j]
-print(f" {j:>3} | {w_hat[j]:>12.4f} | {standard_errors[j]:>12.4f} | [{lo:.4f}, {hi:.4f}]")
+    hi = w_hat[j] + 1.96 * standard_errors[j]
+    print(f" {j:>3} | {w_hat[j]:>12.4f} | {standard_errors[j]:>12.4f} | [{lo:.4f}, {hi:.4f}]")
 ```
 
 ---

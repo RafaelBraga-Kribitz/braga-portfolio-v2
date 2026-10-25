@@ -95,14 +95,18 @@ The sample mean of 52 is not significantly different from 50 at $\alpha = 0.05$.
 
 ```python
 import numpy as np
-from scipy import stats   # Sample data: page load times (seconds) after upgrade
+from scipy import stats
+
+# Sample data: page load times (seconds) after upgrade
 load_times = [1.6, 1.9, 1.7, 2.0, 1.8, 1.5, 2.1, 1.8, 1.9, 1.7, 1.6, 1.8, 2.0, 1.7, 1.9, 1.8, 1.6, 2.0, 1.9, 1.7]
 mu_0 = 2.1   # baseline mean before upgrade
 n = len(load_times)
 x_bar = np.mean(load_times)
 s = np.std(load_times, ddof=1)   # sample std
 sem = s / np.sqrt(n)
-t_stat = (x_bar - mu_0) / sem   # Two-tailed p-value from t-distribution
+t_stat = (x_bar - mu_0) / sem
+
+# Two-tailed p-value from t-distribution
 p_value = 2 * stats.t.cdf(t_stat, df=n - 1)   # left-tail * 2 for two-tailed
 print(f"Sample mean: {x_bar:.4f}")
 print(f"t-statistic: {t_stat:.4f}")
@@ -124,17 +128,32 @@ cat("95% CI: [", round(result$conf.int[1], 4), ",", round(result$conf.int[2], 4)
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
 import pandas as pd
 from scipy import stats
 from dataclasses import dataclass
+
+
 @dataclass
-
 class OneSampleTTestResult:
-    n: int sample_mean: float sample_std: float sem: float null_mean: float t_statistic: float p_value: float cohens_d: float ci_lower: float ci_upper: float reject_null: bool
+    n: int
+    sample_mean: float
+    sample_std: float
+    sem: float
+    null_mean: float
+    t_statistic: float
+    p_value: float
+    cohens_d: float
+    ci_lower: float
+    ci_upper: float
+    reject_null: bool
 
-def one_sample_t_test( data: np.ndarray, null_mean: float, alpha: float = 0.05, alternative: str = "two-sided",
+
+def one_sample_t_test(
+    data: np.ndarray,
+    null_mean: float,
+    alpha: float = 0.05,
+    alternative: str = "two-sided",
 ) -> OneSampleTTestResult:
     # One-sample t-test with effect size (Cohen's d) and CI.
     # alternative: 'two-sided', 'greater', 'less'
@@ -155,7 +174,20 @@ def one_sample_t_test( data: np.ndarray, null_mean: float, alpha: float = 0.05, 
     t_crit = float(stats.t.ppf(1 - alpha / 2, df=df))
     ci_low = x_bar - t_crit * sem
     ci_high = x_bar + t_crit * sem
-    return OneSampleTTestResult( n=n, sample_mean=round(x_bar, 4), sample_std=round(s, 4), sem=round(sem, 4), null_mean=null_mean, t_statistic=round(t_stat, 4), p_value=round(p_val, 6), cohens_d=round(cohens_d, 4), ci_lower=round(ci_low, 4), ci_upper=round(ci_high, 4), reject_null=p_val < alpha, )
+    return OneSampleTTestResult(
+        n=n,
+        sample_mean=round(x_bar, 4),
+        sample_std=round(s, 4),
+        sem=round(sem, 4),
+        null_mean=null_mean,
+        t_statistic=round(t_stat, 4),
+        p_value=round(p_val, 6),
+        cohens_d=round(cohens_d, 4),
+        ci_lower=round(ci_low, 4),
+        ci_upper=round(ci_high, 4),
+        reject_null=p_val < alpha,
+    )
+
 
 if __name__ == "__main__":
     rng = np.random.default_rng(seed=42)

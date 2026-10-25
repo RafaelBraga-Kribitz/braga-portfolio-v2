@@ -103,7 +103,12 @@ Vanilla GD oscillates wildly on $w_2$ (high curvature). Momentum damps oscillati
 ```python
 import numpy as np
 
-def momentum_gd( grad_func, x_init: np.ndarray, learning_rate: float = 0.02, momentum: float = 0.9, n_steps: int = 100,
+def momentum_gd(
+    grad_func,
+    x_init: np.ndarray,
+    learning_rate: float = 0.02,
+    momentum: float = 0.9,
+    n_steps: int = 100,
 ) -> tuple:
     """Gradient descent with classical (Polyak) momentum."""
     x = x_init.copy().astype(float)
@@ -111,25 +116,36 @@ def momentum_gd( grad_func, x_init: np.ndarray, learning_rate: float = 0.02, mom
     history = []
     for step in range(n_steps):
         g = grad_func(x)
-    delta_x = x - x_prev
-    x_new = x - learning_rate * g + momentum * delta_x
-    x_prev = x
-    x = x_new
-    history.append(x.copy())
-    return x, history   # Ill-conditioned quadratic: f(w) = w1^2 + 100*w2^2
+        delta_x = x - x_prev
+        x_new = x - learning_rate * g + momentum * delta_x
+        x_prev = x
+        x = x_new
+        history.append(x.copy())
+    return x, history
 
+
+# Ill-conditioned quadratic: f(w) = w1^2 + 100*w2^2
 def f(w: np.ndarray) -> float:
     return w[0]**2 + 100 * w[1]**2
 
+
 def grad_f(w: np.ndarray) -> np.ndarray:
     return np.array([2 * w[0], 200 * w[1]])
-w_init = np.array([1.0, 1.0])   # Vanilla GD
+
+
+w_init = np.array([1.0, 1.0])
+
+# Vanilla GD
 _, hist_vanilla = momentum_gd(grad_f, w_init, learning_rate=0.009, momentum=0.0, n_steps=150)
+
 # Momentum GD
 w_star_mom, hist_mom = momentum_gd(grad_f, w_init, learning_rate=0.009, momentum=0.9, n_steps=150)
 
+
 def losses(history):
     return [f(x) for x in history]
+
+
 vanilla_losses = losses(hist_vanilla)
 mom_losses = losses(hist_mom)
 print(f"After 50 steps:")
@@ -144,16 +160,19 @@ print(f" Momentum GD loss: {mom_losses[-1]:.6f}")
 
 ```r
 # Gradient descent with momentum: x_{i+1} = x_i - gamma * g + alpha * (x_i - x_{i-1})
-momentum_gd <- function(grad_func, x_init, lr = 0.02, alpha = 0.9, n_steps = 100) { x <- x_init
+momentum_gd <- function(grad_func, x_init, lr = 0.02, alpha = 0.9, n_steps = 100) {
+  x <- x_init
   x_prev <- x
   history <- matrix(0, nrow = n_steps, ncol = length(x))
-  for (step in seq_len(n_steps)) { g <- grad_func(x)
+  for (step in seq_len(n_steps)) {
+    g <- grad_func(x)
     delta_x <- x - x_prev
     x_new <- x - lr * g + alpha * delta_x
     x_prev <- x
     x <- x_new
     history[step, ] <- x
-  } list(x = x, history = history)
+  }
+  list(x = x, history = history)
 }
 f <- function(w) w[1]^2 + 100 * w[2]^2
 grad_f <- function(w) c(2 * w[1], 200 * w[2])
@@ -172,7 +191,9 @@ import numpy as np
 from sklearn.datasets import load_digits
 from sklearn.preprocessing import StandardScaler, LabelBinarizer
 from sklearn.model_selection import train_test_split
-np.random.seed(42)   # -- Compare vanilla SGD vs SGD+momentum on softmax classification of Digits --
+np.random.seed(42)
+
+# -- Compare vanilla SGD vs SGD+momentum on softmax classification of Digits --
 digits = load_digits()
 X_raw, y_raw = digits.data, digits.target
 scaler = StandardScaler()
@@ -215,9 +236,11 @@ def run_sgd(use_momentum: bool, alpha: float = 0.9) -> list:
                 W = W + V
             else:
                 W = W - LR * g
-            acc_history.append(evaluate_accuracy(W))
-        return acc_history
-    acc_vanilla = run_sgd(use_momentum=False)
+        acc_history.append(evaluate_accuracy(W))
+    return acc_history
+
+
+acc_vanilla = run_sgd(use_momentum=False)
 acc_momentum = run_sgd(use_momentum=True, alpha=0.9)
 print(f"Digits classification: SGD vs SGD+Momentum (alpha=0.9)")
 print(f"{'Epoch':<8} {'Vanilla Acc':>12} {'Momentum Acc':>14}")

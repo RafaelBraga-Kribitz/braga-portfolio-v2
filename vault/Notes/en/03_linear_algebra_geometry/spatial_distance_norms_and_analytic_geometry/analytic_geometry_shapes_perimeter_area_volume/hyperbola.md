@@ -101,6 +101,8 @@ import matplotlib.pyplot as plt
 def hyperbola_y(x: np.ndarray, a: float, b: float) -> np.ndarray:
     """Compute y values for hyperbola x^2/a^2 - y^2/b^2 = 1 (upper branch)."""
     return b * np.sqrt((x**2 / a**2) - 1.0)
+
+
 a, b = 2.0, 3.0
 c = np.sqrt(a**2 + b**2)
 ecc = c / a
@@ -108,15 +110,18 @@ print(f"Hyperbola: a={a}, b={b}")
 print(f" Vertices: (+-{a}, 0)")
 print(f" Foci: (+-{c:.4f}, 0)")
 print(f" Asymptotes: y = +-(b/a)*x = +-{b/a:.4f}*x")
-print(f" Eccentricity: e = {ecc:.4f}")   # Sample points on the right branch
+print(f" Eccentricity: e = {ecc:.4f}")
+
+# Sample points on the right branch
 x_vals = np.linspace(a, 10, 200)
 y_upper = hyperbola_y(x_vals, a, b)
 print(f"\nSample points (right branch, upper):")
 for x_pt in [2.0, 4.0, 6.0, 10.0]:
-    y_pt = float(hyperbola_y(np.array([x_pt]), a, b))
-check = x_pt**2/a**2 - y_pt**2/b**2
-print(f" x={x_pt}: y={y_pt:.4f}, check x^2/a^2-y^2/b^2 = {check:.6f}")   # Rectangular hyperbola
-xy = k
+    y_pt = float(hyperbola_y(np.array([x_pt]), a, b)[0])
+    check = x_pt**2/a**2 - y_pt**2/b**2
+    print(f" x={x_pt}: y={y_pt:.4f}, check x^2/a^2-y^2/b^2 = {check:.6f}")
+
+# Rectangular hyperbola xy = k
 K = 6.0
 x_r = np.linspace(0.5, 12, 100)
 y_r = K / x_r
@@ -134,8 +139,12 @@ cat(sprintf("Hyperbola: a=%g, b=%g\n", a, b))
 cat(sprintf(" Vertices: (+-%.4f, 0)\n", a))
 cat(sprintf(" Foci: (+-%.4f, 0)\n", c_focal))
 cat(sprintf(" Asymptotes: y = +-%.4f * x\n", b/a))
-cat(sprintf(" Eccentricity: %.4f\n", ecc))  # Sample points
-for (x_pt in c(2, 4, 6, 10)) { if (x_pt^2/a^2 > 1) { y_pt <- b * sqrt(x_pt^2/a^2 - 1)
+cat(sprintf(" Eccentricity: %.4f\n", ecc))
+
+# Sample points
+for (x_pt in c(2, 4, 6, 10)) {
+  if (x_pt^2/a^2 > 1) {
+    y_pt <- b * sqrt(x_pt^2/a^2 - 1)
     check <- x_pt^2/a^2 - y_pt^2/b^2
     cat(sprintf(" x=%.0f: y=%.4f, check=%.6f\n", x_pt, y_pt, check))
   }
@@ -147,23 +156,34 @@ for (x_pt in c(2, 4, 6, 10)) { if (x_pt^2/a^2 > 1) { y_pt <- b * sqrt(x_pt^2/a^2
 ```python
 import numpy as np
 import pandas as pd
-np.random.seed(42)   # -- Business scenario: constant-revenue hyperbola for pricing analysis ---
+np.random.seed(42)
+
+# -- Business scenario: constant-revenue hyperbola for pricing analysis ---
 # Model price-quantity relationship at different revenue levels.
-# Rectangular hyperbola: price *
-quantity = revenue (constant). TARGET_REVENUE_LEVELS = [10000, 15000, 20000]
+# Rectangular hyperbola: price * quantity = revenue (constant).
+TARGET_REVENUE_LEVELS = [10000, 15000, 20000]
 QUANTITY_RANGE = np.linspace(100, 2000, 100)
 rows = []
 for rev in TARGET_REVENUE_LEVELS:
     prices = rev / QUANTITY_RANGE
-rows.append({ "revenue_target": rev, "qty_at_price_10": rev / 10.0, "qty_at_price_20": rev / 20.0, "qty_at_price_50": rev / 50.0, "price_at_qty_500": rev / 500.0, "price_elasticity": -1.0,   # constant for rectangular hyperbola
-})
+    rows.append({
+        "revenue_target": rev,
+        "qty_at_price_10": rev / 10.0,
+        "qty_at_price_20": rev / 20.0,
+        "qty_at_price_50": rev / 50.0,
+        "price_at_qty_500": rev / 500.0,
+        "price_elasticity": -1.0,  # constant for rectangular hyperbola
+    })
 df = pd.DataFrame(rows)
 print("Constant-revenue curves (rectangular hyperbola: price * quantity = revenue):")
-print(df.to_string(index=False))   # Simulate noisy price-quantity data and fit a rectangular hyperbola (xy = k)
+print(df.to_string(index=False))
+
+# Simulate noisy price-quantity data and fit a rectangular hyperbola (xy = k)
 TRUE_REVENUE = 12000.0
 qty_data = np.random.uniform(200, 1800, 30)
-price_data = TRUE_REVENUE / qty_data + np.random.normal(0, 0.5, 30)   # Fit: xy = k; estimate k as
-mean(price * quantity)
+price_data = TRUE_REVENUE / qty_data + np.random.normal(0, 0.5, 30)
+
+# Fit: xy = k; estimate k as mean(price * quantity)
 k_hat = np.mean(price_data * qty_data)
 residuals = price_data - k_hat / qty_data
 print(f"\nFitted rectangular hyperbola (price * quantity = k):")

@@ -3,6 +3,7 @@ publish: true
 date: '2026-04-16'
 tags:
 - algebra
+slug: division-powers-and-exponents
 ---
 
 # Division
@@ -118,13 +119,20 @@ cat(sprintf("Match: %s\n", isTRUE(all.equal(result_rule, result_manual))))
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: Big-O complexity ratio for algorithm comparison
+import pandas as pd
+
+# Scenario: Big-O complexity ratio for algorithm comparison
 # Compare O(n^m) vs O(n^k) -- the ratio is O(n^(m-k))
 np.random.seed(42)
 input_sizes = [10, 100, 1_000, 10_000, 100_000]
-comparisons = pd.DataFrame({ "n": input_sizes, "algo_A_ops": [n**5 for n in input_sizes],   # O(n^5)
-    "algo_B_ops": [n**3 for n in input_sizes],   # O(n^3)
-})   # Ratio using exponent division rule: n^5 / n^3 = n^(5-3) = n^2
+# float: 100_000**5 = 1e25 does not fit in a 64-bit integer column
+comparisons = pd.DataFrame({
+    "n": input_sizes,
+    "algo_A_ops": [float(n)**5 for n in input_sizes],   # O(n^5)
+    "algo_B_ops": [float(n)**3 for n in input_sizes],   # O(n^3)
+})
+
+# Ratio using exponent division rule: n^5 / n^3 = n^(5-3) = n^2
 comparisons["ratio_rule"] = [n**(5-3) for n in input_sizes]
 comparisons["ratio_direct"] = comparisons["algo_A_ops"] / comparisons["algo_B_ops"]
 comparisons["match"] = np.isclose(comparisons["ratio_rule"], comparisons["ratio_direct"])
@@ -141,7 +149,10 @@ print("\nInterpretation: for n=10,000, Algo A is n^2 = 100,000,000x slower than 
 ```r
 # Big-O ratio: n^5 / n^3 = n^(5-3) = n^2
 input_sizes <- c(10, 100, 1000, 10000, 100000)
-comparisons <- data.frame( n = input_sizes, algo_A_ops = input_sizes^5, algo_B_ops = input_sizes^3
+comparisons <- data.frame(
+  n = input_sizes,
+  algo_A_ops = input_sizes^5,
+  algo_B_ops = input_sizes^3
 )
 comparisons$ratio_rule <- input_sizes^(5 - 3)
 comparisons$ratio_direct <- comparisons$algo_A_ops / comparisons$algo_B_ops

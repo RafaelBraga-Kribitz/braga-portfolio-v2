@@ -93,7 +93,9 @@ print(f"Base: {base}, n (root index): {n}, m (outer power): {m}")
 print(f"Form 1 - (n-th root of a)^m: {form_1:.10f}")
 print(f"Form 2 - n-th root of (a^m): {form_2:.10f}")
 print(f"Form 3 - a^(m/n): {form_3:.10f}")
-print(f"All equal: {abs(form_1 - form_2) < 1e-10 and abs(form_2 - form_3) < 1e-10}")   # Classic case: squaring a square root
+print(f"All equal: {abs(form_1 - form_2) < 1e-10 and abs(form_2 - form_3) < 1e-10}")
+
+# Classic case: squaring a square root
 x = 7.5
 print(f"\n(sqrt({x}))^2 = {(x**0.5)**2} (should be {x})")
 ```
@@ -112,7 +114,9 @@ cat(sprintf("Base: %d, n=%d, m=%d\n", base, n, m))
 cat(sprintf("Form 1: %.10f\n", form_1))
 cat(sprintf("Form 2: %.10f\n", form_2))
 cat(sprintf("Form 3: %.10f\n", form_3))
-cat(sprintf("All equal: %s\n", isTRUE(all.equal(form_1, form_2)) & isTRUE(all.equal(form_2, form_3))))  # Squaring a square root
+cat(sprintf("All equal: %s\n", isTRUE(all.equal(form_1, form_2)) & isTRUE(all.equal(form_2, form_3))))
+
+# Squaring a square root
 x <- 7.5
 cat(sprintf("\n(sqrt(%.1f))^2 = %.10f (should be %.1f)\n", x, (sqrt(x))^2, x))
 ```
@@ -121,23 +125,35 @@ cat(sprintf("\n(sqrt(%.1f))^2 = %.10f (should be %.1f)\n", x, (sqrt(x))^2, x))
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: PCA variance reconstruction
+import pandas as pd
+
+# Scenario: PCA variance reconstruction
 # Eigenvalues lambda_i from covariance matrix = variance in each PC direction
-# Standard deviations (singular values) are stored as
-sqrt(lambda_i)
-# To get variance back: (sqrt(lambda_i))^2 = lambda_i -- power of radical with
-m=n=2
-np.random.seed(42)   # Simulate a 4-feature covariance matrix and decompose
+# Standard deviations (singular values) are stored as sqrt(lambda_i)
+# To get variance back: (sqrt(lambda_i))^2 = lambda_i -- power of radical with m=n=2
+np.random.seed(42)
+
+# Simulate a 4-feature covariance matrix and decompose
 n_features = 4
 cov_matrix = np.random.randn(n_features, n_features)
 cov_matrix = cov_matrix @ cov_matrix.T / n_features   # make it positive semi-definite
 eigenvalues, _ = np.linalg.eigh(cov_matrix)
-eigenvalues = np.sort(eigenvalues)[::-1]   # descending # Standard deviations (what PCA often returns as "explained std")
-std_devs = np.sqrt(eigenvalues)   # Recover variances using power of radical: (sqrt(lambda))^2 = lambda
+eigenvalues = np.sort(eigenvalues)[::-1]   # descending
+
+# Standard deviations (what PCA often returns as "explained std")
+std_devs = np.sqrt(eigenvalues)
+
+# Recover variances using power of radical: (sqrt(lambda))^2 = lambda
 variances_recovered = std_devs ** 2
 total_variance = eigenvalues.sum()
 explained_ratio = eigenvalues / total_variance
-results_df = pd.DataFrame({ "PC": [f"PC{i+1}" for i in range(n_features)], "eigenvalue_orig": eigenvalues, "std_dev": std_devs, "variance_recovered": variances_recovered, "match": np.isclose(eigenvalues, variances_recovered), "explained_pct": explained_ratio * 100,
+results_df = pd.DataFrame({
+    "PC": [f"PC{i+1}" for i in range(n_features)],
+    "eigenvalue_orig": eigenvalues,
+    "std_dev": std_devs,
+    "variance_recovered": variances_recovered,
+    "match": np.isclose(eigenvalues, variances_recovered),
+    "explained_pct": explained_ratio * 100,
 })
 print("PCA Variance Reconstruction: (sqrt(lambda))^2 = lambda")
 print("Power-of-radical rule: (n-th root of a)^n = a")
@@ -158,7 +174,12 @@ eig <- eigen(cov_matrix, symmetric = TRUE)
 eigenvalues <- sort(eig$values, decreasing = TRUE)
 std_devs <- sqrt(eigenvalues)
 variances_recovered <- std_devs^2
-results_df <- data.frame( PC = paste0("PC", 1:n_features), eigenvalue_orig = eigenvalues, std_dev = std_devs, variance_recovered = variances_recovered, match = abs(eigenvalues - variances_recovered) < 1e-10
+results_df <- data.frame(
+  PC = paste0("PC", 1:n_features),
+  eigenvalue_orig = eigenvalues,
+  std_dev = std_devs,
+  variance_recovered = variances_recovered,
+  match = abs(eigenvalues - variances_recovered) < 1e-10
 )
 cat("PCA Variance: (sqrt(lambda))^2 = lambda\n")
 print(results_df)

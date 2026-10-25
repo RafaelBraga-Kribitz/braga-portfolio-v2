@@ -114,27 +114,39 @@ def affine_power_antiderivative(x: float, a: float, b: float, n: float) -> float
 
 def affine_power_definite(lo: float, hi: float, a: float, b: float, n: float) -> float:
     """int_lo^hi (ax+b)^n dx = F(hi) - F(lo)."""
-    return (affine_power_antiderivative(hi, a, b, n) - affine_power_antiderivative(lo, a, b, n))   # Test cases
-cases = [ (0, 1, 3.0, 2.0, 4.0),   # int
-    (3x+2)^4 from 0 to 1 (0, 2, 2.0, 0.0, 3.0),   # int
-    (2x)^3 from 0 to 2 (1, 3, 1.0, -1.0, 2.0),   # int
-    (x-1)^2 from 1 to 3 ]
+    return (affine_power_antiderivative(hi, a, b, n) - affine_power_antiderivative(lo, a, b, n))
+
+
+# Test cases
+cases = [
+    (0, 1, 3.0, 2.0, 4.0),    # int (3x+2)^4 from 0 to 1
+    (0, 2, 2.0, 0.0, 3.0),    # int (2x)^3 from 0 to 2
+    (1, 3, 1.0, -1.0, 2.0),   # int (x-1)^2 from 1 to 3
+]
 for lo, hi, a, b, n in cases:
     analytic = affine_power_definite(lo, hi, a, b, n)
-numerical, _ = integrate.quad(lambda x, aa=a, bb=b, nn=n: (aa*x+bb)**nn, lo, hi)
-print(f"int_({lo},{hi}) ({a}x+{b})^{n}: " f"analytic={analytic:.6f}, numerical={numerical:.6f}, " f"match={abs(analytic-numerical)<1e-8}")
+    numerical, _ = integrate.quad(lambda x, aa=a, bb=b, nn=n: (aa*x+bb)**nn, lo, hi)
+    print(f"int_({lo},{hi}) ({a}x+{b})^{n}: "
+          f"analytic={analytic:.6f}, numerical={numerical:.6f}, "
+          f"match={abs(analytic-numerical)<1e-8}")
 ```
 
 ### Beginner example (R)
 
 ```r
-affine_power_antiderivative <- function(x, a, b, n) { if (abs(n + 1) < 1e-12) stop("n = -1: use (1/a)*ln|ax+b| rule.")
-  if (abs(a) < 1e-12) stop("a = 0: not affine.") (a * x + b)^(n + 1) / (a * (n + 1))
+affine_power_antiderivative <- function(x, a, b, n) {
+  if (abs(n + 1) < 1e-12) stop("n = -1: use (1/a)*ln|ax+b| rule.")
+  if (abs(a) < 1e-12) stop("a = 0: not affine.")
+  (a * x + b)^(n + 1) / (a * (n + 1))
 }
-affine_power_definite <- function(lo, hi, a, b, n) { affine_power_antiderivative(hi, a, b, n) - affine_power_antiderivative(lo, a, b, n)
-}  # Test cases
+affine_power_definite <- function(lo, hi, a, b, n) {
+  affine_power_antiderivative(hi, a, b, n) - affine_power_antiderivative(lo, a, b, n)
+}
+
+# Test cases
 cases <- list(c(0, 1, 3, 2, 4), c(0, 2, 2, 0, 3), c(1, 3, 1, -1, 2))
-for (tc in cases) { lo <- tc[1]; hi <- tc[2]; a <- tc[3]; b <- tc[4]; n <- tc[5]
+for (tc in cases) {
+  lo <- tc[1]; hi <- tc[2]; a <- tc[3]; b <- tc[4]; n <- tc[5]
   analytic <- affine_power_definite(lo, hi, a, b, n)
   numerical <- integrate(function(x) (a*x+b)^n, lower=lo, upper=hi)$value
   cat(sprintf("int_(%g,%g) (%gx+%g)^%g: analytic=%.6f, num=%.6f, match=%s\n", lo, hi, a, b, n, analytic, numerical, isTRUE(all.equal(analytic, numerical, tol=1e-7))))
@@ -145,35 +157,53 @@ for (tc in cases) { lo <- tc[1]; hi <- tc[2]; a <- tc[3]; b <- tc[4]; n <- tc[5]
 
 ```python
 """
-Affine power rule for integrating polynomial spline basis functions. Natural cubic splines use piecewise polynomials over knot-defined intervals.
+Affine power rule for integrating polynomial spline basis functions.
+
+Natural cubic splines use piecewise polynomials over knot-defined intervals.
 Each piece is a cubic polynomial in (x - knot_i), an affine power of degree 3.
 Computing the integral of a spline (e.g., for expected value under a spline PDF)
-uses the affine power rule repeatedly on each segment. Here we fit a monotone cubic spline to a conversion rate curve and
+uses the affine power rule repeatedly on each segment.
+
+Here we fit a monotone cubic spline to a conversion rate curve and
 compute the area under it over a price range.
 """
 import numpy as np
 from scipy import integrate
-from scipy.interpolate import PchipInterpolator   # Simulated conversion rate vs. price (monotone decreasing)
+from scipy.interpolate import PchipInterpolator
+
+# Simulated conversion rate vs. price (monotone decreasing)
 price_knots = np.array([10.0, 20.0, 30.0, 40.0, 50.0, 60.0])
-conv_rate = np.array([0.82, 0.71, 0.58, 0.43, 0.29, 0.17])   # Piecewise cubic hermite spline (C1-continuous, monotone)
-spline = PchipInterpolator(price_knots, conv_rate)   # Goal: expected conversion rate over price range [15, 55] = (1/width) * integral
+conv_rate = np.array([0.82, 0.71, 0.58, 0.43, 0.29, 0.17])
+
+# Piecewise cubic hermite spline (C1-continuous, monotone)
+spline = PchipInterpolator(price_knots, conv_rate)
+
+# Goal: expected conversion rate over price range [15, 55] = (1/width) * integral
 lo_price = 15.0
 hi_price = 55.0
-width = hi_price - lo_price   # Numerical integral of spline (affine cubics on each segment)
+width = hi_price - lo_price
+
+# Numerical integral of spline (affine cubics on each segment)
 area, error = integrate.quad(spline, lo_price, hi_price)
 expected_conversion = area / width
 print(f"Price range: [{lo_price}, {hi_price}]")
 print(f"Integral of spline: {area:.6f}")
 print(f"Expected conversion rate: {expected_conversion:.4f}")
-print(f"Integration error estimate: {error:.2e}")   # Show per-segment analytic contributions (affine power rule)
+print(f"Integration error estimate: {error:.2e}")
+
+# Show per-segment analytic contributions (affine power rule)
 segments = list(zip(price_knots[:-1], price_knots[1:]))
 print("\nPer-segment integral (spline evaluated numerically on each):")
 total_check = 0.0
 for seg_lo, seg_hi in segments:
     seg_area, _ = integrate.quad(spline, seg_lo, seg_hi)
-total_check += seg_area
-print(f" [{seg_lo:.0f}, {seg_hi:.0f}]: area = {seg_area:.6f}")
-print(f" Sum of segments: {total_check:.6f} (matches full integral: " f"{abs(total_check - area) < 1e-8})")
+    total_check += seg_area
+    print(f" [{seg_lo:.0f}, {seg_hi:.0f}]: area = {seg_area:.6f}")
+
+# The segments cover the full knot range [10, 60]
+full_area, _ = integrate.quad(spline, price_knots[0], price_knots[-1])
+print(f" Sum of segments: {total_check:.6f} (matches full integral: "
+      f"{abs(total_check - full_area) < 1e-8})")
 ```
 
 ---

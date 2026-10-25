@@ -101,17 +101,25 @@ Both eigenvalues are positive ✓. Consistent with the PD conclusion.
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # -- Check positive definiteness via eigenvalues and Cholesky ----------
-A = np.array([[3.0, 1.0], [1.0, 2.0]])   # Method 1: eigenvalues
+import numpy as np
+
+# -- Check positive definiteness via eigenvalues and Cholesky ----------
+A = np.array([[3.0, 1.0], [1.0, 2.0]])
+
+# Method 1: eigenvalues
 eigenvalues = np.linalg.eigvalsh(A)
 print(f"Eigenvalues: {eigenvalues.round(4)}")
-print(f"All positive (PD): {bool(np.all(eigenvalues > 0))}")   # Method 2: Cholesky (succeeds if and only if A is PD)
+print(f"All positive (PD): {bool(np.all(eigenvalues > 0))}")
+
+# Method 2: Cholesky (succeeds if and only if A is PD)
 try:
     L = np.linalg.cholesky(A)
     print(f"\nCholesky succeeded: A = L L^T (PD confirmed)")
     print(f"L =\n{L.round(4)}")
 except np.linalg.LinAlgError:
-    print("\nCholesky failed: A is not PD")   # Method 3: directly evaluate quadratic form for a test vector
+    print("\nCholesky failed: A is not PD")
+
+# Method 3: directly evaluate quadratic form for a test vector
 x_test = np.array([1.0, 2.0])
 qf = float(x_test @ A @ x_test)
 print(f"\nQuadratic form x^T A x for x={x_test}: {qf:.4f} (> 0 confirms PD for this x)")
@@ -121,13 +129,24 @@ print(f"\nQuadratic form x^T A x for x={x_test}: {qf:.4f} (> 0 confirms PD for t
 
 ```r
 # -- Check positive definiteness via eigenvalues and Cholesky ----------
-A <- matrix(c(3, 1, 1, 2), nrow = 2)  # Method 1: eigenvalues
+A <- matrix(c(3, 1, 1, 2), nrow = 2)
+
+# Method 1: eigenvalues
 eigenvalues <- eigen(A, symmetric = TRUE)$values
 cat(sprintf("Eigenvalues: %s\n", paste(round(eigenvalues, 4), collapse = ", ")))
-cat(sprintf("All positive (PD): %s\n", all(eigenvalues > 0)))  # Method 2: Cholesky
-tryCatch({ L <- chol(A) cat(sprintf("\nCholesky succeeded: A is PD\n")) cat("L =\n") print(round(L, 4))
-}, error = function(e) { cat(sprintf("\nCholesky failed: %s\n", e$message))
-})  # Method 3: quadratic form
+cat(sprintf("All positive (PD): %s\n", all(eigenvalues > 0)))
+
+# Method 2: Cholesky
+tryCatch({
+  L <- chol(A)
+  cat(sprintf("\nCholesky succeeded: A is PD\n"))
+  cat("L =\n")
+  print(round(L, 4))
+}, error = function(e) {
+  cat(sprintf("\nCholesky failed: %s\n", e$message))
+})
+
+# Method 3: quadratic form
 x_test <- c(1.0, 2.0)
 qf <- as.numeric(x_test %*% A %*% x_test)
 cat(sprintf("\nQuadratic form x^T A x = %.4f (> 0: PD confirmed for this x)\n", qf))
@@ -138,34 +157,46 @@ cat(sprintf("\nQuadratic form x^T A x = %.4f (> 0: PD confirmed for this x)\n", 
 ```python
 import numpy as np
 import pandas as pd
-np.random.seed(42)   # -- Business scenario: validate covariance matrix before Cholesky sampling
+np.random.seed(42)
+
+# -- Business scenario: validate covariance matrix before Cholesky sampling
 # A risk model needs to sample correlated returns for 6 assets.
 # Estimate the covariance from data and handle near-PD issues.
-N_PERIODS = 52   # 1 year of weekly data
+N_PERIODS = 52  # 1 year of weekly data
 N_ASSETS = 6
 JITTER = 1e-6   # small diagonal fix for numerical PD
-asset_names = [f"asset_{chr(65+i)}" for i in range(N_ASSETS)]   # Simulate returns from a known PD covariance
+asset_names = [f"asset_{chr(65+i)}" for i in range(N_ASSETS)]
+
+# Simulate returns from a known PD covariance
 true_cov = np.eye(N_ASSETS) + 0.3 * np.ones((N_ASSETS, N_ASSETS))
 # true_cov is PD: diagonal dominant with all off-diagonal = 0.3
 L_true = np.linalg.cholesky(true_cov)
 returns = np.random.normal(size=(N_PERIODS, N_ASSETS)) @ L_true.T
 df = pd.DataFrame(returns, columns=asset_names)
-cov_est = df.cov().to_numpy()   # Diagnose PD status
+cov_est = df.cov().to_numpy()
+
+# Diagnose PD status
 eigenvalues = np.linalg.eigvalsh(cov_est)
 is_pd = bool(np.all(eigenvalues > 0))
 min_eig = float(eigenvalues.min())
 print(f"Estimated covariance eigenvalues: {eigenvalues.round(4)}")
-print(f"Is PD: {is_pd}, Min eigenvalue: {min_eig:.6f}")   # Apply jitter if needed to ensure PD
+print(f"Is PD: {is_pd}, Min eigenvalue: {min_eig:.6f}")
+
+# Apply jitter if needed to ensure PD
 if not is_pd or min_eig < 1e-8:
     cov_pd = cov_est + JITTER * np.eye(N_ASSETS)
-print(f"\nApplied jitter {JITTER} to ensure PD")
+    print(f"\nApplied jitter {JITTER} to ensure PD")
 else:
-    cov_pd = cov_est   # Cholesky factorization and simulation
+    cov_pd = cov_est
+
+# Cholesky factorization and simulation
 L_est = np.linalg.cholesky(cov_pd)
 N_SIM = 1_000
 simulated = np.random.normal(size=(N_SIM, N_ASSETS)) @ L_est.T
 sim_df = pd.DataFrame(simulated, columns=asset_names)
-sim_cov = sim_df.cov()   # Quadratic form check: x^T cov_pd x > 0 for a test portfolio
+sim_cov = sim_df.cov()
+
+# Quadratic form check: x^T cov_pd x > 0 for a test portfolio
 test_weights = np.ones(N_ASSETS) / N_ASSETS
 portfolio_var = float(test_weights @ cov_pd @ test_weights)
 print(f"\nCholesky factorization: success")

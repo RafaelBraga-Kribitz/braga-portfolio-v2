@@ -91,16 +91,21 @@ $Q^T Q = I$ implies $\det(Q)^2 = \det(I) = 1$, so $\det(Q) = \pm 1$ ✓.
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # -- det(I) = 1: verify and explore scaling and orthogonal properties --
+import numpy as np
+
+# -- det(I) = 1: verify and explore scaling and orthogonal properties --
 for n in [2, 3, 4, 5]:
     I_n = np.eye(n)
-print(f"det(I_{n}) = {np.linalg.det(I_n):.6f} (should be 1.0)")   # Scaling rule: det(k * I_n) = k^n
+    print(f"det(I_{n}) = {np.linalg.det(I_n):.6f} (should be 1.0)")
+
+# Scaling rule: det(k * I_n) = k^n
 K = 3.0
 N = 4
 scaled_I = K * np.eye(N)
-print(f"\ndet({K} * I_{N}) = {np.linalg.det(scaled_I):.4f} (should be {K**N:.4f} = {K}^{N})")   # Orthogonal matrix: |det| = 1 since Q^T
-Q = I
-theta = np.pi / 6   # 30 degrees
+print(f"\ndet({K} * I_{N}) = {np.linalg.det(scaled_I):.4f} (should be {K**N:.4f} = {K}^{N})")
+
+# Orthogonal matrix: |det| = 1 since Q^T Q = I
+theta = np.pi / 6  # 30 degrees
 Q = np.array([[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]])
 print(f"\nRotation matrix Q (theta = {np.degrees(theta):.0f} deg):")
 print(Q.round(4))
@@ -112,10 +117,15 @@ print(f"Q.T @ Q == I: {np.allclose(Q.T @ Q, np.eye(2))}")
 
 ```r
 # -- det(I) = 1: verify and scaling rule ------------------------------
-for (n in 2:5) { cat(sprintf("det(I_%d) = %.6f (should be 1.0)\n", n, det(diag(n))))
-}  # Scaling rule
+for (n in 2:5) {
+  cat(sprintf("det(I_%d) = %.6f (should be 1.0)\n", n, det(diag(n))))
+}
+
+# Scaling rule
 K <- 3.0; N <- 4L
-cat(sprintf("\ndet(%g * I_%d) = %.4f (should be %.4f = %g^%d)\n", K, N, det(K * diag(N)), K^N, K, N))  # Orthogonal matrix
+cat(sprintf("\ndet(%g * I_%d) = %.4f (should be %.4f = %g^%d)\n", K, N, det(K * diag(N)), K^N, K, N))
+
+# Orthogonal matrix
 theta <- pi / 6
 Q <- matrix(c(cos(theta), sin(theta), -sin(theta), cos(theta)), nrow = 2)
 cat(sprintf("\ndet(Q) = %.6f (rotation, should be 1.0)\n", det(Q)))
@@ -127,26 +137,35 @@ cat(sprintf("Q^T Q == I: %s\n", isTRUE(all.equal(t(Q) %*% Q, diag(2)))))
 ```python
 import numpy as np
 import pandas as pd
-np.random.seed(42)   # -- Business scenario: verify PCA rotation preserves total variance
+np.random.seed(42)
+
+# -- Business scenario: verify PCA rotation preserves total variance
 # Q (eigenvector matrix) is orthogonal, so det(Q) = +-1.
 # Total variance = tr(Sigma) must equal tr(Lambda) (in rotated PCA space).
 # det(I) = 1 is the anchor: Q^T Q = I means det(Q)^2 = 1.
 N_OBS = 200
 N_FEATURES = 6
-KPI_NAMES = ["spend", "impressions", "clicks", "cvr", "revenue", "roas"]   # Simulate correlated KPI data
+KPI_NAMES = ["spend", "impressions", "clicks", "cvr", "revenue", "roas"]
+
+# Simulate correlated KPI data
 L_sim = np.tril(np.random.uniform(0.2, 1.0, size=(N_FEATURES, N_FEATURES)))
 X = np.random.normal(0, 1, size=(N_OBS, N_FEATURES)) @ L_sim.T
 X_c = X - X.mean(axis=0)
-cov_matrix = X_c.T @ X_c / (N_OBS - 1)   # PCA eigendecomposition
+cov_matrix = X_c.T @ X_c / (N_OBS - 1)
+
+# PCA eigendecomposition
 eigenvalues, eigenvectors = np.linalg.eigh(cov_matrix)
 eigenvalues = eigenvalues[::-1]
-eigenvectors = eigenvectors[:, ::-1]   # columns are principal components (= Q) # Verify Q is orthogonal: Q^T
-Q = I
+eigenvectors = eigenvectors[:, ::-1]  # columns are principal components (= Q)
+
+# Verify Q is orthogonal: Q^T Q = I
 Q = eigenvectors
 QtQ = Q.T @ Q
 I_n = np.eye(N_FEATURES)
 orthogonality_error = float(np.max(np.abs(QtQ - I_n)))
-det_Q = float(np.linalg.det(Q))   # Variance preservation: tr(Sigma) == tr(Lambda) == tr(Q^T Sigma Q)
+det_Q = float(np.linalg.det(Q))
+
+# Variance preservation: tr(Sigma) == tr(Lambda) == tr(Q^T Sigma Q)
 Lambda = np.diag(eigenvalues)
 total_var = float(np.trace(cov_matrix))
 trace_lambda = float(np.trace(Lambda))
@@ -158,7 +177,10 @@ print(f"Sum of eigenvalues tr(Lambda): {trace_lambda:.4f}")
 print(f"Trace of rotated cov tr(Q^T S Q): {trace_rotated:.4f}")
 print(f"\nVariance preserved by rotation: {np.isclose(total_var, trace_lambda)}")
 print(f"\nExplained variance per component:")
-pca_df = pd.DataFrame({ "component": [f"PC{i+1}" for i in range(N_FEATURES)], "eigenvalue": eigenvalues.round(3), "explained_pct": (eigenvalues / total_var * 100).round(2),
+pca_df = pd.DataFrame({
+    "component": [f"PC{i+1}" for i in range(N_FEATURES)],
+    "eigenvalue": eigenvalues.round(3),
+    "explained_pct": (eigenvalues / total_var * 100).round(2),
 })
 print(pca_df.to_string(index=False))
 print("\nInterpretation: det(I) = 1 is why |det(Q)| = 1 for the PCA rotation matrix -- rotation is a volume-preserving transformation.")

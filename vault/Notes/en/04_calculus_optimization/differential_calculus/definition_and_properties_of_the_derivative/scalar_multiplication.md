@@ -3,6 +3,7 @@ publish: true
 date: '2026-04-16'
 tags:
 - calculus
+slug: scalar-multiplication-definition-and-properties-of-the-derivative
 ---
 
 # Scalar Multiplication
@@ -100,28 +101,38 @@ import numpy as np
 
 def scaled_deriv(k: float, f_prime_x: float) -> float:
     """d/dx[k * f(x)] = k * f'(x)."""
-    return k * f_prime_x   # Verify for MSE: d/dw[(1/N) * ||y - wx||^2]
+    return k * f_prime_x
+
+
+# Verify for MSE: d/dw[(1/N) * ||y - wx||^2]
 x_vals = np.array([1.0, 2.0, 3.0])
 y_vals = np.array([2.0, 3.0, 4.0])
 w = 1.0
 N = len(x_vals)
 
+
 def mse(w: float) -> float:
-    return float((1 / N) * np.sum((y_vals - w * x_vals)**2))   # Analytic gradient: (1/N) * (-2) *
-sum(r_i * x_i)
+    return float((1 / N) * np.sum((y_vals - w * x_vals)**2))
+
+
+# Analytic gradient: (1/N) * (-2) * sum(r_i * x_i)
 residuals = y_vals - w * x_vals
-grad_analytic = (1 / N) * (-2) * np.dot(residuals, x_vals)   # Numerical
+grad_analytic = (1 / N) * (-2) * np.dot(residuals, x_vals)
+
+# Numerical
 h = 1e-7
 grad_numerical = (mse(w + h) - mse(w - h)) / (2 * h)
 print(f"MSE gradient: analytic = {grad_analytic:.6f}, numerical = {grad_numerical:.6f}")
-print(f"Scalar rule: (1/N) factors out of d/dw[||y - wx||^2]")   # Show that scaling the loss scales the gradient proportionally
+print(f"Scalar rule: (1/N) factors out of d/dw[||y - wx||^2]")
+
+# Show that scaling the loss scales the gradient proportionally
 print("\nEffect of scalar k on gradient:")
 print(f"{'k':>8} {'Gradient':>14}")
 for k in [1.0, 1/N, 2.0, 0.5, -1.0]:
     # d/dw[k * mse_unnormalized] = k * grad_unnormalized
     grad_unnormalized = (-2) * np.dot(residuals, x_vals)
-scaled_grad = k * grad_unnormalized
-print(f"{k:>8.4f} {scaled_grad:>14.6f}")
+    scaled_grad = k * grad_unnormalized
+    print(f"{k:>8.4f} {scaled_grad:>14.6f}")
 ```
 
 ### Beginner example (R)
@@ -133,12 +144,16 @@ y_vals <- c(2, 3, 4)
 w <- 1.0
 N <- length(x_vals)
 mse <- function(w) (1/N) * sum((y_vals - w * x_vals)^2)
-residuals <- y_vals - w * x_vals  # Analytic: (1/N) passes through derivative
+residuals <- y_vals - w * x_vals
+
+# Analytic: (1/N) passes through derivative
 grad_analytic <- (1/N) * (-2) * sum(residuals * x_vals)
 h <- 1e-7
 grad_numerical <- (mse(w + h) - mse(w - h)) / (2 * h)
 cat(sprintf("MSE gradient: analytic = %.6f, numerical = %.6f\n", grad_analytic, grad_numerical))
-cat("Scalar (1/N) factors out of derivative.\n")  # Multi-task loss: grad(alpha*L_A + beta*L_B) = alpha*grad_A + beta*grad_B
+cat("Scalar (1/N) factors out of derivative.\n")
+
+# Multi-task loss: grad(alpha*L_A + beta*L_B) = alpha*grad_A + beta*grad_B
 alpha <- 0.7; beta <- 0.3
 grad_A <- 2.0  # hypothetical
 grad_B <- 5.0  # hypothetical
@@ -151,12 +166,16 @@ cat(sprintf("\nMulti-task: alpha*grad_A + beta*grad_B = %.1f*%.1f + %.1f*%.1f = 
 ```python
 import numpy as np
 from sklearn.datasets import make_regression
-np.random.seed(42)   # -- Scalar rule in multi-task learning: gradient scaling by task weight --
+np.random.seed(42)
+
+# -- Scalar rule in multi-task learning: gradient scaling by task weight --
 # Use case: a DS trains a model with two losses (regression + sparsity),
 # weighted by alpha and beta. The gradient is a weighted sum of individual gradients.
 N, D = 300, 6
 X, y_reg = make_regression(n_samples=N, n_features=D, noise=3.0, random_state=42)
-y_reg = y_reg / y_reg.std()   # Two tasks: MSE regression loss and L2 sparsity regularization
+y_reg = y_reg / y_reg.std()
+
+# Two tasks: MSE regression loss and L2 sparsity regularization
 ALPHA = 0.8   # regression weight
 BETA = 0.2   # sparsity weight
 LAMBDA = 0.01   # L2 regularization intensity
@@ -178,21 +197,29 @@ def l2_gradient(w: np.ndarray, lam: float) -> np.ndarray:
     """grad L_B = 2 * lambda * w. Scalar 2*lambda factors out."""
     return 2.0 * lam * w
 
-def total_loss_and_gradient( w: np.ndarray, X: np.ndarray, y: np.ndarray, alpha: float, beta: float, lam: float ) -> tuple:
-    """L = alpha * L_A + beta * L_B. Scalar rule: grad L = alpha * grad_A + beta * grad_B. """
+def total_loss_and_gradient(
+    w: np.ndarray, X: np.ndarray, y: np.ndarray, alpha: float, beta: float, lam: float
+) -> tuple:
+    """
+    L = alpha * L_A + beta * L_B.
+    Scalar rule: grad L = alpha * grad_A + beta * grad_B.
+    """
     loss_a = mse_loss(w, X, y)
     loss_b = l2_penalty(w, lam)
     grad_a = mse_gradient(w, X, y)
     grad_b = l2_gradient(w, lam)
     total_loss = alpha * loss_a + beta * loss_b
     total_grad = alpha * grad_a + beta * grad_b   # scalar rule
-    return float(total_loss), total_grad   # Gradient descent
+    return float(total_loss), total_grad
+
+
+# Gradient descent
 w = np.zeros(D)
 LR = 0.05
 N_ITER = 300
 for _ in range(N_ITER):
     _, grad = total_loss_and_gradient(w, X, y_reg, ALPHA, BETA, LAMBDA)
-w -= LR * grad
+    w -= LR * grad
 total_loss_final, grad_final = total_loss_and_gradient(w, X, y_reg, ALPHA, BETA, LAMBDA)
 grad_a_final = mse_gradient(w, X, y_reg)
 grad_b_final = l2_gradient(w, LAMBDA)

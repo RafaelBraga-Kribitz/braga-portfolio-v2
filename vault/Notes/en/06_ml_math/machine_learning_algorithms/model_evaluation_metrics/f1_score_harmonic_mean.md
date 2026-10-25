@@ -117,40 +117,57 @@ cat(sprintf("Precision: %.4f\nRecall: %.4f\nF1: %.4f\n", precision, recall, f1))
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
 import pandas as pd
 from sklearn.metrics import f1_score, fbeta_score, precision_recall_curve
 
-def f1_threshold_optimisation( y_true: np.ndarray, y_prob: np.ndarray, n_thresholds: int = 100,
+
+def f1_threshold_optimisation(
+    y_true: np.ndarray, y_prob: np.ndarray, n_thresholds: int = 100,
 ) -> dict[str, float]:
     # Find the threshold maximising F1 and return full metrics at that point.
     thresholds = np.linspace(0.01, 0.99, n_thresholds)
-    f1_scores = [ f1_score(y_true, (y_prob >= t).astype(int), zero_division=0) for t in thresholds ]
+    f1_scores = [
+        f1_score(y_true, (y_prob >= t).astype(int), zero_division=0) for t in thresholds
+    ]
     best_idx = int(np.argmax(f1_scores))
     best_thresh = float(thresholds[best_idx])
     best_f1 = float(f1_scores[best_idx])
-    return { "optimal_threshold": round(best_thresh, 4), "max_f1": round(best_f1, 6), }
+    return {
+        "optimal_threshold": round(best_thresh, 4),
+        "max_f1": round(best_f1, 6),
+    }
 
-def compare_models_f1( model_results: list[dict[str, np.ndarray]], y_true: np.ndarray, beta: float = 1.0,
+
+def compare_models_f1(
+    model_results: list[dict[str, np.ndarray]], y_true: np.ndarray, beta: float = 1.0,
 ) -> pd.DataFrame:
     # Compare models using Fbeta at their respective optimal thresholds.
     # model_results: list of {"name": str, "y_prob": ndarray}
     rows = []
     for entry in model_results:
         name = entry["name"]
-    y_prob = entry["y_prob"]
-    opt = f1_threshold_optimisation(y_true, y_prob)
-    thresh = opt["optimal_threshold"]
-    y_pred = (y_prob >= thresh).astype(int)
-    rows.append({ "model": name, "threshold": thresh, "f1": round(f1_score(y_true, y_pred, zero_division=0), 4), "fbeta": round(fbeta_score(y_true, y_pred, beta=beta, zero_division=0), 4), })
+        y_prob = entry["y_prob"]
+        opt = f1_threshold_optimisation(y_true, y_prob)
+        thresh = opt["optimal_threshold"]
+        y_pred = (y_prob >= thresh).astype(int)
+        rows.append({
+            "model": name,
+            "threshold": thresh,
+            "f1": round(f1_score(y_true, y_pred, zero_division=0), 4),
+            "fbeta": round(fbeta_score(y_true, y_pred, beta=beta, zero_division=0), 4),
+        })
     return pd.DataFrame(rows).sort_values("f1", ascending=False)
+
 
 if __name__ == "__main__":
     rng = np.random.default_rng(seed=42)
     n = 600
     y_true_sim = rng.binomial(1, 0.20, n)
-    models = [ {"name": "model_a", "y_prob": np.clip(y_true_sim * 0.7 + rng.beta(2, 5, n) * 0.4, 0, 1)}, {"name": "model_b", "y_prob": np.clip(y_true_sim * 0.5 + rng.beta(1, 3, n) * 0.6, 0, 1)}, ]
+    models = [
+        {"name": "model_a", "y_prob": np.clip(y_true_sim * 0.7 + rng.beta(2, 5, n) * 0.4, 0, 1)},
+        {"name": "model_b", "y_prob": np.clip(y_true_sim * 0.5 + rng.beta(1, 3, n) * 0.6, 0, 1)},
+    ]
     print("Model comparison by F1 at optimal threshold:")
     comparison = compare_models_f1(models, y_true_sim, beta=1.0)
     print(comparison.to_string(index=False))
@@ -239,7 +256,7 @@ So the shortcut formula is correct.
 
 ### Bounds check
 
-Since $\mathrm{Precision}, \mathrm{Recall} \in \[0,1\]$, and the harmonic mean of two numbers in $\[0,1\]$ also lies in $\[0,1\]$, we have:
+Since $\mathrm{Precision}, \mathrm{Recall} \in [0,1]$, and the harmonic mean of two numbers in $[0,1]$ also lies in $[0,1]$, we have:
 
 $$
 0 \le F_1 \le 1
@@ -322,6 +339,6 @@ $$
 - Harmonic mean formula for two positive numbers
 - Confusion matrix definition for binary classification
 - Equivalent F1 expression in confusion-matrix counts, $F_1=\frac{2TP}{2TP+FP+FN}$
-- Bound result that F1 lies in $\[0,1\]$
+- Bound result that F1 lies in $[0,1]$
 - Threshold dependence of hard-label classification metrics
 - Class imbalance motivation for using Precision, Recall, and F1

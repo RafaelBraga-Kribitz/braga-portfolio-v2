@@ -96,21 +96,29 @@ Interpretation: the point $(5,4,3)$ is $\sqrt{13}$ units from the line.
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # -- Distance from a point to an affine subspace ---
+import numpy as np
+
+# -- Distance from a point to an affine subspace ---
 # L = x0 + span(b): a line through x0 in direction b
 x0 = np.array([1.0, 2.0, 0.0])   # anchor point on L
 b = np.array([1.0, 0.0, 0.0])   # direction of the line (unit vector)
-x = np.array([5.0, 4.0, 3.0])   # query point # Step 1: translate
-v = x - x0   # Step 2: project onto
-U = span(b)
-proj_v = np.dot(b, v) * b   #
-pi_U(v)   # Step 3: residual and distance
+x = np.array([5.0, 4.0, 3.0])   # query point
+
+# Step 1: translate
+v = x - x0
+
+# Step 2: project onto U = span(b)
+proj_v = np.dot(b, v) * b   # pi_U(v)
+
+# Step 3: residual and distance
 residual = v - proj_v
 dist = np.linalg.norm(residual)
 print(f"v = x - x0 = {v}")
 print(f"pi_U(v) = {proj_v}")
 print(f"Residual = {residual}")
-print(f"d(x, L) = {dist:.4f}")   # Closest point on L
+print(f"d(x, L) = {dist:.4f}")
+
+# Closest point on L
 closest_on_L = x0 + proj_v
 print(f"\nClosest point on L: {closest_on_L}")
 print(f"Distance verification: {np.linalg.norm(x - closest_on_L):.4f}")
@@ -139,25 +147,33 @@ import numpy as np
 import pandas as pd
 from sklearn.svm import SVC
 from sklearn.preprocessing import StandardScaler
-np.random.seed(42)   # -- Business scenario: SVM margin = distance to hyperplane (affine subspace) ---
+np.random.seed(42)
+
+# -- Business scenario: SVM margin = distance to hyperplane (affine subspace) ---
 # The SVM hyperplane w^T x + b = 0 is an affine subspace.
 # Margin = distance from support vectors to this affine subspace.
+
 # Generate two-class customer data (2 features for visualization clarity)
 N = 200
-X_class0 = np.random.randn(N/2, 2) - 1.5
-X_class1 = np.random.randn(N/2, 2) + 1.5
+X_class0 = np.random.randn(N // 2, 2) - 1.5
+X_class1 = np.random.randn(N // 2, 2) + 1.5
 X = np.vstack([X_class0, X_class1])
-y = np.array([0]*(N/2) + [1]*(N/2))
+y = np.array([0] * (N // 2) + [1] * (N // 2))
 scaler = StandardScaler()
 X_s = scaler.fit_transform(X)
 svm = SVC(kernel='linear', C=1.0)
 svm.fit(X_s, y)
 w = svm.coef_[0]
-b_val = svm.intercept_[0]   # Distance from each training point to the hyperplane
+b_val = svm.intercept_[0]
+
+# Distance from each training point to the hyperplane
 # Affine subspace formula: d = |w^T x + b| / ||w||
 distances = np.abs(X_s @ w + b_val) / np.linalg.norm(w)
 margin = 2 / np.linalg.norm(w)   # total margin width
-results = pd.DataFrame({ "obs": range(N), "class": y, "distance": distances.round(4),
+results = pd.DataFrame({
+    "obs": range(N),
+    "class": y,
+    "distance": distances.round(4),
 })
 print(f"SVM hyperplane: w = {w.round(4)}, b = {b_val:.4f}")
 print(f"||w|| = {np.linalg.norm(w):.4f}")

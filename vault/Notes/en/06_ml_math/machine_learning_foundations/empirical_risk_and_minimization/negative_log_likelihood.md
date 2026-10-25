@@ -401,7 +401,7 @@ This is the standard binary cross-entropy loss, so the classification link is co
 
 ### Non-negativity intuition check
 
-Since probabilities lie in $(0,1\]$, their logarithms are non-positive:
+Since probabilities lie in $(0,1]$, their logarithms are non-positive:
 
 $$
 \log p \le 0

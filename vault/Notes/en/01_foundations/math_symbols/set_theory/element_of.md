@@ -102,8 +102,11 @@ No — $\notin A$ — null value, invalid.
 A = {1, 2, 3, 4, 5}
 print(f"3 ∈ A: {3 in A}")   # True
 print(f"7 ∈ A: {7 in A}")   # False
-print(f"7 ∉ A: {7 not in A}")   # True # Set vs list performance
+print(f"7 ∉ A: {7 not in A}")   # True
+
+# Set vs list performance
 import time
+
 large_list = list(range(1_000_000))
 large_set = set(large_list)
 target = 999_999
@@ -116,15 +119,21 @@ set_time = time.perf_counter() - start
 print(f"\nMembership check (target = {target}):")
 print(f" list (O(n)): {list_time*1000:.4f} ms")
 print(f" set (O(1)): {set_time*1000:.4f} ms")
-print(f" Speedup: ~{list_time / set_time:.0f}x")   # Pandas: vectorized membership with
-isin()
+print(f" Speedup: ~{list_time / set_time:.0f}x")
+
+# Pandas: vectorized membership with isin()
 import pandas as pd
 import numpy as np
+
 np.random.seed(42)
 valid_statuses = {"approved", "pending", "rejected"}
-df = pd.DataFrame({ "transaction_id": range(1, 11), "status": ["approved", "pending", "rejected", "acitve", "approved", None, "APPROVED", "rejected", "pending", "cancelled"],
+df = pd.DataFrame({
+    "transaction_id": range(1, 11),
+    "status": ["approved", "pending", "rejected", "acitve", "approved",
+               None, "APPROVED", "rejected", "pending", "cancelled"],
 })
-df["is_valid"] = df["status"].isin(valid_statuses)   # x ∈ A for each row print("\nStatus membership validation (x ∈ valid_statuses):")
+df["is_valid"] = df["status"].isin(valid_statuses)   # x ∈ A for each row
+print("\nStatus membership validation (x ∈ valid_statuses):")
 print(df.to_string(index=False))
 print(f"\nValid: {df['is_valid'].sum()} Invalid: {(~df['is_valid']).sum()}")
 ```
@@ -136,10 +145,16 @@ print(f"\nValid: {df['is_valid'].sum()} Invalid: {(~df['is_valid']).sum()}")
 A <- c(1, 2, 3, 4, 5)
 cat("3 ∈ A:", 3 %in% A, "\n")
 cat("7 ∈ A:", 7 %in% A, "\n")
-cat("7 ∉ A:", !(7 %in% A), "\n")  # Vectorized membership check (like pandas isin)
+cat("7 ∉ A:", !(7 %in% A), "\n")
+
+# Vectorized membership check (like pandas isin)
 valid_statuses <- c("approved", "pending", "rejected")
-df <- data.frame( transaction_id = 1:8, status = c("approved", "pending", "acitve", "rejected", "approved", NA, "APPROVED", "cancelled"), stringsAsFactors = FALSE
-) df$is_valid <- df$status %in% valid_statuses  # x ∈ A, element-wise
+df <- data.frame(
+  transaction_id = 1:8,
+  status = c("approved", "pending", "acitve", "rejected", "approved", NA, "APPROVED", "cancelled"),
+  stringsAsFactors = FALSE
+)
+df$is_valid <- df$status %in% valid_statuses  # x ∈ A, element-wise
 cat("\nStatus membership validation:\n")
 print(df)
 cat(sprintf("\nValid: %d Invalid: %d\n", sum(df$is_valid, na.rm = TRUE), sum(!df$is_valid, na.rm = TRUE)))
@@ -150,31 +165,70 @@ cat(sprintf("\nValid: %d Invalid: %d\n", sum(df$is_valid, na.rm = TRUE), sum(!df
 ```python
 import pandas as pd
 import numpy as np
-from typing import Any   # Scenario: multi-column domain validation using set membership
+from typing import Any
+
+# Scenario: multi-column domain validation using set membership
 # Each column has a known valid domain — membership check enforces the contract
 np.random.seed(42)
 N = 200
-VALID_DOMAINS: dict[str, set] = { "country_code": {"AT", "DE", "CH", "US", "GB", "BR"}, "channel": {"organic", "paid", "email", "referral", "direct"}, "status": {"active", "inactive", "suspended"}, "currency": {"EUR", "USD", "GBP", "CHF"},
-}   # Simulate data with some invalid values
-df = pd.DataFrame({ "country_code": np.random.choice(["AT", "DE", "US", "XX", "YY"], N), "channel": np.random.choice(["organic", "paid", "unknown", "bot"], N), "status": np.random.choice(["active", "inactive", "deleted"], N), "currency": np.random.choice(["EUR", "USD", "BTX", "GBP"], N), "revenue": np.random.uniform(10, 1000, N).round(2),
+VALID_DOMAINS: dict[str, set] = {
+    "country_code": {"AT", "DE", "CH", "US", "GB", "BR"},
+    "channel": {"organic", "paid", "email", "referral", "direct"},
+    "status": {"active", "inactive", "suspended"},
+    "currency": {"EUR", "USD", "GBP", "CHF"},
+}
+
+# Simulate data with some invalid values
+df = pd.DataFrame({
+    "country_code": np.random.choice(["AT", "DE", "US", "XX", "YY"], N),
+    "channel": np.random.choice(["organic", "paid", "unknown", "bot"], N),
+    "status": np.random.choice(["active", "inactive", "deleted"], N),
+    "currency": np.random.choice(["EUR", "USD", "BTX", "GBP"], N),
+    "revenue": np.random.uniform(10, 1000, N).round(2),
 })
 
-def validate_membership( df: pd.DataFrame, domain_map: dict[str, set],
+
+def validate_membership(
+    df: pd.DataFrame,
+    domain_map: dict[str, set],
 ) -> pd.DataFrame:
-    """ Validate column values against known valid domains (x ∈ A check). Args: df: Input DataFrame. domain_map: Dict mapping column names to their valid value sets. Returns: DataFrame with per-column violation counts and sample invalid values. """
+    """
+    Validate column values against known valid domains (x ∈ A check).
+
+    Args:
+        df: Input DataFrame.
+        domain_map: Dict mapping column names to their valid value sets.
+
+    Returns:
+        DataFrame with per-column violation counts and sample invalid values.
+    """
     report_rows = []
     for col, valid_set in domain_map.items():
         if col not in df.columns:
             continue
         mask = ~df[col].isin(valid_set)
-    violating = df.loc[mask, col].dropna().unique().tolist()
-    report_rows.append({ "column": col, "total_rows": len(df), "violations": int(mask.sum()), "violation_pct": round(mask.mean() * 100, 1), "invalid_values": str(violating[:5]), })
+        violating = df.loc[mask, col].dropna().unique().tolist()
+        report_rows.append({
+            "column": col,
+            "total_rows": len(df),
+            "violations": int(mask.sum()),
+            "violation_pct": round(mask.mean() * 100, 1),
+            "invalid_values": str(violating[:5]),
+        })
     return pd.DataFrame(report_rows)
+
+
 report = validate_membership(df, VALID_DOMAINS)
 print("Domain Membership Validation Report (x ∈ A)")
 print("=" * 60)
-print(report.to_string(index=False))   # Clean: drop rows with any membership violation
-valid_mask = pd.concat([ df[col].isin(valid_set) for col, valid_set in VALID_DOMAINS.items() if col in df.columns ], axis=1).all(axis=1)
+print(report.to_string(index=False))
+
+# Clean: drop rows with any membership violation
+valid_mask = pd.concat([
+    df[col].isin(valid_set)
+    for col, valid_set in VALID_DOMAINS.items()
+    if col in df.columns
+], axis=1).all(axis=1)
 print(f"\nRows passing all domain checks: {valid_mask.sum()} / {len(df)}")
 print(f"Rows failing (at least one x ∉ A): {(~valid_mask).sum()} / {len(df)}")
 ```
@@ -183,11 +237,18 @@ print(f"Rows failing (at least one x ∉ A): {(~valid_mask).sum()} / {len(df)}")
 
 ```r
 # Domain membership validation: x ∈ A for each column
-VALID_DOMAINS <- list( region = c("N", "S", "E", "W"), status = c("active", "inactive", "pending")
+VALID_DOMAINS <- list(
+  region = c("N", "S", "E", "W"),
+  status = c("active", "inactive", "pending")
 )
 set.seed(42)
-df <- data.frame( id = 1:50, region = sample(c("N", "S", "E", "W", "X"), 50, replace = TRUE), status = sample(c("active", "inactive", "pending", "unknown"), 50, replace = TRUE)
-) valid_mask <- Reduce(`&`, lapply(names(VALID_DOMAINS), function(col) { if (col %in% names(df)) dfcol %in% VALID_DOMAINScol else rep(TRUE, nrow(df))
+df <- data.frame(
+  id = 1:50,
+  region = sample(c("N", "S", "E", "W", "X"), 50, replace = TRUE),
+  status = sample(c("active", "inactive", "pending", "unknown"), 50, replace = TRUE)
+)
+valid_mask <- Reduce(`&`, lapply(names(VALID_DOMAINS), function(col) {
+  if (col %in% names(df)) df[[col]] %in% VALID_DOMAINS[[col]] else rep(TRUE, nrow(df))
 }))
 cat("Domain Membership Validation (x ∈ A)\n")
 cat(" Rows passing all checks:", sum(valid_mask), "/", nrow(df), "\n")

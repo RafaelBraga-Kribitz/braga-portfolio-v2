@@ -101,21 +101,69 @@ True value: $1.21 + 0.99 + 0.81 = 3.01$ ✓ (exact for quadratic f)
 
 ```python
 """
-Multivariate Taylor Series: 2nd-order approximation. f(x) approx
-f(x0) + grad(x0)^T * delta + 0.5 * delta^T * H(x0) * delta Applied to approximating a multivariate function near a base point
+Multivariate Taylor Series: 2nd-order approximation.
+
+f(x) approx f(x0) + grad(x0)^T * delta + 0.5 * delta^T * H(x0) * delta
+
+Applied to approximating a multivariate function near a base point
 and implementing one step of Newton's method.
-""" import numpy as np def quadratic_loss(weights: np.ndarray) -> float: """Example loss: L(w) = 0.5 * ||Aw - b||^2.""" a_matrix = np.array([[2.0, 1.0], [1.0, 3.0]]) b_vector = np.array([1.0, 2.0]) residual = a_matrix @ weights - b_vector return 0.5 * float(residual @ residual) def gradient(weights: np.ndarray) -> np.ndarray: """Gradient: dL/dw = A^T(Aw - b).""" a_matrix = np.array([[2.0, 1.0], [1.0, 3.0]]) b_vector = np.array([1.0, 2.0]) return a_matrix.T @ (a_matrix @ weights - b_vector) def hessian() -> np.ndarray: """Hessian: d^2L/dw^2 = A^T A (constant for quadratic loss).""" a_matrix = np.array([[2.0, 1.0], [1.0, 3.0]]) return a_matrix.T @ a_matrix def taylor_second_order_approx( weights: np.ndarray, weights_0: np.ndarray, grad_at_0: np.ndarray, hess_at_0: np.ndarray, function_val_at_0: float,
-) -> float: """Evaluate 2nd-order Taylor approximation at weights given expansion at weights_0.""" delta = weights - weights_0 return ( function_val_at_0 + grad_at_0 @ delta + 0.5 * delta @ hess_at_0 @ delta ) weights_0 = np.array([0.5, 0.5])
+"""
+import numpy as np
+
+
+def quadratic_loss(weights: np.ndarray) -> float:
+    """Example loss: L(w) = 0.5 * ||Aw - b||^2."""
+    a_matrix = np.array([[2.0, 1.0], [1.0, 3.0]])
+    b_vector = np.array([1.0, 2.0])
+    residual = a_matrix @ weights - b_vector
+    return 0.5 * float(residual @ residual)
+
+
+def gradient(weights: np.ndarray) -> np.ndarray:
+    """Gradient: dL/dw = A^T(Aw - b)."""
+    a_matrix = np.array([[2.0, 1.0], [1.0, 3.0]])
+    b_vector = np.array([1.0, 2.0])
+    return a_matrix.T @ (a_matrix @ weights - b_vector)
+
+
+def hessian() -> np.ndarray:
+    """Hessian: d^2L/dw^2 = A^T A (constant for quadratic loss)."""
+    a_matrix = np.array([[2.0, 1.0], [1.0, 3.0]])
+    return a_matrix.T @ a_matrix
+
+
+def taylor_second_order_approx(
+    weights: np.ndarray,
+    weights_0: np.ndarray,
+    grad_at_0: np.ndarray,
+    hess_at_0: np.ndarray,
+    function_val_at_0: float,
+) -> float:
+    """Evaluate 2nd-order Taylor approximation at weights given expansion at weights_0."""
+    delta = weights - weights_0
+    return (
+        function_val_at_0
+        + grad_at_0 @ delta
+        + 0.5 * delta @ hess_at_0 @ delta
+    )
+
+
+weights_0 = np.array([0.5, 0.5])
 grad_0 = gradient(weights_0)
 hess_0 = hessian()
-loss_0 = quadratic_loss(weights_0)   # Newton
-step: delta = -H^{-1} * grad
+loss_0 = quadratic_loss(weights_0)
+
+# Newton step: delta = -H^{-1} * grad
 newton_delta = -np.linalg.solve(hess_0, grad_0)
-weights_newton = weights_0 + newton_delta   # Taylor approximation along the Newton direction
+weights_newton = weights_0 + newton_delta
+
+# Taylor approximation along the Newton direction
 delta_eval = np.array([0.05, 0.05])
 weights_eval = weights_0 + delta_eval
 true_loss = quadratic_loss(weights_eval)
-taylor_loss = taylor_second_order_approx(weights_eval, weights_0, grad_0, hess_0, loss_0) print(f"Base point : {weights_0} → loss = {loss_0:.6f}")
+taylor_loss = taylor_second_order_approx(weights_eval, weights_0, grad_0, hess_0, loss_0)
+
+print(f"Base point : {weights_0} → loss = {loss_0:.6f}")
 print(f"Gradient : {grad_0}")
 print(f"Newton step : {newton_delta.round(6)}")
 print(f"Newton point: {weights_newton.round(6)} → loss = {quadratic_loss(weights_newton):.8f}")
@@ -127,24 +175,42 @@ print(f"True loss at {weights_eval}: {true_loss:.6f} (exact for quadratic)")
 
 ```r
 # Multivariate Taylor Series: 2nd-order approximation
-# Applied to sensitivity analysis of a business revenue model # Revenue function: R(price, units) = price * units - 0.1*price^2 - 0.5*units^2
-revenue_func <- function(price, units) { price * units - 0.1 * price^2 - 0.5 * units^2
-}  # Gradient: [dR/d_price, dR/d_units]
-revenue_gradient <- function(price, units) { d_price <- units - 0.2 * price
-  d_units <- price - units c(d_price, d_units)
-}  # Hessian matrix (constant for this quadratic function)
-revenue_hessian <- matrix(c(-0.2, 1, 1, -1), nrow = 2, ncol = 2)  # Taylor 2nd-order approximation around (p_0, u_0)
-taylor_approx_2nd <- function(price, units, p_0, u_0) { delta <- c(price - p_0, units - u_0)
+# Applied to sensitivity analysis of a business revenue model
+
+# Revenue function: R(price, units) = price * units - 0.1*price^2 - 0.5*units^2
+revenue_func <- function(price, units) {
+  price * units - 0.1 * price^2 - 0.5 * units^2
+}
+
+# Gradient: [dR/d_price, dR/d_units]
+revenue_gradient <- function(price, units) {
+  d_price <- units - 0.2 * price
+  d_units <- price - units
+  c(d_price, d_units)
+}
+
+# Hessian matrix (constant for this quadratic function)
+revenue_hessian <- matrix(c(-0.2, 1, 1, -1), nrow = 2, ncol = 2)
+
+# Taylor 2nd-order approximation around (p_0, u_0)
+taylor_approx_2nd <- function(price, units, p_0, u_0) {
+  delta <- c(price - p_0, units - u_0)
   grad <- revenue_gradient(p_0, u_0)
-  r_0 <- revenue_func(p_0, u_0) r_0 + sum(grad * delta) + 0.5 * t(delta) %*% revenue_hessian %*% delta
-}  # Base point
+  r_0 <- revenue_func(p_0, u_0)
+  as.numeric(r_0 + sum(grad * delta) + 0.5 * t(delta) %*% revenue_hessian %*% delta)
+}
+
+# Base point
 P_0 <- 30.0
 U_0 <- 20.0
 cat(sprintf("Revenue at (%.0f, %.0f): €%.2f\n", P_0, U_0, revenue_func(P_0, U_0)))
-cat(sprintf("Gradient: price_sensitivity=%.2f, units_sensitivity=%.2f\n", revenue_gradient(P_0, U_0)[1], revenue_gradient(P_0, U_0)[2]))  # Sensitivity analysis via Taylor
+cat(sprintf("Gradient: price_sensitivity=%.2f, units_sensitivity=%.2f\n", revenue_gradient(P_0, U_0)[1], revenue_gradient(P_0, U_0)[2]))
+
+# Sensitivity analysis via Taylor
 price_variations <- seq(25, 35, by = 2)
 cat("\nPrice sensitivity (units=20 fixed):\n")
-for (p in price_variations) { true_r <- revenue_func(p, U_0)
+for (p in price_variations) {
+  true_r <- revenue_func(p, U_0)
   approx_r <- taylor_approx_2nd(p, U_0, P_0, U_0)
   cat(sprintf(" p=%2.0f: true=€%.2f, taylor=€%.2f, error=€%.4f\n", p, true_r, approx_r, abs(true_r - approx_r)))
 }
@@ -155,9 +221,14 @@ for (p in price_variations) { true_r <- revenue_func(p, U_0)
 ```python
 """
 Multivariate Taylor Series for the Laplace approximation
-of a Bayesian posterior in logistic regression. Business context: A churn prediction team wants uncertainty estimates for their model weights. The Laplace approximation gives a Gaussian approximation to the posterior
-p(w|data), using the MAP estimate and the Hessian of the log-posterior at that point.
-""" import numpy as np
+of a Bayesian posterior in logistic regression.
+
+Business context: A churn prediction team wants uncertainty estimates for
+their model weights. The Laplace approximation gives a Gaussian approximation
+to the posterior p(w|data), using the MAP estimate and the Hessian of the
+log-posterior at that point.
+"""
+import numpy as np
 from scipy.optimize import minimize
 from scipy.special import expit   # sigmoid function
 RNG_SEED: int = 42
@@ -176,20 +247,33 @@ def log_posterior(weights: np.ndarray, x_data: np.ndarray, y_labels: np.ndarray)
     log_prior = -0.5 * PRIOR_PRECISION * float(weights @ weights)
     return log_likelihood(weights, x_data, y_labels) + log_prior
 
-def hessian_log_posterior( weights: np.ndarray, x_data: np.ndarray ) -> np.ndarray:
-    """Hessian of log-posterior: H = -X^T D X - prior_precision * I. D is diagonal matrix with sigmoid(Xw)*(1-sigmoid(Xw)) on diagonal. """
+def hessian_log_posterior(weights: np.ndarray, x_data: np.ndarray) -> np.ndarray:
+    """Hessian of log-posterior: H = -X^T D X - prior_precision * I.
+
+    D is diagonal matrix with sigmoid(Xw)*(1-sigmoid(Xw)) on diagonal.
+    """
     probs = expit(x_data @ weights)
     diag_weights = probs * (1.0 - probs)
     hess_likelihood = -(x_data.T * diag_weights) @ x_data
     hess_prior = -PRIOR_PRECISION * np.eye(len(weights))
     return hess_likelihood + hess_prior
+
+
 rng = np.random.default_rng(RNG_SEED)
 x_data = rng.normal(0.0, 1.0, (NUM_SAMPLES, NUM_FEATURES))
 true_weights = np.array([1.0, -0.5, 0.8])
-y_labels = (expit(x_data @ true_weights) > rng.uniform(0, 1, NUM_SAMPLES)).astype(float)   # Find MAP estimate (2nd-order Taylor approximation is centered here)
-result = minimize( fun=lambda w: -log_posterior(w, x_data, y_labels), x0=np.zeros(NUM_FEATURES), jac="2-point", method="BFGS",
+y_labels = (expit(x_data @ true_weights) > rng.uniform(0, 1, NUM_SAMPLES)).astype(float)
+
+# Find MAP estimate (2nd-order Taylor approximation is centered here)
+result = minimize(
+    fun=lambda w: -log_posterior(w, x_data, y_labels),
+    x0=np.zeros(NUM_FEATURES),
+    jac="2-point",
+    method="BFGS",
 )
-map_weights = result.x   # Laplace approximation: Gaussian N(w_map, (-H)^{-1})
+map_weights = result.x
+
+# Laplace approximation: Gaussian N(w_map, (-H)^{-1})
 hess_at_map = hessian_log_posterior(map_weights, x_data)
 covariance_laplace = -np.linalg.inv(hess_at_map)   # 2nd-order Taylor gives covariance
 print("Laplace Approximation (Multivariate 2nd-Order Taylor):")
@@ -198,7 +282,9 @@ print(f" True weights: {true_weights}")
 print(f" Posterior std (Laplace):")
 for feature_idx in range(NUM_FEATURES):
     std = np.sqrt(covariance_laplace[feature_idx, feature_idx])
-print(f" w_{feature_idx+1}: MAP={map_weights[feature_idx]:.4f}, std={std:.4f}, " f"95%CI=[{map_weights[feature_idx]-1.96*std:.4f}, " f"{map_weights[feature_idx]+1.96*std:.4f}]")
+    print(f" w_{feature_idx+1}: MAP={map_weights[feature_idx]:.4f}, std={std:.4f}, "
+          f"95%CI=[{map_weights[feature_idx]-1.96*std:.4f}, "
+          f"{map_weights[feature_idx]+1.96*std:.4f}]")
 ```
 
 ---

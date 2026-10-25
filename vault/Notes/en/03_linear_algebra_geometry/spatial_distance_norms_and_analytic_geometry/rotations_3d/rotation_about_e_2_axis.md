@@ -95,26 +95,41 @@ $\|v\| = \sqrt{1+4+9} = \sqrt{14}$. $\|R_2 v\| = \sqrt{2.366^2+4+2.098^2} = \sqr
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # -- Rotation matrix R2(theta) around the y-axis ---
+import numpy as np
+
+# -- Rotation matrix R2(theta) around the y-axis ---
+
 
 def rotation_y(theta_deg: float) -> np.ndarray:
     """Return 3x3 rotation matrix for rotation around y-axis by theta_deg degrees."""
     theta = np.radians(theta_deg)
     c, s = np.cos(theta), np.sin(theta)
-    return np.array([ [ c, 0.0, s], [0.0, 1.0, 0.0], [-s, 0.0, c], ])
-v = np.array([1.0, 0.0, 0.0])   # unit x vector
+    return np.array([
+        [ c, 0.0, s],
+        [0.0, 1.0, 0.0],
+        [-s, 0.0, c],
+    ])
+
+
+v = np.array([1.0, 0.0, 0.0])  # unit x vector
 for angle in [0, 30, 90, 180]:
     R2 = rotation_y(angle)
-v_rot = R2 @ v
-print(f"theta={angle:3d}°: {v} -> {v_rot.round(4)}")   # Verify sign pattern vs R1
+    v_rot = R2 @ v
+    print(f"theta={angle:3d}°: {v} -> {v_rot.round(4)}")
 
+
+# Verify sign pattern vs R1
 def rotation_x(theta_deg):
     t = np.radians(theta_deg)
-    return np.array([[1,0,0],[0,np.cos(t),-np.sin(t)],[0,np.sin(t),np.cos(t)]])
+    return np.array([[1, 0, 0], [0, np.cos(t), -np.sin(t)], [0, np.sin(t), np.cos(t)]])
+
+
 print(f"\nR2(45) sin pattern (note flipped signs vs R1):")
 print(rotation_y(45).round(3))
 print(f"\nR1(45) for comparison:")
-print(rotation_x(45).round(3))   # Verify orthogonality
+print(rotation_x(45).round(3))
+
+# Verify orthogonality
 R2 = rotation_y(37)
 print(f"\nR2^T R2 = I: {np.allclose(R2.T @ R2, np.eye(3))}")
 print(f"det(R2) = 1: {np.isclose(np.linalg.det(R2), 1.0)}")
@@ -124,10 +139,13 @@ print(f"det(R2) = 1: {np.isclose(np.linalg.det(R2), 1.0)}")
 
 ```r
 # -- Rotation around y-axis ---
-rotation_y <- function(theta_deg) { t <- theta_deg * pi / 180 matrix(c(cos(t), 0, -sin(t), 0, 1, 0, sin(t), 0, cos(t)), nrow=3, ncol=3, byrow=TRUE)
+rotation_y <- function(theta_deg) {
+  t <- theta_deg * pi / 180
+  matrix(c(cos(t), 0, -sin(t), 0, 1, 0, sin(t), 0, cos(t)), nrow=3, ncol=3, byrow=TRUE)
 }
 v <- c(1, 2, 3)
-for (angle in c(0, 30, 90, 180)) { R2 <- rotation_y(angle)
+for (angle in c(0, 30, 90, 180)) {
+  R2 <- rotation_y(angle)
   v_rot <- R2 %*% v
   cat(sprintf("theta=%d: (%.4f, %.4f, %.4f) norm=%.4f\n", angle, v_rot[1], v_rot[2], v_rot[3], sqrt(sum(v_rot^2))))
 }
@@ -138,34 +156,51 @@ for (angle in c(0, 30, 90, 180)) { R2 <- rotation_y(angle)
 ```python
 import numpy as np
 import pandas as pd
-np.random.seed(42)   # -- Business scenario: Euler angle composition ---
+np.random.seed(42)
+
+# -- Business scenario: Euler angle composition ---
 # Compose yaw (R3), pitch (R2), roll (R1) for full 3D orientation.
 # Simulate sensor orientation for an autonomous vehicle dataset.
 
+
 def rotation_x(theta_deg):
-    t = np.radians(theta_deg); c, s = np.cos(t), np.sin(t)
-    return np.array([[1,0,0],[0,c,-s],[0,s,c]])
+    t = np.radians(theta_deg)
+    c, s = np.cos(t), np.sin(t)
+    return np.array([[1, 0, 0], [0, c, -s], [0, s, c]])
+
 
 def rotation_y(theta_deg):
-    t = np.radians(theta_deg); c, s = np.cos(t), np.sin(t)
-    return np.array([[c,0,s],[0,1,0],[-s,0,c]])
+    t = np.radians(theta_deg)
+    c, s = np.cos(t), np.sin(t)
+    return np.array([[c, 0, s], [0, 1, 0], [-s, 0, c]])
+
 
 def rotation_z(theta_deg):
-    t = np.radians(theta_deg); c, s = np.cos(t), np.sin(t)
-    return np.array([[c,-s,0],[s,c,0],[0,0,1]])
+    t = np.radians(theta_deg)
+    c, s = np.cos(t), np.sin(t)
+    return np.array([[c, -s, 0], [s, c, 0], [0, 0, 1]])
+
+
 N_SENSORS = 20
 sensors = []
 for i in range(N_SENSORS):
-    yaw = np.random.uniform(-180, 180)   # rotation around z (heading)
-pitch = np.random.uniform(-15, 15)   # rotation around y (tilt)
-roll = np.random.uniform(-10, 10)   # rotation around x (lean) # Full
-rotation: R = R3(yaw)
-R2(pitch)
-R1(roll)
-R = rotation_z(yaw) @ rotation_y(pitch) @ rotation_x(roll)   # Verify it is a valid rotation matrix
-is_ortho = np.allclose(R.T @ R, np.eye(3))
-det_ok = np.isclose(np.linalg.det(R), 1.0)
-sensors.append({ "sensor_id": i + 1, "yaw_deg": round(yaw, 1), "pitch_deg": round(pitch, 1), "roll_deg": round(roll, 1), "is_valid_rotation": is_ortho and det_ok, })
+    yaw = np.random.uniform(-180, 180)  # rotation around z (heading)
+    pitch = np.random.uniform(-15, 15)  # rotation around y (tilt)
+    roll = np.random.uniform(-10, 10)   # rotation around x (lean)
+
+    # Full rotation: R = R3(yaw) R2(pitch) R1(roll)
+    R = rotation_z(yaw) @ rotation_y(pitch) @ rotation_x(roll)
+
+    # Verify it is a valid rotation matrix
+    is_ortho = np.allclose(R.T @ R, np.eye(3))
+    det_ok = np.isclose(np.linalg.det(R), 1.0)
+    sensors.append({
+        "sensor_id": i + 1,
+        "yaw_deg": round(yaw, 1),
+        "pitch_deg": round(pitch, 1),
+        "roll_deg": round(roll, 1),
+        "is_valid_rotation": is_ortho and det_ok,
+    })
 df = pd.DataFrame(sensors)
 print("Euler angle composition (R = R3(yaw) @ R2(pitch) @ R1(roll)):")
 print(df.to_string(index=False))

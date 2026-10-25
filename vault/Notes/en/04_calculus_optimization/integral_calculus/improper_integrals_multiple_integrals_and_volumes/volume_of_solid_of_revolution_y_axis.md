@@ -135,19 +135,20 @@ print(f"Same result: {abs(vol_shell - volume_numerical) < 1e-6}")
 ### Beginner example (R)
 
 ```r
-# Volume of solid of revolution around y-axis:
-x = sqrt(y), y in [0, 4]
+# Volume of solid of revolution around y-axis: x = sqrt(y), y in [0, 4]
 g <- function(y) sqrt(y)
 disk_integrand_y <- function(y) pi * g(y)^2  # pi * y
 result <- integrate(disk_integrand_y, lower = 0, upper = 4)
 cat("Volume (y-axis, numerical):", result$value, "\n")  # ~25.1327
-cat("8*pi = ", 8 * pi, "\n")  # Sphere via y-axis:
-x = sqrt(r^2 - y^2)
+cat("8*pi = ", 8 * pi, "\n")
+
+# Sphere via y-axis: x = sqrt(r^2 - y^2)
 r <- 3
 vol_sphere <- integrate(function(y) pi * (r^2 - y^2), -r, r)$value
 cat("Sphere (r=3) volume:", vol_sphere, "\n")
-cat("4/3*pi*r^3: ", (4/3)*pi*r^3, "\n")  # Shell method:
-V = 2*pi*int_0^2 x*f(x) dx where f(x) = x^2
+cat("4/3*pi*r^3: ", (4/3)*pi*r^3, "\n")
+
+# Shell method: V = 2*pi*int_0^2 x*f(x) dx where f(x) = x^2
 vol_shell <- integrate(function(x) 2*pi*x*x^2, 0, 2)$value
 cat("Shell method cross-check:", vol_shell, "\n")
 ```
@@ -156,32 +157,47 @@ cat("Shell method cross-check:", vol_shell, "\n")
 
 ```python
 """
-Y-axis revolution: quantile function of exponential distribution. For X ~ Exp(lambda), the quantile function (inverse CDF)
-is: x = F^{-1}(p) = -ln(1-p) / lambda Revolving this curve around the y-axis (p-axis) from p=0 to
-p=0.99
-gives a 3D solid whose
-volume = pi * int_0^0.99 [-ln(1-p)/lambda]^2 dp. This relates to the second moment: E[X^2] = int_0^1 [F^{-1}(p)]^2 dp (via probability integral transform) For
-Exp(lambda): E[X^2] = Var[X] + (E[X])^2 = 1/lambda^2 + 1/lambda^2 = 2/lambda^2 Business use: customer lifetime follows
-Exp(lambda). E[T^2] tells us the
-variance of
-lifetime: Var[T] = E[T^2] - (E[T])^2 = 2/lambda^2 - 1/lambda^2 = 1/lambda^2.
+Y-axis revolution: quantile function of exponential distribution.
+
+For X ~ Exp(lambda), the quantile function (inverse CDF) is:
+    x = F^{-1}(p) = -ln(1-p) / lambda
+
+Revolving this curve around the y-axis (p-axis) from p=0 to p=0.99
+gives a 3D solid whose volume = pi * int_0^0.99 [-ln(1-p)/lambda]^2 dp.
+
+This relates to the second moment:
+    E[X^2] = int_0^1 [F^{-1}(p)]^2 dp  (via probability integral transform)
+For Exp(lambda): E[X^2] = Var[X] + (E[X])^2 = 1/lambda^2 + 1/lambda^2 = 2/lambda^2
+
+Business use: customer lifetime follows Exp(lambda).
+E[T^2] tells us the variance of lifetime:
+    Var[T] = E[T^2] - (E[T])^2 = 2/lambda^2 - 1/lambda^2 = 1/lambda^2.
 """
 import numpy as np
 from scipy import integrate, stats
-LAMBDA = 0.2   # churn rate: 20% per month -> E[T] = 5 months # Quantile function: Q(p) = F^{-1}(p) = -ln(1-p)/lambda
 
+LAMBDA = 0.2   # churn rate: 20% per month -> E[T] = 5 months
+
+
+# Quantile function: Q(p) = F^{-1}(p) = -ln(1-p)/lambda
 def quantile_fn(p: float, lam: float = LAMBDA) -> float:
     """Inverse CDF of Exp(lambda)."""
-    return -np.log(1.0 - p) / lam   # Volume of y-axis revolution of quantile curve
+    return -np.log(1.0 - p) / lam
+
+
+# Volume of y-axis revolution of quantile curve
 UPPER_P = 0.99   # avoid p=1 (Q goes to inf)
-volume_quantile, err = integrate.quad( lambda p: np.pi * quantile_fn(p)**2, 0, UPPER_P,
-)   # E[X^2] = int_0^1 [Q(p)]^2 dp
-# = int_0^1 [(-ln(1-p)/lambda)]^2 dp = 2/lambda^2
-e_x2_numerical, _ = integrate.quad( lambda p: quantile_fn(p)**2, 0, 1 - 1e-10,   # avoid p=1
+volume_quantile, err = integrate.quad(
+    lambda p: np.pi * quantile_fn(p)**2, 0, UPPER_P,
+)
+
+# E[X^2] = int_0^1 [Q(p)]^2 dp
+#        = int_0^1 [(-ln(1-p)/lambda)]^2 dp = 2/lambda^2
+e_x2_numerical, _ = integrate.quad(
+    lambda p: quantile_fn(p)**2, 0, 1 - 1e-10,   # avoid p=1
 )
 e_x2_analytic = 2.0 / LAMBDA**2   # = 50
-e_x = 1.0 / LAMBDA   #
-E[T] = 5
+e_x = 1.0 / LAMBDA                # E[T] = 5
 var_x_analytic = 1.0 / LAMBDA**2   # = 25
 print(f"=== Exponential(lambda={LAMBDA}) Quantile Revolution ===")
 print(f" E[T] = 1/lambda = {e_x:.2f} months")
@@ -190,7 +206,9 @@ print(f" E[T^2] analytic (2/lambda^2): {e_x2_analytic:.4f}")
 print(f" Var[T] = E[T^2] - (E[T])^2 = {e_x2_analytic - e_x**2:.4f} (= 1/lambda^2 = {var_x_analytic:.4f})")
 print(f"\nVolume of y-axis revolution (p in [0, {UPPER_P}]):")
 print(f" V = pi * int_0^{UPPER_P} [Q(p)]^2 dp = {volume_quantile:.4f}")
-print(f" [Integration error: {err:.2e}]")   # Sampling verification: var[T] from simulation
+print(f" [Integration error: {err:.2e}]")
+
+# Sampling verification: var[T] from simulation
 rng = np.random.default_rng(42)
 samples = rng.exponential(scale=1.0 / LAMBDA, size=1_000_000)
 print(f"\nMonte Carlo verification (N=1e6):")

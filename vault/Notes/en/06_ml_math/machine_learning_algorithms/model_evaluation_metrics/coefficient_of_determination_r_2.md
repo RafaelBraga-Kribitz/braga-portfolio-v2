@@ -352,7 +352,7 @@ $$
 - Symbol-table notation uses math mode such as `$y_i$`, `$\hat{y}_i$`, `$\bar{y}$`, `$SS_{\mathrm{res}}$`, and `$SS_{\mathrm{tot}}$`.
 - Mermaid uses `flowchart TD` and node text in `["..."]`.
 - Three code blocks are present: Python beginner, R beginner, Python professional.
-- Range $(-\infty,1\]$, negative values, baseline interpretation, and overfitting limitations are explicitly included.
+- Range $(-\infty,1]$, negative values, baseline interpretation, and overfitting limitations are explicitly included.
 - No placeholder text remains.
 
 ## Common Pitfalls and Edge Cases

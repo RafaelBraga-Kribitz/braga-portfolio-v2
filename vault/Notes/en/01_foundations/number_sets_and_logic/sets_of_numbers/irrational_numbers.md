@@ -131,17 +131,23 @@ print(f" Bits (log2): {entropy_bits:.6f} ← involves log(2) (irrational)")
 ### Beginner example (R)
 
 ```r
-# Irrational numbers in R # R provides float approximations via built-in constants
+# Irrational numbers in R
+# R provides float approximations via built-in constants
 cat("π: ", pi, "\n")
 cat("e: ", exp(1), "\n")
 cat("√2: ", sqrt(2), "\n")
 cat("ln2: ", log(2), "\n")
 cat(sprintf("\nFloat precision of π: %.15f\n", pi))
-cat(sprintf("True π: 3.14159265358979323846...\n"))  # Normal PDF: uses π and e
+cat(sprintf("True π: 3.14159265358979323846...\n"))
+
+# Normal PDF: uses π and e
 x_vals <- c(-2, -1, 0, 1, 2)
 cat("\nStandard Normal PDF:\n")
-for (x in x_vals) { cat(sprintf(" f(%+.0f) = %.8f\n", x, dnorm(x)))
-}  # Entropy: uses log (base e by default in R)
+for (x in x_vals) {
+  cat(sprintf(" f(%+.0f) = %.8f\n", x, dnorm(x)))
+}
+
+# Entropy: uses log (base e by default in R)
 probs <- c(0.5, 0.3, 0.2)
 entropy_nats <- -sum(probs * log(probs))
 entropy_bits <- -sum(probs * log2(probs))
@@ -155,15 +161,27 @@ cat(sprintf("Entropy (bits): %.6f (involves log2 = irrational)\n", entropy_bits)
 import numpy as np
 import pandas as pd
 from scipy.stats import norm
-import sympy as sp   # Scenario: demonstrate where irrationals appear in ML metrics
+import sympy as sp
+
+# Scenario: demonstrate where irrationals appear in ML metrics
 # and symbolic vs. numeric computation
 np.random.seed(42)
-N = 1000   # Simulate binary classifier predictions
+N = 1000
+
+# Simulate binary classifier predictions
 true_labels = np.random.randint(0, 2, N)
-pred_probs = np.clip(np.random.beta(2, 5, N), 1e-9, 1 - 1e-9)   # 1. Log-loss: uses ln (base e, irrational)
-log_loss = -np.mean( true_labels * np.log(pred_probs) + (1 - true_labels) * np.log(1 - pred_probs) )   # 2. Normal PDF normalization constant (uses π)
+pred_probs = np.clip(np.random.beta(2, 5, N), 1e-9, 1 - 1e-9)
+
+# 1. Log-loss: uses ln (base e, irrational)
+log_loss = -np.mean(
+    true_labels * np.log(pred_probs) + (1 - true_labels) * np.log(1 - pred_probs)
+)
+
+# 2. Normal PDF normalization constant (uses π)
 x_range = np.linspace(-4, 4, 9)
-pdf_vals = norm.pdf(x_range)   # 3. Symbolic computation — keep irrationals exact (no float rounding)
+pdf_vals = norm.pdf(x_range)
+
+# 3. Symbolic computation — keep irrationals exact (no float rounding)
 x_sym = sp.Symbol("x")
 normal_sym = (1 / sp.sqrt(2 * sp.pi)) * sp.exp(-x_sym**2 / 2)
 print("Irrational Constants in ML Metrics")

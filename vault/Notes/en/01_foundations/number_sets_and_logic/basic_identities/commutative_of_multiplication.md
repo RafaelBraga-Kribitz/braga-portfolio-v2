@@ -95,20 +95,24 @@ Both equal $\frac{4}{3}$, confirming $\text{Cov}(X,Y) = \text{Cov}(Y,X)$.
 ### Beginner example (Python)
 
 ```python
-# Commutative property of multiplication: a *
-b = b * a
+# Commutative property of multiplication: a * b = b * a
 pairs = [(6, 4), (-3, 7), (0.5, 8), (100, 0), (-2, -5)]
 print("Verifying a * b == b * a:")
 for a, b in pairs:
-    print(f" {a} × {b} = {a*b} | {b} × {a} = {b*a} | Equal: {a*b == b*a}")   # Weighted average: w * score == score * w (element-wise)
+    print(f" {a} × {b} = {a*b} | {b} × {a} = {b*a} | Equal: {a*b == b*a}")
+
+# Weighted average: w * score == score * w (element-wise)
 weights = [0.3, 0.2, 0.5]
 scores = [85, 90, 78]
 weighted_sum_1 = sum(w * s for w, s in zip(weights, scores))
 weighted_sum_2 = sum(s * w for s, w in zip(scores, weights))
 print(f"\nWeighted average (w×s): {weighted_sum_1:.2f}")
 print(f"Weighted average (s×w): {weighted_sum_2:.2f}")
-print(f"Equal: {abs(weighted_sum_1 - weighted_sum_2) < 1e-10}")   # IMPORTANT: matrix multiplication is NOT commutative
+print(f"Equal: {abs(weighted_sum_1 - weighted_sum_2) < 1e-10}")
+
+# IMPORTANT: matrix multiplication is NOT commutative
 import numpy as np
+
 A = np.array([[1, 2], [3, 4]])
 B = np.array([[5, 6], [7, 8]])
 print(f"\nA @ B =\n{A @ B}")
@@ -119,17 +123,21 @@ print(f"A@B == B@A: {np.allclose(A @ B, B @ A)} ← FALSE for matrices!")
 ### Beginner example (R)
 
 ```r
-# Commutative property of multiplication: a *
-b = b * a
+# Commutative property of multiplication: a * b = b * a
 pairs <- list(c(6, 4), c(-3, 7), c(0.5, 8), c(100, 0), c(-2, -5))
 cat("Verifying a * b == b * a:\n")
-for (p in pairs) { a <- p[1]; b <- p[2]
+for (p in pairs) {
+  a <- p[1]; b <- p[2]
   cat(sprintf(" %.1f × %.1f = %.1f | %.1f × %.1f = %.1f | Equal: %s\n", a, b, a*b, b, a, b*a, (a*b == b*a)))
-}  # Weighted average
+}
+
+# Weighted average
 weights <- c(0.3, 0.2, 0.5)
 scores <- c(85, 90, 78)
 cat(sprintf("\nWeighted avg (w×s): %.2f\n", sum(weights * scores)))
-cat(sprintf("Weighted avg (s×w): %.2f\n", sum(scores * weights)))  # Matrix multiplication NOT commutative
+cat(sprintf("Weighted avg (s×w): %.2f\n", sum(scores * weights)))
+
+# Matrix multiplication NOT commutative
 A <- matrix(c(1,3,2,4), nrow=2)
 B <- matrix(c(5,7,6,8), nrow=2)
 cat("\nA %*% B:\n")
@@ -143,11 +151,19 @@ cat("Equal:", all(A %*% B == B %*% A), "← FALSE for matrices!\n")
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: verify covariance matrix symmetry (product commutativity in action)
+import pandas as pd
+
+# Scenario: verify covariance matrix symmetry (product commutativity in action)
 # and contrast with matrix multiplication non-commutativity
 np.random.seed(42)
-n = 500   # Generate correlated features
-features = pd.DataFrame({ "age": np.random.normal(35, 8, n), "spend": np.random.normal(250, 80, n), "tenure": np.random.normal(4, 2, n), "nps": np.random.normal(7, 2, n),
+n = 500
+
+# Generate correlated features
+features = pd.DataFrame({
+    "age": np.random.normal(35, 8, n),
+    "spend": np.random.normal(250, 80, n),
+    "tenure": np.random.normal(4, 2, n),
+    "nps": np.random.normal(7, 2, n),
 })
 cov_matrix = features.cov()
 print("Covariance Matrix (relies on commutativity of scalar multiplication)")
@@ -156,14 +172,18 @@ print(cov_matrix.round(4))
 print()
 print(f"Is symmetric (Σ = Σᵀ): {np.allclose(cov_matrix, cov_matrix.T)}")
 print(f"Max off-diagonal asymmetry: {np.max(np.abs(cov_matrix.values - cov_matrix.T.values)):.2e}")
-print()   # PCA: eigenvalues are real because Σ is symmetric (because multiplication commutes)
+print()
+
+# PCA: eigenvalues are real because Σ is symmetric (because multiplication commutes)
 eigenvalues, eigenvectors = np.linalg.eigh(cov_matrix.values)
 eigenvalues = eigenvalues[::-1]
 explained_var = eigenvalues / eigenvalues.sum()
 print("PCA Explained Variance (possible because Σ is symmetric):")
 for i, (ev, pct) in enumerate(zip(eigenvalues, explained_var)):
     print(f" PC{i+1}: eigenvalue={ev:.2f}, explained={pct:.1%}")
-print()   # Show: X^T X and X X^T are NOT equal (matrix non-commutativity)
+print()
+
+# Show: X^T X and X X^T are NOT equal (matrix non-commutativity)
 X = features.values
 XtX = X.T @ X   # shape (4, 4) — feature covariance (up to scaling)
 XXt = X @ X.T   # shape (500, 500) — sample similarity matrix

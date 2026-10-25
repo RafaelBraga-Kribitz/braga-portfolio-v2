@@ -100,7 +100,9 @@ Phi = np.array([[1, 1], [1, 2], [1, 3], [1, 4]], dtype=float)
 y = np.array([2.0, 3.5, 5.0, 6.5])
 ridge = Ridge(alpha=1.0, fit_intercept=False)
 ridge.fit(Phi, y)
-print(f"Ridge coefficients (alpha=1): {ridge.coef_.round(4)}")   # Cross-validated lambda selection
+print(f"Ridge coefficients (alpha=1): {ridge.coef_.round(4)}")
+
+# Cross-validated lambda selection
 ridge_cv = RidgeCV(alphas=[0.01, 0.1, 1.0, 10.0], cv=3, fit_intercept=False)
 ridge_cv.fit(Phi, y)
 print(f"Best alpha: {ridge_cv.alpha_}")
@@ -112,12 +114,17 @@ print(f"Best coefficients: {ridge_cv.coef_.round(4)}")
 ```r
 Phi <- cbind(1, c(1, 2, 3, 4))
 y <- c(2.0, 3.5, 5.0, 6.5)
-lam <- 1.0  # Direct ridge formula
+lam <- 1.0
+
+# Direct ridge formula
 PhiTPhi <- t(Phi) %*% Phi
 PhiTy <- t(Phi) %*% y
 theta_ridge <- solve(PhiTPhi + lam * diag(ncol(Phi)), PhiTy)
-cat("Ridge coefficients:", round(theta_ridge, 4), "\n")  # Using glmnet for comparison
-if (requireNamespace("glmnet", quietly = TRUE)) { library(glmnet)
+cat("Ridge coefficients:", round(theta_ridge, 4), "\n")
+
+# Using glmnet for comparison
+if (requireNamespace("glmnet", quietly = TRUE)) {
+  library(glmnet)
   fit <- glmnet(Phi, y, alpha = 0, lambda = lam / nrow(Phi), intercept = FALSE)
   cat("glmnet coefficients:", round(as.numeric(coef(fit))[-1], 4), "\n")
 }
@@ -126,30 +133,50 @@ if (requireNamespace("glmnet", quietly = TRUE)) { library(glmnet)
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import RidgeCV
 from sklearn.model_selection import KFold
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import r2_score
+
 LAMBDA_GRID = [1e-4, 1e-3, 0.01, 0.1, 1.0, 10.0, 100.0]
 
-def ridge_cross_val_report( X: np.ndarray, y: np.ndarray, lambda_grid: list[float] = LAMBDA_GRID, n_folds: int = 5,
+
+def ridge_cross_val_report(
+    X: np.ndarray,
+    y: np.ndarray,
+    lambda_grid: list[float] = LAMBDA_GRID,
+    n_folds: int = 5,
 ) -> dict[str, object]:
     # Standardise features, then cross-validate ridge and return full report.
     scaler = StandardScaler()
     X_sc = scaler.fit_transform(X)
-    ridge_cv = RidgeCV( alphas=lambda_grid, cv=KFold(n_splits=n_folds, shuffle=True, random_state=42), scoring="r2", fit_intercept=True, )
+    ridge_cv = RidgeCV(
+        alphas=lambda_grid,
+        cv=KFold(n_splits=n_folds, shuffle=True, random_state=42),
+        scoring="r2",
+        fit_intercept=True,
+    )
     ridge_cv.fit(X_sc, y)
     y_pred = ridge_cv.predict(X_sc)
-    coef_df = pd.DataFrame({ "feature": [f"x{j}" for j in range(X.shape[1])], "coefficient": ridge_cv.coef_.round(4), }).sort_values("coefficient", key=abs, ascending=False)
-    return { "best_lambda": ridge_cv.alpha_, "r2_train": round(r2_score(y, y_pred), 4), "coef_df": coef_df, }
+    coef_df = pd.DataFrame({
+        "feature": [f"x{j}" for j in range(X.shape[1])],
+        "coefficient": ridge_cv.coef_.round(4),
+    }).sort_values("coefficient", key=abs, ascending=False)
+    return {
+        "best_lambda": ridge_cv.alpha_,
+        "r2_train": round(r2_score(y, y_pred), 4),
+        "coef_df": coef_df,
+    }
+
 
 if __name__ == "__main__":
     rng = np.random.default_rng(seed=42)
     n, p = 200, 10
-    X_sim = rng.standard_normal((n, p))   # Add strong collinearity
+    X_sim = rng.standard_normal((n, p))
+
+    # Add strong collinearity
     X_sim[:, 5] = X_sim[:, 0] + rng.normal(0, 0.1, n)
     true_theta = rng.uniform(-2, 2, p)
     y_sim = X_sim @ true_theta + rng.normal(0, 1.5, n)

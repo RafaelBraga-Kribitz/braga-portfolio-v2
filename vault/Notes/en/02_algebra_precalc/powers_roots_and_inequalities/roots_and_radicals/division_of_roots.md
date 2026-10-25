@@ -81,23 +81,24 @@ Verify: $\frac{8}{27} \approx 0.296$, $\sqrt[3]{0.296} \approx 0.667$. Confirmed
 ### Beginner example (Python)
 
 ```python
-# Division of roots: n-th root of (a/b) = n-th
-root(a) / n-th
-root(b)
+# Division of roots: n-th root of (a/b) = n-th root(a) / n-th root(b)
 a = 8
 b = 27
 n = 3
-root_fraction = (a / b) ** (1/n)   # root of the fraction
+root_fraction = (a / b) ** (1/n)               # root of the fraction
 fraction_roots = (a ** (1/n)) / (b ** (1/n))   # fraction of roots
 print(f"Cube root of ({a}/{b})")
 print(f" Root of fraction: {root_fraction:.10f}")
 print(f" Fraction of roots: {fraction_roots:.10f}")
-print(f" Match: {abs(root_fraction - fraction_roots) < 1e-12}")   # Standard error example
+print(f" Match: {abs(root_fraction - fraction_roots) < 1e-12}")
+
+# Standard error example
 import math
 sample_variance = 16.0   # s^2
 n_obs = 25
-se_formula = math.sqrt(sample_variance / n_obs)   # sqrt(s^2/n)
-se_rule = math.sqrt(sample_variance) / math.sqrt(n_obs)   # s / sqrt(n) print(f"\nStandard Error: sqrt(s^2/n) = s / sqrt(n)")
+se_formula = math.sqrt(sample_variance / n_obs)           # sqrt(s^2/n)
+se_rule = math.sqrt(sample_variance) / math.sqrt(n_obs)   # s / sqrt(n)
+print(f"\nStandard Error: sqrt(s^2/n) = s / sqrt(n)")
 print(f" s^2={sample_variance}, n={n_obs}")
 print(f" sqrt(s^2/n): {se_formula:.10f}")
 print(f" s / sqrt(n): {se_rule:.10f}")
@@ -116,7 +117,9 @@ fraction_roots <- (a^(1/n)) / (b^(1/n))
 cat(sprintf("Cube root of (%d/%d)\n", a, b))
 cat(sprintf(" Root of fraction: %.10f\n", root_fraction))
 cat(sprintf(" Fraction of roots: %.10f\n", fraction_roots))
-cat(sprintf(" Match: %s\n", isTRUE(all.equal(root_fraction, fraction_roots))))  # Standard error example
+cat(sprintf(" Match: %s\n", isTRUE(all.equal(root_fraction, fraction_roots))))
+
+# Standard error example
 sample_variance <- 16
 n_obs <- 25
 se_formula <- sqrt(sample_variance / n_obs)
@@ -131,19 +134,30 @@ cat(sprintf(" Match: %s\n", isTRUE(all.equal(se_formula, se_rule))))
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: confidence interval half-width computation
-# CI half-width = z *
-sqrt(p*(1-p) / n)
-# Using division of roots: = z *
-sqrt(p*(1-p)) / sqrt(n)
+import pandas as pd
+
+# Scenario: confidence interval half-width computation
+# CI half-width = z * sqrt(p*(1-p) / n)
+# Using division of roots: = z * sqrt(p*(1-p)) / sqrt(n)
 # This form separates sample size from the proportion variability term
 np.random.seed(42)
 Z_95 = 1.96   # 95% CI z-score
-scenarios = pd.DataFrame({ "label": ["Low p, small n", "Moderate p, medium n", "High p, large n"], "p": [0.05, 0.30, 0.70], "n": [50, 500, 5000],
-})   # Two equivalent computations
-scenarios["half_width_combined"] = Z_95 * np.sqrt( scenarios["p"] * (1 - scenarios["p"]) / scenarios["n"] )
-scenarios["half_width_split"] = Z_95 * ( np.sqrt(scenarios["p"] * (1 - scenarios["p"])) / np.sqrt(scenarios["n"]) )
-scenarios["match"] = np.isclose( scenarios["half_width_combined"], scenarios["half_width_split"] )
+scenarios = pd.DataFrame({
+    "label": ["Low p, small n", "Moderate p, medium n", "High p, large n"],
+    "p": [0.05, 0.30, 0.70],
+    "n": [50, 500, 5000],
+})
+
+# Two equivalent computations
+scenarios["half_width_combined"] = Z_95 * np.sqrt(
+    scenarios["p"] * (1 - scenarios["p"]) / scenarios["n"]
+)
+scenarios["half_width_split"] = Z_95 * (
+    np.sqrt(scenarios["p"] * (1 - scenarios["p"])) / np.sqrt(scenarios["n"])
+)
+scenarios["match"] = np.isclose(
+    scenarios["half_width_combined"], scenarios["half_width_split"]
+)
 print("95% CI Half-Width: z * sqrt(p*(1-p) / n) = z * sqrt(p*(1-p)) / sqrt(n)")
 print()
 print(scenarios[["label", "p", "n", "half_width_combined", "match"]].to_string(index=False))
@@ -156,7 +170,10 @@ print("\nNote: split form separates effect of variance from effect of sample siz
 ```r
 # CI half-width: z * sqrt(p*(1-p)/n) = z * sqrt(p*(1-p)) / sqrt(n)
 Z_95 <- 1.96
-scenarios <- data.frame( label = c("Low p, small n", "Moderate p, medium n", "High p, large n"), p = c(0.05, 0.30, 0.70), n = c(50, 500, 5000)
+scenarios <- data.frame(
+  label = c("Low p, small n", "Moderate p, medium n", "High p, large n"),
+  p = c(0.05, 0.30, 0.70),
+  n = c(50, 500, 5000)
 )
 scenarios$half_width_combined <- Z_95 * sqrt(scenarios$p * (1 - scenarios$p) / scenarios$n)
 scenarios$half_width_split <- Z_95 * (sqrt(scenarios$p * (1 - scenarios$p)) / sqrt(scenarios$n))

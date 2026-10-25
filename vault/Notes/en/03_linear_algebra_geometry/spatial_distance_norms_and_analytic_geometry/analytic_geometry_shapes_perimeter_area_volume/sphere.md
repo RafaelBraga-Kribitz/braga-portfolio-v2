@@ -91,7 +91,10 @@ $S/V = 144\pi / (288\pi) = 1/2 = 3/R = 3/6 = 0.5$ ✓.
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # -- Sphere: volume, surface area, and curse of dimensionality demo ----
+import numpy as np
+
+# -- Sphere: volume, surface area, and curse of dimensionality demo ----
+
 
 def sphere_volume(radius: float) -> float:
     """Volume of a 3D sphere."""
@@ -100,22 +103,29 @@ def sphere_volume(radius: float) -> float:
 def sphere_surface(radius: float) -> float:
     """Surface area of a 3D sphere."""
     return 4.0 * np.pi * radius**2
+
+
 for r in [1.0, 3.0, 5.0, 10.0]:
     v = sphere_volume(r)
-s = sphere_surface(r)
-print(f" R={r:.0f}: V={v:.4f}, S={s:.4f}, S/V={s/v:.4f} (= 3/R = {3/r:.4f})")   # Curse of dimensionality: hypersphere volume fraction in hypercube
+    s = sphere_surface(r)
+    print(f" R={r:.0f}: V={v:.4f}, S={s:.4f}, S/V={s/v:.4f} (= 3/R = {3/r:.4f})")
+
+# Curse of dimensionality: hypersphere volume fraction in hypercube
 from math import gamma, pi as PI
+
 
 def ball_volume_fraction(d: int) -> float:
     """Fraction of d-dimensional unit hypercube occupied by inscribed d-ball (R=0.5)."""
     r = 0.5
-    v_ball = (pi**(d / 2) / gamma(d / 2 + 1)) * r**d
+    v_ball = (PI**(d / 2) / gamma(d / 2 + 1)) * r**d
     v_cube = 1.0
     return v_ball / v_cube
+
+
 print("\nCurse of dimensionality: fraction of unit hypercube in inscribed ball:")
 for d in [1, 2, 3, 5, 10, 20, 50]:
     frac = ball_volume_fraction(d)
-print(f" d={d:2d}: fraction = {frac:.6f}")
+    print(f" d={d:2d}: fraction = {frac:.6f}")
 ```
 
 ### Beginner example (R)
@@ -124,17 +134,21 @@ print(f" d={d:2d}: fraction = {frac:.6f}")
 # -- Sphere: volume, surface area, and S/V ratio -----------------------
 sphere_volume <- function(r) (4/3) * pi * r^3
 sphere_surface <- function(r) 4 * pi * r^2
-for (r in c(1, 3, 5, 10)) { v <- sphere_volume(r)
+for (r in c(1, 3, 5, 10)) {
+  v <- sphere_volume(r)
   s <- sphere_surface(r)
   cat(sprintf(" R=%2.0f: V=%.4f, S=%.4f, S/V=%.4f\n", r, v, s, s/v))
-}  # Curse of dimensionality
-ball_fraction <- function(d) { r <- 0.5
+}
+
+# Curse of dimensionality
+ball_fraction <- function(d) {
+  r <- 0.5
   v_ball <- (pi^(d/2) / gamma(d/2 + 1)) * r^d
-  return(v_ball)  #
-  v_cube = 1
+  return(v_ball)  # v_cube = 1
 }
 cat("\nCurse of dimensionality: ball fraction in unit hypercube:\n")
-for (d in c(1, 2, 3, 5, 10, 20, 50)) { cat(sprintf(" d=%2d: fraction = %.6f\n", d, ball_fraction(d)))
+for (d in c(1, 2, 3, 5, 10, 20, 50)) {
+  cat(sprintf(" d=%2d: fraction = %.6f\n", d, ball_fraction(d)))
 }
 ```
 
@@ -156,9 +170,16 @@ dims = list(range(1, MAX_DIM + 1))
 rows = []
 for d in dims:
     v_ball = hypersphere_volume(d, RADIUS)
-v_cube = 1.0   # unit hypercube
-frac = v_ball / v_cube   # Expected fraction of nearest neighbors within radius R in a uniform hypercube
-rows.append({ "dimension": d, "ball_volume": float(v_ball), "cube_volume": v_cube, "fraction_in_ball": float(frac), "pct_volume_in_ball": float(frac * 100), })
+    v_cube = 1.0  # unit hypercube
+    frac = v_ball / v_cube
+    # Expected fraction of nearest neighbors within radius R in a uniform hypercube
+    rows.append({
+        "dimension": d,
+        "ball_volume": float(v_ball),
+        "cube_volume": v_cube,
+        "fraction_in_ball": float(frac),
+        "pct_volume_in_ball": float(frac * 100),
+    })
 df = pd.DataFrame(rows)
 print("Hypersphere volume fraction by dimension (R=0.5, unit hypercube):")
 key_dims = df[df["dimension"].isin([1, 2, 3, 5, 10, 15, 20, 25, 30])]

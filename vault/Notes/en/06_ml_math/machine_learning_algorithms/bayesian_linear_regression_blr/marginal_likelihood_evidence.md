@@ -330,18 +330,36 @@ The model with higher evidence explains the observed data better on average unde
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # Small toy regression
+import numpy as np
+
+# Small toy regression
 x = np.array([[1.0], [2.0], [3.0]])
-y = np.array([1.2, 1.9, 3.1])   # Prior mean and covariance
+y = np.array([1.2, 1.9, 3.1])
+
+# Prior mean and covariance
 m_0 = np.array([0.0])
-s_0 = np.array(1.0)   # Noise variance
-sigma_squared = 0.5   # Compute the marginal covariance of y
-c = sigma_squared * np.eye(len(y)) + x @ s_0 @ x.T   # Mean of y under the prior predictive distribution
-mean_y = x @ m_0   # Residual
-residual = y - mean_y   # Log evidence
+s_0 = np.array([[1.0]])
+
+# Noise variance
+sigma_squared = 0.5
+
+# Compute the marginal covariance of y
+c = sigma_squared * np.eye(len(y)) + x @ s_0 @ x.T
+
+# Mean of y under the prior predictive distribution
+mean_y = x @ m_0
+
+# Residual
+residual = y - mean_y
+
+# Log evidence
 sign, log_det_c = np.linalg.slogdet(c)
 c_inv = np.linalg.inv(c)
-log_evidence = ( -0.5 * len(y) * np.log(2.0 * np.pi) -0.5 * log_det_c -0.5 * residual.T @ c_inv @ residual )
+log_evidence = (
+    -0.5 * len(y) * np.log(2.0 * np.pi)
+    - 0.5 * log_det_c
+    - 0.5 * residual.T @ c_inv @ residual
+)
 print("Marginal covariance C:")
 print(c)
 print("\nLog evidence:")
@@ -356,17 +374,37 @@ example computes the log evidence directly from the closed-form Gaussian formula
 ```r
 # Small toy regression
 x <- matrix(c(1.0, 2.0, 3.0), ncol = 1)
-y <- c(1.2, 1.9, 3.1)  # Prior mean and covariance
+y <- c(1.2, 1.9, 3.1)
+
+# Prior mean and covariance
 m_0 <- c(0.0)
-s_0 <- matrix(1.0, nrow = 1, ncol = 1)  # Noise variance
-sigma_squared <- 0.5  # Marginal covariance of y
-c_matrix <- sigma_squared * diag(length(y)) + x %*% s_0 %*% t(x)  # Mean of y under the prior predictive distribution
-mean_y <- as.vector(x %*% m_0)  # Residual
-residual <- y - mean_y  # Log determinant
-log_det_c <- as.numeric(determinant(c_matrix, logarithm = TRUE)$modulus)  # Inverse
-c_inv <- solve(c_matrix)  # Log evidence
-log_evidence <- ( -0.5 * length(y) * log(2 * pi) -0.5 * log_det_c -0.5 * t(residual) %*% c_inv %*% residual
-) cat("Marginal covariance C:\n")
+s_0 <- matrix(1.0, nrow = 1, ncol = 1)
+
+# Noise variance
+sigma_squared <- 0.5
+
+# Marginal covariance of y
+c_matrix <- sigma_squared * diag(length(y)) + x %*% s_0 %*% t(x)
+
+# Mean of y under the prior predictive distribution
+mean_y <- as.vector(x %*% m_0)
+
+# Residual
+residual <- y - mean_y
+
+# Log determinant
+log_det_c <- as.numeric(determinant(c_matrix, logarithm = TRUE)$modulus)
+
+# Inverse
+c_inv <- solve(c_matrix)
+
+# Log evidence
+log_evidence <- (
+  -0.5 * length(y) * log(2 * pi)
+  - 0.5 * log_det_c
+  - 0.5 * t(residual) %*% c_inv %*% residual
+)
+cat("Marginal covariance C:\n")
 print(c_matrix)
 cat("\nLog evidence:\n")
 print(as.numeric(log_evidence))
@@ -383,10 +421,16 @@ from typing import List
 import numpy as np
 from numpy.typing import NDArray
 RANDOM_SEED = 42
-@dataclass
 
+
+@dataclass
 class BlrEvidenceResult:
-    model_name: str log_evidence: float log_det_c: float quadratic_form: float n_observations: int
+    model_name: str
+    log_evidence: float
+    log_det_c: float
+    quadratic_form: float
+    n_observations: int
+
 
 def add_intercept(x: NDArray[np.float64]) -> NDArray[np.float64]:
     intercept = np.ones((x.shape[0], 1), dtype=np.float64)
@@ -399,14 +443,28 @@ def build_marketing_dataset(n_samples: int = 60) -> tuple[NDArray[np.float64], N
     paid_social_spend = 0.6 * email_spend + rng.normal(loc=0.0, scale=5.0, size=n_samples)
     seasonality = np.sin(np.linspace(0.0, 2.0 * np.pi, n_samples))
     discount_flag = rng.integers(low=0, high=2, size=n_samples)
-    x_full = np.column_stack( [ email_spend, search_spend, paid_social_spend, seasonality, discount_flag, ] ).astype(np.float64)
+    x_full = np.column_stack(
+        [
+            email_spend,
+            search_spend,
+            paid_social_spend,
+            seasonality,
+            discount_flag,
+        ]
+    ).astype(np.float64)
     x_with_intercept = add_intercept(x_full)
     true_w = np.array([10.0, 0.9, 1.1, 0.4, 8.0, 6.0], dtype=np.float64)
     noise = rng.normal(loc=0.0, scale=6.0, size=n_samples)
     y = x_with_intercept @ true_w + noise
     return x_full, y.astype(np.float64)
 
-def compute_log_evidence( x: NDArray[np.float64], y: NDArray[np.float64], m_0: NDArray[np.float64], s_0: NDArray[np.float64], sigma_squared: float, model_name: str,
+def compute_log_evidence(
+    x: NDArray[np.float64],
+    y: NDArray[np.float64],
+    m_0: NDArray[np.float64],
+    s_0: NDArray[np.float64],
+    sigma_squared: float,
+    model_name: str,
 ) -> BlrEvidenceResult:
     if x.ndim != 2:
         raise ValueError("x must be a 2D matrix")
@@ -429,28 +487,56 @@ def compute_log_evidence( x: NDArray[np.float64], y: NDArray[np.float64], m_0: N
         raise ValueError("c_matrix must be positive definite")
     c_inv_residual = np.linalg.solve(c_matrix, residual)
     quadratic_form = float(residual.T @ c_inv_residual)
-    log_evidence = float( -0.5 * n_rows * np.log(2.0 * np.pi) -0.5 * log_det_c -0.5 * quadratic_form )
-    return BlrEvidenceResult( model_name=model_name, log_evidence=log_evidence, log_det_c=float(log_det_c), quadratic_form=quadratic_form, n_observations=n_rows, )
+    log_evidence = float(
+        -0.5 * n_rows * np.log(2.0 * np.pi)
+        - 0.5 * log_det_c
+        - 0.5 * quadratic_form
+    )
+    return BlrEvidenceResult(
+        model_name=model_name,
+        log_evidence=log_evidence,
+        log_det_c=float(log_det_c),
+        quadratic_form=quadratic_form,
+        n_observations=n_rows,
+    )
+
 
 def main() -> None:
-    x_full, y = build_marketing_dataset(n_samples=60)   # Candidate model 1: paid channels only
-    x_model_1 = add_intercept(x_full[:, [0, 1, 2]])   # Candidate model 2: paid channels + seasonality
+    x_full, y = build_marketing_dataset(n_samples=60)
+
+    # Candidate model 1: paid channels only
+    x_model_1 = add_intercept(x_full[:, [0, 1, 2]])
+
+    # Candidate model 2: paid channels + seasonality
     x_model_2 = add_intercept(x_full[:, [0, 1, 2, 3]])
+
     sigma_squared = 36.0
     results: List[BlrEvidenceResult] = []
-    for model_name, x_model in [ ("paid_channels_only", x_model_1), ("paid_channels_plus_seasonality", x_model_2), ]:
+    for model_name, x_model in [
+        ("paid_channels_only", x_model_1),
+        ("paid_channels_plus_seasonality", x_model_2),
+    ]:
         n_features = x_model.shape[1]
-    m_0 = np.zeros(n_features, dtype=np.float64)
-    s_0 = 25.0 * np.eye(n_features, dtype=np.float64)
-    result = compute_log_evidence( x=x_model, y=y, m_0=m_0, s_0=s_0, sigma_squared=sigma_squared, model_name=model_name, )
-    results.append(result)
+        m_0 = np.zeros(n_features, dtype=np.float64)
+        s_0 = 25.0 * np.eye(n_features, dtype=np.float64)
+        result = compute_log_evidence(
+            x=x_model,
+            y=y,
+            m_0=m_0,
+            s_0=s_0,
+            sigma_squared=sigma_squared,
+            model_name=model_name,
+        )
+        results.append(result)
+
     for result in results:
         print(f"Model: {result.model_name}")
-    print(f" log_evidence: {result.log_evidence:.6f}")
-    print(f" log_det_c: {result.log_det_c:.6f}")
-    print(f" quadratic_form: {result.quadratic_form:.6f}")
-    print(f" n_observations: {result.n_observations}")
-    print()
+        print(f" log_evidence: {result.log_evidence:.6f}")
+        print(f" log_det_c: {result.log_det_c:.6f}")
+        print(f" quadratic_form: {result.quadratic_form:.6f}")
+        print(f" n_observations: {result.n_observations}")
+        print()
+
     best_model = max(results, key=lambda item: item.log_evidence)
     print(f"Best model by log evidence: {best_model.model_name}")
 

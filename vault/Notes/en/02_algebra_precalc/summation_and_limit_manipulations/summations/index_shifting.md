@@ -83,17 +83,20 @@ $= 0^2 + 1^2 + 2^2$... wait: $(0+2)^2 + (1+2)^2 + (2+2)^2 = 4 + 9 + 16 = 29$. Co
 ### Beginner example (Python)
 
 ```python
-# Index shifting: sum f(n) from s to
-t = sum
-f(n-p) from s+p to t+p
+# Index shifting: sum f(n) from s to t = sum f(n-p) from s+p to t+p
+
 
 def sum_original(s: int, t: int, f) -> float:
     """Sum f(n) for n from s to t inclusive."""
     return sum(f(n) for n in range(s, t + 1))
 
+
 def sum_shifted(s: int, t: int, p: int, f) -> float:
     """Sum f(n-p) for n from s+p to t+p inclusive (shifted by p)."""
-    return sum(f(n - p) for n in range(s + p, t + p + 1))   # Test with f(n) = n^2
+    return sum(f(n - p) for n in range(s + p, t + p + 1))
+
+
+# Test with f(n) = n^2
 f = lambda n: n ** 2
 s, t = 2, 6
 print(f"f(n) = n^2, original sum from {s} to {t}")
@@ -101,8 +104,8 @@ print(f"Original sum: {sum_original(s, t, f)}")
 print()
 for p in [-2, 0, 3, 10]:
     shifted = sum_shifted(s, t, p, f)
-original = sum_original(s, t, f)
-print(f" Shift p={p:>3}: new range [{s+p}, {t+p}], shifted sum = {shifted}, match = {original == shifted}")
+    original = sum_original(s, t, f)
+    print(f" Shift p={p:>3}: new range [{s+p}, {t+p}], shifted sum = {shifted}, match = {original == shifted}")
 ```
 
 ### Beginner example (R)
@@ -115,7 +118,8 @@ f <- function(n) n^2
 s <- 2; t <- 6
 original <- sum_original(s, t, f)
 cat(sprintf("f(n) = n^2, original sum [%d, %d] = %.0f\n\n", s, t, original))
-for (p in c(-2, 0, 3, 10)) { shifted <- sum_shifted(s, t, p, f)
+for (p in c(-2, 0, 3, 10)) {
+  shifted <- sum_shifted(s, t, p, f)
   cat(sprintf(" Shift p=%3d: new range [%d, %d], shifted sum = %.0f, match = %s\n", p, s+p, t+p, shifted, isTRUE(all.equal(original, shifted))))
 }
 ```
@@ -124,20 +128,35 @@ for (p in c(-2, 0, 3, 10)) { shifted <- sum_shifted(s, t, p, f)
 
 ```python
 import pandas as pd
-import numpy as np   # Scenario: two time-series datasets with different index origins
+import numpy as np
+
+# Scenario: two time-series datasets with different index origins
 # Dataset A: week index starts at week 1
 # Dataset B: week index starts at week 0 (0-indexed)
 # We need to align them to compare corresponding weeks
 np.random.seed(42)
-n_weeks = 8   # Dataset A: week 1 to 8
-ds_a = pd.DataFrame({ "week_a": range(1, n_weeks + 1), "revenue_a": np.round(np.random.uniform(40000, 60000, n_weeks), 2),
-})   # Dataset B: week 0 to 7 (same data, different index origin)
-ds_b = pd.DataFrame({ "week_b": range(0, n_weeks), "revenue_b": ds_a["revenue_a"].values,   # same underlying revenue
-})   # Apply index shift p = -1 to align A's index with B's (week_a - 1 = week_b)
-ds_a["week_shifted"] = ds_a["week_a"] - 1   # shift by
-p = -1   # Merge on aligned index
+n_weeks = 8
+
+# Dataset A: week 1 to 8
+ds_a = pd.DataFrame({
+    "week_a": range(1, n_weeks + 1),
+    "revenue_a": np.round(np.random.uniform(40000, 60000, n_weeks), 2),
+})
+
+# Dataset B: week 0 to 7 (same data, different index origin)
+ds_b = pd.DataFrame({
+    "week_b": range(0, n_weeks),
+    "revenue_b": ds_a["revenue_a"].values,   # same underlying revenue
+})
+
+# Apply index shift p = -1 to align A's index with B's (week_a - 1 = week_b)
+ds_a["week_shifted"] = ds_a["week_a"] - 1   # shift by p = -1
+
+# Merge on aligned index
 merged = ds_a.merge(ds_b, left_on="week_shifted", right_on="week_b")
-merged["revenues_match"] = np.isclose(merged["revenue_a"], merged["revenue_b"])   # Verify: sum over original range == sum over shifted range
+merged["revenues_match"] = np.isclose(merged["revenue_a"], merged["revenue_b"])
+
+# Verify: sum over original range == sum over shifted range
 sum_original_a = ds_a["revenue_a"].sum()
 sum_shifted_b = ds_b["revenue_b"].sum()
 print("Index Shift: aligning two time-series with different index origins")

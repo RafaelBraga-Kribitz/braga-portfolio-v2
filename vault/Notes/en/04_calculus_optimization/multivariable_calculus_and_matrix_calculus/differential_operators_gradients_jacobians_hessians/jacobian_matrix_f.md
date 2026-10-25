@@ -9,7 +9,7 @@ tags:
 
 Jacobian Matrix ($f:\mathbb{R}^n \to \mathbb{R}^m$)
 
-# $J_f = \begin{bmatrix} \frac{\partial f_1}{\partial x_1} & \dots & \frac{\partial f_1}{\partial x_n} \\ \vdots & \ddots & \vdots \\ \frac{\partial f_m}{\partial x_1} & \dots & \frac{\partial f_m}{\partial x_n} \end{bmatrix} \in \mathbb{R}^{m \times n}$
+$J_f = \begin{bmatrix} \frac{\partial f_1}{\partial x_1} & \dots & \frac{\partial f_1}{\partial x_n} \\ \vdots & \ddots & \vdots \\ \frac{\partial f_m}{\partial x_1} & \dots & \frac{\partial f_m}{\partial x_n} \end{bmatrix} \in \mathbb{R}^{m \times n}$
 
 ## Deep Breakdown
 
@@ -119,9 +119,10 @@ def f(x: np.ndarray) -> np.ndarray:
 def analytic_jacobian(x: np.ndarray) -> np.ndarray:
     """Jacobian of f at x: 3 x 2 matrix."""
     x1, x2 = x[0], x[1]
-    return np.array([ [x2, x1],   # row 1: grad of f1
+    return np.array([
+        [x2, x1],      # row 1: grad of f1
         [2*x1, 0.0],   # row 2: grad of f2
-        [1.0, 3.0],   # row 3: grad of f3
+        [1.0, 3.0],    # row 3: grad of f3
     ])
 
 def numerical_jacobian(fn, x: np.ndarray, h: float = 1e-5) -> np.ndarray:
@@ -131,9 +132,12 @@ def numerical_jacobian(fn, x: np.ndarray, h: float = 1e-5) -> np.ndarray:
     m = len(f0)
     jac = np.zeros((m, n))
     for j in range(n):
-        e_j = np.zeros(n); e_j[j] = 1.0
-    jac[:, j] = (fn(x + h * e_j) - fn(x - h * e_j)) / (2 * h)
+        e_j = np.zeros(n)
+        e_j[j] = 1.0
+        jac[:, j] = (fn(x + h * e_j) - fn(x - h * e_j)) / (2 * h)
     return jac
+
+
 x0 = np.array([2.0, 1.0])
 j_analytic = analytic_jacobian(x0)
 j_numerical = numerical_jacobian(f, x0)
@@ -142,7 +146,9 @@ print("Analytic:")
 print(j_analytic)
 print("\nNumerical:")
 print(j_numerical.round(6))
-print(f"\nMax error: {np.abs(j_analytic - j_numerical).max():.2e}")   # Linear approximation test
+print(f"\nMax error: {np.abs(j_analytic - j_numerical).max():.2e}")
+
+# Linear approximation test
 h_vec = np.array([0.01, 0.01])
 delta_f_approx = j_analytic @ h_vec
 delta_f_exact = f(x0 + h_vec) - f(x0)
@@ -153,21 +159,32 @@ print(f"Exact change: {delta_f_exact}")
 ### Beginner example (R)
 
 ```r
-f_fn <- function(x) c(x[1]*x[2], x[1]^2, x[1] + 3*x[2])  # R^2 -> R^3 # Analytic Jacobian at x
-analytic_jac <- function(x) { matrix(c(x[2], 2*x[1], 1,  # column 1 (partial w.r.t. x1) x[1], 0, 3), # column 2 (partial w.r.t. x2)
-  nrow = 3, ncol = 2)
-}  # Numerical Jacobian
-num_jac <- function(fn, x, h = 1e-5) { n <- length(x); f0 <- fn(x); m <- length(f0)
+f_fn <- function(x) c(x[1]*x[2], x[1]^2, x[1] + 3*x[2])  # R^2 -> R^3
+
+# Analytic Jacobian at x
+analytic_jac <- function(x) {
+  matrix(c(x[2], 2*x[1], 1,  # column 1 (partial w.r.t. x1)
+           x[1], 0, 3),      # column 2 (partial w.r.t. x2)
+         nrow = 3, ncol = 2)
+}
+
+# Numerical Jacobian
+num_jac <- function(fn, x, h = 1e-5) {
+  n <- length(x); f0 <- fn(x); m <- length(f0)
   jac <- matrix(0, nrow = m, ncol = n)
-  for (j in seq_len(n)) { e <- rep(0, n); e[j] <- 1
+  for (j in seq_len(n)) {
+    e <- rep(0, n); e[j] <- 1
     jac[, j] <- (fn(x + h * e) - fn(x - h * e)) / (2 * h)
-  } jac
+  }
+  jac
 }
 x0 <- c(2, 1)
 j_a <- analytic_jac(x0); j_n <- num_jac(f_fn, x0)
 cat("Analytic Jacobian:\n"); print(j_a)
 cat("\nNumerical Jacobian:\n"); print(round(j_n, 6))
-cat("Max error:", max(abs(j_a - j_n)), "\n")  # Linear approximation
+cat("Max error:", max(abs(j_a - j_n)), "\n")
+
+# Linear approximation
 h_vec <- c(0.01, 0.01)
 cat("Linear approx:", j_a %*% h_vec, "\n")
 cat("Exact change: ", f_fn(x0 + h_vec) - f_fn(x0), "\n")
@@ -177,13 +194,16 @@ cat("Exact change: ", f_fn(x0 + h_vec) - f_fn(x0), "\n")
 
 ```python
 """
-Jacobian of softmax: core derivative
-for multi-class classification backprop. For z in R^K:
-    softmax(z)_i = exp(z_i) / sum_j
-exp(z_j)
-Jacobian: J_softmax[i,j] = p_i * (delta_{ij} - p_j) = diag(p) - p @ p^T VJP (backprop): delta_z = J_softmax^T @ delta_p We verify the analytic Jacobian against numerical differences and
-demonstrate the VJP used in backward
-pass of multi-class softmax.
+Jacobian of softmax: core derivative for multi-class classification backprop.
+
+For z in R^K:
+    softmax(z)_i = exp(z_i) / sum_j exp(z_j)
+
+Jacobian: J_softmax[i,j] = p_i * (delta_{ij} - p_j) = diag(p) - p @ p^T
+VJP (backprop): delta_z = J_softmax^T @ delta_p
+
+We verify the analytic Jacobian against numerical differences and
+demonstrate the VJP used in backward pass of multi-class softmax.
 """
 import numpy as np
 RANDOM_SEED = 42
@@ -204,9 +224,12 @@ def numerical_jacobian_softmax(z: np.ndarray, h: float = 1e-5) -> np.ndarray:
     k = len(z)
     jac = np.zeros((k, k))
     for j in range(k):
-        e_j = np.zeros(k); e_j[j] = h
-    jac[:, j] = (softmax(z + e_j) - softmax(z - e_j)) / (2 * h)
+        e_j = np.zeros(k)
+        e_j[j] = h
+        jac[:, j] = (softmax(z + e_j) - softmax(z - e_j)) / (2 * h)
     return jac
+
+
 K = 5
 z_test = rng.standard_normal(K)
 p_test = softmax(z_test)
@@ -219,11 +242,16 @@ print(f"\nNumerical J (5x5):\n{j_numerical.round(4)}")
 print(f"\nMax error: {np.abs(j_analytic - j_numerical).max():.2e}")
 print(f"Symmetric: {np.allclose(j_analytic, j_analytic.T)}")
 print(f"Row sums (should all be ~0): {j_analytic.sum(axis=1).round(6)}")
-print(f"Rank: {np.linalg.matrix_rank(j_analytic)} (= K-1 = {K-1}, one zero eigenvalue)")   # VJP: backprop through softmax layer
+print(f"Rank: {np.linalg.matrix_rank(j_analytic)} (= K-1 = {K-1}, one zero eigenvalue)")
+
+# VJP: backprop through softmax layer
 # Upstream: dL/dp from cross-entropy with true class = 2
-y_onehot = np.zeros(K); y_onehot[2] = 1.0
-delta_p = -(y_onehot / np.clip(p_test, 1e-12, 1.0))   # dL/dp delta_z = j_analytic.T @ delta_p # VJP: J^T @ upstream # Efficient combined CE + softmax
-gradient: delta_z = p - y
+y_onehot = np.zeros(K)
+y_onehot[2] = 1.0
+delta_p = -(y_onehot / np.clip(p_test, 1e-12, 1.0))  # dL/dp
+delta_z = j_analytic.T @ delta_p  # VJP: J^T @ upstream
+
+# Efficient combined CE + softmax gradient: delta_z = p - y
 delta_z_combined = p_test - y_onehot
 print(f"\nVJP delta_z (J^T @ delta_p): {delta_z.round(4)}")
 print(f"Combined CE+softmax gradient: {delta_z_combined.round(4)}")

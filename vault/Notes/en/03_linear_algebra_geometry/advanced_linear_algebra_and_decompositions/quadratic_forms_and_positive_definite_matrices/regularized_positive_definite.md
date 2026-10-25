@@ -98,21 +98,29 @@ Regularization fixed the deficiency.
 
 ```python
 import numpy as np
-EPSILON = 0.01   # -- Regularize a PSD-but-not-PD matrix to make it PD ----------------
+EPSILON = 0.01
+
+# -- Regularize a PSD-but-not-PD matrix to make it PD ----------------
 A = np.array([[4.0, 2.0], [2.0, 1.0]])   # rank-1: eigenvalues 5 and 0
 print("Original A:")
 print(A)
-print(f"Eigenvalues of A: {np.linalg.eigvalsh(A).round(6)}")   # Apply diagonal regularization
+print(f"Eigenvalues of A: {np.linalg.eigvalsh(A).round(6)}")
+
+# Apply diagonal regularization
 A_reg = A + EPSILON * np.eye(A.shape[0])
 print(f"\nA + {EPSILON} * I:")
 print(A_reg)
-print(f"Eigenvalues of A_reg: {np.linalg.eigvalsh(A_reg).round(6)}")   # Verify Cholesky now succeeds
+print(f"Eigenvalues of A_reg: {np.linalg.eigvalsh(A_reg).round(6)}")
+
+# Verify Cholesky now succeeds
 try:
     L = np.linalg.cholesky(A_reg)
     print(f"\nCholesky succeeded after regularization")
     print(f"L =\n{L.round(4)}")
 except np.linalg.LinAlgError:
-    print("\nCholesky still failed: increase epsilon")   # Verify quadratic form for former null-space vector
+    print("\nCholesky still failed: increase epsilon")
+
+# Verify quadratic form for former null-space vector
 x_null = np.array([1.0, -2.0])
 qf_orig = float(x_null @ A @ x_null)
 qf_reg = float(x_null @ A_reg @ x_null)
@@ -123,7 +131,9 @@ print(f"Quadratic form (regularized): {qf_reg:.6f} (> 0, fixed)")
 ### Beginner example (R)
 
 ```r
-EPSILON <- 0.01  # -- Regularize a PSD-but-not-PD matrix to make it PD ----------------
+EPSILON <- 0.01
+
+# -- Regularize a PSD-but-not-PD matrix to make it PD ----------------
 A <- matrix(c(4, 2, 2, 1), nrow = 2)
 cat("Original A:\n")
 print(A)
@@ -131,10 +141,17 @@ cat(sprintf("Eigenvalues of A: %s\n", paste(round(eigen(A)$values, 6), collapse 
 A_reg <- A + EPSILON * diag(nrow(A))
 cat(sprintf("\nA + %g * I:\n", EPSILON))
 print(A_reg)
-cat(sprintf("Eigenvalues of A_reg: %s\n", paste(round(eigen(A_reg)$values, 6), collapse = ", ")))  # Cholesky check
-tryCatch({ L <- chol(A_reg) cat("\nCholesky succeeded after regularization\n")
-}, error = function(e) { cat(sprintf("\nCholesky failed: %s\n", e$message))
-})  # Quadratic form check for former null-space vector
+cat(sprintf("Eigenvalues of A_reg: %s\n", paste(round(eigen(A_reg)$values, 6), collapse = ", ")))
+
+# Cholesky check
+tryCatch({
+  L <- chol(A_reg)
+  cat("\nCholesky succeeded after regularization\n")
+}, error = function(e) {
+  cat(sprintf("\nCholesky failed: %s\n", e$message))
+})
+
+# Quadratic form check for former null-space vector
 x_null <- c(1.0, -2.0)
 qf_orig <- as.numeric(x_null %*% A %*% x_null)
 qf_reg <- as.numeric(x_null %*% A_reg %*% x_null)
@@ -147,20 +164,42 @@ cat(sprintf("Quadratic form (regularized): %.6f (> 0)\n", qf_reg))
 ```python
 import numpy as np
 import pandas as pd
-np.random.seed(42)   # -- Business scenario: ridge regression on a near-collinear feature matrix
+np.random.seed(42)
+
+# -- Business scenario: ridge regression on a near-collinear feature matrix
 # Estimate marketing ROI coefficients when spend channels are highly correlated.
 N_WEEKS = 60
 CHANNEL_NAMES = ["tv", "digital", "branded_search", "nonbranded_search"]
 LAMBDA_VALUES = [0.0, 0.01, 0.1, 1.0, 10.0]   # regularization strengths to compare
-TRUE_COEFS = np.array([0.5, 1.2, 0.9, 0.6])   # Simulate near-collinear spend data: branded and nonbranded search are ~90% correlated
+TRUE_COEFS = np.array([0.5, 1.2, 0.9, 0.6])
+
+# Simulate near-collinear spend data: branded and nonbranded search are ~90% correlated
 base_spend = np.abs(np.random.normal(20_000, 3_000, size=(N_WEEKS,)))
-spend_raw = np.column_stack([ np.abs(np.random.normal(15_000, 4_000, N_WEEKS)),   # tv np.abs(np.random.normal(12_000, 2_000, N_WEEKS)), # digital base_spend + np.random.normal(0,
-    500, N_WEEKS),   # branded search base_spend + np.random.normal(0,
-    600, N_WEEKS),   # nonbranded search
-]) X = spend_raw / spend_raw.std(axis=0)   # standardize
-y = X @ TRUE_COEFS + np.random.normal(0, 0.3, N_WEEKS) results = []
-for lam in LAMBDA_VALUES: xtx = X.T @ X xty = X.T @ y xtx_reg = xtx + lam * np.eye(X.shape[1]) theta = np.linalg.solve(xtx_reg, xty) cond = float(np.linalg.cond(xtx_reg)) y_hat = X @ theta mse = float(np.mean((y - y_hat) ** 2)) results.append({ "lambda":
-    lam, "condition_number": round(cond, 1), "mse": round(mse, 4), "coef_norm": round(float(np.linalg.norm(theta)), 4), }) results_df = pd.DataFrame(results)
+spend_raw = np.column_stack([
+    np.abs(np.random.normal(15_000, 4_000, N_WEEKS)),   # tv
+    np.abs(np.random.normal(12_000, 2_000, N_WEEKS)),   # digital
+    base_spend + np.random.normal(0, 500, N_WEEKS),     # branded search
+    base_spend + np.random.normal(0, 600, N_WEEKS),     # nonbranded search
+])
+X = spend_raw / spend_raw.std(axis=0)   # standardize
+y = X @ TRUE_COEFS + np.random.normal(0, 0.3, N_WEEKS)
+
+results = []
+for lam in LAMBDA_VALUES:
+    xtx = X.T @ X
+    xty = X.T @ y
+    xtx_reg = xtx + lam * np.eye(X.shape[1])
+    theta = np.linalg.solve(xtx_reg, xty)
+    cond = float(np.linalg.cond(xtx_reg))
+    y_hat = X @ theta
+    mse = float(np.mean((y - y_hat) ** 2))
+    results.append({
+        "lambda": lam,
+        "condition_number": round(cond, 1),
+        "mse": round(mse, 4),
+        "coef_norm": round(float(np.linalg.norm(theta)), 4),
+    })
+results_df = pd.DataFrame(results)
 print("Ridge regression: effect of epsilon (lambda) on condition number and MSE:")
 print(results_df.to_string(index=False))
 print("\nInterpretation: adding lambda * I reduces condition number (more stable) at the cost of some bias (higher MSE for true lambda=0).")

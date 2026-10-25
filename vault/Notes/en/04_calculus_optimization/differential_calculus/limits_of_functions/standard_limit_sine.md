@@ -94,22 +94,30 @@ $= (3/5) \cdot 1 = 3/5 = 0.6$. *Verify:* $x = 0.001$: $\sin(0.003)/0.005 = 0.002
 ```python
 import numpy as np
 
+
 def sinc_unnormalized(x: np.ndarray) -> np.ndarray:
     """sin(x)/x, defined to be 1 at x=0 (by the standard limit)."""
-    return np.where(np.abs(x) < 1e-10, 1.0, np.sin(x) / x)   # Demonstrate the limit numerically
+    return np.where(np.abs(x) < 1e-10, 1.0, np.sin(x) / x)
+
+
+# Demonstrate the limit numerically
 print("Standard Limit: lim_{x->0} sin(x)/x = 1")
 print(f"\n{'x (rad)':>12} {'sin(x)/x':>12} {'Error from 1':>14} {'sin(x) approx':>16}")
 x_vals = [1.0, 0.5, 0.1, 0.05, 0.01, 0.001, 0.0001]
 for x in x_vals:
     ratio = np.sin(x) / x
-error = abs(ratio - 1.0)
-taylor_err = x**2 / 6   # leading error term from Taylor: 1 - x^2/6 print(f"{x:>12.4f} {ratio:>12.8f} {error:>14.2e} {taylor_err:>16.2e}") # Derived limits: lim sin(ax) /
-x = a
+    error = abs(ratio - 1.0)
+    taylor_err = x**2 / 6   # leading error term from Taylor: 1 - x^2/6
+    print(f"{x:>12.4f} {ratio:>12.8f} {error:>14.2e} {taylor_err:>16.2e}")
+
+# Derived limits: lim sin(ax) / x = a
 print(f"\n--- Derived: lim_{{x->0}} sin(ax)/x = a ---")
 print(f"{'a':>6} {'Numerical':>12} {'Analytic (=a)':>14}")
 for a in [2, 3, 0.5, np.pi]:
     numerical = np.sin(a * 1e-8) / 1e-8
-print(f"{a:>6.4f} {numerical:>12.6f} {a:>14.6f}")   # Sinc function: signal processing zero-padding interpolation
+    print(f"{a:>6.4f} {numerical:>12.6f} {a:>14.6f}")
+
+# Sinc function: signal processing zero-padding interpolation
 print(f"\n--- Sinc function (unnormalized): sin(x)/x ---")
 x_domain = np.linspace(-3 * np.pi, 3 * np.pi, 1000)
 sinc_vals = sinc_unnormalized(x_domain)
@@ -123,18 +131,23 @@ print(f" First zero crossing at x = pi = {np.pi:.4f}")
 
 ```r
 # Standard limit: lim_{x->0} sin(x)/x = 1
-sinc_unnormalized <- function(x) { ifelse(abs(x) < 1e-10, 1.0, sin(x) / x)
+sinc_unnormalized <- function(x) {
+  ifelse(abs(x) < 1e-10, 1.0, sin(x) / x)
 }
 cat("Standard Limit: lim_{x->0} sin(x)/x = 1\n\n")
 cat(sprintf("%-12s %-12s %-14s\n", "x (rad)", "sin(x)/x", "Error from 1"))
 x_vals <- c(1.0, 0.5, 0.1, 0.01, 0.001, 0.0001)
-for (x in x_vals) { ratio <- sin(x) / x
+for (x in x_vals) {
+  ratio <- sin(x) / x
   error <- abs(ratio - 1.0)
   cat(sprintf("%-12.4f %-12.8f %-14.2e\n", x, ratio, error))
-}  # Derived limit: lim sin(ax)/x = a
+}
+
+# Derived limit: lim sin(ax)/x = a
 cat("\nDerived: lim_{x->0} sin(ax)/x = a\n")
 cat(sprintf("%-6s %-12s %-12s\n", "a", "Numerical", "Analytic"))
-for (a in c(2, 3, 0.5, pi)) { h <- 1e-8
+for (a in c(2, 3, 0.5, pi)) {
+  h <- 1e-8
   numerical <- sin(a * h) / h
   cat(sprintf("%-6.4f %-12.6f %-12.6f\n", a, numerical, a))
 }
@@ -146,7 +159,9 @@ for (a in c(2, 3, 0.5, pi)) { h <- 1e-8
 import numpy as np
 from scipy.signal import resample_poly
 from sklearn.metrics import mean_squared_error
-np.random.seed(42)   # -- Standard limit sin(x)/x = 1: sinc interpolation for time series upsampling --
+np.random.seed(42)
+
+# -- Standard limit sin(x)/x = 1: sinc interpolation for time series upsampling --
 # Use case: A DS upsamples a sensor time series (e.g., IoT device sampled at 10 Hz)
 # to a higher rate (50 Hz) for downstream feature engineering. The ideal
 # reconstruction filter is sinc, whose DC value (gain at 0 Hz) = 1 by the standard limit.
@@ -155,23 +170,41 @@ ORIG_RATE = 10   # Hz
 TARGET_RATE = 50   # Hz
 UP_FACTOR = TARGET_RATE // ORIG_RATE
 DURATION = 2.0   # seconds
-FREQ_SIGNAL = 3.0   # Hz (well below Nyquist of 5 Hz) # Generate ground truth at target rate
-t_high = np.linspace(0, DURATION, int(TARGET_RATE * DURATION), endpoint=False)
-signal_truth = np.sin(2 * np.pi * FREQ_SIGNAL * t_high) + 0.3 * np.sin(2 * np.pi * 2.0 * t_high)   # Downsampled signal at original rate
-t_low = t_high[::UP_FACTOR]
-signal_low = signal_truth[::UP_FACTOR]   # --- Sinc interpolation ---
+FREQ_SIGNAL = 3.0   # Hz (well below Nyquist of 5 Hz)
 
+# Generate ground truth at target rate
+t_high = np.linspace(0, DURATION, int(TARGET_RATE * DURATION), endpoint=False)
+signal_truth = np.sin(2 * np.pi * FREQ_SIGNAL * t_high) + 0.3 * np.sin(2 * np.pi * 2.0 * t_high)
+
+# Downsampled signal at original rate
+t_low = t_high[::UP_FACTOR]
+signal_low = signal_truth[::UP_FACTOR]
+
+
+# --- Sinc interpolation ---
 def sinc_interp(x_low: np.ndarray, t_low: np.ndarray, t_high: np.ndarray) -> np.ndarray:
-    """ Whittaker-Shannon sinc interpolation. x_reconstruct[t] = sum_k x[k] * sinc((t - t_k) / T) where sinc(u) = sin(pi*u)/(pi*u) -- value at u=0 is 1 by the standard limit. """
+    """Whittaker-Shannon sinc interpolation.
+
+    x_reconstruct[t] = sum_k x[k] * sinc((t - t_k) / T)
+    where sinc(u) = sin(pi*u)/(pi*u) -- value at u=0 is 1 by the standard limit.
+    """
     T = t_low[1] - t_low[0]   # original sampling interval
     output = np.zeros_like(t_high)
     for k, (x_k, t_k) in enumerate(zip(x_low, t_low)):
-        u = (t_high - t_k) / T   # sinc(u) = sin(pi*u)/(pi*u), defined = 1 at u=0 (standard limit)
-    sinc_vals = np.where(np.abs(u) < 1e-10, 1.0, np.sin(np.pi * u) / (np.pi * u))
-    output += x_k * sinc_vals
-    return output   # --- Linear interpolation ---
-signal_linear = np.interp(t_high, t_low, signal_low)   # --- Sinc interpolation ---
-signal_sinc = sinc_interp(signal_low, t_low, t_high)   # Compare quality
+        u = (t_high - t_k) / T
+        # sinc(u) = sin(pi*u)/(pi*u), defined = 1 at u=0 (standard limit)
+        sinc_vals = np.where(np.abs(u) < 1e-10, 1.0, np.sin(np.pi * u) / (np.pi * u))
+        output += x_k * sinc_vals
+    return output
+
+
+# --- Linear interpolation ---
+signal_linear = np.interp(t_high, t_low, signal_low)
+
+# --- Sinc interpolation ---
+signal_sinc = sinc_interp(signal_low, t_low, t_high)
+
+# Compare quality
 mse_linear = mean_squared_error(signal_truth, signal_linear)
 mse_sinc = mean_squared_error(signal_truth, signal_sinc)
 print("Standard Limit sin(x)/x=1: Sinc Interpolation for Time Series Upsampling")
@@ -186,8 +219,8 @@ print(f"\nSinc at sample points (should be exactly 1 or 0):")
 for k in range(min(5, len(t_low))):
     # At each original sample time: sinc(0) = 1 for matching sample, sinc(n) = 0 for others
     u_vals = (t_low[k] - t_low) / (t_low[1] - t_low[0])
-sinc_at_samples = np.where(np.abs(u_vals) < 1e-10, 1.0, np.sin(np.pi * u_vals) / (np.pi * u_vals))
-print(f" k={k}: sinc at own sample = {sinc_at_samples[k]:.6f} (expect 1.0)")
+    sinc_at_samples = np.where(np.abs(u_vals) < 1e-10, 1.0, np.sin(np.pi * u_vals) / (np.pi * u_vals))
+    print(f" k={k}: sinc at own sample = {sinc_at_samples[k]:.6f} (expect 1.0)")
 ```
 
 ---

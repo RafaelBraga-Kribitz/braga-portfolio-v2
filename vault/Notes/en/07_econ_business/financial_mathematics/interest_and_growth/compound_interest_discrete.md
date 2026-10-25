@@ -162,13 +162,16 @@ print(c(A = round(A, 2), EAR = round(ear, 6)))
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 from dataclasses import dataclass
-RANDOM_SEED = 42
-@dataclass(frozen=True)
 
+RANDOM_SEED = 42
+
+
+@dataclass(frozen=True)
 class DiscreteCompoundResult:
-    future_value: float effective_annual_rate: float
+    future_value: float
+    effective_annual_rate: float
+
 
 def discrete_compound(*, principal: float, annual_rate: float, n_per_year: int, years: float) -> DiscreteCompoundResult:
     if principal <= 0:
@@ -182,10 +185,12 @@ def discrete_compound(*, principal: float, annual_rate: float, n_per_year: int, 
     ear = (1 + annual_rate / n_per_year) ** n_per_year - 1
     return DiscreteCompoundResult(future_value=fv, effective_annual_rate=ear)
 
+
 def main() -> None:
     _ = RANDOM_SEED
     out = discrete_compound(principal=2500.0, annual_rate=0.0525, n_per_year=365, years=3.0)
     print(out)
+
 
 if __name__ == "__main__":
     main()

@@ -99,21 +99,30 @@ $7 \div 2 = 3.5$. Is $3.5 \in \mathbb{N}$? No — not a whole number. Not closed
 # Natural numbers ℕ = {1, 2, 3, ...}
 # Generate natural numbers
 natural_numbers = list(range(1, 11))
-print("First 10 natural numbers:", natural_numbers)   # Closure demonstration
+print("First 10 natural numbers:", natural_numbers)
+
+# Closure demonstration
 a, b = 7, 3
 print(f"\nClosure under addition: {a} + {b} = {a + b} (in ℕ: {a + b >= 1})")
 print(f"Closure under multiplication: {a} × {b} = {a * b} (in ℕ: {a * b >= 1})")
 print(f"NOT closed - subtraction: {b} - {a} = {b - a} (in ℕ: {(b - a) >= 1})")
 print(f"NOT closed - division: {a} ÷ {b} = {a / b:.4f} (whole: {a % b == 0})")
+
 import pandas as pd
 import numpy as np
+
 np.random.seed(42)
-df = pd.DataFrame({ "product_id": range(1, 11),   # natural number IDs
-    "units_sold": np.random.randint(1, 500, 10),   # counts: ℕ
-    (no zeros) "rank": range(1, 11),   # ordinal ranks: ℕ
-})   # Validate no zeros or negatives crept in
+df = pd.DataFrame({
+    "product_id": range(1, 11),                   # natural number IDs
+    "units_sold": np.random.randint(1, 500, 10),  # counts: ℕ (no zeros)
+    "rank": range(1, 11),                         # ordinal ranks: ℕ
+})
+
+# Validate no zeros or negatives crept in
 assert (df["units_sold"] >= 1).all(), "units_sold must be >= 1 (natural number)"
-assert (df["rank"] >= 1).all(), "rank must be >= 1 (natural number)"   # Enforce with efficient uint32 dtype
+assert (df["rank"] >= 1).all(), "rank must be >= 1 (natural number)"
+
+# Enforce with efficient uint32 dtype
 df["product_id"] = df["product_id"].astype("uint32")
 df["units_sold"] = df["units_sold"].astype("uint32")
 df["rank"] = df["rank"].astype("uint32")
@@ -127,15 +136,24 @@ print(f"\nDtypes: {df.dtypes.to_dict()}")
 ```r
 # Natural numbers in R
 natural_numbers <- 1:10
-cat("First 10 natural numbers:", natural_numbers, "\n")  # Closure checks
+cat("First 10 natural numbers:", natural_numbers, "\n")
+
+# Closure checks
 a <- 7L
 b <- 3L
 cat(sprintf("\nClosure under +: %d + %d = %d (in ℕ: %s)\n", a, b, a + b, a + b >= 1L))
 cat(sprintf("NOT closed under -: %d - %d = %d (in ℕ: %s)\n", b, a, b - a, (b - a) >= 1L))
-cat(sprintf("NOT closed under /: %d / %d = %.4f (whole: %s)\n", a, b, a / b, a %% b == 0L))  # Practical: product rankings (natural numbers)
+cat(sprintf("NOT closed under /: %d / %d = %.4f (whole: %s)\n", a, b, a / b, a %% b == 0L))
+
+# Practical: product rankings (natural numbers)
 set.seed(42)
-df <- data.frame( product_id = 1L:10L, units_sold = sample(1L:500L, 10L, replace = TRUE), rank = 1L:10L
-)  # Validate natural number constraints
+df <- data.frame(
+  product_id = 1L:10L,
+  units_sold = sample(1L:500L, 10L, replace = TRUE),
+  rank = 1L:10L
+)
+
+# Validate natural number constraints
 stopifnot(all(df$units_sold >= 1L))
 stopifnot(all(df$rank >= 1L))
 stopifnot(all(df$product_id >= 1L))
@@ -148,28 +166,58 @@ cat("\nAll columns satisfy ℕ: no zeros, no negatives, no fractions.\n")
 
 ```python
 import pandas as pd
-import numpy as np   # Scenario: enforce natural-number semantics across a sales pipeline
+import numpy as np
+
+# Scenario: enforce natural-number semantics across a sales pipeline
 # Natural numbers appear as IDs, counts, ranks, iteration bounds
 np.random.seed(42)
 N_PRODUCTS = 50
-raw_df = pd.DataFrame({ "product_id": np.arange(1, N_PRODUCTS + 1, dtype="uint32"), "units_sold": np.random.randint(0, 1000, N_PRODUCTS),   # may contain zeros
-    "returns": np.random.randint(0, 50, N_PRODUCTS), "price_usd": np.random.uniform(5.0, 500.0, N_PRODUCTS).round(2),
+raw_df = pd.DataFrame({
+    "product_id": np.arange(1, N_PRODUCTS + 1, dtype="uint32"),
+    "units_sold": np.random.randint(0, 1000, N_PRODUCTS),   # may contain zeros
+    "returns": np.random.randint(0, 50, N_PRODUCTS),
+    "price_usd": np.random.uniform(5.0, 500.0, N_PRODUCTS).round(2),
 })
 
-def validate_natural_columns( df: pd.DataFrame, columns: list[str], strict: bool = True,
+
+def validate_natural_columns(
+    df: pd.DataFrame,
+    columns: list[str],
+    strict: bool = True,
 ) -> dict[str, int]:
-    """ Validate that specified columns contain only natural-number values. Args: df: Input DataFrame. columns: Column names to validate. strict: If True, require >= 1 (ℕ). If False, allow >= 0 (ℕ₀). Returns: Dict mapping column name to count of violations. """
+    """Validate that specified columns contain only natural-number values.
+
+    Args:
+        df: Input DataFrame.
+        columns: Column names to validate.
+        strict: If True, require >= 1 (ℕ). If False, allow >= 0 (ℕ₀).
+
+    Returns:
+        Dict mapping column name to count of violations.
+    """
     threshold = 1 if strict else 0
-    return { col: int((df[col] < threshold).sum()) for col in columns if col in df.columns }   # Validate ID and count columns
-violations = validate_natural_columns( df=raw_df, columns=["product_id", "units_sold", "returns"], strict=True,
+    return {col: int((df[col] < threshold).sum()) for col in columns if col in df.columns}
+
+
+# Validate ID and count columns
+violations = validate_natural_columns(
+    df=raw_df,
+    columns=["product_id", "units_sold", "returns"],
+    strict=True,
 )
 print("Natural Number (ℕ) Validation Report")
 print("=" * 42)
 for col, count in violations.items():
-    status = "PASS" if count == 0 else f"FAIL — {count} violation(s)[["
-print(f"]] {col:<20} {status}")   # Rank products by net sales (rank is always ℕ: starts at 1)
+    status = "PASS" if count == 0 else f"FAIL — {count} violation(s)"
+    print(f"  {col:<20} {status}")
+
+# Rank products by net sales (rank is always ℕ: starts at 1)
 raw_df["net_units"] = (raw_df["units_sold"] - raw_df["returns"]).clip(lower=1)
-raw_df["rank"] = ( raw_df["net_units"] .rank(ascending=False, method="min") .astype("uint32") )
+raw_df["rank"] = (
+    raw_df["net_units"]
+    .rank(ascending=False, method="min")
+    .astype("uint32")
+)
 top_10 = raw_df.nsmallest(10, "rank")[["product_id", "net_units", "rank"]]
 print("\nTop 10 Products by Net Units Sold:")
 print(top_10.to_string(index=False))
@@ -183,13 +231,22 @@ print(f"Min rank: {raw_df['rank'].min()} ← starts at 1, not 0")
 # Enforce natural-number semantics: validate ℕ columns, rank by net units
 set.seed(42)
 N_PRODUCTS <- 50
-raw_df <- data.frame( product_id = seq_len(N_PRODUCTS), units_sold = sample(0:1000, N_PRODUCTS, replace = TRUE), returns = sample(0:50, N_PRODUCTS, replace = TRUE), price_usd = round(runif(N_PRODUCTS, 5, 500), 2)
-) validate_natural_columns <- function(df, columns, strict = TRUE) { threshold <- if (strict) 1 else 0 sapply(columns[columns %in% names(df)], function(col) sum(dfcol < threshold))
+raw_df <- data.frame(
+  product_id = seq_len(N_PRODUCTS),
+  units_sold = sample(0:1000, N_PRODUCTS, replace = TRUE),
+  returns = sample(0:50, N_PRODUCTS, replace = TRUE),
+  price_usd = round(runif(N_PRODUCTS, 5, 500), 2)
+)
+
+validate_natural_columns <- function(df, columns, strict = TRUE) {
+  threshold <- if (strict) 1 else 0
+  sapply(columns[columns %in% names(df)], function(col) sum(df[[col]] < threshold))
 }
+
 violations <- validate_natural_columns(raw_df, c("product_id", "units_sold", "returns"), strict = TRUE)
 cat("Natural Number (ℕ) Validation Report\n")
-for (col in names(violations)) { status <- if (violations[col] == 0) "PASS"
-  else paste("FAIL —", violations[col], "violation(s)")
+for (col in names(violations)) {
+  status <- if (violations[col] == 0) "PASS" else paste("FAIL —", violations[col], "violation(s)")
   cat(" ", col, " ", status, "\n", sep = "")
 }
 raw_df$net_units <- pmax(raw_df$units_sold - raw_df$returns, 1)

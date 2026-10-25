@@ -96,20 +96,36 @@ Products: A, B, C. Days: Mon, Tue, Wed. Raw data has no row for Product B on Mon
 
 ```python
 # Whole numbers ℕ₀ = {0, 1, 2, 3, ...}
+import pandas as pd
+import numpy as np
+
 whole_numbers = list(range(0, 11))
-print("First 11 whole numbers (0 to 10):", whole_numbers)   # Zero is valid, not missing
+print("First 11 whole numbers (0 to 10):", whole_numbers)
+
+# Zero is valid, not missing
 print(f"\nClosure under addition: 0 + 5 = {0 + 5} (in ℕ₀: {0 + 5 >= 0})")
 print(f"Additive identity: 7 + 0 = {7 + 0} (unchanged)")
 print(f"NOT closed under -: 2 - 5 = {2 - 5} (in ℕ₀: {(2 - 5) >= 0})")
-import pandas as pd
-import numpy as np   # Zero-count gap filling: every product appears on every day
+
+# Zero-count gap filling: every product appears on every day
 dates = pd.date_range("2024-01-01", periods=5, freq="D")
-products = ["A", "B", "C"]   # Spine: every date × every product
+products = ["A", "B", "C"]
+
+# Spine: every date × every product
 spine = pd.MultiIndex.from_product([dates, products], names=["date", "product"])
-spine_df = pd.DataFrame(index=spine).reset_index()   # Simulated raw sales (some days missing for some products)
+spine_df = pd.DataFrame(index=spine).reset_index()
+
+# Simulated raw sales (some days missing for some products)
 np.random.seed(42)
-raw_sales = pd.DataFrame({ "date": np.random.choice(dates, 8), "product": np.random.choice(products, 8), "units": np.random.randint(1, 50, 8),
-})   # Merge and fill zeros (ℕ₀ semantics: absent = 0, not null)
+raw_sales = pd.DataFrame({
+    "date": np.random.choice(dates, 8),
+    "product": np.random.choice(products, 8),
+    "units": np.random.randint(1, 50, 8),
+})
+# Several sales can share a (date, product): sum them to one row per cell
+raw_sales = raw_sales.groupby(["date", "product"], as_index=False)["units"].sum()
+
+# Merge and fill zeros (ℕ₀ semantics: absent = 0, not null)
 full_df = spine_df.merge(raw_sales, on=["date", "product"], how="left")
 full_df["units"] = full_df["units"].fillna(0).astype("uint32")
 print("\nFull sales grid (zeros = whole-number absence, not null):")
@@ -124,15 +140,24 @@ print(f"\nDtype: {full_df['units'].dtype} ← uint32 enforces ℕ₀ semantics")
 whole_numbers <- 0:10
 cat("First 11 whole numbers:", whole_numbers, "\n")
 cat(sprintf("Additive identity: 7 + 0 = %d\n", 7L + 0L))
-cat(sprintf("NOT closed under subtraction: 2 - 5 = %d (negative)\n", 2L - 5L))  # Gap filling: complete date × product grid with zero counts
+cat(sprintf("NOT closed under subtraction: 2 - 5 = %d (negative)\n", 2L - 5L))
+
+# Gap filling: complete date × product grid with zero counts
 library(dplyr)
 library(tidyr)
 dates <- seq.Date(as.Date("2024-01-01"), by = "day", length.out = 5)
 products <- c("A", "B", "C")
 spine <- expand.grid(date = dates, product = products, stringsAsFactors = FALSE)
 set.seed(42)
-raw_sales <- data.frame( date = sample(dates, 8, replace = TRUE), product = sample(products, 8, replace = TRUE), units = sample(1:50, 8, replace = TRUE)
-) full_df <- spine |> left_join(raw_sales, by = c("date", "product")) |> mutate(units = if_else(is.na(units), 0L, as.integer(units))) cat("\nFull sales grid (ℕ₀ — zeros not nulls):\n")
+raw_sales <- data.frame(
+  date = sample(dates, 8, replace = TRUE),
+  product = sample(products, 8, replace = TRUE),
+  units = sample(1:50, 8, replace = TRUE)
+)
+full_df <- spine |>
+  left_join(raw_sales, by = c("date", "product")) |>
+  mutate(units = if_else(is.na(units), 0L, as.integer(units)))
+cat("\nFull sales grid (ℕ₀ — zeros not nulls):\n")
 print(full_df |> pivot_wider(names_from = product, values_from = units))
 ```
 
@@ -140,19 +165,44 @@ print(full_df |> pivot_wider(names_from = product, values_from = units))
 
 ```python
 import pandas as pd
-import numpy as np   # Scenario: build a complete daily KPI report with zero-fill
+import numpy as np
+
+# Scenario: build a complete daily KPI report with zero-fill
 # Zero counts are whole numbers; missing = 0 (known absence), not NULL (unknown)
 np.random.seed(42)
 date_range = pd.date_range("2024-01-01", "2024-01-31", freq="D")
-channels = ["organic", "paid", "email", "referral"]   # Spine: complete cross product of dates × channels
-spine = pd.DataFrame( [(d, c) for d in date_range for c in channels], columns=["date", "channel"],
-)   # Raw events (sparse — not all channels active every day)
-n_events = 60
-raw_events = pd.DataFrame({ "date": np.random.choice(date_range, n_events), "channel": np.random.choice(channels, n_events), "sessions": np.random.randint(1, 500, n_events), "conversions": np.random.randint(0, 20, n_events),
-})   # Aggregate and merge — zero-fill for ℕ₀ semantics
-agg = raw_events.groupby(["date", "channel"], as_index=False).agg( total_sessions=("sessions", "sum"), total_conversions=("conversions", "sum"),
+channels = ["organic", "paid", "email", "referral"]
+
+# Spine: complete cross product of dates × channels
+spine = pd.DataFrame(
+    [(d, c) for d in date_range for c in channels],
+    columns=["date", "channel"],
 )
-report = ( spine .merge(agg, on=["date", "channel"], how="left") .fillna({"total_sessions": 0, "total_conversions": 0}) .astype({"total_sessions": "uint32", "total_conversions": "uint32"}) .sort_values(["channel", "date"]) .reset_index(drop=True) )   # Verify: no NULLs, no negatives — all values in ℕ₀
+
+# Raw events (sparse — not all channels active every day)
+n_events = 60
+raw_events = pd.DataFrame({
+    "date": np.random.choice(date_range, n_events),
+    "channel": np.random.choice(channels, n_events),
+    "sessions": np.random.randint(1, 500, n_events),
+    "conversions": np.random.randint(0, 20, n_events),
+})
+
+# Aggregate and merge — zero-fill for ℕ₀ semantics
+agg = raw_events.groupby(["date", "channel"], as_index=False).agg(
+    total_sessions=("sessions", "sum"),
+    total_conversions=("conversions", "sum"),
+)
+report = (
+    spine
+    .merge(agg, on=["date", "channel"], how="left")
+    .fillna({"total_sessions": 0, "total_conversions": 0})
+    .astype({"total_sessions": "uint32", "total_conversions": "uint32"})
+    .sort_values(["channel", "date"])
+    .reset_index(drop=True)
+)
+
+# Verify: no NULLs, no negatives — all values in ℕ₀
 assert report["total_sessions"].isna().sum() == 0, "NULLs in sessions"
 assert report["total_conversions"].isna().sum() == 0, "NULLs in conversions"
 assert (report["total_sessions"] >= 0).all(), "Negative sessions"
@@ -171,7 +221,10 @@ print(report.head(8).to_string(index=False))
 ```r
 # Daily aggregates: total_sessions, total_conversions in ℕ₀ (whole numbers, 0 allowed)
 set.seed(42)
-daily <- data.frame( date = rep(seq(as.Date("2024-01-01"), by = "day", length.out = 7), each = 3), sessions = sample(0:100, 21, replace = TRUE), conversions = sample(0:10, 21, replace = TRUE)
+daily <- data.frame(
+  date = rep(seq(as.Date("2024-01-01"), by = "day", length.out = 7), each = 3),
+  sessions = sample(0:100, 21, replace = TRUE),
+  conversions = sample(0:10, 21, replace = TRUE)
 )
 report <- aggregate(cbind(sessions = sessions, conversions = conversions) ~ date, data = daily, sum)
 cat(" Days with zero sessions (valid ℕ₀):", sum(report$sessions == 0), "\n")

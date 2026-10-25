@@ -97,12 +97,16 @@ from sklearn.metrics import log_loss
 y_true = [1, 0, 1, 0, 1]
 y_pred = [0.9, 0.1, 0.8, 0.3, 0.6]
 bce = log_loss(y_true, y_pred)
-print(f"Binary Cross-Entropy: {bce:.6f}")   # Manual calculation for verification
+print(f"Binary Cross-Entropy: {bce:.6f}")
+
+# Manual calculation for verification
 y_true_arr = np.array(y_true)
 y_pred_arr = np.array(y_pred)
 eps = 1e-15
 y_pred_clipped = np.clip(y_pred_arr, eps, 1 - eps)
-manual_bce = -np.mean( y_true_arr * np.log(y_pred_clipped) + (1 - y_true_arr) * np.log(1 - y_pred_clipped) )
+manual_bce = -np.mean(
+    y_true_arr * np.log(y_pred_clipped) + (1 - y_true_arr) * np.log(1 - y_pred_clipped)
+)
 print(f"Manual BCE: {manual_bce:.6f}")
 ```
 
@@ -120,22 +124,28 @@ cat("Binary Cross-Entropy:", round(bce, 6), "\n")
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
 import pandas as pd
 from sklearn.metrics import log_loss
+
 EPSILON = 1e-12   # numerical stability floor
 
-def binary_cross_entropy( y_true: np.ndarray, y_prob: np.ndarray, sample_weights: np.ndarray | None = None,
+
+def binary_cross_entropy(
+    y_true: np.ndarray, y_prob: np.ndarray, sample_weights: np.ndarray | None = None,
 ) -> float:
     # Numerically stable weighted BCE.
     y_prob_clipped = np.clip(y_prob, EPSILON, 1.0 - EPSILON)
-    per_sample = -( y_true * np.log(y_prob_clipped) + (1 - y_true) * np.log(1 - y_prob_clipped) )
+    per_sample = -(
+        y_true * np.log(y_prob_clipped) + (1 - y_true) * np.log(1 - y_prob_clipped)
+    )
     if sample_weights is not None:
         return float(np.average(per_sample, weights=sample_weights))
     return float(per_sample.mean())
 
-def bce_calibration_check( y_true: np.ndarray, y_prob: np.ndarray, n_bins: int = 10,
+
+def bce_calibration_check(
+    y_true: np.ndarray, y_prob: np.ndarray, n_bins: int = 10,
 ) -> pd.DataFrame:
     # Check BCE decomposition into calibration and refinement components.
     bins = np.linspace(0, 1, n_bins + 1)
@@ -144,19 +154,27 @@ def bce_calibration_check( y_true: np.ndarray, y_prob: np.ndarray, n_bins: int =
     rows = []
     for bin_idx in range(n_bins):
         mask = labels == bin_idx
-    if mask.sum() == 0:
-        continue
-    mean_pred = float(y_prob[mask].mean())
-    mean_true = float(y_true[mask].mean())
-    bin_bce = binary_cross_entropy(y_true[mask], y_prob[mask])
-    rows.append({ "bin_idx": bin_idx, "n": int(mask.sum()), "mean_pred": round(mean_pred, 4), "mean_true": round(mean_true, 4), "bin_bce": round(bin_bce, 6), })
+        if mask.sum() == 0:
+            continue
+        mean_pred = float(y_prob[mask].mean())
+        mean_true = float(y_true[mask].mean())
+        bin_bce = binary_cross_entropy(y_true[mask], y_prob[mask])
+        rows.append({
+            "bin_idx": bin_idx,
+            "n": int(mask.sum()),
+            "mean_pred": round(mean_pred, 4),
+            "mean_true": round(mean_true, 4),
+            "bin_bce": round(bin_bce, 6),
+        })
     return pd.DataFrame(rows)
+
 
 if __name__ == "__main__":
     rng = np.random.default_rng(seed=42)
     n = 1_000
-    y_true_sim = rng.binomial(1, 0.25, n)   # Simulate slightly miscalibrated model
-    y_prob_sim = np.clip( y_true_sim * 0.5 + rng.beta(1, 3, n) * 0.6, 0.0, 1.0, )
+    y_true_sim = rng.binomial(1, 0.25, n)
+    # Simulate slightly miscalibrated model
+    y_prob_sim = np.clip(y_true_sim * 0.5 + rng.beta(1, 3, n) * 0.6, 0.0, 1.0)
     bce_val = binary_cross_entropy(y_true_sim, y_prob_sim)
     print(f"BCE: {bce_val:.6f}")
     print(f"sklearn log_loss: {log_loss(y_true_sim, y_prob_sim):.6f}")

@@ -88,10 +88,15 @@ $f_X(0) + f_X(1) = 0.50 + 0.50 = 1.0$ ✓
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # Joint PMF: rows = device (mobile, desktop),
-cols = purchase (no, yes)
-joint_pmf = np.array([ [0.40, 0.10], [0.25, 0.25],
-])   # Marginal of X (device) = row sums
+import numpy as np
+
+# Joint PMF: rows = device (mobile, desktop), cols = purchase (no, yes)
+joint_pmf = np.array([
+    [0.40, 0.10],
+    [0.25, 0.25],
+])
+
+# Marginal of X (device) = row sums
 marginal_x = joint_pmf.sum(axis=1)
 # Marginal of Y (purchase) = column sums
 marginal_y = joint_pmf.sum(axis=0)
@@ -108,7 +113,10 @@ for label, prob in zip(purchase_labels, marginal_y):
 ### Beginner example (R)
 
 ```r
-joint_pmf <- matrix(c(0.40, 0.10, 0.25, 0.25), nrow = 2, byrow = TRUE, dimnames = list(device = c("mobile", "desktop"), purchase = c("no", "yes")))  # Marginal of rows (device)
+joint_pmf <- matrix(c(0.40, 0.10, 0.25, 0.25), nrow = 2, byrow = TRUE,
+                    dimnames = list(device = c("mobile", "desktop"), purchase = c("no", "yes")))
+
+# Marginal of rows (device)
 marginal_device <- rowSums(joint_pmf)
 # Marginal of columns (purchase)
 marginal_purchase <- colSums(joint_pmf)
@@ -119,11 +127,13 @@ cat("Marginal P(purchase):\n"); print(marginal_purchase)
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-def compute_joint_and_marginals( df: pd.DataFrame, col_x: str, col_y: str ) -> dict[str, pd.Series | pd.DataFrame]:
+
+def compute_joint_and_marginals(
+    df: pd.DataFrame, col_x: str, col_y: str
+) -> dict[str, pd.Series | pd.DataFrame]:
     # Compute empirical joint PMF and marginals from categorical data.
     # Returns joint, marginal_x, marginal_y as normalised Series/DataFrames.
     n = len(df)
@@ -135,10 +145,16 @@ def compute_joint_and_marginals( df: pd.DataFrame, col_x: str, col_y: str ) -> d
     assert np.isclose(marginal_y.sum(), 1.0), "Marginal Y must sum to 1"
     return {"joint": joint_pmf, "marginal_x": marginal_x, "marginal_y": marginal_y}
 
+
 if __name__ == "__main__":
     rng = np.random.default_rng(seed=42)
     n_users = 10_000
-    user_df = pd.DataFrame({ "device": rng.choice(["mobile", "desktop"], p=[0.60, 0.40], size=n_users), "purchase": rng.choice(["no", "yes"], p=[0.70, 0.30], size=n_users), })   # Induce some dependence: desktop users purchase more
+    user_df = pd.DataFrame({
+        "device": rng.choice(["mobile", "desktop"], p=[0.60, 0.40], size=n_users),
+        "purchase": rng.choice(["no", "yes"], p=[0.70, 0.30], size=n_users),
+    })
+
+    # Induce some dependence: desktop users purchase more
     mask_desktop_purchase = (user_df["device"] == "desktop") & (rng.random(n_users) < 0.15)
     user_df.loc[mask_desktop_purchase, "purchase"] = "yes"
     results = compute_joint_and_marginals(user_df, col_x="device", col_y="purchase")

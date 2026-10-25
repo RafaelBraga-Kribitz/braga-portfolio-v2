@@ -43,7 +43,7 @@ $\sin^2\theta + \cos^2\theta = 1$ is only an equation for specific $\theta$ valu
 
 ### Example in a business
 
-Hash partitioning: assigning a customer ID to one of $k$ database shards using $\text{shard_id} \equiv \text{customer_id} \pmod{k}$. This assigns customer IDs cyclically and deterministically. Every time you compute this, the same customer gets the same shard.
+Hash partitioning: assigning a customer ID to one of $k$ database shards using $\text{shard\_id} \equiv \text{customer\_id} \pmod{k}$. This assigns customer IDs cyclically and deterministically. Every time you compute this, the same customer gets the same shard.
 
 ## The formula, piece by piece
 

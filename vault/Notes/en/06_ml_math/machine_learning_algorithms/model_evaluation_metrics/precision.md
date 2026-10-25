@@ -385,7 +385,7 @@ $$
 - Precision definition as positive predictive value
 - Non-negativity of confusion-matrix counts
 - Partition of predicted positives into $TP$ and $FP$
-- Bound result that a ratio of part-to-whole lies in $\[0,1\]$
+- Bound result that a ratio of part-to-whole lies in $[0,1]$
 - Standard classification metrics: Recall and F1 score
 - Precision–Recall tradeoff under threshold variation
 - Threshold dependence of hard-label classification metrics

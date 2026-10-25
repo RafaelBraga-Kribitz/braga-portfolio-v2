@@ -106,21 +106,28 @@ A_numpy = np.array([[3, -1], [0, 4], [2, 7]])
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # -- Defining a matrix and accessing entries ---------------------------
+import numpy as np
+
+# -- Defining a matrix and accessing entries ---------------------------
 A = np.array([[7.0, 2.0, 5.0], [1.0, 0.0, 3.0]])
 m, n = A.shape
 print(f"Matrix A ({m} x {n}):")
 print(A)
-print(f"\nm = {m} rows, n = {n} columns, total entries = {A.size}")   # Access entries using 0-indexed NumPy syntax
-# Mathematical
-a_11 = A[0, 0], a_23 = A[1, 2]
+print(f"\nm = {m} rows, n = {n} columns, total entries = {A.size}")
+
+# Access entries using 0-indexed NumPy syntax
+# Mathematical a_11 = A[0, 0], a_23 = A[1, 2]
 print(f"\na_11 (row 1, col 1) = {A[0, 0]:.1f}")
 print(f"a_12 (row 1, col 2) = {A[0, 1]:.1f}")
-print(f"a_23 (row 2, col 3) = {A[1, 2]:.1f}")   # Extract a full row and full column
+print(f"a_23 (row 2, col 3) = {A[1, 2]:.1f}")
+
+# Extract a full row and full column
 row_2 = A[1, :]   # second row (index 1)
 col_3 = A[:, 2]   # third column (index 2)
 print(f"\nRow 2 (a_2j): {row_2}")
-print(f"Col 3 (a_i3): {col_3}")   # Common shapes in DA/DS
+print(f"Col 3 (a_i3): {col_3}")
+
+# Common shapes in DA/DS
 print(f"\nShape {A.shape}: wide (m < n) -> more features than observations")
 B = A.T
 print(f"Transposed shape {B.shape}: tall (m > n) -> more observations than features")
@@ -132,10 +139,14 @@ print(f"Transposed shape {B.shape}: tall (m > n) -> more observations than featu
 # -- Defining a matrix and accessing entries ---------------------------
 A <- matrix(c(7, 2, 5, 1, 0, 3), nrow = 2, byrow = TRUE)
 cat(sprintf("Matrix A (%d x %d):\n", nrow(A), ncol(A)))
-print(A)  # R uses 1-based indexing, same as math notation
+print(A)
+
+# R uses 1-based indexing, same as math notation
 cat(sprintf("\na_11 = %.1f\n", A[1, 1]))  # row 1, col 1
 cat(sprintf("a_12 = %.1f\n", A[1, 2]))  # row 1, col 2
-cat(sprintf("a_23 = %.1f\n", A[2, 3]))  # row 2, col 3 # Extract row and column
+cat(sprintf("a_23 = %.1f\n", A[2, 3]))  # row 2, col 3
+
+# Extract row and column
 row_2 <- A[2, ]
 col_3 <- A[, 3]
 cat(sprintf("Row 2: %s\n", paste(row_2, collapse = ", ")))
@@ -147,22 +158,35 @@ cat(sprintf("Col 3: %s\n", paste(col_3, collapse = ", ")))
 ```python
 import numpy as np
 import pandas as pd
-np.random.seed(42)   # -- Business scenario: inspect and validate a design matrix for regression
+np.random.seed(42)
+
+# -- Business scenario: inspect and validate a design matrix for regression
 # Sales dataset: N observations, p features. Verify shape, sparsity, range.
 N_OBS = 500
 N_FEATURES = 8
-FEATURE_NAMES = [ "price_index", "promo_flag", "seasonality", "store_size_sqm", "competitor_dist_km", "foot_traffic", "online_share", "weather_index",
-]   # Simulate realistic feature matrix
-X = np.column_stack([ np.random.uniform(0.8, 1.2, N_OBS),   # price_index np.random.binomial(1,
-    0.3, N_OBS),   # promo_flag
-    (sparse: ~70% zeros) np.sin(2 * np.pi * np.arange(N_OBS) / 52),   # seasonality
-    (weekly cycle) np.random.normal(1200, 300, N_OBS),   # store_size_sqm np.random.exponential(2.0, N_OBS), # competitor_dist_km np.random.poisson(500, N_OBS).astype(float),# foot_traffic np.random.beta(2,
-    5, N_OBS),   # online_share (0-1)
-np.random.normal(0, 1, N_OBS),   # weather_index
-]) df = pd.DataFrame(X, columns=FEATURE_NAMES)   # Matrix-level diagnostics
+FEATURE_NAMES = [
+    "price_index", "promo_flag", "seasonality", "store_size_sqm",
+    "competitor_dist_km", "foot_traffic", "online_share", "weather_index",
+]
+
+# Simulate realistic feature matrix
+X = np.column_stack([
+    np.random.uniform(0.8, 1.2, N_OBS),                  # price_index
+    np.random.binomial(1, 0.3, N_OBS),                   # promo_flag (sparse: ~70% zeros)
+    np.sin(2 * np.pi * np.arange(N_OBS) / 52),           # seasonality (weekly cycle)
+    np.random.normal(1200, 300, N_OBS),                  # store_size_sqm
+    np.random.exponential(2.0, N_OBS),                   # competitor_dist_km
+    np.random.poisson(500, N_OBS).astype(float),         # foot_traffic
+    np.random.beta(2, 5, N_OBS),                         # online_share (0-1)
+    np.random.normal(0, 1, N_OBS),                       # weather_index
+])
+df = pd.DataFrame(X, columns=FEATURE_NAMES)
+
+# Matrix-level diagnostics
 m, n = X.shape
 sparsity = float(np.sum(X == 0)) / X.size
-cond_num = float(np.linalg.cond(X)) print(f"Design matrix X: {m} observations x {n} features (m x n = {m} x {n})")
+cond_num = float(np.linalg.cond(X))
+print(f"Design matrix X: {m} observations x {n} features (m x n = {m} x {n})")
 print(f"Shape type: {'tall (overdetermined)' if m > n else 'wide (underdetermined)'}")
 print(f"Sparsity (fraction of zeros): {sparsity:.3f}")
 print(f"Condition number: {cond_num:.1f} ({'well-conditioned' if cond_num < 1000 else 'ill-conditioned'})")
@@ -174,12 +198,19 @@ print(f"\nInterpretation: a_ij is the {n}-feature value for observation i. The t
 ### Professional example (R)
 
 ```r
-# Design matrix X (m x n):
-columns = features, rows = observations
+# Design matrix X (m x n): columns = features, rows = observations
 set.seed(42)
 N_OBS <- 500
 N_FEATURES <- 8
-X <- cbind( runif(N_OBS, 0.8, 1.2), rbinom(N_OBS, 1, 0.3), sin(2 * pi * (1:N_OBS) / 52), rnorm(N_OBS, 1200, 300), rexp(N_OBS, 0.5), rpois(N_OBS, 500) + 0, rbeta(N_OBS, 2, 5), rnorm(N_OBS)
+X <- cbind(
+  runif(N_OBS, 0.8, 1.2),
+  rbinom(N_OBS, 1, 0.3),
+  sin(2 * pi * (1:N_OBS) / 52),
+  rnorm(N_OBS, 1200, 300),
+  rexp(N_OBS, 0.5),
+  rpois(N_OBS, 500) + 0,
+  rbeta(N_OBS, 2, 5),
+  rnorm(N_OBS)
 )
 m <- nrow(X)
 n <- ncol(X)

@@ -104,15 +104,40 @@ cat(sprintf("Median: $%.2f\n", median(order_values)))
 import numpy as np
 import pandas as pd
 
-def cohort_mean_analysis( values: np.ndarray, cohort_labels: np.ndarray ) -> pd.DataFrame:
-    """Compute population mean per cohort with outlier sensitivity check. Args: values: Numeric array of metric values. cohort_labels: Array of cohort identifiers. Returns: DataFrame with mean, median, and skew per cohort. """
+def cohort_mean_analysis(
+    values: np.ndarray, cohort_labels: np.ndarray
+) -> pd.DataFrame:
+    """
+    Compute population mean per cohort with outlier sensitivity check.
+
+    Args:
+        values: Numeric array of metric values.
+        cohort_labels: Array of cohort identifiers.
+
+    Returns:
+        DataFrame with mean, median, and skew per cohort.
+    """
     df = pd.DataFrame({"value": values, "cohort": cohort_labels})
-    return ( df.groupby("cohort")["value"] .agg( mean="mean", median="median", skew="skew", count="count", ) .assign(mean_median_ratio=lambda x: x["mean"] / x["median"]) .round(4) )
+    return (
+        df.groupby("cohort")["value"]
+        .agg(
+            mean="mean",
+            median="median",
+            skew="skew",
+            count="count",
+        )
+        .assign(mean_median_ratio=lambda x: x["mean"] / x["median"])
+        .round(4)
+    )
+
+
 rng = np.random.default_rng(seed=42)
 n_users = 5_000
 cohorts = rng.choice(["A", "B", "C"], n_users)
-orders = np.where( rng.uniform(0, 1, n_users) < 0.02, rng.uniform(500, 2000, n_users),   # 2% high-value outliers rng.lognormal(3.5,
-    0.8, n_users)   # typical orders ~$33
+orders = np.where(
+    rng.uniform(0, 1, n_users) < 0.02,
+    rng.uniform(500, 2000, n_users),   # 2% high-value outliers
+    rng.lognormal(3.5, 0.8, n_users),  # typical orders ~$33
 )
 result = cohort_mean_analysis(orders, cohorts)
 print("Cohort mean analysis:")

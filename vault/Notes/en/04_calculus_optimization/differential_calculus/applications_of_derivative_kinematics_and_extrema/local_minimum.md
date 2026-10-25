@@ -104,7 +104,7 @@ $f(1) = 1 - 6 + 9 + 1 = 5$. This is the local maximum value. Verify: $f(2) = 8 -
 import numpy as np
 from scipy.signal import find_peaks
 
-def second_derivative_test( f, f_prime, f_double_prime, x_crit_candidates: list[float] ) -> None:
+def second_derivative_test(f, f_prime, f_double_prime, x_crit_candidates: list[float]) -> None:
     """Classify a list of critical point candidates."""
     print(f"{'x_crit':>10} {'f(x)':>10} {'f_prime':>10} {'f_pp':>10} {'Type':>15}")
     for x_crit in x_crit_candidates:
@@ -118,31 +118,48 @@ def second_derivative_test( f, f_prime, f_double_prime, x_crit_candidates: list[
         else:
             label = "inconclusive"
         print(f"{x_crit:>10.4f} {fx:>10.4f} {fp:>10.2e} {fpp:>10.4f} {label:>15}")
-    f = lambda x: x**3 - 6*x**2 + 9*x + 1
+
+
+f = lambda x: x**3 - 6*x**2 + 9*x + 1
 fp = lambda x: 3*x**2 - 12*x + 9
 fpp = lambda x: 6*x - 12
 print("Local Minimum: f'(x0) = 0 and f''(x0) > 0")
 print("\nf(x) = x^3 - 6x^2 + 9x + 1")
-second_derivative_test(f, fp, fpp, [1.0, 3.0])   # Trough detection in a time series (local minima)
+second_derivative_test(f, fp, fpp, [1.0, 3.0])
+
+# Trough detection in a time series (local minima)
 print("\n--- Trough detection: local minima in revenue time series ---")
 np.random.seed(42)
 n_weeks = 52
-revenue = ( 80000 + 15000 * np.sin(2 * np.pi * np.arange(n_weeks) / 13)   # quarterly cycle + 5000 * np.sin(2 * np.pi * np.arange(n_weeks) /
-    4)   # monthly noise +
-np.random.randn(n_weeks) * 2000
+revenue = (
+    80000
+    + 15000 * np.sin(2 * np.pi * np.arange(n_weeks) / 13)   # quarterly cycle
+    + 5000 * np.sin(2 * np.pi * np.arange(n_weeks) / 4)     # monthly
+    + np.random.randn(n_weeks) * 2000                       # noise
 )
+
 # Find troughs: find_peaks on the negative signal
 trough_indices, _ = find_peaks(-revenue, prominence=5000, distance=4)
 print(f"{'Week':>8} {'Revenue':>12} {'Type':>25}")
-for idx in trough_indices: print(f"{idx+1:>8} {revenue[idx]:>12.0f} {'TROUGH (local minimum)':>25}")
+for idx in trough_indices:
+    print(f"{idx+1:>8} {revenue[idx]:>12.0f} {'TROUGH (local minimum)':>25}")
 print(f"\nTroughs found: {len(trough_indices)}")
 print(f"Min revenue at troughs: {revenue[trough_indices].min():,.0f}")
-print(f"Overall mean revenue: {revenue.mean():,.0f}")   # Loss landscape: gradient descent converging to local minimum
+print(f"Overall mean revenue: {revenue.mean():,.0f}")
+
+# Loss landscape: gradient descent converging to local minimum
 print("\n--- Gradient descent converging to local minimum ---")
 x = 4.0
 alpha = 0.05
 print(f"{'Step':>6} {'x':>8} {'f(x)':>10} {'f_prime':>10} {'Converged':>10}")
-for step in range(30): grad = fp(x) converged = abs(grad) < 1e-4 if step % 5 == 0 or converged: print(f"{step:>6} {x:>8.4f} {f(x):>10.4f} {grad:>10.4f} {str(converged):>10}") x -= alpha * grad if converged: break
+for step in range(30):
+    grad = fp(x)
+    converged = abs(grad) < 1e-4
+    if step % 5 == 0 or converged:
+        print(f"{step:>6} {x:>8.4f} {f(x):>10.4f} {grad:>10.4f} {str(converged):>10}")
+    x -= alpha * grad
+    if converged:
+        break
 print(f"Converged to x = {x:.4f}: {'local min' if fpp(x) > 0 else 'local max'}")
 ```
 
@@ -154,19 +171,21 @@ f <- function(x) x^3 - 6*x^2 + 9*x + 1
 fp <- function(x) 3*x^2 - 12*x + 9
 fpp <- function(x) 6*x - 12
 cat("Local Minimum: f'(x0)=0 and f''(x0)>0\n\n")
-for (x_crit in c(1.0, 3.0)) { fpp_val <- fpp(x_crit)
-  type <- if (fpp_val > 1e-8) "LOCAL MIN"
-  else
-  if (fpp_val < -1e-8) "LOCAL MAX"
-  else "inconclusive"
+for (x_crit in c(1.0, 3.0)) {
+  fpp_val <- fpp(x_crit)
+  type <- if (fpp_val > 1e-8) "LOCAL MIN" else if (fpp_val < -1e-8) "LOCAL MAX" else "inconclusive"
   cat(sprintf("x = %.1f: f = %.1f, f'' = %.1f -> %s\n", x_crit, f(x_crit), fpp_val, type))
-}  # Gradient descent to local minimum
+}
+
+# Gradient descent to local minimum
 cat("\n--- Gradient descent to local min ---\n")
 x <- 4.0
 alpha <- 0.05
 cat(sprintf("%-6s %-8s %-10s %-10s\n", "Step", "x", "f(x)", "|grad|"))
-for (step in 0:29) { grad <- fp(x)
-  if (step %% 5 == 0) { cat(sprintf("%-6d %-8.4f %-10.4f %-10.4f\n", step, x, f(x), abs(grad)))
+for (step in 0:29) {
+  grad <- fp(x)
+  if (step %% 5 == 0) {
+    cat(sprintf("%-6d %-8.4f %-10.4f %-10.4f\n", step, x, f(x), abs(grad)))
   }
   x <- x - alpha * grad
   if (abs(grad) < 1e-4) break
@@ -180,7 +199,9 @@ cat(sprintf("Converged: x = %.4f, type = %s\n", x, if (fpp(x) > 0) "LOCAL MIN" e
 import numpy as np
 from sklearn.datasets import make_regression
 from sklearn.preprocessing import StandardScaler
-np.random.seed(42)   # -- Local Minimum: Hessian eigenvalue analysis of the loss landscape at w* --
+np.random.seed(42)
+
+# -- Local Minimum: Hessian eigenvalue analysis of the loss landscape at w* --
 # Use case: A DS trains Ridge regression, finds the closed-form minimum,
 # then diagnoses the shape of the loss valley via Hessian eigenvalue analysis.
 # The condition number kappa = lambda_max / lambda_min determines:
@@ -210,31 +231,39 @@ def ridge_gradient(w: np.ndarray, X: np.ndarray, y: np.ndarray, lam: float) -> n
 def ridge_hessian(X: np.ndarray, lam: float) -> np.ndarray:
     """H = 2/N * X^T X + 2*lambda*I. Positive definite for lambda > 0."""
     return 2.0 / len(X) * X.T @ X + 2 * lam * np.eye(X.shape[1])
+
+
 print("Local Minimum: Hessian Analysis of Ridge Regression Loss Bowl")
 for lam in [0.0, 0.01, 0.1, 1.0]:
     # Closed-form minimum
     A = X.T @ X / N + lam * np.eye(DIM)
-b = X.T @ y / N
-w_opt = np.linalg.solve(A, b)   # Hessian at the minimum
-H = ridge_hessian(X, lam)
-eigenvalues = np.linalg.eigvalsh(H)
-lam_min = eigenvalues.min()
-lam_max = eigenvalues.max()
-kappa = lam_max / max(lam_min, 1e-12)   # Verify: gradient at minimum should be ~0
-grad_at_min = ridge_gradient(w_opt, X, y, lam)
-loss_at_min = ridge_loss(w_opt, X, y, lam)   # Optimal learning rate for gradient descent
-alpha_opt = 2.0 / (lam_min + lam_max)
-print(f"\nlambda = {lam}")
-print(f" Loss at minimum: {loss_at_min:.6f}")
-print(f" |gradient| at min: {np.linalg.norm(grad_at_min):.2e} (f'(x0) ~ 0)[[")
-print(f"]] Hessian eigenvalues: min={lam_min:.4f}, max={lam_max:.4f}")
-print(f" Condition number kappa = {kappa:.1f}")
-print(f" Optimal LR = 2/(lam_min+lam_max) = {alpha_opt:.4f}")
-psd_check = "PD (local min confirmed)" if lam_min > 1e-8 else "PSD only (degenerate)[["
-print(f"]] Hessian: {psd_check}")
-if lam > 0:
-    convergence_rate = ((kappa - 1) / (kappa + 1))**2
-print(f" GD convergence rate (per step): {convergence_rate:.6f} (lower = faster)")
+    b = X.T @ y / N
+    w_opt = np.linalg.solve(A, b)
+
+    # Hessian at the minimum
+    H = ridge_hessian(X, lam)
+    eigenvalues = np.linalg.eigvalsh(H)
+    lam_min = eigenvalues.min()
+    lam_max = eigenvalues.max()
+    kappa = lam_max / max(lam_min, 1e-12)
+
+    # Verify: gradient at minimum should be ~0
+    grad_at_min = ridge_gradient(w_opt, X, y, lam)
+    loss_at_min = ridge_loss(w_opt, X, y, lam)
+
+    # Optimal learning rate for gradient descent
+    alpha_opt = 2.0 / (lam_min + lam_max)
+    print(f"\nlambda = {lam}")
+    print(f" Loss at minimum: {loss_at_min:.6f}")
+    print(f" |gradient| at min: {np.linalg.norm(grad_at_min):.2e} (f'(x0) ~ 0)")
+    print(f" Hessian eigenvalues: min={lam_min:.4f}, max={lam_max:.4f}")
+    print(f" Condition number kappa = {kappa:.1f}")
+    print(f" Optimal LR = 2/(lam_min+lam_max) = {alpha_opt:.4f}")
+    psd_check = "PD (local min confirmed)" if lam_min > 1e-8 else "PSD only (degenerate)"
+    print(f" Hessian: {psd_check}")
+    if lam > 0:
+        convergence_rate = ((kappa - 1) / (kappa + 1))**2
+        print(f" GD convergence rate (per step): {convergence_rate:.6f} (lower = faster)")
 ```
 
 ---

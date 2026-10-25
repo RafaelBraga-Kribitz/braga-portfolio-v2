@@ -108,9 +108,10 @@ print(mean(abs(dF - integrand)) < 0.03)
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
+
 RANDOM_SEED = 42
+
 
 def log_integral_check(x: np.ndarray, f: np.ndarray, fp: np.ndarray) -> float:
     """Mean abs error of d/dx ln|f| vs f'/f on interior points (finite diff)."""
@@ -118,6 +119,7 @@ def log_integral_check(x: np.ndarray, f: np.ndarray, fp: np.ndarray) -> float:
     dlogf = np.gradient(logf, x)
     ratio = fp / f
     return float(np.mean(np.abs(dlogf - ratio)))
+
 
 if __name__ == "__main__":
     rng = np.random.default_rng(RANDOM_SEED)

@@ -130,11 +130,32 @@ print(in_interval)
 ### Professional example (Python)
 
 ```python
-import numpy as np   # Scenario: safe computation of cross-entropy loss
+import numpy as np
+
+# Scenario: safe computation of cross-entropy loss
 # Predictions must be in (0, 1) - open interval - to avoid log(0) = -infinity
 
 def safe_cross_entropy(y_true: np.ndarray, y_pred: np.ndarray, epsilon: float = 1e-12) -> float:
-    """ Binary cross-entropy loss with numerical safety clipping. Clips y_pred to the open interval (epsilon, 1-epsilon) to ensure we never compute log(0), which would be -infinity. L = -mean(y * log(p) + (1-y) * log(1-p)) Parameters ---------- y_true : true binary labels (0 or 1) y_pred : predicted probabilities (should be in (0, 1)) epsilon : small value defining the open interval lower/upper bound Returns ------- float: mean cross-entropy loss """   # Clip to open interval (epsilon, 1-epsilon) # Without this, log(0) = -inf and log(1) = 0 which can cause issues
+    """
+    Binary cross-entropy loss with numerical safety clipping.
+
+    Clips y_pred to the open interval (epsilon, 1-epsilon) to ensure we never
+    compute log(0), which would be -infinity.
+
+    L = -mean(y * log(p) + (1-y) * log(1-p))
+
+    Parameters
+    ----------
+    y_true : true binary labels (0 or 1)
+    y_pred : predicted probabilities (should be in (0, 1))
+    epsilon : small value defining the open interval lower/upper bound
+
+    Returns
+    -------
+    float: mean cross-entropy loss
+    """
+    # Clip to open interval (epsilon, 1-epsilon)
+    # Without this, log(0) = -inf and log(1) = 0 which can cause issues
     p = np.clip(y_pred, epsilon, 1 - epsilon)
     return -np.mean(y_true * np.log(p) + (1 - y_true) * np.log(1 - p))
 y_true = np.array([1, 0, 1, 1, 0])
@@ -142,15 +163,16 @@ y_pred_good = np.array([0.9, 0.1, 0.8, 0.7, 0.2])
 y_pred_extreme = np.array([1.0, 0.0, 0.9, 0.8, 0.1])   # has exact 0 and 1
 print(f"Good predictions loss: {safe_cross_entropy(y_true, y_pred_good):.4f}")
 print(f"Extreme predictions loss: {safe_cross_entropy(y_true, y_pred_extreme):.4f}")
-# Without clipping, y_pred_extreme would produce log(0) = -inf =>
-loss = inf
+# Without clipping, y_pred_extreme would produce log(0) = -inf => loss = inf
 ```
 
 ### Professional example (R)
 
 ```r
 # Safe cross-entropy: clip predictions to (epsilon, 1-epsilon) to avoid log(0)
-safe_cross_entropy <- function(y_true, y_pred, epsilon = 1e-12) { p <- pmin(pmax(y_pred, epsilon), 1 - epsilon) -mean(y_true * log(p) + (1 - y_true) * log(1 - p))
+safe_cross_entropy <- function(y_true, y_pred, epsilon = 1e-12) {
+  p <- pmin(pmax(y_pred, epsilon), 1 - epsilon)
+  -mean(y_true * log(p) + (1 - y_true) * log(1 - p))
 }
 y_true <- c(1, 0, 1, 1, 0)
 y_pred_good <- c(0.9, 0.1, 0.8, 0.7, 0.2)

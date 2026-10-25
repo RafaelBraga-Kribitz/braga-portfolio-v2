@@ -92,26 +92,37 @@ $w_2 = (2, -1) - 0.5 \cdot (0, 0) = (2, -1)$. Converged in 1 step to $w^* = (2, 
 ```python
 import numpy as np
 
-def gradient_descent( func, grad_func, x_init: np.ndarray, learning_rate: float = 0.1, n_iterations: int = 200, tol: float = 1e-6,
+def gradient_descent(
+    func,
+    grad_func,
+    x_init: np.ndarray,
+    learning_rate: float = 0.1,
+    n_iterations: int = 200,
+    tol: float = 1e-6,
 ) -> tuple:
     """Minimize func(x) using gradient descent."""
     x = x_init.copy().astype(float)
     history = []
     for iteration in range(n_iterations):
         grad = grad_func(x)
-    loss = func(x)
-    history.append(loss)
-    if np.linalg.norm(grad) < tol:
-        print(f" Converged at iteration {iteration}")
-    break
-x = x - learning_rate * grad
-return x, history   # Example: minimize f(w) = (w1 - 2)^2 + (w2 + 1)^2
+        loss = func(x)
+        history.append(loss)
+        if np.linalg.norm(grad) < tol:
+            print(f" Converged at iteration {iteration}")
+            break
+        x = x - learning_rate * grad
+    return x, history
 
+
+# Example: minimize f(w) = (w1 - 2)^2 + (w2 + 1)^2
 def f(w: np.ndarray) -> float:
     return (w[0] - 2)**2 + (w[1] + 1)**2
 
+
 def grad_f(w: np.ndarray) -> np.ndarray:
     return np.array([2 * (w[0] - 2), 2 * (w[1] + 1)])
+
+
 w_init = np.array([0.0, 0.0])
 w_star, loss_curve = gradient_descent(f, grad_f, w_init, learning_rate=0.5)
 print(f"x* = {w_star}")
@@ -124,15 +135,19 @@ print(f"Steps to converge: {len(loss_curve)}")
 
 ```r
 # Gradient descent: min_x f(x)
-gradient_descent <- function(func, grad_func, x_init, learning_rate = 0.1, n_iter = 200, tol = 1e-6) { x <- x_init
+gradient_descent <- function(func, grad_func, x_init, learning_rate = 0.1, n_iter = 200, tol = 1e-6) {
+  x <- x_init
   history <- numeric(n_iter)
-  for (i in seq_len(n_iter)) { g <- grad_func(x)
+  for (i in seq_len(n_iter)) {
+    g <- grad_func(x)
     history[i] <- func(x)
-    if (sqrt(sum(g^2)) < tol) { cat(sprintf("Converged at iteration %d\n", i))
+    if (sqrt(sum(g^2)) < tol) {
+      cat(sprintf("Converged at iteration %d\n", i))
       return(list(x = x, history = history[1:i]))
     }
     x <- x - learning_rate * g
-  } list(x = x, history = history)
+  }
+  list(x = x, history = history)
 }
 f <- function(w) (w[1] - 2)^2 + (w[2] + 1)^2
 grad_f <- function(w) c(2*(w[1]-2), 2*(w[2]+1))
@@ -148,21 +163,30 @@ import numpy as np
 from sklearn.datasets import make_regression
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error
-np.random.seed(42)   # -- Gradient descent for linear regression from scratch ----------------------
+np.random.seed(42)
+
+# -- Gradient descent for linear regression from scratch ----------------------
 X_raw, y = make_regression(n_samples=300, n_features=5, noise=15.0, random_state=42)
 scaler = StandardScaler()
 X = scaler.fit_transform(X_raw)
-n_samples, n_features = X.shape   # OLS loss: f(w) = (1/n)||y - Xw||^2
-# Gradient: grad_f(w) = -(2/n) X^T (y - Xw)
+n_samples, n_features = X.shape
 
+# OLS loss: f(w) = (1/n)||y - Xw||^2
+# Gradient: grad_f(w) = -(2/n) X^T (y - Xw)
 def mse_loss(w: np.ndarray) -> float:
     residuals = y - X @ w
     return float(np.mean(residuals**2))
 
+
 def mse_gradient(w: np.ndarray) -> np.ndarray:
     residuals = y - X @ w
-    return -2.0 / n_samples * X.T @ residuals   # Analytical optimum (OLS closed form) for comparison
-w_ols = np.linalg.lstsq(X, y, rcond=None)[0]   # Gradient descent
+    return -2.0 / n_samples * X.T @ residuals
+
+
+# Analytical optimum (OLS closed form) for comparison
+w_ols = np.linalg.lstsq(X, y, rcond=None)[0]
+
+# Gradient descent
 LEARNING_RATE = 0.1
 N_ITER = 2000
 TOLERANCE = 1e-7
@@ -170,12 +194,12 @@ w = np.zeros(n_features)
 loss_history = []
 for step in range(N_ITER):
     loss = mse_loss(w)
-grad = mse_gradient(w)
-loss_history.append(loss)
-if np.linalg.norm(grad) < TOLERANCE:
-    print(f"Converged at step {step}")
-break
-w -= LEARNING_RATE * grad
+    grad = mse_gradient(w)
+    loss_history.append(loss)
+    if np.linalg.norm(grad) < TOLERANCE:
+        print(f"Converged at step {step}")
+        break
+    w -= LEARNING_RATE * grad
 print(f"min_w f(w) solved via gradient descent")
 print(f"Final MSE (GD): {mse_loss(w):.6f}")
 print(f"Optimal MSE (OLS): {mse_loss(w_ols):.6f}")

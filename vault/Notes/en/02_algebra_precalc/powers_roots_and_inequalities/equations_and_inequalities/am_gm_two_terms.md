@@ -108,29 +108,46 @@ $n_1 = 20, n_2 = 80$: $1/20 + 1/80 = 0.050 + 0.0125 = 0.0625 > 0.04$. ✓
 ### Beginner example (Python)
 
 ```python
-# Two-ratio AM-GM: a/b + b/a >= 2 for a,b > 0, equality iff
-a=b
+# Two-ratio AM-GM: a/b + b/a >= 2 for a,b > 0, equality iff a=b
 import math
 import numpy as np
 
+
 def two_ratio_am_gm(a: float, b: float) -> float:
-    """ Compute a/b + b/a. By AM-GM: always >= 2 when a, b > 0. Equality iff a == b. Args: a: First positive quantity. b: Second positive quantity. Returns: a/b + b/a (always >= 2). """
+    """Compute a/b + b/a.
+
+    By AM-GM: always >= 2 when a, b > 0. Equality iff a == b.
+
+    Args:
+        a: First positive quantity.
+        b: Second positive quantity.
+
+    Returns:
+        a/b + b/a (always >= 2).
+    """
     if a <= 0 or b <= 0:
         raise ValueError("Both a and b must be positive")
-    return a / b + b / a   # Verify across pairs
+    return a / b + b / a
+
+
+# Verify across pairs
 print("Two-ratio AM-GM: a/b + b/a >= 2, equality iff a=b")
 pairs = [(1.0, 1.0), (2.0, 1.0), (3.0, 2.0), (0.5, 0.8), (10.0, 0.1), (100.0, 100.0)]
 print(f"{'a':>8} {'b':>8} {'a/b+b/a':>10} {'>=2?':>6} {'gap':>8}")
 for a, b in pairs:
     val = two_ratio_am_gm(a, b)
-print(f"{a:>8.4f} {b:>8.4f} {val:>10.6f} {str(val >= 2 - 1e-12):>6} {val-2:>8.6f}")   # Proof via (a-b)^2 >= 0
+    print(f"{a:>8.4f} {b:>8.4f} {val:>10.6f} {str(val >= 2 - 1e-12):>6} {val-2:>8.6f}")
+
+# Proof via (a-b)^2 >= 0
 print("\nProof: (a-b)^2 >= 0 => a/b + b/a >= 2")
 for a, b in [(3.0, 2.0), (5.0, 5.0), (0.5, 2.0)]:
     sq_diff = (a - b) ** 2
-lhs = a ** 2 + b ** 2
-rhs = 2 * a * b
-ratio_sum = two_ratio_am_gm(a, b)
-print(f" a={a}, b={b}: (a-b)^2={sq_diff:.4f} a^2+b^2={lhs:.4f} 2ab={rhs:.4f} a/b+b/a={ratio_sum:.4f}")   # Experiment design: equal allocation minimizes 1/n1 + 1/n2
+    lhs = a ** 2 + b ** 2
+    rhs = 2 * a * b
+    ratio_sum = two_ratio_am_gm(a, b)
+    print(f" a={a}, b={b}: (a-b)^2={sq_diff:.4f} a^2+b^2={lhs:.4f} 2ab={rhs:.4f} a/b+b/a={ratio_sum:.4f}")
+
+# Experiment design: equal allocation minimizes 1/n1 + 1/n2
 N_TOTAL = 1000
 print(f"\nTwo-group experiment (N={N_TOTAL}): minimize 1/n1 + 1/n2")
 splits = [(50, 950), (100, 900), (250, 750), (400, 600), (500, 500)]
@@ -138,31 +155,41 @@ print(f"{'n1':>6} {'n2':>6} {'1/n1+1/n2':>12} {'above_min':>12}")
 min_val = 4 / N_TOTAL
 for n1, n2 in splits:
     val = 1/n1 + 1/n2
-print(f"{n1:>6} {n2:>6} {val:>12.6f} {val - min_val:>12.6f}")
-print(f" Theoretical minimum (equal split): {min_val:.6f}")   # Precision-recall balance
+    print(f"{n1:>6} {n2:>6} {val:>12.6f} {val - min_val:>12.6f}")
+print(f" Theoretical minimum (equal split): {min_val:.6f}")
+
+# Precision-recall balance
 print("\nPrecision-recall: P/R + R/P >= 2, equality when P=R")
 pr_pairs = [(0.8, 0.4), (0.6, 0.6), (0.9, 0.3), (0.7, 0.7)]
 for p, r in pr_pairs:
     val = p/r + r/p
-print(f" P={p:.1f} R={r:.1f} P/R+R/P={val:.4f} balanced: {abs(p-r) < 1e-9}")
+    print(f" P={p:.1f} R={r:.1f} P/R+R/P={val:.4f} balanced: {abs(p-r) < 1e-9}")
 ```
 
 ### Beginner example (R)
 
 ```r
 # Two-ratio AM-GM in R: a/b + b/a >= 2
-two_ratio_am_gm <- function(a, b) { if (any(a <= 0) || any(b <= 0)) stop("Both must be positive") a / b + b / a
-}  # Verify
+two_ratio_am_gm <- function(a, b) {
+  if (any(a <= 0) || any(b <= 0)) stop("Both must be positive")
+  a / b + b / a
+}
+
+# Verify
 cat("Two-ratio AM-GM: a/b + b/a >= 2\n")
 pairs <- list(c(1,1), c(2,1), c(3,2), c(0.5,0.8), c(10,0.1))
 cat(sprintf("%-8s %-8s %-10s %-6s\n", "a", "b", "a/b+b/a", ">=2?"))
-for (p in pairs) { a <- p[1]; b <- p[2]
+for (p in pairs) {
+  a <- p[1]; b <- p[2]
   val <- two_ratio_am_gm(a, b)
   cat(sprintf("%-8.4f %-8.4f %-10.6f %s\n", a, b, val, val >= 2 - 1e-12))
-}  # Experiment design
+}
+
+# Experiment design
 N_total <- 1000
 cat(sprintf("\nEqual allocation minimizes 1/n1 + 1/n2 (N=%d):\n", N_total))
-for (n1 in c(50, 200, 500, 800)) { n2 <- N_total - n1
+for (n1 in c(50, 200, 500, 800)) {
+  n2 <- N_total - n1
   val <- 1/n1 + 1/n2
   cat(sprintf(" n1=%d n2=%d: 1/n1+1/n2=%.6f (min=%.6f)\n", n1, n2, val, 4/N_total))
 }
@@ -173,28 +200,60 @@ for (n1 in c(50, 200, 500, 800)) { n2 <- N_total - n1
 ```python
 import numpy as np
 import pandas as pd
-from itertools import product as iterproduct   # Scenario: demonstrate that equal group allocation maximizes statistical power
+from itertools import product as iterproduct
+
+# Scenario: demonstrate that equal group allocation maximizes statistical power
 # in an A/B test, using the two-ratio AM-GM as theoretical justification.
 np.random.seed(42)
-TOTAL_BUDGET = 2000   # total number of impressions
-TRUE_CTR_A = 0.05   # true click-through rate for variant A
-TRUE_CTR_B = 0.07   # true click-through rate for variant B
-SIGMA_SQUARED = TRUE_CTR_A * (1 - TRUE_CTR_A)   # approximate variance (Bernoulli)
+TOTAL_BUDGET = 2000  # total number of impressions
+TRUE_CTR_A = 0.05    # true click-through rate for variant A
+TRUE_CTR_B = 0.07    # true click-through rate for variant B
+SIGMA_SQUARED = TRUE_CTR_A * (1 - TRUE_CTR_A)  # approximate variance (Bernoulli)
+
 
 def variance_of_difference(n1: int, n2: int, sigma_sq: float) -> float:
-    """ Variance of the estimated difference in means between two groups. Var(x_bar1 - x_bar2) = sigma^2 * (1/n1 + 1/n2) By AM-GM: 1/n1 + 1/n2 >= 4/(n1+n2), minimized at n1 = n2. Args: n1: Sample size for group 1. n2: Sample size for group 2. sigma_sq: Common variance (Bernoulli approximation). Returns: Variance of the estimated difference. """
+    """Variance of the estimated difference in means between two groups.
+
+    Var(x_bar1 - x_bar2) = sigma^2 * (1/n1 + 1/n2)
+    By AM-GM: 1/n1 + 1/n2 >= 4/(n1+n2), minimized at n1 = n2.
+
+    Args:
+        n1: Sample size for group 1.
+        n2: Sample size for group 2.
+        sigma_sq: Common variance (Bernoulli approximation).
+
+    Returns:
+        Variance of the estimated difference.
+    """
     return sigma_sq * (1 / n1 + 1 / n2)
 
+
 def am_gm_lower_bound(n_total: int, sigma_sq: float) -> float:
-    """ AM-GM lower bound on variance: sigma^2 * 4/N, achieved at n1 = n2 = N/2. Args: n_total: Total sample size. sigma_sq: Common variance. Returns: Theoretical minimum variance (from AM-GM). """
-    return sigma_sq * 4 / n_total   # Evaluate variance over all splits
+    """AM-GM lower bound on variance: sigma^2 * 4/N, achieved at n1 = n2 = N/2.
+
+    Args:
+        n_total: Total sample size.
+        sigma_sq: Common variance.
+
+    Returns:
+        Theoretical minimum variance (from AM-GM).
+    """
+    return sigma_sq * 4 / n_total
+
+
+# Evaluate variance over all splits
 splits = [(n1, TOTAL_BUDGET - n1) for n1 in range(100, TOTAL_BUDGET, 100)]
 rows = []
 for n1, n2 in splits:
     var_val = variance_of_difference(n1, n2, SIGMA_SQUARED)
-ratio_sum = n1 / n2 + n2 / n1   # AM-GM value (>= 2)
-rows.append({ "n1": n1, "n2": n2, "ratio_sum": round(ratio_sum, 4),   # a/b + b/a >= 2
-    "variance": round(var_val, 8), "above_min": round(var_val - am_gm_lower_bound(TOTAL_BUDGET, SIGMA_SQUARED), 8), })
+    ratio_sum = n1 / n2 + n2 / n1  # AM-GM value (>= 2)
+    rows.append({
+        "n1": n1,
+        "n2": n2,
+        "ratio_sum": round(ratio_sum, 4),  # a/b + b/a >= 2
+        "variance": round(var_val, 8),
+        "above_min": round(var_val - am_gm_lower_bound(TOTAL_BUDGET, SIGMA_SQUARED), 8),
+    })
 results_df = pd.DataFrame(rows)
 optimal = results_df.loc[results_df["variance"].idxmin()]
 am_gm_min = am_gm_lower_bound(TOTAL_BUDGET, SIGMA_SQUARED)
@@ -209,7 +268,7 @@ print(f" Optimal split: n1={int(optimal.n1)}, n2={int(optimal.n2)} " f"(variance
 print(f" Ratio sum at optimum: {optimal.ratio_sum:.4f} (theoretical minimum: 2.0000)")
 print()
 print("Sample splits (showing variance increases away from equal):")
-print(results_df.iloc[[0, 3, 9, 14, 19, -1]].to_string(index=False))
+print(results_df.iloc[[0, 3, 9, 14, -1]].to_string(index=False))
 print(f"\nAll variances >= AM-GM bound: {(results_df['above_min'] >= -1e-10).all()}")
 ```
 

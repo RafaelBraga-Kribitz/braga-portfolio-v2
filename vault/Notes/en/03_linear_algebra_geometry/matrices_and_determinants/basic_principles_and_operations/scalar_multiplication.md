@@ -3,6 +3,7 @@ publish: true
 date: '2026-04-16'
 tags:
 - linear-algebra
+slug: scalar-multiplication-basic-principles-and-operations
 ---
 
 # Scalar multiplication
@@ -94,18 +95,23 @@ $-2+1+0-4-3-5 = -13$ ✓.
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # -- Scalar multiplication: mechanics + learning rate demo -------------
+import numpy as np
+
+# -- Scalar multiplication: mechanics + learning rate demo -------------
 A = np.array([[4.0, -2.0, 0.0], [8.0, 6.0, 10.0]])
 SCALE_FACTOR = -0.5
 B = SCALE_FACTOR * A
 print(f"Original A:\n{A}")
 print(f"\n{SCALE_FACTOR} * A:\n{B}")
-print(f"\nShapes: A={A.shape}, B={B.shape} (same shape)")   # Verify distributivity:
-k(A + C) == kA + kC
+print(f"\nShapes: A={A.shape}, B={B.shape} (same shape)")
+
+# Verify distributivity: k(A + C) == kA + kC
 C = np.ones_like(A)
 lhs = SCALE_FACTOR * (A + C)
 rhs = SCALE_FACTOR * A + SCALE_FACTOR * C
-print(f"\nk(A + C) == kA + kC: {np.allclose(lhs, rhs)}")   # Gradient descent weight update
+print(f"\nk(A + C) == kA + kC: {np.allclose(lhs, rhs)}")
+
+# Gradient descent weight update
 ALPHA = 0.01   # learning rate
 W = np.array([[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]])
 grad_W = np.array([[0.5, -0.2], [0.1, 0.3], [-0.4, 0.6]])
@@ -123,11 +129,15 @@ SCALE_FACTOR <- -0.5
 B <- SCALE_FACTOR * A
 cat("Original A:\n"); print(A)
 cat(sprintf("\n%.1f * A:\n", SCALE_FACTOR)); print(B)
-cat(sprintf("Shape unchanged: %s\n", paste(dim(B), collapse = " x ")))  # Distributivity check
+cat(sprintf("Shape unchanged: %s\n", paste(dim(B), collapse = " x ")))
+
+# Distributivity check
 C <- matrix(1, nrow = nrow(A), ncol = ncol(A))
 lhs <- SCALE_FACTOR * (A + C)
 rhs <- SCALE_FACTOR * A + SCALE_FACTOR * C
-cat(sprintf("\nk(A+C) == kA + kC: %s\n", isTRUE(all.equal(lhs, rhs))))  # Gradient descent
+cat(sprintf("\nk(A+C) == kA + kC: %s\n", isTRUE(all.equal(lhs, rhs))))
+
+# Gradient descent
 ALPHA <- 0.01
 W <- matrix(seq(1, 6), nrow = 3, byrow = TRUE)
 grad_W <- matrix(c(0.5, -0.2, 0.1, 0.3, -0.4, 0.6), nrow = 3, byrow = TRUE)
@@ -140,23 +150,33 @@ cat("\nUpdated weights:\n"); print(round(W_new, 4))
 ```python
 import numpy as np
 import pandas as pd
-np.random.seed(42)   # -- Business scenario: federated model averaging via scalar multiplication
+np.random.seed(42)
+
+# -- Business scenario: federated model averaging via scalar multiplication
 # K clients each train a model and return gradient updates Delta_W_k.
-# Server averages
-them: W_global = W_global - (1/K) * sum_k(Delta_W_k)
+# Server averages them: W_global = W_global - (1/K) * sum_k(Delta_W_k)
 # The (1/K) factor is scalar multiplication by the averaging weight.
 N_CLIENTS = 5
-N_IN = 8   # input features
+N_IN = 8    # input features
 N_OUT = 3   # output classes
-CLIENT_NAMES = [f"client_{k}" for k in range(N_CLIENTS)]   # Simulate per-client gradient updates (as if from one SGD step)
-delta_W_list = [np.random.normal(0, 0.1, size=(N_IN, N_OUT)) for _ in range(N_CLIENTS)]   # Federated
-averaging: W_new = W_old - learning_rate * (1/K) * sum(Delta_W_k)
+CLIENT_NAMES = [f"client_{k}" for k in range(N_CLIENTS)]
+
+# Simulate per-client gradient updates (as if from one SGD step)
+delta_W_list = [np.random.normal(0, 0.1, size=(N_IN, N_OUT)) for _ in range(N_CLIENTS)]
+
+# Federated averaging: W_new = W_old - learning_rate * (1/K) * sum(Delta_W_k)
 LEARNING_RATE = 0.01
-W_global = np.zeros((N_IN, N_OUT))   # Step 1: sum all client updates
-sum_delta = np.sum(delta_W_list, axis=0)   # matrix addition # Step 2: scalar multiplication to average (1/K) and apply learning rate
+W_global = np.zeros((N_IN, N_OUT))
+
+# Step 1: sum all client updates
+sum_delta = np.sum(delta_W_list, axis=0)   # matrix addition
+
+# Step 2: scalar multiplication to average (1/K) and apply learning rate
 averaged_update = (1.0 / N_CLIENTS) * sum_delta   # scalar mult by 1/K
-step = LEARNING_RATE * averaged_update   # scalar mult by lr
-W_global = W_global - step   # Report norms to confirm convergence behavior
+step = LEARNING_RATE * averaged_update            # scalar mult by lr
+W_global = W_global - step
+
+# Report norms to confirm convergence behavior
 print(f"Number of clients: {N_CLIENTS}")
 print(f"Gradient update shape: {delta_W_list[0].shape}")
 print(f"\nPer-client update Frobenius norms:")

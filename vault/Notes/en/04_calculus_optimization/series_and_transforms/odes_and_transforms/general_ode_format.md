@@ -94,10 +94,14 @@ x_2(0.1) = 5 + 0.1×(-3.75) = **4.625** (predators declining)
 
 ```python
 """
-General ODE system: dx_i/dt = f_i(x) Applied to a Lotka-Volterra predator-prey model with 2 state variables.
+General ODE system: dx_i/dt = f_i(x)
+
+Applied to a Lotka-Volterra predator-prey model with 2 state variables.
 Uses scipy.integrate.solve_ivp for accurate integration.
-""" import numpy as np
+"""
+import numpy as np
 from scipy.integrate import solve_ivp
+
 ALPHA_PREY_GROWTH: float = 1.0
 BETA_PREDATION: float = 0.1
 DELTA_PREDATOR_GROWTH: float = 0.075
@@ -106,13 +110,33 @@ INITIAL_PREY: float = 10.0
 INITIAL_PREDATORS: float = 5.0
 TIME_SPAN = (0.0, 50.0)
 
+
 def lotka_volterra(time: float, state: np.ndarray) -> list[float]:
-    """Right-hand side of Lotka-Volterra ODE system. Parameters ---------- time : current time (not used in autonomous system, but required by solver) state : [prey, predators] current population sizes Returns ------- list of [d_prey/dt, d_predators/dt] """
+    """Right-hand side of Lotka-Volterra ODE system.
+
+    Parameters
+    ----------
+    time : current time (not used in autonomous system, but required by solver)
+    state : [prey, predators] current population sizes
+
+    Returns
+    -------
+    list of [d_prey/dt, d_predators/dt]
+    """
     prey, predators = state
     d_prey = ALPHA_PREY_GROWTH * prey - BETA_PREDATION * prey * predators
     d_predators = DELTA_PREDATOR_GROWTH * prey * predators - GAMMA_PREDATOR_DEATH * predators
     return [d_prey, d_predators]
-solution = solve_ivp( fun=lotka_volterra, t_span=TIME_SPAN, y0=[INITIAL_PREY, INITIAL_PREDATORS], method="RK45", dense_output=True, rtol=1e-8, atol=1e-8,
+
+
+solution = solve_ivp(
+    fun=lotka_volterra,
+    t_span=TIME_SPAN,
+    y0=[INITIAL_PREY, INITIAL_PREDATORS],
+    method="RK45",
+    dense_output=True,
+    rtol=1e-8,
+    atol=1e-8,
 )
 time_points = np.linspace(*TIME_SPAN, 500)
 state_values = solution.sol(time_points)
@@ -127,20 +151,32 @@ print(f"Predators at t=50 : {state_values[1, -1]:.2f}")
 ```r
 # General ODE system: dx_i/dt = f_i(x)
 # Customer lifecycle model: prospects → active → churned
-library(deSolve)  # Transition rates
+library(deSolve)
+
+# Transition rates
 CONVERSION_RATE <- 0.1  # prospects → active per day
-CHURN_RATE <- 0.02  # active users → churned per day
-customer_lifecycle_ode <- function(time, state, parameters) {  # ODE system for customer compartment model # State: [prospects, active, churned] with(as.list(c(state, parameters)), {
+CHURN_RATE <- 0.02      # active users → churned per day
+customer_lifecycle_ode <- function(time, state, parameters) {
+  # ODE system for customer compartment model
+  # State: [prospects, active, churned]
+  with(as.list(c(state, parameters)), {
     d_prospects <- -conversion_rate * prospects
     d_active <- conversion_rate * prospects - churn_rate * active
-    d_churned <- churn_rate * active list(c(d_prospects, d_active, d_churned))
+    d_churned <- churn_rate * active
+    list(c(d_prospects, d_active, d_churned))
   })
 }
 initial_state <- c(prospects = 10000, active = 500, churned = 0)
 params <- c(conversion_rate = CONVERSION_RATE, churn_rate = CHURN_RATE)
 time_points <- seq(0, 100, by = 1)
-solution <- ode( y = initial_state, times = time_points, func = customer_lifecycle_ode, parms = params, method = "rk4"
-) solution_df <- as.data.frame(solution)
+solution <- ode(
+  y = initial_state,
+  times = time_points,
+  func = customer_lifecycle_ode,
+  parms = params,
+  method = "rk4"
+)
+solution_df <- as.data.frame(solution)
 peak_active_time <- solution_df$time[which.max(solution_df$active)]
 cat(sprintf("Peak active users: %.0f at day %.0f\n", max(solution_df$active), peak_active_time))
 cat(sprintf("Active at day 100: %.0f\n", tail(solution_df$active, 1)))
@@ -151,27 +187,57 @@ cat(sprintf("Churned at day 100: %.0f\n", tail(solution_df$churned, 1)))
 
 ```python
 """
-General ODE system
-for Neural ODE implementation concept. Business context:
+General ODE system for Neural ODE implementation concept.
+
+Business context:
     A deep learning team wants to build a continuous-depth model (Neural ODE)
-for time series forecasting. The hidden state evolves according to a learned ODE:
-    dh/dt = f_theta(h, t). This code demonstrates the ODE integration forward
-pass and sensitivity to the learnable parameters theta.
-""" import numpy as np
+    for time series forecasting. The hidden state evolves according to a learned ODE:
+        dh/dt = f_theta(h, t).
+
+This code demonstrates the ODE integration forward pass and sensitivity
+to the learnable parameters theta.
+"""
+import numpy as np
 from scipy.integrate import solve_ivp
+
 HIDDEN_DIM: int = 4
 TIME_SPAN = (0.0, 1.0)
 RNG_SEED: int = 42
 
-def neural_ode_dynamics( time: float, hidden_state: np.ndarray, weight_matrix: np.ndarray, bias_vector: np.ndarray,
+
+def neural_ode_dynamics(
+    time: float,
+    hidden_state: np.ndarray,
+    weight_matrix: np.ndarray,
+    bias_vector: np.ndarray,
 ) -> np.ndarray:
-    """ODE dynamics: dh/dt = tanh(W @ h + b). Parameters ---------- time : current time (not used here: autonomous system) hidden_state : current hidden state vector h weight_matrix: learned weight matrix W bias_vector : learned bias vector b Returns ------- np.ndarray : dh/dt """
+    """ODE dynamics: dh/dt = tanh(W @ h + b).
+
+    Parameters
+    ----------
+    time : current time (not used here: autonomous system)
+    hidden_state : current hidden state vector h
+    weight_matrix : learned weight matrix W
+    bias_vector : learned bias vector b
+
+    Returns
+    -------
+    np.ndarray : dh/dt
+    """
     return np.tanh(weight_matrix @ hidden_state + bias_vector)
+
+
 rng = np.random.default_rng(RNG_SEED)
 weight_mat = rng.normal(0.0, 0.3, (HIDDEN_DIM, HIDDEN_DIM))
 bias_vec = rng.normal(0.0, 0.1, HIDDEN_DIM)
 initial_hidden = rng.normal(0.0, 1.0, HIDDEN_DIM)
-solution = solve_ivp( fun=lambda t, h: neural_ode_dynamics(t, h, weight_mat, bias_vec), t_span=TIME_SPAN, y0=initial_hidden, method="RK45", rtol=1e-6, atol=1e-6,
+solution = solve_ivp(
+    fun=lambda t, h: neural_ode_dynamics(t, h, weight_mat, bias_vec),
+    t_span=TIME_SPAN,
+    y0=initial_hidden,
+    method="RK45",
+    rtol=1e-6,
+    atol=1e-6,
 )
 print("Neural ODE forward pass:")
 print(f" Initial hidden state : {initial_hidden.round(4)}")

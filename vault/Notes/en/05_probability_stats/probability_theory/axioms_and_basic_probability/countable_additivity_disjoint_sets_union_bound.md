@@ -106,17 +106,38 @@ cat("Significant:", significant, "\n")
 import numpy as np
 from scipy.stats import ttest_ind
 
-def bonferroni_test( p_values: np.ndarray, target_fwer: float = 0.05 ) -> dict[str, np.ndarray | float]:
-    """Apply Bonferroni correction using the union bound. Union bound: P(any H0 rejected | all H0 true) <= sum(alpha_i) = FWER target. Args: p_values: Array of p-values from multiple tests. target_fwer: Desired family-wise error rate. Returns: Dict with corrected threshold, rejected flags, and effective FWER bound. """
+def bonferroni_test(
+    p_values: np.ndarray, target_fwer: float = 0.05
+) -> dict[str, np.ndarray | float]:
+    """Apply Bonferroni correction using the union bound.
+
+    Union bound: P(any H0 rejected | all H0 true) <= sum(alpha_i) = FWER target.
+
+    Args:
+        p_values: Array of p-values from multiple tests.
+        target_fwer: Desired family-wise error rate.
+
+    Returns:
+        Dict with corrected threshold, rejected flags, and effective FWER bound.
+    """
     n_tests = len(p_values)
     corrected_alpha = target_fwer / n_tests
     rejected = p_values <= corrected_alpha
-    fwer_bound = n_tests * corrected_alpha   # = target_fwer by construction
-    return { "corrected_alpha": corrected_alpha, "rejected": rejected, "fwer_bound": fwer_bound, "n_significant": int(np.sum(rejected)), }   # Simulate feature significance testing
+    fwer_bound = n_tests * corrected_alpha  # = target_fwer by construction
+    return {
+        "corrected_alpha": corrected_alpha,
+        "rejected": rejected,
+        "fwer_bound": fwer_bound,
+        "n_significant": int(np.sum(rejected)),
+    }
+
+
+# Simulate feature significance testing
 rng = np.random.default_rng(seed=42)
 n_features = 20
-p_vals = np.concatenate([ rng.uniform(0, 0.01, 3),   # 3 truly significant rng.uniform(0.1,
-    1.0, 17)   # 17 null
+p_vals = np.concatenate([
+    rng.uniform(0, 0.01, 3),     # 3 truly significant
+    rng.uniform(0.1, 1.0, 17),   # 17 null
 ])
 result = bonferroni_test(p_vals, target_fwer=0.05)
 print(f"Corrected alpha: {result['corrected_alpha']:.4f}")

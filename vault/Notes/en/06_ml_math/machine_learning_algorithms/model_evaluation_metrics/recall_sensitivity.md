@@ -384,7 +384,7 @@ $$
 - Sensitivity as a standard synonym for Recall
 - Non-negativity of confusion-matrix counts
 - Partition of actual positives into $TP$ and $FN$
-- Bound result that a ratio of part-to-whole lies in $\[0,1\]$
+- Bound result that a ratio of part-to-whole lies in $[0,1]$
 - Standard classification metrics: Precision and F1 score
 - Recall–Precision tradeoff under threshold variation
 - Threshold dependence of hard-label classification metrics

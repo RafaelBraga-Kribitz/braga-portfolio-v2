@@ -122,13 +122,17 @@ print(f"{x:>12.2e} {naive:>20.15e} {stable:>20.15e} {x:>18.15e}")
 # Standard limit: lim_{x->0} (e^x - 1)/x = 1
 cat("Standard Limit: lim_{x->0} (e^x - 1)/x = 1\n\n")
 cat(sprintf("%-12s %-14s %-14s\n", "x", "(e^x-1)/x", "Error from 1"))
-for (x in c(0.5, 0.1, 0.01, 0.001, 1e-8)) { ratio <- expm1(x) / x  # expm1 is available in base R
+for (x in c(0.5, 0.1, 0.01, 0.001, 1e-8)) {
+  ratio <- expm1(x) / x  # expm1 is available in base R
   error <- abs(ratio - 1.0)
   cat(sprintf("%-12.2e %-14.9f %-14.2e\n", x, ratio, error))
-}  # Log-return approximation: log(1+r) ≈ r for small r
+}
+
+# Log-return approximation: log(1+r) ≈ r for small r
 cat("\n--- Log-return approximation: log(1+r) ≈ r for small r ---\n")
 cat(sprintf("%-8s %-12s %-12s %-12s\n", "r (%)", "log(1+r)", "r (approx)", "Error"))
-for (r_pct in c(10, 5, 1, 0.1, 0.01)) { r <- r_pct / 100
+for (r_pct in c(10, 5, 1, 0.1, 0.01)) {
+  r <- r_pct / 100
   lr <- log(1 + r)  # log1p is also available
   err <- abs(lr - r)
   cat(sprintf("%-8.2f %-12.6f %-12.6f %-12.4e\n", r_pct, lr, r, err))
@@ -141,7 +145,9 @@ for (r_pct in c(10, 5, 1, 0.1, 0.01)) { r <- r_pct / 100
 import numpy as np
 from sklearn.datasets import make_classification
 from sklearn.preprocessing import StandardScaler
-np.random.seed(42)   # -- Standard Limit (exp): numerically stable Poisson log-likelihood --
+np.random.seed(42)
+
+# -- Standard Limit (exp): numerically stable Poisson log-likelihood --
 # Use case: A DS fits a Poisson regression model manually and encounters
 # the numerical stability issue with computing log(lambda) when lambda is
 # very small. The expm1 function (based on the standard exponential limit)
@@ -162,7 +168,12 @@ def poisson_log_lambda(w: np.ndarray, X: np.ndarray) -> np.ndarray:
     return X @ w   # log(lambda) directly
 
 def stable_poisson_ll(w: np.ndarray, X: np.ndarray, y: np.ndarray) -> float:
-    """ Numerically stable Poisson log-likelihood. ell = sum[y * log_lambda - exp(log_lambda)] = sum[y * z - exp(z)] Uses np.exp with clipping to avoid overflow. """
+    """
+    Numerically stable Poisson log-likelihood.
+
+    ell = sum[y * log_lambda - exp(log_lambda)] = sum[y * z - exp(z)]
+    Uses np.exp with clipping to avoid overflow.
+    """
     z = poisson_log_lambda(w, X)
     lam = np.exp(np.clip(z, -30, 20))
     return float(np.sum(y * z - lam))
@@ -171,16 +182,21 @@ def poisson_gradient(w: np.ndarray, X: np.ndarray, y: np.ndarray) -> np.ndarray:
     """Gradient: d(ell)/dw = X^T(y - lambda)."""
     z = poisson_log_lambda(w, X)
     lam = np.exp(np.clip(z, -30, 20))
-    return X.T @ (y - lam)   # Demonstrate expm1 precision for small-lambda regime
+    return X.T @ (y - lam)
+
+
+# Demonstrate expm1 precision for small-lambda regime
 print("Standard Limit (exp): expm1 Precision for Small Lambda")
 print(f"\nlim_{{x->0}} (e^x - 1)/x = 1 -> e^x - 1 ≈ x for small x")
 print(f"\nNumerical stability of e^x - 1 in Poisson computations:")
 print(f"{'z (log lambda)':>18} {'lambda':>12} {'naive exp(z)-1':>18} {'expm1(z)':>12} {'True ~ z':>10}")
 for z in [-10, -5, -1, -0.1, -0.01, -0.001, -1e-6, -1e-10]:
     lam = np.exp(z)
-naive = np.exp(z) - 1
-stable = np.expm1(z)
-print(f"{z:>18.4e} {lam:>12.6e} {naive:>18.10e} {stable:>12.10e} {z:>10.6e}")   # Fit Poisson regression via gradient ascent on log-likelihood
+    naive = np.exp(z) - 1
+    stable = np.expm1(z)
+    print(f"{z:>18.4e} {lam:>12.6e} {naive:>18.10e} {stable:>12.10e} {z:>10.6e}")
+
+# Fit Poisson regression via gradient ascent on log-likelihood
 X_raw = np.random.randn(N, DIM)
 scaler = StandardScaler()
 X = scaler.fit_transform(X_raw)
@@ -191,12 +207,14 @@ w = np.zeros(DIM)
 ll_history = []
 for step in range(N_ITER):
     ll = stable_poisson_ll(w, X, y)
-ll_history.append(ll)
-grad = poisson_gradient(w, X, y)
-w = w + LR * grad / N
+    ll_history.append(ll)
+    grad = poisson_gradient(w, X, y)
+    w = w + LR * grad / N
+
 print(f"\nPoisson Regression via Gradient Ascent (max-likelihood)")
 print(f"N={N}, DIM={DIM}, true_w={true_w}")
-print(f"\nLog-likelihood: step 1={ll_history[0]:.2f}, step 100={ll_history[99]:.2f}, " f"final={ll_history[-1]:.2f}")
+print(f"\nLog-likelihood: step 1={ll_history[0]:.2f}, step 100={ll_history[99]:.2f}, "
+      f"final={ll_history[-1]:.2f}")
 print(f"Fitted w: {np.round(w, 4)}")
 print(f"True w: {true_w}")
 print(f"\nKey: d/dw[exp(w^Tx)] = exp(w^Tx)*x -- uses d/dx[e^x] = e^x, anchored by lim(e^x-1)/x = 1")

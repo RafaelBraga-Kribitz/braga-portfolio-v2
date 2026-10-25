@@ -97,7 +97,9 @@ Note: $\lambda_1 \cdot \lambda_2 = 5 = \det(A) = 8 - 3 = 5$ ✓ (trace = eigenva
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # -- tr(A) = sum of eigenvalues: verification and PCA variance check ---
+import numpy as np
+
+# -- tr(A) = sum of eigenvalues: verification and PCA variance check ---
 A = np.array([[4.0, 1.0], [3.0, 2.0]])
 trace_direct = float(np.trace(A))
 eigenvalues, _ = np.linalg.eig(A)
@@ -105,7 +107,9 @@ trace_from_eigs = float(np.sum(eigenvalues.real))   # real part (imag ~ 0 for re
 print(f"Matrix A:\n{A}")
 print(f"\nTrace (diagonal sum): {trace_direct:.6f}")
 print(f"Sum of eigenvalues: {trace_from_eigs:.6f}")
-print(f"Identity holds: {np.isclose(trace_direct, trace_from_eigs)}")   # Symmetric PSD example: covariance matrix
+print(f"Identity holds: {np.isclose(trace_direct, trace_from_eigs)}")
+
+# Symmetric PSD example: covariance matrix
 np.random.seed(42)
 cov = np.cov(np.random.randn(5, 50))   # 5x5 sample covariance
 eigvals_cov = np.linalg.eigvalsh(cov)   # eigvalsh for symmetric: real eigenvalues
@@ -124,7 +128,9 @@ eig_result <- eigen(A)
 trace_eigsum <- sum(Re(eig_result$values))
 cat(sprintf("Trace (diagonal sum): %.6f\n", trace_direct))
 cat(sprintf("Sum of eigenvalues: %.6f\n", trace_eigsum))
-cat(sprintf("Identity holds: %s\n", isTRUE(all.equal(trace_direct, trace_eigsum))))  # PCA variance
+cat(sprintf("Identity holds: %s\n", isTRUE(all.equal(trace_direct, trace_eigsum))))
+
+# PCA variance
 set.seed(42)
 X_data <- matrix(rnorm(50 * 5), nrow = 50, ncol = 5)
 cov_mat <- cov(X_data)
@@ -139,26 +145,47 @@ cat(sprintf("Explained variance ratio: %s\n", paste(round(eigvals / sum(diag(cov
 ```python
 import numpy as np
 import pandas as pd
-np.random.seed(42)   # -- Business scenario: PCA component selection using trace identity
+np.random.seed(42)
+
+# -- Business scenario: PCA component selection using trace identity
 # Customer behaviour dataset: 20 features.
 # Use tr(Sigma) as the total-variance denominator (O(n) cost, no eigendecomp needed).
 # Then determine how many PCA components explain >= 90% of variance.
 N_OBS = 500
 N_FEATURES = 20
 VARIANCE_THRESHOLD = 0.90
-FEATURE_NAMES = [f"behaviour_{i:02d}" for i in range(1, N_FEATURES + 1)]   # Simulate data with latent structure: first 5 factors drive most variance
+FEATURE_NAMES = [f"behaviour_{i:02d}" for i in range(1, N_FEATURES + 1)]
+
+# Simulate data with latent structure: first 5 factors drive most variance
 latent_factors = np.random.randn(N_OBS, 5)
-loadings = np.random.randn(5, N_FEATURES) * [2.0, 1.5, 1.2, 0.8, 0.5]
+factor_scales = np.array([2.0, 1.5, 1.2, 0.8, 0.5])
+loadings = np.random.randn(5, N_FEATURES) * factor_scales[:, None]   # scale each factor's row
 noise = np.random.randn(N_OBS, N_FEATURES) * 0.3
-X = latent_factors @ loadings + noise   # Center and compute covariance matrix
+X = latent_factors @ loadings + noise
+
+# Center and compute covariance matrix
 X_centered = X - X.mean(axis=0)
-cov_matrix = np.cov(X_centered.T)   # (20 x 20) # Total variance via trace (O(n), no eigendecomp required)
-total_variance = float(np.trace(cov_matrix))   # Eigendecomposition for component analysis
-eigenvalues = np.linalg.eigvalsh(cov_matrix)[::-1]   # sorted descending # Verify trace identity
-trace_vs_eigsum_match = np.isclose(total_variance, float(np.sum(eigenvalues)))   # Find k components to exceed the variance threshold
+cov_matrix = np.cov(X_centered.T)   # (20 x 20)
+
+# Total variance via trace (O(n), no eigendecomp required)
+total_variance = float(np.trace(cov_matrix))
+
+# Eigendecomposition for component analysis
+eigenvalues = np.linalg.eigvalsh(cov_matrix)[::-1]   # sorted descending
+
+# Verify trace identity
+trace_vs_eigsum_match = np.isclose(total_variance, float(np.sum(eigenvalues)))
+
+# Find k components to exceed the variance threshold
 cumulative_ratio = np.cumsum(eigenvalues) / total_variance
-k_components = int(np.searchsorted(cumulative_ratio, VARIANCE_THRESHOLD)) + 1   # Summary table
-component_df = pd.DataFrame({ "component": range(1, N_FEATURES + 1), "eigenvalue": eigenvalues.round(4), "explained_pct": (eigenvalues / total_variance * 100).round(2), "cumulative_pct": (cumulative_ratio * 100).round(2),
+k_components = int(np.searchsorted(cumulative_ratio, VARIANCE_THRESHOLD)) + 1
+
+# Summary table
+component_df = pd.DataFrame({
+    "component": range(1, N_FEATURES + 1),
+    "eigenvalue": eigenvalues.round(4),
+    "explained_pct": (eigenvalues / total_variance * 100).round(2),
+    "cumulative_pct": (cumulative_ratio * 100).round(2),
 })
 print(f"Total variance tr(Sigma) = {total_variance:.4f}")
 print(f"Sum of eigenvalues = {float(np.sum(eigenvalues)):.4f}")

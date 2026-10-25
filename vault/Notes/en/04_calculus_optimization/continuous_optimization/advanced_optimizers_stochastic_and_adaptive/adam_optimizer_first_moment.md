@@ -101,17 +101,23 @@ Adam's $m_t$ includes the $(1-\beta_1)$ factor to ensure $\mathbb{E}[m_t] \appro
 ```python
 import numpy as np
 
-def ewma_first_moment( gradients: list, beta1: float = 0.9,
+
+def ewma_first_moment(
+    gradients: list,
+    beta1: float = 0.9,
 ) -> tuple:
     """Compute EWMA first moment m_t and bias-corrected m_hat_t."""
     m = 0.0
     moments, moments_corrected = [], []
     for t, g in enumerate(gradients, start=1):
         m = beta1 * m + (1 - beta1) * g
-    m_hat = m / (1 - beta1**t)
-    moments.append(m)
-    moments_corrected.append(m_hat)
-    return moments, moments_corrected   # Example: 10 gradient steps with oscillating gradients
+        m_hat = m / (1 - beta1**t)
+        moments.append(m)
+        moments_corrected.append(m_hat)
+    return moments, moments_corrected
+
+
+# Example: 10 gradient steps with oscillating gradients
 gradients = [0.5, -0.3, 0.8, 0.2, -0.6, 1.0, -0.4, 0.7, 0.1, -0.2]
 m_raw, m_corrected = ewma_first_moment(gradients, beta1=0.9)
 print(f"{'t':>3} {'g_t':>8} {'m_t (raw)':>12} {'m_hat_t (corrected)':>20}")
@@ -125,19 +131,23 @@ print(f"(m_hat_1 should equal g_1 = {gradients[0]})")
 
 ```r
 # Adam first moment: EWMA of gradients with bias correction
-ewma_first_moment <- function(gradients, beta1 = 0.9) { m <- 0
+ewma_first_moment <- function(gradients, beta1 = 0.9) {
+  m <- 0
   m_list <- numeric(length(gradients))
   mhat_list <- numeric(length(gradients))
-  for (t in seq_along(gradients)) { m <- beta1 * m + (1 - beta1) * gradientst
+  for (t in seq_along(gradients)) {
+    m <- beta1 * m + (1 - beta1) * gradients[t]
     m_hat <- m / (1 - beta1^t)
     m_list[t] <- m
     mhat_list[t] <- m_hat
-  } list(m = m_list, m_hat = mhat_list)
+  }
+  list(m = m_list, m_hat = mhat_list)
 }
 grads <- c(0.5, -0.3, 0.8, 0.2, -0.6, 1.0, -0.4, 0.7, 0.1, -0.2)
 result <- ewma_first_moment(grads, beta1 = 0.9)
 cat(sprintf("%-3s %-8s %-12s %-20s\n", "t", "g_t", "m_t (raw)", "m_hat_t (corrected)"))
-for (t in seq_along(grads)) { cat(sprintf("%-3d %-8.3f %-12.5f %-20.5f\n", t, grads[t], result$m[t], result$m_hat[t]))
+for (t in seq_along(grads)) {
+  cat(sprintf("%-3d %-8.3f %-12.5f %-20.5f\n", t, grads[t], result$m[t], result$m_hat[t]))
 }
 ```
 
@@ -145,37 +155,62 @@ for (t in seq_along(grads)) { cat(sprintf("%-3d %-8.3f %-12.5f %-20.5f\n", t, gr
 
 ```python
 import numpy as np
-np.random.seed(42)   # -- Full Adam optimizer implementation using first and second moments --------
+np.random.seed(42)
+
+# -- Full Adam optimizer implementation using first and second moments --------
 # Focus: illustrate m_t's role vs raw gradient noise
+
 
 class AdamOptimizer:
     """Adam optimizer: theta_update = -eta * m_hat / (sqrt(v_hat) + eps)."""
 
-def __init__( self, learning_rate: float = 0.001, beta1: float = 0.9, beta2: float = 0.999, epsilon: float = 1e-8, ) -> None:
-    self.learning_rate = learning_rate
-    self.beta1 = beta1
-    self.beta2 = beta2
-    self.epsilon = epsilon self.m: np.ndarray | None = None self.v: np.ndarray | None = None
-    self.t = 0
+    def __init__(
+        self,
+        learning_rate: float = 0.001,
+        beta1: float = 0.9,
+        beta2: float = 0.999,
+        epsilon: float = 1e-8,
+    ) -> None:
+        self.learning_rate = learning_rate
+        self.beta1 = beta1
+        self.beta2 = beta2
+        self.epsilon = epsilon
+        self.m: np.ndarray | None = None
+        self.v: np.ndarray | None = None
+        self.t = 0
 
-def step(self, theta: np.ndarray, gradient: np.ndarray) -> np.ndarray:
-    if self.m is None:
-        self.m = np.zeros_like(theta)
-    self.v = np.zeros_like(theta)
-    self.t += 1   # First moment (mean of gradients): EWMA
-    self.m = self.beta1 * self.m + (1 - self.beta1) * gradient   # Second moment (uncentered variance): EWMA of squared gradients
-    self.v = self.beta2 * self.v + (1 - self.beta2) * gradient**2   # Bias corrections
-    m_hat = self.m / (1 - self.beta1**self.t)
-    v_hat = self.v / (1 - self.beta2**self.t)   # Parameter update
-    return theta - self.learning_rate * m_hat / (np.sqrt(v_hat) + self.epsilon)   # Compare Adam vs SGD on noisy quadratic with added per-parameter noise
+    def step(self, theta: np.ndarray, gradient: np.ndarray) -> np.ndarray:
+        if self.m is None:
+            self.m = np.zeros_like(theta)
+            self.v = np.zeros_like(theta)
+        self.t += 1
+
+        # First moment (mean of gradients): EWMA
+        self.m = self.beta1 * self.m + (1 - self.beta1) * gradient
+
+        # Second moment (uncentered variance): EWMA of squared gradients
+        self.v = self.beta2 * self.v + (1 - self.beta2) * gradient**2
+
+        # Bias corrections
+        m_hat = self.m / (1 - self.beta1**self.t)
+        v_hat = self.v / (1 - self.beta2**self.t)
+
+        # Parameter update
+        return theta - self.learning_rate * m_hat / (np.sqrt(v_hat) + self.epsilon)
+
+
+# Compare Adam vs SGD on noisy quadratic with added per-parameter noise
 D = 10
-TRUE_OPTIMUM = np.ones(D) * 3.0   # known optimum
+TRUE_OPTIMUM = np.ones(D) * 3.0  # known optimum
+
 
 def noisy_gradient(theta: np.ndarray, noise_std: float = 0.5) -> np.ndarray:
     """Gradient of f(theta) = ||theta - 3||^2 with Gaussian noise."""
     true_grad = 2 * (theta - TRUE_OPTIMUM)
     noise = np.random.randn(D) * noise_std
     return true_grad + noise
+
+
 N_STEPS = 500
 LEARNING_RATE = 0.01
 theta_adam = np.zeros(D)
@@ -185,11 +220,11 @@ adam_errors = []
 sgd_errors = []
 for step in range(N_STEPS):
     g = noisy_gradient(theta_adam)
-theta_adam = adam.step(theta_adam, g)
-g_sgd = noisy_gradient(theta_sgd)
-theta_sgd -= LEARNING_RATE * g_sgd
-adam_errors.append(float(np.linalg.norm(theta_adam - TRUE_OPTIMUM)))
-sgd_errors.append(float(np.linalg.norm(theta_sgd - TRUE_OPTIMUM)))
+    theta_adam = adam.step(theta_adam, g)
+    g_sgd = noisy_gradient(theta_sgd)
+    theta_sgd -= LEARNING_RATE * g_sgd
+    adam_errors.append(float(np.linalg.norm(theta_adam - TRUE_OPTIMUM)))
+    sgd_errors.append(float(np.linalg.norm(theta_sgd - TRUE_OPTIMUM)))
 print(f"Optimization results (D={D}, true optimum = all 3's)")
 print(f"{'Step':>6} {'Adam error':>12} {'SGD error':>12}")
 for step in [49, 99, 199, 499]:

@@ -9,7 +9,11 @@ tags:
 
 Participation Rate ($\Delta P\%$)
 
-# $\text{Participation Rate}_t = \left(\frac{LF_t}{WAP_t}\right)\times 100,\quad \Delta P\% = \text{Participation Rate}_t - \text{Participation Rate}_{t-1}$ We are working on the labor force participation rate, defined as $\text{Participation Rate}_t = \left(\frac{LF_t}{WAP_t}\right)\times 100$, where $LF_t$ is the labor force in period $t$ and $WAP_t$ is the working-age population in period $t$. When the focus is change over time, we use $\Delta P\% = \text{Participation Rate}_t - \text{Participation Rate}_{t-1}$, which is usually interpreted as a percentage-point change. The setting is labor market measurement under standard ILO/OECD-style definitions, with labor force defined as employed plus unemployed persons who are actively participating in the labor market.
+$$
+\text{Participation Rate}_t = \left(\frac{LF_t}{WAP_t}\right)\times 100,\quad \Delta P\% = \text{Participation Rate}_t - \text{Participation Rate}_{t-1}
+$$
+
+We are working on the labor force participation rate, defined as $\text{Participation Rate}_t = \left(\frac{LF_t}{WAP_t}\right)\times 100$, where $LF_t$ is the labor force in period $t$ and $WAP_t$ is the working-age population in period $t$. When the focus is change over time, we use $\Delta P\% = \text{Participation Rate}_t - \text{Participation Rate}_{t-1}$, which is usually interpreted as a percentage-point change. The setting is labor market measurement under standard ILO/OECD-style definitions, with labor force defined as employed plus unemployed persons who are actively participating in the labor market.
 
 ## Deep Breakdown
 

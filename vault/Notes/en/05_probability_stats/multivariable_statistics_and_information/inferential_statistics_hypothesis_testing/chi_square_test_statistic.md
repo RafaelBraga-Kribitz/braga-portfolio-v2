@@ -99,12 +99,20 @@ $df = 3-1 = 2$; $\chi^2_{0.05, 2} = 5.99$; since $4.0 < 5.99$, fail to reject $H
 
 ```python
 import numpy as np
-from scipy import stats   # Observed click counts per weekday
+from scipy import stats
+
+# Observed click counts per weekday
 observed = np.array([60, 40, 50, 70, 55])
-total = observed.sum()   # Expected under uniform distribution
-expected = np.full_like(observed, total / len(observed), dtype=float)   # Manual chi-square
+total = observed.sum()
+
+# Expected under uniform distribution
+expected = np.full_like(observed, total / len(observed), dtype=float)
+
+# Manual chi-square
 chi2_manual = sum((o - e) ** 2 / e for o, e in zip(observed, expected))
-print(f"Chi-square (manual): {chi2_manual:.4f}")   # scipy version
+print(f"Chi-square (manual): {chi2_manual:.4f}")
+
+# scipy version
 chi2_stat, p_value = stats.chisquare(observed, f_exp=expected)
 print(f"Chi-square (scipy): {chi2_stat:.4f}")
 print(f"p-value: {p_value:.6f}")
@@ -115,7 +123,11 @@ print(f"Reject uniform H0: {p_value < 0.05}")
 
 ```r
 # Test of independence: device x purchase
-contingency_table <- matrix(c(420, 80, 280, 220), nrow = 2, byrow = TRUE, dimnames = list(device = c("mobile", "desktop"), purchase = c("no", "yes")))
+contingency_table <- matrix(
+  c(420, 80, 280, 220),
+  nrow = 2, byrow = TRUE,
+  dimnames = list(device = c("mobile", "desktop"), purchase = c("no", "yes"))
+)
 test_result <- chisq.test(contingency_table)
 cat("Chi-square statistic:", round(test_result$statistic, 4), "\n")
 cat("p-value: ", round(test_result$p.value, 6), "\n")
@@ -125,17 +137,27 @@ cat("Degrees of freedom: ", test_result$parameter, "\n")
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
 import pandas as pd
 from scipy.stats import chi2_contingency
 from dataclasses import dataclass
+
+
 @dataclass
-
 class ChiSquareIndependenceResult:
-    chi2_statistic: float p_value: float degrees_of_freedom: int cramers_v: float reject_independence: bool conclusion: str
+    chi2_statistic: float
+    p_value: float
+    degrees_of_freedom: int
+    cramers_v: float
+    reject_independence: bool
+    conclusion: str
 
-def chi_square_independence_test( df: pd.DataFrame, col_x: str, col_y: str, alpha: float = 0.05,
+
+def chi_square_independence_test(
+    df: pd.DataFrame,
+    col_x: str,
+    col_y: str,
+    alpha: float = 0.05,
 ) -> ChiSquareIndependenceResult:
     # Chi-square test of independence with Cramer's V effect size.
     contingency = pd.crosstab(df[col_x], df[col_y])
@@ -143,12 +165,25 @@ def chi_square_independence_test( df: pd.DataFrame, col_x: str, col_y: str, alph
     n = contingency.values.sum()
     k = min(contingency.shape[0] - 1, contingency.shape[1] - 1)
     cramers_v = float(np.sqrt(chi2_stat / (n * k))) if k > 0 else 0.0
-    return ChiSquareIndependenceResult( chi2_statistic=round(float(chi2_stat), 4), p_value=round(float(p_val), 6), degrees_of_freedom=int(dof), cramers_v=round(cramers_v, 4), reject_independence=p_val < alpha, conclusion=( f"DEPENDENT (p={p_val:.4f} < {alpha}, V={cramers_v:.3f})" if p_val < alpha else f"Cannot reject independence (p={p_val:.4f} >= {alpha})" ), )
+    return ChiSquareIndependenceResult(
+        chi2_statistic=round(float(chi2_stat), 4),
+        p_value=round(float(p_val), 6),
+        degrees_of_freedom=int(dof),
+        cramers_v=round(cramers_v, 4),
+        reject_independence=p_val < alpha,
+        conclusion=(
+            f"DEPENDENT (p={p_val:.4f} < {alpha}, V={cramers_v:.3f})"
+            if p_val < alpha
+            else f"Cannot reject independence (p={p_val:.4f} >= {alpha})"
+        ),
+    )
+
 
 if __name__ == "__main__":
     rng = np.random.default_rng(seed=42)
     n_users = 5_000
-    device = rng.choice(["mobile", "desktop"], size=n_users, p=[0.60, 0.40])   # Desktop converts at 2x the rate: strong dependence
+    device = rng.choice(["mobile", "desktop"], size=n_users, p=[0.60, 0.40])
+    # Desktop converts at 2x the rate: strong dependence
     purchase_prob = np.where(device == "desktop", 0.40, 0.15)
     purchase = (rng.random(n_users) < purchase_prob).astype(str)
     purchase = np.where(purchase == "True", "yes", "no")

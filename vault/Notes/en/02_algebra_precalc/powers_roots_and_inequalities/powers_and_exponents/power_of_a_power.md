@@ -115,18 +115,25 @@ cat(sprintf("Match: %s\n", result_rule == result_stacked))
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: converting monthly survival rate to quarterly survival rate
-# Monthly survival: S(t) = s^t where
-t = months
+import pandas as pd
+
+# Scenario: converting monthly survival rate to quarterly survival rate
+# Monthly survival: S(t) = s^t where t = months
 # Quarterly: S(3k) = s^(3k) = (s^3)^k -- quarterly survival rate is s^3
-MONTHLY_SURVIVAL = 0.92   # 8% monthly churn
-QUARTERLY_SURVIVAL = MONTHLY_SURVIVAL ** 3   # power-of-a-power rule
+MONTHLY_SURVIVAL = 0.92                     # 8% monthly churn
+QUARTERLY_SURVIVAL = MONTHLY_SURVIVAL ** 3  # power-of-a-power rule
 quarters = list(range(1, 9))
-survival_df = pd.DataFrame({ "quarter": quarters, "months_elapsed": [q * 3 for q in quarters],
-})   # Two equivalent ways to compute survival
+survival_df = pd.DataFrame({
+    "quarter": quarters,
+    "months_elapsed": [q * 3 for q in quarters],
+})
+
+# Two equivalent ways to compute survival
 survival_df["survival_monthly_form"] = MONTHLY_SURVIVAL ** survival_df["months_elapsed"]
 survival_df["survival_quarterly_form"] = QUARTERLY_SURVIVAL ** survival_df["quarter"]
-survival_df["match"] = np.isclose( survival_df["survival_monthly_form"], survival_df["survival_quarterly_form"] )
+survival_df["match"] = np.isclose(
+    survival_df["survival_monthly_form"], survival_df["survival_quarterly_form"]
+)
 print(f"Monthly survival rate: {MONTHLY_SURVIVAL}")
 print(f"Quarterly survival rate: {MONTHLY_SURVIVAL}^3 = {QUARTERLY_SURVIVAL:.6f}")
 print()

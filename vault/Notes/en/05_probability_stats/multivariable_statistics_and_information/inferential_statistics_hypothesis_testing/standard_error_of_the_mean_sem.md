@@ -89,7 +89,9 @@ The sample mean $\bar{x}$ is expected to be within about $\pm 20$ EUR of the tru
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # Daily revenue data (small sample)
+import numpy as np
+
+# Daily revenue data (small sample)
 revenues = [85, 92, 110, 78, 105, 95, 88, 101, 97, 103]
 n = len(revenues)
 sample_mean = np.mean(revenues)
@@ -118,12 +120,14 @@ cat("SEM :", round(sem, 4), "\n")
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
 import pandas as pd
 from scipy import stats
 
-def compute_sem_and_ci( data: np.ndarray, confidence_level: float = 0.95,
+
+def compute_sem_and_ci(
+    data: np.ndarray,
+    confidence_level: float = 0.95,
 ) -> dict[str, float]:
     # Compute sample mean, SEM, and t-based confidence interval.
     n = len(data)
@@ -133,16 +137,27 @@ def compute_sem_and_ci( data: np.ndarray, confidence_level: float = 0.95,
     alpha = 1.0 - confidence_level
     t_critical = stats.t.ppf(1 - alpha / 2, df=n - 1)
     margin = t_critical * sem
-    return { "n": n, "mean": round(sample_mean, 4), "std": round(sample_std, 4), "sem": round(sem, 4), "t_critical": round(t_critical, 4), "ci_lower": round(sample_mean - margin, 4), "ci_upper": round(sample_mean + margin, 4), "confidence_level": confidence_level, }
+    return {
+        "n": n,
+        "mean": round(sample_mean, 4),
+        "std": round(sample_std, 4),
+        "sem": round(sem, 4),
+        "t_critical": round(t_critical, 4),
+        "ci_lower": round(sample_mean - margin, 4),
+        "ci_upper": round(sample_mean + margin, 4),
+        "confidence_level": confidence_level,
+    }
 
-def sem_sample_size_table( sigma: float, target_sems: list[float] ) -> pd.DataFrame:
-    # Required sample sizes to achieve target SEM values. #
-    n = (sigma / target_SE)^2
+
+def sem_sample_size_table(sigma: float, target_sems: list[float]) -> pd.DataFrame:
+    # Required sample sizes to achieve target SEM values.
+    # n = (sigma / target_SE)^2
     rows = []
     for target_se in target_sems:
         n_required = int(np.ceil((sigma / target_se) ** 2))
-    rows.append({"target_SE": target_se, "required_n": n_required})
+        rows.append({"target_SE": target_se, "required_n": n_required})
     return pd.DataFrame(rows)
+
 
 if __name__ == "__main__":
     rng = np.random.default_rng(seed=42)

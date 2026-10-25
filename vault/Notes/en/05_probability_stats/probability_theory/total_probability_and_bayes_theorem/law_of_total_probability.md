@@ -79,7 +79,9 @@ Overall CTR is 4.8%, a weighted average of segment CTRs.
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # Compute overall conversion rate via total probability
+import numpy as np
+
+# Compute overall conversion rate via total probability
 segment_probs = np.array([0.60, 0.40])   # P(B_i)
 conditional_ctrs = np.array([0.06, 0.03])   # P(click | B_i)
 overall_ctr = np.dot(conditional_ctrs, segment_probs)
@@ -100,24 +102,48 @@ cat(sprintf("Overall CTR: %.4f (%.2f%%)\n", overall_ctr, overall_ctr * 100))
 ```python
 import numpy as np
 from dataclasses import dataclass
-@dataclass
 
+
+@dataclass
 class Segment:
-    """A population segment with its prior and conditional rate.""" name: str prior: float   # P(B_i) conditional_rate: float # P(A | B_i)
+    """A population segment with its prior and conditional rate."""
+    name: str
+    prior: float   # P(B_i)
+    conditional_rate: float   # P(A | B_i)
+
 
 def total_probability(segments: list[Segment]) -> float:
-    """Compute P(A) via law of total probability. P(A) = sum_i P(A|B_i) * P(B_i). Args: segments: List of Segment objects with prior and conditional_rate. Returns: Marginal probability P(A). Raises: ValueError: If priors do not sum to 1. """
+    """Compute P(A) via law of total probability.
+
+    P(A) = sum_i P(A|B_i) * P(B_i).
+
+    Args:
+        segments: List of Segment objects with prior and conditional_rate.
+
+    Returns:
+        Marginal probability P(A).
+
+    Raises:
+        ValueError: If priors do not sum to 1.
+    """
     prior_sum = sum(s.prior for s in segments)
     if abs(prior_sum - 1.0) > 1e-6:
         raise ValueError(f"Priors sum to {prior_sum:.6f}, must equal 1.0")
-    return sum(s.prior * s.conditional_rate for s in segments)   # Marketing channel analysis
-channel_segments = [ Segment("mobile_young", prior=0.30, conditional_rate=0.08), Segment("mobile_older", prior=0.20, conditional_rate=0.05), Segment("desktop_young", prior=0.25, conditional_rate=0.04), Segment("desktop_older", prior=0.25, conditional_rate=0.02),
+    return sum(s.prior * s.conditional_rate for s in segments)
+
+
+# Marketing channel analysis
+channel_segments = [
+    Segment("mobile_young", prior=0.30, conditional_rate=0.08),
+    Segment("mobile_older", prior=0.20, conditional_rate=0.05),
+    Segment("desktop_young", prior=0.25, conditional_rate=0.04),
+    Segment("desktop_older", prior=0.25, conditional_rate=0.02),
 ]
 overall = total_probability(channel_segments)
 print(f"Overall conversion rate: {overall:.4f} ({overall*100:.2f}%)")
 for seg in channel_segments:
     contribution = seg.prior * seg.conditional_rate
-print(f" {seg.name:<20}: contribution = {contribution:.4f}")
+    print(f" {seg.name:<20}: contribution = {contribution:.4f}")
 ```
 
 ---

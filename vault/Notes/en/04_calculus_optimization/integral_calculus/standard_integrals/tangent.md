@@ -3,6 +3,7 @@ publish: true
 date: '2026-04-16'
 tags:
 - calculus
+slug: tangent-standard-integrals
 ---
 
 # Tangent
@@ -115,17 +116,23 @@ def tan_antiderivative(x: float, a: float, b: float) -> float:
     return (1.0 / a) * np.log(abs(1.0 / cos_val))   # ln|sec| = -ln|cos|
 
 def tan_definite(lo: float, hi: float, a: float, b: float) -> float:
-    return tan_antiderivative(hi, a, b) - tan_antiderivative(lo, a, b)   # Test cases (avoid poles: tan(x) has poles at pi/2, 3pi/2, ...)
-cases = [ (0.0, np.pi/6, 1.0, 0.0),   # int tan(x) from 0 to pi/6
+    return tan_antiderivative(hi, a, b) - tan_antiderivative(lo, a, b)
+
+
+# Test cases (avoid poles: tan(x) has poles at pi/2, 3pi/2, ...)
+cases = [
+    (0.0, np.pi/6, 1.0, 0.0),   # int tan(x) from 0 to pi/6
     (0.0, np.pi/4, 1.0, 0.0),   # int tan(x) from 0 to pi/4
     (0.0, np.pi/8, 2.0, 0.0),   # int tan(2x) from 0 to pi/8
 ]
 for lo, hi, a, b in cases:
     analytic = tan_definite(lo, hi, a, b)
-numerical, _ = integrate.quad(lambda x, aa=a, bb=b: np.tan(aa*x+bb), lo, hi)
-print(f"int_({lo:.3f},{hi:.4f}) tan({a}x+{b:.2f}): " f"analytic={analytic:.6f}, numerical={numerical:.6f}, " f"match={abs(analytic-numerical)<1e-6}")   # tanh analogue: int
-tanh(x)
-dx = ln(cosh(x)) + C
+    numerical, _ = integrate.quad(lambda x, aa=a, bb=b: np.tan(aa*x+bb), lo, hi)
+    print(f"int_({lo:.3f},{hi:.4f}) tan({a}x+{b:.2f}): "
+          f"analytic={analytic:.6f}, numerical={numerical:.6f}, "
+          f"match={abs(analytic-numerical)<1e-6}")
+
+# tanh analogue: int tanh(x) dx = ln(cosh(x)) + C
 print("\n=== Hyperbolic analogue: int tanh(x) dx ===")
 tanh_antiderivative = lambda x: np.log(np.cosh(x))
 lo, hi = -1.0, 2.0
@@ -137,16 +144,22 @@ print(f"int_({lo},{hi}) tanh(x): analytic={tanh_analytic:.6f}, numerical={tanh_n
 ### Beginner example (R)
 
 ```r
-tan_antiderivative <- function(x, a, b) { if (abs(a) < 1e-12) stop("a = 0.") (1 / a) * log(abs(1 / cos(a * x + b)))
+tan_antiderivative <- function(x, a, b) {
+  if (abs(a) < 1e-12) stop("a = 0.")
+  (1 / a) * log(abs(1 / cos(a * x + b)))
 }
-tan_definite <- function(lo, hi, a, b) { tan_antiderivative(hi, a, b) - tan_antiderivative(lo, a, b)
+tan_definite <- function(lo, hi, a, b) {
+  tan_antiderivative(hi, a, b) - tan_antiderivative(lo, a, b)
 }
 cases <- list(c(0, pi/6, 1, 0), c(0, pi/4, 1, 0))
-for (tc in cases) { lo <- tc[1]; hi <- tc[2]; a <- tc[3]; b <- tc[4]
+for (tc in cases) {
+  lo <- tc[1]; hi <- tc[2]; a <- tc[3]; b <- tc[4]
   analytic <- tan_definite(lo, hi, a, b)
   numerical <- integrate(function(x) tan(a*x+b), lower=lo, upper=hi)$value
   cat(sprintf("int_(%5.3f,%5.3f) tan(%gx): analytic=%.6f, num=%.6f, match=%s\n", lo, hi, a, analytic, numerical, isTRUE(all.equal(analytic, numerical, tol=1e-7))))
-}  # tanh analogue
+}
+
+# tanh analogue
 tanh_analytic <- log(cosh(2)) - log(cosh(-1))
 tanh_numerical <- integrate(tanh, lower=-1, upper=2)$value
 cat(sprintf("\nint tanh(x) from -1 to 2: analytic=%.6f, num=%.6f\n", tanh_analytic, tanh_numerical))
@@ -156,16 +169,17 @@ cat(sprintf("\nint tanh(x) from -1 to 2: analytic=%.6f, num=%.6f\n", tanh_analyt
 
 ```python
 """
-tanh activation integral: int
-tanh(x)
-dx = ln(cosh(x)) + C. The hyperbolic analogue of tan's formula. This matters because:
+tanh activation integral: int tanh(x) dx = ln(cosh(x)) + C.
+
+The hyperbolic analogue of tan's formula. This matters because:
 1. tanh is a standard neural network activation function.
 2. The integral of tanh appears in the ELBO (Evidence Lower BOund)
-for variational autoencoders:
-    computing int
-q(z)*ln
-p(x|z) dz often involves integrating over tanh-activated layers.
-3. For regularization: the integral of |tanh(w)| w.r.t. w provides a smooth L1-like sparsity measure. We demonstrate the formula and connect to activation-layer analysis.
+   for variational autoencoders: computing int q(z)*ln p(x|z) dz often
+   involves integrating over tanh-activated layers.
+3. For regularization: the integral of |tanh(w)| w.r.t. w provides a
+   smooth L1-like sparsity measure.
+
+We demonstrate the formula and connect to activation-layer analysis.
 """
 import numpy as np
 from scipy import integrate
@@ -176,21 +190,28 @@ def tanh_antiderivative(x: np.ndarray) -> np.ndarray:
 
 def tanh_energy(lo: float, hi: float) -> float:
     """int_lo^hi tanh(x) dx = ln(cosh(hi)) - ln(cosh(lo))."""
-    return float(tanh_antiderivative(hi) - tanh_antiderivative(lo))   # Verify analytically vs numerically
+    return float(tanh_antiderivative(hi) - tanh_antiderivative(lo))
+
+
+# Verify analytically vs numerically
 test_ranges = [(-2.0, 2.0), (0.0, 3.0), (-1.0, 1.0)]
 print("=== tanh integral verification ===")
 for lo, hi in test_ranges:
     analytic = tanh_energy(lo, hi)
-numerical, _ = integrate.quad(np.tanh, lo, hi)
-print(f" int_({lo:+.1f},{hi:+.1f}) tanh: " f"analytic={analytic:.6f}, numerical={numerical:.6f}, " f"match={abs(analytic-numerical)<1e-8}")   # Pre-activation distribution: for a layer with weights w, input z ~
-N(0,1),
+    numerical, _ = integrate.quad(np.tanh, lo, hi)
+    print(f" int_({lo:+.1f},{hi:+.1f}) tanh: "
+          f"analytic={analytic:.6f}, numerical={numerical:.6f}, "
+          f"match={abs(analytic-numerical)<1e-8}")
+
+# Pre-activation distribution: for a layer with weights w, input z ~ N(0,1),
 # the mean absolute activation E[|tanh(w*z)|] is computed by integration.
 print("\n=== Mean |tanh(w*z)| for z ~ N(0,1) ===")
 from scipy.stats import norm
+
 for w in [0.5, 1.0, 2.0, 5.0]:
     # Numerical: E[|tanh(w*z)|] = int |tanh(w*z)| * phi(z) dz
-    mean_abs, _ = integrate.quad( lambda z, ww=w: abs(np.tanh(ww * z)) * norm.pdf(z), -10, 10 )
-print(f" w={w:.1f}: E[|tanh(w*z)|] = {mean_abs:.4f}")
+    mean_abs, _ = integrate.quad(lambda z, ww=w: abs(np.tanh(ww * z)) * norm.pdf(z), -10, 10)
+    print(f" w={w:.1f}: E[|tanh(w*z)|] = {mean_abs:.4f}")
 print("[As w increases, tanh saturates and E[|tanh|] -> 1]")
 ```
 

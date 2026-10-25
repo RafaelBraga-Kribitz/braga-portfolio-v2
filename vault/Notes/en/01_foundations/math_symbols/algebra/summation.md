@@ -94,20 +94,26 @@ $\bar{x} = \frac{\sum x_i}{n} = \frac{25}{5} = 5$
 
 ```python
 # Summation using Python
-x = [3, 7, 2, 8, 5]   # Method 1: built-in
-sum()
+x = [3, 7, 2, 8, 5]
+
+# Method 1: built-in sum()
 total = sum(x)
-print(f"Sum: {total}")   # 25 # Method 2: explicit loop (shows the sigma logic)
+print(f"Sum: {total}")   # 25
+
+# Method 2: explicit loop (shows the sigma logic)
 total_loop = 0   # initialize accumulator to 0 (additive identity)
 for xi in x:
     total_loop += xi
-print(f"Sum (loop): {total_loop}")   # 25 # Mean
+print(f"Sum (loop): {total_loop}")   # 25
+
+# Mean
 n = len(x)
 mean = sum(x) / n
-print(f"Mean: {mean}")   # 5.0 # Variance:
-sum((x_i - mean)^2) / n
+print(f"Mean: {mean}")   # 5.0
+
+# Variance: sum((x_i - mean)^2) / n
 variance = sum((xi - mean)**2 for xi in x) / n
-print(f"Variance: {variance}")   # 4.0
+print(f"Variance: {variance}")   # 5.2
 ```
 
 ### Beginner example (R)
@@ -115,30 +121,42 @@ print(f"Variance: {variance}")   # 4.0
 ```r
 x <- c(3, 7, 2, 8, 5)  # sum() is base R
 total <- sum(x)
-print(total)  # 25 # Mean
+print(total)  # 25
+
+# Mean
 mean_val <- sum(x) / length(x)
-print(mean_val)  # 5 (same as mean(x)) # Variance using summation
+print(mean_val)  # 5 (same as mean(x))
+
+# Variance using summation
 n <- length(x)
 variance <- sum((x - mean_val)^2) / n  # vectorized: R subtracts mean from all elements
-print(variance)  # 4 (population variance)
+print(variance)  # 5.2 (population variance)
 ```
 
 ### Professional example (Python)
 
 ```python
-import numpy as np   # Scenario: compute multiple regression metrics from scratch using summation notation
+import numpy as np
+
+# Scenario: compute multiple regression metrics from scratch using summation notation
 # Demonstrates how every metric is a specific use of sum
 y_true = np.array([120.0, 90.0, 75.0, 200.0, 55.0, 140.0, 95.0, 180.0])
 y_pred = np.array([110.0, 95.0, 70.0, 190.0, 60.0, 135.0, 100.0, 185.0])
-n = len(y_true)   # Mean: (1/n) *
-sum(y_i)
-mean_true = (1/n) * np.sum(y_true)   # MAE: (1/n) * sum(|y_i - y_hat_i|)
-mae = (1/n) * np.sum(np.abs(y_true - y_pred))   # MSE: (1/n) *
-sum((y_i - y_hat_i)^2)
-mse = (1/n) * np.sum((y_true - y_pred)**2)   # RMSE:
-sqrt(MSE)
-rmse = np.sqrt(mse)   # R-squared: 1 -
-sum((y_i - y_hat_i)^2) / sum((y_i - mean_true)^2)
+n = len(y_true)
+
+# Mean: (1/n) * sum(y_i)
+mean_true = (1/n) * np.sum(y_true)
+
+# MAE: (1/n) * sum(|y_i - y_hat_i|)
+mae = (1/n) * np.sum(np.abs(y_true - y_pred))
+
+# MSE: (1/n) * sum((y_i - y_hat_i)^2)
+mse = (1/n) * np.sum((y_true - y_pred)**2)
+
+# RMSE: sqrt(MSE)
+rmse = np.sqrt(mse)
+
+# R-squared: 1 - sum((y_i - y_hat_i)^2) / sum((y_i - mean_true)^2)
 ss_residual = np.sum((y_true - y_pred)**2)
 ss_total = np.sum((y_true - mean_true)**2)
 r_squared = 1 - (ss_residual / ss_total)

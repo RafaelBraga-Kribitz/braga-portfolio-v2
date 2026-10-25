@@ -94,21 +94,27 @@ $r = (3,1,2)-(1,2,2) = (2,-1,0)$. $B^Tr = 2-2+0 = 0$. $\checkmark$
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # -- Pseudo-inverse: (B^T B)^{-1} B^T ---
+import numpy as np
+
+# -- Pseudo-inverse: (B^T B)^{-1} B^T ---
 B = np.array([[1.0], [2.0], [2.0]])   # tall matrix (3x1), overdetermined
-x = np.array([3.0, 1.0, 2.0])   # Manual pseudo-inverse
-gram = B.T @ B   # 1x1
-gram_inv = np.linalg.inv(gram)   # 1x1
-B_plus = gram_inv @ B.T   # pseudo-inverse: (1,)^T
-lambda_hat = B_plus @ x   # least-squares scalar
-proj = B * lambda_hat   # projection vector
+x = np.array([3.0, 1.0, 2.0])
+
+# Manual pseudo-inverse
+gram = B.T @ B                       # 1x1
+gram_inv = np.linalg.inv(gram)       # 1x1
+B_plus = gram_inv @ B.T              # pseudo-inverse: 1x3
+lambda_hat = (B_plus @ x).item()     # least-squares scalar
+proj = B * lambda_hat                # projection vector
 residual = x - proj.flatten()
 print(f"B^T B = {gram[0,0]:.2f}")
 print(f"Pseudo-inverse B^+: {B_plus.round(4)}")
 print(f"lambda_hat = {lambda_hat:.4f}")
 print(f"Projection pi_U(x) = {proj.flatten().round(4)}")
 print(f"Residual = {residual.round(4)}")
-print(f"B^T residual = {(B.T @ residual).round(10)}")   # Compare to NumPy pinv
+print(f"B^T residual = {(B.T @ residual).round(10)}")
+
+# Compare to NumPy pinv
 B_plus_np = np.linalg.pinv(B)
 print(f"\nnp.linalg.pinv(B): {B_plus_np.round(4)}")
 print(f"Match: {np.allclose(B_plus, B_plus_np)}")
@@ -135,20 +141,38 @@ cat(sprintf("B^T resid: %.10f\n", t(B) %*% resid))
 ```python
 import numpy as np
 import pandas as pd
-np.random.seed(42)   # -- Business scenario: OLS coefficients via pseudo-inverse ---
+np.random.seed(42)
+
+# -- Business scenario: OLS coefficients via pseudo-inverse ---
 # Compare pseudo-inverse methods for numerical stability.
 N, K = 300, 5
-X = np.column_stack([ np.ones(N), np.random.uniform(1, 100, N), np.random.uniform(0, 50, N), np.random.uniform(0, 20, N), np.random.uniform(0, 10, N),
+X = np.column_stack([
+    np.ones(N),
+    np.random.uniform(1, 100, N),
+    np.random.uniform(0, 50, N),
+    np.random.uniform(0, 20, N),
+    np.random.uniform(0, 10, N),
 ])
 true_beta = np.array([10.0, 2.5, -1.8, 0.5, 3.0])
-y = X @ true_beta + np.random.randn(N) * 2.0   # Method 1: explicit pseudo-inverse (unstable if X^T X ill-conditioned)
+y = X @ true_beta + np.random.randn(N) * 2.0
+
+# Method 1: explicit pseudo-inverse (unstable if X^T X ill-conditioned)
 gram = X.T @ X
 B_plus_exp = np.linalg.inv(gram) @ X.T
-beta_exp = B_plus_exp @ y   # Method 2: NumPy pinv (SVD-based, always stable)
+beta_exp = B_plus_exp @ y
+
+# Method 2: NumPy pinv (SVD-based, always stable)
 B_plus_svd = np.linalg.pinv(X)
-beta_svd = B_plus_svd @ y   # Method 3: lstsq (best practice)
+beta_svd = B_plus_svd @ y
+
+# Method 3: lstsq (best practice)
 beta_lstsq, residuals, rank, sv = np.linalg.lstsq(X, y, rcond=None)
-comparison = pd.DataFrame({ "param": [f"beta_{i}" for i in range(K)], "true": true_beta, "explicit_inv": beta_exp.round(4), "pinv_svd": beta_svd.round(4), "lstsq": beta_lstsq.round(4),
+comparison = pd.DataFrame({
+    "param": [f"beta_{i}" for i in range(K)],
+    "true": true_beta,
+    "explicit_inv": beta_exp.round(4),
+    "pinv_svd": beta_svd.round(4),
+    "lstsq": beta_lstsq.round(4),
 })
 print("Pseudo-inverse comparison for OLS:")
 print(comparison.to_string(index=False))

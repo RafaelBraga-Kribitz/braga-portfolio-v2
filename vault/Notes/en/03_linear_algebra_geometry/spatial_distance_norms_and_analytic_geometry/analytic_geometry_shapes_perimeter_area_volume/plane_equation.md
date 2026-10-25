@@ -98,25 +98,38 @@ $Q$ is slightly on the negative-normal side. $\checkmark$
 ```python
 import numpy as np
 
+
 def plane_from_normal_point(normal: np.ndarray, point: np.ndarray) -> np.ndarray:
     """Return [A, B, C, D] for plane with given normal through given point."""
     A, B, C = normal
     D = -float(normal @ point)
     return np.array([A, B, C, D])
 
+
 def signed_distance_to_plane(pt: np.ndarray, plane: np.ndarray) -> float:
     """Signed distance from point to plane [A, B, C, D]."""
     A, B, C, D = plane
-    return float(A*pt[0] + B*pt[1] + C*pt[2] + D) / float(np.linalg.norm([A, B, C]))   # Define plane
+    return float(A*pt[0] + B*pt[1] + C*pt[2] + D) / float(np.linalg.norm([A, B, C]))
+
+
+# Define plane
 normal = np.array([2.0, -1.0, 3.0])
 p0 = np.array([1.0, 0.0, 2.0])
 plane = plane_from_normal_point(normal, p0)
 print(f"Plane: {plane[0]:.1f}x + {plane[1]:.1f}y + {plane[2]:.1f}z + {plane[3]:.1f} = 0")
-print(f"Normal vector: {normal}")   # Test points
-test_pts = [ np.array([1.0, 0.0, 2.0]),   # on plane np.array([3.0,
-    2.0, 1.0]), np.array([0.0, 0.0, 0.0]), np.array([4.0, 1.0, 3.0]),
+print(f"Normal vector: {normal}")
+
+# Test points
+test_pts = [
+    np.array([1.0, 0.0, 2.0]),   # on plane
+    np.array([3.0, 2.0, 1.0]),
+    np.array([0.0, 0.0, 0.0]),
+    np.array([4.0, 1.0, 3.0]),
 ]
-for pt in test_pts: d = signed_distance_to_plane(pt, plane) side = "ON plane" if np.isclose(d, 0) else ("positive side" if d > 0 else "negative side[[") print(f"]] {pt}: d = {d:.4f} -> {side}")
+for pt in test_pts:
+    d = signed_distance_to_plane(pt, plane)
+    side = "ON plane" if np.isclose(d, 0) else ("positive side" if d > 0 else "negative side")
+    print(f"  {pt}: d = {d:.4f} -> {side}")
 ```
 
 ### Beginner example (R)
@@ -127,10 +140,12 @@ normal <- c(2, -1, 3)
 p0 <- c(1, 0, 2)
 D <- -sum(normal * p0)
 cat(sprintf("Plane: %.0fx + %.0fy + %.0fz + %.0f = 0\n", normal[1], normal[2], normal[3], D))
-signed_dist <- function(pt, normal, D) { (sum(normal * pt) + D) / sqrt(sum(normal^2))
+signed_dist <- function(pt, normal, D) {
+  (sum(normal * pt) + D) / sqrt(sum(normal^2))
 }
 test_pts <- list(c(1, 0, 2), c(3, 2, 1), c(0, 0, 0))
-for (pt in test_pts) { d <- signed_dist(pt, normal, D)
+for (pt in test_pts) {
+  d <- signed_dist(pt, normal, D)
   side <- ifelse(abs(d) < 1e-10, "ON plane", ifelse(d > 0, "positive side", "negative side"))
   cat(sprintf(" (%g,%g,%g): d=%.4f -> %s\n", pt[1], pt[2], pt[3], d, side))
 }
@@ -143,31 +158,43 @@ import numpy as np
 import pandas as pd
 from sklearn.svm import SVC
 from sklearn.preprocessing import StandardScaler
-np.random.seed(42)   # -- Business scenario: SVM decision boundary as plane in 3D feature space ---
+np.random.seed(42)
+
+# -- Business scenario: SVM decision boundary as plane in 3D feature space ---
 # 3 features: transaction amount, velocity, account age (all scaled).
 # Train SVM, extract the decision plane equation.
 N_NORMAL = 200
 N_FRAUD = 50
-D = 3   # Normal transactions
-X_normal = np.random.randn(N_NORMAL, D) * np.array([1, 1, 1])   # Fraud: shifted distribution
+D = 3
+
+# Normal transactions
+X_normal = np.random.randn(N_NORMAL, D) * np.array([1, 1, 1])
+# Fraud: shifted distribution
 X_fraud = np.random.randn(N_FRAUD, D) * np.array([0.5, 0.5, 0.5]) + np.array([2, 2, -2])
 X_all = np.vstack([X_normal, X_fraud])
 y_all = np.array([0] * N_NORMAL + [1] * N_FRAUD)
 scaler = StandardScaler()
-X_std = scaler.fit_transform(X_all)   # Linear SVM: decision boundary is a plane w^T x +
-b = 0
+X_std = scaler.fit_transform(X_all)
+
+# Linear SVM: decision boundary is a plane w^T x + b = 0
 svm = SVC(kernel='linear', C=1.0, random_state=42)
 svm.fit(X_std, y_all)
 w = svm.coef_[0]   # normal vector (A, B, C)
 b = svm.intercept_[0]
 print(f"SVM decision plane: {w[0]:.4f}*x1 + {w[1]:.4f}*x2 + {w[2]:.4f}*x3 + {b:.4f} = 0")
 print(f"Normal vector ||w|| = {np.linalg.norm(w):.4f}")
-print(f"SVM margin = 2 / ||w|| = {2.0 / np.linalg.norm(w):.4f}")   # Compute signed distances for test samples
+print(f"SVM margin = 2 / ||w|| = {2.0 / np.linalg.norm(w):.4f}")
+
+# Compute signed distances for test samples
 X_test = np.random.randn(20, D)
 X_test[:10] += np.array([2, 2, -2])   # fraud-like
 X_test_std = scaler.transform(X_test)
 signed_dists = X_test_std @ w + b
-results = pd.DataFrame({ "sample": range(20), "true_class": ["fraud" if i < 10 else "normal" for i in range(20)], "signed_dist": signed_dists.round(4), "predicted": ["fraud" if d > 0 else "normal" for d in signed_dists],
+results = pd.DataFrame({
+    "sample": range(20),
+    "true_class": ["fraud" if i < 10 else "normal" for i in range(20)],
+    "signed_dist": signed_dists.round(4),
+    "predicted": ["fraud" if d > 0 else "normal" for d in signed_dists],
 })
 print(f"\nSigned distances to SVM decision plane:")
 print(results.to_string(index=False))

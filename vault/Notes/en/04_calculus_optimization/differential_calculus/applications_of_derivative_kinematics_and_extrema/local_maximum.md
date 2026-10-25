@@ -100,9 +100,13 @@ $f(2) = 2(8) - 3(4) - 12(2) + 5 = 16 - 12 - 24 + 5 = -15$. Local min value. Veri
 
 ```python
 import numpy as np
-from scipy.signal import find_peaks   # Second derivative test for local maxima
+from scipy.signal import find_peaks
 
-def classify_critical_points( f, f_prime, f_double_prime, search_range: tuple[float, float], n_grid: int = 2000 ) -> None:
+
+# Second derivative test for local maxima
+def classify_critical_points(
+    f, f_prime, f_double_prime, search_range: tuple[float, float], n_grid: int = 2000
+) -> None:
     """Find and classify critical points of f using the second derivative test."""
     from scipy.optimize import brentq
     x_grid = np.linspace(search_range[0], search_range[1], n_grid)
@@ -119,22 +123,30 @@ def classify_critical_points( f, f_prime, f_double_prime, search_range: tuple[fl
             else:
                 label = "inconclusive"
             print(f"{x_crit:>10.4f} {f(x_crit):>10.4f} {f_prime(x_crit):>10.2e} {fpp:>10.4f} {label:>15}")
-        f = lambda x: 2*x**3 - 3*x**2 - 12*x + 5
+
+
+f = lambda x: 2*x**3 - 3*x**2 - 12*x + 5
 fp = lambda x: 6*x**2 - 6*x - 12
 fpp = lambda x: 12*x - 6
 print("Local Maximum: f'(x0) = 0 and f''(x0) < 0")
 print("\nf(x) = 2x^3 - 3x^2 - 12x + 5")
-classify_critical_points(f, fp, fpp, (-3.0, 4.0))   # Peak detection in a time series (local max condition numerically)
+classify_critical_points(f, fp, fpp, (-3.0, 4.0))
+
+# Peak detection in a time series (local max condition numerically)
 print("\n--- Peak detection in a time series ---")
 np.random.seed(42)
 n_days = 60
-dau = ( 10000 + 2000 * np.sin(2 * np.pi * np.arange(n_days) / 20)   # ~20-day cycle + 500 * np.sin(2 * np.pi * np.arange(n_days) /
-    7)   # weekly pattern +
-np.random.randn(n_days) * 150
+dau = (
+    10000
+    + 2000 * np.sin(2 * np.pi * np.arange(n_days) / 20)  # ~20-day cycle
+    + 500 * np.sin(2 * np.pi * np.arange(n_days) / 7)    # weekly pattern
+    + np.random.randn(n_days) * 150
 )
 peak_indices, peak_properties = find_peaks(dau, prominence=400, distance=5)
 print(f"{'Peak day':>10} {'DAU':>10} {'Context':>30}")
-for idx in peak_indices: context = "local max (f'>0 before, f'<0 after)" print(f"{idx+1:>10} {dau[idx]:>10.0f} {context:>30}")
+for idx in peak_indices:
+    context = "local max (f'>0 before, f'<0 after)"
+    print(f"{idx+1:>10} {dau[idx]:>10.0f} {context:>30}")
 print(f"\nTotal peaks found: {len(peak_indices)}")
 print(f"Average DAU at peaks: {dau[peak_indices].mean():.0f}")
 print(f"Average DAU overall: {dau.mean():.0f}")
@@ -146,21 +158,25 @@ print(f"Average DAU overall: {dau.mean():.0f}")
 # Local Maximum: f'(x0) = 0, f''(x0) < 0
 f <- function(x) 2*x^3 - 3*x^2 - 12*x + 5
 fp <- function(x) 6*x^2 - 6*x - 12
-fpp <- function(x) 12*x - 6  # Find critical points via sign changes in f'
+fpp <- function(x) 12*x - 6
+
+# Find critical points via sign changes in f'
 x_grid <- seq(-3, 4, length.out = 2000)
 fp_vals <- fp(x_grid)
 cat("Local Maximum: f'(x0)=0 and f''(x0)<0\n\n")
 cat(sprintf("%-10s %-10s %-10s %-10s %-15s\n", "x_crit", "f(x)", "f'(x)", "f''(x)", "Type"))
-for (i in 1:(length(x_grid) - 1)) { if (fp_vals[i] * fp_vals[i + 1] < 0) { x_crit <- uniroot(fp, lower = x_grid[i], upper = x_grid[i + 1])$root
+for (i in 1:(length(x_grid) - 1)) {
+  if (fp_vals[i] * fp_vals[i + 1] < 0) {
+    x_crit <- uniroot(fp, lower = x_grid[i], upper = x_grid[i + 1])$root
     fpp_val <- fpp(x_crit)
-    type <- if (fpp_val < -1e-8) "LOCAL MAX"
-    else
-    if (fpp_val > 1e-8) "LOCAL MIN"
-    else "inconclusive"
+    type <- if (fpp_val < -1e-8) "LOCAL MAX" else if (fpp_val > 1e-8) "LOCAL MIN" else "inconclusive"
     cat(sprintf("%-10.4f %-10.4f %-10.4f %-10.4f %-15s\n", x_crit, f(x_crit), fp(x_crit), fpp_val, type))
   }
-}  # Simple peak detection: find local maxima in a vector
-find_local_maxima <- function(x_vec) { which(x_vec > c(-Inf, x_vec[-length(x_vec)]) & x_vec > c(x_vec[-1], -Inf))
+}
+
+# Simple peak detection: find local maxima in a vector
+find_local_maxima <- function(x_vec) {
+  which(x_vec > c(-Inf, x_vec[-length(x_vec)]) & x_vec > c(x_vec[-1], -Inf))
 }
 set.seed(42)
 dau <- 10000 + 2000 * sin(2 * pi * 1:60 / 20) + rnorm(60, sd = 150)
@@ -177,13 +193,12 @@ from scipy.optimize import minimize_scalar
 from sklearn.datasets import make_classification
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
-np.random.seed(42)   # -- Local Maximum: MAP estimate as local max of log-posterior --
+np.random.seed(42)
+
+# -- Local Maximum: MAP estimate as local max of log-posterior --
 # Use case: A DS fits a Bayesian logistic regression with a Gaussian prior.
 # The MAP estimate is the local maximum of the log-posterior:
-# log p(w|X, y) = log
-p(y|X, w) + log
-p(w) - log
-p(y|X)
+# log p(w|X, y) = log p(y|X, w) + log p(w) - log p(y|X)
 # At MAP: gradient = 0, Hessian = negative definite (local max of log-posterior).
 # The Hessian at MAP = -(Fisher information + prior precision) = curvature of the peak.
 N = 300
@@ -192,6 +207,7 @@ PRIOR_PRECISION = 1.0   # L2 regularization = prior precision
 X_raw, y = make_classification(n_samples=N, n_features=DIM, n_informative=DIM, n_redundant=0, random_state=42)
 scaler = StandardScaler()
 X = scaler.fit_transform(X_raw)
+
 
 def sigmoid_stable(z: np.ndarray) -> np.ndarray:
     return np.where(z >= 0, 1.0 / (1.0 + np.exp(-z)), np.exp(z) / (1.0 + np.exp(z)))
@@ -213,7 +229,10 @@ def log_posterior_hessian(w: np.ndarray, X: np.ndarray, precision: float) -> np.
     """H = -X^T diag(p*(1-p)) X - precision*I. Negative definite at MAP => local max."""
     p = sigmoid_stable(X @ w)
     weights = p * (1 - p)
-    return -(X * weights[:, None]).T @ X - precision * np.eye(len(w))   # Gradient ascent to find MAP (local max of log-posterior)
+    return -(X * weights[:, None]).T @ X - precision * np.eye(len(w))
+
+
+# Gradient ascent to find MAP (local max of log-posterior)
 ALPHA = 0.1
 N_STEPS = 300
 w_map = np.zeros(DIM)
@@ -221,10 +240,12 @@ log_posts = []
 grad_norms = []
 for step in range(N_STEPS):
     lp = log_posterior(w_map, X, y, PRIOR_PRECISION)
-grad = log_posterior_gradient(w_map, X, y, PRIOR_PRECISION)
-log_posts.append(lp)
-grad_norms.append(float(np.linalg.norm(grad)))
-w_map += ALPHA * grad   # gradient ASCENT: climb to local max # Evaluate at MAP
+    grad = log_posterior_gradient(w_map, X, y, PRIOR_PRECISION)
+    log_posts.append(lp)
+    grad_norms.append(float(np.linalg.norm(grad)))
+    w_map += ALPHA * grad  # gradient ASCENT: climb to local max
+
+# Evaluate at MAP
 H = log_posterior_hessian(w_map, X, PRIOR_PRECISION)
 eigenvalues = np.linalg.eigvalsh(H)
 lp_final = log_posterior(w_map, X, y, PRIOR_PRECISION)
@@ -235,7 +256,7 @@ print(f"\nGradient ascent convergence to local max (log-posterior peak):")
 print(f"{'Step':>6} {'log-posterior':>15} {'|grad|':>12} {'Status':>20}")
 for step in [0, 10, 30, 100, 200, 299]:
     status = "at local max" if grad_norms[step] < 0.05 else "ascending"
-print(f"{step+1:>6} {log_posts[step]:>15.4f} {grad_norms[step]:>12.6f} {status:>20}")
+    print(f"{step+1:>6} {log_posts[step]:>15.4f} {grad_norms[step]:>12.6f} {status:>20}")
 print(f"\nVerification of local maximum at MAP:")
 print(f" Gradient norm: {np.linalg.norm(grad_final):.2e} (≈ 0: critical point)")
 print(f" Hessian eigenvalues: {np.round(eigenvalues, 4)}")

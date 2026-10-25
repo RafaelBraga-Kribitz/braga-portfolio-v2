@@ -98,25 +98,34 @@ Verify: $A \cdot A^{-1} = \begin{bmatrix}3&1\\1&3\end{bmatrix}\begin{bmatrix}3/8
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # -- Spectral inverse of a small symmetric positive definite matrix ----
-A = np.array([[3.0, 1.0], [1.0, 3.0]])   # Eigendecomposition (eigh: symmetric, guaranteed real + orthonormal output)
+import numpy as np
+
+# -- Spectral inverse of a small symmetric positive definite matrix ----
+A = np.array([[3.0, 1.0], [1.0, 3.0]])
+
+# Eigendecomposition (eigh: symmetric, guaranteed real + orthonormal output)
 eigenvalues, eigenvectors = np.linalg.eigh(A)
 print("Eigenvalues:", eigenvalues.round(4))
 print("Eigenvectors (columns):")
-print(eigenvectors.round(4))   # Spectral inverse: sum of (1/lambda_k) * v_k * v_k^T
+print(eigenvectors.round(4))
+
+# Spectral inverse: sum of (1/lambda_k) * v_k * v_k^T
 n = A.shape[0]
 A_inv_spectral = np.zeros((n, n))
 for k in range(n):
     lam_k = eigenvalues[k]
-v_k = eigenvectors[:, k].reshape(-1, 1)
-A_inv_spectral += (1.0 / lam_k) * (v_k @ v_k.T)   # Compare against numpy direct inverse
+    v_k = eigenvectors[:, k].reshape(-1, 1)
+    A_inv_spectral += (1.0 / lam_k) * (v_k @ v_k.T)
+
+# Compare against numpy direct inverse
 A_inv_direct = np.linalg.inv(A)
 print("\nSpectral inverse:")
 print(A_inv_spectral.round(6))
 print("\nnp.linalg.inv result:")
 print(A_inv_direct.round(6))
-print(f"\nMax difference: {np.max(np.abs(A_inv_spectral - A_inv_direct)):.2e}")   # Verify A *
-A_inv = I
+print(f"\nMax difference: {np.max(np.abs(A_inv_spectral - A_inv_direct)):.2e}")
+
+# Verify A * A_inv = I
 product = A @ A_inv_spectral
 print(f"\nA * A_inv (should be identity):")
 print(product.round(6))
@@ -131,10 +140,13 @@ result <- eigen(A, symmetric = TRUE)
 eigenvalues <- result$values
 eigenvectors <- result$vectors
 cat("Eigenvalues:\n")
-print(round(eigenvalues, 4))  # Spectral inverse: sum of (1 / lambda_k) * v_k %*% t(v_k)
+print(round(eigenvalues, 4))
+
+# Spectral inverse: sum of (1 / lambda_k) * v_k %*% t(v_k)
 n <- nrow(A)
 A_inv_spec <- matrix(0, n, n)
-for (k in seq_len(n)) { v_k <- eigenvectors[, k, drop = FALSE]
+for (k in seq_len(n)) {
+  v_k <- eigenvectors[, k, drop = FALSE]
   A_inv_spec <- A_inv_spec + (1.0 / eigenvalues[k]) * (v_k %*% t(v_k))
 }
 cat("\nSpectral inverse:\n")
@@ -151,34 +163,51 @@ print(round(A %*% A_inv_spec, 6))
 ```python
 import numpy as np
 import pandas as pd
-np.random.seed(42)   # -- Business scenario: regularized precision matrix for Mahalanobis anomaly detection
+np.random.seed(42)
+
+# -- Business scenario: regularized precision matrix for Mahalanobis anomaly detection
 # A digital analyst monitors 5 media channel metrics weekly.
 # The covariance matrix is estimated from limited history and may be near-singular.
 N_WEEKS = 80
 N_CHANNELS = 5
-EIGENVAL_FLOOR = 1e-3   # floor near-zero eigenvalues before inverting
-channel_names = ["search", "social", "display", "video", "email"]   # Simulate correlated weekly spend increments (EUR thousands)
-true_cov = np.array([ [4.0, 1.5, 0.8, 0.4, 0.2], [1.5, 3.0, 1.0, 0.5, 0.3], [0.8, 1.0, 2.5, 0.6, 0.2], [0.4, 0.5, 0.6, 2.0, 0.4], [0.2, 0.3, 0.2, 0.4, 1.5],
+EIGENVAL_FLOOR = 1e-3  # floor near-zero eigenvalues before inverting
+channel_names = ["search", "social", "display", "video", "email"]
+
+# Simulate correlated weekly spend increments (EUR thousands)
+true_cov = np.array([
+    [4.0, 1.5, 0.8, 0.4, 0.2],
+    [1.5, 3.0, 1.0, 0.5, 0.3],
+    [0.8, 1.0, 2.5, 0.6, 0.2],
+    [0.4, 0.5, 0.6, 2.0, 0.4],
+    [0.2, 0.3, 0.2, 0.4, 1.5],
 ])
 L_sim = np.linalg.cholesky(true_cov)
 data = np.random.normal(size=(N_WEEKS, N_CHANNELS)) @ L_sim.T
 df = pd.DataFrame(data, columns=channel_names)
-cov_est = df.cov().to_numpy()   # Eigendecomposition of estimated covariance
+cov_est = df.cov().to_numpy()
+
+# Eigendecomposition of estimated covariance
 eigenvalues, eigenvectors = np.linalg.eigh(cov_est)
 order = np.argsort(eigenvalues)[::-1]
 eigenvalues = eigenvalues[order]
-eigenvectors = eigenvectors[:, order]   # Floor near-zero eigenvalues (regularization)
-eigenvalues_reg = np.maximum(eigenvalues, EIGENVAL_FLOOR)   # Spectral inverse (regularized precision matrix)
+eigenvectors = eigenvectors[:, order]
+
+# Floor near-zero eigenvalues (regularization)
+eigenvalues_reg = np.maximum(eigenvalues, EIGENVAL_FLOOR)
+
+# Spectral inverse (regularized precision matrix)
 precision_matrix = np.zeros((N_CHANNELS, N_CHANNELS))
 for k in range(N_CHANNELS):
     v_k = eigenvectors[:, k].reshape(-1, 1)
-precision_matrix += (1.0 / eigenvalues_reg[k]) * (v_k @ v_k.T)   # Compute Mahalanobis distance for each weekly observation
+    precision_matrix += (1.0 / eigenvalues_reg[k]) * (v_k @ v_k.T)
+
+# Compute Mahalanobis distance for each weekly observation
 mean_vec = df.mean().to_numpy()
 anomaly_scores = []
 for i in range(N_WEEKS):
     delta = df.iloc[i].to_numpy() - mean_vec
-score = float(delta @ precision_matrix @ delta)
-anomaly_scores.append(score)
+    score = float(delta @ precision_matrix @ delta)
+    anomaly_scores.append(score)
 anomaly_series = pd.Series(anomaly_scores, name="mahalanobis_sq")
 threshold_95 = anomaly_series.quantile(0.95)
 print(f"Eigenvalues (estimated): {eigenvalues.round(4)}")

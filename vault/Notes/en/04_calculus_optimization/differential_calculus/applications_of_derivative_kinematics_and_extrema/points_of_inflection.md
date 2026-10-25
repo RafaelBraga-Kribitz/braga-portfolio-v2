@@ -105,8 +105,13 @@ Sign change $- \to +$: inflection. Inflection points: $(-1, f(-1)) = (-1, 1-6+1)
 import numpy as np
 from scipy.signal import find_peaks
 
-def find_inflection_points( f_double_prime, search_range: tuple[float, float], n_grid: int = 2000 ) -> list[float]:
-    """ Find inflection points via sign changes of f''. Returns list of x-values where f'' changes sign. """
+def find_inflection_points(
+    f_double_prime, search_range: tuple[float, float], n_grid: int = 2000
+) -> list[float]:
+    """Find inflection points via sign changes of f''.
+
+    Returns list of x-values where f'' changes sign.
+    """
     from scipy.optimize import brentq
     x_grid = np.linspace(search_range[0], search_range[1], n_grid)
     fpp_vals = f_double_prime(x_grid)
@@ -114,8 +119,10 @@ def find_inflection_points( f_double_prime, search_range: tuple[float, float], n
     for i in range(len(x_grid) - 1):
         if fpp_vals[i] * fpp_vals[i + 1] < 0:
             x_infl = brentq(f_double_prime, x_grid[i], x_grid[i + 1])
-        inflections.append(x_infl)
+            inflections.append(x_infl)
     return inflections
+
+
 f = lambda x: x**4 - 6*x**2 + 1
 fp = lambda x: 4*x**3 - 12*x
 fpp = lambda x: 12*x**2 - 12
@@ -124,24 +131,34 @@ print("\nf(x) = x^4 - 6x^2 + 1")
 print(f"{'x_infl':>10} {'f(x)':>10} {'f_pp':>10} {'Concavity change':>25}")
 for x_infl in find_inflection_points(fpp, (-3.0, 3.0)):
     left_concavity = "concave up" if fpp(x_infl - 0.01) > 0 else "concave down"
-right_concavity = "concave up" if fpp(x_infl + 0.01) > 0 else "concave down"
-change = f"{left_concavity} -> {right_concavity}"
-print(f"{x_infl:>10.4f} {f(x_infl):>10.4f} {fpp(x_infl):>10.2e} {change:>25}")   # Logistic growth: inflection at K/2 = maximum growth velocity
+    right_concavity = "concave up" if fpp(x_infl + 0.01) > 0 else "concave down"
+    change = f"{left_concavity} -> {right_concavity}"
+    print(f"{x_infl:>10.4f} {f(x_infl):>10.4f} {fpp(x_infl):>10.2e} {change:>25}")
+
+# Logistic growth: inflection at K/2 = maximum growth velocity
 print("\n--- Logistic S-curve: inflection = peak growth velocity ---")
-K, r, t0 = 100_000.0, 0.15, 30.0   # capacity, growth rate, midpoint
+K, r, t0 = 100_000.0, 0.15, 30.0  # capacity, growth rate, midpoint
 t = np.linspace(0, 60, 200)
-S = K / (1 + np.exp(-r * (t - t0)))   # cumulative
-dS = r * S * (1 - S / K)   # velocity (growth rate)
-d2S = r * dS * (1 - 2 * S / K)   # acceleration # Inflection where d2S changes sign: at t0 = 30, S(t0) = K/2
-infl_idx = np.argmin(np.abs(d2S))   # closest to zero acceleration
+S = K / (1 + np.exp(-r * (t - t0)))  # cumulative
+dS = r * S * (1 - S / K)             # velocity (growth rate)
+d2S = r * dS * (1 - 2 * S / K)       # acceleration
+
+# Inflection where d2S changes sign: at t0 = 30, S(t0) = K/2
+infl_idx = np.argmin(np.abs(d2S))  # closest to zero acceleration
 print(f"Inflection at t = {t[infl_idx]:.1f} days (theoretical: {t0})")
 print(f"S(t_infl) = {S[infl_idx]:.0f} = K/2 = {K/2:.0f} (should match)")
 print(f"Peak daily growth: {dS[infl_idx]:.0f} units/day (at inflection)")
 print(f"Growth before inflection: accelerating (d2S > 0)")
-print(f"Growth after inflection: decelerating (d2S < 0)")   # Discrete: second difference sign change in cumulative downloads
+print(f"Growth after inflection: decelerating (d2S < 0)")
+
+# Discrete: second difference sign change in cumulative downloads
 np.random.seed(42)
 n_days = 60
-downloads_daily = K * r * np.exp(-r * (np.arange(n_days) - t0)) / \ (1 + np.exp(-r * (np.arange(n_days) - t0)))**2 + \ np.random.randn(n_days) * 200
+downloads_daily = (
+    K * r * np.exp(-r * (np.arange(n_days) - t0))
+    / (1 + np.exp(-r * (np.arange(n_days) - t0)))**2
+    + np.random.randn(n_days) * 200
+)
 cumulative = np.cumsum(downloads_daily)
 second_diff = np.diff(np.diff(cumulative))
 sign_changes = np.where(np.diff(np.sign(second_diff)) != 0)[0]
@@ -153,20 +170,23 @@ print(f"\nDiscrete inflection (second difference sign change): day {sign_changes
 ```r
 # Points of inflection: f''(x0) = 0 and f'' changes sign
 f <- function(x) x^4 - 6*x^2 + 1
-fpp <- function(x) 12*x^2 - 12  # Find sign changes of f''
+fpp <- function(x) 12*x^2 - 12
+
+# Find sign changes of f''
 x_grid <- seq(-3, 3, length.out = 2000)
 fpp_vals <- fpp(x_grid)
 cat("Points of Inflection\n\n")
 cat(sprintf("%-10s %-10s %-10s %-30s\n", "x_infl", "f(x)", "f''(x)", "Concavity"))
-for (i in 1:(length(x_grid) - 1)) { if (fpp_vals[i] * fpp_vals[i + 1] < 0) { x_infl <- uniroot(fpp, lower = x_grid[i], upper = x_grid[i + 1])$root
-    left <- if (fpp(x_infl - 0.01) > 0) "up"
-    else "down"
-    right <- if (fpp(x_infl + 0.01) > 0) "up"
-    else "down"
+for (i in 1:(length(x_grid) - 1)) {
+  if (fpp_vals[i] * fpp_vals[i + 1] < 0) {
+    x_infl <- uniroot(fpp, lower = x_grid[i], upper = x_grid[i + 1])$root
+    left <- if (fpp(x_infl - 0.01) > 0) "up" else "down"
+    right <- if (fpp(x_infl + 0.01) > 0) "up" else "down"
     cat(sprintf("%-10.4f %-10.4f %-10.4f concave %s -> %s\n", x_infl, f(x_infl), fpp(x_infl), left, right))
   }
-}  # Logistic curve: inflection at
-S = K/2
+}
+
+# Logistic curve: inflection at S = K/2
 K <- 100000; r <- 0.15; t0 <- 30
 t <- seq(0, 60, length.out = 200)
 S <- K / (1 + exp(-r * (t - t0)))
@@ -236,10 +256,12 @@ t_forecast = np.array([10, 20, 30, int(t_inflection), 60, 75, 90], dtype=float)
 print(f"\n{'Day':>6} {'MAU':>10} {'Velocity':>12} {'Acceleration':>15} {'Phase':>20}")
 for t_val in t_forecast:
     s = logistic_model(np.array([t_val]), K_fit, r_fit, t0_fit)[0]
-v = logistic_velocity(np.array([t_val]), K_fit, r_fit, t0_fit)[0]
-a = logistic_acceleration(np.array([t_val]), K_fit, r_fit, t0_fit)[0]
-phase = "accelerating" if a > 100 else ("peak velocity" if abs(a) < 200 else "decelerating")
-print(f"{t_val:>6.0f} {s:>10.0f} {v:>12.0f} {a:>15.0f} {phase:>20}")   # Deceleration warning: day when velocity drops below 50% of peak
+    v = logistic_velocity(np.array([t_val]), K_fit, r_fit, t0_fit)[0]
+    a = logistic_acceleration(np.array([t_val]), K_fit, r_fit, t0_fit)[0]
+    phase = "accelerating" if a > 100 else ("peak velocity" if abs(a) < 200 else "decelerating")
+    print(f"{t_val:>6.0f} {s:>10.0f} {v:>12.0f} {a:>15.0f} {phase:>20}")
+
+# Deceleration warning: day when velocity drops below 50% of peak
 peak_v = v_inflection
 t_fine = np.linspace(1, 120, 1000)
 v_fine = logistic_velocity(t_fine, K_fit, r_fit, t0_fit)

@@ -107,39 +107,44 @@ $L_1/L_2 = 0.03456/0.02304 \approx 1.50$. ✓
 ### Beginner example (Python)
 
 ```python
-# Quotient rule for logs: log_a(x/y) =
-log_a(x) - log_a(y)
+# Quotient rule for logs: log_a(x/y) = log_a(x) - log_a(y)
 import math
-import numpy as np   # Verify the quotient rule
+import numpy as np
+
+# Verify the quotient rule
 print("Quotient rule: ln(x/y) = ln(x) - ln(y)")
 pairs = [(6.0, 2.0), (100.0, 10.0), (0.8, 0.2), (5.0, 7.0), (math.e, 2.0)]
 print(f"{'x':>8} {'y':>8} {'ln(x/y)':>10} {'ln(x)-ln(y)':>14} {'match':>6}")
 for x, y in pairs:
     direct = math.log(x / y)
-rule_form = math.log(x) - math.log(y)
-print(f"{x:>8.4f} {y:>8.4f} {direct:>10.6f} {rule_form:>14.6f} {str(abs(direct - rule_form) < 1e-10):>6}")   # Log-likelihood ratio test: two Bernoulli models
+    rule_form = math.log(x) - math.log(y)
+    print(f"{x:>8.4f} {y:>8.4f} {direct:>10.6f} {rule_form:>14.6f} {str(abs(direct - rule_form) < 1e-10):>6}")
+
+# Log-likelihood ratio test: two Bernoulli models
 print("\nLog-likelihood ratio test: ln(L1/L2) = ln(L1) - ln(L2)")
 obs = np.array([1, 1, 0, 1, 0, 1, 1, 0, 0, 1])
 p1, p2 = 0.6, 0.35
 n1, n0 = obs.sum(), (1 - obs).sum()
 ll1 = n1 * math.log(p1) + n0 * math.log(1 - p1)
 ll2 = n1 * math.log(p2) + n0 * math.log(1 - p2)
-log_lr = ll1 - ll2   # quotient rule: ln(L1/L2) =
-ln(L1) - ln(L2)
+log_lr = ll1 - ll2      # quotient rule: ln(L1/L2) = ln(L1) - ln(L2)
 lr = math.exp(log_lr)   # L1/L2
 print(f" Observations: {n1} ones, {n0} zeros")
 print(f" ln(L1) [p={p1}]: {ll1:.4f}")
 print(f" ln(L2) [p={p2}]: {ll2:.4f}")
 print(f" ln(L1/L2) = ln(L1) - ln(L2) = {log_lr:.4f}")
-print(f" L1/L2 = e^{log_lr:.4f} = {lr:.4f}")   # Logit: ln(p/(1-p)) =
-ln(p) - ln(1-p)
+print(f" L1/L2 = e^{log_lr:.4f} = {lr:.4f}")
+
+# Logit: ln(p/(1-p)) = ln(p) - ln(1-p)
 print("\nLogit: ln(p/(1-p)) = ln(p) - ln(1-p)")
 probs = [0.1, 0.3, 0.5, 0.7, 0.9]
 print(f"{'p':>6} {'ln(p/(1-p))':>14} {'ln(p)-ln(1-p)':>16} {'match':>6}")
 for p in probs:
     direct = math.log(p / (1 - p))
-rule_form = math.log(p) - math.log(1 - p)
-print(f"{p:>6.2f} {direct:>14.6f} {rule_form:>16.6f} {str(abs(direct - rule_form) < 1e-10):>6}")   # KL divergence using quotient rule: sum p * (ln(p) - ln(q))
+    rule_form = math.log(p) - math.log(1 - p)
+    print(f"{p:>6.2f} {direct:>14.6f} {rule_form:>16.6f} {str(abs(direct - rule_form) < 1e-10):>6}")
+
+# KL divergence using quotient rule: sum p * (ln(p) - ln(q))
 print("\nKL divergence: sum_i p_i * ln(p_i/q_i) = sum_i p_i * (ln(p_i) - ln(q_i))")
 p_dist = np.array([0.4, 0.3, 0.2, 0.1])
 q_dist = np.array([0.25, 0.25, 0.25, 0.25])
@@ -153,21 +158,29 @@ print(f" Match: {abs(kl_direct - kl_rule) < 1e-10}")
 ### Beginner example (R)
 
 ```r
-# Quotient rule in R: log_a(x/y) = log_a(x) - log_a(y) # Verify
+# Quotient rule in R: log_a(x/y) = log_a(x) - log_a(y)
+
+# Verify
 cat("Quotient rule: ln(x/y) = ln(x) - ln(y)\n")
 pairs <- list(c(6,2), c(100,10), c(0.8,0.2), c(5,7))
 cat(sprintf("%-8s %-8s %-10s %-14s %s\n", "x", "y", "ln(x/y)", "ln(x)-ln(y)", "match"))
-for (p in pairs) { x <- p[1]; y <- p[2]
+for (p in pairs) {
+  x <- p[1]; y <- p[2]
   direct <- log(x / y)
   rule_form <- log(x) - log(y)
   cat(sprintf("%-8.4f %-8.4f %-10.6f %-14.6f %s\n", x, y, direct, rule_form, abs(direct - rule_form) < 1e-10))
-}  # Logit function
+}
+
+# Logit function
 cat("\nLogit: ln(p/(1-p)) = ln(p) - ln(1-p)\n")
 probs <- c(0.1, 0.3, 0.5, 0.7, 0.9)
-for (p in probs) { direct <- log(p / (1 - p))
+for (p in probs) {
+  direct <- log(p / (1 - p))
   rule_form <- log(p) - log(1 - p)
   cat(sprintf(" p=%.1f direct=%.6f rule=%.6f match=%s\n", p, direct, rule_form, abs(direct - rule_form) < 1e-10))
-}  # KL divergence
+}
+
+# KL divergence
 p_dist <- c(0.4, 0.3, 0.2, 0.1)
 q_dist <- c(0.25, 0.25, 0.25, 0.25)
 kl <- sum(p_dist * (log(p_dist) - log(q_dist)))
@@ -180,11 +193,15 @@ cat(sprintf("\nKL(P||Q) using quotient rule: %.6f\n", kl))
 import numpy as np
 import pandas as pd
 import math
-from scipy import stats   # Scenario: likelihood ratio test comparing two logistic regression models
+from scipy import stats
+
+# Scenario: likelihood ratio test comparing two logistic regression models
 # Uses: ln(L1/L2) = ln(L1) - ln(L2) for numerically stable model comparison
 np.random.seed(42)
 N_SAMPLES = 600
-N_FEATURES = 4   # Generate binary classification data
+N_FEATURES = 4
+
+# Generate binary classification data
 true_coefficients = np.array([0.5, -1.2, 0.8, -0.3])
 feature_matrix = np.random.normal(0, 1, (N_SAMPLES, N_FEATURES))
 log_odds = feature_matrix @ true_coefficients
@@ -195,30 +212,60 @@ def sigmoid(x: np.ndarray) -> np.ndarray:
     """Sigmoid function: 1 / (1 + exp(-x))."""
     return 1 / (1 + np.exp(-np.clip(x, -500, 500)))
 
-def log_likelihood_logistic( features: np.ndarray, labels: np.ndarray, coefficients: np.ndarray,
+def log_likelihood_logistic(
+    features: np.ndarray,
+    labels: np.ndarray,
+    coefficients: np.ndarray,
 ) -> float:
-    """ Compute logistic regression log-likelihood. ln L(beta) = sum_i [y_i * ln(p_i) + (1-y_i) * ln(1-p_i)] = sum_i [y_i * ln(p_i/(1-p_i)) + ln(1-p_i)] -- quotient rule on p_i/(1-p_i) Args: features: Feature matrix (n_samples x n_features). labels: Binary labels (0 or 1). coefficients: Logistic regression coefficients. Returns: Log-likelihood value. """
+    """Compute logistic regression log-likelihood.
+
+    ln L(beta) = sum_i [y_i * ln(p_i) + (1-y_i) * ln(1-p_i)]
+               = sum_i [y_i * ln(p_i/(1-p_i)) + ln(1-p_i)]  -- quotient rule on p_i/(1-p_i)
+
+    Args:
+        features: Feature matrix (n_samples x n_features).
+        labels: Binary labels (0 or 1).
+        coefficients: Logistic regression coefficients.
+
+    Returns:
+        Log-likelihood value.
+    """
     probs = sigmoid(features @ coefficients)
-    probs_clip = np.clip(probs, 1e-15, 1 - 1e-15)   # avoid
-    log(0)
-    return float(np.sum( labels * np.log(probs_clip) + (1 - labels) * np.log(1 - probs_clip) ))   # Three models to compare
-null_coefs = np.zeros(N_FEATURES)   # intercept-only (null model)
-partial_coefs = np.array([0.5, -1.2, 0.0, 0.0])   # only first 2 features
-full_coefs = true_coefficients.copy()   # all 4 features (oracle)
-models = { "null (intercept only)": null_coefs, "partial (2 features)": partial_coefs, "full (4 features)": full_coefs,
-}   # Compute log-likelihoods and likelihood ratios
-log_likelihoods = {name: log_likelihood_logistic(feature_matrix, labels, coefs) for name, coefs in models.items()}   # Likelihood ratio test: compare each model to the null
+    probs_clip = np.clip(probs, 1e-15, 1 - 1e-15)   # avoid log(0)
+    return float(np.sum(
+        labels * np.log(probs_clip) + (1 - labels) * np.log(1 - probs_clip)
+    ))
+
+
+# Three models to compare
+null_coefs = np.zeros(N_FEATURES)                  # intercept-only (null model)
+partial_coefs = np.array([0.5, -1.2, 0.0, 0.0])    # only first 2 features
+full_coefs = true_coefficients.copy()              # all 4 features (oracle)
+models = {
+    "null (intercept only)": null_coefs,
+    "partial (2 features)": partial_coefs,
+    "full (4 features)": full_coefs,
+}
+
+# Compute log-likelihoods and likelihood ratios
+log_likelihoods = {name: log_likelihood_logistic(feature_matrix, labels, coefs) for name, coefs in models.items()}
+
+# Likelihood ratio test: compare each model to the null
 null_ll = log_likelihoods["null (intercept only)"]
 rows = []
 for model_name, ll in log_likelihoods.items():
-    log_lr = ll - null_ll   # quotient rule: ln(L/L0) =
-ln(L) - ln(L0)
-lr = math.exp(min(log_lr, 700))   # L/L0 — may be very large
-chi2_stat = 2 * log_lr
-df = N_FEATURES
-p_value = 1 - stats.chi2.cdf(chi2_stat, df) if chi2_stat > 0 else 1.0
-rows.append({ "model": model_name, "log_likelihood": round(ll, 2), "log_LR_vs_null": round(log_lr, 4),   # = ln(L) - ln(L_null)
-    "chi2_stat": round(chi2_stat, 4), "p_value": round(p_value, 4), })
+    log_lr = ll - null_ll                # quotient rule: ln(L/L0) = ln(L) - ln(L0)
+    lr = math.exp(min(log_lr, 700))      # L/L0 — may be very large
+    chi2_stat = 2 * log_lr
+    df = N_FEATURES
+    p_value = 1 - stats.chi2.cdf(chi2_stat, df) if chi2_stat > 0 else 1.0
+    rows.append({
+        "model": model_name,
+        "log_likelihood": round(ll, 2),
+        "log_LR_vs_null": round(log_lr, 4),   # = ln(L) - ln(L_null)
+        "chi2_stat": round(chi2_stat, 4),
+        "p_value": round(p_value, 4),
+    })
 results_df = pd.DataFrame(rows)
 print("Likelihood ratio test: ln(L1/L2) = ln(L1) - ln(L2) (quotient rule)")
 print("=" * 72)

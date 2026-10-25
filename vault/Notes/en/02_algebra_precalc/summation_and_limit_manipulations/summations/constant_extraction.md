@@ -83,15 +83,20 @@ $4(1) + 4(2) + 4(3) + 4(4) + 4(5) = 4 + 8 + 12 + 16 + 20 = 60$. Confirmed.
 ```python
 # Constant extraction: sum of C*f(n) = C * sum of f(n)
 EXCHANGE_RATE = 0.92   # USD -> EUR, a constant (independent of n)
-usd_costs = [1500.0, 2300.0, 900.0, 3100.0, 750.0]   # Method 1: convert each then sum
-total_eur_method1 = sum(EXCHANGE_RATE * cost for cost in usd_costs)   # Method 2: sum first, then convert once (constant extraction)
+usd_costs = [1500.0, 2300.0, 900.0, 3100.0, 750.0]
+
+# Method 1: convert each then sum
+total_eur_method1 = sum(EXCHANGE_RATE * cost for cost in usd_costs)
+
+# Method 2: sum first, then convert once (constant extraction)
 total_eur_method2 = EXCHANGE_RATE * sum(usd_costs)
 print(f"USD costs: {usd_costs}")
 print(f"Exchange rate (constant C): {EXCHANGE_RATE}")
 print(f"Method 1 (convert each, then sum): {total_eur_method1:.2f} EUR")
 print(f"Method 2 (sum first, then convert): {total_eur_method2:.2f} EUR")
-print(f"Equal: {abs(total_eur_method1 - total_eur_method2) < 1e-9}")   # MSE
-example: mean = (1/N) * sum
+print(f"Equal: {abs(total_eur_method1 - total_eur_method2) < 1e-9}")
+
+# MSE example: mean = (1/N) * sum
 errors = [2.0, -1.5, 3.0, -0.5, 1.0]
 N = len(errors)
 mse_method1 = sum(e**2 for e in errors) / N
@@ -111,7 +116,9 @@ total_eur_method1 <- sum(EXCHANGE_RATE * usd_costs)  # convert each, then sum
 total_eur_method2 <- EXCHANGE_RATE * sum(usd_costs)  # sum first, then convert
 cat(sprintf("Method 1 (convert each, sum): %.2f EUR\n", total_eur_method1))
 cat(sprintf("Method 2 (sum, then convert): %.2f EUR\n", total_eur_method2))
-cat(sprintf("Equal: %s\n", isTRUE(all.equal(total_eur_method1, total_eur_method2))))  # Mean squared error
+cat(sprintf("Equal: %s\n", isTRUE(all.equal(total_eur_method1, total_eur_method2))))
+
+# Mean squared error
 errors <- c(2.0, -1.5, 3.0, -0.5, 1.0)
 n <- length(errors)
 mse <- (1 / n) * sum(errors^2)
@@ -122,16 +129,27 @@ cat(sprintf("\nMSE = (1/%d) * sum(e^2) = %.4f\n", n, mse))
 
 ```python
 import pandas as pd
-import numpy as np   # Scenario: compute per-unit metrics and currency-converted totals
+import numpy as np
+
+# Scenario: compute per-unit metrics and currency-converted totals
 # across multiple campaigns using constant extraction for efficiency
 np.random.seed(42)
 USD_TO_EUR = 0.92   # constant: does not depend on campaign
 USD_TO_GBP = 0.79   # constant: does not depend on campaign
-campaigns = pd.DataFrame({ "campaign": ["Alpha", "Beta", "Gamma", "Delta", "Epsilon"], "impressions": [120000, 85000, 200000, 95000, 150000], "clicks": [3600, 2125, 7000, 1900, 4500], "spend_usd": [4500.0, 3200.0, 8100.0, 2700.0, 5900.0], "conversions": [180, 95, 340, 88, 210],
-})   # Constant extraction: convert total spend once instead of per row
+campaigns = pd.DataFrame({
+    "campaign": ["Alpha", "Beta", "Gamma", "Delta", "Epsilon"],
+    "impressions": [120000, 85000, 200000, 95000, 150000],
+    "clicks": [3600, 2125, 7000, 1900, 4500],
+    "spend_usd": [4500.0, 3200.0, 8100.0, 2700.0, 5900.0],
+    "conversions": [180, 95, 340, 88, 210],
+})
+
+# Constant extraction: convert total spend once instead of per row
 # (both methods identical, but the rule explains WHY)
 campaigns["spend_eur"] = campaigns["spend_usd"] * USD_TO_EUR
-campaigns["spend_gbp"] = campaigns["spend_usd"] * USD_TO_GBP   # Per-unit metrics: divide total by N (constant 1/N extraction)
+campaigns["spend_gbp"] = campaigns["spend_usd"] * USD_TO_GBP
+
+# Per-unit metrics: divide total by N (constant 1/N extraction)
 total_spend_usd = campaigns["spend_usd"].sum()
 total_spend_eur_via_extraction = USD_TO_EUR * total_spend_usd   # C * sum
 total_spend_eur_direct = campaigns["spend_eur"].sum()   # sum of C*f(n)

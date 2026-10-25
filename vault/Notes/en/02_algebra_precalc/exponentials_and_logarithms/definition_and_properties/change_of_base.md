@@ -52,8 +52,7 @@ A data scientist computes decision tree entropy in bits using numpy:
 import numpy as np
 probs = np.array([0.7, 0.2, 0.1])
 entropy_bits = -np.sum(probs * np.log(probs) / np.log(2))   # change of base
-#
-Equivalent: entropy_bits = -np.sum(probs * np.log2(probs))
+# Equivalent: entropy_bits = -np.sum(probs * np.log2(probs))
 ```
 
 Every call to `log2` in numpy is `log(x) / log(2)` — the change-of-base formula applied silently.
@@ -108,15 +107,28 @@ $\log_8 512 = \frac{\log_2 512}{\log_2 8} = \frac{9}{3} = 3$. ✓
 ### Beginner example (Python)
 
 ```python
-# Change of base: log_a(x) =
-log_c(x) / log_c(a)
+# Change of base: log_a(x) = log_c(x) / log_c(a)
 import math
 
+import numpy as np
+
+
 def log_any_base(x: float, a: float) -> float:
-    """ Compute log_a(x) using natural log via change of base. Args: x: Argument (x > 0). a: Base (a > 0, a != 1). Returns: log_a(x) = ln(x) / ln(a). """
-    return math.log(x) / math.log(a)   # Verify against Python's built-in
-math.log(x, base)
-test_cases = [ (512.0, 8.0),   # log_8(512) = 3
+    """Compute log_a(x) using natural log via change of base.
+
+    Args:
+        x: Argument (x > 0).
+        a: Base (a > 0, a != 1).
+
+    Returns:
+        log_a(x) = ln(x) / ln(a).
+    """
+    return math.log(x) / math.log(a)
+
+
+# Verify against Python's built-in math.log(x, base)
+test_cases = [
+    (512.0, 8.0),   # log_8(512) = 3
     (100.0, 10.0),   # log_10(100) = 2
     (32.0, 2.0),   # log_2(32) = 5
     (27.0, 3.0),   # log_3(27) = 3
@@ -126,12 +138,12 @@ print("Change of base: log_a(x) = ln(x) / ln(a)")
 print(f"{'x':>8} {'a':>5} {'formula':>12} {'built-in':>12} {'match':>6}")
 for x, a in test_cases:
     formula = log_any_base(x, a)
-built_in = math.log(x, a)
-print(f"{x:>8.4f} {a:>5.2f} {formula:>12.8f} {built_in:>12.8f} {str(abs(formula - built_in) < 1e-10):>6}")   # Shannon entropy in bits using change of base
-import numpy as np
+    built_in = math.log(x, a)
+    print(f"{x:>8.4f} {a:>5.2f} {formula:>12.8f} {built_in:>12.8f} {str(abs(formula - built_in) < 1e-10):>6}")
+
+# Shannon entropy in bits using change of base
 probs = np.array([0.4, 0.3, 0.2, 0.1])
-log2_probs = np.log(probs) / np.log(2)   # change of base:
-ln(x)/ln(2)
+log2_probs = np.log(probs) / np.log(2)   # change of base: ln(x)/ln(2)
 log2_direct = np.log2(probs)   # built-in
 entropy_bits = -np.sum(probs * log2_probs)
 print(f"\nShannon entropy: H = -{', '.join(f'{p:.1f}' for p in probs)} dist")
@@ -139,13 +151,14 @@ print(f" log2 via change of base: {log2_probs.round(4)}")
 print(f" log2 direct: {log2_direct.round(4)}")
 print(f" Entropy (bits): {entropy_bits:.6f}")
 print(f" Entropy (nats): {-np.sum(probs * np.log(probs)):.6f}")
-print(f" Conversion check: nats × (1/ln2) = bits: {-np.sum(probs * np.log(probs)) / np.log(2):.6f}")   # Reciprocal identity: log_a(c) = 1 /
-log_c(a)
+print(f" Conversion check: nats × (1/ln2) = bits: {-np.sum(probs * np.log(probs)) / np.log(2):.6f}")
+
+# Reciprocal identity: log_a(c) = 1 / log_c(a)
 print(f"\nReciprocal identity: log_a(c) = 1 / log_c(a)")
 for a, c in [(2.0, 10.0), (math.e, 2.0), (10.0, math.e)]:
     forward = log_any_base(c, a)
-recipro = 1.0 / log_any_base(a, c)
-print(f" a={a:.4f} c={c:.4f} log_a(c)={forward:.6f} 1/log_c(a)={recipro:.6f} match={abs(forward - recipro) < 1e-10}")
+    recipro = 1.0 / log_any_base(a, c)
+    print(f" a={a:.4f} c={c:.4f} log_a(c)={forward:.6f} 1/log_c(a)={recipro:.6f} match={abs(forward - recipro) < 1e-10}")
 ```
 
 ### Beginner example (R)
@@ -155,17 +168,23 @@ print(f" a={a:.4f} c={c:.4f} log_a(c)={forward:.6f} 1/log_c(a)={recipro:.6f} mat
 log_any_base <- function(x, a) log(x) / log(a)
 test_cases <- list(c(512, 8), c(100, 10), c(32, 2), c(27, 3))
 cat(sprintf("%-8s %-5s %-12s %-12s %s\n", "x", "a", "formula", "built-in", "match"))
-for (tc in test_cases) { x <- tc[1]; a <- tc[2]
+for (tc in test_cases) {
+  x <- tc[1]; a <- tc[2]
   formula <- log_any_base(x, a)
   built_in <- log(x, base = a)
   cat(sprintf("%-8.4f %-5.2f %-12.8f %-12.8f %s\n", x, a, formula, built_in, abs(formula - built_in) < 1e-10))
-}  # Entropy in bits
+}
+
+# Entropy in bits
 probs <- c(0.4, 0.3, 0.2, 0.1)
 log2_probs <- log(probs) / log(2)  # change of base
 entropy_bits <- -sum(probs * log2_probs)
-cat(sprintf("\nShannon entropy (bits): %.6f\n", entropy_bits))  # Reciprocal identity
+cat(sprintf("\nShannon entropy (bits): %.6f\n", entropy_bits))
+
+# Reciprocal identity
 cat("\nReciprocal identity:\n")
-for (pair in list(c(2, 10), c(exp(1), 2))) { a <- pair[1]; c_val <- pair[2]
+for (pair in list(c(2, 10), c(exp(1), 2))) {
+  a <- pair[1]; c_val <- pair[2]
   cat(sprintf(" log_%.4f(%.4f) = %.6f 1/log_%.4f(%.4f) = %.6f match=%s\n", a, c_val, log_any_base(c_val, a), c_val, a, 1/log_any_base(a, c_val), abs(log_any_base(c_val, a) - 1/log_any_base(a, c_val)) < 1e-10))
 }
 ```
@@ -175,29 +194,66 @@ for (pair in list(c(2, 10), c(exp(1), 2))) { a <- pair[1]; c_val <- pair[2]
 ```python
 import numpy as np
 import pandas as pd
-import math   # Scenario: compute decision-tree entropy and information gain using log_2
+import math
+
+# Scenario: compute decision-tree entropy and information gain using log_2
 # via change of base, then validate conversion to nats and compare
 
+
 def entropy_bits(probs: np.ndarray) -> float:
-    """ Shannon entropy in bits: H = -sum p_k * log2(p_k). Uses change of base: log2(x) = ln(x) / ln(2). Args: probs: Probability vector (must sum to 1, entries > 0). Returns: Entropy in bits. """
+    """Shannon entropy in bits: H = -sum p_k * log2(p_k).
+
+    Uses change of base: log2(x) = ln(x) / ln(2).
+
+    Args:
+        probs: Probability vector (must sum to 1, entries > 0).
+
+    Returns:
+        Entropy in bits.
+    """
     safe_probs = probs[probs > 0]
     return -float(np.sum(safe_probs * np.log(safe_probs) / math.log(2)))
 
-def information_gain_bits( parent_probs: np.ndarray, splits: list[np.ndarray], split_weights: np.ndarray,
+
+def information_gain_bits(
+    parent_probs: np.ndarray,
+    splits: list[np.ndarray],
+    split_weights: np.ndarray,
 ) -> float:
-    """ Compute information gain (reduction in entropy) from a binary split. IG = H(parent) - sum_i w_i * H(child_i) Args: parent_probs: Class distribution of parent node. splits: List of class distributions for each child. split_weights: Fraction of samples in each child (sum to 1). Returns: Information gain in bits. """
+    """Compute information gain (reduction in entropy) from a binary split.
+
+    IG = H(parent) - sum_i w_i * H(child_i)
+
+    Args:
+        parent_probs: Class distribution of parent node.
+        splits: List of class distributions for each child.
+        split_weights: Fraction of samples in each child (sum to 1).
+
+    Returns:
+        Information gain in bits.
+    """
     h_parent = entropy_bits(parent_probs)
     h_weighted = float(np.sum([w * entropy_bits(p) for w, p in zip(split_weights, splits)]))
-    return h_parent - h_weighted   # Simulate a dataset split
+    return h_parent - h_weighted
+
+
+# Simulate a dataset split
 parent = np.array([0.5, 0.5])   # 50% class 0, 50% class 1
 child_left = np.array([0.8, 0.2])   # mostly class 0
 child_right = np.array([0.2, 0.8])   # mostly class 1
 weights = np.array([0.5, 0.5])   # equal split
 h_parent_bits = entropy_bits(parent)
 h_parent_nats = -float(np.sum(parent * np.log(parent)))
-ig_bits = information_gain_bits(parent, [child_left, child_right], weights)   # Verify: nats * (1/ln2) = bits
+ig_bits = information_gain_bits(parent, [child_left, child_right], weights)
+
+# Verify: nats * (1/ln2) = bits
 scale_nats_to_bits = 1.0 / math.log(2)
-report = pd.DataFrame({ "node": ["parent", "child_left", "child_right"], "H_bits": [entropy_bits(p) for p in [parent, child_left, child_right]], "H_nats": [-float(np.sum(p[p>0] * np.log(p[p>0]))) for p in [parent, child_left, child_right]], "scale_check": [entropy_bits(p) / (-float(np.sum(p[p>0] * np.log(p[p>0])))) for p in [parent, child_left, child_right]],
+nodes = [parent, child_left, child_right]
+report = pd.DataFrame({
+    "node": ["parent", "child_left", "child_right"],
+    "H_bits": [entropy_bits(p) for p in nodes],
+    "H_nats": [-float(np.sum(p[p>0] * np.log(p[p>0]))) for p in nodes],
+    "scale_check": [entropy_bits(p) / (-float(np.sum(p[p>0] * np.log(p[p>0])))) for p in nodes],
 })
 print("Decision Tree Entropy via Change of Base: log2(x) = ln(x)/ln(2)")
 print("=" * 72)
@@ -214,7 +270,11 @@ print(f"All scale_check values match: {(abs(report['scale_check'] - scale_nats_t
 # Entropy in nats vs bits: log2(x) = ln(x)/ln(2)
 probs <- list(c(0.5, 0.5), c(0.25, 0.75), c(0.1, 0.9))
 scale_nats_to_bits <- 1 / log(2)
-report <- do.call(rbind, lapply(probs, function(p) { p <- p[p > 0] H_nats <- -sum(p * log(p)) H_bits <- -sum(p * log(p) / log(2)) data.frame(H_nats = H_nats, H_bits = H_bits, scale_check = H_bits / H_nats)
+report <- do.call(rbind, lapply(probs, function(p) {
+  p <- p[p > 0]
+  H_nats <- -sum(p * log(p))
+  H_bits <- -sum(p * log(p) / log(2))
+  data.frame(H_nats = H_nats, H_bits = H_bits, scale_check = H_bits / H_nats)
 }))
 cat("Change of base: log2(x) = ln(x)/ln(2)\n")
 print(report)

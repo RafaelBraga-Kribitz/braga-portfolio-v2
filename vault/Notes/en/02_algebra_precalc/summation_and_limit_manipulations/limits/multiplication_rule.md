@@ -83,18 +83,20 @@ $\lim_{x \to 2} (x+3)(x^2) = 5 \times 4 = 20$. Verify: $(2+3)(2^2) = 5 \times 4 
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # Limit product rule:
-lim[f(x) * g(x)] = lim
-f(x) * lim
-g(x)
-# Verify numerically by approaching
-a = 2
+import numpy as np
+
+# Limit product rule: lim[f(x) * g(x)] = lim f(x) * lim g(x)
+# Verify numerically by approaching a = 2
+
 
 def f(x: float) -> float:
     return x + 3.0
 
+
 def g(x: float) -> float:
     return x ** 2
+
+
 TARGET_A = 2.0
 epsilons = [0.1, 0.01, 0.001, 0.0001]
 lim_f = f(TARGET_A)   # limit of f as x->2
@@ -108,16 +110,15 @@ print(f"{'epsilon':>10} | {'f*g at a+eps':>15} | {'matches prediction':>18}")
 print("-" * 50)
 for eps in epsilons:
     x_val = TARGET_A + eps
-product_at_x = f(x_val) * g(x_val)
-print(f"{eps:>10.4f} | {product_at_x:>15.8f} | {abs(product_at_x - predicted_product) < 0.01}")
+    product_at_x = f(x_val) * g(x_val)
+    print(f"{eps:>10.4f} | {product_at_x:>15.8f} | {abs(product_at_x - predicted_product) < 0.01}")
 print(f"\nAs eps -> 0, f*g -> {predicted_product}. Rule confirmed.")
 ```
 
 ### Beginner example (R)
 
 ```r
-# Limit product rule:
-lim[f(x) * g(x)] = lim f(x) * lim g(x)
+# Limit product rule: lim[f(x) * g(x)] = lim f(x) * lim g(x)
 f <- function(x) x + 3
 g <- function(x) x^2
 TARGET_A <- 2
@@ -127,7 +128,8 @@ lim_g <- g(TARGET_A)
 cat(sprintf("lim f = %.1f, lim g = %.1f, product of limits = %.1f\n\n", lim_f, lim_g, lim_f * lim_g))
 cat(sprintf("%10s | %15s\n", "epsilon", "f*g at a+eps"))
 cat(strrep("-", 30), "\n")
-for (eps in epsilons) { x_val <- TARGET_A + eps
+for (eps in epsilons) {
+  x_val <- TARGET_A + eps
   cat(sprintf("%10.4f | %15.8f\n", eps, f(x_val) * g(x_val)))
 }
 ```
@@ -136,9 +138,10 @@ for (eps in epsilons) { x_val <- TARGET_A + eps
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: analyzing decay of a compound learning rate schedule
-# eta(t) = eta_0 *
-decay_A(t) * decay_B(t)
+import pandas as pd
+
+# Scenario: analyzing decay of a compound learning rate schedule
+# eta(t) = eta_0 * decay_A(t) * decay_B(t)
 # Both factors -> 0 as t -> infinity
 # Product rule: lim eta(t) = eta_0 * lim decay_A * lim decay_B
 INITIAL_LR = 0.1
@@ -148,10 +151,18 @@ steps = np.array([0, 10, 50, 100, 200, 500, 1000])
 records = []
 for t in steps:
     factor_a = DECAY_A ** t
-factor_b = DECAY_B ** t
-combined = INITIAL_LR * factor_a * factor_b   # Product rule: separately analyze then multiply
-combined_via_rule = INITIAL_LR * (DECAY_A * DECAY_B) ** t
-records.append({ "step": t, "factor_A": round(factor_a, 8), "factor_B": round(factor_b, 8), "eta_direct": round(combined, 10), "eta_via_rule": round(combined_via_rule, 10), "agree": np.isclose(combined, combined_via_rule), })
+    factor_b = DECAY_B ** t
+    combined = INITIAL_LR * factor_a * factor_b
+    # Product rule: separately analyze then multiply
+    combined_via_rule = INITIAL_LR * (DECAY_A * DECAY_B) ** t
+    records.append({
+        "step": t,
+        "factor_A": round(factor_a, 8),
+        "factor_B": round(factor_b, 8),
+        "eta_direct": round(combined, 10),
+        "eta_via_rule": round(combined_via_rule, 10),
+        "agree": np.isclose(combined, combined_via_rule),
+    })
 df = pd.DataFrame(records)
 print("Compound Learning Rate Decay: Limit Product Rule")
 print(f"eta(t) = {INITIAL_LR} * {DECAY_A}^t * {DECAY_B}^t")

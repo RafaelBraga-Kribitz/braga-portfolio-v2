@@ -129,17 +129,23 @@ def implicit_slope(x: float, y: float) -> float:
     fy = f_y(x, y)
     if abs(fy) < 1e-10:
         raise ValueError(f"F_y ≈ 0 at ({x},{y}): vertical tangent, dy/dx undefined")
-    return -f_x(x, y) / fy   # Test points on the unit circle
-test_points = [ (1.0 / np.sqrt(2), 1.0 / np.sqrt(2)),   # 45 degrees
-    (0.5, np.sqrt(0.75)),   # 60 degrees
-    (0.0, 1.0),   # 90 degrees: F_y =
-    2, F_x = 0 -> slope = 0 ]
+    return -f_x(x, y) / fy
+
+
+# Test points on the unit circle
+test_points = [
+    (1.0 / np.sqrt(2), 1.0 / np.sqrt(2)),   # 45 degrees
+    (0.5, np.sqrt(0.75)),                   # 60 degrees
+    (0.0, 1.0),                             # 90 degrees: F_y = 2, F_x = 0 -> slope = 0
+]
 print("Implicit differentiation on unit circle (x^2 + y^2 = 1):")
 print(f" {'(x, y)':>26} | {'On curve?':>10} | {'dy/dx':>10}")
 for x0, y0 in test_points:
     on_curve = abs(big_f(x0, y0)) < 1e-8
-slope = implicit_slope(x0, y0)
-print(f" ({x0:>8.5f}, {y0:>8.5f}) | {str(on_curve):>10} | {slope:>10.5f}")   # Numerical check: perturb along the curve, measure slope
+    slope = implicit_slope(x0, y0)
+    print(f" ({x0:>8.5f}, {y0:>8.5f}) | {str(on_curve):>10} | {slope:>10.5f}")
+
+# Numerical check: perturb along the curve, measure slope
 x0, y0 = test_points[0]
 dx = 1e-6
 y1 = np.sqrt(max(0, 1.0 - (x0 + dx)**2))   # stay on circle
@@ -155,10 +161,17 @@ print(f" Numerical slope: {numerical_slope:.6f}")
 big_f <- function(x, y) x^2 + y^2 - 1  # unit circle
 f_x_fn <- function(x, y) 2 * x
 f_y_fn <- function(x, y) 2 * y
-implicit_slope <- function(x, y) -f_x_fn(x, y) / f_y_fn(x, y)  # Test points on the unit circle
-test_points <- list( c(1/sqrt(2), 1/sqrt(2)),  # 45 degrees c(0.5, sqrt(0.75)), # 60 degrees c(0, 1) # 90 degrees
-) cat("Implicit differentiation on unit circle:\n")
-for (pt in test_points) { x0 <- pt[1]; y0 <- pt[2]
+implicit_slope <- function(x, y) -f_x_fn(x, y) / f_y_fn(x, y)
+
+# Test points on the unit circle
+test_points <- list(
+  c(1/sqrt(2), 1/sqrt(2)),  # 45 degrees
+  c(0.5, sqrt(0.75)),       # 60 degrees
+  c(0, 1)                   # 90 degrees
+)
+cat("Implicit differentiation on unit circle:\n")
+for (pt in test_points) {
+  x0 <- pt[1]; y0 <- pt[2]
   on_curve <- abs(big_f(x0, y0)) < 1e-8
   slope <- implicit_slope(x0, y0)
   cat(sprintf(" (%.5f, %.5f): on curve=%s, dy/dx = %.5f\n", x0, y0, on_curve, slope))

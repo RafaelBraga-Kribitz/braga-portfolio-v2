@@ -103,27 +103,38 @@ $\frac{4 \cdot 1 \cdot 1}{5 \cdot 4 \cdot 3} = \frac{4}{60} = \frac{1}{15}$. ✓
 ### Beginner example (Python)
 
 ```python
-# Fraction multiplication in Python from fractions import Fraction
+# Fraction multiplication in Python
+from fractions import Fraction
+
 # Basic: a/b × c/d
 a, b = 3, 10   # 30% click-through on ad
-c, d = 1, 4   # 25% conversion of those who click
-numerator = a * c   # ac
-denominator = b * d   # bd print(f"Manual: ({a}×{c}) / ({b}×{d}) = {numerator}/{denominator} = {numerator/denominator:.4f}") # Python Fraction (auto-simplifies)
+c, d = 1, 4    # 25% conversion of those who click
+numerator = a * c     # ac
+denominator = b * d   # bd
+print(f"Manual: ({a}×{c}) / ({b}×{d}) = {numerator}/{denominator} = {numerator/denominator:.4f}")
+
+# Python Fraction (auto-simplifies)
 frac_1 = Fraction(a, b)
 frac_2 = Fraction(c, d)
 result = frac_1 * frac_2
 print(f"Fraction class: {frac_1} × {frac_2} = {result} ({float(result):.4f})")
-print(f"Simplified: {float(result):.1%}")   # Funnel chain: 3 stages
+print(f"Simplified: {float(result):.1%}")
+
+# Funnel chain: 3 stages
 deliverability = Fraction(4, 5)   # 80%
-open_rate = Fraction(1, 4)   # 25%
-ctr = Fraction(1, 3)   # 33%
+open_rate = Fraction(1, 4)        # 25%
+ctr = Fraction(1, 3)              # 33%
 end_to_end = deliverability * open_rate * ctr
 print(f"\nFunnel chain:")
 print(f" deliverability × open rate × CTR")
-print(f" {deliverability} × {open_rate} × {ctr} = {end_to_end} = {float(end_to_end):.4f}")   # Compound probability (independent events)
+print(f" {deliverability} × {open_rate} × {ctr} = {end_to_end} = {float(end_to_end):.4f}")
+
+# Compound probability (independent events)
 import numpy as np
 np.random.seed(42)
-N = 100_000   # Simulate: P(A) = 0.3, P(B) = 0.25, independent
+N = 100_000
+
+# Simulate: P(A) = 0.3, P(B) = 0.25, independent
 event_a = np.random.rand(N) < 0.30
 event_b = np.random.rand(N) < 0.25
 both_occur = (event_a & event_b).mean()
@@ -136,22 +147,27 @@ print(f" Simulated P(A ∩ B) = {both_occur:.4f} (close to {theoretical:.4f})")
 ### Beginner example (R)
 
 ```r
-# Fraction multiplication in R # Basic fraction multiplication
+# Fraction multiplication in R
+# Basic fraction multiplication
 a <- 3; b <- 10  # 30%
 c <- 1; d <- 4  # 25%
 numerator <- a * c
 denominator <- b * d
-cat(sprintf("(%d×%d) / (%d×%d) = %d/%d = %.4f\n", a, c, b, d, numerator, denominator, numerator / denominator))  # Simplify with GCD
-gcd <- function(x, y)
-if (y == 0) x
-else gcd(y, x %% y)
+cat(sprintf("(%d×%d) / (%d×%d) = %d/%d = %.4f\n", a, c, b, d, numerator, denominator, numerator / denominator))
+
+# Simplify with GCD
+gcd <- function(x, y) if (y == 0) x else gcd(y, x %% y)
 g <- gcd(numerator, denominator)
-cat(sprintf("Simplified: %d/%d\n", numerator / g, denominator / g))  # Funnel chain
+cat(sprintf("Simplified: %d/%d\n", numerator / g, denominator / g))
+
+# Funnel chain
 deliverability <- 4/5
 open_rate <- 1/4
 ctr <- 1/3
 end_to_end <- deliverability * open_rate * ctr
-cat(sprintf("\nFunnel chain: %.4f × %.4f × %.4f = %.4f (%.1f%%)\n", deliverability, open_rate, ctr, end_to_end, end_to_end * 100))  # Compound probability simulation
+cat(sprintf("\nFunnel chain: %.4f × %.4f × %.4f = %.4f (%.1f%%)\n", deliverability, open_rate, ctr, end_to_end, end_to_end * 100))
+
+# Compound probability simulation
 set.seed(42)
 N <- 100000
 p_a <- 0.30
@@ -217,7 +233,11 @@ page_visits <- 4000
 add_to_cart <- 6000
 checkouts <- 2400
 purchases <- 1800
-funnel <- data.frame( stage = c("impressions → clicks", "clicks → page_visits", "page_visits → add_to_cart", "add_to_cart → checkouts", "checkouts → purchases"), n_in = c(impressions, clicks, page_visits, add_to_cart, checkouts), n_out = c(clicks, page_visits, add_to_cart, checkouts, purchases)
+funnel <- data.frame(
+  stage = c("impressions → clicks", "clicks → page_visits", "page_visits → add_to_cart",
+            "add_to_cart → checkouts", "checkouts → purchases"),
+  n_in = c(impressions, clicks, page_visits, add_to_cart, checkouts),
+  n_out = c(clicks, page_visits, add_to_cart, checkouts, purchases)
 )
 funnel$rate <- funnel$n_out / funnel$n_in
 funnel$below_20pct <- funnel$rate < 0.20

@@ -99,8 +99,9 @@ a_values = [7, -3, 0.5, -100, 0]
 print("Verifying a + (-a) == 0:")
 for a in a_values:
     result = a + (-a)
-print(f" {a} + ({-a}) = {result} | zero: {result == 0}")   # Mean-centering: sum of
-deviations = 0
+    print(f" {a} + ({-a}) = {result} | zero: {result == 0}")
+
+# Mean-centering: sum of deviations = 0
 data = [2.0, 4.0, 6.0, 8.0, 10.0]
 mean_val = sum(data) / len(data)
 centered = [x - mean_val for x in data]   # x + (-mean) for each x
@@ -116,9 +117,12 @@ print(f"Sum of centered (should be 0): {sum(centered):.10f}")
 # Additive inverse: a + (-a) = 0
 a_values <- c(7, -3, 0.5, -100, 0)
 cat("Verifying a + (-a) == 0:\n")
-for (a in a_values) { result <- a + (-a)
+for (a in a_values) {
+  result <- a + (-a)
   cat(sprintf(" %.1f + (%.1f) = %.1f | zero: %s\n", a, -a, result, result == 0))
-}  # Mean-centering
+}
+
+# Mean-centering
 data_vec <- c(2, 4, 6, 8, 10)
 mean_val <- mean(data_vec)
 centered <- data_vec - mean_val
@@ -131,20 +135,40 @@ cat(sprintf("Sum of centered (should be 0): %.10f\n", sum(centered)))
 
 ```python
 import pandas as pd
-import numpy as np   # Scenario: OLS residuals sum to zero (additive inverse property)
+import numpy as np
+
+# Scenario: OLS residuals sum to zero (additive inverse property)
 # and gradient descent as addition of negative gradient
 np.random.seed(42)
-n = 200   # Simulate data: revenue ~ beta_0 + beta_1 * spend + noise
+n = 200
+
+# Simulate data: revenue ~ beta_0 + beta_1 * spend + noise
 spend = np.random.uniform(100, 5_000, n)
 true_beta_0, true_beta_1 = 500.0, 2.3
-revenue = true_beta_0 + true_beta_1 * spend + np.random.normal(0, 300, n)   # OLS via normal equations:
-beta_hat = (X'X)^{-1} X'y X = np.column_stack([np.ones(n), spend]) beta_hat = np.linalg.solve(X.T @ X, X.T @ revenue) y_hat = X @ beta_hat residuals = revenue - y_hat   # y_i +
-    (-y_hat_i): additive inverse print("OLS Residuals (Additive Inverse Property)") print("=" * 44) print(f" True coefficients: β₀={true_beta_0:.1f}, β₁={true_beta_1:.2f}") print(f" Estimated: β₀={beta_hat[0]:.2f}, β₁={beta_hat[1]:.4f}") print(f" Sum of residuals: {residuals.sum():.2e} ← should be ≈ 0") print(f" Mean of residuals: {residuals.mean():.2e} ← should be ≈ 0") print()   # Gradient descent as addition of negative gradient
-    (additive inverse) theta = np.array([0.0, 0.0])   # initialize
-    alpha = 1e-7   # learning rate
-    print("Gradient Descent (theta += -alpha * gradient)") for step in range(5): gradient = -2 * X.T @ (revenue - X @ theta) / n theta = theta + (-alpha * gradient)   # addition of inverse loss = np.mean((revenue - X @ theta) **
-    2)
-print(f" Step {step+1}: θ={theta.round(4)}, MSE={loss:,.1f}")
+revenue = true_beta_0 + true_beta_1 * spend + np.random.normal(0, 300, n)
+
+# OLS via normal equations: beta_hat = (X'X)^{-1} X'y
+X = np.column_stack([np.ones(n), spend])
+beta_hat = np.linalg.solve(X.T @ X, X.T @ revenue)
+y_hat = X @ beta_hat
+residuals = revenue - y_hat   # y_i + (-y_hat_i): additive inverse
+print("OLS Residuals (Additive Inverse Property)")
+print("=" * 44)
+print(f" True coefficients: β₀={true_beta_0:.1f}, β₁={true_beta_1:.2f}")
+print(f" Estimated: β₀={beta_hat[0]:.2f}, β₁={beta_hat[1]:.4f}")
+print(f" Sum of residuals: {residuals.sum():.2e} ← should be ≈ 0")
+print(f" Mean of residuals: {residuals.mean():.2e} ← should be ≈ 0")
+print()
+
+# Gradient descent as addition of negative gradient (additive inverse)
+theta = np.array([0.0, 0.0])   # initialize
+alpha = 1e-7   # learning rate
+print("Gradient Descent (theta += -alpha * gradient)")
+for step in range(5):
+    gradient = -2 * X.T @ (revenue - X @ theta) / n
+    theta = theta + (-alpha * gradient)   # addition of inverse
+    loss = np.mean((revenue - X @ theta) ** 2)
+    print(f" Step {step+1}: θ={theta.round(4)}, MSE={loss:,.1f}")
 ```
 
 ### Professional example (R)
@@ -158,7 +182,8 @@ revenue <- X %*% c(50, 2) + rnorm(n, 0, 20)
 theta <- c(0, 0)
 alpha <- 1e-7
 cat("Gradient Descent (theta += -alpha * gradient)\n")
-for (step in 1:5) { gradient <- -2 * t(X) %*% (revenue - X %*% theta) / n
+for (step in 1:5) {
+  gradient <- -2 * t(X) %*% (revenue - X %*% theta) / n
   theta <- theta + (-alpha * gradient)
   loss <- mean((revenue - X %*% theta)^2)
   cat(sprintf(" Step %d: θ=(%.4f, %.4f), MSE=%.1f\n", step, theta[1], theta[2], loss))

@@ -99,29 +99,32 @@ import numpy as np
 print("Standard Limit: lim_{x->0} ln(1+x)/x = 1")
 print(f"\n{'x':>12} {'ln(1+x)/x':>14} {'Error from 1':>14}")
 for x in [0.5, 0.1, 0.01, 0.001, 1e-6, 1e-10]:
-    ratio = np.log1p(x) / x   # log1p is numerically stable
-error = abs(ratio - 1.0)
-print(f"{x:>12.4e} {ratio:>14.9f} {error:>14.2e}")   # Log-return vs simple
-return comparison
+    ratio = np.log1p(x) / x  # log1p is numerically stable
+    error = abs(ratio - 1.0)
+    print(f"{x:>12.4e} {ratio:>14.9f} {error:>14.2e}")
+
+# Log-return vs simple return comparison
 print(f"\n--- Log-return vs simple return: ln(1+r) ≈ r for small r ---")
 print(f"{'r_simple (%)':>14} {'r_simple':>10} {'r_log':>10} {'approx error':>14} {'2nd order -r^2/2':>18}")
 for r_pct in [50.0, 20.0, 10.0, 5.0, 1.0, 0.1, 0.01]:
     r = r_pct / 100.0
-r_log = np.log1p(r)
-approx_err = abs(r_log - r)
-second_order = r**2 / 2
-print(f"{r_pct:>14.2f} {r:>10.5f} {r_log:>10.5f} {approx_err:>14.6e} {second_order:>18.6e}")   # KL divergence approximation via log linearization
+    r_log = np.log1p(r)
+    approx_err = abs(r_log - r)
+    second_order = r**2 / 2
+    print(f"{r_pct:>14.2f} {r:>10.5f} {r_log:>10.5f} {approx_err:>14.6e} {second_order:>18.6e}")
+
+# KL divergence approximation via log linearization
 print(f"\n--- KL div approx: ln(p/q) ≈ (p-q)/q for p≈q ---")
-q = np.array([0.3, 0.4, 0.3])   # reference distribution
+q = np.array([0.3, 0.4, 0.3])  # reference distribution
 perturbations = [0.1, 0.01, 0.001, 0.0001]
 print(f"{'epsilon':>10} {'True KL':>12} {'Chi2 approx':>14} {'Relative err':>14}")
 for eps in perturbations:
     p = q + eps * np.array([1, -2, 1])
-p = p / p.sum()   # renormalize
-kl_true = float(np.sum(p * np.log(p / q)))
-kl_chi2 = float(0.5 * np.sum((p - q)**2 / q))
-rel_err = abs(kl_true - kl_chi2) / max(kl_true, 1e-15)
-print(f"{eps:>10.4f} {kl_true:>12.8f} {kl_chi2:>14.8f} {rel_err:>14.4f}")
+    p = p / p.sum()  # renormalize
+    kl_true = float(np.sum(p * np.log(p / q)))
+    kl_chi2 = float(0.5 * np.sum((p - q)**2 / q))
+    rel_err = abs(kl_true - kl_chi2) / max(kl_true, 1e-15)
+    print(f"{eps:>10.4f} {kl_true:>12.8f} {kl_chi2:>14.8f} {rel_err:>14.4f}")
 ```
 
 ### Beginner example (R)
@@ -130,13 +133,17 @@ print(f"{eps:>10.4f} {kl_true:>12.8f} {kl_chi2:>14.8f} {rel_err:>14.4f}")
 # Standard limit: lim_{x->0} ln(1+x)/x = 1
 cat("Standard Limit: lim_{x->0} ln(1+x)/x = 1\n\n")
 cat(sprintf("%-12s %-14s %-14s\n", "x", "log1p(x)/x", "Error from 1"))
-for (x in c(0.5, 0.1, 0.01, 0.001, 1e-6, 1e-10)) { ratio <- log1p(x) / x  # log1p is available in base R
+for (x in c(0.5, 0.1, 0.01, 0.001, 1e-6, 1e-10)) {
+  ratio <- log1p(x) / x  # log1p is available in base R
   error <- abs(ratio - 1.0)
   cat(sprintf("%-12.4e %-14.9f %-14.2e\n", x, ratio, error))
-}  # Log-return approximation
+}
+
+# Log-return approximation
 cat("\n--- Log-return ≈ simple return for small r ---\n")
 cat(sprintf("%-14s %-10s %-10s %-14s\n", "r_simple (%)", "r_simple", "r_log", "error"))
-for (r_pct in c(50, 20, 10, 5, 1, 0.1)) { r <- r_pct / 100
+for (r_pct in c(50, 20, 10, 5, 1, 0.1)) {
+  r <- r_pct / 100
   r_log <- log1p(r)
   err <- abs(r_log - r)
   cat(sprintf("%-14.2f %-10.5f %-10.5f %-14.6e\n", r_pct, r, r_log, err))
@@ -149,7 +156,9 @@ for (r_pct in c(50, 20, 10, 5, 1, 0.1)) { r <- r_pct / 100
 import numpy as np
 from sklearn.datasets import make_classification
 from sklearn.preprocessing import StandardScaler
-np.random.seed(42)   # -- Log limit ln(1+x)/x = 1: stable KL divergence computation for model comparison --
+np.random.seed(42)
+
+# -- Log limit ln(1+x)/x = 1: stable KL divergence computation for model comparison --
 # Use case: A DS compares two probabilistic classifiers by computing the
 # KL divergence between their softmax output distributions on a held-out set.
 # Uses log1p-based stable computation and demonstrates the chi^2 approximation
@@ -160,31 +169,47 @@ TEMPERATURE1 = 1.0   # model A temperature
 TEMPERATURE2 = 1.5   # model B temperature (softer predictions)
 
 def stable_kl_divergence(p: np.ndarray, q: np.ndarray, eps: float = 1e-12) -> float:
-    """ KL(P||Q) = sum_i p_i * ln(p_i/q_i) Using log1p form: ln(p_i/q_i) = log1p((p_i - q_i)/q_i) for numerical stability. """
+    """KL(P||Q) = sum_i p_i * ln(p_i/q_i).
+
+    Using log1p form: ln(p_i/q_i) = log1p((p_i - q_i)/q_i) for numerical stability.
+    """
     p_safe = np.clip(p, eps, 1.0)
-    q_safe = np.clip(q, eps, 1.0)   # Normalize
+    q_safe = np.clip(q, eps, 1.0)
+    # Normalize
     p_safe /= p_safe.sum(axis=-1, keepdims=True)
-    q_safe /= q_safe.sum(axis=-1, keepdims=True)   # log(p/q) =
-    log1p((p-q)/q) -- uses
-    ln(1+x)/x ≈ 1
-    for tiny (p-q)/q
-    log_ratio = np.where( np.abs(p_safe - q_safe) < 1e-10, np.zeros_like(p_safe), np.log(p_safe / q_safe) )
+    q_safe /= q_safe.sum(axis=-1, keepdims=True)
+    # log(p/q) = log1p((p-q)/q) -- uses ln(1+x)/x ≈ 1 for tiny (p-q)/q
+    log_ratio = np.where(
+        np.abs(p_safe - q_safe) < 1e-10, np.zeros_like(p_safe), np.log(p_safe / q_safe)
+    )
     return float(np.sum(p_safe * log_ratio, axis=-1).mean())
 
+
 def chi2_approx_kl(p: np.ndarray, q: np.ndarray, eps: float = 1e-12) -> float:
-    """ Chi-squared approximation of KL for similar distributions. KL(P||Q) ≈ 0.5 * sum((p-q)^2 / q) [from ln(1+(p-q)/q) ≈ (p-q)/q - (p-q)^2/(2q^2)] Valid when (p-q)/q is small. """
+    """Chi-squared approximation of KL for similar distributions.
+
+    KL(P||Q) ≈ 0.5 * sum((p-q)^2 / q)
+    [from ln(1+(p-q)/q) ≈ (p-q)/q - (p-q)^2/(2q^2)]
+    Valid when (p-q)/q is small.
+    """
     q_safe = np.clip(q, eps, 1.0)
     q_safe /= q_safe.sum(axis=-1, keepdims=True)
     p_safe = np.clip(p, eps, 1.0)
     p_safe /= p_safe.sum(axis=-1, keepdims=True)
-    return float((0.5 * np.sum((p_safe - q_safe)**2 / q_safe, axis=-1)).mean())   # Generate mock softmax outputs from two temperature-scaled models
+    return float((0.5 * np.sum((p_safe - q_safe)**2 / q_safe, axis=-1)).mean())
+
+
+# Generate mock softmax outputs from two temperature-scaled models
 logits = np.random.randn(N_SAMPLES, N_CLASSES)
+
 
 def softmax_temp(logits: np.ndarray, temp: float) -> np.ndarray:
     z = logits / temp
     z -= z.max(axis=1, keepdims=True)
     exp_z = np.exp(z)
     return exp_z / exp_z.sum(axis=1, keepdims=True)
+
+
 p_dist = softmax_temp(logits, TEMPERATURE1)   # model A (sharper)
 q_dist = softmax_temp(logits, TEMPERATURE2)   # model B (softer)
 kl_true = stable_kl_divergence(p_dist, q_dist)
@@ -194,16 +219,18 @@ print(f"\nModels: {N_SAMPLES} samples, {N_CLASSES} classes")
 print(f"Temperature A = {TEMPERATURE1}, Temperature B = {TEMPERATURE2}")
 print(f"\nKL(P||Q) true (stable log): {kl_true:.6f}")
 print(f"KL(P||Q) chi2 approx: {kl_chi2:.6f}")
-print(f"Relative error of approximation: {abs(kl_true-kl_chi2)/kl_true:.4f}")   # Vary temperature gap to show approximation quality vs gap size
+print(f"Relative error of approximation: {abs(kl_true-kl_chi2)/kl_true:.4f}")
+
+# Vary temperature gap to show approximation quality vs gap size
 print(f"\n--- Approximation quality vs temperature difference ---")
 print(f"{'T_B':>6} {'KL true':>10} {'Chi2 approx':>12} {'Rel error':>12} {'Max (p-q)/q':>14}")
 for temp_b in [1.01, 1.05, 1.1, 1.2, 1.5, 2.0, 3.0]:
     q_t = softmax_temp(logits, temp_b)
-kl_t = stable_kl_divergence(p_dist, q_t)
-kl_c = chi2_approx_kl(p_dist, q_t)
-rel_e = abs(kl_t - kl_c) / max(kl_t, 1e-10)
-max_dq = float(np.abs((p_dist - q_t) / q_t).max())
-print(f"{temp_b:>6.2f} {kl_t:>10.6f} {kl_c:>12.6f} {rel_e:>12.4f} {max_dq:>14.4f}")
+    kl_t = stable_kl_divergence(p_dist, q_t)
+    kl_c = chi2_approx_kl(p_dist, q_t)
+    rel_e = abs(kl_t - kl_c) / max(kl_t, 1e-10)
+    max_dq = float(np.abs((p_dist - q_t) / q_t).max())
+    print(f"{temp_b:>6.2f} {kl_t:>10.6f} {kl_c:>12.6f} {rel_e:>12.4f} {max_dq:>14.4f}")
 print(f"\nKey: when max|(p-q)/q| is small (models close), chi2 approx is accurate.")
 print(f"The approximation uses ln(1+(p-q)/q) ≈ (p-q)/q [standard log limit with x=(p-q)/q].")
 ```

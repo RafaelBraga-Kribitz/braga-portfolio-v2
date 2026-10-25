@@ -90,21 +90,29 @@ All elements satisfy $\lnot P$. $\therefore \; \nexists x \in \{1, 2, 3, 4\}: x 
 ### Beginner example (Python)
 
 ```python
-# ∄ x in S: P(x) corresponds to not
-any(P(x) for x in S)
+# ∄ x in S: P(x) corresponds to not any(P(x) for x in S)
+import pandas as pd
+
 domain = [1, 2, 3, 4]
-property_p = lambda x: x > 10   # ∄ check
+property_p = lambda x: x > 10
+
+# ∄ check
 result = not any(property_p(x) for x in domain)
-print(f"∄ x in {domain}: x > 10 => {result}")   # True # ∀ ¬ check (equivalent)
+print(f"∄ x in {domain}: x > 10 => {result}")   # True
+
+# ∀ ¬ check (equivalent)
 result_forall = all(not property_p(x) for x in domain)
 print(f"∀ x in {domain}: x <= 10 => {result_forall}")   # True (same)
-print(f"Both equivalent: {result == result_forall}")   # Introduce a counterexample
+print(f"Both equivalent: {result == result_forall}")
+
+# Introduce a counterexample
 domain2 = [1, 2, 15, 4]
 result2 = not any(property_p(x) for x in domain2)
 print(f"\n∄ x in {domain2}: x > 10 => {result2}")   # False (15 > 10)
 counterexample = next(x for x in domain2 if property_p(x))
-print(f"Counterexample: x = {counterexample} (violates ∄)")   # Pandas: no null values in a column
-import pandas as pd
+print(f"Counterexample: x = {counterexample} (violates ∄)")
+
+# Pandas: no null values in a column
 df = pd.DataFrame({"order_id": [1, 2, 3, 4, 5]})
 no_nulls = not df["order_id"].isna().any()   # ∄ null
 print(f"\n∄ null in order_id: {no_nulls}")   # True
@@ -117,14 +125,20 @@ print(f"\n∄ null in order_id: {no_nulls}")   # True
 domain <- c(1, 2, 3, 4)
 property_p <- function(x) x > 10  # ∄ check
 result <- !any(property_p(domain))
-cat(sprintf("∄ x in {1,2,3,4}: x > 10 => %s\n", result))  # TRUE # ∀ ¬ (equivalent)
+cat(sprintf("∄ x in {1,2,3,4}: x > 10 => %s\n", result))  # TRUE
+
+# ∀ ¬ (equivalent)
 result_forall <- all(!property_p(domain))
-cat(sprintf("∀ x: x <= 10 => %s (same: %s)\n", result_forall, result == result_forall))  # Counterexample
+cat(sprintf("∀ x: x <= 10 => %s (same: %s)\n", result_forall, result == result_forall))
+
+# Counterexample
 domain2 <- c(1, 2, 15, 4)
 result2 <- !any(property_p(domain2))
 cat(sprintf("∄ x in {1,2,15,4}: x > 10 => %s\n", result2))  # FALSE
 counterex <- domain2[property_p(domain2)][1]
-cat(sprintf("Counterexample: x = %d\n", counterex))  # No nulls in a vector
+cat(sprintf("Counterexample: x = %d\n", counterex))
+
+# No nulls in a vector
 order_ids <- c(1, 2, 3, 4, 5)
 no_nulls <- !any(is.na(order_ids))
 cat(sprintf("\n∄ null in order_ids: %s\n", no_nulls))  # TRUE
@@ -134,36 +148,54 @@ cat(sprintf("\n∄ null in order_ids: %s\n", no_nulls))  # TRUE
 
 ```python
 import pandas as pd
-import numpy as np   # Scenario: post-ETL data pipeline validation
+import numpy as np
+
+# Scenario: post-ETL data pipeline validation
 # Invariants that must all be ∄ violations after processing
 np.random.seed(42)
-N_ROWS = 2_000   # Simulate a processed orders table
-df = pd.DataFrame({ "order_id": range(1, N_ROWS + 1), "user_id": np.random.randint(1, 500, size=N_ROWS), "amount": np.random.exponential(50, size=N_ROWS), "status": np.random.choice(["completed", "pending", "cancelled"], size=N_ROWS),
-})   # Introduce deliberate violations to test our checks
+N_ROWS = 2_000
+
+# Simulate a processed orders table
+df = pd.DataFrame({
+    "order_id": range(1, N_ROWS + 1),
+    "user_id": np.random.randint(1, 500, size=N_ROWS),
+    "amount": np.random.exponential(50, size=N_ROWS),
+    "status": np.random.choice(["completed", "pending", "cancelled"], size=N_ROWS),
+})
+
+# Introduce deliberate violations to test our checks
 df.loc[5, "order_id"] = df.loc[4, "order_id"]   # duplicate order_id
 df.loc[10, "user_id"] = None   # null user_id
-df.loc[15, "amount"] = -25.0   # negative amount # ∄ violation checks (all should be False in a clean dataset)
-checks = { "∄ duplicate order_id": df["order_id"].duplicated().any(), "∄ null user_id": df["user_id"].isna().any(), "∄ negative amount": (df["amount"] < 0).any(), "∄ unknown status": ~df["status"].isin(["completed", "pending", "cancelled"]).all(),
+df.loc[15, "amount"] = -25.0   # negative amount
+
+# ∄ violation checks (all should be False in a clean dataset)
+checks = {
+    "∄ duplicate order_id": df["order_id"].duplicated().any(),
+    "∄ null user_id": df["user_id"].isna().any(),
+    "∄ negative amount": (df["amount"] < 0).any(),
+    "∄ unknown status": not df["status"].isin(["completed", "pending", "cancelled"]).all(),
 }
+
 print("Post-ETL Pipeline Validation (∄ violations expected):")
 print("=" * 52)
 all_clean = True
 for rule, violation_exists in checks.items():
     status = "VIOLATION DETECTED" if violation_exists else "CLEAN"
-print(f" {rule}: {status}")
-if violation_exists:
-    all_clean = False
+    print(f" {rule}: {status}")
+    if violation_exists:
+        all_clean = False
+
 print()
 print(f"Overall: {'ALL CLEAN' if all_clean else 'PIPELINE FAILED: violations found'}")
 print()
 if not all_clean:
     print("Violation details:")
-dups = df[df["order_id"].duplicated(keep=False)]
-print(f" Duplicate order_ids at rows: {dups.index.tolist()}")
-nulls = df[df["user_id"].isna()]
-print(f" Null user_id at rows: {nulls.index.tolist()}")
-negatives = df[df["amount"] < 0]
-print(f" Negative amounts at rows: {negatives.index.tolist()}")
+    dups = df[df["order_id"].duplicated(keep=False)]
+    print(f" Duplicate order_ids at rows: {dups.index.tolist()}")
+    nulls = df[df["user_id"].isna()]
+    print(f" Null user_id at rows: {nulls.index.tolist()}")
+    negatives = df[df["amount"] < 0]
+    print(f" Negative amounts at rows: {negatives.index.tolist()}")
 ```
 
 ### Professional example (R)
@@ -171,15 +203,23 @@ print(f" Negative amounts at rows: {negatives.index.tolist()}")
 ```r
 # Post-ETL validation: there does not exist (∄) duplicates, nulls, negatives, unknown status
 set.seed(42)
-df <- data.frame( order_id = c(1:28, 5, 5), user_id = c(101:129, NA), amount = c(runif(29, 10, 100), -10), status = c(rep("completed", 29), "unknown")
-) checks <- list( "∄ duplicate order_id" = any(duplicated(df$order_id)), "∄ null user_id" = any(is.na(df$user_id)), "∄ negative amount" = any(df$amount < 0), "∄ unknown status" = !all(df$status %in% c("completed", "pending", "cancelled"))
+df <- data.frame(
+  order_id = c(1:28, 5, 5),
+  user_id = c(101:129, NA),
+  amount = c(runif(29, 10, 100), -10),
+  status = c(rep("completed", 29), "unknown")
+)
+checks <- list(
+  "∄ duplicate order_id" = any(duplicated(df$order_id)),
+  "∄ null user_id" = any(is.na(df$user_id)),
+  "∄ negative amount" = any(df$amount < 0),
+  "∄ unknown status" = !all(df$status %in% c("completed", "pending", "cancelled"))
 )
 cat("Post-ETL Validation (∄ violations expected):\n")
 all_clean <- TRUE
-for (rule in names(checks)) { status <- if (checksrule) "VIOLATION DETECTED"
-  else "CLEAN"
-  if (checksrule)
-  all_clean <- FALSE
+for (rule in names(checks)) {
+  status <- if (checks[[rule]]) "VIOLATION DETECTED" else "CLEAN"
+  if (checks[[rule]]) all_clean <- FALSE
   cat(" ", rule, ": ", status, "\n", sep = "")
 }
 cat("Overall:", if (all_clean) "ALL CLEAN" else "PIPELINE FAILED", "\n")

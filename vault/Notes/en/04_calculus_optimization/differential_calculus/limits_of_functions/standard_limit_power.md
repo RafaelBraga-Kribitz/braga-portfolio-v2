@@ -104,48 +104,60 @@ def power_limit_numerical(n: int, a: float, h: float = 1e-7) -> float:
         # handle a=0 case
         return ((a + h)**n - a**n) / h
     return ((a + h)**n - a**n) / h
+
+
 print("Standard Power Limit: lim_{x->a}(x^n - a^n)/(x-a) = n*a^(n-1)")
 print(f"\n{'n':>4} {'a':>6} {'Analytic n*a^(n-1)':>22} {'Numerical':>14} {'Match':>7}")
 test_cases = [(2, 3), (3, 2), (4, 3), (5, 1), (2, -2), (3, 0.5), (4, -1)]
 for n, a in test_cases:
     analytic = power_limit(n, a)
-numerical = power_limit_numerical(n, a)
-match = abs(analytic - numerical) < 1e-3
-print(f"{n:>4} {a:>6.2f} {analytic:>22.6f} {numerical:>14.6f} {str(match):>7}")   # Demonstrate factoring for small n
+    numerical = power_limit_numerical(n, a)
+    match = abs(analytic - numerical) < 1e-3
+    print(f"{n:>4} {a:>6.2f} {analytic:>22.6f} {numerical:>14.6f} {str(match):>7}")
+
+# Demonstrate factoring for small n
 print(f"\n--- Factoring: x^n - a^n = (x-a)(sum of n terms) ---")
 print(f"n=2, a=3: (x^2-9)/(x-3) = x+3 -> at x=3: 6 = 2*3^1 = {power_limit(2, 3)}")
 print(f"n=3, a=2: (x^3-8)/(x-2) = x^2+2x+4 -> at x=2: 12 = 3*2^2 = {power_limit(3, 2)}")
-print(f"n=4, a=3: (x^4-81)/(x-3) -> at x=3: 108 = 4*3^3 = {power_limit(4, 3)}")   # Gradient checking demo: power rule as numerical limit
+print(f"n=4, a=3: (x^4-81)/(x-3) -> at x=3: 108 = 4*3^3 = {power_limit(4, 3)}")
+
+# Gradient checking demo: power rule as numerical limit
 print(f"\n--- Gradient check: power rule via finite difference ---")
 print(f"{'x0':>6} {'n':>4} {'Analytic':>12} {'Forward diff':>14} {'Central diff':>14}")
 for x0, n in [(2.0, 3), (5.0, 2), (1.5, 4)]:
     analytic = power_limit(n, x0)
-h = 1e-5
-forward = ((x0 + h)**n - x0**n) / h
-central = ((x0 + h)**n - (x0 - h)**n) / (2 * h)
-print(f"{x0:>6.2f} {n:>4} {analytic:>12.6f} {forward:>14.6f} {central:>14.6f}")
+    h = 1e-5
+    forward = ((x0 + h)**n - x0**n) / h
+    central = ((x0 + h)**n - (x0 - h)**n) / (2 * h)
+    print(f"{x0:>6.2f} {n:>4} {analytic:>12.6f} {forward:>14.6f} {central:>14.6f}")
 ```
 
 ### Beginner example (R)
 
 ```r
 # Standard power limit: lim_{x->a}(x^n - a^n)/(x-a) = n*a^(n-1)
-power_limit <- function(n, a) { n * a^(n - 1)
+power_limit <- function(n, a) {
+  n * a^(n - 1)
 }
-power_limit_numerical <- function(n, a, h = 1e-7) { ((a + h)^n - a^n) / h
+power_limit_numerical <- function(n, a, h = 1e-7) {
+  ((a + h)^n - a^n) / h
 }
 cat("Standard Power Limit: lim_{x->a}(x^n - a^n)/(x-a) = n*a^(n-1)\n\n")
 cat(sprintf("%-4s %-6s %-22s %-14s\n", "n", "a", "Analytic n*a^(n-1)", "Numerical"))
 test_cases <- list(c(2,3), c(3,2), c(4,3), c(5,1), c(2,-2), c(3,0.5))
-for (tc in test_cases) { n <- tc[1]; a <- tc[2]
+for (tc in test_cases) {
+  n <- tc[1]; a <- tc[2]
   analytic <- power_limit(n, a)
   numerical <- power_limit_numerical(n, a)
   cat(sprintf("%-4d %-6.2f %-22.6f %-14.6f\n", n, a, analytic, numerical))
-}  # Gradient check for polynomial
+}
+
+# Gradient check for polynomial
 cat("\n--- Gradient check: power rule via finite differences ---\n")
 h <- 1e-5
 cat(sprintf("%-6s %-4s %-12s %-14s %-14s\n", "x0", "n", "Analytic", "Forward", "Central"))
-for (params in list(c(2,3), c(5,2), c(1.5,4))) { x0 <- params[1]; n <- params[2]
+for (params in list(c(2,3), c(5,2), c(1.5,4))) {
+  x0 <- params[1]; n <- params[2]
   analytic <- power_limit(n, x0)
   forward <- ((x0+h)^n - x0^n) / h
   central <- ((x0+h)^n - (x0-h)^n) / (2*h)
@@ -159,7 +171,9 @@ for (params in list(c(2,3), c(5,2), c(1.5,4))) { x0 <- params[1]; n <- params[2]
 import numpy as np
 from sklearn.datasets import make_regression
 from sklearn.preprocessing import StandardScaler
-np.random.seed(42)   # -- Standard Power Limit: polynomial regression gradient verification --
+np.random.seed(42)
+
+# -- Standard Power Limit: polynomial regression gradient verification --
 # Use case: A DS implements polynomial feature regression from scratch.
 # Each polynomial feature x^k has gradient k*x^(k-1) by the power rule.
 # We verify analytically derived gradients against numerical finite differences.
@@ -173,10 +187,15 @@ def polynomial_features(x: np.ndarray, degree: int) -> np.ndarray:
     return np.column_stack([x**k for k in range(degree + 1)])
 
 def poly_feature_gradient(x: np.ndarray, degree: int) -> np.ndarray:
-    """ Gradient of each feature w.r.t. x: d(x^k)/dx = k*x^(k-1). Power limit: d/dx[x^k]|_{x=a} = k * a^(k-1). Shape: (N, degree+1). """
+    """Gradient of each feature w.r.t. x: d(x^k)/dx = k*x^(k-1).
+
+    Power limit: d/dx[x^k]|_{x=a} = k * a^(k-1).
+    Shape: (N, degree+1).
+    """
     grads = np.zeros((len(x), degree + 1))
     for k in range(1, degree + 1):
-        grads[:, k] = k * x**(k - 1)   # k * x^(k-1): power limit at each x # grads[:, 0] = 0 (constant term has zero gradient)
+        grads[:, k] = k * x**(k - 1)  # k * x^(k-1): power limit at each x
+    # grads[:, 0] = 0 (constant term has zero gradient)
     return grads
 
 def mse_loss(w: np.ndarray, Phi: np.ndarray, y: np.ndarray) -> float:
@@ -192,14 +211,21 @@ def numerical_grad_w(w: np.ndarray, Phi: np.ndarray, y: np.ndarray, h: float = 1
     """Finite difference gradient of MSE w.r.t. w."""
     grad = np.zeros_like(w)
     for i in range(len(w)):
-        w_plus = w.copy(); w_plus[i] += h
-    w_minus = w.copy(); w_minus[i] -= h
-    grad[i] = (mse_loss(w_plus, Phi, y) - mse_loss(w_minus, Phi, y)) / (2 * h)
-    return grad   # Generate 1D regression data
+        w_plus = w.copy()
+        w_plus[i] += h
+        w_minus = w.copy()
+        w_minus[i] -= h
+        grad[i] = (mse_loss(w_plus, Phi, y) - mse_loss(w_minus, Phi, y)) / (2 * h)
+    return grad
+
+
+# Generate 1D regression data
 x_raw = np.linspace(-1, 1, N)
-true_coef = np.array([0.5, 1.2, -0.8, 0.3, 0.1])   # degree 4
+true_coef = np.array([0.5, 1.2, -0.8, 0.3, 0.1])  # degree 4
 y = polynomial_features(x_raw, DEGREE) @ true_coef + 0.05 * np.random.randn(N)
-Phi = polynomial_features(x_raw, DEGREE)   # Verify MSE gradient (uses power limit via power rule)
+Phi = polynomial_features(x_raw, DEGREE)
+
+# Verify MSE gradient (uses power limit via power rule)
 w0 = np.random.randn(DEGREE + 1) * 0.1
 grad_analytic = mse_gradient_w(w0, Phi, y)
 grad_numerical = numerical_grad_w(w0, Phi, y)
@@ -210,23 +236,28 @@ print(f"Power limit: d/dx[x^k] at x=a = k*a^(k-1) (verified for k=1..{DEGREE})")
 print(f"\nMSE Gradient check:")
 print(f" Analytic: {np.round(grad_analytic, 6)}")
 print(f" Numerical: {np.round(grad_numerical, 6)}")
-print(f" Max error: {max_err:.2e} --> {'PASS' if max_err < 1e-4 else 'FAIL'}")   # Fit with gradient descent
+print(f" Max error: {max_err:.2e} --> {'PASS' if max_err < 1e-4 else 'FAIL'}")
+
+# Fit with gradient descent
 w = np.zeros(DEGREE + 1)
 losses = []
 for _ in range(N_ITER):
     loss = mse_loss(w, Phi, y)
-losses.append(loss)
-grad = mse_gradient_w(w, Phi, y)
-w -= LR * grad
+    losses.append(loss)
+    grad = mse_gradient_w(w, Phi, y)
+    w -= LR * grad
 print(f"\nGradient descent convergence:")
-print(f" Loss step 1: {losses[0]:.4f}, step 50: {losses[49]:.4f}, " f"step 200: {losses[199]:.4f}, final: {losses[-1]:.4f}")
+print(f" Loss step 1: {losses[0]:.4f}, step 50: {losses[49]:.4f}, "
+      f"step 200: {losses[199]:.4f}, final: {losses[-1]:.4f}")
 print(f"Fitted coefficients: {np.round(w, 4)}")
-print(f"True coefficients: {true_coef}")   # Feature gradients via power limit
+print(f"True coefficients: {true_coef}")
+
+# Feature gradients via power limit
 print(f"\nFeature gradients d(x^k)/dx = k*x^(k-1) at x=0.5:")
 x_demo = 0.5
 for k in range(DEGREE + 1):
     grad_power = k * x_demo**(k-1) if k > 0 else 0.0
-print(f" k={k}: d(x^{k})/dx|_{{x=0.5}} = {k}*0.5^{k-1} = {grad_power:.6f}")
+    print(f" k={k}: d(x^{k})/dx|_{{x=0.5}} = {k}*0.5^{k-1} = {grad_power:.6f}")
 ```
 
 ---

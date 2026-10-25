@@ -69,7 +69,7 @@ Key relationships:
 2. **High-cardinality vs. low-cardinality features**: this is a practical ML concept derived from set cardinality. Feature encoding strategy depends on it.
 3. **Inclusion-exclusion**: $|A \cup B| = |A| + |B| - |A \cap B|$. You subtract the intersection because those elements would be counted twice. This is used in funnel analysis (how many users completed step A OR step B).
 4. **Cardinality of the power set**: the set of all subsets of $A$ has $2^{|A|}$ elements. This is why combinatorial search spaces explode: a set of 30 features has $2^{30} \approx 10^9$ possible subsets.
-5. **Cardinality and memory**: in pandas, a column with $|A| = k$ unique values can be stored as a `Categorical` dtype using $O(k + n)$ memory instead of $O(n \cdot \text{string_length})$.
+5. **Cardinality and memory**: in pandas, a column with $|A| = k$ unique values can be stored as a `Categorical` dtype using $O(k + n)$ memory instead of $O(n \cdot \text{string\_length})$.
 
 ## Step-by-step calculation (tiny example)
 

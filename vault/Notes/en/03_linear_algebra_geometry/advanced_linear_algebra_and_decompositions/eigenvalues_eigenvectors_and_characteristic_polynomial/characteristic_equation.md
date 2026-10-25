@@ -92,28 +92,32 @@ Both checks pass: eigenvalues are correct.
 ### Beginner example (Python)
 
 ```python
-import math   # -- Characteristic polynomial for a 2x2 matrix ----------------------
-#
-A = [[a, b], [c, d]]
+import math
+
+# -- Characteristic polynomial for a 2x2 matrix ----------------------
+# A = [[a, b], [c, d]]
 A_11 = 5.0
 A_12 = 2.0
 A_21 = 2.0
-A_22 = 2.0   # Coefficients of lambda^2 - tr(A)*lambda + det(A) = 0
+A_22 = 2.0
+
+# Coefficients of lambda^2 - tr(A)*lambda + det(A) = 0
 trace_a = A_11 + A_22
 det_a = A_11 * A_22 - A_12 * A_21
 print(f"tr(A) = {trace_a}")
-print(f"det(A) = {det_a}")   # Solve lambda^2 - trace*lambda +
-det = 0
+print(f"det(A) = {det_a}")
+
+# Solve lambda^2 - trace*lambda + det = 0
 discriminant = trace_a ** 2 - 4 * det_a
 print(f"Discriminant = {discriminant}")
 if discriminant < 0:
     print("Complex eigenvalues (matrix is not symmetric with real eigenvalues)")
 else:
     lambda_1 = (trace_a + math.sqrt(discriminant)) / 2
-lambda_2 = (trace_a - math.sqrt(discriminant)) / 2
-print(f"\nEigenvalues: lambda_1 = {lambda_1:.4f}, lambda_2 = {lambda_2:.4f}")
-print(f"Verification: sum = {lambda_1 + lambda_2:.4f} (should equal tr = {trace_a})")
-print(f"Verification: product = {lambda_1 * lambda_2:.4f} (should equal det = {det_a})")
+    lambda_2 = (trace_a - math.sqrt(discriminant)) / 2
+    print(f"\nEigenvalues: lambda_1 = {lambda_1:.4f}, lambda_2 = {lambda_2:.4f}")
+    print(f"Verification: sum = {lambda_1 + lambda_2:.4f} (should equal tr = {trace_a})")
+    print(f"Verification: product = {lambda_1 * lambda_2:.4f} (should equal det = {det_a})")
 ```
 
 ### Beginner example (R)
@@ -124,11 +128,13 @@ A <- matrix(c(5, 2, 2, 2), nrow = 2)
 trace_a <- sum(diag(A))
 det_a <- det(A)
 cat(sprintf("tr(A) = %.4f\n", trace_a))
-cat(sprintf("det(A) = %.4f\n", det_a))  # Solve lambda^2 - trace*lambda +
-det = 0
+cat(sprintf("det(A) = %.4f\n", det_a))
+
+# Solve lambda^2 - trace*lambda + det = 0
 discriminant <- trace_a^2 - 4 * det_a
 cat(sprintf("Discriminant = %.4f\n", discriminant))
-if (discriminant >= 0) { lambda_1 <- (trace_a + sqrt(discriminant)) / 2
+if (discriminant >= 0) {
+  lambda_1 <- (trace_a + sqrt(discriminant)) / 2
   lambda_2 <- (trace_a - sqrt(discriminant)) / 2
   cat(sprintf("Eigenvalues: %.4f, %.4f\n", lambda_1, lambda_2))
   cat(sprintf("Sum = %.4f (should equal trace = %.4f)\n", lambda_1 + lambda_2, trace_a))

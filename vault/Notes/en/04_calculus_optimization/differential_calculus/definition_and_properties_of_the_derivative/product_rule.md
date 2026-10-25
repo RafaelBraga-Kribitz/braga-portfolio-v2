@@ -3,6 +3,7 @@ publish: true
 date: '2026-04-16'
 tags:
 - calculus
+slug: product-rule-definition-and-properties-of-the-derivative
 ---
 
 # Product Rule

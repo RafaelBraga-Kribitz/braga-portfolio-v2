@@ -105,41 +105,85 @@ $dy/dx = (dy/du)(du/dx) = [-2(1 + e^{-x})^{-3}] \cdot [-e^{-x}] = \frac{2e^{-x}}
 ```python
 import numpy as np
 
-def leibniz_chain_demo( dy_du_fn, du_dx_fn, u_from_x_fn, x: float,
+def leibniz_chain_demo(
+    dy_du_fn, du_dx_fn, u_from_x_fn, x: float,
 ) -> float:
-    """Leibniz chain rule: dy/dx = (dy/du) * (du/dx). Each factor computed at the correct point. """
+    """
+    Leibniz chain rule: dy/dx = (dy/du) * (du/dx).
+    Each factor computed at the correct point.
+    """
     u = u_from_x_fn(x)
-    return dy_du_fn(u) * du_dx_fn(x)   # Concrete compositions with named intermediate variables
+    return dy_du_fn(u) * du_dx_fn(x)
+
+
+# Concrete compositions with named intermediate variables
 # ----------------------------------------------------------
-# y = ln(x^3): u = x^3,
-y = ln(u)
-# y = sin(e^x): u = e^x,
-y = sin(u)
-# y = (1+x^2)^5: u = 1+x^2, y = u^5
-# y = exp(-x^2/2): u = -x^2/2,
-y = exp(u)
-compositions = [ { "name": "ln(x^3)", "u_fn": lambda x: x**3, "dy_du": lambda u: 1.0 / u, "du_dx": lambda x: 3 * x**2, "analytic": lambda x: 3.0 / x,   # d/dx[3*ln(x)]
-}, { "name": "sin(exp(x))", "u_fn": lambda x: np.exp(x), "dy_du": lambda u: np.cos(u), "du_dx": lambda x: np.exp(x), "analytic": lambda x: np.cos(np.exp(x)) * np.exp(x), }, { "name": "(1+x^2)^5", "u_fn": lambda x: 1 + x**2, "dy_du": lambda u: 5 * u**4, "du_dx": lambda x: 2 * x, "analytic": lambda x: 5 * (1 + x**2)**4 * 2 * x, }, { "name": "exp(-x^2/2)", "u_fn": lambda x: -x**2 / 2, "dy_du": lambda u: np.exp(u), "du_dx": lambda x: -x, "analytic": lambda x: -x * np.exp(-x**2 / 2), },
+# y = ln(x^3):       u = x^3,     y = ln(u)
+# y = sin(e^x):      u = e^x,     y = sin(u)
+# y = (1+x^2)^5:     u = 1+x^2,   y = u^5
+# y = exp(-x^2/2):   u = -x^2/2,  y = exp(u)
+compositions = [
+    {
+        "name": "ln(x^3)",
+        "u_fn": lambda x: x**3,
+        "dy_du": lambda u: 1.0 / u,
+        "du_dx": lambda x: 3 * x**2,
+        "analytic": lambda x: 3.0 / x,   # d/dx[3*ln(x)]
+    },
+    {
+        "name": "sin(exp(x))",
+        "u_fn": lambda x: np.exp(x),
+        "dy_du": lambda u: np.cos(u),
+        "du_dx": lambda x: np.exp(x),
+        "analytic": lambda x: np.cos(np.exp(x)) * np.exp(x),
+    },
+    {
+        "name": "(1+x^2)^5",
+        "u_fn": lambda x: 1 + x**2,
+        "dy_du": lambda u: 5 * u**4,
+        "du_dx": lambda x: 2 * x,
+        "analytic": lambda x: 5 * (1 + x**2)**4 * 2 * x,
+    },
+    {
+        "name": "exp(-x^2/2)",
+        "u_fn": lambda x: -x**2 / 2,
+        "dy_du": lambda u: np.exp(u),
+        "du_dx": lambda x: -x,
+        "analytic": lambda x: -x * np.exp(-x**2 / 2),
+    },
 ]
 h = 1e-7
 print(f"{'Function':>18} {'x':>5} {'Leibniz':>12} {'Analytic':>12} {'Agree':>7}")
 for comp in compositions:
     for x_val in [0.5, 1.5]:
         leibniz = leibniz_chain_demo(comp["dy_du"], comp["du_dx"], comp["u_fn"], x_val)
-    analytic = comp["analytic"](x_val)
-match = abs(leibniz - analytic) < 1e-5
-print(f"{comp['name']:>18} {x_val:>5.2f} {leibniz:>12.6f} {analytic:>12.6f} {str(match):>7}")
+        analytic = comp["analytic"](x_val)
+        match = abs(leibniz - analytic) < 1e-5
+        print(f"{comp['name']:>18} {x_val:>5.2f} {leibniz:>12.6f} {analytic:>12.6f} {str(match):>7}")
 ```
 
 ### Beginner example (R)
 
 ```r
 # Leibniz chain rule: dy/dx = (dy/du) * (du/dx)
-leibniz_chain <- function(dy_du_fn, du_dx_fn, u_from_x_fn, x) { u <- u_from_x_fn(x) dy_du_fn(u) * du_dx_fn(x)
-}  # Three examples with explicit intermediate variables
-examples <- list( list( name = "ln(x^3)", u_fn = function(x) x^3, dy_du = function(u) 1 / u, du_dx = function(x) 3 * x^2, analytic = function(x) 3 / x ), list( name = "sin(exp(x))", u_fn = exp, dy_du = cos, du_dx = exp, analytic = function(x) cos(exp(x)) * exp(x) ), list( name = "exp(-x^2/2)", u_fn = function(x) -x^2 / 2, dy_du = exp, du_dx = function(x) -x, analytic = function(x) -x * exp(-x^2 / 2) )
-) cat(sprintf("%-18s %-5s %-12s %-12s %-7s\n", "Function", "x", "Leibniz", "Analytic", "Match"))
-for (ex in examples) { for (x_val in c(0.5, 1.5)) { leibniz_val <- leibniz_chain(ex$dy_du, ex$du_dx, ex$u_fn, x_val)
+leibniz_chain <- function(dy_du_fn, du_dx_fn, u_from_x_fn, x) {
+  u <- u_from_x_fn(x)
+  dy_du_fn(u) * du_dx_fn(x)
+}
+
+# Three examples with explicit intermediate variables
+examples <- list(
+  list(name = "ln(x^3)", u_fn = function(x) x^3, dy_du = function(u) 1 / u,
+       du_dx = function(x) 3 * x^2, analytic = function(x) 3 / x),
+  list(name = "sin(exp(x))", u_fn = exp, dy_du = cos, du_dx = exp,
+       analytic = function(x) cos(exp(x)) * exp(x)),
+  list(name = "exp(-x^2/2)", u_fn = function(x) -x^2 / 2, dy_du = exp,
+       du_dx = function(x) -x, analytic = function(x) -x * exp(-x^2 / 2))
+)
+cat(sprintf("%-18s %-5s %-12s %-12s %-7s\n", "Function", "x", "Leibniz", "Analytic", "Match"))
+for (ex in examples) {
+  for (x_val in c(0.5, 1.5)) {
+    leibniz_val <- leibniz_chain(ex$dy_du, ex$du_dx, ex$u_fn, x_val)
     analytic_val <- ex$analytic(x_val)
     match <- abs(leibniz_val - analytic_val) < 1e-5
     cat(sprintf("%-18s %-5.2f %-12.6f %-12.6f %-7s\n", ex$name, x_val, leibniz_val, analytic_val, as.character(match)))
@@ -153,7 +197,9 @@ for (ex in examples) { for (x_val in c(0.5, 1.5)) { leibniz_val <- leibniz_chain
 import numpy as np
 from sklearn.datasets import make_regression
 from sklearn.preprocessing import StandardScaler
-np.random.seed(42)   # -- Leibniz chain rule: gradient derivation for a normalizing flow step --
+np.random.seed(42)
+
+# -- Leibniz chain rule: gradient derivation for a normalizing flow step --
 # Use case: a DS implements a single affine coupling layer, computing the
 # log-likelihood gradient with explicit Leibniz notation for each link.
 #
@@ -163,8 +209,7 @@ np.random.seed(42)   # -- Leibniz chain rule: gradient derivation for a normaliz
 # (change of variables formula -- Leibniz Jacobian)
 #
 # Affine coupling layer: z = x * exp(s) + t (element-wise, s and t from NN)
-# Inverse: x = (z - t) / exp(s) = (z - t) *
-exp(-s)
+# Inverse: x = (z - t) / exp(s) = (z - t) * exp(-s)
 # Log-Jacobian: sum(s) per sample (diagonal Jacobian -> log-det = sum of logs)
 #
 # Gradient of log p_x wrt s:
@@ -174,9 +219,10 @@ DIM = 6
 N = 200
 SCALE = 0.1   # small scale for stable demo
 
+
 def base_log_prob(z: np.ndarray) -> np.ndarray:
     """log p_z(z): standard normal, shape (N,)."""
-    return float(-0.5 * np.sum(z**2, axis=1) - 0.5 * DIM * np.log(2 * np.pi))
+    return -0.5 * np.sum(z**2, axis=1) - 0.5 * DIM * np.log(2 * np.pi)
 
 def base_log_prob_grad_z(z: np.ndarray) -> np.ndarray:
     """d(log p_z)/dz = -z (Leibniz link: d(log p_z)/dz)."""
@@ -192,40 +238,67 @@ def log_det_jacobian(s: np.ndarray) -> np.ndarray:
     """log|det J| = sum(s) per sample. d(log|det J|)/ds = 1 (per dimension)."""
     return np.sum(s, axis=1)
 
-def affine_coupling_log_prob_and_grad( x: np.ndarray, s: np.ndarray, t: np.ndarray,
+def affine_coupling_log_prob_and_grad(
+    x: np.ndarray, s: np.ndarray, t: np.ndarray,
 ):
-    """ Compute log p_x(x) and gradient wrt s, using Leibniz chain rule explicitly. Leibniz decomposition for grad wrt s: d(log p_x)/ds = [d(log p_z)/dz] * [dz/ds] <- chain link 1: data-ll gradient + [d(log|det J|)/ds] <- chain link 2: volume correction """   # Forward pass
+    """
+    Compute log p_x(x) and gradient wrt s, using Leibniz chain rule explicitly.
+
+    Leibniz decomposition for grad wrt s:
+        d(log p_x)/ds = [d(log p_z)/dz] * [dz/ds]   <- chain link 1: data-ll gradient
+                      + [d(log|det J|)/ds]           <- chain link 2: volume correction
+    """
+    # Forward pass
     z, exp_s = affine_forward(x, s, t)
-    log_pz = base_log_prob(z)   # log
-    p_z(z), shape (N,)
+    log_pz = base_log_prob(z)       # log p_z(z), shape (N,)
     log_jac = log_det_jacobian(s)   # log|det J|, shape (N,)
-    log_px = log_pz + log_jac   # log
-    p_x(x), shape (N,)   # Leibniz chain: gradient wrt s # Link 1: d(log p_z)/dz * dz/ds
+    log_px = log_pz + log_jac       # log p_x(x), shape (N,)
+
+    # Leibniz chain: gradient wrt s
+    # Link 1: d(log p_z)/dz * dz/ds
     d_logpz_dz = base_log_prob_grad_z(z)   # shape (N, DIM): -z
-    dz_ds = x * exp_s   # dz/ds = x * exp(s) = z - t, shape (N, DIM)
-    grad_link1 = d_logpz_dz * dz_ds   # element-wise product, shape (N, DIM) # Link 2: d(log|det J|)/ds = 1 for each dimension
-    grad_link2 = np.ones_like(s)   # shape (N, DIM) # Total gradient (mean over batch)
+    dz_ds = x * exp_s                      # dz/ds = x * exp(s) = z - t, shape (N, DIM)
+    grad_link1 = d_logpz_dz * dz_ds        # element-wise product, shape (N, DIM)
+
+    # Link 2: d(log|det J|)/ds = 1 for each dimension
+    grad_link2 = np.ones_like(s)   # shape (N, DIM)
+
+    # Total gradient (mean over batch)
     grad_s = np.mean(grad_link1 + grad_link2, axis=0)
-    return float(np.mean(log_px)), grad_s   # Generate synthetic data
+    return float(np.mean(log_px)), grad_s
+
+
+# Generate synthetic data
 X_raw, _ = make_regression(n_samples=N, n_features=DIM, noise=0.1, random_state=42)
 scaler = StandardScaler()
-X = scaler.fit_transform(X_raw) * SCALE   # Fixed (small) scale and shift parameters for demo
+X = scaler.fit_transform(X_raw) * SCALE
+
+# Fixed (small) scale and shift parameters for demo
 s_param = np.random.randn(N, DIM) * 0.1   # per-sample, per-dim (simplified)
 t_param = np.zeros((N, DIM))
-log_px, grad_s = affine_coupling_log_prob_and_grad(X, s_param, t_param)   # Numerical verification of gradient (central difference on mean log-prob)
+log_px, grad_s = affine_coupling_log_prob_and_grad(X, s_param, t_param)
 
+
+# Numerical verification of gradient (central difference on mean log-prob)
 def mean_log_px(s_flat: np.ndarray) -> float:
     s_mat = s_flat.reshape(N, DIM)
     z, exp_s = affine_forward(X, s_mat, t_param)
     return float(np.mean(base_log_prob(z) + log_det_jacobian(s_mat)))
+
+
 numerical_grad = np.zeros(N * DIM)
 eps = 1e-5
 s_flat = s_param.flatten()
 for i in range(min(DIM, 6)):
     # check first DIM dimensions only (runtime)
-    s_plus = s_flat.copy(); s_plus[i] += eps
-s_minus = s_flat.copy(); s_minus[i] -= eps
-numerical_grad[i] = (mean_log_px(s_plus) - mean_log_px(s_minus)) / (2 * eps)   # Only compare the DIM components we checked
+    # grad_s is a batch mean, so shift dimension i for every sample (indices i, i+DIM, ...)
+    s_plus = s_flat.copy()
+    s_plus[i::DIM] += eps
+    s_minus = s_flat.copy()
+    s_minus[i::DIM] -= eps
+    numerical_grad[i] = (mean_log_px(s_plus) - mean_log_px(s_minus)) / (2 * eps)
+
+# Only compare the DIM components we checked
 analytic_flat = grad_s[: DIM]
 numerical_flat = numerical_grad[: DIM]
 max_rel_err = float(np.max(np.abs(analytic_flat - numerical_flat) / np.maximum(np.abs(analytic_flat), 1e-8)))

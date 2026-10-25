@@ -110,7 +110,9 @@ print(f"D_KL is symmetric? D_KL(Q||P) = {entropy(q_dist, p_dist):.6f} nats")
 ```r
 p_dist <- c(0.5, 0.3, 0.2)
 q_dist <- c(0.4, 0.4, 0.2)
-kl_divergence <- function(p, q) {  # KL(P||Q) in nats; requires Q(x)>0 wherever P(x)>0 sum(p * log(p / q))
+kl_divergence <- function(p, q) {
+  # KL(P||Q) in nats; requires Q(x)>0 wherever P(x)>0
+  sum(p * log(p / q))
 }
 cat("D_KL(P||Q):", round(kl_divergence(p_dist, q_dist), 6), "nats\n")
 cat("D_KL(Q||P):", round(kl_divergence(q_dist, p_dist), 6), "nats (different!)\n")
@@ -119,40 +121,59 @@ cat("D_KL(Q||P):", round(kl_divergence(q_dist, p_dist), 6), "nats (different!)\n
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
 import pandas as pd
 from scipy.stats import entropy
+
 DRIFT_ALERT_THRESHOLD = 0.10   # nats; common rule-of-thumb for feature drift
 
+
 def kl_divergence(p: np.ndarray, q: np.ndarray, epsilon: float = 1e-10) -> float:
-    # KL(P||Q) in nats. Adds epsilon to avoid
-    log(0). p_safe = np.clip(p, epsilon, None)
-    q_safe = np.clip(q, epsilon, None)   # Renormalise after clipping
+    # KL(P||Q) in nats. Adds epsilon to avoid log(0).
+    p_safe = np.clip(p, epsilon, None)
+    q_safe = np.clip(q, epsilon, None)
+    # Renormalise after clipping
     p_safe /= p_safe.sum()
     q_safe /= q_safe.sum()
     return float(np.sum(p_safe * np.log(p_safe / q_safe)))
 
-def feature_drift_report( train_df: pd.DataFrame, prod_df: pd.DataFrame, cat_features: list[str], alert_threshold: float = DRIFT_ALERT_THRESHOLD,
+
+def feature_drift_report(
+    train_df: pd.DataFrame,
+    prod_df: pd.DataFrame,
+    cat_features: list[str],
+    alert_threshold: float = DRIFT_ALERT_THRESHOLD,
 ) -> pd.DataFrame:
     # Compute KL divergence per categorical feature for drift detection.
     rows = []
     all_categories = {col: list(set(train_df[col].unique()) | set(prod_df[col].unique())) for col in cat_features}
     for col in cat_features:
         cats = all_categories[col]
-    p_counts = train_df[col].value_counts().reindex(cats, fill_value=0).values.astype(float)
-    q_counts = prod_df[col].value_counts().reindex(cats, fill_value=0).values.astype(float)
-    p_probs = p_counts / p_counts.sum()
-    q_probs = q_counts / q_counts.sum()
-    kl_val = kl_divergence(p_probs, q_probs)
-    rows.append({ "feature": col, "kl_divergence_nats": round(kl_val, 6), "drift_alert": kl_val > alert_threshold, })
+        p_counts = train_df[col].value_counts().reindex(cats, fill_value=0).values.astype(float)
+        q_counts = prod_df[col].value_counts().reindex(cats, fill_value=0).values.astype(float)
+        p_probs = p_counts / p_counts.sum()
+        q_probs = q_counts / q_counts.sum()
+        kl_val = kl_divergence(p_probs, q_probs)
+        rows.append({
+            "feature": col,
+            "kl_divergence_nats": round(kl_val, 6),
+            "drift_alert": kl_val > alert_threshold,
+        })
     return pd.DataFrame(rows).sort_values("kl_divergence_nats", ascending=False)
+
 
 if __name__ == "__main__":
     rng = np.random.default_rng(seed=42)
     n_train, n_prod = 5_000, 2_000
-    train_data = pd.DataFrame({ "device": rng.choice(["mobile", "desktop"], size=n_train, p=[0.60, 0.40]), "segment": rng.choice(["A", "B", "C"], size=n_train, p=[0.50, 0.30, 0.20]), })   # Production shift: more desktop, segment B disappears
-    prod_data = pd.DataFrame({ "device": rng.choice(["mobile", "desktop"], size=n_prod, p=[0.35, 0.65]), "segment": rng.choice(["A", "B", "C"], size=n_prod, p=[0.70, 0.05, 0.25]), })
+    train_data = pd.DataFrame({
+        "device": rng.choice(["mobile", "desktop"], size=n_train, p=[0.60, 0.40]),
+        "segment": rng.choice(["A", "B", "C"], size=n_train, p=[0.50, 0.30, 0.20]),
+    })
+    # Production shift: more desktop, segment B disappears
+    prod_data = pd.DataFrame({
+        "device": rng.choice(["mobile", "desktop"], size=n_prod, p=[0.35, 0.65]),
+        "segment": rng.choice(["A", "B", "C"], size=n_prod, p=[0.70, 0.05, 0.25]),
+    })
     report = feature_drift_report(train_data, prod_data, cat_features=["device", "segment"])
     print("Feature drift report (KL divergence, training vs production):")
     print(report.to_string(index=False))

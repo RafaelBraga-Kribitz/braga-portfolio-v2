@@ -100,22 +100,28 @@ Check: $A \cdot A^{-1} = \begin{bmatrix}2\cdot3+1\cdot(-5) & 2\cdot(-1)+1\cdot2 
 ### Beginner example (Python)
 
 ```python
-# Multiplicative inverse: a * (1/a) = 1 values = [4, -2, 0.5, 100, -0.25] print("Verifying a × (1/a) == 1 (for a ≠ 0):")
+# Multiplicative inverse: a * (1/a) = 1
+values = [4, -2, 0.5, 100, -0.25]
+print("Verifying a × (1/a) == 1 (for a ≠ 0):")
 for a in values:
     inv_a = 1 / a
-result = a * inv_a
-print(f" {a} × (1/{a}) = {a} × {inv_a:.4f} = {result:.6f} | ≈ 1: {abs(result - 1) < 1e-10}")   # Division by zero guard
+    result = a * inv_a
+    print(f" {a} × (1/{a}) = {a} × {inv_a:.4f} = {result:.6f} | ≈ 1: {abs(result - 1) < 1e-10}")
+
+# Division by zero guard
 denominators = [10, 5, 0, 3, 0, 8]
 numerators = [100, 50, 999, 30, 1, 80]
 print("\nSafe division with zero guard:")
 for num, den in zip(numerators, denominators):
     safe_den = den if den != 0 else None
-rate = num / safe_den if safe_den is not None else float('nan')
-print(f" {num} / {den} → {rate}")   # Matrix inverse via np.linalg.solve (preferred over inv)
+    rate = num / safe_den if safe_den is not None else float('nan')
+    print(f" {num} / {den} → {rate}")
+
+# Matrix inverse via np.linalg.solve (preferred over inv)
 import numpy as np
 A = np.array([[2.0, 1.0], [5.0, 3.0]])
-b = np.array([8.0, 19.0])   # Preferred: solve(A, b) — do NOT use
-inv(A) @ b
+b = np.array([8.0, 19.0])
+# Preferred: solve(A, b) — do NOT use inv(A) @ b
 x = np.linalg.solve(A, b)
 print(f"\nSolving Ax=b: A={A.tolist()}, b={b.tolist()}")
 print(f"Solution x = {x}")
@@ -128,15 +134,21 @@ print(f"Verification A@x = {A @ x} (should be {b})")
 # Multiplicative inverse: a * (1/a) = 1
 values <- c(4, -2, 0.5, 100, -0.25)
 cat("Verifying a × (1/a) == 1:\n")
-for (a in values) { result <- a * (1/a)
+for (a in values) {
+  result <- a * (1/a)
   cat(sprintf(" %.3f × (1/%.3f) = %.6f | ≈ 1: %s\n", a, a, result, abs(result - 1) < 1e-10))
-}  # Matrix inverse
+}
+
+# Matrix inverse
 A <- matrix(c(2, 5, 1, 3), nrow=2)
-b <- c(8, 19)  # solve(A, b) is preferred over solve(A) %*% b
+b <- c(8, 19)
+# solve(A, b) is preferred over solve(A) %*% b
 x <- solve(A, b)
 cat(sprintf("\nSolution x = (%.1f, %.1f)\n", x[1], x[2]))
 cat("Verification A %*% x =", as.vector(A %*% x), "\n")
-cat("Should equal b =", b, "\n")  # Safe rate calculation
+cat("Should equal b =", b, "\n")
+
+# Safe rate calculation
 safe_rate <- function(num, den) ifelse(den == 0, NA_real_, num / den)
 cat("\nSafe CTR:", safe_rate(c(100, 50, 0, 30), c(10, 0, 5, 0)), "\n")
 ```
@@ -145,27 +157,70 @@ cat("\nSafe CTR:", safe_rate(c(100, 50, 0, 30), c(10, 0, 5, 0)), "\n")
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: OLS normal equations with invertibility check
+import pandas as pd
+
+# Scenario: OLS normal equations with invertibility check
 # + practical rate computation with zero-denomination guard
 np.random.seed(42)
-n, p = 300, 3   # Design matrix with intercept
+n, p = 300, 3
+
+# Design matrix with intercept
 X = np.column_stack([np.ones(n), np.random.randn(n, p - 1)])
 true_beta = np.array([5.0, 2.0, -1.5])
-y = X @ true_beta + np.random.normal(0, 1.0, n)   # OLS:
-beta_hat = (X'X)^{-1} X'y XtX = X.T @ X det_XtX = np.linalg.det(XtX) print("OLS Normal Equations: beta_hat = (X'X)^{-1} X'y") print("=" * 48) print(f" det(X'X) = {det_XtX:.2f} ({'invertible' if abs(det_XtX) > 1e-10 else 'SINGULAR — no inverse'})")   # Solve
-(never use inv(XtX) @ XtX @ b directly) beta_hat = np.linalg.solve(XtX, X.T @ y) print(f" True beta: {true_beta}") print(f" Estimated beta: {beta_hat.round(4)}") print()   # Ridge: add λI to guarantee invertibility
- lambda_vals = [0.0, 0.01, 0.1, 1.0] print("Ridge (X'X + λI)^{-1} X'y — λI ensures invertibility:") for lam in lambda_vals: reg_matrix = XtX + lam * np.eye(p) det_reg = np.linalg.det(reg_matrix) beta_ridge = np.linalg.solve(reg_matrix, X.T @ y) mse = np.mean((y - X @ beta_ridge) ** 2) print(f" λ={lam:.2f}: det={det_reg:.1f}, beta={beta_ridge.round(3)}, MSE={mse:.4f}") print()   # Practical: campaign rate metrics with zero-guard
- campaigns = pd.DataFrame({ "campaign": ["A", "B", "C", "D", "E"], "impressions": [10_000, 5_000, 0, 8_500, 0], "clicks": [320, 150, 50, 0, 0], "conversions": [45, 20, 3, 0, 0],
-})   # Safe division: 1/impressions guarded against 0
- campaigns["ctr"] = ( campaigns["clicks"] / campaigns["impressions"].replace(0, np.nan) ).round(4) campaigns["cvr"] = ( campaigns["conversions"] / campaigns["clicks"].replace(0, np.nan) ).round(4) print("Campaign Rates (safe inverse: guard against 0 denominator):") print(campaigns[["campaign", "impressions", "clicks", "ctr", "cvr"]].to_string(index=False))
+y = X @ true_beta + np.random.normal(0, 1.0, n)
+
+# OLS: beta_hat = (X'X)^{-1} X'y
+XtX = X.T @ X
+det_XtX = np.linalg.det(XtX)
+print("OLS Normal Equations: beta_hat = (X'X)^{-1} X'y")
+print("=" * 48)
+print(f" det(X'X) = {det_XtX:.2f} ({'invertible' if abs(det_XtX) > 1e-10 else 'SINGULAR — no inverse'})")
+
+# Solve (never use inv(XtX) @ XtX @ b directly)
+beta_hat = np.linalg.solve(XtX, X.T @ y)
+print(f" True beta: {true_beta}")
+print(f" Estimated beta: {beta_hat.round(4)}")
+print()
+
+# Ridge: add λI to guarantee invertibility
+lambda_vals = [0.0, 0.01, 0.1, 1.0]
+print("Ridge (X'X + λI)^{-1} X'y — λI ensures invertibility:")
+for lam in lambda_vals:
+    reg_matrix = XtX + lam * np.eye(p)
+    det_reg = np.linalg.det(reg_matrix)
+    beta_ridge = np.linalg.solve(reg_matrix, X.T @ y)
+    mse = np.mean((y - X @ beta_ridge) ** 2)
+    print(f" λ={lam:.2f}: det={det_reg:.1f}, beta={beta_ridge.round(3)}, MSE={mse:.4f}")
+print()
+
+# Practical: campaign rate metrics with zero-guard
+campaigns = pd.DataFrame({
+    "campaign": ["A", "B", "C", "D", "E"],
+    "impressions": [10_000, 5_000, 0, 8_500, 0],
+    "clicks": [320, 150, 50, 0, 0],
+    "conversions": [45, 20, 3, 0, 0],
+})
+
+# Safe division: 1/impressions guarded against 0
+campaigns["ctr"] = (
+    campaigns["clicks"] / campaigns["impressions"].replace(0, np.nan)
+).round(4)
+campaigns["cvr"] = (
+    campaigns["conversions"] / campaigns["clicks"].replace(0, np.nan)
+).round(4)
+print("Campaign Rates (safe inverse: guard against 0 denominator):")
+print(campaigns[["campaign", "impressions", "clicks", "ctr", "cvr"]].to_string(index=False))
 ```
 
 ### Professional example (R)
 
 ```r
-# Campaign rates:
-CTR = clicks/impressions, CVR = conversions/clicks (guard 0)
-campaigns <- data.frame( campaign = c("A", "B", "C"), impressions = c(1000, 0, 500), clicks = c(50, 10, 25), conversions = c(5, 1, 3)
+# Campaign rates: CTR = clicks/impressions, CVR = conversions/clicks (guard 0)
+campaigns <- data.frame(
+  campaign = c("A", "B", "C"),
+  impressions = c(1000, 0, 500),
+  clicks = c(50, 10, 25),
+  conversions = c(5, 1, 3)
 )
 campaigns$ctr <- round(campaigns$clicks / replace(campaigns$impressions, campaigns$impressions == 0, NA), 4)
 campaigns$cvr <- round(campaigns$conversions / replace(campaigns$clicks, campaigns$clicks == 0, NA), 4)

@@ -92,20 +92,47 @@ By comparison test: $\sum \frac{1}{n^2+1}$ **CONVERGES**. *Numerical check*: $\s
 """
 Comparison Test: if a_n <= b_n and sum(b_n) converges → sum(a_n) converges.
 Numerical verification with partial sums.
-""" import numpy as np
+"""
+import numpy as np
 from typing import Callable
 
-def comparison_test_numerical( series_a: Callable[[np.ndarray], np.ndarray], series_b: Callable[[np.ndarray], np.ndarray], num_terms: int = 10_000,
+
+def comparison_test_numerical(
+    series_a: Callable[[np.ndarray], np.ndarray],
+    series_b: Callable[[np.ndarray], np.ndarray],
+    num_terms: int = 10_000,
 ) -> dict:
-    """Numerically check comparison test: verify a_n <= b_n and estimate sums. Parameters ---------- series_a : the series under investigation (a_n) series_b : the comparison series (b_n, should be known) num_terms : how many terms to compute Returns ------- dict with: comparison_holds, partial_sum_a, partial_sum_b, ratio_at_large_n """
+    """
+    Numerically check comparison test: verify a_n <= b_n and estimate sums.
+
+    Parameters
+    ----------
+    series_a : the series under investigation (a_n)
+    series_b : the comparison series (b_n, should be known)
+    num_terms : how many terms to compute
+
+    Returns
+    -------
+    dict with: comparison_holds, partial_sum_a, partial_sum_b, ratio_at_large_n
+    """
     indices = np.arange(1, num_terms + 1, dtype=float)
     a_vals = series_a(indices)
     b_vals = series_b(indices)
     comparison_holds = bool(np.all(a_vals <= b_vals + 1e-14))
     partial_sum_a = float(np.sum(a_vals))
     partial_sum_b = float(np.sum(b_vals))
-    return { "comparison_holds": comparison_holds, "partial_sum_a": partial_sum_a, "partial_sum_b": partial_sum_b, "upper_bound_valid": comparison_holds and partial_sum_b < np.inf, }   # Example: 1/(n^2+1) compared to 1/n^2
-result = comparison_test_numerical( series_a=lambda n: 1.0 / (n**2 + 1.0), series_b=lambda n: 1.0 / n**2,
+    return {
+        "comparison_holds": comparison_holds,
+        "partial_sum_a": partial_sum_a,
+        "partial_sum_b": partial_sum_b,
+        "upper_bound_valid": comparison_holds and partial_sum_b < np.inf,
+    }
+
+
+# Example: 1/(n^2+1) compared to 1/n^2
+result = comparison_test_numerical(
+    series_a=lambda n: 1.0 / (n**2 + 1.0),
+    series_b=lambda n: 1.0 / n**2,
 )
 print(f"1/(n^2+1) vs 1/n^2:")
 print(f" a_n <= b_n everywhere: {result['comparison_holds']}")
@@ -118,39 +145,55 @@ print(f" Upper bound valid: {result['upper_bound_valid']}")
 
 ```r
 # Comparison test: sum 1/(n^2 + n) vs sum 1/n^2
-comparison_test <- function(a_func, b_func, series_name, n_terms = 10000) { n_vals <- seq_len(n_terms)
+comparison_test <- function(a_func, b_func, series_name, n_terms = 10000) {
+  n_vals <- seq_len(n_terms)
   a_vals <- a_func(n_vals)
   b_vals <- b_func(n_vals)
   comparison_holds <- all(a_vals <= b_vals + 1e-14)
   sum_a <- sum(a_vals)
   sum_b <- sum(b_vals)
   cat(sprintf("%s:\n a_n<=b_n: %s | sum_a=%0.6f | sum_b=%0.6f\n", series_name, comparison_holds, sum_a, sum_b))
-} comparison_test( function(n) 1 / (n^2 + n), function(n) 1 / n^2, "1/(n^2+n) vs 1/n^2"
-) comparison_test( function(n) 1 / (2^n + n), function(n) 1 / 2^n, "1/(2^n+n) vs 1/2^n"
-)
+}
+comparison_test(function(n) 1 / (n^2 + n), function(n) 1 / n^2, "1/(n^2+n) vs 1/n^2")
+comparison_test(function(n) 1 / (2^n + n), function(n) 1 / 2^n, "1/(2^n+n) vs 1/2^n")
 ```
 
 ### Professional example (Python)
 
 ```python
 """
-Comparison test for bounding tail probability in a model's output distribution. Business context: Fraud detection model outputs P(fraud | features). We want to bound the total probability mass in the tail (scores above threshold N0) using a geometric comparison, confirming the tail is negligible.
-""" import numpy as np NUM_SCORE_BUCKETS: int = 1000
+Comparison test for bounding tail probability in a model's output distribution.
+
+Business context: Fraud detection model outputs P(fraud | features).
+We want to bound the total probability mass in the tail (scores above
+threshold N0) using a geometric comparison, confirming the tail is negligible.
+"""
+import numpy as np
+
+NUM_SCORE_BUCKETS: int = 1000
 THRESHOLD_INDEX: int = 100   # we ignore scores above this bucket
 DECAY_FACTOR: float = 0.97   # geometric decay of probability per bucket
 
-def simulate_fraud_score_distribution( num_buckets: int, decay: float, seed: int = 42,
+
+def simulate_fraud_score_distribution(
+    num_buckets: int, decay: float, seed: int = 42,
 ) -> np.ndarray:
     """Simulate a fraud score PMF that decays geometrically in the tail."""
     rng = np.random.default_rng(seed)
-    raw_probs = np.zeros(num_buckets)   # First 100 buckets: main mass
-    raw_probs[:100] = rng.dirichlet(np.ones(100)) * 0.85   # Remaining: geometric tail
+    raw_probs = np.zeros(num_buckets)
+    # First 100 buckets: main mass
+    raw_probs[:100] = rng.dirichlet(np.ones(100)) * 0.85
+    # Remaining: geometric tail
     tail_indices = np.arange(num_buckets - 100)
     raw_probs[100:] = 0.15 * decay**tail_indices * (1.0 - decay)
     return raw_probs / raw_probs.sum()
+
+
 fraud_pmf = simulate_fraud_score_distribution(NUM_SCORE_BUCKETS, DECAY_FACTOR)
 tail_probs = fraud_pmf[THRESHOLD_INDEX:]
-tail_indices = np.arange(len(tail_probs), dtype=float)   # Comparison: tail_prob[k] <= 0.15 * DECAY_FACTOR^k (geometric bound)
+tail_indices = np.arange(len(tail_probs), dtype=float)
+
+# Comparison: tail_prob[k] <= 0.15 * DECAY_FACTOR^k (geometric bound)
 geometric_bound = DECAY_FACTOR**tail_indices / (1.0 - DECAY_FACTOR) * fraud_pmf[THRESHOLD_INDEX]
 comparison_holds = np.all(tail_probs <= geometric_bound + 1e-14)
 actual_tail_mass = np.sum(tail_probs)

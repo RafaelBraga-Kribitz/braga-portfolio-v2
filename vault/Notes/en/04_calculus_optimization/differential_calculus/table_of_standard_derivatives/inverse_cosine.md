@@ -34,7 +34,7 @@ flowchart TD
 
 ### Where it is used
 
-Computing the gradient of angular distance $\theta = \arccos(\text{cosine_similarity})$ when using angular loss functions in metric learning and contrastive learning; differentiating geodesic distance formulas for spherical coordinates in geospatial ML; computing gradients through $\arccos$-based activation functions; deriving the gradient of the angular margin in ArcFace loss for face recognition.
+Computing the gradient of angular distance $\theta = \arccos(\text{cosine\_similarity})$ when using angular loss functions in metric learning and contrastive learning; differentiating geodesic distance formulas for spherical coordinates in geospatial ML; computing gradients through $\arccos$-based activation functions; deriving the gradient of the angular margin in ArcFace loss for face recognition.
 
 ### Problem it solves
 
@@ -72,7 +72,7 @@ $d/du(\arccos u)|_{u=0.8} = -1/\sqrt{1-0.64} = -1/\sqrt{0.36} = -1/0.6 \approx -
 - **Negative derivative = decreasing function:** $\arccos$ goes from $\pi$ at $x=-1$ to $0$ at $x=1$. Its derivative is always negative (except undefined at the endpoints). This is the opposite of $\arcsin$, which increases from $-\pi/2$ to $\pi/2$.
 - **Complementary identity:** $\arcsin(x) + \arccos(x) = \pi/2$ for all $x \in [-1, 1]$. Differentiating both sides: $d/dx(\arcsin x) + d/dx(\arccos x) = 0$, so $d/dx(\arccos x) = -d/dx(\arcsin x) = -1/\sqrt{1-x^2}$. This is the quickest proof of the formula.
 - **Angular gradient in embeddings:** when $\theta = \arccos(\mathbf{u} \cdot \mathbf{v})$ and $\mathbf{u}, \mathbf{v}$ are unit vectors, the gradient of $\theta$ with respect to the cosine similarity is $-1/\sin\theta$. This blows up when $\theta \approx 0$ or $\theta \approx \pi$ (nearly identical or opposite vectors). Clip or add $\epsilon$ in practice.
-- **Same domain restriction as arcsin:** $|ax| < 1$ required. Inputs outside $[-1, 1]$ to $\arccos$ are undefined. When computing $\arccos(\text{cosine_similarity})$, numerical errors can push the similarity slightly outside $[-1, 1]$; always clip first: `sim = np.clip(sim, -1, 1)`.
+- **Same domain restriction as arcsin:** $|ax| < 1$ required. Inputs outside $[-1, 1]$ to $\arccos$ are undefined. When computing $\arccos(\text{cosine\_similarity})$, numerical errors can push the similarity slightly outside $[-1, 1]$; always clip first: `sim = np.clip(sim, -1, 1)`.
 - **Gradient clipping at boundary:** just like $\arcsin$, the derivative $\to -\infty$ as $|ax| \to 1$.
 
 In ArcFace and similar angular losses, this is handled by clipping the cosine similarity away from $\pm 1$.

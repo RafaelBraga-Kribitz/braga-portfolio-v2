@@ -82,16 +82,22 @@ $\frac{343}{343} = 1$, so $7^0 = 1$. The result is always 1 regardless of the ba
 ### Beginner example (Python)
 
 ```python
-# Zero exponent rule: a^0 = 1 for any a != 0 bases = [2, 5, -3, 0.5, 100, 3.14159] print("Demonstrating a^0 = 1 for various bases:")
+# Zero exponent rule: a^0 = 1 for any a != 0
+bases = [2, 5, -3, 0.5, 100, 3.14159]
+print("Demonstrating a^0 = 1 for various bases:")
 print(f"{'Base':>10} | {'a^0':>10}")
 print("-" * 25)
 for base in bases:
     result = base ** 0
-print(f"{base:>10} | {result:>10}")   # Polynomial evaluation example: p(x) = 3x^2 + 2x^1 + 5x^0
+    print(f"{base:>10} | {result:>10}")
 
+
+# Polynomial evaluation example: p(x) = 3x^2 + 2x^1 + 5x^0
 def polynomial(x_val: float) -> float:
     """Evaluate 3x^2 + 2x + 5 using explicit exponents."""
     return 3 * x_val**2 + 2 * x_val**1 + 5 * x_val**0
+
+
 print(f"\nPolynomial 3x^2 + 2x + 5:")
 for x in [0, 1, 2, 3]:
     print(f" p({x}) = {polynomial(x)}")
@@ -105,11 +111,15 @@ bases <- c(2, 5, -3, 0.5, 100, pi)
 cat("Demonstrating a^0 = 1 for various bases:\n")
 cat(sprintf("%10s | %10s\n", "Base", "a^0"))
 cat(strrep("-", 25), "\n")
-for (b in bases) { cat(sprintf("%10.5g | %10g\n", b, b^0))
-}  # Polynomial: p(x) = 3x^2 + 2x + 5 using explicit exponents
+for (b in bases) {
+  cat(sprintf("%10.5g | %10g\n", b, b^0))
+}
+
+# Polynomial: p(x) = 3x^2 + 2x + 5 using explicit exponents
 polynomial <- function(x) 3 * x^2 + 2 * x^1 + 5 * x^0
 cat("\nPolynomial 3x^2 + 2x + 5:\n")
-for (x in 0:3) { cat(sprintf(" p(%d) = %.1f\n", x, polynomial(x)))
+for (x in 0:3) {
+  cat(sprintf(" p(%d) = %.1f\n", x, polynomial(x)))
 }
 ```
 
@@ -117,18 +127,26 @@ for (x in 0:3) { cat(sprintf(" p(%d) = %.1f\n", x, polynomial(x)))
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: polynomial feature matrix for regression
+import pandas as pd
+
+# Scenario: polynomial feature matrix for regression
 # X_poly columns = [x^0, x^1, x^2, x^3]
 # x^0 = 1 column is the intercept term (bias)
 np.random.seed(42)
 x_values = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
-degree = 3   # Build the Vandermonde-style feature matrix
-feature_matrix = pd.DataFrame( {f"x^{d}": x_values**d for d in range(degree + 1)} )
+degree = 3
+
+# Build the Vandermonde-style feature matrix
+feature_matrix = pd.DataFrame({f"x^{d}": x_values**d for d in range(degree + 1)})
 print("Polynomial Feature Matrix (columns = x^0, x^1, x^2, x^3)")
 print("Note: x^0 = 1 for all rows — this IS the intercept column")
 print()
-print(feature_matrix.to_string(index=False))   # Confirm x^0 = 1 always holds
-assert (feature_matrix["x^0"] == 1.0).all(), "x^0 should always equal 1"   # Fit simple polynomial coefficients (illustrative)
+print(feature_matrix.to_string(index=False))
+
+# Confirm x^0 = 1 always holds
+assert (feature_matrix["x^0"] == 1.0).all(), "x^0 should always equal 1"
+
+# Fit simple polynomial coefficients (illustrative)
 BETA = np.array([5.0, 2.0, 3.0, 0.5])   # [intercept, x^1, x^2, x^3]
 y_hat = feature_matrix.values @ BETA
 print(f"\nBeta (coefficients): {BETA}")

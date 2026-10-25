@@ -101,9 +101,11 @@ z_values = [3 + 4j, -5 + 12j, 1 + 1j, 0 + 2j, 6 + 0j]
 print("Modulus |a + bi| = sqrt(a² + b²):")
 for z in z_values:
     a, b = z.real, z.imag
-manual = np.sqrt(a**2 + b**2)
-builtin = abs(z)
-print(f" |{a}+{b}j| = sqrt({a}²+{b}²) = sqrt({a**2+b**2:.1f}) = {manual:.4f} | abs() = {builtin:.4f}")   # Verify z * conj(z) = |z|²
+    manual = np.sqrt(a**2 + b**2)
+    builtin = abs(z)
+    print(f" |{a}+{b}j| = sqrt({a}²+{b}²) = sqrt({a**2+b**2:.1f}) = {manual:.4f} | abs() = {builtin:.4f}")
+
+# Verify z * conj(z) = |z|²
 z = 3 + 4j
 conj_z = z.conjugate()
 product = z * conj_z
@@ -120,11 +122,14 @@ print(f"Equal: {abs(product.real - abs(z)**2) < 1e-10}")
 # Modulus of complex numbers in R: Mod()
 z_values <- c(3+4i, -5+12i, 1+1i, 0+2i, 6+0i)
 cat("Modulus |a + bi| = sqrt(a² + b²):\n")
-for (z in z_values) { a <- Re(z); b <- Im(z)
+for (z in z_values) {
+  a <- Re(z); b <- Im(z)
   manual <- sqrt(a^2 + b^2)
   builtin <- Mod(z)
   cat(sprintf(" |%.0f+%.0fi| = %.4f | Mod() = %.4f\n", a, b, manual, builtin))
-}  # z * Conj(z) = |z|^2
+}
+
+# z * Conj(z) = |z|^2
 z <- 3 + 4i
 cat(sprintf("\nz × Conj(z) = %s (expect %d+0i)\n", z * Conj(z), as.integer(Mod(z)^2)))
 ```
@@ -133,20 +138,35 @@ cat(sprintf("\nz × Conj(z) = %s (expect %d+0i)\n", z * Conj(z), as.integer(Mod(
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: FFT amplitude spectrum on sales data
+import pandas as pd
+
+# Scenario: FFT amplitude spectrum on sales data
 # Modulus converts complex FFT output to interpretable amplitudes
 np.random.seed(42)
 n = 60   # 5 years monthly
 t = np.arange(n)
-sales = (10_000 + 500 * t + 2_000 * np.sin(2 * np.pi * t / 12)   # annual cycle + 500 * np.sin(2 * np.pi * t /
-    3)   # quarterly cycle + np.random.normal(0, 300, n)) # FFT
+sales = (10_000 + 500 * t
+         + 2_000 * np.sin(2 * np.pi * t / 12)   # annual cycle
+         + 500 * np.sin(2 * np.pi * t / 3)      # quarterly cycle
+         + np.random.normal(0, 300, n))
+
+# FFT
 fft_raw = np.fft.fft(sales)   # complex array
-frequencies = np.fft.fftfreq(n, d=1)   # cycles per month # Modulus = amplitude at each frequency
+frequencies = np.fft.fftfreq(n, d=1)   # cycles per month
+
+# Modulus = amplitude at each frequency
 amplitudes = np.abs(fft_raw)   # |X[k]| = sqrt(Re²+Im²)
 power = amplitudes**2   # PSD = |X[k]|²
-phases_deg = np.degrees(np.angle(fft_raw))   # angle in degrees # Focus on positive frequencies (symmetric for real input)
+phases_deg = np.degrees(np.angle(fft_raw))   # angle in degrees
+
+# Focus on positive frequencies (symmetric for real input)
 pos = frequencies > 0
-freq_df = pd.DataFrame({ "frequency_cpm": frequencies[pos], "period_months": np.where(frequencies[pos] > 0, 1 / frequencies[pos], np.inf), "amplitude": amplitudes[pos], "power": power[pos], "phase_deg": phases_deg[pos],
+freq_df = pd.DataFrame({
+    "frequency_cpm": frequencies[pos],
+    "period_months": np.where(frequencies[pos] > 0, 1 / frequencies[pos], np.inf),
+    "amplitude": amplitudes[pos],
+    "power": power[pos],
+    "phase_deg": phases_deg[pos],
 }).sort_values("amplitude", ascending=False).head(8).reset_index(drop=True)
 freq_df["period_months"] = freq_df["period_months"].round(1)
 freq_df["amplitude"] = freq_df["amplitude"].round(1)
@@ -158,13 +178,15 @@ print(freq_df.to_string(index=False))
 print()
 print(" → Period ≈ 12.0 months: annual seasonality (amplitude ~2000)")
 print(" → Period ≈ 3.0 months: quarterly seasonality (amplitude ~500)")
-print(" → Modulus converts complex FFT values to real amplitudes")   # Eigenvalue stability check (modulus < 1 → stable)
+print(" → Modulus converts complex FFT values to real amplitudes")
+
+# Eigenvalue stability check (modulus < 1 → stable)
 print("\nEigenvalue Stability Check (|λ| < 1 → stable):")
 A = np.array([[0.8, -0.3], [0.2, 0.7]])   # stable system
 eigenvalues = np.linalg.eigvals(A)
 for i, lam in enumerate(eigenvalues):
     stable = np.abs(lam) < 1
-print(f" λ{i+1} = {lam:.4f}, |λ{i+1}| = {np.abs(lam):.4f}, stable: {stable}")
+    print(f" λ{i+1} = {lam:.4f}, |λ{i+1}| = {np.abs(lam):.4f}, stable: {stable}")
 ```
 
 ### Professional example (R)
@@ -179,7 +201,10 @@ fft_raw <- fft(sales)
 amplitudes <- Mod(fft_raw)
 frequencies <- (0:(n - 1)) / n
 pos <- frequencies > 0 & frequencies <= 0.5
-df <- data.frame( frequency_cpm = frequencies[pos], period_months = 1 / frequencies[pos], amplitude = amplitudes[pos]
+df <- data.frame(
+  frequency_cpm = frequencies[pos],
+  period_months = 1 / frequencies[pos],
+  amplitude = amplitudes[pos]
 )
 df <- df[order(-df$amplitude), ]
 cat("FFT Amplitude Spectrum (Modulus of Complex FFT)\n")
@@ -188,7 +213,8 @@ cat(" → Modulus converts complex FFT values to real amplitudes\n")
 A <- matrix(c(0.8, -0.3, 0.2, 0.7), 2, 2)
 eigenvals <- eigen(A)$values
 cat("\nEigenvalue stability (|λ| < 1 → stable):\n")
-for (i in seq_along(eigenvals)) { lam <- eigenvals[i]
+for (i in seq_along(eigenvals)) {
+  lam <- eigenvals[i]
   cat(sprintf(" λ%d = %.4f, |λ%d| = %.4f, stable: %s\n", i, lam, i, Mod(lam), Mod(lam) < 1))
 }
 ```

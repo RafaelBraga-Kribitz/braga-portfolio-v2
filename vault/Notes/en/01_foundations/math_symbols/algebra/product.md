@@ -3,6 +3,7 @@ publish: true
 date: '2026-04-16'
 tags:
 - foundations
+slug: product-algebra
 ---
 
 # Product

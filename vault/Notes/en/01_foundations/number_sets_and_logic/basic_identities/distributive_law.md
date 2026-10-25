@@ -104,8 +104,10 @@ test_cases = [(3, 4, 5), (2, -3, 7), (0.5, 10, 6), (-1, 8, -2)]
 print("Verifying a(b+c) == ab+ac:")
 for a, b, c in test_cases:
     lhs = a * (b + c)
-rhs = a * b + a * c
-print(f" {a}({b}+{c}) = {a}×{b+c} = {lhs} | {a}×{b}+{a}×{c} = {a*b}+{a*c} = {rhs} | Equal: {lhs==rhs}")   # Dot product distributivity: w · (x + z) = w·x + w·z
+    rhs = a * b + a * c
+    print(f" {a}({b}+{c}) = {a}×{b+c} = {lhs} | {a}×{b}+{a}×{c} = {a*b}+{a*c} = {rhs} | Equal: {lhs==rhs}")
+
+# Dot product distributivity: w · (x + z) = w·x + w·z
 import numpy as np
 w = np.array([1.0, 2.0, 3.0])
 x = np.array([4.0, 5.0, 6.0])
@@ -115,14 +117,16 @@ rhs_dot = w @ x + w @ z
 print(f"\nDot product distributivity:")
 print(f" w·(x+z) = {lhs_dot}")
 print(f" w·x + w·z = {rhs_dot}")
-print(f" Equal: {abs(lhs_dot - rhs_dot) < 1e-10}")   # Revenue: price × (units + bonus) = price×units + price×bonus
+print(f" Equal: {abs(lhs_dot - rhs_dot) < 1e-10}")
+
+# Revenue: price × (units + bonus) = price×units + price×bonus
 prices = [10.0, 25.0, 5.0]
 units = [7, 3, 15]
 bonuses = [3, 2, 0]
 for p, u, b in zip(prices, units, bonuses):
     method1 = p * (u + b)
-method2 = p * u + p * b
-print(f" {p}×({u}+{b})={method1:.1f} | {p}×{u}+{p}×{b}={method2:.1f} Equal:{method1==method2}")
+    method2 = p * u + p * b
+    print(f" {p}×({u}+{b})={method1:.1f} | {p}×{u}+{p}×{b}={method2:.1f} Equal:{method1==method2}")
 ```
 
 ### Beginner example (R)
@@ -131,11 +135,14 @@ print(f" {p}×({u}+{b})={method1:.1f} | {p}×{u}+{p}×{b}={method2:.1f} Equal:{m
 # Distributive law: a(b+c) = ab+ac
 test_cases <- list(c(3, 4, 5), c(2, -3, 7), c(0.5, 10, 6), c(-1, 8, -2))
 cat("Verifying a(b+c) == ab+ac:\n")
-for (t in test_cases) { a <- t[1]; b <- t[2]; c <- t[3]
+for (t in test_cases) {
+  a <- t[1]; b <- t[2]; c <- t[3]
   lhs <- a * (b + c)
   rhs <- a * b + a * c
   cat(sprintf(" %.1f(%.1f+%.1f)=%.1f | %.1f×%.1f+%.1f×%.1f=%.1f Equal:%s\n", a, b, c, lhs, a, b, a, c, rhs, lhs==rhs))
-}  # Dot product distributivity
+}
+
+# Dot product distributivity
 w <- c(1, 2, 3)
 x <- c(4, 5, 6)
 z <- c(1, 1, 1)
@@ -147,16 +154,27 @@ cat(sprintf("w·x + w·z = %.1f\n", sum(w * x) + sum(w * z)))
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: linear model prediction using distributive law
+import pandas as pd
+
+# Scenario: linear model prediction using distributive law
 # and feature scaling coefficient adjustment
 np.random.seed(42)
-n = 300   # Features: age, spend, recency (days since last purchase)
-X = pd.DataFrame({ "age": np.random.normal(38, 10, n), "spend": np.random.normal(300, 100, n), "recency": np.random.uniform(1, 365, n) })   # True weights (simulate "learned" coefficients)
+n = 300
+
+# Features: age, spend, recency (days since last purchase)
+X = pd.DataFrame({
+    "age": np.random.normal(38, 10, n),
+    "spend": np.random.normal(300, 100, n),
+    "recency": np.random.uniform(1, 365, n),
+})
+
+# True weights (simulate "learned" coefficients)
 weights = np.array([0.5, 0.02, -0.003])
-intercept = 10.0   # Prediction via dot product = distributive law applied n_features times
-#
-y_hat = w_0 + w_1*age + w_2*spend + w_3*recency
-# = intercept + w · x_i for each row i
+intercept = 10.0
+
+# Prediction via dot product = distributive law applied n_features times
+# y_hat = w_0 + w_1*age + w_2*spend + w_3*recency
+#       = intercept + w · x_i for each row i
 y_hat_via_dot = X.values @ weights + intercept
 y_hat_explicit = (weights[0] * X["age"] + weights[1] * X["spend"] + weights[2] * X["recency"] + intercept).values
 print("Linear Model: Dot Product via Distributive Law")
@@ -164,7 +182,9 @@ print("=" * 48)
 print(f" Predictions match: {np.allclose(y_hat_via_dot, y_hat_explicit)}")
 print(f" Max diff: {np.max(np.abs(y_hat_via_dot - y_hat_explicit)):.2e}")
 print(f" Sample predictions (first 5): {y_hat_via_dot[:5].round(3)}")
-print()   # Feature scaling: if we scale 'spend' by 1/100 (to make it $hundreds)
+print()
+
+# Feature scaling: if we scale 'spend' by 1/100 (to make it $hundreds)
 # the coefficient must be multiplied by 100 to maintain the same predictions
 scale_factor = 100.0
 X_scaled = X.copy()
@@ -191,7 +211,7 @@ scale_factor <- 0.01
 X_scaled <- X
 X_scaled$spend <- X_scaled$spend * scale_factor
 weights_adjusted <- weights
-weights_adjusted[2] <- weights[2] * scale_factor
+weights_adjusted[2] <- weights[2] / scale_factor
 y_hat_scaled <- as.numeric(as.matrix(X_scaled) %*% weights_adjusted)
 cat(" Predictions unchanged:", all.equal(y_hat_via_dot, y_hat_scaled), "\n")
 ```

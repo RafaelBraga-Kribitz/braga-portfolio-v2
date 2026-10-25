@@ -34,6 +34,12 @@ export function vaultLoader(glob, { name, folders, filePattern, generateId }) {
             const rel = relative(VAULT_DIR, fileURLToPath(args.fileUrl)).split(sep).join('/');
             return { ...info, data: readNote(rel, args.contents).data };
           },
+          // an offline note is never rendered either: a private draft's
+          // half-written maths cannot fail the build
+          getRenderFunction: type.getRenderFunction && (async (config) => {
+            const render = await type.getRenderFunction(config);
+            return (args) => (offline(args.data) ? Promise.resolve(undefined) : render(args));
+          }),
         },
       ]));
       const store = new Proxy(ctx.store, {

@@ -91,19 +91,24 @@ $\det(A^T) = 1 = \det(A)$ ✓.
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # -- det(A^T) = det(A): verification for general and symmetric matrices --
+import numpy as np
+
+# -- det(A^T) = det(A): verification for general and symmetric matrices --
 A = np.array([[2.0, 5.0], [1.0, 3.0]])
 det_A = np.linalg.det(A)
 det_At = np.linalg.det(A.T)
 print(f"A:\n{A}")
 print(f"\ndet(A) = {det_A:.6f}")
 print(f"det(A.T) = {det_At:.6f}")
-print(f"Identity holds: {np.isclose(det_A, det_At)}")   # Symmetric matrix case (covariance-like)
+print(f"Identity holds: {np.isclose(det_A, det_At)}")
+
+# Symmetric matrix case (covariance-like)
 S = np.array([[4.0, 1.5, 0.5], [1.5, 3.0, 1.0], [0.5, 1.0, 2.0]])
 print(f"\nSymmetric matrix S (S == S.T: {np.allclose(S, S.T)})")
 print(f"det(S) = {np.linalg.det(S):.6f}")
-print(f"det(S.T) = {np.linalg.det(S.T):.6f}")   # Gram matrix: det(X^T X) =
-det(X)^2 >= 0
+print(f"det(S.T) = {np.linalg.det(S.T):.6f}")
+
+# Gram matrix: det(X^T X) = det(X)^2 >= 0
 np.random.seed(42)
 X = np.random.randn(4, 4)
 gram = X.T @ X
@@ -122,11 +127,15 @@ det_A <- det(A)
 det_At <- det(t(A))
 cat(sprintf("det(A) = %.6f\n", det_A))
 cat(sprintf("det(t(A)) = %.6f\n", det_At))
-cat(sprintf("Identity holds: %s\n", isTRUE(all.equal(det_A, det_At))))  # Symmetric covariance matrix
+cat(sprintf("Identity holds: %s\n", isTRUE(all.equal(det_A, det_At))))
+
+# Symmetric covariance matrix
 S <- matrix(c(4.0, 1.5, 0.5, 1.5, 3.0, 1.0, 0.5, 1.0, 2.0), nrow = 3, byrow = TRUE)
 cat(sprintf("\nS is symmetric: %s\n", isTRUE(all.equal(S, t(S)))))
 cat(sprintf("det(S) = %.6f\n", det(S)))
-cat(sprintf("det(t(S)) = %.6f\n", det(t(S))))  # Gram matrix
+cat(sprintf("det(t(S)) = %.6f\n", det(t(S))))
+
+# Gram matrix
 set.seed(42)
 X <- matrix(rnorm(16), nrow = 4)
 gram <- t(X) %*% X
@@ -139,31 +148,57 @@ cat(sprintf("det(t(X) %%*%% X) = %.6f\n", det(gram)))
 ```python
 import numpy as np
 import pandas as pd
-np.random.seed(42)   # -- Business scenario: portfolio covariance matrix validation
+np.random.seed(42)
+
+# -- Business scenario: portfolio covariance matrix validation
 # For a portfolio of 8 assets, verify the estimated covariance matrix is
 # positive definite (all eigenvalues > 0, det > 0) using det(Sigma^T) = det(Sigma).
 # Also demonstrate det(X.T @ X) = det(X)^2 for the returns matrix.
 N_OBS = 252   # 1 year of daily returns
 N_ASSETS = 8
-ASSET_NAMES = [f"Asset_{chr(65 + i)}" for i in range(N_ASSETS)]   # Simulate daily log-returns (mildly correlated assets)
+ASSET_NAMES = [f"Asset_{chr(65 + i)}" for i in range(N_ASSETS)]
+
+# Simulate daily log-returns (mildly correlated assets)
 true_corr = np.eye(N_ASSETS)
 for i in range(N_ASSETS - 1):
     true_corr[i, i+1] = true_corr[i+1, i] = 0.3
 true_vols = np.diag(np.random.uniform(0.01, 0.03, N_ASSETS))   # daily vol
 true_cov = true_vols @ true_corr @ true_vols
-returns = np.random.multivariate_normal(np.zeros(N_ASSETS), true_cov, size=N_OBS)   # Sample covariance matrix
-cov_sample = np.cov(returns.T)   # (8 x 8) symmetric PSD # Key checks
+returns = np.random.multivariate_normal(np.zeros(N_ASSETS), true_cov, size=N_OBS)
+
+# Sample covariance matrix
+cov_sample = np.cov(returns.T)   # (8 x 8) symmetric PSD
+
+# Key checks
 is_symmetric = np.allclose(cov_sample, cov_sample.T)
 det_sigma = np.linalg.det(cov_sample)
 det_sigma_t = np.linalg.det(cov_sample.T)
 det_identity_hold = np.isclose(det_sigma, det_sigma_t)
 eigenvalues = np.linalg.eigvalsh(cov_sample)
-is_pos_def = bool(np.all(eigenvalues > 0))   # Returns matrix: det(R^T R) =
-det(R)^2
+is_pos_def = bool(np.all(eigenvalues > 0))
+
+# Returns matrix: det(R^T R) = det(R)^2
 R_centered = returns - returns.mean(axis=0)
 gram_matrix = R_centered.T @ R_centered / (N_OBS - 1)
 det_gram = np.linalg.det(gram_matrix)
-summary = pd.DataFrame({ "check": [ "Symmetric (Sigma == Sigma^T)", "det(Sigma)", "det(Sigma^T)", "det(Sigma^T) == det(Sigma)", "Positive definite (all eigvals > 0)", "Optimization feasible", ], "result": [ str(is_symmetric), f"{det_sigma:.4e}", f"{det_sigma_t:.4e}", str(det_identity_hold), str(is_pos_def), str(is_pos_def and det_identity_hold), ],
+
+summary = pd.DataFrame({
+    "check": [
+        "Symmetric (Sigma == Sigma^T)",
+        "det(Sigma)",
+        "det(Sigma^T)",
+        "det(Sigma^T) == det(Sigma)",
+        "Positive definite (all eigvals > 0)",
+        "Optimization feasible",
+    ],
+    "result": [
+        str(is_symmetric),
+        f"{det_sigma:.4e}",
+        f"{det_sigma_t:.4e}",
+        str(det_identity_hold),
+        str(is_pos_def),
+        str(is_pos_def and det_identity_hold),
+    ],
 })
 print("Portfolio covariance matrix validation:")
 print(summary.to_string(index=False))

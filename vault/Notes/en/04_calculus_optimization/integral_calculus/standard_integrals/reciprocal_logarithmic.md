@@ -112,15 +112,23 @@ def recip_antiderivative(x: float, a: float, b: float) -> float:
     return (1.0 / a) * np.log(abs(val))
 
 def recip_definite(lo: float, hi: float, a: float, b: float) -> float:
-    return recip_antiderivative(hi, a, b) - recip_antiderivative(lo, a, b)   # Test cases (avoid the pole at x = -b/a)
-cases = [ (1.0, 4.0, 3.0, 1.0),   # int 1/(3x+1) from 1 to 4
-    (1.0, 3.0, 1.0, 0.0),   # int 1/x from 1 to 3 = ln(3)
+    return recip_antiderivative(hi, a, b) - recip_antiderivative(lo, a, b)
+
+
+# Test cases (avoid the pole at x = -b/a)
+cases = [
+    (1.0, 4.0, 3.0, 1.0),    # int 1/(3x+1) from 1 to 4
+    (1.0, 3.0, 1.0, 0.0),    # int 1/x from 1 to 3 = ln(3)
     (2.0, 5.0, -1.0, 6.0),   # int 1/(-x+6) from 2 to 5
 ]
 for lo, hi, a, b in cases:
     analytic = recip_definite(lo, hi, a, b)
-numerical, _ = integrate.quad(lambda x, aa=a, bb=b: 1.0/(aa*x+bb), lo, hi)
-print(f"int_({lo},{hi}) 1/({a}x+{b}): " f"analytic={analytic:.6f}, numerical={numerical:.6f}, " f"match={abs(analytic-numerical)<1e-8}")   # Partial fraction: 1/(x*(1-x)) = 1/x + 1/(1-x), integrated from 0.1 to 0.9
+    numerical, _ = integrate.quad(lambda x, aa=a, bb=b: 1.0/(aa*x+bb), lo, hi)
+    print(f"int_({lo},{hi}) 1/({a}x+{b}): "
+          f"analytic={analytic:.6f}, numerical={numerical:.6f}, "
+          f"match={abs(analytic-numerical)<1e-8}")
+
+# Partial fraction: 1/(x*(1-x)) = 1/x + 1/(1-x), integrated from 0.1 to 0.9
 # This gives: ln|x/(1-x)| = logit
 print("\n=== Partial fraction: logit via integration ===")
 logit_analytic = recip_definite(0.1, 0.9, 1.0, 0.0) + recip_definite(0.1, 0.9, -1.0, 1.0)
@@ -133,13 +141,17 @@ print(f"ln(0.9/0.1) - ln(0.1/0.9) = {np.log(9) - np.log(1/9):.6f}")
 ### Beginner example (R)
 
 ```r
-recip_antiderivative <- function(x, a, b) { val <- a * x + b
-  if (abs(val) < 1e-12) stop("Pole.") (1 / a) * log(abs(val))
+recip_antiderivative <- function(x, a, b) {
+  val <- a * x + b
+  if (abs(val) < 1e-12) stop("Pole.")
+  (1 / a) * log(abs(val))
 }
-recip_definite <- function(lo, hi, a, b) { recip_antiderivative(hi, a, b) - recip_antiderivative(lo, a, b)
+recip_definite <- function(lo, hi, a, b) {
+  recip_antiderivative(hi, a, b) - recip_antiderivative(lo, a, b)
 }
 cases <- list(c(1, 4, 3, 1), c(1, 3, 1, 0), c(2, 5, -1, 6))
-for (tc in cases) { lo <- tc[1]; hi <- tc[2]; a <- tc[3]; b <- tc[4]
+for (tc in cases) {
+  lo <- tc[1]; hi <- tc[2]; a <- tc[3]; b <- tc[4]
   analytic <- recip_definite(lo, hi, a, b)
   numerical <- integrate(function(x) 1/(a*x+b), lower=lo, upper=hi)$value
   cat(sprintf("int_(%g,%g) 1/(%gx+%g): analytic=%.6f, num=%.6f, match=%s\n", lo, hi, a, b, analytic, numerical, isTRUE(all.equal(analytic, numerical, tol=1e-7))))
@@ -150,11 +162,15 @@ for (tc in cases) { lo <- tc[1]; hi <- tc[2]; a <- tc[3]; b <- tc[4]
 
 ```python
 """
-Reciprocal logarithmic rule in log-likelihood gradient integration. The score function of the logistic model is: d/dw log
-p(y|x,w) = (y - sigma(w^T x)) * x Integrating the score over a prior
-p(w) gives the expected gradient.
+Reciprocal logarithmic rule in log-likelihood gradient integration.
+
+The score function of the logistic model is:
+    d/dw log p(y|x,w) = (y - sigma(w^T x)) * x
+Integrating the score over a prior p(w) gives the expected gradient.
 For a Gaussian prior on w, integrating involves 1/(sigma*(1-sigma))
-which decomposes via partial fractions into two reciprocal-linear terms. Here we demonstrate the partial-fraction decomposition that appears
+which decomposes via partial fractions into two reciprocal-linear terms.
+
+Here we demonstrate the partial-fraction decomposition that appears
 in the Laplace approximation of the logistic model's evidence.
 """
 import numpy as np
@@ -162,29 +178,38 @@ from scipy import integrate
 
 def sigmoid(z: np.ndarray) -> np.ndarray:
     """Numerically stable sigmoid."""
-    return np.where(z >= 0, 1.0 / (1.0 + np.exp(-z)), np.exp(z) / (1.0 + np.exp(z)))   # For logistic regression: the Fisher information at a single point is
-# I(w) =
-sigma(w) * (1 - sigma(w))
+    return np.where(z >= 0, 1.0 / (1.0 + np.exp(-z)), np.exp(z) / (1.0 + np.exp(z)))
+
+
+# For logistic regression: the Fisher information at a single point is
+# I(w) = sigma(w) * (1 - sigma(w))
 # Its reciprocal 1/(sigma*(1-sigma)) = 1/sigma + 1/(1-sigma) (partial fractions)
+
 # Verify partial fraction identity numerically
 print("=== Partial fraction: 1/(p*(1-p)) = 1/p + 1/(1-p) ===")
 p_values = np.linspace(0.1, 0.9, 9)
 for p in p_values:
     lhs = 1.0 / (p * (1 - p))
-rhs = 1.0/p + 1.0/(1-p)
-print(f" p={p:.1f}: LHS={lhs:.4f}, RHS={rhs:.4f}, match={abs(lhs-rhs)<1e-10}")   # Integral of 1/(p*(1-p)) from p_lo to p_hi = ln(p/(1-p)) evaluated at bounds
-# =
-logit(p_hi) - logit(p_lo)
+    rhs = 1.0/p + 1.0/(1-p)
+    print(f" p={p:.1f}: LHS={lhs:.4f}, RHS={rhs:.4f}, match={abs(lhs-rhs)<1e-10}")
+
+# Integral of 1/(p*(1-p)) from p_lo to p_hi = ln(p/(1-p)) evaluated at bounds
+# = logit(p_hi) - logit(p_lo)
 print("\n=== int_{p1}^{p2} 1/(p*(1-p)) dp = logit(p2) - logit(p1) ===")
+
 
 def logit(p: float) -> float:
     return float(np.log(p / (1.0 - p)))
+
+
 test_pairs = [(0.2, 0.8), (0.1, 0.6), (0.3, 0.7)]
 for p1, p2 in test_pairs:
     # Via partial fractions + reciprocal log rule
-    analytic = logit(p2) - logit(p1)   # Numerical
-numerical, _ = integrate.quad(lambda p: 1.0/(p*(1-p)), p1, p2)
-print(f" [{p1},{p2}]: logit(p2)-logit(p1) = {analytic:.6f}, " f"numerical = {numerical:.6f}, match={abs(analytic-numerical)<1e-6}")
+    analytic = logit(p2) - logit(p1)
+    # Numerical
+    numerical, _ = integrate.quad(lambda p: 1.0/(p*(1-p)), p1, p2)
+    print(f" [{p1},{p2}]: logit(p2)-logit(p1) = {analytic:.6f}, "
+          f"numerical = {numerical:.6f}, match={abs(analytic-numerical)<1e-6}")
 ```
 
 ---

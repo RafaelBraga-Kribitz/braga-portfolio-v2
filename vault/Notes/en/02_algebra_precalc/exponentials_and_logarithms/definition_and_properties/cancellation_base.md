@@ -109,50 +109,68 @@ $e^{\ln 7} = 7$ directly. Verify: $\ln 7 \approx 1.9459$; $e^{1.9459} \approx 7$
 ```python
 # Cancellation identities: e^(ln x) = x and ln(e^x) = x
 import math
-import numpy as np   # Form 1: a^(log_a x) = x
+import numpy as np
+
+# Form 1: a^(log_a x) = x
 print("Form 1: a^(log_a x) = x — exponentiating undoes the log")
 test_values = [0.1, 1.0, 2.0, math.e, 10.0, 100.0]
 print(f"{'x':>8} {'ln(x)':>10} {'e^(ln x)':>12} {'match x':>8}")
 for x in test_values:
     ln_x = math.log(x)
-recovered = math.exp(ln_x)
-print(f"{x:>8.4f} {ln_x:>10.6f} {recovered:>12.6f} {str(abs(recovered - x) < 1e-9):>8}")   # Form 2: log_a(a^x) = x
+    recovered = math.exp(ln_x)
+    print(f"{x:>8.4f} {ln_x:>10.6f} {recovered:>12.6f} {str(abs(recovered - x) < 1e-9):>8}")
+
+# Form 2: log_a(a^x) = x
 print("\nForm 2: ln(e^x) = x — log undoes the exponent")
 exponents = [-3.0, -1.0, 0.0, 1.0, 2.5, 10.0]
 print(f"{'x':>8} {'e^x':>12} {'ln(e^x)':>10} {'match x':>8}")
 for x in exponents:
     exp_x = math.exp(x)
-recovered = math.log(exp_x)
-print(f"{x:>8.4f} {exp_x:>12.6f} {recovered:>10.6f} {str(abs(recovered - x) < 1e-9):>8}")   # TRAP: mismatched bases — e^(log2 x) ≠ x
+    recovered = math.log(exp_x)
+    print(f"{x:>8.4f} {exp_x:>12.6f} {recovered:>10.6f} {str(abs(recovered - x) < 1e-9):>8}")
+
+# TRAP: mismatched bases — e^(log2 x) ≠ x
 print("\nTRAP: e^(log2 x) ≠ x (mismatched bases)")
 for x in [2.0, 4.0, 8.0]:
     log2_x = math.log2(x)
-e_pow_log2 = math.exp(log2_x)   # e^(log2 x) ≠ x print(f" x={x:.0f} log2(x)={log2_x:.4f} e^(log2 x)={e_pow_log2:.4f} equals x: {abs(e_pow_log2 - x) < 1e-9}") # Log-linear model: ln(e^(ax+b)) = ax+b
+    e_pow_log2 = math.exp(log2_x)   # e^(log2 x) ≠ x
+    print(f" x={x:.0f} log2(x)={log2_x:.4f} e^(log2 x)={e_pow_log2:.4f} equals x: {abs(e_pow_log2 - x) < 1e-9}")
+
+# Log-linear model: ln(e^(ax+b)) = ax+b
 print("\nLog-linear model simplification: ln(e^(ax+b)) = ax+b")
 a_coef, b_coef = 2.5, -1.0
 for x_val in [0.0, 1.0, 2.0, -1.0]:
     lhs = math.log(math.exp(a_coef * x_val + b_coef))
-rhs = a_coef * x_val + b_coef
-print(f" x={x_val:5.1f} ln(e^(ax+b))={lhs:.6f} ax+b={rhs:.6f} match={abs(lhs - rhs) < 1e-9}")
+    rhs = a_coef * x_val + b_coef
+    print(f" x={x_val:5.1f} ln(e^(ax+b))={lhs:.6f} ax+b={rhs:.6f} match={abs(lhs - rhs) < 1e-9}")
 ```
 
 ### Beginner example (R)
 
 ```r
-# Cancellation identities in R: e^(ln x) = x and ln(e^x) = x # Form 1
+# Cancellation identities in R: e^(ln x) = x and ln(e^x) = x
+
+# Form 1
 cat("Form 1: e^(ln x) = x\n")
 test_values <- c(0.1, 1, 2, exp(1), 10, 100)
-for (x in test_values) { recovered <- exp(log(x))
+for (x in test_values) {
+  recovered <- exp(log(x))
   cat(sprintf(" x=%-8.4f ln(x)=%-10.6f e^ln(x)=%-10.6f match=%s\n", x, log(x), recovered, abs(recovered - x) < 1e-9))
-}  # Form 2
+}
+
+# Form 2
 cat("\nForm 2: ln(e^x) = x\n")
 exponents <- c(-3, -1, 0, 1, 2.5, 10)
-for (x in exponents) { recovered <- log(exp(x))
+for (x in exponents) {
+  recovered <- log(exp(x))
   cat(sprintf(" x=%-8.4f e^x=%-12.6f ln(e^x)=%-10.6f match=%s\n", x, exp(x), recovered, abs(recovered - x) < 1e-9))
-}  # Log-linear model
+}
+
+# Log-linear model
 a_coef <- 2.5; b_coef <- -1.0
 cat("\nLog-linear: ln(e^(ax+b)) = ax+b\n")
-for (x_val in c(0, 1, 2, -1)) { lhs <- log(exp(a_coef * x_val + b_coef))
+for (x_val in c(0, 1, 2, -1)) {
+  lhs <- log(exp(a_coef * x_val + b_coef))
   rhs <- a_coef * x_val + b_coef
   cat(sprintf(" x=%5.1f lhs=%.6f rhs=%.6f match=%s\n", x_val, lhs, rhs, abs(lhs - rhs) < 1e-9))
 }
@@ -162,28 +180,60 @@ for (x_val in c(0, 1, 2, -1)) { lhs <- log(exp(a_coef * x_val + b_coef))
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: verify the cancellation identity in a log-linear demand model
+import pandas as pd
+
+# Scenario: verify the cancellation identity in a log-linear demand model
 # Model: log(demand) = X @ beta (linear on log scale)
 # Demonstrate the round-trip: predict on log scale, exponentiate, compare to original
 np.random.seed(42)
 N = 500
-N_FEATURES = 3   # True coefficients (log-linear model)
+N_FEATURES = 3
+
+# True coefficients (log-linear model)
 beta_true = np.array([4.0, -0.5, 0.3])   # intercept + 2 features
-feature_matrix = np.column_stack([ np.ones(N), np.random.normal(10, 2, N),   # price np.random.normal(5,
-    1, N),   # discount_pct
-]) log_demand_true = feature_matrix @ beta_true + np.random.normal(0, 0.2, N)
+feature_matrix = np.column_stack([
+    np.ones(N),
+    np.random.normal(10, 2, N),   # price
+    np.random.normal(5, 1, N),    # discount_pct
+])
+log_demand_true = feature_matrix @ beta_true + np.random.normal(0, 0.2, N)
 demand_true = np.exp(log_demand_true)   # back to demand scale
 
-def log_linear_predict( features:
-    np.ndarray, coefficients: np.ndarray,
-) -> tuple[np.ndarray, np.ndarray]: """ Predict from a log-linear model. Uses: e^(ln(demand)) = demand (cancellation identity) Args: features: Feature matrix (n_samples x n_features). coefficients: Model coefficients vector. Returns: Tuple of (log_predictions, demand_predictions). """ log_preds = features @ coefficients   # linear on log scale
-demand_preds = np.exp(log_preds)   # e^(log_preds) = preds
-return log_preds, demand_preds log_preds, demand_preds = log_linear_predict(feature_matrix, beta_true)   # Verify the round-trip: ln(e^(X@beta)) = X@beta
-log_of_exp = np.log(demand_preds)   #
-ln(e^(X@beta)) should = X@beta
-round_trip_error = np.max(np.abs(log_of_exp - log_preds))   # Report
-report_df = pd.DataFrame({ "demand_true": demand_true[:5].round(2), "log_preds": log_preds[:5].round(4), "demand_preds": demand_preds[:5].round(2), "ln_demand": log_of_exp[:5].round(4),
-}) print("Log-Linear Model: e^(ln(demand)) = demand (Cancellation Identity)")
+
+def log_linear_predict(
+    features: np.ndarray,
+    coefficients: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Predict from a log-linear model.
+
+    Uses: e^(ln(demand)) = demand (cancellation identity)
+
+    Args:
+        features: Feature matrix (n_samples x n_features).
+        coefficients: Model coefficients vector.
+
+    Returns:
+        Tuple of (log_predictions, demand_predictions).
+    """
+    log_preds = features @ coefficients   # linear on log scale
+    demand_preds = np.exp(log_preds)      # e^(log_preds) = preds
+    return log_preds, demand_preds
+
+
+log_preds, demand_preds = log_linear_predict(feature_matrix, beta_true)
+
+# Verify the round-trip: ln(e^(X@beta)) = X@beta
+log_of_exp = np.log(demand_preds)   # ln(e^(X@beta)) should = X@beta
+round_trip_error = np.max(np.abs(log_of_exp - log_preds))
+
+# Report
+report_df = pd.DataFrame({
+    "demand_true": demand_true[:5].round(2),
+    "log_preds": log_preds[:5].round(4),
+    "demand_preds": demand_preds[:5].round(2),
+    "ln_demand": log_of_exp[:5].round(4),
+})
+print("Log-Linear Model: e^(ln(demand)) = demand (Cancellation Identity)")
 print("=" * 72)
 print(report_df.to_string(index=False))
 print(f"\nRound-trip max error |ln(e^(Xβ)) - Xβ|: {round_trip_error:.2e}")

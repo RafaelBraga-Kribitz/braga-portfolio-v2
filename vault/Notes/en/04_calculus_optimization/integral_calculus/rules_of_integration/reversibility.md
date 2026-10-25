@@ -100,34 +100,48 @@ Particular antiderivative: $g(x) = x^3 + x^2 - 5x + 7$.
 import numpy as np
 from scipy import integrate
 
+
 def verify_antiderivative(g, f, x_test_points: list[float], tol: float = 1e-6) -> None:
-    """ Reversibility check: verify integral g(x)+C by differentiating. Uses central finite difference to compute d/dx[g(x)]. """
+    """Reversibility check: verify integral g(x)+C by differentiating.
+
+    Uses central finite difference to compute d/dx[g(x)].
+    """
     h = 1e-7
     print(f" {'x':>8} {'f(x)':>12} {'d/dx[g(x)]':>14} {'Match':>8}")
     all_match = True
     for x in x_test_points:
         dg_dx = (g(x + h) - g(x - h)) / (2 * h)
-    fx = f(x)
-    match = abs(dg_dx - fx) < tol
-    all_match = all_match and match
-    print(f" {x:>8.2f} {fx:>12.6f} {dg_dx:>14.6f} {str(match):>8}")
+        fx = f(x)
+        match = abs(dg_dx - fx) < tol
+        all_match = all_match and match
+        print(f" {x:>8.2f} {fx:>12.6f} {dg_dx:>14.6f} {str(match):>8}")
     print(f" All match (reversibility verified): {all_match}")
-    print("Reversibility: integral f(x) dx = g(x) + C <=> d/dx[g(x)+C] = f(x)")   # Example 1: integral of 3x^2 + 2x - 5
+
+
+print("Reversibility: integral f(x) dx = g(x) + C <=> d/dx[g(x)+C] = f(x)")
+
+# Example 1: integral of 3x^2 + 2x - 5
 f = lambda x: 3*x**2 + 2*x - 5
 g = lambda x: x**3 + x**2 - 5*x   # antiderivative (C=0)
 print("\nf(x) = 3x^2 + 2x - 5, g(x) = x^3 + x^2 - 5x")
-verify_antiderivative(g, f, [-2.0, 0.0, 1.5, 3.0])   # CDF-PDF reversibility
+verify_antiderivative(g, f, [-2.0, 0.0, 1.5, 3.0])
+
+# CDF-PDF reversibility
 print("\n--- CDF-PDF reversibility: F'(x) = f(x) ---")
 lam = 2.0
 pdf_exp = lambda x: lam * np.exp(-lam * x)   # f(x) = lambda * e^(-lam*x)
 cdf_exp = lambda x: 1.0 - np.exp(-lam * x)   # F(x) = 1 - e^(-lam*x)
 print("Exponential distribution: f(x) = lambda*exp(-lam*x), F(x) = 1 - exp(-lam*x)")
-verify_antiderivative(cdf_exp, pdf_exp, [0.1, 0.5, 1.0, 2.0])   # Numerical antiderivative: cumsum as discrete integration
+verify_antiderivative(cdf_exp, pdf_exp, [0.1, 0.5, 1.0, 2.0])
+
+# Numerical antiderivative: cumsum as discrete integration
 print("\n--- Numerical antiderivative: np.cumsum as discrete integral ---")
 x_arr = np.linspace(0, 2 * np.pi, 500)
 dx = x_arr[1] - x_arr[0]
 f_sin = np.sin(x_arr)
-g_cos = -np.cos(x_arr)   # analytic antiderivative (C=0) # Numerical antiderivative via cumsum
+g_cos = -np.cos(x_arr)   # analytic antiderivative (C=0)
+
+# Numerical antiderivative via cumsum
 g_numerical = np.concatenate([[0.0], np.cumsum(f_sin[:-1] * dx)])
 # Shift to match boundary condition g(0) = -cos(0) = -1
 g_numerical += g_cos[0] - g_numerical[0]
@@ -140,19 +154,24 @@ print(f"Max diff error: {residual.max():.6f}")
 ### Beginner example (R)
 
 ```r
-# Reversibility: integral f
-dx = g + C <=> d/dx[g] = f
-verify_antiderivative <- function(g, f, x_points, h = 1e-7) { cat(sprintf(" %-8s %-12s %-14s %-8s\n", "x", "f(x)", "d/dx[g(x)]", "Match"))
-  for (x in x_points) { dg_dx <- (g(x + h) - g(x - h)) / (2 * h)
+# Reversibility: integral f dx = g + C <=> d/dx[g] = f
+verify_antiderivative <- function(g, f, x_points, h = 1e-7) {
+  cat(sprintf(" %-8s %-12s %-14s %-8s\n", "x", "f(x)", "d/dx[g(x)]", "Match"))
+  for (x in x_points) {
+    dg_dx <- (g(x + h) - g(x - h)) / (2 * h)
     fx <- f(x)
     match <- abs(dg_dx - fx) < 1e-6
     cat(sprintf(" %-8.2f %-12.6f %-14.6f %-8s\n", x, fx, dg_dx, as.character(match)))
   }
-}  # f(x) = 3x^2 + 2x - 5, antiderivative g(x) = x^3 + x^2 - 5x
+}
+
+# f(x) = 3x^2 + 2x - 5, antiderivative g(x) = x^3 + x^2 - 5x
 f <- function(x) 3*x^2 + 2*x - 5
 g <- function(x) x^3 + x^2 - 5*x
 cat("Reversibility check: d/dx[g(x)] = f(x)\n\n")
-verify_antiderivative(g, f, c(-2, 0, 1.5, 3))  # CDF-PDF reversibility for exponential distribution
+verify_antiderivative(g, f, c(-2, 0, 1.5, 3))
+
+# CDF-PDF reversibility for exponential distribution
 cat("\nCDF-PDF reversibility (exponential):\n")
 lam <- 2.0
 pdf_fn <- function(x) lam * exp(-lam * x)
@@ -166,13 +185,14 @@ verify_antiderivative(cdf_fn, pdf_fn, c(0.1, 0.5, 1.0, 2.0))
 import numpy as np
 from sklearn.datasets import make_regression
 from sklearn.preprocessing import StandardScaler
-np.random.seed(42)   # -- Reversibility: gradient checking as the antiderivative verification test --
+np.random.seed(42)
+
+# -- Reversibility: gradient checking as the antiderivative verification test --
 # Use case: A DS implements a custom loss function and verifies the gradient
 # via gradient checking -- the operationalized version of reversibility.
 # The analytic gradient g = dL/dw should satisfy:
 # L(w + h*e_i) - L(w - h*e_i) ≈ 2h * g_i (finite difference approximation)
-# This is the discrete reversibility check: if L is the antiderivative of
-grad(L),
+# This is the discrete reversibility check: if L is the antiderivative of grad(L),
 # then (L(w+h) - L(w-h))/(2h) ≈ grad(L)(w) for small h.
 N = 150
 DIM = 5
@@ -181,33 +201,47 @@ scaler = StandardScaler()
 X = scaler.fit_transform(X_raw)
 y = y / y.std()
 
+
 def huber_loss(w: np.ndarray, X: np.ndarray, y: np.ndarray, delta: float = 1.0) -> float:
-    """ Huber loss: quadratic for |r| <= delta, linear for |r| > delta. Robust to outliers; differentiable everywhere (unlike L1). """
+    """Huber loss: quadratic for |r| <= delta, linear for |r| > delta.
+
+    Robust to outliers; differentiable everywhere (unlike L1).
+    """
     r = y - X @ w
     quadratic = 0.5 * r**2
     linear = delta * (np.abs(r) - 0.5 * delta)
     return float(np.mean(np.where(np.abs(r) <= delta, quadratic, linear)))
 
+
 def huber_gradient(w: np.ndarray, X: np.ndarray, y: np.ndarray, delta: float = 1.0) -> np.ndarray:
     """Analytic gradient of Huber loss."""
     r = y - X @ w
-    mask = (np.abs(r) <= delta).astype(float)   # For |r| <= delta: dL/dw = -X^T r / N (MSE-like) # For |r| > delta: dL/dw = -X^T
-    sign(r) * delta / N (MAE-like)
+    mask = (np.abs(r) <= delta).astype(float)
+    # For |r| <= delta: dL/dw = -X^T r / N (MSE-like)
+    # For |r| > delta: dL/dw = -X^T sign(r) * delta / N (MAE-like)
     pseudo_residuals = np.where(np.abs(r) <= delta, r, delta * np.sign(r))
     return -X.T @ pseudo_residuals / len(y)
 
+
 def numerical_gradient(loss_fn, w: np.ndarray, h: float = 1e-5) -> np.ndarray:
-    """ Numerical gradient via central finite differences. This is the reversibility test: (L(w+h) - L(w-h))/(2h) ≈ dL/dw. """
+    """Numerical gradient via central finite differences.
+
+    This is the reversibility test: (L(w+h) - L(w-h))/(2h) ≈ dL/dw.
+    """
     grad_num = np.zeros_like(w)
     for i in range(len(w)):
         e_i = np.zeros_like(w)
-    e_i[i] = 1.0
-    grad_num[i] = (loss_fn(w + h * e_i) - loss_fn(w - h * e_i)) / (2 * h)
+        e_i[i] = 1.0
+        grad_num[i] = (loss_fn(w + h * e_i) - loss_fn(w - h * e_i)) / (2 * h)
     return grad_num
+
+
 w_test = np.random.randn(DIM) * 0.5
 loss_fn = lambda w: huber_loss(w, X, y)
 grad_analytic = huber_gradient(w_test, X, y)
-grad_numerical = numerical_gradient(loss_fn, w_test)   # Relative error between analytic and numerical gradients
+grad_numerical = numerical_gradient(loss_fn, w_test)
+
+# Relative error between analytic and numerical gradients
 rel_error = np.abs(grad_analytic - grad_numerical) / (np.abs(grad_analytic) + np.abs(grad_numerical) + 1e-12)
 print("Reversibility: Gradient Checking as Antiderivative Verification")
 print(f"\nHuber loss, N={N}, DIM={DIM}, delta=1.0")
@@ -216,8 +250,8 @@ print(f"\n{'Param':>8} {'Analytic grad':>16} {'Numerical grad':>16} {'Rel error'
 all_pass = True
 for i in range(DIM):
     passed = rel_error[i] < 1e-4
-all_pass = all_pass and passed
-print(f"w[{i}]: {grad_analytic[i]:>16.8f} {grad_numerical[i]:>16.8f} {rel_error[i]:>12.2e} {str(passed):>6}")
+    all_pass = all_pass and passed
+    print(f"w[{i}]: {grad_analytic[i]:>16.8f} {grad_numerical[i]:>16.8f} {rel_error[i]:>12.2e} {str(passed):>6}")
 print(f"\nAll gradient checks passed: {all_pass}")
 print(f"Max relative error: {rel_error.max():.2e}")
 print(f"\nInterpretation: if analytic gradient = numerical gradient, then L is correctly")

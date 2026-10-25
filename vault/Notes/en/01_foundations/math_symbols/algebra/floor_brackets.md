@@ -90,12 +90,18 @@ $\lfloor -2.3 \rfloor = -3$. Check: is $-3 \leq -2.3$? Yes. Is $-3$ the largest 
 ### Beginner example (Python)
 
 ```python
-import math   # math.floor() is Python's floor function
+import math
+
+# math.floor() is Python's floor function
 print(math.floor(3.7))   # 3
 print(math.floor(7.0))   # 7 (already integer)
-print(math.floor(-2.3))   # -3 (negative: rounds away from zero)
-print(math.floor(-7.0))   # -7 # Integer division uses floor semantics for positive numbers
-print(17 // 5)   # 3 (= floor(17/5) = floor(3.4) = 3) # Warning: negative floor division
+print(math.floor(-2.3))  # -3 (negative: rounds away from zero)
+print(math.floor(-7.0))  # -7
+
+# Integer division uses floor semantics for positive numbers
+print(17 // 5)   # 3 (= floor(17/5) = floor(3.4) = 3)
+
+# Warning: negative floor division
 print(-7 // 2)   # -4 (floor(-3.5) = -4, NOT -3)
 print(math.trunc(-7 / 2))   # -3 (truncation toward zero = different!)
 ```
@@ -107,9 +113,13 @@ print(math.trunc(-7 / 2))   # -3 (truncation toward zero = different!)
 print(floor(3.7))  # 3
 print(floor(7.0))  # 7
 print(floor(-2.3))  # -3
-print(floor(-7.0))  # -7 # Integer division in R uses %/% operator
+print(floor(-7.0))  # -7
+
+# Integer division in R uses %/% operator
 print(17 %/% 5)  # 3
-print(-7 %/% 2)  # -4 (floor semantics) # Comparison with ceiling and round
+print(-7 %/% 2)  # -4 (floor semantics)
+
+# Comparison with ceiling and round
 x <- 3.7
 cat("floor:", floor(x), "\n")  # 3
 cat("ceiling:", ceiling(x), "\n")  # 4
@@ -120,20 +130,27 @@ cat("round:", round(x), "\n")  # 4 (rounds to nearest)
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: bin continuous revenue values into $1000-wide brackets for a histogram analysis
+import pandas as pd
+
+# Scenario: bin continuous revenue values into $1000-wide brackets for a histogram analysis
 np.random.seed(42)
 revenue = np.random.normal(loc=5000, scale=1500, size=500)
 revenue = np.clip(revenue, 0, 10_000)   # clip to valid range
 BIN_WIDTH = 1000
-BIN_START = 0   # Compute bin index using
-floor: bin_index = floor((x - start) / width)
+BIN_START = 0
+
+# Compute bin index using floor: bin_index = floor((x - start) / width)
 bin_indices = np.floor((revenue - BIN_START) / BIN_WIDTH).astype(int)
 bin_labels = [f"${int(i * BIN_WIDTH)}-${int((i + 1) * BIN_WIDTH)}" for i in range(11)]
-df = pd.DataFrame({ "revenue": np.round(revenue, 2), "bin_index": bin_indices,
+df = pd.DataFrame({
+    "revenue": np.round(revenue, 2),
+    "bin_index": bin_indices,
 })
 df["bin_label"] = df["bin_index"].map(lambda i: bin_labels[min(i, 10)])
 print("Revenue bin distribution:")
-print(df["bin_label"].value_counts().sort_index())   # This is exactly what pd.cut() does internally with floor arithmetic
+print(df["bin_label"].value_counts().sort_index())
+
+# This is exactly what pd.cut() does internally with floor arithmetic
 df["pandas_bin"] = pd.cut(revenue, bins=range(0, 12_000, 1_000), right=False)
 print("\nVerify with pd.cut():")
 print(df["pandas_bin"].value_counts().sort_index().head())
@@ -149,11 +166,15 @@ BIN_WIDTH <- 1000
 BIN_START <- 0
 bin_indices <- floor((revenue - BIN_START) / BIN_WIDTH)
 bin_labels <- paste0("$", (0:10) * BIN_WIDTH, "-$", (1:11) * BIN_WIDTH)
-df <- data.frame( revenue = round(revenue, 2), bin_index = bin_indices
+df <- data.frame(
+  revenue = round(revenue, 2),
+  bin_index = bin_indices
 )
 df$bin_label <- bin_labels[pmin(df$bin_index + 1, 11)]
 cat("Revenue bin distribution:\n")
-print(table(df$bin_label))  # Verify with cut() (right=FALSE for [a,b) style)
+print(table(df$bin_label))
+
+# Verify with cut() (right=FALSE for [a,b) style)
 df$cut_bin <- cut(revenue, breaks = seq(0, 12000, 1000), right = FALSE)
 cat("\nVerify with cut():\n")
 print(head(table(df$cut_bin)))

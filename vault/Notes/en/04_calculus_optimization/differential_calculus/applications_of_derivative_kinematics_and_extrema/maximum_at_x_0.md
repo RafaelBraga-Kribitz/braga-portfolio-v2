@@ -151,30 +151,38 @@ print(f"Max CTR: {ctr.max():.5f} on day {np.argmax(ctr)+1}")
 
 ```r
 # First derivative test for local maximum: f' changes + to -
-first_derivative_test <- function(f_prime, x_crit, delta = 0.01) { sign_left <- sign(f_prime(x_crit - delta))
+first_derivative_test <- function(f_prime, x_crit, delta = 0.01) {
+  sign_left <- sign(f_prime(x_crit - delta))
   sign_right <- sign(f_prime(x_crit + delta))
   if (sign_left > 0 && sign_right < 0) "LOCAL MAX (+ -> -)"
-  else
-  if (sign_left < 0 && sign_right > 0) "LOCAL MIN (- -> +)"
+  else if (sign_left < 0 && sign_right > 0) "LOCAL MIN (- -> +)"
   else "NOT an extremum"
-}  # Standard case
+}
+
+# Standard case
 f <- function(x) -(x - 2)^2 + 3
 f_prime <- function(x) -2 * (x - 2)
 result <- first_derivative_test(f_prime, 2.0)
-cat(sprintf("f(x) = -(x-2)^2+3, x=2: %s, f(2)=%.1f\n\n", result, f(2.0)))  # Case where second derivative test fails
+cat(sprintf("f(x) = -(x-2)^2+3, x=2: %s, f(2)=%.1f\n\n", result, f(2.0)))
+
+# Case where second derivative test fails
 f2 <- function(x) -x^4
 f2_prime <- function(x) -4 * x^3
 f2_pp <- function(x) -12 * x^2
 cat(sprintf("f(x) = -x^4, f''(0) = %.1f (inconclusive)\n", f2_pp(0)))
-cat(sprintf("First derivative test at x=0: %s\n\n", first_derivative_test(f2_prime, 0.0)))  # Discrete: peak detection in time series
+cat(sprintf("First derivative test at x=0: %s\n\n", first_derivative_test(f2_prime, 0.0)))
+
+# Discrete: peak detection in time series
 set.seed(42)
 n_days <- 30
 ctr <- 0.02 + 0.015 * sin(2 * pi * 1:n_days / 10) + rnorm(n_days, sd = 0.003)
 cat("Discrete first derivative test: peaks in CTR time series\n")
 cat(sprintf("%-6s %-10s %-12s %-12s %-8s\n", "Day", "CTR", "Delta_prev", "Delta_next", "Peak?"))
-for (i in 2:(n_days - 1)) { d_prev <- ctr[i] - ctr[i - 1]
+for (i in 2:(n_days - 1)) {
+  d_prev <- ctr[i] - ctr[i - 1]
   d_next <- ctr[i + 1] - ctr[i]
-  if (d_prev > 0 && d_next < 0) { cat(sprintf("%-6d %-10.5f %-12.5f %-12.5f %-8s\n", i, ctr[i], d_prev, d_next, "PEAK"))
+  if (d_prev > 0 && d_next < 0) {
+    cat(sprintf("%-6d %-10.5f %-12.5f %-12.5f %-8s\n", i, ctr[i], d_prev, d_next, "PEAK"))
   }
 }
 ```
@@ -185,7 +193,9 @@ for (i in 2:(n_days - 1)) { d_prev <- ctr[i] - ctr[i - 1]
 import numpy as np
 from sklearn.datasets import make_regression
 from sklearn.preprocessing import StandardScaler
-np.random.seed(42)   # -- First derivative test: gradient sign analysis in training to detect loss maxima --
+np.random.seed(42)
+
+# -- First derivative test: gradient sign analysis in training to detect loss maxima --
 # Use case: A DS monitors the sign of the gradient component along the update direction.
 # In well-behaved gradient descent, the directional derivative dL/dt = grad . update_dir
 # should always be negative (descending). If a sign change is detected (gradient dot
@@ -201,37 +211,41 @@ y = y / y.std()
 
 def mse_loss_grad(w: np.ndarray, X: np.ndarray, y: np.ndarray) -> tuple[float, np.ndarray]:
     r = y - X @ w
-    return float(np.mean(r**2)), -2.0 / len(y) * X.T @ r   # Run gradient descent with two learning rates: stable and too-large
+    return float(np.mean(r**2)), -2.0 / len(y) * X.T @ r
+
+
+# Run gradient descent with two learning rates: stable and too-large
 print("First Derivative Test: Gradient Sign Analysis in Training")
 for alpha, label in [(0.05, "stable LR"), (0.8, "overshooting LR")]:
     w = np.zeros(DIM)
-losses = []
-sign_changes = []   # sign changes in directional derivative = loss local max along path
-prev_grad = None
-for step in range(60):
-    loss, grad = mse_loss_grad(w, X, y)
-update_dir = -grad   # gradient descent update direction
-if prev_grad is not None:
-    # Directional
-    derivative = grad . update_dir   # If dot(prev_grad, grad) < 0: gradient reversed
-sign = OVERSHOOT   # Geometrically: loss had a local MAX between prev step and current step
-dot = float(np.dot(prev_grad, grad))
-sign_changed = dot < 0
-sign_changes.append((step, sign_changed, loss))
-prev_grad = grad.copy()
-losses.append(loss)
-w += alpha * update_dir   # descent
-n_overshoots = sum(1 for _, changed, _ in sign_changes if changed)
-print(f"\nalpha = {alpha} ({label})[[")
-print(f"]] Overshoots (gradient sign changes = loss local max along path): {n_overshoots}")
-print(f" Final loss: {losses[-1]:.6f}")
-print(f" {'Step':>6} {'Loss':>10} {'Overshoot?':>12}")
-for step in range(min(15, len(sign_changes))):
-    _, changed, loss_val = sign_changes[step]
-if changed:
-    print(f" {step+1:>6} {loss_val:>10.6f} {'YES (+ -> -)':>12}")
-if n_overshoots == 0:
-    print(f" No overshoots: directional gradient consistently negative (descending)")
+    losses = []
+    sign_changes = []   # sign changes in directional derivative = loss local max along path
+    prev_grad = None
+    for step in range(60):
+        loss, grad = mse_loss_grad(w, X, y)
+        update_dir = -grad   # gradient descent update direction
+        if prev_grad is not None:
+            # Directional derivative = grad . update_dir
+            # If dot(prev_grad, grad) < 0: gradient reversed sign = OVERSHOOT
+            # Geometrically: loss had a local MAX between prev step and current step
+            dot = float(np.dot(prev_grad, grad))
+            sign_changed = dot < 0
+            sign_changes.append((step, sign_changed, loss))
+        prev_grad = grad.copy()
+        losses.append(loss)
+        w += alpha * update_dir   # descent
+
+    n_overshoots = sum(1 for _, changed, _ in sign_changes if changed)
+    print(f"\nalpha = {alpha} ({label})")
+    print(f" Overshoots (gradient sign changes = loss local max along path): {n_overshoots}")
+    print(f" Final loss: {losses[-1]:.6f}")
+    print(f" {'Step':>6} {'Loss':>10} {'Overshoot?':>12}")
+    for step in range(min(15, len(sign_changes))):
+        _, changed, loss_val = sign_changes[step]
+        if changed:
+            print(f" {step+1:>6} {loss_val:>10.6f} {'YES (+ -> -)':>12}")
+    if n_overshoots == 0:
+        print(f" No overshoots: directional gradient consistently negative (descending)")
 ```
 
 ---

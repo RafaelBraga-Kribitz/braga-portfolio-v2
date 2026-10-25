@@ -90,42 +90,77 @@ No loop needed — O(1) computation.
 
 ```python
 """
-Arithmetic n-th
-term: u_n = a + (n-1)*d Applied to straight-line asset depreciation and learning rate linear decay.
-""" import numpy as np def arithmetic_nth_term(first_term: float, common_diff: float, term_index: int) -> float: """Return the n-th term of an arithmetic sequence. Parameters ---------- first_term : value of u_1 (starting value) common_diff : common difference d (step size; negative for decreasing) term_index : position n (1-based) Returns ------- float: u_n = first_term + (term_index - 1) * common_diff """ return first_term + (term_index - 1) * common_diff # Straight-line depreciation: asset worth €50,000 losing €4,000/year
+Arithmetic n-th term: u_n = a + (n-1)*d
+
+Applied to straight-line asset depreciation and learning rate linear decay.
+"""
+import numpy as np
+
+
+def arithmetic_nth_term(first_term: float, common_diff: float, term_index: int) -> float:
+    """Return the n-th term of an arithmetic sequence.
+
+    Parameters
+    ----------
+    first_term : value of u_1 (starting value)
+    common_diff : common difference d (step size; negative for decreasing)
+    term_index : position n (1-based)
+
+    Returns
+    -------
+    float: u_n = first_term + (term_index - 1) * common_diff
+    """
+    return first_term + (term_index - 1) * common_diff
+
+
+# Straight-line depreciation: asset worth €50,000 losing €4,000/year
 INITIAL_VALUE = 50_000.0
 ANNUAL_DEPRECIATION = -4_000.0
 print("Asset value under straight-line depreciation:")
 for year in [1, 2, 5, 10, 13]:
     book_value = arithmetic_nth_term(INITIAL_VALUE, ANNUAL_DEPRECIATION, year)
-print(f" Year {year:2d}: €{book_value:,.0f}")   # Verify with numpy
+    print(f" Year {year:2d}: €{book_value:,.0f}")
+
+# Verify with numpy
 years = np.arange(1, 14)
 book_values_np = INITIAL_VALUE + (years - 1) * ANNUAL_DEPRECIATION
-print(f"\nFully depreciated at year: {np.argmin(book_values_np >= 0) + 1}")   # Linear learning rate
-decay: eta_n = 0.1 - (n-1)*0.005
+print(f"\nFully depreciated at year: {np.argmin(book_values_np >= 0) + 1}")
+
+# Linear learning rate decay: eta_n = 0.1 - (n-1)*0.005
 INITIAL_LR = 0.10
 LR_DECAY = -0.005
 print("\nLinear learning rate schedule:")
 for epoch in [1, 5, 10, 15, 20]:
     lr = arithmetic_nth_term(INITIAL_LR, LR_DECAY, epoch)
-print(f" Epoch {epoch:2d}: lr = {lr:.4f}")
+    print(f" Epoch {epoch:2d}: lr = {lr:.4f}")
 ```
 
 ### Beginner example (R)
 
 ```r
-# Arithmetic n-th term:
-u_n = a + (n-1)*d
+# Arithmetic n-th term: u_n = a + (n-1)*d
 # Applied to generating cohort acquisition schedules
-arithmetic_nth_term <- function(first_term, common_diff, term_index) {  # n-th term of arithmetic sequence # Args: # first_term : starting value (u_1) # common_diff : constant step added each term (d) # term_index : position in sequence (1-based integer) # Returns: u_n first_term + (term_index - 1) * common_diff
-}  # Cohort schedule: first cohort acquired in Jan 2023,
+arithmetic_nth_term <- function(first_term, common_diff, term_index) {
+  # n-th term of arithmetic sequence
+  # Args:
+  #   first_term : starting value (u_1)
+  #   common_diff : constant step added each term (d)
+  #   term_index : position in sequence (1-based integer)
+  # Returns: u_n
+  first_term + (term_index - 1) * common_diff
+}
+
+# Cohort schedule: first cohort acquired in Jan 2023,
 # new cohort every 30 days
 FIRST_COHORT_DAY <- 1  # day 1 from reference date
 COHORT_INTERVAL <- 30  # days between cohorts
 cat("Cohort acquisition schedule (days from launch):\n")
-for (cohort_num in 1:8) { acq_day <- arithmetic_nth_term(FIRST_COHORT_DAY, COHORT_INTERVAL, cohort_num)
+for (cohort_num in 1:8) {
+  acq_day <- arithmetic_nth_term(FIRST_COHORT_DAY, COHORT_INTERVAL, cohort_num)
   cat(sprintf(" Cohort %d: day %d\n", cohort_num, acq_day))
-}  # General: generate the full sequence via vectorization
+}
+
+# General: generate the full sequence via vectorization
 cohort_indices <- seq_len(12)
 cohort_days <- arithmetic_nth_term(FIRST_COHORT_DAY, COHORT_INTERVAL, cohort_indices)
 cat(sprintf("\nAll 12 cohort acquisition days: %s\n", paste(cohort_days, collapse=", ")))
@@ -136,33 +171,54 @@ cat(sprintf("\nAll 12 cohort acquisition days: %s\n", paste(cohort_days, collaps
 ```python
 """
 Arithmetic sequence for building a regularized feature index grid
-in a regression model
-with polynomial features. Business context:
-    A demand forecasting team needs to test how adding polynomial terms up to degree N affects model accuracy. They generate evenly-spaced test points for model evaluation, and also build a linear depreciation schedule for modeling asset values in their financial features.
-""" import numpy as np
+in a regression model with polynomial features.
+
+Business context:
+    A demand forecasting team needs to test how adding polynomial terms up to
+    degree N affects model accuracy. They generate evenly-spaced test points for
+    model evaluation, and also build a linear depreciation schedule for modeling
+    asset values in their financial features.
+"""
+import numpy as np
 import pandas as pd
+
 FIRST_VALUE: float = 0.0
 STEP_SIZE: float = 0.1
 NUM_POINTS: int = 50
 POLY_DEGREE: int = 4
 RNG_SEED: int = 42
 
-def arithmetic_sequence( first_term: float, common_diff: float, num_terms: int,
+
+def arithmetic_sequence(
+    first_term: float, common_diff: float, num_terms: int,
 ) -> np.ndarray:
     """Generate arithmetic sequence: u_n = a + (n-1)*d for n = 1, ..., num_terms."""
     term_indices = np.arange(1, num_terms + 1, dtype=float)
     return first_term + (term_indices - 1) * common_diff
 
-def build_polynomial_features( x_values: np.ndarray, max_degree: int,
+
+def build_polynomial_features(
+    x_values: np.ndarray, max_degree: int,
 ) -> np.ndarray:
     """Build polynomial feature matrix [1, x, x^2, ..., x^degree]."""
-    return np.column_stack([x_values**deg for deg in range(max_degree + 1)])   # Generate evenly spaced evaluation grid using arithmetic sequence
-eval_grid = arithmetic_sequence(FIRST_VALUE, STEP_SIZE, NUM_POINTS)   # Build polynomial features on the grid
-poly_features = build_polynomial_features(eval_grid, POLY_DEGREE)   # Verify: each row uses x from the arithmetic sequence
+    return np.column_stack([x_values**deg for deg in range(max_degree + 1)])
+
+
+# Generate evenly spaced evaluation grid using arithmetic sequence
+eval_grid = arithmetic_sequence(FIRST_VALUE, STEP_SIZE, NUM_POINTS)
+
+# Build polynomial features on the grid
+poly_features = build_polynomial_features(eval_grid, POLY_DEGREE)
+
+# Verify: each row uses x from the arithmetic sequence
 rng = np.random.default_rng(RNG_SEED)
 true_coeffs = rng.normal(0, 1, POLY_DEGREE + 1)
 target_values = poly_features @ true_coeffs + rng.normal(0, 0.1, NUM_POINTS)
-summary_df = pd.DataFrame({ "grid_point_x": eval_grid[:5], "x_squared": poly_features[:5, 2], "x_cubed": poly_features[:5, 3], "target_y": target_values[:5],
+summary_df = pd.DataFrame({
+    "grid_point_x": eval_grid[:5],
+    "x_squared": poly_features[:5, 2],
+    "x_cubed": poly_features[:5, 3],
+    "target_y": target_values[:5],
 })
 print("First 5 evaluation points:")
 print(summary_df.to_string(index=False))

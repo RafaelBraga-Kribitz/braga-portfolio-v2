@@ -98,18 +98,72 @@ $f(x) = \frac{L}{2} - \frac{L}{\pi}\sum_{n=1}^\infty \frac{1}{n}\sin\!\left(\fra
 
 ```python
 """
-Fourier Series: decompose a periodic signal into frequency components. Applied to computing and plotting the Fourier approximation of a sawtooth wave.
-""" import numpy as np def compute_fourier_coefficients( signal: np.ndarray, period: float, num_harmonics: int,
-) -> tuple[np.ndarray, np.ndarray, float]: """Compute Fourier series coefficients numerically via integration. Parameters ---------- signal : sampled values of f(x) over one period period : length of one period (L) num_harmonics: number of harmonics N to compute Returns ------- tuple of (a_coeffs array [n=0..N], b_coeffs array [n=1..N], dc_offset) """ num_samples = len(signal) x_values = np.linspace(0, period, num_samples, endpoint=False) dx = period / num_samples a_coeffs = np.empty(num_harmonics + 1) b_coeffs = np.empty(num_harmonics + 1)   # a_0 (DC component)
-a_coeffs[0] = (2.0 / period) * np.sum(signal) * dx for harmonic_idx in range(1, num_harmonics + 1): angular_freq = 2.0 * np.pi * harmonic_idx / period cos_basis = np.cos(angular_freq * x_values) sin_basis = np.sin(angular_freq * x_values) a_coeffs[harmonic_idx] = (2.0 / period) * np.sum(signal * cos_basis) * dx b_coeffs[harmonic_idx] = (2.0 / period) * np.sum(signal * sin_basis) * dx return a_coeffs, b_coeffs, float(a_coeffs[0] / 2.0) def reconstruct_from_fourier( a_coeffs: np.ndarray, b_coeffs: np.ndarray, period: float, x_values: np.ndarray, num_harmonics: int,
-) -> np.ndarray: """Reconstruct signal from Fourier coefficients.""" reconstruction = a_coeffs[0] / 2.0 * np.ones_like(x_values) for n in range(1, num_harmonics + 1): angular_freq = 2.0 * np.pi * n / period reconstruction += a_coeffs[n] * np.cos(angular_freq * x_values) reconstruction += b_coeffs[n] * np.sin(angular_freq * x_values) return reconstruction PERIOD = 2.0 * np.pi
+Fourier Series: decompose a periodic signal into frequency components.
+
+Applied to computing and plotting the Fourier approximation of a sawtooth wave.
+"""
+import numpy as np
+
+
+def compute_fourier_coefficients(
+    signal: np.ndarray, period: float, num_harmonics: int,
+) -> tuple[np.ndarray, np.ndarray, float]:
+    """Compute Fourier series coefficients numerically via integration.
+
+    Parameters
+    ----------
+    signal : sampled values of f(x) over one period
+    period : length of one period (L)
+    num_harmonics: number of harmonics N to compute
+
+    Returns
+    -------
+    tuple of (a_coeffs array [n=0..N], b_coeffs array [n=1..N], dc_offset)
+    """
+    num_samples = len(signal)
+    x_values = np.linspace(0, period, num_samples, endpoint=False)
+    dx = period / num_samples
+    a_coeffs = np.empty(num_harmonics + 1)
+    b_coeffs = np.empty(num_harmonics + 1)
+    # a_0 (DC component)
+    a_coeffs[0] = (2.0 / period) * np.sum(signal) * dx
+    for harmonic_idx in range(1, num_harmonics + 1):
+        angular_freq = 2.0 * np.pi * harmonic_idx / period
+        cos_basis = np.cos(angular_freq * x_values)
+        sin_basis = np.sin(angular_freq * x_values)
+        a_coeffs[harmonic_idx] = (2.0 / period) * np.sum(signal * cos_basis) * dx
+        b_coeffs[harmonic_idx] = (2.0 / period) * np.sum(signal * sin_basis) * dx
+    return a_coeffs, b_coeffs, float(a_coeffs[0] / 2.0)
+
+
+def reconstruct_from_fourier(
+    a_coeffs: np.ndarray,
+    b_coeffs: np.ndarray,
+    period: float,
+    x_values: np.ndarray,
+    num_harmonics: int,
+) -> np.ndarray:
+    """Reconstruct signal from Fourier coefficients."""
+    reconstruction = a_coeffs[0] / 2.0 * np.ones_like(x_values)
+    for n in range(1, num_harmonics + 1):
+        angular_freq = 2.0 * np.pi * n / period
+        reconstruction += a_coeffs[n] * np.cos(angular_freq * x_values)
+        reconstruction += b_coeffs[n] * np.sin(angular_freq * x_values)
+    return reconstruction
+
+
+PERIOD = 2.0 * np.pi
 NUM_SAMPLES = 1000
-NUM_HARMONICS = 10 x_full = np.linspace(0, PERIOD, NUM_SAMPLES, endpoint=False)
-sawtooth_signal = x_full - np.pi   # sawtooth centered at 0 a_coeff, b_coeff,
-dc_offset = compute_fourier_coefficients( sawtooth_signal, PERIOD, NUM_HARMONICS
+NUM_HARMONICS = 10
+x_full = np.linspace(0, PERIOD, NUM_SAMPLES, endpoint=False)
+sawtooth_signal = x_full - np.pi   # sawtooth centered at 0
+a_coeff, b_coeff, dc_offset = compute_fourier_coefficients(
+    sawtooth_signal, PERIOD, NUM_HARMONICS
 )
-reconstructed = reconstruct_from_fourier( a_coeff, b_coeff, PERIOD, x_full, NUM_HARMONICS
-) reconstruction_error = np.mean((sawtooth_signal - reconstructed)**2)
+reconstructed = reconstruct_from_fourier(
+    a_coeff, b_coeff, PERIOD, x_full, NUM_HARMONICS
+)
+reconstruction_error = np.mean((sawtooth_signal - reconstructed)**2)
 print(f"DC offset (a_0/2): {dc_offset:.4f} (expected: 0.0 for centered sawtooth)")
 print(f"b_1 coefficient : {b_coeff[1]:.4f} (expected: -2.0 for sawtooth)")
 print(f"MSE of reconstruction with N={NUM_HARMONICS}: {reconstruction_error:.6f}")
@@ -119,24 +173,36 @@ print(f"MSE of reconstruction with N={NUM_HARMONICS}: {reconstruction_error:.6f}
 
 ```r
 # Fourier Series: extract seasonal components from weekly sales data
-compute_fourier_approximation <- function(signal, n_harmonics) {  # Approximate signal using n_harmonics Fourier terms # Returns reconstructed signal and power spectrum
+compute_fourier_approximation <- function(signal, n_harmonics) {
+  # Approximate signal using n_harmonics Fourier terms
+  # Returns reconstructed signal and power spectrum
   num_samples <- length(signal)
   period <- num_samples  # in sample units
   x_vals <- seq(0, period - 1)
   reconstruction <- rep(mean(signal), num_samples)  # DC component
   harmonics_power <- numeric(n_harmonics)
-  for (k in seq_len(n_harmonics)) { angular_freq <- 2 * pi * k / period
+  for (k in seq_len(n_harmonics)) {
+    angular_freq <- 2 * pi * k / period
     cos_basis <- cos(angular_freq * x_vals)
     sin_basis <- sin(angular_freq * x_vals)
     a_k <- (2 / period) * sum(signal * cos_basis)
     b_k <- (2 / period) * sum(signal * sin_basis)
     reconstruction <- reconstruction + a_k * cos_basis + b_k * sin_basis
     harmonics_power[k] <- sqrt(a_k^2 + b_k^2)
-  } list( reconstruction = reconstruction, power_spectrum = harmonics_power, dominant_harmonic = which.max(harmonics_power) )
-}  # Simulate weekly sales with annual seasonality + noise
+  }
+  list(
+    reconstruction = reconstruction,
+    power_spectrum = harmonics_power,
+    dominant_harmonic = which.max(harmonics_power)
+  )
+}
+
+# Simulate weekly sales with annual seasonality + noise
 set.seed(42)
 num_weeks <- 104  # 2 years
-weekly_sales <- 1000 + 200 * sin(2 * pi * seq_len(num_weeks) / 52) +  # annual cycle 50 * sin(2 * pi * seq_len(num_weeks) / 13) + # quarterly pulse rnorm(num_weeks, 0, 30) # noise
+weekly_sales <- 1000 + 200 * sin(2 * pi * seq_len(num_weeks) / 52) +  # annual cycle
+  50 * sin(2 * pi * seq_len(num_weeks) / 13) +                        # quarterly pulse
+  rnorm(num_weeks, 0, 30)                                             # noise
 result <- compute_fourier_approximation(weekly_sales, n_harmonics = 20)
 cat(sprintf("Dominant harmonic: n=%d (period ≈ %.0f weeks)\n", result$dominant_harmonic, num_weeks / result$dominant_harmonic))
 cat(sprintf("MSE of 20-harmonic approx: %.2f\n", mean((weekly_sales - result$reconstruction)^2)))
@@ -146,15 +212,23 @@ cat(sprintf("MSE of 20-harmonic approx: %.2f\n", mean((weekly_sales - result$rec
 
 ```python
 """
-Fourier Series
-for time series seasonality decomposition and deseasonalization. Business context:
-    An e-commerce analytics team needs to remove weekly and annual seasonality from daily revenue data before fitting a trend model (regression or ARIMA). Step 1: Estimate Fourier components. Step 2: Subtract seasonal signal. Step 3: Fit trend on deseasonalized data.
-""" import numpy as np
+Fourier Series for time series seasonality decomposition and deseasonalization.
+
+Business context:
+    An e-commerce analytics team needs to remove weekly and annual seasonality
+    from daily revenue data before fitting a trend model (regression or ARIMA).
+    Step 1: Estimate Fourier components.
+    Step 2: Subtract seasonal signal.
+    Step 3: Fit trend on deseasonalized data.
+"""
+import numpy as np
 import pandas as pd
+
 RNG_SEED: int = 42
 NUM_DAYS: int = 730   # 2 years
 N_WEEKLY_HARMONICS: int = 3
 N_ANNUAL_HARMONICS: int = 5
+
 
 def generate_synthetic_revenue(num_days: int, seed: int) -> pd.Series:
     """Create synthetic daily revenue with trend + seasonality + noise."""
@@ -167,7 +241,9 @@ def generate_synthetic_revenue(num_days: int, seed: int) -> pd.Series:
     dates = pd.date_range("2022-01-01", periods=num_days, freq="D")
     return pd.Series(trend + weekly_season + annual_season + noise, index=dates)
 
-def compute_seasonal_signal( signal: np.ndarray, period: float, num_harmonics: int,
+
+def compute_seasonal_signal(
+    signal: np.ndarray, period: float, num_harmonics: int,
 ) -> np.ndarray:
     """Return estimated seasonal component using n_harmonics Fourier terms."""
     num_samples = len(signal)
@@ -175,12 +251,14 @@ def compute_seasonal_signal( signal: np.ndarray, period: float, num_harmonics: i
     seasonal = np.zeros(num_samples)
     for harmonic_idx in range(1, num_harmonics + 1):
         angular_freq = 2.0 * np.pi * harmonic_idx / period
-    cos_basis = np.cos(angular_freq * day_index)
-    sin_basis = np.sin(angular_freq * day_index)
-    a_n = (2.0 / num_samples) * np.dot(signal, cos_basis)
-    b_n = (2.0 / num_samples) * np.dot(signal, sin_basis)
-    seasonal += a_n * cos_basis + b_n * sin_basis
+        cos_basis = np.cos(angular_freq * day_index)
+        sin_basis = np.sin(angular_freq * day_index)
+        a_n = (2.0 / num_samples) * np.dot(signal, cos_basis)
+        b_n = (2.0 / num_samples) * np.dot(signal, sin_basis)
+        seasonal += a_n * cos_basis + b_n * sin_basis
     return seasonal
+
+
 revenue = generate_synthetic_revenue(NUM_DAYS, RNG_SEED)
 revenue_array = revenue.to_numpy()
 weekly_component = compute_seasonal_signal(revenue_array, 7.0, N_WEEKLY_HARMONICS)

@@ -98,18 +98,21 @@ Check: $|A| + |B| - |A \cap B| = 3 + 4 - 2 = 5$. Confirmed. ($A \cap B = \{2, 3\
 ### Beginner example (Python)
 
 ```python
-# Set union in Python: A | B or
-A.union(B)
+# Set union in Python: A | B or A.union(B)
 A = {1, 2, 3}
 B = {2, 3, 4, 5}
 union_result = A | B
 print(f"A = {A}")
 print(f"B = {B}")
-print(f"A ∪ B = {union_result}")   # {1, 2, 3, 4, 5} # Cardinality via inclusion-exclusion
+print(f"A ∪ B = {union_result}")  # {1, 2, 3, 4, 5}
+
+# Cardinality via inclusion-exclusion
 print(f"\nInclusion-exclusion:")
 print(f"|A| = {len(A)}, |B| = {len(B)}, |A ∩ B| = {len(A & B)}")
 print(f"|A ∪ B| = {len(A)} + {len(B)} - {len(A & B)} = {len(A) + len(B) - len(A & B)}")
-print(f"Direct count: {len(union_result)}")   # String sets (categorical values)
+print(f"Direct count: {len(union_result)}")
+
+# String sets (categorical values)
 users_email = {"alice", "bob", "carol"}
 users_app = {"bob", "carol", "dave", "eve"}
 all_users = users_email | users_app
@@ -126,9 +129,13 @@ B <- c(2, 3, 4, 5)
 union_result <- union(A, B)
 cat("A =", A, "\n")
 cat("B =", B, "\n")
-cat("A ∪ B =", union_result, "\n")  # 1 2 3 4 5 # Inclusion-exclusion for cardinality
+cat("A ∪ B =", union_result, "\n")  # 1 2 3 4 5
+
+# Inclusion-exclusion for cardinality
 cat(sprintf("|A|=%d, |B|=%d, |A∩B|=%d\n", length(A), length(B), length(intersect(A, B))))
-cat(sprintf("|A ∪ B| = %d + %d - %d = %d\n", length(A), length(B), length(intersect(A, B)), length(A) + length(B) - length(intersect(A, B))))  # String sets
+cat(sprintf("|A ∪ B| = %d + %d - %d = %d\n", length(A), length(B), length(intersect(A, B)), length(A) + length(B) - length(intersect(A, B))))
+
+# String sets
 users_email <- c("alice", "bob", "carol")
 users_app <- c("bob", "carol", "dave", "eve")
 all_users <- union(users_email, users_app)

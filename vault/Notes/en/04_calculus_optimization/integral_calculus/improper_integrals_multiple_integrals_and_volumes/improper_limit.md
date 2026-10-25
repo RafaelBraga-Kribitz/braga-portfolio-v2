@@ -102,17 +102,22 @@ def f_convergent(x: float) -> float:
 
 def f_divergent(x: float) -> float:
     """1/x: divergent on [1, inf)."""
-    return 1.0 / x   # Convergent improper integral: scipy.quad handles this with
-limit=inf
+    return 1.0 / x
+
+
+# Convergent improper integral: scipy.quad handles this with limit=inf
 area_convergent, error = integrate.quad(f_convergent, 1, np.inf)
 print(f"int_1^inf 1/x^2 dx = {area_convergent:.6f} (expected: 1.0)")
-print(f"Error estimate: {error:.2e}")   # Verify by limit approach (finite approximations)
+print(f"Error estimate: {error:.2e}")
+
+# Verify by limit approach (finite approximations)
 b_values = [10, 100, 1_000, 10_000, 100_000]
 print("\nFinite-b approximation: 1 - 1/b")
 for b in b_values:
     approx = 1.0 - 1.0 / b
-print(f" b = {b:>8d}: integral = {approx:.8f}")   # Exponential PDF: verify int_0^inf lambda*exp(-lambda*x)
-dx = 1
+    print(f" b = {b:>8d}: integral = {approx:.8f}")
+
+# Exponential PDF: verify int_0^inf lambda*exp(-lambda*x) dx = 1
 LAMBDA = 0.1
 area_pdf, _ = integrate.quad(lambda x: LAMBDA * np.exp(-LAMBDA * x), 0, np.inf)
 print(f"\nExp(lambda=0.1) PDF integrates to: {area_pdf:.8f} (expected: 1.0)")
@@ -121,14 +126,18 @@ print(f"\nExp(lambda=0.1) PDF integrates to: {area_pdf:.8f} (expected: 1.0)")
 ### Beginner example (R)
 
 ```r
-# Convergent: int_1^inf 1/x^2
-dx = 1
+# Convergent: int_1^inf 1/x^2 dx = 1
 f_convergent <- function(x) 1 / x^2
 result <- integrate(f_convergent, lower = 1, upper = Inf)
-cat("int_1^inf 1/x^2 dx:", result$value, "\n")  # 1 # Finite-b approximation: approaches 1 as b -> inf
+cat("int_1^inf 1/x^2 dx:", result$value, "\n")  # 1
+
+# Finite-b approximation: approaches 1 as b -> inf
 cat("\nFinite-b approximation (1 - 1/b):\n")
-for (b in c(10, 100, 1000, 10000)) { cat(" b =", b, ": integral =", 1 - 1/b, "\n")
-}  # Exponential PDF: integrate to infinity
+for (b in c(10, 100, 1000, 10000)) {
+  cat(" b =", b, ": integral =", 1 - 1/b, "\n")
+}
+
+# Exponential PDF: integrate to infinity
 lambda <- 0.1
 area_pdf <- integrate(function(x) lambda * exp(-lambda * x), 0, Inf)$value
 cat("\nExp(lambda=0.1) PDF total area:", area_pdf, "\n")  # 1
@@ -138,49 +147,69 @@ cat("\nExp(lambda=0.1) PDF total area:", area_pdf, "\n")  # 1
 
 ```python
 """
-Improper integrals in Bayesian posterior normalization. In Bayesian inference: posterior ∝ likelihood * prior normalizing constant
-Z = int_{-inf}^{inf}
-likelihood(theta) * prior(theta)
-d(theta) For a Gaussian likelihood with Gaussian prior (conjugate model),
-Z has a closed form. We verify numerically using scipy.integrate.quad
-on an improper integral over all of R. Business context: estimate the true conversion rate mu from n trials.
-Prior: mu ~ Normal(mu_0, sigma_0) [truncated to (0,1) for simplicity here we work on the unconstrained space and use a proper Gaussian likelihood].
-Likelihood: proportional to
-Normal(x_bar | mu, sigma_likelihood).
+Improper integrals in Bayesian posterior normalization.
+
+In Bayesian inference: posterior ∝ likelihood * prior
+normalizing constant Z = int_{-inf}^{inf} likelihood(theta) * prior(theta) d(theta)
+
+For a Gaussian likelihood with Gaussian prior (conjugate model), Z has a
+closed form. We verify numerically using scipy.integrate.quad on an improper
+integral over all of R.
+
+Business context: estimate the true conversion rate mu from n trials.
+Prior: mu ~ Normal(mu_0, sigma_0) [truncated to (0,1) for simplicity here we
+work on the unconstrained space and use a proper Gaussian likelihood].
+Likelihood: proportional to Normal(x_bar | mu, sigma_likelihood).
 """
 import numpy as np
 from scipy import integrate, stats
-from sklearn.datasets import make_classification
+
 RANDOM_SEED = 42
-rng = np.random.default_rng(RANDOM_SEED)   # Observed data: 200 A/B test users, conversion rate ~0.30
+rng = np.random.default_rng(RANDOM_SEED)
+
+# Observed data: 200 A/B test users, conversion rate ~0.30
 n_obs = 200
 true_rate = 0.30
 conversions = rng.binomial(n=1, p=true_rate, size=n_obs)
-x_bar = float(conversions.mean())   # Gaussian prior: mu_0 = 0.25,
-sigma_0 = 0.10
-mu_prior = 0.25
-sigma_prior = 0.10   # Gaussian likelihood std (known, simplified):
-sigma_L = 1/sqrt(n)
-sigma_likelihood = 1.0 / np.sqrt(n_obs)   # Unnormalized posterior: p(mu | data) ∝ likelihood * prior
+x_bar = float(conversions.mean())
 
+# Gaussian prior: mu_0 = 0.25, sigma_0 = 0.10
+mu_prior = 0.25
+sigma_prior = 0.10
+
+# Gaussian likelihood std (known, simplified): sigma_L = 1/sqrt(n)
+sigma_likelihood = 1.0 / np.sqrt(n_obs)
+
+
+# Unnormalized posterior: p(mu | data) ∝ likelihood * prior
 def unnorm_posterior(mu: float) -> float:
     """Unnormalized: Normal likelihood * Normal prior."""
     log_likelihood = stats.norm.logpdf(x_bar, loc=mu, scale=sigma_likelihood)
     log_prior = stats.norm.logpdf(mu, loc=mu_prior, scale=sigma_prior)
-    return float(np.exp(log_likelihood + log_prior))   # Normalizing constant Z = int_{-inf}^{inf} unnorm_posterior(mu) d(mu)
+    return float(np.exp(log_likelihood + log_prior))
+
+
+# Normalizing constant Z = int_{-inf}^{inf} unnorm_posterior(mu) d(mu)
 # This is an improper integral: both limits infinite
 normalizing_constant, error = integrate.quad(unnorm_posterior, -np.inf, np.inf)
 print(f"Normalizing constant Z: {normalizing_constant:.6f}")
-print(f"Integration error: {error:.2e}")   # Posterior mean (should match conjugate Gaussian update)
+print(f"Integration error: {error:.2e}")
 
+
+# Posterior mean (should match conjugate Gaussian update)
 def posterior_mean_integrand(mu: float) -> float:
     return mu * unnorm_posterior(mu) / normalizing_constant
-posterior_mean, _ = integrate.quad(posterior_mean_integrand, -np.inf, np.inf)   # Closed-form conjugate Gaussian posterior mean
+
+
+posterior_mean, _ = integrate.quad(posterior_mean_integrand, -np.inf, np.inf)
+
+# Closed-form conjugate Gaussian posterior mean
 precision_prior = 1.0 / sigma_prior**2
-precision_likelihood = n_obs   # since
-sigma_L = 1/sqrt(n)
+precision_likelihood = n_obs   # since sigma_L = 1/sqrt(n)
 precision_posterior = precision_prior + precision_likelihood
-mu_posterior_analytic = ( (mu_prior * precision_prior + x_bar * precision_likelihood) / precision_posterior )
+mu_posterior_analytic = (
+    (mu_prior * precision_prior + x_bar * precision_likelihood) / precision_posterior
+)
 print(f"\nObserved mean (x_bar): {x_bar:.4f}")
 print(f"Posterior mean (improper int): {posterior_mean:.4f}")
 print(f"Posterior mean (analytic): {mu_posterior_analytic:.4f}")

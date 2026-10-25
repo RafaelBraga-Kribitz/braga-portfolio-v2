@@ -91,12 +91,16 @@ $\begin{bmatrix}2\cdot1 + 3\cdot0 & 2\cdot0 + 3\cdot1 \\ 4\cdot1 + 5\cdot0 & 4\c
 ### Beginner example (Python)
 
 ```python
-# Multiplicative identity: a * 1 = a values = [7, -3.5, 0, 100.0, -0.001] print("Verifying a × 1 == a:")
+import numpy as np
+
+# Multiplicative identity: a * 1 = a
+values = [7, -3.5, 0, 100.0, -0.001]
+print("Verifying a × 1 == a:")
 for a in values:
     result = a * 1
-print(f" {a} × 1 = {result} | unchanged: {result == a}")   # Identity matrix: A @
-I = A
-import numpy as np
+    print(f" {a} × 1 = {result} | unchanged: {result == a}")
+
+# Identity matrix: A @ I = A
 A = np.array([[2, 3], [4, 5]], dtype=float)
 I = np.eye(2)
 AI = A @ I   # A times identity
@@ -105,13 +109,15 @@ print(f"\nA =\n{A}")
 print(f"I =\n{I}")
 print(f"A @ I =\n{AI}")
 print(f"A @ I == A: {np.allclose(AI, A)}")
-print(f"I @ A == A: {np.allclose(IA, A)}")   # Accumulator bug: product should start at 1, not 0
+print(f"I @ A == A: {np.allclose(IA, A)}")
+
+# Accumulator bug: product should start at 1, not 0
 numbers = [2, 3, 4, 5]
-product_correct = 1   # multiplicative identity start
-product_wrong = 0   # additive identity — will always give 0!
+product_correct = 1  # multiplicative identity start
+product_wrong = 0    # additive identity — will always give 0!
 for n in numbers:
     product_correct *= n
-product_wrong *= n
+    product_wrong *= n
 print(f"\nProduct (start=1): {product_correct} ← correct: 2×3×4×5=120")
 print(f"Product (start=0): {product_wrong} ← wrong! 0 annihilates all")
 ```
@@ -122,14 +128,19 @@ print(f"Product (start=0): {product_wrong} ← wrong! 0 annihilates all")
 # Multiplicative identity: a * 1 = a
 values <- c(7, -3.5, 0, 100.0, -0.001)
 cat("Verifying a × 1 == a:\n")
-for (a in values) { result <- a * 1
+for (a in values) {
+  result <- a * 1
   cat(sprintf(" %.4f × 1 = %.4f | unchanged: %s\n", a, result, result == a))
-}  # Identity matrix
+}
+
+# Identity matrix
 A <- matrix(c(2, 4, 3, 5), nrow=2)
 I2 <- diag(2)
 cat("\nA %*% I:\n")
 print(A %*% I2)
-cat("Equals A:", all(A %*% I2 == A), "\n")  # Product accumulator: must start at 1
+cat("Equals A:", all(A %*% I2 == A), "\n")
+
+# Product accumulator: must start at 1
 numbers <- c(2, 3, 4, 5)
 product <- Reduce("*", numbers, accumulate=FALSE)
 cat(sprintf("\nProduct of %s = %d\n", paste(numbers, collapse="×"), product))
@@ -139,37 +150,50 @@ cat(sprintf("\nProduct of %s = %d\n", paste(numbers, collapse="×"), product))
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: ridge regression uses identity matrix,
+import pandas as pd
+
+# Scenario: ridge regression uses identity matrix,
 # ResNet-style residual uses identity shortcut
 np.random.seed(42)
 n, p = 200, 4
 X = np.random.randn(n, p)
 true_w = np.array([2.0, -1.5, 0.8, 0.3])
-y = X @ true_w + np.random.normal(0, 0.5, n)   # OLS vs Ridge: (X'X + λI)^{-1} X'y
+y = X @ true_w + np.random.normal(0, 0.5, n)
+
+# OLS vs Ridge: (X'X + λI)^{-1} X'y
 lambda_values = [0.0, 0.1, 1.0, 10.0]
 print("Ridge Regression: (X'X + λI)⁻¹ X'y")
 print(" λ=0 means OLS; λI is adding λ to diagonal (identity role)")
 print("=" * 54)
 for lam in lambda_values:
-    XtX = X.T @ X   # p×p reg = XtX + lam * np.eye(p) # λI = multiplicative identity × λ
-w_hat = np.linalg.solve(reg, X.T @ y)
-mse = np.mean((y - X @ w_hat) ** 2)
-print(f" λ={lam:>5}: w_hat={w_hat.round(3)}, MSE={mse:.4f}")
+    XtX = X.T @ X                 # p×p
+    reg = XtX + lam * np.eye(p)   # λI = multiplicative identity × λ
+    w_hat = np.linalg.solve(reg, X.T @ y)
+    mse = np.mean((y - X @ w_hat) ** 2)
+    print(f" λ={lam:>5}: w_hat={w_hat.round(3)}, MSE={mse:.4f}")
 print()
+
 # Residual (identity) connection sanity check
 print("ResNet Identity Shortcut (f(x) + x)")
 print("-" * 38)
 
+
 def linear_layer(W, b, x):
     return W @ x + b
-x_input = np.array([1.0, 2.0, 3.0, 4.0])   # Identity weights + zero bias → should return x unchanged (a·1 = a)
+
+
+x_input = np.array([1.0, 2.0, 3.0, 4.0])
+
+# Identity weights + zero bias → should return x unchanged (a·1 = a)
 W_identity = np.eye(4)
 b_zero = np.zeros(4)
 output = linear_layer(W_identity, b_zero, x_input)
 print(f" Input: {x_input}")
 print(f" Output: {output}")
-print(f" Identity transform (output == input): {np.allclose(output, x_input)}")   # Residual output with zero learned residual: x + f(x) where f(x) ≈ 0
-residual = np.zeros(4)   # learned component ≈ 0
+print(f" Identity transform (output == input): {np.allclose(output, x_input)}")
+
+# Residual output with zero learned residual: x + f(x) where f(x) ≈ 0
+residual = np.zeros(4)              # learned component ≈ 0
 final_output = x_input + residual   # identity path dominates
 print(f" Residual block output: {final_output} (identity path)")
 ```
@@ -177,8 +201,7 @@ print(f" Residual block output: {final_output} (identity path)")
 ### Professional example (R)
 
 ```r
-# Identity transform:
-W = I, b = 0 => output = input; residual x + 0 = x
+# Identity transform: W = I, b = 0 => output = input; residual x + 0 = x
 x_input <- c(1, 2, 3, 4)
 W_identity <- diag(4)
 output <- as.numeric(W_identity %*% x_input)

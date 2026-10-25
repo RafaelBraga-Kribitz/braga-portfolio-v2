@@ -104,7 +104,10 @@ Task: trace which number set each operation in a typical DA pipeline uses.
 
 ```python
 # Number set hierarchy: ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ ⊂ ℂ
-import numpy as np   # Demonstrate which set each value belongs to
+import numpy as np
+from fractions import Fraction
+
+# Demonstrate which set each value belongs to
 
 def classify_number(value) -> str:
     """Classify a scalar value by the smallest number set it belongs to."""
@@ -121,23 +124,34 @@ def classify_number(value) -> str:
             return f"ℕ₀ (whole): {n}"
         else:
             return f"ℤ (integer): {n}"
-        from fractions import Fraction
     frac = Fraction(val).limit_denominator(10**9)
     if abs(float(frac) - val) < 1e-10:
         return f"ℚ (rational): {frac}"
     return f"ℝ (real, likely irrational): {val:.6f}"
-examples = [ 5,   # ℕ
-    -3,   # ℤ
-    0.75,   # ℚ
-    (= 3/4) np.sqrt(2),   # ℝ
-    (irrational) np.pi,   # ℝ
-    (irrational) 2 + 3j,   # ℂ np.nan, # outside ℝ np.inf, # outside ℝ
+
+
+examples = [
+    5,           # ℕ
+    -3,          # ℤ
+    0.75,        # ℚ (= 3/4)
+    np.sqrt(2),  # ℝ (irrational)
+    np.pi,       # ℝ (irrational)
+    2 + 3j,      # ℂ
+    np.nan,      # outside ℝ
+    np.inf,      # outside ℝ
 ]
 print("Number Set Classification:")
 for v in examples:
-    print(f" {str(v):>15} → {classify_number(v)}")   # Python dtype hierarchy (practical mapping)
+    print(f" {str(v):>15} → {classify_number(v)}")
+
+# Python dtype hierarchy (practical mapping)
 print("\nPractical dtype mapping:")
-dtype_map = { "row count, rank": "uint32 (ℕ)", "revenue delta, lag": "int64 (ℤ)", "conversion rate, %": "float64 (ℚ approx)", "log value, gradient": "float64 (ℝ approx)", "FFT output, eigval": "complex128 (ℂ)",
+dtype_map = {
+    "row count, rank": "uint32 (ℕ)",
+    "revenue delta, lag": "int64 (ℤ)",
+    "conversion rate, %": "float64 (ℚ approx)",
+    "log value, gradient": "float64 (ℝ approx)",
+    "FFT output, eigval": "complex128 (ℂ)",
 }
 for use_case, dtype in dtype_map.items():
     print(f" {use_case:<30} → {dtype}")
@@ -146,13 +160,20 @@ for use_case, dtype in dtype_map.items():
 ### Beginner example (R)
 
 ```r
-# Number set hierarchy in R # R uses double for ℝ, complex for ℂ, integer for ℤ and ℕ
-values <- list( natural = 5L, integer = -3L, rational = 3/4, irrational = sqrt(2), complex = 2 + 3i, nan_val = NaN, inf_val = Inf
-) cat("R numeric types vs. mathematical sets:\n")
+# Number set hierarchy in R
+# R uses double for ℝ, complex for ℂ, integer for ℤ and ℕ
+values <- list(
+  natural = 5L, integer = -3L, rational = 3/4, irrational = sqrt(2),
+  complex = 2 + 3i, nan_val = NaN, inf_val = Inf
+)
+cat("R numeric types vs. mathematical sets:\n")
 cat(sprintf(" %-15s class=%-10s is.integer=%-5s is.complex=%-5s is.finite=%-5s\n", "value", "class", "int?", "complex?", "finite?"))
-for (name in names(values)) { v <- valuesname
+for (name in names(values)) {
+  v <- values[[name]]
   cat(sprintf(" %-15s class=%-10s is.integer=%-5s is.complex=%-5s is.finite=%-5s\n", name, class(v), is.integer(v), is.complex(v), if (is.complex(v)) "N/A" else is.finite(v)))
-}  # FFT in R returns complex vector
+}
+
+# FFT in R returns complex vector
 signal <- c(1, 2, 3, 4, 3, 2, 1, 0)
 fft_out <- fft(signal)
 cat(sprintf("\nFFT output class: %s (ℂ)\n", class(fft_out)))
@@ -163,17 +184,27 @@ cat(sprintf("First element: %.2f + %.2fi\n", Re(fft_out[1]), Im(fft_out[1])))
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: audit a pipeline's column types against the number-set hierarchy
+import pandas as pd
+
+# Scenario: audit a pipeline's column types against the number-set hierarchy
 # Goal: assign the smallest sufficient numeric type to each column
 np.random.seed(42)
 N = 300
-raw = pd.DataFrame({ "user_id": np.arange(1, N + 1),   # ℕ
-    "session_count": np.random.randint(0, 50, N),   # ℕ₀
-    (can be 0) "revenue_delta": np.random.randint(-1000, 5000, N),   # ℤ
-    "conversion_rate": np.random.uniform(0, 0.5, N),   # ℚ/ℝ
+raw = pd.DataFrame({
+    "user_id": np.arange(1, N + 1),                       # ℕ
+    "session_count": np.random.randint(0, 50, N),         # ℕ₀ (can be 0)
+    "revenue_delta": np.random.randint(-1000, 5000, N),   # ℤ
+    "conversion_rate": np.random.uniform(0, 0.5, N),      # ℚ/ℝ
     "log_spend": np.log(np.random.uniform(1, 1000, N)),   # ℝ
-})   # Optimal dtypes aligned with number-set hierarchy
-dtype_plan = { "user_id": ("uint32", "ℕ — positive IDs, no zero needed"), "session_count": ("uint16", "ℕ₀ — non-negative counts, max 50"), "revenue_delta": ("int32", "ℤ — can be negative, fits in 32 bits"), "conversion_rate": ("float32", "ℝ — continuous [0,1], 32-bit sufficient"), "log_spend": ("float64", "ℝ — irrational values, 64-bit needed"),
+})
+
+# Optimal dtypes aligned with number-set hierarchy
+dtype_plan = {
+    "user_id": ("uint32", "ℕ — positive IDs, no zero needed"),
+    "session_count": ("uint16", "ℕ₀ — non-negative counts, max 50"),
+    "revenue_delta": ("int32", "ℤ — can be negative, fits in 32 bits"),
+    "conversion_rate": ("float32", "ℝ — continuous [0,1], 32-bit sufficient"),
+    "log_spend": ("float64", "ℝ — irrational values, 64-bit needed"),
 }
 print("Number-Set Hierarchy: Dtype Audit")
 print("=" * 58)
@@ -182,14 +213,18 @@ print(" " + "-" * 80)
 optimized = raw.copy()
 for col, (target_dtype, reason) in dtype_plan.items():
     before = str(raw[col].dtype)
-optimized[col] = raw[col].astype(target_dtype)
-after = str(optimized[col].dtype)
-print(f" {col:<20} {before:>12} {after:>12} {reason}")   # Memory savings
+    optimized[col] = raw[col].astype(target_dtype)
+    after = str(optimized[col].dtype)
+    print(f" {col:<20} {before:>12} {after:>12} {reason}")
+
+# Memory savings
 mem_before = raw.memory_usage(deep=True).sum()
 mem_after = optimized.memory_usage(deep=True).sum()
 print(f"\n Memory before: {mem_before:,} bytes")
 print(f" Memory after: {mem_after:,} bytes")
-print(f" Reduction: {(1 - mem_after/mem_before)*100:.1f}%")   # FFT demo: automatically promotes to ℂ
+print(f" Reduction: {(1 - mem_after/mem_before)*100:.1f}%")
+
+# FFT demo: automatically promotes to ℂ
 signal = np.sin(2 * np.pi * np.linspace(0, 1, 128))
 fft_output = np.fft.fft(signal)
 print(f"\n FFT input dtype: {signal.dtype} ← ℝ (float64)")
