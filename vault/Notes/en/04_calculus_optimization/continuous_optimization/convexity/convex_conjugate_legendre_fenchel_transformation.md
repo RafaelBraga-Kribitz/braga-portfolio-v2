@@ -108,51 +108,70 @@ For $u = 0$: $\sup_x (0 - e^x) = -\inf_x e^x = 0 - 0 = 0$, so $f^*(0) = 0$. *Res
 import numpy as np
 from scipy.optimize import minimize_scalar
 
-def fenchel_conjugate_numerical( func, u_val: float, x_bounds: tuple = (-10, 10),
+def fenchel_conjugate_numerical(
+    func,
+    u_val: float,
+    x_bounds: tuple = (-10, 10),
 ) -> float:
     """Numerically compute f*(u) = sup_x [xu - f(x)]."""
-    result = minimize_scalar( lambda x: -(x * u_val - func(x)), bounds=x_bounds, method="bounded", )
-    return -result.fun   # f(x) = x^2: conjugate should be u^2/4
+    result = minimize_scalar(
+        lambda x: -(x * u_val - func(x)),
+        bounds=x_bounds,
+        method="bounded",
+    )
+    return -result.fun
 
+
+# f(x) = x^2: conjugate should be u^2/4
 def f_squared(x: float) -> float:
     return x**2
 
+
 def f_exp(x: float) -> float:
     return np.exp(x)
+
+
 u_grid = np.linspace(-3, 3, 13)
 print("f(x) = x^2: f*(u) vs analytical u^2/4")
 for u in u_grid:
     numerical = fenchel_conjugate_numerical(f_squared, u)
-analytical = u**2 / 4
-print(f" u={u:5.1f}: numerical={numerical:7.4f}, analytical={analytical:7.4f}")
+    analytical = u**2 / 4
+    print(f" u={u:5.1f}: numerical={numerical:7.4f}, analytical={analytical:7.4f}")
+
 print("\nf(x) = e^x (u > 0): f*(u) vs analytical u*log(u) - u")
 for u in [0.5, 1.0, 2.0, 3.0]:
     numerical = fenchel_conjugate_numerical(f_exp, u, x_bounds=(-20, 20))
-analytical = u * np.log(u) - u
-print(f" u={u}: numerical={numerical:.4f}, analytical={analytical:.4f}")
+    analytical = u * np.log(u) - u
+    print(f" u={u}: numerical={numerical:.4f}, analytical={analytical:.4f}")
 ```
 
 ### Beginner example (R)
 
 ```r
 # Fenchel conjugate: f*(u) = sup_x [xu - f(x)]
-fenchel_conjugate <- function(f, u_val, lower = -10, upper = 10) { result <- optimize(function(x) -(x * u_val - f(x)), lower = lower, upper = upper) -result$objective
+fenchel_conjugate <- function(f, u_val, lower = -10, upper = 10) {
+  result <- optimize(function(x) -(x * u_val - f(x)), lower = lower, upper = upper)
+  -result$objective
 }
 f_squared <- function(x) x^2
-f_entropy <- function(x)
-if (x > 0) x * log(x)
-else
-if (x == 0) 0
-else Inf
+f_entropy <- function(x) {
+  if (x > 0) x * log(x)
+  else if (x == 0) 0
+  else Inf
+}
 u_vals <- seq(-2, 2, by = 0.5)
 cat("f(x)=x^2: f*(u) vs u^2/4\n")
-for (u in u_vals) { num <- fenchel_conjugate(f_squared, u)
+for (u in u_vals) {
+  num <- fenchel_conjugate(f_squared, u)
   anal <- u^2 / 4
   cat(sprintf(" u=%4.1f: numerical=%.4f, analytical=%.4f\n", u, num, anal))
-}  # Fenchel-Young inequality check
+}
+
+# Fenchel-Young inequality check
 cat("\nFenchel-Young: f(x) + f*(u) >= xu\n")
 pairs <- list(c(1, 2), c(-1, 0.5), c(3, 1))
-for (p in pairs) { x <- p[1]; u <- p[2]
+for (p in pairs) {
+  x <- p[1]; u <- p[2]
   f_val <- f_squared(x)
   fstar <- fenchel_conjugate(f_squared, u)
   cat(sprintf(" x=%g, u=%g: f(x)=%g, f*(u)=%.4f, sum=%.4f >= xu=%g? %s\n", x, u, f_val, fstar, f_val+fstar, x*u, f_val+fstar >= x*u - 1e-8))
@@ -164,9 +183,12 @@ for (p in pairs) { x <- p[1]; u <- p[2]
 ```python
 import numpy as np
 from scipy.optimize import minimize
-np.random.seed(42)   # -- SVM dual via Fenchel duality: demonstrate the connection -------------------
+np.random.seed(42)
+
+# -- SVM dual via Fenchel duality: demonstrate the connection -------------------
 # The SVM primal uses f(w) = 0.5*||w||^2, whose conjugate is f*(u) = 0.5*||u||^2
 # This self-conjugacy is WHY the SVM dual has the same quadratic form.
+
 # Generate linearly separable 2D data
 N_POS = 30
 N_NEG = 30
@@ -174,8 +196,9 @@ X_pos = np.random.randn(N_POS, 2) + np.array([2, 2])
 X_neg = np.random.randn(N_NEG, 2) + np.array([-2, -2])
 X = np.vstack([X_pos, X_neg])
 y = np.hstack([np.ones(N_POS), -np.ones(N_NEG)])
-C_PARAM = 1.0   # SVM dual: max
-sum(alpha) - 0.5 * alpha @ K @ alpha
+C_PARAM = 1.0
+
+# SVM dual: max sum(alpha) - 0.5 * alpha @ K @ alpha
 # s.t. 0 <= alpha <= C, sum(alpha * y) = 0
 # K_ij = y_i y_j x_i^T x_j (linear kernel with label encoding)
 K = (y[:, None] * X) @ (y[:, None] * X).T
@@ -186,15 +209,25 @@ def svm_dual_negative(alpha: np.ndarray) -> float:
 
 def svm_dual_gradient(alpha: np.ndarray) -> np.ndarray:
     return K @ alpha - np.ones(len(alpha))
+
+
 n_samples = len(y)
 alpha_init = np.zeros(n_samples)
 bounds = [(0, C_PARAM)] * n_samples
 constraints = {"type": "eq", "fun": lambda a: a @ y, "jac": lambda a: y}
-result = minimize( svm_dual_negative, alpha_init, jac=svm_dual_gradient, method="SLSQP", bounds=bounds, constraints=constraints, options={"ftol": 1e-9, "maxiter": 500},
+result = minimize(
+    svm_dual_negative,
+    alpha_init,
+    jac=svm_dual_gradient,
+    method="SLSQP",
+    bounds=bounds,
+    constraints=constraints,
+    options={"ftol": 1e-9, "maxiter": 500},
 )
 alpha_opt = result.x
-dual_value = -result.fun   # Recover primal from
-dual: w = sum(alpha_i * y_i * x_i)
+dual_value = -result.fun
+
+# Recover primal from dual: w = sum(alpha_i * y_i * x_i)
 w_dual = (alpha_opt * y) @ X
 support_mask = alpha_opt > 1e-4
 b_dual = np.mean(y[support_mask] - X[support_mask] @ w_dual)
@@ -202,7 +235,9 @@ print("SVM via Fenchel-dual optimization")
 print(f"Support vectors: {support_mask.sum()} / {n_samples}")
 print(f"Dual objective value: {dual_value:.6f}")
 print(f"||w|| (margin = 2/||w||): {np.linalg.norm(w_dual):.4f}")
-print(f"Margin: {2/np.linalg.norm(w_dual):.4f}")   # Verify primal objective matches dual (strong duality for convex QP)
+print(f"Margin: {2/np.linalg.norm(w_dual):.4f}")
+
+# Verify primal objective matches dual (strong duality for convex QP)
 xi = np.maximum(0, 1 - y * (X @ w_dual + b_dual))
 primal_value = 0.5 * np.linalg.norm(w_dual)**2 + C_PARAM * xi.sum()
 print(f"\nPrimal objective: {primal_value:.6f}")

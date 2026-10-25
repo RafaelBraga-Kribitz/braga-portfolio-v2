@@ -109,23 +109,31 @@ pairs = [(5, 3), (10, 4), (7, 2), (0.5, 0.25), (-3, 2)]
 print(f"{'a':>6} {'b':>6} {'a²-b²':>8} {'(a-b)(a+b)':>12} {'match':>6}")
 for a, b in pairs:
     lhs = a**2 - b**2
-rhs = (a - b) * (a + b)
-print(f"{a:>6.2f} {b:>6.2f} {lhs:>8.4f} {rhs:>12.4f} {str(abs(lhs-rhs)<1e-10):>6}")   # TRAP: contrast with (a-b)²
+    rhs = (a - b) * (a + b)
+    print(f"{a:>6.2f} {b:>6.2f} {lhs:>8.4f} {rhs:>12.4f} {str(abs(lhs-rhs)<1e-10):>6}")
+
+# TRAP: contrast with (a-b)²
 a, b = 5.0, 3.0
 print(f"\nTRAP comparison for a={a}, b={b}:")
 print(f" a²-b² = {a**2-b**2:.1f} (difference of squares = (a-b)(a+b))")
 print(f" (a-b)² = {(a-b)**2:.1f} (squared difference = a²-2ab+b²)")
-print(f" They are NOT equal: {a**2-b**2 != (a-b)**2}")   # Variance computational formula
+print(f" They are NOT equal: {a**2-b**2 != (a-b)**2}")
+
+# Variance computational formula
 import numpy as np
 np.random.seed(42)
-data = np.array([3.0, 7.0, 5.0, 9.0, 1.0, 11.0, 4.0, 8.0])   # Two methods — should be equal
+data = np.array([3.0, 7.0, 5.0, 9.0, 1.0, 11.0, 4.0, 8.0])
+
+# Two methods — should be equal
 var_direct = np.mean((data - data.mean())**2)   # E[(X - μ)²]
 var_formula = np.mean(data**2) - data.mean()**2   # E[X²] - μ² (diff of squares)
 print(f"\nVariance computation:")
 print(f" E[X²] = {np.mean(data**2):.4f} μ² = {data.mean()**2:.4f}")
 print(f" Var (direct): {var_direct:.6f}")
 print(f" Var (formula): {var_formula:.6f}")
-print(f" Match: {abs(var_direct - var_formula) < 1e-10}")   # Mental math trick: a×b = (m-d)(m+d) = m² - d²
+print(f" Match: {abs(var_direct - var_formula) < 1e-10}")
+
+# Mental math trick: a×b = (m-d)(m+d) = m² - d²
 m, d = 50, 3
 print(f"\nMental math: {m-d} × {m+d} = {m}² - {d}² = {m**2} - {d**2} = {m**2 - d**2}")
 ```
@@ -156,47 +164,66 @@ cat(sprintf(" Match: %s\n", abs(var_direct - var_formula) < 1e-10))
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: online (single-pass) variance computation using E[X²] - (E[X])²
+import pandas as pd
+
+# Scenario: online (single-pass) variance computation using E[X²] - (E[X])²
 # Demonstrates the difference-of-squares form of variance in a streaming context
 # Critical for large datasets where two-pass computation is expensive
 np.random.seed(42)
-N_STREAM = 100_000   # simulate streaming observations
+N_STREAM = 100_000  # simulate streaming observations
+
 
 class OnlineVarianceTracker:
-    """ Single-pass online variance using the computational formula: Var(X) = E[X²] - (E[X])² — the difference-of-squares identity. Numerically uses Welford's algorithm for stability, but also tracks the naive formula for illustration. """
+    """Single-pass online variance using the computational formula.
 
-def __init__(self) -> None:
-    self._n: int = 0
-    self._sum: float = 0.0
-    self._sum_sq: float = 0.0
+    Var(X) = E[X²] - (E[X])² — the difference-of-squares identity.
+    Numerically uses Welford's algorithm for stability, but also tracks
+    the naive formula for illustration.
+    """
 
-def update(self, x: float) -> None:
-    """Accumulate a new observation."""
-    self._n += 1
-    self._sum += x
-    self._sum_sq += x * x
-@property
+    def __init__(self) -> None:
+        self._n: int = 0
+        self._sum: float = 0.0
+        self._sum_sq: float = 0.0
 
-def mean(self) -> float:
-    """Current running mean E[X]."""
-    return self._sum / self._n if self._n > 0 else 0.0
-@property
+    def update(self, x: float) -> None:
+        """Accumulate a new observation."""
+        self._n += 1
+        self._sum += x
+        self._sum_sq += x * x
 
-def variance(self) -> float:
-    """Variance using E[X²] - (E[X])² (difference of squares formula)."""
-    if self._n < 2:
-        return 0.0
-    e_x2 = self._sum_sq / self._n
-    mu = self.mean
-    return e_x2 - mu**2   # a² - b² form # Stream data
+    @property
+    def mean(self) -> float:
+        """Current running mean E[X]."""
+        return self._sum / self._n if self._n > 0 else 0.0
+
+    @property
+    def variance(self) -> float:
+        """Variance using E[X²] - (E[X])² (difference of squares formula)."""
+        if self._n < 2:
+            return 0.0
+        e_x2 = self._sum_sq / self._n
+        mu = self.mean
+        return e_x2 - mu**2  # a² - b² form
+
+
+# Stream data
 true_mean = 50.0
 true_std = 10.0
 tracker = OnlineVarianceTracker()
 snapshots = []
 for i, x in enumerate(np.random.normal(true_mean, true_std, N_STREAM)):
     tracker.update(float(x))
-if (i + 1) in {100, 1_000, 10_000, N_STREAM}:
-    snapshots.append({ "n": i + 1, "mean": tracker.mean, "variance": tracker.variance, "std": tracker.variance**0.5, "true_mean": true_mean, "true_var": true_std**2, })
+    if (i + 1) in {100, 1_000, 10_000, N_STREAM}:
+        snapshots.append({
+            "n": i + 1,
+            "mean": tracker.mean,
+            "variance": tracker.variance,
+            "std": tracker.variance**0.5,
+            "true_mean": true_mean,
+            "true_var": true_std**2,
+        })
+
 report = pd.DataFrame(snapshots)
 print("Online Variance via E[X²] - (E[X])² (Difference-of-Squares Formula)")
 print("=" * 72)
@@ -214,17 +241,22 @@ N_STREAM <- 10000
 true_mean <- 50
 true_std <- 10
 x_stream <- rnorm(N_STREAM, true_mean, true_std)
-online_var <- function(x, check_at = c(100, 1000, 10000, N_STREAM)) { n <- length(x)
+online_var <- function(x, check_at = c(100, 1000, 10000, N_STREAM)) {
+  n <- length(x)
   sum_x <- 0
   sum_sq <- 0
   out <- list()
-  for (i in seq_len(n)) { sum_x <- sum_x + x[i]
+  for (i in seq_len(n)) {
+    sum_x <- sum_x + x[i]
     sum_sq <- sum_sq + x[i]^2
-    if (i %in% check_at) { mu <- sum_x / i
+    if (i %in% check_at) {
+      mu <- sum_x / i
       e_x2 <- sum_sq / i
-      var_x <- e_x2 - mu^2 outlength(out) + 1 <- data.frame(n = i, mean = mu, variance = var_x, std = sqrt(var_x), true_mean = true_mean, true_var = true_std^2)
+      var_x <- e_x2 - mu^2
+      out[[length(out) + 1]] <- data.frame(n = i, mean = mu, variance = var_x, std = sqrt(var_x), true_mean = true_mean, true_var = true_std^2)
     }
-  } do.call(rbind, out)
+  }
+  do.call(rbind, out)
 }
 report <- online_var(x_stream)
 cat("Online Variance via E[X²] - (E[X])² (Difference-of-Squares Formula)\n")

@@ -93,7 +93,9 @@ Four zero-fill rows were added by the Cartesian product that would have been inv
 ### Beginner example (Python)
 
 ```python
-# A × B: Cartesian product import itertools
+# A × B: Cartesian product
+import itertools
+
 # Basic example: months × products
 months = ["Jan", "Feb", "Mar"]
 products = ["Widget_A", "Widget_B"]
@@ -102,19 +104,33 @@ print(f"|A| = {len(months)}, |B| = {len(products)}")
 print(f"|A × B| = {len(cartesian)}")
 print("\nAll ordered pairs (A × B):")
 for pair in cartesian:
-    print(f" {pair}")   # Verify cardinality rule
-assert len(cartesian) == len(months) * len(products), "Cardinality rule violated"   # Pandas: build complete date × product grid and fill missing revenue
+    print(f" {pair}")
+
+# Verify cardinality rule
+assert len(cartesian) == len(months) * len(products), "Cardinality rule violated"
+
+# Pandas: build complete date × product grid and fill missing revenue
 import pandas as pd
 import numpy as np
 np.random.seed(42)
 date_spine = pd.date_range("2024-01-01", periods=5, freq="D")
-product_list = ["Widget_A", "Widget_B", "Widget_C"]   # Cartesian product as a DataFrame
-grid_df = pd.DataFrame( list(itertools.product(date_spine, product_list)), columns=["date", "product"],
+product_list = ["Widget_A", "Widget_B", "Widget_C"]
+
+# Cartesian product as a DataFrame
+grid_df = pd.DataFrame(
+    list(itertools.product(date_spine, product_list)),
+    columns=["date", "product"],
 )
-print(f"\nGrid size: {len(grid_df)} rows ({len(date_spine)} dates × {len(product_list)} products)")   # Simulate sparse actual data (subset of the grid)
-actual_df = pd.DataFrame({ "date": [date_spine[0], date_spine[1], date_spine[3]], "product": ["Widget_A", "Widget_C", "Widget_B"], "revenue": [120.0, 85.0, 200.0],
-})   # LEFT JOIN: missing combinations get
-revenue = 0
+print(f"\nGrid size: {len(grid_df)} rows ({len(date_spine)} dates × {len(product_list)} products)")
+
+# Simulate sparse actual data (subset of the grid)
+actual_df = pd.DataFrame({
+    "date": [date_spine[0], date_spine[1], date_spine[3]],
+    "product": ["Widget_A", "Widget_C", "Widget_B"],
+    "revenue": [120.0, 85.0, 200.0],
+})
+
+# LEFT JOIN: missing combinations get revenue = 0
 complete_df = grid_df.merge(actual_df, on=["date", "product"], how="left").fillna({"revenue": 0.0})
 print("\nComplete reporting grid (zeros for missing combos):")
 print(complete_df.to_string(index=False))
@@ -197,8 +213,10 @@ for combo in all_combos[:3]:
 n_estimators <- c(50, 100, 200)
 max_depth <- c(3, 5, 10)
 learning_rate <- c(0.01, 0.1, 0.3)
-all_combos <- expand.grid( n_estimators = n_estimators, max_depth = max_depth, learning_rate = learning_rate
-) cat("Hyperparameter Grid (A × B × C)\n")
+all_combos <- expand.grid(
+  n_estimators = n_estimators, max_depth = max_depth, learning_rate = learning_rate
+)
+cat("Hyperparameter Grid (A × B × C)\n")
 cat(sprintf(" n_estimators: %d values\n", length(n_estimators)))
 cat(sprintf(" max_depth: %d values\n", length(max_depth)))
 cat(sprintf(" learning_rate: %d values\n", length(learning_rate)))

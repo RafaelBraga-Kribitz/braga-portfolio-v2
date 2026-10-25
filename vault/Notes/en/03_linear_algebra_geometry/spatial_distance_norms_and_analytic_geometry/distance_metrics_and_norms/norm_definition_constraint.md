@@ -92,16 +92,23 @@ $u = (0, 0, 0.0001)$. $\|u\|_2 = 0.0001 > 0$ even though $u$ is tiny. The norm i
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # -- Positive definiteness of norms: verify ||x|| >= 0 and ||x|| = 0 iff x = 0 ---
-test_vectors = [ np.array([3.0, 4.0]), np.array([0.0, 0.0]), np.array([-5.0, 0.0, 12.0]), np.array([0.0, 0.0, 0.0]), np.array([0.0, 0.001]),
+import numpy as np
+
+# -- Positive definiteness of norms: verify ||x|| >= 0 and ||x|| = 0 iff x = 0 ---
+test_vectors = [
+    np.array([3.0, 4.0]),
+    np.array([0.0, 0.0]),
+    np.array([-5.0, 0.0, 12.0]),
+    np.array([0.0, 0.0, 0.0]),
+    np.array([0.0, 0.001]),
 ]
 print(f"{'Vector':<30} {'L2 norm':>10} {'>=0':>6} {'=0 iff zero':>12}")
 for x in test_vectors:
     norm_val = np.linalg.norm(x)
-is_zero_vec = np.all(x == 0)
-norm_is_zero = np.isclose(norm_val, 0)
-axiom_ok = (norm_val >= 0) and (norm_is_zero == is_zero_vec)
-print(f"{str(x):<30} {norm_val:>10.6f} {str(norm_val >= 0):>6} {str(axiom_ok):>12}")
+    is_zero_vec = np.all(x == 0)
+    norm_is_zero = np.isclose(norm_val, 0)
+    axiom_ok = (norm_val >= 0) and (norm_is_zero == is_zero_vec)
+    print(f"{str(x):<30} {norm_val:>10.6f} {str(norm_val >= 0):>6} {str(axiom_ok):>12}")
 ```
 
 ### Beginner example (R)
@@ -109,7 +116,8 @@ print(f"{str(x):<30} {norm_val:>10.6f} {str(norm_val >= 0):>6} {str(axiom_ok):>1
 ```r
 # -- Positive definiteness for L2 norm ---
 test_vecs <- list(c(3, 4), c(0, 0), c(-5, 0, 12), c(0, 0, 0), c(0, 0.001))
-for (x in test_vecs) { norm_val <- sqrt(sum(x^2))
+for (x in test_vecs) {
+  norm_val <- sqrt(sum(x^2))
   is_zero_vec <- all(x == 0)
   norm_is_zero <- isTRUE(all.equal(norm_val, 0))
   axiom_ok <- (norm_val >= 0) && (norm_is_zero == is_zero_vec)
@@ -122,24 +130,33 @@ for (x in test_vecs) { norm_val <- sqrt(sum(x^2))
 ```python
 import numpy as np
 import pandas as pd
-np.random.seed(42)   # -- Business scenario: gradient convergence monitoring via norm ---
+np.random.seed(42)
+
+# -- Business scenario: gradient convergence monitoring via norm ---
 # Training stops when ||grad||_2 < epsilon (relies on positive definiteness).
 # Track gradient norm across training iterations.
 N_PARAMS = 20
 N_ITERS = 40
 LR = 0.15
-EPSILON = 1e-4   # Simulate gradient descent: grad decays toward zero
+EPSILON = 1e-4
+
+# Simulate gradient descent: grad decays toward zero
 theta = np.random.randn(N_PARAMS)
 grad_log = []
 for step in range(N_ITERS):
     # Simulate quadratic loss gradient: grad proportional to theta
     grad = theta + 0.05 * np.random.randn(N_PARAMS)
-theta = theta - LR * grad
-grad_norm = np.linalg.norm(grad)   # positive definiteness guarantees >= 0
-converged = grad_norm < EPSILON
-grad_log.append({ "step": step + 1, "grad_norm": round(grad_norm, 6), "converged": converged, })
-if converged:
-    break
+    theta = theta - LR * grad
+    grad_norm = np.linalg.norm(grad)  # positive definiteness guarantees >= 0
+    converged = grad_norm < EPSILON
+    grad_log.append({
+        "step": step + 1,
+        "grad_norm": round(grad_norm, 6),
+        "converged": converged,
+    })
+    if converged:
+        break
+
 grad_df = pd.DataFrame(grad_log)
 print("Gradient norm convergence (||grad|| -> 0 means all partial derivatives -> 0):")
 print(grad_df.to_string(index=False))

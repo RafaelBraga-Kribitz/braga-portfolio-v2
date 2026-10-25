@@ -96,40 +96,81 @@ Every doubling of terms adds half the remaining gap to 2. This is the geometric 
 
 ```python
 """
-Geometric infinite
-sum: S_inf = a / (1 - r), |r| < 1 Used here to compute expected customer LTV under constant monthly churn.
-""" import numpy as np def geometric_infinite_sum(first_term: float, ratio: float) -> float: """Return sum of infinite geometric series. Parameters ---------- first_term : float First term a. ratio : float Common ratio r. Must satisfy |r| < 1. Returns ------- float
-S_inf = first_term / (1 - ratio) Raises ------ ValueError If |ratio| >= 1 (series diverges). """ if abs(ratio) >= 1.0: raise ValueError(f"Series diverges: |r| = {abs(ratio):.4f} >= 1") return first_term / (1.0 - ratio) # SaaS customer LTV: €200/month, 5% monthly churn → r = 0.95
+Geometric infinite sum: S_inf = a / (1 - r), |r| < 1
+
+Used here to compute expected customer LTV under constant monthly churn.
+"""
+import numpy as np
+
+
+def geometric_infinite_sum(first_term: float, ratio: float) -> float:
+    """Return sum of infinite geometric series.
+
+    Parameters
+    ----------
+    first_term : float
+        First term a.
+    ratio : float
+        Common ratio r. Must satisfy |r| < 1.
+
+    Returns
+    -------
+    float
+        S_inf = first_term / (1 - ratio)
+
+    Raises
+    ------
+    ValueError
+        If |ratio| >= 1 (series diverges).
+    """
+    if abs(ratio) >= 1.0:
+        raise ValueError(f"Series diverges: |r| = {abs(ratio):.4f} >= 1")
+    return first_term / (1.0 - ratio)
+
+
+# SaaS customer LTV: €200/month, 5% monthly churn → r = 0.95
 MONTHLY_REVENUE = 200.0
 MONTHLY_CHURN = 0.05
 RETENTION_RATE = 1.0 - MONTHLY_CHURN
 ltv = geometric_infinite_sum(MONTHLY_REVENUE, RETENTION_RATE)
-print(f"Expected LTV (no discount): €{ltv:,.0f}")   # With monthly discount rate d = 1%
+print(f"Expected LTV (no discount): €{ltv:,.0f}")
+
+# With monthly discount rate d = 1%
 MONTHLY_DISCOUNT = 0.01
 effective_ratio = RETENTION_RATE / (1.0 + MONTHLY_DISCOUNT)
-ltv_discounted = geometric_infinite_sum( MONTHLY_REVENUE / (1.0 + MONTHLY_DISCOUNT), effective_ratio )
-print(f"Expected LTV (discounted) : €{ltv_discounted:,.0f}")   # Verify with finite sum at n=120 months
-partial_sum = sum( MONTHLY_REVENUE * RETENTION_RATE**k for k in range(120) )
+ltv_discounted = geometric_infinite_sum(MONTHLY_REVENUE / (1.0 + MONTHLY_DISCOUNT), effective_ratio)
+print(f"Expected LTV (discounted) : €{ltv_discounted:,.0f}")
+
+# Verify with finite sum at n=120 months
+partial_sum = sum(MONTHLY_REVENUE * RETENTION_RATE**k for k in range(120))
 print(f"120-month partial sum : €{partial_sum:,.0f} (≈ LTV, small tail remaining)")
 ```
 
 ### Beginner example (R)
 
 ```r
-# Geometric infinite sum:
-S_inf = a / (1 - r), for |r| < 1
+# Geometric infinite sum: S_inf = a / (1 - r), for |r| < 1
 # Application: discount factor sum in reinforcement learning
-geometric_infinite_sum <- function(first_term, ratio) {  # Infinite geometric series sum # Args: # first_term : first value in series (a) # ratio : common ratio (r), must have |r| < 1 # Returns: exact infinite sum
-  if (abs(ratio) >= 1) { stop(sprintf("Series diverges: |r| = %.4f >= 1", abs(ratio)))
-  } first_term / (1 - ratio)
-}  # Reinforcement learning: total discounted return
-#
-gamma = 0.99, constant reward
-r_t = 1 at every step
+geometric_infinite_sum <- function(first_term, ratio) {
+  # Infinite geometric series sum
+  # Args:
+  #   first_term : first value in series (a)
+  #   ratio      : common ratio (r), must have |r| < 1
+  # Returns: exact infinite sum
+  if (abs(ratio) >= 1) {
+    stop(sprintf("Series diverges: |r| = %.4f >= 1", abs(ratio)))
+  }
+  first_term / (1 - ratio)
+}
+
+# Reinforcement learning: total discounted return
+# gamma = 0.99, constant reward r_t = 1 at every step
 DISCOUNT_FACTOR <- 0.99
 CONSTANT_REWARD <- 1.0
 total_return <- geometric_infinite_sum(CONSTANT_REWARD, DISCOUNT_FACTOR)
-cat(sprintf("Max possible discounted return (gamma=0.99): %.2f\n", total_return))  # Verify: partial sum at 1000 steps
+cat(sprintf("Max possible discounted return (gamma=0.99): %.2f\n", total_return))
+
+# Verify: partial sum at 1000 steps
 steps <- 0:999
 partial <- sum(CONSTANT_REWARD * DISCOUNT_FACTOR^steps)
 cat(sprintf("1000-step partial sum : %.2f\n", partial))
@@ -140,35 +181,73 @@ cat(sprintf("Tail remaining (approx a*r^n/(1-r)) : %.4f\n", CONSTANT_REWARD * DI
 
 ```python
 """
-Infinite geometric series
-for perpetuity pricing and sensitivity analysis. Business context:
-    Fixed-income team pricing a perpetuity bond that pays coupon C per period, with a discount rate d that varies by credit rating scenario. Goal: compute fair value and duration (sensitivity to rate changes).
-""" import numpy as np
+Infinite geometric series for perpetuity pricing and sensitivity analysis.
+
+Business context: Fixed-income team pricing a perpetuity bond that pays coupon C
+per period, with a discount rate d that varies by credit rating scenario.
+Goal: compute fair value and duration (sensitivity to rate changes).
+"""
+import numpy as np
 import pandas as pd
+
 ANNUAL_COUPON_EUR: float = 1_000.0
 FACE_VALUE_EUR: float = 10_000.0
-CREDIT_SCENARIOS: dict[str, float] = { "AAA (2%)": 0.02, "AA (3%)": 0.03, "A (5%)": 0.05, "BBB (7%)": 0.07, "BB (10%)": 0.10,
+CREDIT_SCENARIOS: dict[str, float] = {
+    "AAA (2%)": 0.02,
+    "AA (3%)": 0.03,
+    "A (5%)": 0.05,
+    "BBB (7%)": 0.07,
+    "BB (10%)": 0.10,
 }
 
+
 def perpetuity_price(annual_coupon: float, discount_rate: float) -> float:
-    """Price a perpetuity as geometric infinite sum. The perpetuity pays annual_coupon at end of each year forever. Price = sum_{t=1}^{inf} C / (1+d)^t = C/(1+d) * sum_{k=0}^{inf} (1/(1+d))^k [geometric series] = C/(1+d) * 1/(1 - 1/(1+d)) = C / d Parameters ---------- annual_coupon : periodic payment discount_rate : per-period discount rate d (e.g. 0.05 for 5%) Returns ------- float : present value of perpetuity """
+    """Price a perpetuity as geometric infinite sum.
+
+    The perpetuity pays annual_coupon at end of each year forever.
+    Price = sum_{t=1}^{inf} C / (1+d)^t
+          = C/(1+d) * sum_{k=0}^{inf} (1/(1+d))^k   [geometric series]
+          = C/(1+d) * 1/(1 - 1/(1+d))
+          = C / d
+
+    Parameters
+    ----------
+    annual_coupon : periodic payment
+    discount_rate : per-period discount rate d (e.g. 0.05 for 5%)
+
+    Returns
+    -------
+    float : present value of perpetuity
+    """
     return annual_coupon / discount_rate
+
 
 def modified_duration(discount_rate: float) -> float:
     """Duration of a perpetuity = (1 + d) / d."""
     return (1.0 + discount_rate) / discount_rate
+
+
 rows = []
 for scenario, rate in CREDIT_SCENARIOS.items():
     price = perpetuity_price(ANNUAL_COUPON_EUR, rate)
-duration = modified_duration(rate)
-yield_spread = rate - 0.02   # spread over AAA
-rows.append({ "scenario": scenario, "discount_rate_pct": rate * 100, "price_eur": round(price, 2), "modified_duration_years": round(duration, 2), "yield_spread_bps": round(yield_spread * 10_000, 0), })
+    duration = modified_duration(rate)
+    yield_spread = rate - 0.02  # spread over AAA
+    rows.append({
+        "scenario": scenario,
+        "discount_rate_pct": rate * 100,
+        "price_eur": round(price, 2),
+        "modified_duration_years": round(duration, 2),
+        "yield_spread_bps": round(yield_spread * 10_000, 0),
+    })
+
 results_df = pd.DataFrame(rows)
-print(results_df.to_string(index=False))   # Sensitivity: 1bp rate increase → price change ≈ -duration * price * 0.0001
+print(results_df.to_string(index=False))
+
+# Sensitivity: 1bp rate increase → price change ≈ -duration * price * 0.0001
 print("\nPrice sensitivity to +1bp rate shock:")
 for _, row in results_df.iterrows():
     price_change = -row["modified_duration_years"] * row["price_eur"] * 0.0001
-print(f" {row['scenario']}: €{price_change:+.2f} per bond")
+    print(f" {row['scenario']}: €{price_change:+.2f} per bond")
 ```
 
 ---

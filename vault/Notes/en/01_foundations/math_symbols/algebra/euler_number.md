@@ -130,20 +130,33 @@ cat("sigmoid(2):", sigmoid(2), "\n")  # ~0.88
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: binary classification with logistic regression
+import pandas as pd
+
+# Scenario: binary classification with logistic regression
 # Demonstrate how e underlies the sigmoid -> probability -> cross-entropy loss pipeline
-np.random.seed(42)   # Simulated raw model scores (logits) for 6 observations
+np.random.seed(42)
+
+# Simulated raw model scores (logits) for 6 observations
 logits = np.array([-3.0, -1.5, -0.5, 0.5, 1.5, 3.0])
-labels = np.array([0, 0, 0, 1, 1, 1])   # true binary labels # Step 1: sigmoid converts logits to probabilities using e
-probabilities = 1 / (1 + np.exp(-logits))   # Step 2: cross-entropy loss uses natural log (ln = log base e)
-#
-L_i = -[y_i * ln(p_i) + (1 - y_i) * ln(1 - p_i)]
-epsilon = 1e-12   # clip to avoid
-ln(0)
+labels = np.array([0, 0, 0, 1, 1, 1])  # true binary labels
+
+# Step 1: sigmoid converts logits to probabilities using e
+probabilities = 1 / (1 + np.exp(-logits))
+
+# Step 2: cross-entropy loss uses natural log (ln = log base e)
+# L_i = -[y_i * ln(p_i) + (1 - y_i) * ln(1 - p_i)]
+epsilon = 1e-12  # clip to avoid ln(0)
 p_clipped = np.clip(probabilities, epsilon, 1 - epsilon)
-cross_entropy_per_obs = -(labels * np.log(p_clipped) + (1 - labels) * np.log(1 - p_clipped))   # Mean cross-entropy loss
+cross_entropy_per_obs = -(labels * np.log(p_clipped) + (1 - labels) * np.log(1 - p_clipped))
+
+# Mean cross-entropy loss
 log_loss = np.mean(cross_entropy_per_obs)
-df = pd.DataFrame({ "logit": logits, "probability": np.round(probabilities, 4), "label": labels, "ce_loss": np.round(cross_entropy_per_obs, 4),
+
+df = pd.DataFrame({
+    "logit": logits,
+    "probability": np.round(probabilities, 4),
+    "label": labels,
+    "ce_loss": np.round(cross_entropy_per_obs, 4),
 })
 print(df.to_string(index=False))
 print(f"\nMean Cross-Entropy Loss (log-loss): {log_loss:.4f}")

@@ -104,17 +104,20 @@ As $n \to \infty$, the difference $H_n - \ln(n) \to \gamma \approx 0.5772$. Conv
 
 ```python
 import math
-import numpy as np   # Approximate gamma by computing H_n -
-ln(n)
-for increasing n
+import numpy as np
 
+# Approximate gamma by computing H_n - ln(n) for increasing n
 def harmonic_number(n: int) -> float:
     """Compute H_n = sum of 1/k for k=1 to n."""
     return sum(1.0 / k for k in range(1, n + 1))
+
+
 for n in [10, 100, 1_000, 10_000, 100_000]:
     h_n = harmonic_number(n)
-approximation = h_n - math.log(n)
-print(f"n = {n:>7}: H_n - ln(n) = {approximation:.6f}")   # True value of gamma
+    approximation = h_n - math.log(n)
+    print(f"n = {n:>7}: H_n - ln(n) = {approximation:.6f}")
+
+# True value of gamma
 print(f"\nTrue gamma (from scipy): ", end="")
 from scipy.special import digamma
 print(f"{-digamma(1):.6f}")   # digamma(1) = -gamma
@@ -125,10 +128,13 @@ print(f"{-digamma(1):.6f}")   # digamma(1) = -gamma
 ```r
 # Approximate gamma numerically in R
 harmonic_number <- function(n) sum(1 / seq_len(n))
-for (n in c(10, 100, 1000, 10000)) { h_n <- harmonic_number(n)
+for (n in c(10, 100, 1000, 10000)) {
+  h_n <- harmonic_number(n)
   approx_gamma <- h_n - log(n)  # log() in R is natural log by default
   cat(sprintf("n = %6d: H_n - ln(n) = %.6f\n", n, approx_gamma))
-}  # R provides Euler-Mascheroni via the digamma function
+}
+
+# R provides Euler-Mascheroni via the digamma function
 # digamma(1) = -gamma
 cat("True gamma (from digamma):", -digamma(1), "\n")
 ```
@@ -137,16 +143,24 @@ cat("True gamma (from digamma):", -digamma(1), "\n")
 
 ```python
 import numpy as np
-from scipy.stats import gumbel_r   # Scenario: understanding the Gumbel distribution in extreme value analysis
-# gamma is the mean of the standard Gumbel distribution (mu=0, beta=1) EULER_MASCHERONI = 0.5772156649015329
+from scipy.stats import gumbel_r
+
+# Scenario: understanding the Gumbel distribution in extreme value analysis
+# gamma is the mean of the standard Gumbel distribution (mu=0, beta=1)
+EULER_MASCHERONI = 0.5772156649015329
+
 # Theoretical mean of Gumbel(0, 1) = gamma
-theoretical_mean = EULER_MASCHERONI   # Empirical verification via sampling
+theoretical_mean = EULER_MASCHERONI
+
+# Empirical verification via sampling
 np.random.seed(42)
 samples = gumbel_r.rvs(loc=0, scale=1, size=100_000)
 empirical_mean = np.mean(samples)
 print(f"Theoretical mean of Gumbel(0,1): {theoretical_mean:.6f} (= gamma)")
 print(f"Empirical mean (100k samples): {empirical_mean:.6f}")
-print(f"Difference: {abs(theoretical_mean - empirical_mean):.6f}")   # The Gumbel-max trick: sample from a categorical distribution
+print(f"Difference: {abs(theoretical_mean - empirical_mean):.6f}")
+
+# The Gumbel-max trick: sample from a categorical distribution
 # by adding Gumbel noise to log-probabilities
 log_probs = np.log(np.array([0.1, 0.3, 0.4, 0.2]))   # log probabilities of 4 classes
 gumbel_noise = gumbel_r.rvs(loc=0, scale=1, size=(10_000, 4))
@@ -163,16 +177,19 @@ print(f"Sampled proportions: {class_counts}")
 # Scenario: Gumbel distribution in extreme value analysis
 # gamma is the mean of the standard Gumbel(0, 1)
 EULER_MASCHERONI <- 0.5772156649015329
-theoretical_mean <- EULER_MASCHERONI  # Empirical verification via sampling (use evd or extraDistr for Gumbel)
+theoretical_mean <- EULER_MASCHERONI
+
+# Empirical verification via sampling (use evd or extraDistr for Gumbel)
 set.seed(42)
-# Inverse CDF:
-G = -log(-log(U)), U ~ Uniform(0,1)
+# Inverse CDF: G = -log(-log(U)), U ~ Uniform(0,1)
 u <- runif(100000)
 samples <- -log(-log(u))
 empirical_mean <- mean(samples)
 cat(sprintf("Theoretical mean of Gumbel(0,1): %.6f (= gamma)\n", theoretical_mean))
 cat(sprintf("Empirical mean (100k samples): %.6f\n", empirical_mean))
-cat(sprintf("Difference: %.6f\n", abs(theoretical_mean - empirical_mean)))  # Gumbel-max trick: sample categorical via log-probs + Gumbel noise
+cat(sprintf("Difference: %.6f\n", abs(theoretical_mean - empirical_mean)))
+
+# Gumbel-max trick: sample categorical via log-probs + Gumbel noise
 log_probs <- log(c(0.1, 0.3, 0.4, 0.2))
 gumbel_noise <- matrix(-log(-log(runif(10000 * 4))), 10000, 4)
 samples_argmax <- max.col(log_probs + gumbel_noise, ties.method = "first")

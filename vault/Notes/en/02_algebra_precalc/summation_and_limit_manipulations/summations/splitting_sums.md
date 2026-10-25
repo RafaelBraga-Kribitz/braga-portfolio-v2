@@ -83,25 +83,26 @@ $14 + 41 = 55$. Matches. Confirmed. The split is valid and no terms were missed 
 ### Beginner example (Python)
 
 ```python
-# Splitting sums: full sum = left partial + right partial values = [3.0, 7.0, 2.0, 9.0, 4.0, 6.0, 1.0, 8.0]
-# f(n) for n = 0..7
+# Splitting sums: full sum = left partial + right partial
+values = [3.0, 7.0, 2.0, 9.0, 4.0, 6.0, 1.0, 8.0]  # f(n) for n = 0..7
 n = len(values)
 full_sum = sum(values)
 print(f"Values: {values}")
 print(f"Full sum (n=0 to {n-1}): {full_sum}")
-print()   # Try three different split points
+print()
+
+# Try three different split points
 for split_j in [1, 3, 5]:
-    left_partial = sum(values[:split_j + 1])   # indices 0 .. j
-right_partial = sum(values[split_j + 1:])   # indices j+1 .. n-1
-total = left_partial + right_partial
-print(f"Split at j={split_j}: left={left_partial} right={right_partial} total={total} match={total == full_sum}")
+    left_partial = sum(values[:split_j + 1])  # indices 0 .. j
+    right_partial = sum(values[split_j + 1:])  # indices j+1 .. n-1
+    total = left_partial + right_partial
+    print(f"Split at j={split_j}: left={left_partial} right={right_partial} total={total} match={total == full_sum}")
 ```
 
 ### Beginner example (R)
 
 ```r
-# Splitting sums: full
-sum = left partial + right partial
+# Splitting sums: full sum = left partial + right partial
 values <- c(3, 7, 2, 9, 4, 6, 1, 8)
 n <- length(values)
 full_sum <- sum(values)
@@ -118,15 +119,26 @@ for (split_j in c(2, 4, 6)) {  # R is 1-indexed
 
 ```python
 import pandas as pd
-import numpy as np   # Scenario: validate monthly revenue aggregation by comparing
+import numpy as np
+
+# Scenario: validate monthly revenue aggregation by comparing
 # quarterly partials (Q1 + Q2 + Q3 + Q4) to the full-year total
 # This verifies that the ETL partial-aggregation pipeline produces correct totals
 np.random.seed(42)
-monthly_revenue = pd.DataFrame({ "month": range(1, 13), "quarter": [1,1,1, 2,2,2, 3,3,3, 4,4,4], "revenue": [41000, 38500, 43200, 47800, 51000, 49500, 53200, 55800, 52100, 48900, 46700, 50300],
+monthly_revenue = pd.DataFrame({
+    "month": range(1, 13),
+    "quarter": [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4],
+    "revenue": [41000, 38500, 43200, 47800, 51000, 49500, 53200, 55800, 52100, 48900, 46700, 50300],
 })
-full_year_total = monthly_revenue["revenue"].sum()   # Split sum by quarter: sum_q1 + sum_q2 + sum_q3 +
-sum_q4 = full_year
-quarterly_totals = ( monthly_revenue.groupby("quarter")["revenue"] .sum() .reset_index() .rename(columns={"revenue": "quarterly_total"}) )
+full_year_total = monthly_revenue["revenue"].sum()
+
+# Split sum by quarter: sum_q1 + sum_q2 + sum_q3 + sum_q4 = full_year
+quarterly_totals = (
+    monthly_revenue.groupby("quarter")["revenue"]
+    .sum()
+    .reset_index()
+    .rename(columns={"revenue": "quarterly_total"})
+)
 reconstructed_total = quarterly_totals["quarterly_total"].sum()
 quarterly_totals["cumulative"] = quarterly_totals["quarterly_total"].cumsum()
 print("Monthly Revenue: Full-Year = Sum of Quarterly Partials")
@@ -141,8 +153,7 @@ print(f"Match: {np.isclose(full_year_total, reconstructed_total)}")
 ### Professional example (R)
 
 ```r
-# Full
-year = sum of quarterly partials (splitting sums)
+# Full year = sum of quarterly partials (splitting sums)
 monthly <- rep(c(100, 110, 105), 4)
 full_year_total <- sum(monthly)
 Q1 <- sum(monthly[1:3]); Q2 <- sum(monthly[4:6]); Q3 <- sum(monthly[7:9]); Q4 <- sum(monthly[10:12])

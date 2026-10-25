@@ -93,21 +93,28 @@ import numpy as np
 
 def cosine_deriv(x: float) -> float:
     """d/dx(cos(x)) = -sin(x)."""
-    return -np.sin(x)   # Numerical verification
+    return -np.sin(x)
+
+
+# Numerical verification
 x_vals = np.linspace(0, 2 * np.pi, 9)
 h = 1e-7
 print(f"{'x (rad)':>10} {'-sin(x)':>10} {'numerical':>12} {'match':>7}")
 for x in x_vals:
     analytic = cosine_deriv(x)
-numerical = (np.cos(x + h) - np.cos(x - h)) / (2 * h)
-match = abs(analytic - numerical) < 1e-5
-print(f"{x:>10.4f} {analytic:>10.5f} {numerical:>12.5f} {str(match):>7}")   # Random Fourier feature gradient
+    numerical = (np.cos(x + h) - np.cos(x - h)) / (2 * h)
+    match = abs(analytic - numerical) < 1e-5
+    print(f"{x:>10.4f} {analytic:>10.5f} {numerical:>12.5f} {str(match):>7}")
+
+# Random Fourier feature gradient
 print("\n--- Random Fourier feature gradient ---")
 np.random.seed(42)
 d_in = 4
-omega = np.random.randn(d_in)   # random frequency vector
+omega = np.random.randn(d_in)  # random frequency vector
 b = np.random.uniform(0, 2 * np.pi)
-x = np.array([1.0, 0.5, -0.3, 0.8])   # phi(x) = cos(omega^T x + b)
+x = np.array([1.0, 0.5, -0.3, 0.8])
+
+# phi(x) = cos(omega^T x + b)
 phi = np.cos(omega @ x + b)
 # d(phi)/dx = -sin(omega^T x + b) * omega
 d_phi_dx = -np.sin(omega @ x + b) * omega
@@ -123,7 +130,8 @@ cosine_deriv <- function(x) -sin(x)
 x_vals <- seq(0, 2 * pi, length.out = 9)
 h <- 1e-7
 cat(sprintf("%-10s %-10s %-12s\n", "x (rad)", "-sin(x)", "numerical"))
-for (x in x_vals) { analytic <- cosine_deriv(x)
+for (x in x_vals) {
+  analytic <- cosine_deriv(x)
   numerical <- (cos(x + h) - cos(x - h)) / (2 * h)
   cat(sprintf("%-10.4f %-10.5f %-12.5f\n", x, analytic, numerical))
 }
@@ -135,7 +143,9 @@ for (x in x_vals) { analytic <- cosine_deriv(x)
 import numpy as np
 from sklearn.kernel_approximation import RBFSampler
 from sklearn.preprocessing import StandardScaler
-np.random.seed(42)   # -- Random Fourier Features: cosine derivative in kernel approximation --------
+np.random.seed(42)
+
+# -- Random Fourier Features: cosine derivative in kernel approximation --------
 # RBF kernel k(x,z) = exp(-gamma*||x-z||^2)
 # Approx: k(x,z) ~ phi(x)^T phi(z) where phi_j(x) = sqrt(2/D)*cos(omega_j^T x + b_j)
 # Gradient of feature map phi_j w.r.t. input: -sqrt(2/D)*sin(omega_j^T x + b_j)*omega_j
@@ -143,26 +153,38 @@ N, D_IN, D_FEAT = 300, 5, 100
 GAMMA = 0.5
 X = np.random.randn(N, D_IN)
 scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)   # Sample random Fourier frequencies
+X_scaled = scaler.fit_transform(X)
+
+# Sample random Fourier frequencies
 omegas = np.random.randn(D_FEAT, D_IN) * np.sqrt(2 * GAMMA)
 biases = np.random.uniform(0, 2 * np.pi, D_FEAT)
 
+
 def rff_features(x: np.ndarray) -> np.ndarray:
     """Random Fourier features: phi(x) = sqrt(2/D) * cos(omega^T x + b)."""
-    projections = x @ omegas.T + biases[np.newaxis, :]   # (N, D_FEAT)
+    projections = x @ omegas.T + biases[np.newaxis, :]  # (N, D_FEAT)
     return np.sqrt(2 / D_FEAT) * np.cos(projections)
 
+
 def rff_gradient(x: np.ndarray) -> np.ndarray:
-    """Gradient of RFF features: d phi_j/d x = -sqrt(2/D) * sin(omega_j^T x + b_j) * omega_j. Uses d/dx(cos(f(x))) = -sin(f(x)) * f'(x). """
-    projections = x @ omegas.T + biases[np.newaxis, :]   # (N, D_FEAT) # d_phi_j /
-    d_x_k = -sqrt(2/D) * sin(projection_j) * omega_j_k
-    coeffs = -np.sqrt(2 / D_FEAT) * np.sin(projections)   # (N, D_FEAT) # Sum over feature dimensions: (N, D_FEAT) @ (D_FEAT, D_IN) -> (N, D_IN)
+    """Gradient of RFF features: d phi_j/d x = -sqrt(2/D) * sin(omega_j^T x + b_j) * omega_j.
+
+    Uses d/dx(cos(f(x))) = -sin(f(x)) * f'(x).
+    """
+    projections = x @ omegas.T + biases[np.newaxis, :]  # (N, D_FEAT)
+    # d_phi_j / d_x_k = -sqrt(2/D) * sin(projection_j) * omega_j_k
+    coeffs = -np.sqrt(2 / D_FEAT) * np.sin(projections)  # (N, D_FEAT)
+    # Sum over feature dimensions: (N, D_FEAT) @ (D_FEAT, D_IN) -> (N, D_IN)
     return coeffs @ omegas
+
+
 phi = rff_features(X_scaled)
 d_phi = rff_gradient(X_scaled)
 print("Random Fourier Features: d/dx(cos(x)) = -sin(x) in feature gradient")
 print(f"RFF feature matrix shape: {phi.shape}")
-print(f"Gradient matrix shape: {d_phi.shape} (d_phi/d_input for each sample)")   # Verify RBF kernel approximation quality
+print(f"Gradient matrix shape: {d_phi.shape} (d_phi/d_input for each sample)")
+
+# Verify RBF kernel approximation quality
 from sklearn.metrics.pairwise import rbf_kernel
 K_exact = rbf_kernel(X_scaled[:50], X_scaled[:50], gamma=GAMMA)
 K_approx = phi[:50] @ phi[:50].T

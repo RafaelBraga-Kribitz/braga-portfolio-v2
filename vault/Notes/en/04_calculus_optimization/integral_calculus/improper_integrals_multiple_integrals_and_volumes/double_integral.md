@@ -131,15 +131,22 @@ from scipy import integrate
 
 def f(x: float, y: float) -> float:
     """Integrand: f(x, y) = x + y over [0,1] x [0,2]."""
-    return x + y   #
-scipy.integrate.dblquad(f, x_lower, x_upper, y_lower_fn, y_upper_fn)
-# Note: dblquad integrates y first (inner), then x (outer)
-result, error = integrate.dblquad( f, 0, 1,   # x limits
-    (outer) lambda x: 0,   # y lower limit
-    (inner, can depend on x) lambda x: 2,   # y upper limit
-    (inner, can depend on x) )
-print(f"Double integral (x+y) over [0,1]x[0,2]: {result:.6f}")   # 3.0
-print(f"Error estimate: {error:.2e}")   # Verify with 2D Riemann sum (brute force approximation)
+    return x + y
+
+
+# scipy.integrate.dblquad(f, x_lower, x_upper, y_lower_fn, y_upper_fn)
+# Note: dblquad integrates y first (inner), then x (outer),
+# and calls the integrand as func(y, x)
+result, error = integrate.dblquad(
+    lambda y, x: f(x, y),
+    0, 1,  # x limits (outer)
+    lambda x: 0,  # y lower limit (inner, can depend on x)
+    lambda x: 2,  # y upper limit (inner, can depend on x)
+)
+print(f"Double integral (x+y) over [0,1]x[0,2]: {result:.6f}")  # 3.0
+print(f"Error estimate: {error:.2e}")
+
+# Verify with 2D Riemann sum (brute force approximation)
 N = 1_000
 x_vals = np.linspace(0, 1, N)
 y_vals = np.linspace(0, 2, N)
@@ -154,11 +161,16 @@ print(f"Riemann sum (N={N}x{N}): {riemann_sum:.6f}")
 
 ```r
 library(cubature)  # or use manual iterated integrate()
-f <- function(x, y) x + y  # Method 1: iterated integrate() calls
-inner_integral <- function(x) { integrate(function(y) f(x, y), lower = 0, upper = 2)$value
+f <- function(x, y) x + y
+
+# Method 1: iterated integrate() calls
+inner_integral <- function(x) {
+  integrate(function(y) f(x, y), lower = 0, upper = 2)$value
 }
 result <- integrate(Vectorize(inner_integral), lower = 0, upper = 1)$value
-cat("Double integral (x+y) over [0,1]x[0,2]:", result, "\n")  # 3 # Method 2: 2D Riemann sum verification
+cat("Double integral (x+y) over [0,1]x[0,2]:", result, "\n")  # 3
+
+# Method 2: 2D Riemann sum verification
 n <- 500L
 x_vals <- seq(0, 1, length.out = n)
 y_vals <- seq(0, 2, length.out = n)
@@ -173,43 +185,66 @@ cat("Riemann sum (N=500x500): ", riemann_sum, "\n")
 
 ```python
 """
-Double integral
-for bivariate normal marginalisation and joint probability. Joint probability:
-    P(0 < X < 1, 0 < Y < 1) for a bivariate normal.
-Marginal: f_X(x) = int_{-inf}^{inf} f_{X,Y}(x,y) dy (inner integral). Business context: model joint distribution of (click_propensity, purchase_propensity)
+Double integral for bivariate normal marginalisation and joint probability.
+
+Joint probability: P(0 < X < 1, 0 < Y < 1) for a bivariate normal.
+Marginal: f_X(x) = int_{-inf}^{inf} f_{X,Y}(x,y) dy (inner integral).
+
+Business context: model joint distribution of (click_propensity, purchase_propensity)
 for a digital advertising segment. Compute the probability that both are > 0.5
 (high-value users) and the marginal click distribution.
 """
 import numpy as np
-from scipy import integrate, stats   # Bivariate normal parameters
-MU = np.array([0.6, 0.5])   # mean: (click_prop, purchase_prop)
-SIGMA = np.array([[0.04, 0.02],   # covariance matrix
-    [0.02, 0.09]])
-rv = stats.multivariate_normal(mean=MU, cov=SIGMA)   # Joint PDF
+from scipy import integrate, stats
 
+# Bivariate normal parameters
+MU = np.array([0.6, 0.5])  # mean: (click_prop, purchase_prop)
+SIGMA = np.array([[0.04, 0.02],  # covariance matrix
+                  [0.02, 0.09]])
+rv = stats.multivariate_normal(mean=MU, cov=SIGMA)
+
+
+# Joint PDF
 def joint_pdf(x: float, y: float) -> float:
-    return float(rv.pdf([x, y]))   # P(X > 0.5, Y > 0.5): double integral from 0.5 to inf on both
-p_high_value, error = integrate.dblquad( joint_pdf, 0.5, np.inf,   # x limits lambda x:
-    0.5,   # y lower lambda x: np.inf, # y upper
+    return float(rv.pdf([x, y]))
+
+
+# P(X > 0.5, Y > 0.5): double integral from 0.5 to inf on both
+# (dblquad calls the integrand as func(y, x))
+p_high_value, error = integrate.dblquad(
+    lambda y, x: joint_pdf(x, y),
+    0.5, np.inf,  # x limits
+    lambda x: 0.5,  # y lower
+    lambda x: np.inf,  # y upper
 )
 print(f"P(click_prop > 0.5 AND purchase_prop > 0.5): {p_high_value:.4f}")
-print(f"Integration error: {error:.2e}")   # Marginal of X (click_propensity) via inner integral over Y
+print(f"Integration error: {error:.2e}")
 
+
+# Marginal of X (click_propensity) via inner integral over Y
 def marginal_x(x: float) -> float:
     """f_X(x) = int_{-inf}^{inf} f_{X,Y}(x,y) dy"""
     result, _ = integrate.quad(lambda y: joint_pdf(x, y), -np.inf, np.inf)
-    return result   # Compare to analytic marginal: Normal(mu_x, sigma_x^2)
+    return result
+
+
+# Compare to analytic marginal: Normal(mu_x, sigma_x^2)
 x_test_points = np.array([0.4, 0.5, 0.6, 0.7, 0.8])
 analytic_marginal = stats.norm(loc=MU[0], scale=np.sqrt(SIGMA[0, 0]))
 print("\nMarginal PDF of click_propensity:")
 print(f" {'x':>6} | {'Numerical':>12} | {'Analytic':>12} | {'Match':>8}")
 for x_val in x_test_points:
     num = marginal_x(x_val)
-ana = float(analytic_marginal.pdf(x_val))
-match = abs(num - ana) < 1e-5
-print(f" {x_val:>6.2f} | {num:>12.6f} | {ana:>12.6f} | {str(match):>8}")   # Verify total
-probability = 1
-total_prob, _ = integrate.dblquad( joint_pdf, -np.inf, np.inf, lambda x: -np.inf, lambda x: np.inf,
+    ana = float(analytic_marginal.pdf(x_val))
+    match = abs(num - ana) < 1e-5
+    print(f" {x_val:>6.2f} | {num:>12.6f} | {ana:>12.6f} | {str(match):>8}")
+
+# Verify total probability = 1
+total_prob, _ = integrate.dblquad(
+    lambda y, x: joint_pdf(x, y),
+    -np.inf, np.inf,
+    lambda x: -np.inf,
+    lambda x: np.inf,
 )
 print(f"\nTotal probability (double integral over R^2): {total_prob:.6f} (expected: 1.0)")
 ```

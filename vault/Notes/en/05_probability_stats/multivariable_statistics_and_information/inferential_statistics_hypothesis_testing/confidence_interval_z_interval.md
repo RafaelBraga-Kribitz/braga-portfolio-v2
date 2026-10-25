@@ -127,23 +127,32 @@ cat("95% Z-interval: [", round(ci_lower, 4), ",", round(ci_upper, 4), "]\n")
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
 import pandas as pd
 from scipy import stats
 from dataclasses import dataclass
+
+
 @dataclass
-
 class ConfidenceIntervalResult:
-    mean: float sem: float z_critical: float lower: float upper: float confidence_level: float
+    mean: float
+    sem: float
+    z_critical: float
+    lower: float
+    upper: float
+    confidence_level: float
 
-def contains(self, value: float) -> bool:
-    return self.lower <= value <= self.upper
+    def contains(self, value: float) -> bool:
+        return self.lower <= value <= self.upper
 
-def width(self) -> float:
-    return self.upper - self.lower
+    def width(self) -> float:
+        return self.upper - self.lower
 
-def z_confidence_interval( data: np.ndarray, sigma: float | None = None, confidence_level: float = 0.95,
+
+def z_confidence_interval(
+    data: np.ndarray,
+    sigma: float | None = None,
+    confidence_level: float = 0.95,
 ) -> ConfidenceIntervalResult:
     # Compute Z-based confidence interval for the population mean.
     # If sigma is None, uses sample std (large-sample approximation).
@@ -154,16 +163,32 @@ def z_confidence_interval( data: np.ndarray, sigma: float | None = None, confide
     alpha = 1.0 - confidence_level
     z_crit = float(stats.norm.ppf(1 - alpha / 2))
     margin = z_crit * sem
-    return ConfidenceIntervalResult( mean=round(x_bar, 4), sem=round(sem, 4), z_critical=round(z_crit, 4), lower=round(x_bar - margin, 4), upper=round(x_bar + margin, 4), confidence_level=confidence_level, )
+    return ConfidenceIntervalResult(
+        mean=round(x_bar, 4),
+        sem=round(sem, 4),
+        z_critical=round(z_crit, 4),
+        lower=round(x_bar - margin, 4),
+        upper=round(x_bar + margin, 4),
+        confidence_level=confidence_level,
+    )
 
-def ab_test_ci_report( control_data: np.ndarray, treatment_data: np.ndarray, confidence_level: float = 0.95,
+
+def ab_test_ci_report(
+    control_data: np.ndarray,
+    treatment_data: np.ndarray,
+    confidence_level: float = 0.95,
 ) -> pd.DataFrame:
     # Compute CIs for control and treatment means and the lift.
     control_ci = z_confidence_interval(control_data, confidence_level=confidence_level)
     treatment_ci = z_confidence_interval(treatment_data, confidence_level=confidence_level)
     lift = treatment_ci.mean - control_ci.mean
-    rows = [ {"group": "control", "mean": control_ci.mean, "ci_lower": control_ci.lower, "ci_upper": control_ci.upper}, {"group": "treatment", "mean": treatment_ci.mean, "ci_lower": treatment_ci.lower, "ci_upper": treatment_ci.upper}, {"group": "lift", "mean": round(lift, 4), "ci_lower": None, "ci_upper": None}, ]
+    rows = [
+        {"group": "control", "mean": control_ci.mean, "ci_lower": control_ci.lower, "ci_upper": control_ci.upper},
+        {"group": "treatment", "mean": treatment_ci.mean, "ci_lower": treatment_ci.lower, "ci_upper": treatment_ci.upper},
+        {"group": "lift", "mean": round(lift, 4), "ci_lower": None, "ci_upper": None},
+    ]
     return pd.DataFrame(rows)
+
 
 if __name__ == "__main__":
     rng = np.random.default_rng(seed=42)

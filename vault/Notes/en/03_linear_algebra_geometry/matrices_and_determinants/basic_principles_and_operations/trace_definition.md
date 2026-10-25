@@ -92,16 +92,21 @@ Sum: $6.02 + (-3.94) + 0.92 \approx 3.00$ ✓ (matches trace).
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # -- Trace: definition, properties, and PCA variance explained ---------
+import numpy as np
+
+# -- Trace: definition, properties, and PCA variance explained ---------
 A = np.array([[4.0, 1.0, 0.0], [2.0, -3.0, 5.0], [7.0, 0.0, 2.0]])
 trace_a = np.trace(A)
 print(f"A:\n{A}")
-print(f"\ntr(A) = {trace_a}")   # Verify: tr(A) == sum of eigenvalues
+print(f"\ntr(A) = {trace_a}")
+
+# Verify: tr(A) == sum of eigenvalues
 eigenvalues = np.linalg.eigvals(A)
 print(f"\nEigenvalues of A: {eigenvalues.real.round(4)}")
 print(f"Sum of eigenvalues: {eigenvalues.real.sum():.4f}")
-print(f"tr(A) == sum(eigenvalues): {np.isclose(trace_a, eigenvalues.real.sum())}")   # Cyclic property:
-tr(AB) == tr(BA)
+print(f"tr(A) == sum(eigenvalues): {np.isclose(trace_a, eigenvalues.real.sum())}")
+
+# Cyclic property: tr(AB) == tr(BA)
 B = np.random.default_rng(42).normal(size=(3, 3))
 print(f"\ntr(AB) = {np.trace(A @ B):.6f}")
 print(f"tr(BA) = {np.trace(B @ A):.6f}")
@@ -114,11 +119,15 @@ print(f"tr(AB) == tr(BA): {np.isclose(np.trace(A @ B), np.trace(B @ A))}")
 # -- Trace: definition, properties, and eigenvalue connection ----------
 A <- matrix(c(4, 1, 0, 2, -3, 5, 7, 0, 2), nrow = 3, byrow = TRUE)
 trace_A <- sum(diag(A))  # R has no built-in trace(); use sum(diag())
-cat(sprintf("tr(A) = %.4f\n", trace_A))  # Eigenvalue check
+cat(sprintf("tr(A) = %.4f\n", trace_A))
+
+# Eigenvalue check
 ev <- eigen(A)$values
 cat(sprintf("Eigenvalues: %s\n", paste(round(Re(ev), 4), collapse = ", ")))
 cat(sprintf("Sum of eigenvalues: %.4f\n", sum(Re(ev))))
-cat(sprintf("tr(A) == sum(eigenvalues): %s\n", isTRUE(all.equal(trace_A, sum(Re(ev))))))  # Cyclic property: tr(AB) == tr(BA)
+cat(sprintf("tr(A) == sum(eigenvalues): %s\n", isTRUE(all.equal(trace_A, sum(Re(ev))))))
+
+# Cyclic property: tr(AB) == tr(BA)
 set.seed(42)
 B <- matrix(rnorm(9), nrow = 3)
 cat(sprintf("\ntr(AB) = %.6f\n", sum(diag(A %*% B))))

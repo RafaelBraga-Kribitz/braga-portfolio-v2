@@ -95,19 +95,27 @@ import numpy as np
 
 def geometric_nth_term(a: float, r: float, n: int | np.ndarray) -> float | np.ndarray:
     """n-th term of geometric sequence: u_n = a * r^(n-1)."""
-    return a * r ** (n - 1)   # Sequence 2, 6, 18, 54, ...
+    return a * r ** (n - 1)
+
+
+# Sequence 2, 6, 18, 54, ...
 a_val, r_val = 2.0, 3.0
 print("Geometric sequence (a=2, r=3):")
 for n in [1, 2, 3, 5, 7]:
-    print(f" u_{n} = {geometric_nth_term(a_val, r_val, n):.1f}")   # Verify constant ratio
+    print(f" u_{n} = {geometric_nth_term(a_val, r_val, n):.1f}")
+
+# Verify constant ratio
 terms = geometric_nth_term(a_val, r_val, np.arange(1, 8))
 ratios = terms[1:] / terms[:-1]
-print(f"\nRatios (all should be {r_val}): {ratios}")   # Compound interest: P=1000, r=1.05 (5% per period)
+print(f"\nRatios (all should be {r_val}): {ratios}")
+
+# Compound interest: P=1000, r=1.05 (5% per period)
 P, r_rate = 1_000.0, 1.05
 print("\nCompound interest (P=1000, 5%/period):")
 for n in [1, 5, 10, 20]:
-    print(f" Period {n:2d}: EUR {geometric_nth_term(P, r_rate, n):>9,.2f}")   # Learning rate schedule: eta_0=0.1,
-gamma=0.9
+    print(f" Period {n:2d}: EUR {geometric_nth_term(P, r_rate, n):>9,.2f}")
+
+# Learning rate schedule: eta_0=0.1, gamma=0.9
 eta_0, gamma = 0.1, 0.9
 print("\nLearning rate decay (eta_0=0.1, gamma=0.9):")
 for epoch in [1, 5, 10, 20, 50]:
@@ -117,14 +125,20 @@ for epoch in [1, 5, 10, 20, 50]:
 ### Beginner example (R)
 
 ```r
-geometric_nth_term <- function(a, r, n) a * r^(n - 1)  # Sequence 2, 6, 18, ...
+geometric_nth_term <- function(a, r, n) a * r^(n - 1)
+
+# Sequence 2, 6, 18, ...
 a_val <- 2; r_val <- 3
 cat("Geometric sequence (a=2, r=3):\n")
-for (n in c(1, 2, 3, 5, 7)) { cat(sprintf(" u_%d = %.1f\n", n, geometric_nth_term(a_val, r_val, n)))
-}  # Compound interest
+for (n in c(1, 2, 3, 5, 7)) {
+  cat(sprintf(" u_%d = %.1f\n", n, geometric_nth_term(a_val, r_val, n)))
+}
+
+# Compound interest
 P <- 1000; r_rate <- 1.05
 cat("\nCompound interest (P=1000, 5%/period):\n")
-for (n in c(1, 5, 10, 20)) { cat(sprintf(" Period %2d: EUR %9.2f\n", n, geometric_nth_term(P, r_rate, n)))
+for (n in c(1, 5, 10, 20)) {
+  cat(sprintf(" Period %2d: EUR %9.2f\n", n, geometric_nth_term(P, r_rate, n)))
 }
 ```
 
@@ -139,26 +153,33 @@ import pandas as pd
 
 def geometric_nth_term(a: float, r: float, n: int | np.ndarray) -> float | np.ndarray:
     """u_n = a * r^(n-1)."""
-    return a * r ** (n - 1)   # 1. Monthly revenue with geometric growth (r = 1.15: 15% MoM)
+    return a * r ** (n - 1)
+
+
+# 1. Monthly revenue with geometric growth (r = 1.15: 15% MoM)
 a_rev, r_rev = 100_000.0, 1.15
 months = np.arange(1, 25)
 revenue = geometric_nth_term(a_rev, r_rev, months)
 print("=== Monthly Revenue (15% MoM Growth) ===")
 df_rev = pd.DataFrame({"month": months, "revenue_eur": revenue.round(0)})
 print(df_rev[df_rev["month"].isin([1, 6, 12, 18, 24])].to_string(index=False))
-print(f"MoM growth: {r_rev-1:.0%} | Year-2 ARR: EUR {revenue[23]*12:,.0f}")   # 2. Learning rate schedule for ML training
+print(f"MoM growth: {r_rev-1:.0%} | Year-2 ARR: EUR {revenue[23]*12:,.0f}")
+
+# 2. Learning rate schedule for ML training
 eta_0, gamma = 0.01, 0.95
 n_epochs = np.arange(1, 51)
 lr_schedule = geometric_nth_term(eta_0, gamma, n_epochs)
 print(f"\n=== LR Schedule (eta_0={eta_0}, gamma={gamma}) ===")
 for ep in [1, 10, 25, 50]:
-    print(f" Epoch {ep:2d}: eta = {lr_schedule[ep-1]:.6f}")   # 3. NPV discount factors
-i_rate = 0.08   # 8% discount rate
-r_npv = 1.0 / (1.0 + i_rate)   # discount factor r < 1
+    print(f" Epoch {ep:2d}: eta = {lr_schedule[ep-1]:.6f}")
+
+# 3. NPV discount factors
+i_rate = 0.08  # 8% discount rate
+r_npv = 1.0 / (1.0 + i_rate)  # discount factor r < 1
 n_years = np.arange(1, 11)
 discount_factors = geometric_nth_term(1.0, r_npv, n_years)
 print(f"\n=== NPV Discount Factors (r={r_npv:.4f}) ===")
-for yr, df_val in zip(n_years0,4,9, discount_factors0,4,9):
+for yr, df_val in zip(n_years[[0, 4, 9]], discount_factors[[0, 4, 9]]):
     print(f" Year {yr:2d}: factor = {df_val:.4f}")
 ```
 

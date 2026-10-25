@@ -97,18 +97,30 @@ With Lagrange multiplier $\lambda$: $x_1 = 3 - \lambda$, $x_2 = 2 - \lambda$. Su
 
 ```python
 import numpy as np
-from scipy.optimize import minimize   # min 0.5 x^T Q x + c^T x s.t. x1+x2 <= 4, x >= 0
+from scipy.optimize import minimize
+
+# min 0.5 x^T Q x + c^T x  s.t. x1+x2 <= 4, x >= 0
 Q = np.eye(2)
 c = np.array([-3.0, -2.0])
+
 
 def objective(x):
     return 0.5 * x @ Q @ x + c @ x
 
+
 def gradient(x):
     return Q @ x + c
+
+
 constraints = [{"type": "ineq", "fun": lambda x: 4.0 - (x[0] + x[1])}]
 bounds = [(0, None), (0, None)]
-result = minimize( objective, x0=[1.0, 1.0], jac=gradient, method="SLSQP", bounds=bounds, constraints=constraints,
+result = minimize(
+    objective,
+    x0=[1.0, 1.0],
+    jac=gradient,
+    method="SLSQP",
+    bounds=bounds,
+    constraints=constraints,
 )
 print(f"Optimal x: {result.x.round(4)}")
 print(f"Optimal value: {result.fun:.4f}")
@@ -119,8 +131,7 @@ print(f"Optimal value: {result.fun:.4f}")
 ```r
 # install.packages("quadprog") if needed
 library(quadprog)
-# solve.QP minimises 0.5 x^T D x - d^T x (note sign flip:
-d = -c)
+# solve.QP minimises 0.5 x^T D x - d^T x (note sign flip: d = -c)
 D <- diag(2)
 d <- c(3, 2)  # negated c
 # Constraints: x1+x2 <= 4 becomes -x1-x2 >= -4; x >= 0 becomes diag(2) x >= 0
@@ -134,34 +145,49 @@ cat("Optimal value:", round(result$value, 4), "\n")
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
 import cvxpy as cp
 
-def solve_budget_allocation_qp( expected_returns: np.ndarray, cov_matrix: np.ndarray, total_budget: float, risk_aversion: float = 1.0,
+
+def solve_budget_allocation_qp(
+    expected_returns: np.ndarray,
+    cov_matrix: np.ndarray,
+    total_budget: float,
+    risk_aversion: float = 1.0,
 ) -> dict[str, object]:
     # Mean-variance media budget QP:
     # min risk_aversion * x^T Sigma x - r^T x
-    # s.t.
-    sum(x) <= total_budget, x >= 0
+    # s.t. sum(x) <= total_budget, x >= 0
     n = len(expected_returns)
     x = cp.Variable(n)
-    objective = cp.Minimize( risk_aversion * cp.quad_form(x, cov_matrix) - expected_returns @ x )
+    objective = cp.Minimize(risk_aversion * cp.quad_form(x, cov_matrix) - expected_returns @ x)
     constraints = [cp.sum(x) <= total_budget, x >= 0]
     problem = cp.Problem(objective, constraints)
     problem.solve(solver=cp.OSQP, warm_start=True)
     if problem.status not in ("optimal", "optimal_inaccurate"):
         raise ValueError(f"QP solver failed: {problem.status}")
     x_opt = x.value
-    return { "allocation": x_opt.round(2), "expected_return": round(float(expected_returns @ x_opt), 4), "portfolio_risk": round(float(x_opt @ cov_matrix @ x_opt), 6), "objective_value": round(float(problem.value), 4), "solver_status": problem.status, }
+    return {
+        "allocation": x_opt.round(2),
+        "expected_return": round(float(expected_returns @ x_opt), 4),
+        "portfolio_risk": round(float(x_opt @ cov_matrix @ x_opt), 6),
+        "objective_value": round(float(problem.value), 4),
+        "solver_status": problem.status,
+    }
+
 
 if __name__ == "__main__":
     rng = np.random.default_rng(seed=42)
     n_channels = 5
     expected_returns = rng.uniform(0.05, 0.25, n_channels)
     raw_cov = rng.standard_normal((n_channels, n_channels))
-    cov_matrix = raw_cov.T @ raw_cov / n_channels   # PSD by construction
-    result = solve_budget_allocation_qp( expected_returns=expected_returns, cov_matrix=cov_matrix, total_budget=100_000.0, risk_aversion=2.0, )
+    cov_matrix = raw_cov.T @ raw_cov / n_channels  # PSD by construction
+    result = solve_budget_allocation_qp(
+        expected_returns=expected_returns,
+        cov_matrix=cov_matrix,
+        total_budget=100_000.0,
+        risk_aversion=2.0,
+    )
     print("QP budget allocation:")
     for key, val in result.items():
         print(f" {key}: {val}")

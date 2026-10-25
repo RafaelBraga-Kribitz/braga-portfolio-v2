@@ -101,30 +101,51 @@ def soft_threshold(v: np.ndarray, threshold: float) -> np.ndarray:
     """Proximal operator of L1 norm: soft-thresholding."""
     return np.sign(v) * np.maximum(np.abs(v) - threshold, 0)
 
-def admm_lasso( X: np.ndarray, y: np.ndarray, lam: float = 0.1, rho: float = 1.0, n_iter: int = 100, tol: float = 1e-6,
+
+def admm_lasso(
+    X: np.ndarray,
+    y: np.ndarray,
+    lam: float = 0.1,
+    rho: float = 1.0,
+    n_iter: int = 100,
+    tol: float = 1e-6,
 ) -> np.ndarray:
-    """ADMM for Lasso: min 0.5*||y-Xw||^2 + lam*||w||_1. Saddle-point form: min_{w=z} 0.5*||y-Xw||^2 + lam*||z||_1. """
-    n, d = X.shape   # Precompute for w-update: (X^T X + rho I)^{-1}
+    """ADMM for Lasso: min 0.5*||y-Xw||^2 + lam*||w||_1.
+
+    Saddle-point form: min_{w=z} 0.5*||y-Xw||^2 + lam*||z||_1.
+    """
+    n, d = X.shape
+
+    # Precompute for w-update: (X^T X + rho I)^{-1}
     XtX = X.T @ X
     XtX_rho = XtX + rho * np.eye(d)
     Xty = X.T @ y
-    L = np.linalg.cholesky(XtX_rho)   # for fast solves
+    L = np.linalg.cholesky(XtX_rho)  # for fast solves
+
     w = np.zeros(d)
     z = np.zeros(d)
     u = np.zeros(d)
     for iteration in range(n_iter):
         # w-update: min_w 0.5*||y-Xw||^2 + rho/2*||w - z + u/rho||^2
         rhs = Xty + rho * (z - u / rho)
-    w = np.linalg.solve(L.T, np.linalg.solve(L, rhs))
-    z_prev = z.copy()   # z-update: soft-threshold (proximal of L1)
-    z = soft_threshold(w + u / rho, lam / rho)   # Dual update
-    u += rho * (w - z)   # Check convergence
-    primal_res = np.linalg.norm(w - z)
-    dual_res = np.linalg.norm(rho * (z - z_prev))
-    if primal_res < tol and dual_res < tol:
-        print(f" ADMM converged at iteration {iteration}")
-    break
-return w
+        w = np.linalg.solve(L.T, np.linalg.solve(L, rhs))
+        z_prev = z.copy()
+
+        # z-update: soft-threshold (proximal of L1)
+        z = soft_threshold(w + u / rho, lam / rho)
+
+        # Dual update
+        u += rho * (w - z)
+
+        # Check convergence
+        primal_res = np.linalg.norm(w - z)
+        dual_res = np.linalg.norm(rho * (z - z_prev))
+        if primal_res < tol and dual_res < tol:
+            print(f" ADMM converged at iteration {iteration}")
+            break
+    return w
+
+
 np.random.seed(42)
 n, d = 100, 20
 X_data = np.random.randn(n, d)
@@ -143,19 +164,26 @@ print(f"True coefficients (first 5): {true_w[:5]}")
 ```r
 # ADMM for Lasso: saddle-point structure
 soft_threshold <- function(v, threshold) sign(v) * pmax(abs(v) - threshold, 0)
-admm_lasso_r <- function(X, y, lam = 0.1, rho = 1.0, n_iter = 100, tol = 1e-6) { n <- nrow(X); d <- ncol(X)
+admm_lasso_r <- function(X, y, lam = 0.1, rho = 1.0, n_iter = 100, tol = 1e-6) {
+  n <- nrow(X); d <- ncol(X)
   XtX_rho <- t(X) %*% X + rho * diag(d)
   Xty <- t(X) %*% y
   w <- numeric(d); z <- numeric(d); u <- numeric(d)
-  for (i in seq_len(n_iter)) {  # w-update
+  for (i in seq_len(n_iter)) {
+    # w-update
     rhs <- Xty + rho * (z - u / rho)
     w <- solve(XtX_rho, rhs)
-    z_prev <- z  # z-update: soft-threshold
-    z <- soft_threshold(w + u/rho, lam/rho)  # dual update
+    z_prev <- z
+    # z-update: soft-threshold
+    z <- soft_threshold(w + u/rho, lam/rho)
+    # dual update
     u <- u + rho * (w - z)
-    if (sqrt(sum((w-z)^2)) < tol && sqrt(sum((rho*(z-z_prev))^2)) < tol) { cat(sprintf("Converged at iteration %d\n", i)); break
+    if (sqrt(sum((w-z)^2)) < tol && sqrt(sum((rho*(z-z_prev))^2)) < tol) {
+      cat(sprintf("Converged at iteration %d\n", i))
+      break
     }
-  } w
+  }
+  w
 }
 set.seed(42)
 n <- 100; d <- 20
@@ -173,7 +201,9 @@ cat("ADMM w[1:5]:", round(w_est[1:5], 3), "\n")
 import numpy as np
 from sklearn.linear_model import Lasso
 from sklearn.preprocessing import StandardScaler
-np.random.seed(42)   # -- Distributed consensus ADMM for Lasso (2 compute nodes) -------------------
+np.random.seed(42)
+
+# -- Distributed consensus ADMM for Lasso (2 compute nodes) -------------------
 # Split data across 2 nodes; each solves local subproblem; consensus via ADMM
 N_TOTAL = 300
 D = 15
@@ -189,31 +219,47 @@ N_ITER = 200
 TOL = 1e-6
 
 def soft_threshold(v: np.ndarray, tau: float) -> np.ndarray:
-    return np.sign(v) * np.maximum(np.abs(v) - tau, 0)   # Split data across nodes
+    return np.sign(v) * np.maximum(np.abs(v) - tau, 0)
+
+
+# Split data across nodes
 indices = [np.arange(i * N_TOTAL // n_nodes, (i + 1) * N_TOTAL // n_nodes) for i in range(n_nodes)]
 X_nodes = [X[idx] for idx in indices]
-y_nodes = [y[idx] for idx in indices]   # Pre-compute per-node matrices
+y_nodes = [y[idx] for idx in indices]
+
+# Pre-compute per-node matrices
 node_XtX_rho = [X_k.T @ X_k + RHO * np.eye(D) for X_k in X_nodes]
-node_Xty = [X_k.T @ y_k for X_k, y_k in zip(X_nodes, y_nodes)]   # Consensus ADMM state
-w_local = [np.zeros(D) for _ in range(n_nodes)]   # per-node estimates
-z_global = np.zeros(D)   # consensus variable
-u_dual = [np.zeros(D) for _ in range(n_nodes)]   # per-node dual vars
+node_Xty = [X_k.T @ y_k for X_k, y_k in zip(X_nodes, y_nodes)]
+
+# Consensus ADMM state
+w_local = [np.zeros(D) for _ in range(n_nodes)]  # per-node estimates
+z_global = np.zeros(D)  # consensus variable
+u_dual = [np.zeros(D) for _ in range(n_nodes)]  # per-node dual vars
+
 for iteration in range(N_ITER):
     # Step 1: each node updates its local w (ridge sub-problem)
     for k in range(n_nodes):
         rhs = node_Xty[k] + RHO * (z_global - u_dual[k])
-    w_local[k] = np.linalg.solve(node_XtX_rho[k], rhs)
-z_prev = z_global.copy()   # Step 2: consensus update (average + soft-threshold)
-w_avg = np.mean(w_local, axis=0)
-u_avg = np.mean(u_dual, axis=0)
-z_global = soft_threshold(w_avg + u_avg, LAM / (RHO * n_nodes))   # Step 3: per-node dual update
-for k in range(n_nodes):
-    u_dual[k] += w_local[k] - z_global   # Convergence check
-primal_res = max(np.linalg.norm(w_local[k] - z_global) for k in range(n_nodes))
-dual_res = RHO * np.linalg.norm(z_global - z_prev)
-if primal_res < TOL and dual_res < TOL:
-    print(f"Distributed ADMM converged at iteration {iteration}")
-break   # Compare to centralized Lasso
+        w_local[k] = np.linalg.solve(node_XtX_rho[k], rhs)
+    z_prev = z_global.copy()
+
+    # Step 2: consensus update (average + soft-threshold)
+    w_avg = np.mean(w_local, axis=0)
+    u_avg = np.mean(u_dual, axis=0)
+    z_global = soft_threshold(w_avg + u_avg, LAM / (RHO * n_nodes))
+
+    # Step 3: per-node dual update
+    for k in range(n_nodes):
+        u_dual[k] += w_local[k] - z_global
+
+    # Convergence check
+    primal_res = max(np.linalg.norm(w_local[k] - z_global) for k in range(n_nodes))
+    dual_res = RHO * np.linalg.norm(z_global - z_prev)
+    if primal_res < TOL and dual_res < TOL:
+        print(f"Distributed ADMM converged at iteration {iteration}")
+        break
+
+# Compare to centralized Lasso
 centralized = Lasso(alpha=LAM / N_TOTAL, fit_intercept=False, max_iter=10000)
 centralized.fit(X, y)
 print(f"\nDistributed vs Centralized Lasso")

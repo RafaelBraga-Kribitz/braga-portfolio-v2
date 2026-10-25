@@ -95,14 +95,16 @@ Values $\{1, 4, 9\}$: left-to-right $(1+4)+9 = 14$. Right-to-left $(9+4)+1 = 14$
 ### Beginner example (Python)
 
 ```python
-# Commutative property: a +
-b = b + a
+import random
+
+# Commutative property: a + b = b + a
 pairs = [(3, 7), (-5, 12), (0.5, -0.5), (100, -200)]
 print("Verifying a + b == b + a:")
 for a, b in pairs:
-    print(f" {a} + {b} = {a+b} | {b} + {a} = {b+a} | Equal: {a+b == b+a}")   # Order-independent aggregation
+    print(f" {a} + {b} = {a+b} | {b} + {a} = {b+a} | Equal: {a+b == b+a}")
+
+# Order-independent aggregation
 monthly_revenue = [4_200, 3_800, 5_100, 4_700, 6_200, 5_800, 4_900, 5_300, 6_100, 5_700, 4_400, 7_200]
-import random
 shuffled = monthly_revenue.copy()
 random.seed(42)
 random.shuffle(shuffled)
@@ -114,13 +116,16 @@ print(f"Same result: {sum(monthly_revenue) == sum(shuffled)}")
 ### Beginner example (R)
 
 ```r
-# Commutative property: a +
-b = b + a
+# Commutative property: a + b = b + a
 pairs <- list(c(3, 7), c(-5, 12), c(0.5, -0.5), c(100, -200))
 cat("Verifying a + b == b + a:\n")
-for (p in pairs) { a <- p[1]; b <- p[2]
+for (p in pairs) {
+  a <- p[1]
+  b <- p[2]
   cat(sprintf(" %.1f + %.1f = %.1f | %.1f + %.1f = %.1f | Equal: %s\n", a, b, a+b, b, a, b+a, (a+b == b+a)))
-}  # Order-independent aggregation
+}
+
+# Order-independent aggregation
 monthly_revenue <- c(4200, 3800, 5100, 4700, 6200, 5800, 4900, 5300, 6100, 5700, 4400, 7200)
 set.seed(42)
 shuffled <- sample(monthly_revenue)
@@ -152,7 +157,9 @@ print()
 print(" Regional breakdown:")
 for region, s in region_totals.sort_values(ascending=False).items():
     pct = s / total_sequential * 100
-print(f" {region:<6}: {s:>10,.2f} ({pct:.1f}%)")   # Also verify: covariance symmetry (relies on commutativity of sum and multiply)
+    print(f" {region:<6}: {s:>10,.2f} ({pct:.1f}%)")
+
+# Also verify: covariance symmetry (relies on commutativity of sum and multiply)
 x = df["spend"].values
 y = np.random.normal(0, 1, n)   # dummy second variable
 cov_xy = np.cov(x, y)[0, 1]

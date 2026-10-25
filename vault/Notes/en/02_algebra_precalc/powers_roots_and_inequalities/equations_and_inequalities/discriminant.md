@@ -91,7 +91,16 @@ Full roots: $x = \frac{7 \pm \sqrt{25}}{6} = \frac{7 \pm 5}{6}$, giving $x_1 = 2
 
 ```python
 def classify_discriminant(a: float, b: float, c: float) -> dict:
-    """ Compute and classify the discriminant of ax^2 + bx + c = 0. Args: a: coefficient of x^2 b: coefficient of x c: constant term Returns: Dictionary with discriminant value and classification """
+    """Compute and classify the discriminant of ax^2 + bx + c = 0.
+
+    Args:
+        a: coefficient of x^2
+        b: coefficient of x
+        c: constant term
+
+    Returns:
+        Dictionary with discriminant value and classification
+    """
     delta = b**2 - 4 * a * c
     if delta > 0:
         classification = "Two distinct real roots"
@@ -99,33 +108,41 @@ def classify_discriminant(a: float, b: float, c: float) -> dict:
         classification = "One repeated real root"
     else:
         classification = "No real roots (complex only)"
-    return {"delta": delta, "classification": classification}   # Test cases
-test_cases = [ (1, -5, 6),   # 2 real roots
-    (1, -2, 1),   # 1 repeated root
-    (1, 0, 1),   # no real roots
-    (3, -7, 2),   # 2 real roots
+    return {"delta": delta, "classification": classification}
+
+
+# Test cases
+test_cases = [
+    (1, -5, 6),  # 2 real roots
+    (1, -2, 1),  # 1 repeated root
+    (1, 0, 1),  # no real roots
+    (3, -7, 2),  # 2 real roots
 ]
 for (a, b, c) in test_cases:
     result = classify_discriminant(a, b, c)
-print(f"{a}x^2 + {b}x + {c} = 0: Δ = {result['delta']:>5} -> {result['classification']}")
+    print(f"{a}x^2 + {b}x + {c} = 0: Δ = {result['delta']:>5} -> {result['classification']}")
 ```
 
 ### Beginner example (R)
 
 ```r
-classify_discriminant <- function(a, b, c) {  #' Classify the discriminant of ax^2 + bx +
-  c = 0.  #' @return List with delta and classification
+classify_discriminant <- function(a, b, c) {
+  #' Classify the discriminant of ax^2 + bx + c = 0.
+  #' @return List with delta and classification
   delta <- b^2 - 4 * a * c
-  classification <- if (delta > 0) { "Two distinct real roots"
+  classification <- if (delta > 0) {
+    "Two distinct real roots"
+  } else if (delta == 0) {
+    "One repeated real root"
+  } else {
+    "No real roots (complex only)"
   }
-  else
-  if (delta == 0) { "One repeated real root"
-  }
-  else { "No real roots (complex only)"
-  } list(delta = delta, classification = classification)
+  list(delta = delta, classification = classification)
 }
-test_cases <- list( c(1, -5, 6), c(1, -2, 1), c(1, 0, 1), c(3, -7, 2)
-) for (tc in test_cases) { result <- classify_discriminant(tc[1], tc[2], tc[3]) cat(sprintf("%dx^2 + %dx + %d: D = %5g -> %s\n", tc[1], tc[2], tc[3], result$delta, result$classification))
+test_cases <- list(c(1, -5, 6), c(1, -2, 1), c(1, 0, 1), c(3, -7, 2))
+for (tc in test_cases) {
+  result <- classify_discriminant(tc[1], tc[2], tc[3])
+  cat(sprintf("%dx^2 + %dx + %d: D = %5g -> %s\n", tc[1], tc[2], tc[3], result$delta, result$classification))
 }
 ```
 
@@ -133,14 +150,21 @@ test_cases <- list( c(1, -5, 6), c(1, -2, 1), c(1, 0, 1), c(3, -7, 2)
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: feasibility screening for quadratic pricing models
+import pandas as pd
+
+# Scenario: feasibility screening for quadratic pricing models
 # Before computing full roots, use discriminant to flag infeasible cases
 np.random.seed(42)
-pricing_models = pd.DataFrame({ "product": ["A", "B", "C", "D", "E"], "a": [ 2.0, 1.0, -1.5, 3.0, 0.5],   # coefficient of p^2
-    "b": [-80.0, -40.0, 60.0, -30.0, -20.0],   # coefficient of p
-    "c": [600.0, 900.0, -500.0, 400.0, 250.0],   # constant
-    (fixed cost) })
-pricing_models["discriminant"] = ( pricing_models["b"]**2 - 4 * pricing_models["a"] * pricing_models["c"] )
+pricing_models = pd.DataFrame({
+    "product": ["A", "B", "C", "D", "E"],
+    "a": [2.0, 1.0, -1.5, 3.0, 0.5],  # coefficient of p^2
+    "b": [-80.0, -40.0, 60.0, -30.0, -20.0],  # coefficient of p
+    "c": [600.0, 900.0, -500.0, 400.0, 250.0],  # constant (fixed cost)
+})
+pricing_models["discriminant"] = (
+    pricing_models["b"]**2 - 4 * pricing_models["a"] * pricing_models["c"]
+)
+
 
 def classify_delta(delta: float) -> str:
     if delta > 0:
@@ -149,8 +173,10 @@ def classify_delta(delta: float) -> str:
         return "Marginal (1 break-even price)"
     else:
         return "Infeasible (no break-even exists)"
-    pricing_models["feasibility"] = pricing_models["discriminant"].apply(classify_delta)
-    print("Break-Even Feasibility Screen using Discriminant")
+
+
+pricing_models["feasibility"] = pricing_models["discriminant"].apply(classify_delta)
+print("Break-Even Feasibility Screen using Discriminant")
 print("Model: a*p^2 + b*p + c = 0 (find break-even price p)")
 print()
 print(pricing_models[["product", "a", "b", "c", "discriminant", "feasibility"]].to_string(index=False))
@@ -165,9 +191,9 @@ set.seed(42)
 pricing_models <- data.frame( product = c("A", "B", "C", "D", "E"), a = c(2, 1, -1.5, 3, 0.5), b = c(-80, -40, 60, -30, -20), c = c(600, 900, -500, 400, 250)
 )
 pricing_models$discriminant <- with(pricing_models, b^2 - 4*a*c)
-classify_delta <- function(delta) { if (delta > 0) "Feasible (2 break-even prices)"
-  else
-  if (delta == 0) "Marginal (1 break-even price)"
+classify_delta <- function(delta) {
+  if (delta > 0) "Feasible (2 break-even prices)"
+  else if (delta == 0) "Marginal (1 break-even price)"
   else "Infeasible (no break-even exists)"
 }
 pricing_models$feasibility <- sapply(pricing_models$discriminant, classify_delta)

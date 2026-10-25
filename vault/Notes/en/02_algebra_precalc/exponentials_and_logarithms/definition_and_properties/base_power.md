@@ -97,52 +97,75 @@ $\log_{100} 1000 = 1.5$ means: to get $1000$ from base $100$, you need the $1.5$
 ### Beginner example (Python)
 
 ```python
-# Base-power rule: log_{a^n}(x) = (1/n) *
-log_a(x)
+# Base-power rule: log_{a^n}(x) = (1/n) * log_a(x)
 import math
 
+
 def log_base_power(x: float, a: float, n: float) -> float:
-    """ Evaluate log_{a^n}(x) using the base-power rule. Args: x: Argument (x > 0). a: Underlying base (a > 0, a != 1). n: Exponent of the base (n != 0). Returns: (1/n) * log_a(x). """
-    return (1 / n) * math.log(x, a)   # Verify against direct computation using the composite base
-test_cases = [ (1000.0, 10.0, 2.0),   # log_{100}(1000) = 1.5
-    (64.0, 2.0, 3.0),   # log_{8}(64) = 2
-    (100.0, 10.0, 0.5),   # log_{√10}(100) = 4
-    (math.e, math.e, 0.5),   # log_{√e}(e) = 2
+    """Evaluate log_{a^n}(x) using the base-power rule.
+
+    Args:
+        x: Argument (x > 0).
+        a: Underlying base (a > 0, a != 1).
+        n: Exponent of the base (n != 0).
+
+    Returns:
+        (1/n) * log_a(x).
+    """
+    return (1 / n) * math.log(x, a)
+
+
+# Verify against direct computation using the composite base
+test_cases = [
+    (1000.0, 10.0, 2.0),  # log_{100}(1000) = 1.5
+    (64.0, 2.0, 3.0),  # log_{8}(64) = 2
+    (100.0, 10.0, 0.5),  # log_{√10}(100) = 4
+    (math.e, math.e, 0.5),  # log_{√e}(e) = 2
 ]
 print(f"{'x':>8} {'a':>5} {'n':>5} {'base=a^n':>10} {'rule':>10} {'direct':>10} {'match':>6}")
 for x, a, n in test_cases:
     base = a ** n
-result_rule = log_base_power(x, a, n)
-result_direct = math.log(x, base)
-print(f"{x:>8.4f} {a:>5.2f} {n:>5.2f} {base:>10.4f} {result_rule:>10.6f} {result_direct:>10.6f} {str(abs(result_rule - result_direct) < 1e-10):>6}")   # Entropy base conversion: nats to bits and vice versa
-import math
-nat_entropy = 1.0   # 1 nat of entropy (example)
-bits_entropy = nat_entropy / math.log(2)   # = nat / ln(2) = (1/ln2) * nat
+    result_rule = log_base_power(x, a, n)
+    result_direct = math.log(x, base)
+    print(f"{x:>8.4f} {a:>5.2f} {n:>5.2f} {base:>10.4f} {result_rule:>10.6f} {result_direct:>10.6f} {str(abs(result_rule - result_direct) < 1e-10):>6}")
+
+# Entropy base conversion: nats to bits and vice versa
+nat_entropy = 1.0  # 1 nat of entropy (example)
+bits_entropy = nat_entropy / math.log(2)  # = nat / ln(2) = (1/ln2) * nat
 print(f"\nEntropy conversion: 1 nat = {bits_entropy:.6f} bits")
 print(f"Scale factor 1/ln(2) = {1/math.log(2):.6f}")
-print(f"log_2(x) = ln(x) / ln(2) — base-power rule with a=e, n=ln2≈{math.log(2):.4f}")   # Verify: log_{e^(ln2)}(x) = (1/ln2) * ln(x) =
-log_2(x)
+print(f"log_2(x) = ln(x) / ln(2) — base-power rule with a=e, n=ln2≈{math.log(2):.4f}")
+
+# Verify: log_{e^(ln2)}(x) = (1/ln2) * ln(x) = log_2(x)
 for x in [2.0, 4.0, 8.0, 16.0]:
     rule = log_base_power(x, math.e, math.log(2))
-direct = math.log2(x)
-print(f" x={x:.0f}: rule={rule:.6f} log2={direct:.6f} match={abs(rule - direct) < 1e-10}")
+    direct = math.log2(x)
+    print(f" x={x:.0f}: rule={rule:.6f} log2={direct:.6f} match={abs(rule - direct) < 1e-10}")
 ```
 
 ### Beginner example (R)
 
 ```r
 # Base-power rule in R: log_{a^n}(x) = (1/n) * log_a(x)
-log_base_power <- function(x, a, n) {  # (1/n) * log_a(x) (1 / n) * log(x,
-  base = a)
+log_base_power <- function(x, a, n) {
+  # (1/n) * log_a(x)
+  (1 / n) * log(x, base = a)
 }
-test_cases <- list( c(1000, 10, 2),  # log_{100}(1000) = 1.5 c(64, 2, 3), # log_{8}(64) = 2 c(100, 10, 0.5) # log_{√10}(100) = 4
-) cat(sprintf("%-8s %-5s %-5s %-10s %-10s %-10s %s\n", "x", "a", "n", "base=a^n", "rule", "direct", "match"))
-for (tc in test_cases) { x <- tc[1]; a <- tc[2]; n <- tc[3]
+test_cases <- list(
+  c(1000, 10, 2),  # log_{100}(1000) = 1.5
+  c(64, 2, 3),     # log_{8}(64) = 2
+  c(100, 10, 0.5)  # log_{√10}(100) = 4
+)
+cat(sprintf("%-8s %-5s %-5s %-10s %-10s %-10s %s\n", "x", "a", "n", "base=a^n", "rule", "direct", "match"))
+for (tc in test_cases) {
+  x <- tc[1]; a <- tc[2]; n <- tc[3]
   base <- a^n
   result_rule <- log_base_power(x, a, n)
   result_direct <- log(x, base = base)
   cat(sprintf("%-8.4f %-5.2f %-5.2f %-10.4f %-10.6f %-10.6f %s\n", x, a, n, base, result_rule, result_direct, abs(result_rule - result_direct) < 1e-10))
-}  # Nats to bits
+}
+
+# Nats to bits
 ln2 <- log(2)
 cat(sprintf("\n1 nat = %.6f bits (scale = 1/ln(2) = %.6f)\n", 1 / ln2, 1 / ln2))
 ```
@@ -152,30 +175,55 @@ cat(sprintf("\n1 nat = %.6f bits (scale = 1/ln(2) = %.6f)\n", 1 / ln2, 1 / ln2))
 ```python
 import math
 import numpy as np
-import pandas as pd   # Scenario: information-theoretic entropy comparison across bases
+import pandas as pd
+
+# Scenario: information-theoretic entropy comparison across bases
 # Compute entropy H(p) = -sum(p_k * log_{base}(p_k)) for multiple bases
 # Show that H in different bases differ by the 1/n scaling factor
 
+
 def entropy(probs: np.ndarray, base: float) -> float:
-    """ Compute Shannon entropy in a given base. H(p) = -sum_k p_k * log_{base}(p_k) Args: probs: Probability vector (must sum to 1, all entries > 0). base: Logarithm base. Returns: Entropy value in the specified base. """
+    """Compute Shannon entropy in a given base.
+
+    H(p) = -sum_k p_k * log_{base}(p_k)
+
+    Args:
+        probs: Probability vector (must sum to 1, all entries > 0).
+        base: Logarithm base.
+
+    Returns:
+        Entropy value in the specified base.
+    """
     assert np.isclose(probs.sum(), 1.0), "probabilities must sum to 1"
     assert (probs > 0).all(), "all probabilities must be positive"
-    return -float(np.sum(probs * np.log(probs) / math.log(base)))   # Uniform distribution over k categories — maximum entropy
-distributions = { "uniform_2": np.array([0.5, 0.5]), "uniform_4": np.array([0.25] * 4), "uniform_8": np.array([0.125] * 8), "skewed_4": np.array([0.7, 0.1, 0.1, 0.1]),
+    return -float(np.sum(probs * np.log(probs) / math.log(base)))
+
+
+# Uniform distribution over k categories — maximum entropy
+distributions = {
+    "uniform_2": np.array([0.5, 0.5]),
+    "uniform_4": np.array([0.25] * 4),
+    "uniform_8": np.array([0.125] * 8),
+    "skewed_4": np.array([0.7, 0.1, 0.1, 0.1]),
 }
-BASES = { "nats (e)": math.e, "bits (2)": 2.0, "dits (10)": 10.0,
+BASES = {
+    "nats (e)": math.e,
+    "bits (2)": 2.0,
+    "dits (10)": 10.0,
 }
 SCALE_TO_NATS = {label: 1.0 / math.log(base) for label, base in BASES.items()}
+
 rows = []
 for dist_name, probs in distributions.items():
     row = {"distribution": dist_name, "n_outcomes": len(probs)}
-h_nats = entropy(probs, math.e)
-for base_label, base in BASES.items():
-    h_base = entropy(probs, base)
-predicted = h_nats * (1.0 / math.log(base))   # base-power scaling
-row[f"H_{base_label}"] = round(h_base, 6)
-row[f"predicted_{base_label}"] = round(predicted, 6)
-rows.append(row)
+    h_nats = entropy(probs, math.e)
+    for base_label, base in BASES.items():
+        h_base = entropy(probs, base)
+        predicted = h_nats * (1.0 / math.log(base))  # base-power scaling
+        row[f"H_{base_label}"] = round(h_base, 6)
+        row[f"predicted_{base_label}"] = round(predicted, 6)
+    rows.append(row)
+
 report = pd.DataFrame(rows)
 print("Entropy across bases — H_base = (1/ln(base)) × H_nats (base-power rule)")
 print("=" * 80)
@@ -186,8 +234,7 @@ print(f"\nScale factors: nats→bits = 1/ln(2) ≈ {1/math.log(2):.4f} | nats→
 ### Professional example (R)
 
 ```r
-# Entropy in nats, bits, dits:
-H_base = (1/ln(base)) * H_nats
+# Entropy in nats, bits, dits: H_base = (1/ln(base)) * H_nats
 probs <- list(uniform = rep(0.25, 4), skewed = c(0.5, 0.3, 0.15, 0.05))
 H_nats <- sapply(probs, function(p) -sum(p * log(p)))
 H_bits <- H_nats / log(2)

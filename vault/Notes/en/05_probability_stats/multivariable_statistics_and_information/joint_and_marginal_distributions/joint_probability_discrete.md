@@ -87,12 +87,14 @@ $P(X=1, Y=0) = f(1,0) = 0.25$ — probability of heads on coin 1 and tails on co
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # Joint PMF for (Device, Purchase) as a 2D table
-#
-Rows: device = [mobile, desktop]
-Cols: purchase = [no, yes]
-joint_pmf = np.array([ [0.40, 0.10],   # mobile: 40% no-purchase, 10% purchase
-    [0.25, 0.25],   # desktop: 25% no-purchase, 25% purchase
+import numpy as np
+
+# Joint PMF for (Device, Purchase) as a 2D table
+# Rows: device = [mobile, desktop]
+# Cols: purchase = [no, yes]
+joint_pmf = np.array([
+    [0.40, 0.10],  # mobile: 40% no-purchase, 10% purchase
+    [0.25, 0.25],  # desktop: 25% no-purchase, 25% purchase
 ])
 devices = ["mobile", "desktop"]
 purchases = ["no", "yes"]
@@ -100,7 +102,7 @@ print("Joint PMF table:")
 print(f"{'':8s} {'no':>6} {'yes':>6}")
 for i, device in enumerate(devices):
     row = " ".join(f"{joint_pmf[i, j]:>6.2f}" for j in range(len(purchases)))
-print(f"{device:8s} {row}")
+    print(f"{device:8s} {row}")
 print(f"\nSum of all probabilities: {joint_pmf.sum():.2f}")
 print(f"P(mobile, purchase=yes) = {joint_pmf[0, 1]:.2f}")
 ```
@@ -119,44 +121,62 @@ cat("P(mobile, purchase=yes):", joint_pmf["mobile", "yes"], "\n")
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
 import pandas as pd
+
 
 class DiscreteJointDistribution:
     # Discrete bivariate joint PMF with marginal and conditional extraction.
 
-def __init__( self, pmf: np.ndarray, row_labels: list[str], col_labels: list[str], row_name: str = "X", col_name: str = "Y", ) -> None:
-    assert np.isclose(pmf.sum(), 1.0), f"PMF must sum to 1, got {pmf.sum():.6f}"
-    assert (pmf >= 0).all(), "PMF must be non-negative."
-    self._pmf = pmf
-    self._row_labels = row_labels
-    self._col_labels = col_labels
-    self.row_name = row_name
-    self.col_name = col_name
+    def __init__(
+        self,
+        pmf: np.ndarray,
+        row_labels: list[str],
+        col_labels: list[str],
+        row_name: str = "X",
+        col_name: str = "Y",
+    ) -> None:
+        assert np.isclose(pmf.sum(), 1.0), f"PMF must sum to 1, got {pmf.sum():.6f}"
+        assert (pmf >= 0).all(), "PMF must be non-negative."
+        self._pmf = pmf
+        self._row_labels = row_labels
+        self._col_labels = col_labels
+        self.row_name = row_name
+        self.col_name = col_name
 
-def marginal_row(self) -> pd.Series:
-    return pd.Series(self._pmf.sum(axis=1), index=self._row_labels, name=self.row_name)
+    def marginal_row(self) -> pd.Series:
+        return pd.Series(self._pmf.sum(axis=1), index=self._row_labels, name=self.row_name)
 
-def marginal_col(self) -> pd.Series:
-    return pd.Series(self._pmf.sum(axis=0), index=self._col_labels, name=self.col_name)
+    def marginal_col(self) -> pd.Series:
+        return pd.Series(self._pmf.sum(axis=0), index=self._col_labels, name=self.col_name)
 
-def conditional_col_given_row(self, row_label: str) -> pd.Series:
-    row_idx = self._row_labels.index(row_label)
-    marginal_val = self._pmf[row_idx, :].sum()
-    cond = self._pmf[row_idx, :] / marginal_val
-    return pd.Series(cond, index=self._col_labels, name=f"P({self.col_name}|{self.row_name}={row_label})")
+    def conditional_col_given_row(self, row_label: str) -> pd.Series:
+        row_idx = self._row_labels.index(row_label)
+        marginal_val = self._pmf[row_idx, :].sum()
+        cond = self._pmf[row_idx, :] / marginal_val
+        return pd.Series(cond, index=self._col_labels, name=f"P({self.col_name}|{self.row_name}={row_label})")
 
-def as_dataframe(self) -> pd.DataFrame:
-    return pd.DataFrame(self._pmf, index=self._row_labels, columns=self._col_labels)
+    def as_dataframe(self) -> pd.DataFrame:
+        return pd.DataFrame(self._pmf, index=self._row_labels, columns=self._col_labels)
+
 
 if __name__ == "__main__":
     pmf_data = np.array([[0.40, 0.10], [0.25, 0.25]])
-    dist = DiscreteJointDistribution( pmf=pmf_data, row_labels=["mobile", "desktop"], col_labels=["no_purchase", "purchase"], row_name="device", col_name="purchase", )
-    print("Joint PMF:"); print(dist.as_dataframe())
-    print("\nMarginal P(device): "); print(dist.marginal_row().round(3))
-    print("\nMarginal P(purchase):"); print(dist.marginal_col().round(3))
-    print("\nP(purchase | mobile):"); print(dist.conditional_col_given_row("mobile").round(4))
+    dist = DiscreteJointDistribution(
+        pmf=pmf_data,
+        row_labels=["mobile", "desktop"],
+        col_labels=["no_purchase", "purchase"],
+        row_name="device",
+        col_name="purchase",
+    )
+    print("Joint PMF:")
+    print(dist.as_dataframe())
+    print("\nMarginal P(device): ")
+    print(dist.marginal_row().round(3))
+    print("\nMarginal P(purchase):")
+    print(dist.marginal_col().round(3))
+    print("\nP(purchase | mobile):")
+    print(dist.conditional_col_given_row("mobile").round(4))
 ```
 
 ---

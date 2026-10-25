@@ -97,42 +97,52 @@ $= 1/\cos^2 x = \sec^2 x$. $\checkmark$
 ```python
 import numpy as np
 
-def quotient_rule_deriv( u: float, v: float, u_prime: float, v_prime: float ) -> float:
+def quotient_rule_deriv(u: float, v: float, u_prime: float, v_prime: float) -> float:
     """d/dx[u/v] = (v*u' - u*v') / v^2. Requires v != 0."""
     if abs(v) < 1e-12:
         raise ValueError(f"v = {v:.2e} is too close to 0.")
-    return (v * u_prime - u * v_prime) / v**2   # Example 1: d/dx[tan(x)] = sec^2(x), derived from
-sin(x)/cos(x)
+    return (v * u_prime - u * v_prime) / v**2
+
+
+# Example 1: d/dx[tan(x)] = sec^2(x), derived from sin(x)/cos(x)
 x_vals = np.array([-1.0, -0.5, 0.0, 0.5, 1.0])
 h = 1e-7
 print("Quotient rule for d/dx[tan(x)] = (cos*cos - sin*(-sin)) / cos^2 = sec^2(x)")
 print(f"{'x':>6} {'Quotient rule':>14} {'1/cos^2(x)':>12} {'Numerical':>12}")
 for x in x_vals:
     qr = quotient_rule_deriv(np.sin(x), np.cos(x), np.cos(x), -np.sin(x))
-sec2 = 1 / np.cos(x)**2
-num = (np.tan(x + h) - np.tan(x - h)) / (2 * h)
-print(f"{x:>6.2f} {qr:>14.6f} {sec2:>12.6f} {num:>12.6f}")   # Example 2: d/dx[x^2 / (x+1)]
+    sec2 = 1 / np.cos(x)**2
+    num = (np.tan(x + h) - np.tan(x - h)) / (2 * h)
+    print(f"{x:>6.2f} {qr:>14.6f} {sec2:>12.6f} {num:>12.6f}")
+
+# Example 2: d/dx[x^2 / (x+1)]
 print("\nd/dx[x^2 / (x+1)] = (x^2 + 2x) / (x+1)^2")
 for x in [0.5, 1.0, 2.0, 3.0]:
     qr = quotient_rule_deriv(x**2, x+1, 2*x, 1.0)
-formula = (x**2 + 2*x) / (x+1)**2
-print(f" x={x:.1f}: quotient rule={qr:.4f}, formula={formula:.4f}")
+    formula = (x**2 + 2*x) / (x+1)**2
+    print(f" x={x:.1f}: quotient rule={qr:.4f}, formula={formula:.4f}")
 ```
 
 ### Beginner example (R)
 
 ```r
 # Quotient rule: d/dx[u/v] = (v*u' - u*v') / v^2
-quotient_rule <- function(u, v, u_prime, v_prime) (v * u_prime - u * v_prime) / v^2  # d/dx[sin(x)/cos(x)] = sec^2(x)
+quotient_rule <- function(u, v, u_prime, v_prime) (v * u_prime - u * v_prime) / v^2
+
+# d/dx[sin(x)/cos(x)] = sec^2(x)
 x_vals <- c(-1.0, -0.5, 0.0, 0.5, 1.0)
 cat("d/dx[tan(x)] via quotient rule:\n")
 cat(sprintf("%-6s %-14s %-12s\n", "x", "Quotient rule", "1/cos^2(x)"))
-for (x in x_vals) { qr <- quotient_rule(sin(x), cos(x), cos(x), -sin(x))
+for (x in x_vals) {
+  qr <- quotient_rule(sin(x), cos(x), cos(x), -sin(x))
   sec2 <- 1 / cos(x)^2
   cat(sprintf("%-6.2f %-14.6f %-12.6f\n", x, qr, sec2))
-}  # F1 score gradient w.r.t. precision
+}
+
+# F1 score gradient w.r.t. precision
 cat("\ndF1/dP where F1 = 2PR/(P+R):\n")
-for (P in c(0.5, 0.7, 0.8, 0.9)) { R <- 0.75  # fixed recall
+for (P in c(0.5, 0.7, 0.8, 0.9)) {
+  R <- 0.75  # fixed recall
   u <- 2 * P * R
   v <- P + R
   u_prime <- 2 * R
@@ -146,9 +156,12 @@ for (P in c(0.5, 0.7, 0.8, 0.9)) { R <- 0.75  # fixed recall
 
 ```python
 import numpy as np
-np.random.seed(42)   # -- Quotient rule: softmax Jacobian derivation from scratch --
+np.random.seed(42)
+
+# -- Quotient rule: softmax Jacobian derivation from scratch --
 # Use case: a DS implements manual backprop through a softmax layer.
 # The softmax Jacobian d(sigma_j)/d(z_k) uses the quotient rule.
+
 
 def softmax(z: np.ndarray) -> np.ndarray:
     """Numerically stable softmax."""
@@ -156,21 +169,34 @@ def softmax(z: np.ndarray) -> np.ndarray:
     exp_z = np.exp(z_shift)
     return exp_z / exp_z.sum()
 
+
 def softmax_jacobian(z: np.ndarray) -> np.ndarray:
-    """Jacobian of softmax: J[j,k] = sigma_j * (delta_{jk} - sigma_k). Derived via quotient rule on e^z_j / sum_k e^z_k. Numerator u = e^z_j, denominator v = S = sum_k e^z_k. d/dz_k[u/v]: For k=j: (S*e^z_j - e^z_j*e^z_k) / S^2 = sigma_j*(1 - sigma_j) For k!=j: (S*0 - e^z_j*e^z_k) / S^2 = -sigma_j*sigma_k Result: sigma_j*(delta_{jk} - sigma_k) """
+    """Jacobian of softmax: J[j,k] = sigma_j * (delta_{jk} - sigma_k).
+
+    Derived via quotient rule on e^z_j / sum_k e^z_k.
+    Numerator u = e^z_j, denominator v = S = sum_k e^z_k.
+    d/dz_k[u/v]:
+        For k=j:  (S*e^z_j - e^z_j*e^z_k) / S^2 = sigma_j*(1 - sigma_j)
+        For k!=j: (S*0 - e^z_j*e^z_k) / S^2 = -sigma_j*sigma_k
+    Result: sigma_j*(delta_{jk} - sigma_k)
+    """
     sigma = softmax(z)
     K = len(sigma)
     jac = np.zeros((K, K))
     for j in range(K):
         for k in range(K):
             delta = 1.0 if j == k else 0.0
-        jac[j, k] = sigma[j] * (delta - sigma[k])
+            jac[j, k] = sigma[j] * (delta - sigma[k])
     return jac
+
 
 def softmax_jacobian_vectorized(z: np.ndarray) -> np.ndarray:
     """Vectorized version: J = diag(sigma) - sigma @ sigma.T."""
     sigma = softmax(z)
-    return np.diag(sigma) - np.outer(sigma, sigma)   # Verify Jacobian against numerical Jacobian
+    return np.diag(sigma) - np.outer(sigma, sigma)
+
+
+# Verify Jacobian against numerical Jacobian
 K = 5
 z = np.random.randn(K) * 2.0
 sigma = softmax(z)
@@ -178,9 +204,12 @@ jac_analytic = softmax_jacobian_vectorized(z)
 h = 1e-6
 jac_numerical = np.zeros((K, K))
 for k in range(K):
-    z_plus = z.copy(); z_plus[k] += h
-z_minus = z.copy(); z_minus[k] -= h
-jac_numerical[:, k] = (softmax(z_plus) - softmax(z_minus)) / (2 * h)
+    z_plus = z.copy()
+    z_plus[k] += h
+    z_minus = z.copy()
+    z_minus[k] -= h
+    jac_numerical[:, k] = (softmax(z_plus) - softmax(z_minus)) / (2 * h)
+
 max_err = np.max(np.abs(jac_analytic - jac_numerical))
 print("Softmax Jacobian via Quotient Rule: d(sigma_j)/d(z_k) = sigma_j*(delta_{jk} - sigma_k)")
 print(f"\nz = {z.round(4)}")

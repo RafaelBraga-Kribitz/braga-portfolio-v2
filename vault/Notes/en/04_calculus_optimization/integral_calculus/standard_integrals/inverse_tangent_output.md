@@ -110,14 +110,16 @@ print(mean(abs(dF - integrand)) < 0.04)
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
+
 RANDOM_SEED = 42
+
 
 def arctan_antiderivative(x: np.ndarray, a: float) -> np.ndarray:
     if a == 0:
         raise ValueError("a must be nonzero")
     return (1.0 / a) * np.arctan(x / a)
+
 
 if __name__ == "__main__":
     rng = np.random.default_rng(RANDOM_SEED)

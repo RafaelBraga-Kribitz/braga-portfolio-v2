@@ -82,22 +82,23 @@ Verify: $\sqrt{50} \approx 7.071$. Confirmed.
 ### Beginner example (Python)
 
 ```python
-import math   # Multiplication of roots: n-th root of (a*b) = n-th
-root(a) * n-th
-root(b)   # Example 1: simplify sqrt(50) =
-sqrt(25 * 2)
+import math
+
+# Multiplication of roots: n-th root of (a*b) = n-th root(a) * n-th root(b)
+
+# Example 1: simplify sqrt(50) = sqrt(25 * 2)
 a = 25
 b = 2
 n = 2
-root_product = (a * b) ** (1/n)   #
-sqrt(a * b)
-product_roots = (a ** (1/n)) * (b ** (1/n))   #
-sqrt(a) * sqrt(b)
+root_product = (a * b) ** (1/n)  # sqrt(a * b)
+product_roots = (a ** (1/n)) * (b ** (1/n))  # sqrt(a) * sqrt(b)
 print(f"sqrt({a * b}) = sqrt({a}) * sqrt({b})")
 print(f" Root of product: {root_product:.10f}")
 print(f" Product of roots: {product_roots:.10f}")
 print(f" Simplified: {int(a**0.5)} * sqrt({b}) = {int(a**0.5)} * {b**0.5:.4f} = {int(a**0.5) * b**0.5:.4f}")
-print(f" Match: {abs(root_product - product_roots) < 1e-12}")   # Common mistake demo
+print(f" Match: {abs(root_product - product_roots) < 1e-12}")
+
+# Common mistake demo
 x, y = 9.0, 16.0
 print(f"\nCommon mistake: sqrt({x} + {y}) vs sqrt({x}) + sqrt({y})")
 print(f" sqrt({x + y}) = {math.sqrt(x + y):.4f}")
@@ -124,23 +125,35 @@ cat(sprintf(" Match: %s\n", isTRUE(all.equal(root_product, product_roots))))
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: Euclidean distance scaling
+import pandas as pd
+
+# Scenario: Euclidean distance scaling
 # When features are scaled by c, distance scales by c as well
 # d_scaled = sqrt((c*dx)^2 + (c*dy)^2) = sqrt(c^2 * (dx^2 + dy^2))
-# = sqrt(c^2) * sqrt(dx^2 + dy^2) [multiplication of roots rule]
-# = c * d_original
+#          = sqrt(c^2) * sqrt(dx^2 + dy^2)  [multiplication of roots rule]
+#          = c * d_original
 np.random.seed(42)
 num_points = 5
-c_values = [0.5, 1.0, 2.0, 5.0]   # Random 2D point offsets
+c_values = [0.5, 1.0, 2.0, 5.0]
+
+# Random 2D point offsets
 dx = np.random.randn(num_points)
 dy = np.random.randn(num_points)
 d_original = np.sqrt(dx**2 + dy**2)
+
 results = []
 for c in c_values:
     d_scaled_direct = np.sqrt((c * dx)**2 + (c * dy)**2)
-d_scaled_rule = c * d_original
-match = np.allclose(d_scaled_direct, d_scaled_rule)
-results.append({ "scale_c": c, "mean_d_original": d_original.mean(), "mean_d_scaled_direct": d_scaled_direct.mean(), "mean_d_scaled_rule": d_scaled_rule.mean(), "match": match, })
+    d_scaled_rule = c * d_original
+    match = np.allclose(d_scaled_direct, d_scaled_rule)
+    results.append({
+        "scale_c": c,
+        "mean_d_original": d_original.mean(),
+        "mean_d_scaled_direct": d_scaled_direct.mean(),
+        "mean_d_scaled_rule": d_scaled_rule.mean(),
+        "match": match,
+    })
+
 df = pd.DataFrame(results)
 print("Euclidean Distance Scaling: sqrt(c^2 * sum) = c * sqrt(sum)")
 print("(Multiplication of roots: sqrt(c^2 * D^2) = sqrt(c^2) * sqrt(D^2) = c * D)")
@@ -159,7 +172,10 @@ c_values <- c(0.5, 1, 2, 5)
 dx <- rnorm(num_points)
 dy <- rnorm(num_points)
 d_original <- sqrt(dx^2 + dy^2)
-results <- lapply(c_values, function(c) { d_scaled_direct <- sqrt((c*dx)^2 + (c*dy)^2) d_scaled_rule <- c * d_original data.frame(scale_c = c, mean_d_original = mean(d_original), mean_d_scaled_direct = mean(d_scaled_direct), mean_d_scaled_rule = mean(d_scaled_rule), match = all(abs(d_scaled_direct - d_scaled_rule) < 1e-10))
+results <- lapply(c_values, function(c) {
+  d_scaled_direct <- sqrt((c*dx)^2 + (c*dy)^2)
+  d_scaled_rule <- c * d_original
+  data.frame(scale_c = c, mean_d_original = mean(d_original), mean_d_scaled_direct = mean(d_scaled_direct), mean_d_scaled_rule = mean(d_scaled_rule), match = all(abs(d_scaled_direct - d_scaled_rule) < 1e-10))
 })
 df <- do.call(rbind, results)
 cat("Euclidean Distance Scaling: sqrt(c^2*D^2) = c*D\n")

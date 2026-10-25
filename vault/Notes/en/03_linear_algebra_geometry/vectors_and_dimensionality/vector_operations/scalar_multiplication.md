@@ -91,7 +91,9 @@ Both components have flipped sign compared to $\vec{v}$ because $k < 0$. $|\vec{
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # -- Scalar multiplication: scaling, normalizing ---
+import numpy as np
+
+# -- Scalar multiplication: scaling, normalizing ---
 v = np.array([3.0, 1.0, -5.0])
 k = -2.0
 scaled = k * v
@@ -101,7 +103,9 @@ print(f"k * v = {scaled}")   # [-6. -2. 10.]
 print(f"|v| = {np.linalg.norm(v):.4f}")
 print(f"|k*v| = {np.linalg.norm(scaled):.4f}")
 print(f"|k|*|v| = {abs(k)*np.linalg.norm(v):.4f}")
-print(f"Magnitude scales by |k|: {np.isclose(np.linalg.norm(scaled), abs(k)*np.linalg.norm(v))}")   # Normalization (scalar multiplication by 1/|v|)
+print(f"Magnitude scales by |k|: {np.isclose(np.linalg.norm(scaled), abs(k)*np.linalg.norm(v))}")
+
+# Normalization (scalar multiplication by 1/|v|)
 unit_v = v / np.linalg.norm(v)
 print(f"\nUnit vector v/|v| = {unit_v.round(4)}")
 print(f"|unit_v| = {np.linalg.norm(unit_v):.6f}")   # should be 1.0
@@ -118,7 +122,9 @@ cat("v :", v, "\n")
 cat("k * v :", scaled, "\n")
 cat(sprintf("|v| : %.4f\n", sqrt(sum(v^2))))
 cat(sprintf("|k*v| : %.4f\n", sqrt(sum(scaled^2))))
-cat(sprintf("|k|*|v| : %.4f\n", abs(k)*sqrt(sum(v^2))))  # Normalization
+cat(sprintf("|k|*|v| : %.4f\n", abs(k)*sqrt(sum(v^2))))
+
+# Normalization
 unit_v <- v / sqrt(sum(v^2))
 cat("Unit v :", round(unit_v, 4), "\n")
 cat(sprintf("|unit_v| = %.6f\n", sqrt(sum(unit_v^2))))
@@ -129,35 +135,43 @@ cat(sprintf("|unit_v| = %.6f\n", sqrt(sum(unit_v^2))))
 ```python
 import numpy as np
 import pandas as pd
-np.random.seed(42)   # -- Business scenario: gradient clipping and feature normalization ---
+np.random.seed(42)
+
+# -- Business scenario: gradient clipping and feature normalization ---
 # Two common uses of scalar multiplication in a DS workflow:
 # 1. Gradient clipping: scale gradient down if norm exceeds a threshold
 # 2. Min-max normalization: scale feature vectors to [0, 1] range
+
 # 1. Gradient clipping
 MAX_GRAD_NORM = 1.0
-gradient = np.random.randn(8)   # simulated gradient for 8 parameters
+gradient = np.random.randn(8)  # simulated gradient for 8 parameters
 grad_norm = np.linalg.norm(gradient)
 if grad_norm > MAX_GRAD_NORM:
     clip_factor = MAX_GRAD_NORM / grad_norm
-gradient_clipped = clip_factor * gradient   # scalar multiplication
-clipped = True
+    gradient_clipped = clip_factor * gradient  # scalar multiplication
+    clipped = True
 else:
     gradient_clipped = gradient
-clip_factor = 1.0
-clipped = False
+    clip_factor = 1.0
+    clipped = False
+
 print("=== Gradient Clipping ===")
 print(f"Original gradient norm : {grad_norm:.4f}")
 print(f"Clipping threshold : {MAX_GRAD_NORM}")
 print(f"Clip factor (k) : {clip_factor:.4f}")
 print(f"Clipped gradient norm : {np.linalg.norm(gradient_clipped):.4f}")
-print(f"Direction preserved? : {np.isclose(np.dot(gradient, gradient_clipped), np.linalg.norm(gradient)*np.linalg.norm(gradient_clipped))}")   # 2. Feature normalization (min-max scaling)
+print(f"Direction preserved? : {np.isclose(np.dot(gradient, gradient_clipped), np.linalg.norm(gradient)*np.linalg.norm(gradient_clipped))}")
+
+# 2. Feature normalization (min-max scaling)
 print("\n=== Feature Normalization ===")
 feature_names = ["age", "income", "tenure_months", "n_purchases"]
 raw_features = np.array([[45, 85000, 36, 12], [28, 42000, 8, 3], [62, 120000, 72, 45], [34, 67000, 18, 7]], dtype=float)
 col_min = raw_features.min(axis=0)
 col_max = raw_features.max(axis=0)
-col_range = col_max - col_min   # Min-max scaling: for each column, scale by 1/range (scalar mult), then shift
-scaled_features = (raw_features - col_min) / col_range   # scalar mult per col
+col_range = col_max - col_min
+
+# Min-max scaling: for each column, scale by 1/range (scalar mult), then shift
+scaled_features = (raw_features - col_min) / col_range  # scalar mult per col
 df_raw = pd.DataFrame(raw_features, columns=feature_names)
 df_scaled = pd.DataFrame(scaled_features, columns=feature_names)
 print("Raw features:\n", df_raw.to_string(index=False))
@@ -172,8 +186,7 @@ set.seed(42)
 MAX_GRAD_NORM <- 2.0
 gradient <- rnorm(10, 0, 1.5)
 grad_norm <- sqrt(sum(gradient^2))
-clip_factor <- if (grad_norm > MAX_GRAD_NORM) MAX_GRAD_NORM / grad_norm
-else 1.0
+clip_factor <- if (grad_norm > MAX_GRAD_NORM) MAX_GRAD_NORM / grad_norm else 1.0
 gradient_clipped <- clip_factor * gradient
 cat(sprintf("Gradient norm: %.4f Clipped: %.4f\n", grad_norm, sqrt(sum(gradient_clipped^2))))
 raw_features <- matrix(c(45, 85000, 36, 12, 28, 42000, 8, 3, 62, 120000, 72, 45, 34, 67000, 18, 7), nrow = 4, byrow = TRUE)

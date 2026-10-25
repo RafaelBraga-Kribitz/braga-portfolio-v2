@@ -105,34 +105,42 @@ If $\ln(\mu) = 1.5$, then $\mu = e^{1.5} \approx 4.4817$. Verify: $\ln(4.4817) \
 ```python
 # Natural log cancellation: e^(ln x) = x and ln(e^x) = x
 import math
-import numpy as np   # Direction 1: e^(ln x) = x (requires x > 0)
+import numpy as np
+
+# Direction 1: e^(ln x) = x (requires x > 0)
 print("Direction 1: e^(ln x) = x")
 test_vals = [0.1, 1.0, math.e, 5.0, 100.0, 1e-4]
 print(f"{'x':>10} {'ln(x)':>10} {'e^(ln x)':>12} {'matches x':>10}")
 for x in test_vals:
     ln_x = math.log(x)
-recovered = math.exp(ln_x)
-print(f"{x:>10.6f} {ln_x:>10.6f} {recovered:>12.6f} {str(abs(recovered - x) < 1e-9):>10}")   # Direction 2: ln(e^x) = x (all real x)
+    recovered = math.exp(ln_x)
+    print(f"{x:>10.6f} {ln_x:>10.6f} {recovered:>12.6f} {str(abs(recovered - x) < 1e-9):>10}")
+
+# Direction 2: ln(e^x) = x (all real x)
 print("\nDirection 2: ln(e^x) = x")
 exponents = [-5.0, -1.0, 0.0, 0.5, 1.0, 3.0, 10.0]
 print(f"{'x':>8} {'e^x':>14} {'ln(e^x)':>10} {'matches x':>10}")
 for x in exponents:
     exp_x = math.exp(x)
-recovered = math.log(exp_x)
-print(f"{x:>8.2f} {exp_x:>14.6f} {recovered:>10.6f} {str(abs(recovered - x) < 1e-9):>10}")   # Exponential distribution log-likelihood simplification
+    recovered = math.log(exp_x)
+    print(f"{x:>8.2f} {exp_x:>14.6f} {recovered:>10.6f} {str(abs(recovered - x) < 1e-9):>10}")
+
+# Exponential distribution log-likelihood simplification
 # f(t; lambda) = lambda * e^(-lambda*t)
 # ln f = ln(lambda) + ln(e^(-lambda*t)) = ln(lambda) - lambda*t
 print("\nExponential distribution: ln(lambda * e^(-lambda*t))")
 lam = 2.0
 for t in [0.1, 0.5, 1.0, 2.0]:
     direct = math.log(lam * math.exp(-lam * t))
-formula = math.log(lam) - lam * t   # using ln(e^x) = x
-print(f" t={t:.1f}: direct={direct:.6f} formula={formula:.6f} match={abs(direct - formula) < 1e-10}")   # TRAP: mismatched base
+    formula = math.log(lam) - lam * t  # using ln(e^x) = x
+    print(f" t={t:.1f}: direct={direct:.6f} formula={formula:.6f} match={abs(direct - formula) < 1e-10}")
+
+# TRAP: mismatched base
 print("\nTRAP: e^(log2 x) ≠ x (mismatched base)")
 for x in [2.0, 4.0, 8.0]:
     log2_x = math.log2(x)
-e_pow_log2 = math.exp(log2_x)   # e^(log2 x) ≠ x
-print(f" x={x:.0f}: log2(x)={log2_x:.4f} e^(log2 x)={e_pow_log2:.4f} equals x: {abs(e_pow_log2 - x) < 1e-9}")
+    e_pow_log2 = math.exp(log2_x)  # e^(log2 x) ≠ x
+    print(f" x={x:.0f}: log2(x)={log2_x:.4f} e^(log2 x)={e_pow_log2:.4f} equals x: {abs(e_pow_log2 - x) < 1e-9}")
 ```
 
 ### Beginner example (R)
@@ -161,30 +169,62 @@ for (t in c(0.1, 0.5, 1.0, 2.0)) { direct <- log(lam * exp(-lam * t))
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: unconstrained optimization of a positive parameter
-# using the reparameterization
-sigma = exp(alpha)
+import pandas as pd
+
+# Scenario: unconstrained optimization of a positive parameter
+# using the reparameterization sigma = exp(alpha)
 # This is the core trick behind log-normal MLE and GLM scale estimation
 np.random.seed(42)
 N_OBS = 300
 TRUE_MU = 3.5
-TRUE_SIGMA = 1.2   # Generate log-normal data
+TRUE_SIGMA = 1.2
+
+# Generate log-normal data
 raw_data = np.random.lognormal(mean=TRUE_MU, sigma=TRUE_SIGMA, size=N_OBS)
 
+
 def normal_log_likelihood(data: np.ndarray, mu: float, log_sigma: float) -> float:
-    """ Log-likelihood of a normal distribution using the reparameterization sigma = exp(log_sigma). Applies e^(ln sigma) = sigma to work in unconstrained log_sigma space, avoiding the sigma > 0 constraint during optimization. Args: data: Array of observations (log-transformed raw data). mu: Mean parameter (unconstrained). log_sigma: Log of standard deviation (unconstrained; sigma = exp(log_sigma)). Returns: Log-likelihood value. """
-    sigma = np.exp(log_sigma)   # e^(ln sigma) = sigma — cancellation identity n = len(data) return float( -n * log_sigma # -n * ln(sigma) = ln(sigma^{-n}) - n / 2 * np.log(2 * np.pi) - 0.5 * np.sum((data - mu) ** 2) / sigma**2 ) # Evaluate on a grid to find MLE
-log_data = np.log(raw_data)   # ln(x) = y such that e^y = x
+    """Log-likelihood of a normal distribution using the reparameterization sigma = exp(log_sigma).
+
+    Applies e^(ln sigma) = sigma to work in unconstrained log_sigma space,
+    avoiding the sigma > 0 constraint during optimization.
+
+    Args:
+        data: Array of observations (log-transformed raw data).
+        mu: Mean parameter (unconstrained).
+        log_sigma: Log of standard deviation (unconstrained; sigma = exp(log_sigma)).
+
+    Returns:
+        Log-likelihood value.
+    """
+    sigma = np.exp(log_sigma)  # e^(ln sigma) = sigma — cancellation identity
+    n = len(data)
+    return float(
+        -n * log_sigma  # -n * ln(sigma) = ln(sigma^{-n})
+        - n / 2 * np.log(2 * np.pi)
+        - 0.5 * np.sum((data - mu) ** 2) / sigma**2
+    )
+
+
+# Evaluate on a grid to find MLE
+log_data = np.log(raw_data)  # ln(x) = y such that e^y = x
 mu_grid = np.linspace(3.0, 4.0, 50)
 log_sig_grid = np.linspace(0.0, 1.0, 50)
 best_ll, best_mu, best_log_sigma = -np.inf, 0.0, 0.0
 for mu_val in mu_grid:
     for ls_val in log_sig_grid:
         ll = normal_log_likelihood(log_data, mu_val, ls_val)
-    if ll > best_ll:
-        best_ll, best_mu, best_log_sigma = ll, mu_val, ls_val
-    best_sigma = np.exp(best_log_sigma)   # recover sigma from log_sigma using e^(ln x) = x # Report
-summary = pd.DataFrame({ "parameter": ["mu", "sigma", "log_sigma"], "true_value": [TRUE_MU, TRUE_SIGMA, np.log(TRUE_SIGMA)], "mle_estimate": [best_mu, best_sigma, best_log_sigma], "sample_est": [log_data.mean(), log_data.std(), np.log(log_data.std())],
+        if ll > best_ll:
+            best_ll, best_mu, best_log_sigma = ll, mu_val, ls_val
+
+best_sigma = np.exp(best_log_sigma)  # recover sigma from log_sigma using e^(ln x) = x
+
+# Report
+summary = pd.DataFrame({
+    "parameter": ["mu", "sigma", "log_sigma"],
+    "true_value": [TRUE_MU, TRUE_SIGMA, np.log(TRUE_SIGMA)],
+    "mle_estimate": [best_mu, best_sigma, best_log_sigma],
+    "sample_est": [log_data.mean(), log_data.std(), np.log(log_data.std())],
 })
 print("Log-normal MLE with reparameterization: sigma = exp(log_sigma)")
 print("Cancellation identity: exp(ln(sigma)) = sigma used at recovery step")
@@ -197,13 +237,14 @@ print(f"Recovered sigma = exp({best_log_sigma:.4f}) = {best_sigma:.4f} " f"(true
 ### Professional example (R)
 
 ```r
-# Log-normal MLE:
-sigma = exp(log_sigma), exp(ln(sigma)) = sigma
+# Log-normal MLE: sigma = exp(log_sigma), exp(ln(sigma)) = sigma
 set.seed(42)
 TRUE_SIGMA <- 1.5
 x <- exp(rnorm(200, 0, TRUE_SIGMA))
 log_sigma_grid <- seq(0.1, 2, by = 0.05)
-ll <- sapply(log_sigma_grid, function(ls) { sigma <- exp(ls) -sum(log(dlnorm(x, 0, sigma)))
+ll <- sapply(log_sigma_grid, function(ls) {
+  sigma <- exp(ls)
+  -sum(log(dlnorm(x, 0, sigma)))
 })
 best_idx <- which.max(ll)
 best_log_sigma <- log_sigma_grid[best_idx]

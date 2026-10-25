@@ -97,7 +97,9 @@ $Gini = 1 - 0.58 = 0.42$ Now test a split that creates: left child (6 positive, 
 
 ```python
 import numpy as np
-from sklearn.tree import DecisionTreeClassifier, export_text   # Binary classification: churn (1) vs. no churn (0)
+from sklearn.tree import DecisionTreeClassifier, export_text
+
+# Binary classification: churn (1) vs. no churn (0)
 # Features: [tenure_months, n_support_tickets]
 X = np.array([[12, 0], [3, 5], [24, 1], [1, 8], [36, 0], [6, 3]])
 y = np.array([0, 1, 0, 1, 0, 1])
@@ -114,6 +116,8 @@ def gini_impurity(labels: np.ndarray) -> float:
     classes, counts = np.unique(labels, return_counts=True)
     probs = counts / n
     return float(1.0 - np.sum(probs ** 2))
+
+
 print(f"Root Gini (manual): {gini_impurity(y):.4f}")
 ```
 
@@ -121,14 +125,17 @@ print(f"Root Gini (manual): {gini_impurity(y):.4f}")
 
 ```r
 # Manual Gini computation
-gini_impurity <- function(labels) { n <- length(labels)
-  if (n == 0)
-  return(0)
+gini_impurity <- function(labels) {
+  n <- length(labels)
+  if (n == 0) return(0)
   counts <- table(labels)
-  probs <- counts / n 1 - sum(probs^2)
+  probs <- counts / n
+  1 - sum(probs^2)
 }
 y <- c(0, 1, 0, 1, 0, 1)
-cat("Root Gini:", round(gini_impurity(y), 4), "\n")  # Left child after a split
+cat("Root Gini:", round(gini_impurity(y), 4), "\n")
+
+# Left child after a split
 y_left <- c(0, 0, 0, 1)
 y_right <- c(1, 1)
 n <- length(y)
@@ -141,10 +148,10 @@ cat("Weighted child Gini:", round(weighted_gini, 4), "\n")
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
 import pandas as pd
 from sklearn.tree import DecisionTreeClassifier
+
 
 def gini_impurity(class_counts: np.ndarray) -> float:
     # Compute Gini from an array of class counts.
@@ -154,7 +161,10 @@ def gini_impurity(class_counts: np.ndarray) -> float:
     probs = class_counts / total
     return float(1.0 - np.sum(probs ** 2))
 
-def best_split_gini( feature_values: np.ndarray, labels: np.ndarray,
+
+def best_split_gini(
+    feature_values: np.ndarray,
+    labels: np.ndarray,
 ) -> dict[str, float]:
     # Brute-force best split threshold for a single continuous feature using Gini.
     sorted_values = np.sort(np.unique(feature_values))
@@ -163,27 +173,40 @@ def best_split_gini( feature_values: np.ndarray, labels: np.ndarray,
     best_gini = float("inf")
     for thresh in thresholds:
         left_mask = feature_values <= thresh
-    right_mask = ~left_mask
-    if left_mask.sum() == 0 or right_mask.sum() == 0:
-        continue
-    classes = np.unique(labels)
-    left_counts = np.array([np.sum(labels[left_mask] == c) for c in classes])
-    right_counts = np.array([np.sum(labels[right_mask] == c) for c in classes])
-    n = len(labels)
-    n_left = left_mask.sum()
-    n_right = right_mask.sum()
-    weighted = (n_left / n) * gini_impurity(left_counts) + \ (n_right / n) * gini_impurity(right_counts)
-    if weighted < best_gini:
-        best_gini = weighted
-    best_thresh = float(thresh)
-    return { "best_threshold": best_thresh, "best_weighted_gini": round(best_gini, 6), }
+        right_mask = ~left_mask
+        if left_mask.sum() == 0 or right_mask.sum() == 0:
+            continue
+        classes = np.unique(labels)
+        left_counts = np.array([np.sum(labels[left_mask] == c) for c in classes])
+        right_counts = np.array([np.sum(labels[right_mask] == c) for c in classes])
+        n = len(labels)
+        n_left = left_mask.sum()
+        n_right = right_mask.sum()
+        weighted = (n_left / n) * gini_impurity(left_counts) + \
+            (n_right / n) * gini_impurity(right_counts)
+        if weighted < best_gini:
+            best_gini = weighted
+            best_thresh = float(thresh)
+    return {
+        "best_threshold": best_thresh,
+        "best_weighted_gini": round(best_gini, 6),
+    }
 
-def gini_feature_importance_report( X: np.ndarray, y: np.ndarray, feature_names: list[str], max_depth: int = 4,
+
+def gini_feature_importance_report(
+    X: np.ndarray,
+    y: np.ndarray,
+    feature_names: list[str],
+    max_depth: int = 4,
 ) -> pd.DataFrame:
     # Fit a decision tree and return Gini-based feature importances.
     tree = DecisionTreeClassifier(criterion="gini", max_depth=max_depth, random_state=42)
     tree.fit(X, y)
-    return pd.DataFrame({ "feature": feature_names, "importance": tree.feature_importances_.round(4), }).sort_values("importance", ascending=False)
+    return pd.DataFrame({
+        "feature": feature_names,
+        "importance": tree.feature_importances_.round(4),
+    }).sort_values("importance", ascending=False)
+
 
 if __name__ == "__main__":
     rng = np.random.default_rng(seed=42)

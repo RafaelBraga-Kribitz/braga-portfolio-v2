@@ -92,16 +92,25 @@ $E[XY] = 0 + 0.25 + 0.20 + 0 + 0.20 + 0.40 = 1.05$
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # Joint PMF: rows = X (clicks 0,1,2), cols = Y (conversions 0,1,2)
-joint_pmf = np.array([ [0.20, 0.05, 0.00], [0.15, 0.25, 0.10], [0.05, 0.10, 0.10],
+import numpy as np
+
+# Joint PMF: rows = X (clicks 0,1,2), cols = Y (conversions 0,1,2)
+joint_pmf = np.array([
+    [0.20, 0.05, 0.00],
+    [0.15, 0.25, 0.10],
+    [0.05, 0.10, 0.10],
 ])
 x_values = np.array([0, 1, 2])
-y_values = np.array([0, 1, 2])   # E[X*Y] using bivariate LOTUS
+y_values = np.array([0, 1, 2])
+
+# E[X*Y] using bivariate LOTUS
 e_xy = 0.0
 for i, x_val in enumerate(x_values):
     for j, y_val in enumerate(y_values):
         e_xy += x_val * y_val * joint_pmf[i, j]
-    print(f"E[XY] = {e_xy:.4f}")   # Numpy vectorised version
+print(f"E[XY] = {e_xy:.4f}")
+
+# Numpy vectorised version
 x_grid, y_grid = np.meshgrid(x_values, y_values, indexing='ij')
 e_xy_vec = np.sum(x_grid * y_grid * joint_pmf)
 print(f"E[XY] vectorised = {e_xy_vec:.4f}")
@@ -112,7 +121,9 @@ print(f"E[XY] vectorised = {e_xy_vec:.4f}")
 ```r
 joint_pmf <- matrix(c(0.20, 0.05, 0.00, 0.15, 0.25, 0.10, 0.05, 0.10, 0.10), nrow = 3, byrow = TRUE)
 x_values <- 0:2
-y_values <- 0:2  # E[X*Y] via outer product and joint PMF
+y_values <- 0:2
+
+# E[X*Y] via outer product and joint PMF
 xy_matrix <- outer(x_values, y_values, FUN = "*")
 e_xy <- sum(xy_matrix * joint_pmf)
 cat("E[XY] =", e_xy, "\n")
@@ -124,20 +135,28 @@ cat("Cov(X,Y) = E[XY] - E[X]*E[Y] =", e_xy - e_x * e_y, "\n")
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
 from typing import Callable
 
-def bivariate_lotus_discrete( g: Callable[[float, float], float], joint_pmf: np.ndarray, x_values: np.ndarray, y_values: np.ndarray,
+
+def bivariate_lotus_discrete(
+    g: Callable[[float, float], float],
+    joint_pmf: np.ndarray,
+    x_values: np.ndarray,
+    y_values: np.ndarray,
 ) -> float:
-    # Bivariate LOTUS: E[g(X,Y)] = sum_x sum_y g(x,y) *
-    f(x,y). total = 0.0
+    # Bivariate LOTUS: E[g(X,Y)] = sum_x sum_y g(x,y) * f(x,y).
+    total = 0.0
     for i, x_val in enumerate(x_values):
         for j, y_val in enumerate(y_values):
             total += g(x_val, y_val) * joint_pmf[i, j]
-        return total
+    return total
 
-def compute_covariance_from_joint( joint_pmf: np.ndarray, x_values: np.ndarray, y_values: np.ndarray,
+
+def compute_covariance_from_joint(
+    joint_pmf: np.ndarray,
+    x_values: np.ndarray,
+    y_values: np.ndarray,
 ) -> float:
     # Cov(X,Y) = E[XY] - E[X]*E[Y] via joint PMF.
     e_xy = bivariate_lotus_discrete(lambda x, y: x * y, joint_pmf, x_values, y_values)
@@ -145,8 +164,13 @@ def compute_covariance_from_joint( joint_pmf: np.ndarray, x_values: np.ndarray, 
     e_y = bivariate_lotus_discrete(lambda x, y: y, joint_pmf, x_values, y_values)
     return e_xy - e_x * e_y
 
+
 if __name__ == "__main__":
-    joint = np.array([ [0.20, 0.05, 0.00], [0.15, 0.25, 0.10], [0.05, 0.10, 0.10], ])
+    joint = np.array([
+        [0.20, 0.05, 0.00],
+        [0.15, 0.25, 0.10],
+        [0.05, 0.10, 0.10],
+    ])
     x_vals = np.array([0.0, 1.0, 2.0])
     y_vals = np.array([0.0, 1.0, 2.0])
     e_xy = bivariate_lotus_discrete(lambda x, y: x * y, joint, x_vals, y_vals)

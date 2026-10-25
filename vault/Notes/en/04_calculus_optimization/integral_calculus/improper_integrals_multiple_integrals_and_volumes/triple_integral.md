@@ -134,20 +134,26 @@ from scipy import integrate
 
 def f(z: float, y: float, x: float) -> float:
     """Integrand: x + y + z. Note: scipy.tplquad takes z, y, x order."""
-    return x + y + z   #
-scipy.integrate.tplquad(f, x_lower, x_upper, y_lower_fn, y_upper_fn, z_lower_fn, z_upper_fn)
+    return x + y + z
+
+
+# scipy.integrate.tplquad(f, x_lower, x_upper, y_lower_fn, y_upper_fn, z_lower_fn, z_upper_fn)
 # Function signature must be f(z, y, x) — innermost variable first
-result, error = integrate.tplquad( f, 0, 1,   # x limits
-    (outermost) lambda x: 0,   # y lower lambda x:
-    1,   # y upper lambda x, y:
-    0,   # z lower
-    (innermost) lambda x, y: 1,   # z upper
+result, error = integrate.tplquad(
+    f,
+    0, 1,  # x limits (outermost)
+    lambda x: 0,  # y lower
+    lambda x: 1,  # y upper
+    lambda x, y: 0,  # z lower (innermost)
+    lambda x, y: 1,  # z upper
 )
-print(f"Triple integral (x+y+z) over [0,1]^3: {result:.6f}")   # 1.5
-print(f"Error estimate: {error:.2e}")   # Monte Carlo verification (for high-D intuition)
+print(f"Triple integral (x+y+z) over [0,1]^3: {result:.6f}")  # 1.5
+print(f"Error estimate: {error:.2e}")
+
+# Monte Carlo verification (for high-D intuition)
 N = 1_000_000
 rng = np.random.default_rng(42)
-samples = rng.uniform(0, 1, size=(N, 3))   # (x, y, z) from Uniform[0,1]^3
+samples = rng.uniform(0, 1, size=(N, 3))  # (x, y, z) from Uniform[0,1]^3
 mc_estimate = float(np.mean(samples[:, 0] + samples[:, 1] + samples[:, 2]))
 print(f"Monte Carlo estimate (N={N}): {mc_estimate:.6f} (expected: 1.5)")
 ```
@@ -157,12 +163,16 @@ print(f"Monte Carlo estimate (N={N}): {mc_estimate:.6f} (expected: 1.5)")
 ```r
 # Triple integral (x + y + z) over [0,1]^3 via iterated integrate()
 inner <- function(z, x, y) x + y + z
-middle <- function(y, x) { integrate(inner, lower = 0, upper = 1, x = x, y = y)$value
+middle <- function(y, x) {
+  integrate(inner, lower = 0, upper = 1, x = x, y = y)$value
 }
-outer_fn <- function(x) { integrate(Vectorize(function(y) middle(y, x)), lower = 0, upper = 1)$value
+outer_fn <- function(x) {
+  integrate(Vectorize(function(y) middle(y, x)), lower = 0, upper = 1)$value
 }
 result <- integrate(Vectorize(outer_fn), lower = 0, upper = 1)$value
-cat("Triple integral (x+y+z) over [0,1]^3:", result, "\n")  # 1.5 # Monte Carlo verification
+cat("Triple integral (x+y+z) over [0,1]^3:", result, "\n")  # 1.5
+
+# Monte Carlo verification
 set.seed(42)
 n_mc <- 1e6L
 x_mc <- runif(n_mc); y_mc <- runif(n_mc); z_mc <- runif(n_mc)
@@ -174,37 +184,53 @@ cat("Monte Carlo estimate:", mc_estimate, "\n")
 
 ```python
 """
-Triple integral
-for trivariate Gaussian probability and Monte Carlo comparison. Business context:
-    a product team models three engagement signals
-jointly: X = log_session_duration (z-scored)
-Y = log_page_views (z-scored)
-Z = log_purchase_amount (z-scored) Goal: P(X > 0, Y > 0, Z > 0) = P(all three above median) for a correlated model.
+Triple integral for trivariate Gaussian probability and Monte Carlo comparison.
+
+Business context: a product team models three engagement signals jointly:
+    X = log_session_duration (z-scored)
+    Y = log_page_views (z-scored)
+    Z = log_purchase_amount (z-scored)
+
+Goal: P(X > 0, Y > 0, Z > 0) = P(all three above median) for a correlated model.
 Analytically this is a triple integral; numerically we use Monte Carlo
 (tplquad would be too slow for small correlations with infinite limits).
 """
 import numpy as np
 from scipy import stats
+
 RANDOM_SEED = 42
-rng = np.random.default_rng(RANDOM_SEED)   # Trivariate normal parameters (all z-scored, mean=0)
+rng = np.random.default_rng(RANDOM_SEED)
+
+# Trivariate normal parameters (all z-scored, mean=0)
 MU_3D = np.array([0.0, 0.0, 0.0])
 # Correlation structure: moderate positive correlations
-SIGMA_3D = np.array([ [1.00, 0.40, 0.25],   # session_dur corr with page_views=0.4, purchase=0.25
-    [0.40, 1.00, 0.35],   # page_views corr with purchase=0.35
+SIGMA_3D = np.array([
+    [1.00, 0.40, 0.25],  # session_dur corr with page_views=0.4, purchase=0.25
+    [0.40, 1.00, 0.35],  # page_views corr with purchase=0.35
     [0.25, 0.35, 1.00],
 ])
-rv_3d = stats.multivariate_normal(mean=MU_3D, cov=SIGMA_3D)   # Monte Carlo: P(X > 0, Y > 0, Z > 0)
+rv_3d = stats.multivariate_normal(mean=MU_3D, cov=SIGMA_3D)
+
+# Monte Carlo: P(X > 0, Y > 0, Z > 0)
 N_MC = 5_000_000
 samples_3d = rng.multivariate_normal(MU_3D, SIGMA_3D, size=N_MC)
-p_all_above_median_mc = float(np.mean( (samples_3d[:, 0] > 0) & (samples_3d[:, 1] > 0) & (samples_3d[:, 2] > 0) ))   # For independent standard normals, P(X>0,Y>0,Z>0) = 0.5^3 = 0.125
+p_all_above_median_mc = float(np.mean(
+    (samples_3d[:, 0] > 0) & (samples_3d[:, 1] > 0) & (samples_3d[:, 2] > 0)
+))
+
+# For independent standard normals, P(X>0,Y>0,Z>0) = 0.5^3 = 0.125
 # With positive correlations, probability > 0.125
-p_independent = 0.5**3   # baseline: no correlation # Importance sampling estimate (more variance-efficient for tails)
+p_independent = 0.5**3  # baseline: no correlation
+
+# Importance sampling estimate (more variance-efficient for tails)
 # Here we simply report MC which is accurate for this central region
 print("=== Trivariate Engagement Model ===")
 print(f"P(X>0, Y>0, Z>0) independent: {p_independent:.4f} (no correlation baseline)")
 print(f"P(X>0, Y>0, Z>0) Monte Carlo: {p_all_above_median_mc:.4f} (N={N_MC:,})")
 print(f"Correlation boost factor: {p_all_above_median_mc / p_independent:.3f}x")
-print()   # Verify: marginal probabilities (each should be 0.5 by symmetry)
+print()
+
+# Verify: marginal probabilities (each should be 0.5 by symmetry)
 p_x = float(np.mean(samples_3d[:, 0] > 0))
 p_y = float(np.mean(samples_3d[:, 1] > 0))
 p_z = float(np.mean(samples_3d[:, 2] > 0))
@@ -212,11 +238,13 @@ print(f"Marginal checks (should all be ~0.5):")
 print(f" P(X > 0) = {p_x:.4f}")
 print(f" P(Y > 0) = {p_y:.4f}")
 print(f" P(Z > 0) = {p_z:.4f}")
-print()   # Demonstrate marginalization (triple -> double -> single)
+print()
+
+# Demonstrate marginalization (triple -> double -> single)
 # f_XY(x,y) = int_{-inf}^{inf} f_{XYZ}(x,y,z) dz <- inner integral of triple
 # Result should match bivariate normal marginal
 x_test, y_test = 0.5, 0.3
-marginal_xy_rv = stats.multivariate_normal( mean=MU_3D[:2], cov=SIGMA_3D[:2, :2] )
+marginal_xy_rv = stats.multivariate_normal(mean=MU_3D[:2], cov=SIGMA_3D[:2, :2])
 marginal_pdf_analytic = float(marginal_xy_rv.pdf([x_test, y_test]))
 print(f"Marginal f_XY({x_test},{y_test}) analytic: {marginal_pdf_analytic:.6f}")
 print(f"[Note: equals int_{{-inf}}^{{inf}} f_XYZ({x_test},{y_test},z) dz]")
