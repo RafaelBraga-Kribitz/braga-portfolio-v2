@@ -45,7 +45,7 @@ test('Dataview fields and the excerpt', () => {
 
 test('placeOf: site folders by language; templates and private folders are not pages', () => {
   assert.deepEqual(placeOf('Projects/en/a.md'), { folder: 'Projects', collection: 'projects', lang: 'en', kind: undefined });
-  assert.deepEqual(placeOf('Notes/de/x/y.md'), { folder: 'Notes', collection: 'writing', lang: 'de', kind: 'note' });
+  assert.deepEqual(placeOf('Notes/de/x/y.md'), { folder: 'Notes', collection: 'notes', lang: 'de', kind: 'note' });
   assert.equal(placeOf('_templates/Note.md'), null);
   assert.equal(placeOf('Projects/fr/a.md'), null);
   assert.equal(placeOf('Notes/en/_draft.md'), null);

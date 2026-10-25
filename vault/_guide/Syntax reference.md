@@ -13,7 +13,7 @@ Markdown pipeline in `astro.config.mjs`.
 |---|---|---|
 | `Projects/{en,de}/` | project, per language | `/<lang>/work/<slug>/` |
 | `Essays/{en,de}/` | essay, per language | `/<lang>/writing/<slug>/` |
-| `Notes/{en,de}/` | note, per language | `/<lang>/writing/<slug>/` |
+| `Notes/{en,de}/` | note of the library, per language | `/<lang>/notes/<slug>/`, listed on `/<lang>/notes/` by its folders |
 | `Pages/{en,de}/` | About (`about.md`) and the kitchen sink (`system.md`) | `/<lang>/about/`, `/<lang>/system/` |
 | `Legal/{en,de}/` | legal page, per language | by `page`: see below |
 | `Attachments/` | images, video, audio, files | `/media/…`, only when a published note uses them |
@@ -22,7 +22,14 @@ Markdown pipeline in `astro.config.mjs`.
 - A note is on the site only with `publish: true`. Without it, it stays in
   the vault, wherever it is. A note dated in the future is published on its
   date (a daily build puts it online).
-- Sub-folders inside a language folder are fine (`Notes/en/2026/…`).
+- Sub-folders inside a language folder are fine (`Notes/en/2026/…`). In
+  `Notes/`, the folders are the library's index: `<area>/<topic>/<subtopic>/`,
+  the area named with its number (`04_calculus_optimization`). The area
+  opens a section of `/<lang>/notes/`, each note is coded `<area>-<nnn>` in
+  topic, subtopic and title order, and folder names read as titles
+  (`discrete_random_variables_drvs` → "Discrete random variables (DRVs)").
+- Two notes with the same file name in different folders collide on one
+  URL: give one a `slug`. `npm run vault:check` names the pair.
 - The **slug** (the URL) is the file name in lower-case kebab-case, unless
   the `slug` property says otherwise. The English and the German note of one
   document share it: that is how the two versions find each other. A note

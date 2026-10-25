@@ -12,9 +12,9 @@ import Listing from '@/components/Listing.astro';
 import ListingRow from '@/components/ListingRow.astro';
 import StatusMark from '@/components/StatusMark.astro';
 import { t, formatDate, type Lang } from '@/lib/i18n';
-import { writingRoute } from '@/lib/routes';
+import { route, writingRoute } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
-import { writingOf, writingCode } from '@/lib/collections';
+import { writingOf, writingCode, libraryOf } from '@/lib/collections';
 
 export function getStaticPaths() {
   return LANGS.map((lang) => ({ params: { lang } }));
@@ -22,15 +22,21 @@ export function getStaticPaths() {
 
 const lang = Astro.params.lang as Lang;
 const writing = await writingOf(lang);
+// the notes library closes the writing listing as one row (owner, 25 Oct 2026)
+const library = (await libraryOf(lang)).length ? await libraryOf(lang) : await libraryOf('en');
+const libraryCount = library.reduce((n, a) => n + a.rows.length, 0);
 ---
 <Base lang={lang} page="writing" title={t(lang, 'door.writing')} description={t(lang, 'writing.prose')} current="02">
   <section class="section">
     <SectionHeading number="02" word={t(lang, 'door.writing')} claim={t(lang, 'writing.claim')} prose={t(lang, 'writing.prose')} as="h1" />
-    {writing.length > 0 && (
+    {writing.length + libraryCount > 0 && (
       <Listing head={{ index: t(lang, 'index'), title: t(lang, 'title'), meta: t(lang, 'kind-date'), trail: '' }}>
         {writing.map((e, i) => (
           <ListingRow code={writingCode(e, i)} title={e.data.title} sub={e.data.summary} meta={[t(lang, `kind.${e.data.kind}`), formatDate(e.data.date, lang)]} lang={lang} href={writingRoute(e.data.slug, lang)} />
         ))}
+        {libraryCount > 0 && (
+          <ListingRow code={`02-${String(writing.length + 1).padStart(2, '0')}`} title={t(lang, 'notes.word')} sub={library.map((a) => a.title).join(' · ')} meta={[t(lang, 'kind.library'), t(lang, 'notes.count').replace('{n}', String(libraryCount))]} lang={lang} href={route('notes', lang)} />
+        )}
       </Listing>
     )}
     {lang === 'de' && <div class="doc-meta"><StatusMark state="in-build" lang={lang} label={t(lang, 'draft')} /></div>}

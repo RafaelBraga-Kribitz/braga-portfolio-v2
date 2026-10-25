@@ -11,17 +11,19 @@ import Listing from '@/components/Listing.astro';
 import ListingRow from '@/components/ListingRow.astro';
 import { t, otherLang, formatDate, isDraftLang, type Lang } from '@/lib/i18n';
 import StatusMark from '@/components/StatusMark.astro';
-import { workRoute, writingRoute, withBase } from '@/lib/routes';
+import { workRoute, writingRoute, noteRoute, withBase } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
-import { projectsOf, writingOf, writingCode, tagPath } from '@/lib/collections';
+import { projectsOf, writingOf, writingCode, libraryOf, tagPath } from '@/lib/collections';
 
 export async function getStaticPaths() {
   const tagged = async (lang: Lang) => {
     const projects = await projectsOf(lang);
     const writing = await writingOf(lang);
+    const notes = (await libraryOf(lang)).flatMap((a) => a.rows);
     const rows = [
       ...projects.map((p) => ({ tags: p.data.tags, date: p.data.date, code: p.data.code, title: p.data.title, sub: p.data.summary, meta: [p.data.domain], status: p.data.status, href: workRoute(p.data.slug, lang) })),
       ...writing.map((e, i) => ({ tags: e.data.tags, date: e.data.date, code: writingCode(e, i), title: e.data.title, sub: e.data.summary, meta: [t(lang, `kind.${e.data.kind}`), formatDate(e.data.date, lang)], status: undefined, href: writingRoute(e.data.slug, lang) })),
+      ...notes.map((r) => ({ tags: r.entry.data.tags, date: r.entry.data.date, code: r.code, title: r.entry.data.title, sub: '', meta: [t(lang, 'kind.note'), r.subtopic || r.topic], status: undefined, href: noteRoute(r.entry.data.slug, lang) })),
     ];
     const byTag = new Map<string, typeof rows>();
     for (const r of rows) for (const tag of r.tags) byTag.set(tag, [...(byTag.get(tag) ?? []), r]);

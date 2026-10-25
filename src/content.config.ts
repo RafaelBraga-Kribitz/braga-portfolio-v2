@@ -5,7 +5,9 @@
 // vault/_guide/Start here.md.
 //
 //   projects  vault/Projects/{en,de}/**.md         → /<lang>/work/<slug>/
-//   writing   vault/{Essays,Notes}/{en,de}/**.md   → /<lang>/writing/<slug>/
+//   writing   vault/Essays/{en,de}/**.md           → /<lang>/writing/<slug>/
+//   notes     vault/Notes/{en,de}/**.md            → /<lang>/notes/<slug>/, the
+//             library, indexed by its folder tree (owner, 25 Oct 2026)
 //   pages     vault/Pages/{en,de}/*.md             → about, system
 //   legal     vault/Legal/{en,de}/*.md             → impressum, privacy,
 //             accessibility, by the `page` key (the German URLs differ:
@@ -216,7 +218,8 @@ const vault = (name: string, folders: string[], filePattern = '**/*.md'): Loader
 
 export const collections = {
   projects: defineCollection({ loader: vault('projects', ['Projects']), schema: projectSchema }),
-  writing: defineCollection({ loader: vault('writing', ['Essays', 'Notes']), schema: writingSchema }),
+  writing: defineCollection({ loader: vault('writing', ['Essays']), schema: writingSchema }),
+  notes: defineCollection({ loader: vault('notes', ['Notes']), schema: writingSchema }),
   pages: defineCollection({ loader: vault('pages', ['Pages'], '*.md'), schema: pageSchema }),
   legal: defineCollection({ loader: vault('legal', ['Legal'], '*.md'), schema: legalSchema }),
 };

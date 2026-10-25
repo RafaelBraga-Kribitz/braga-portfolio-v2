@@ -41,6 +41,7 @@ const dateOk = (v) => typeof v === 'string' && ISO.test(v) && !Number.isNaN(new 
 const REQUIRED = {
   projects: ['code', 'kind', 'date', 'summary', 'lead', 'domain', 'status'],
   writing: ['date', 'summary'],
+  notes: ['date', 'summary'],
   pages: ['summary'],
   legal: ['page', 'updated', 'summary'],
 };
