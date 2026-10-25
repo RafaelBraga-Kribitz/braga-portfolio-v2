@@ -32,7 +32,10 @@ flowchart TD A["Specify model M"] --> B["Choose prior p(w | M)"] B --> C["Specif
 #### Example of it used in the Working Context as DA/DS for a Business A marketing analytics team is modeling weekly conversions using possible predictors such as email spend, search spend, paid social spend, seasonal indicators, discount flags, and website traffic. They have three candidate Bayesian linear models: - Model A, only paid channels,
 - Model B, paid channels plus seasonality,
 - Model C, paid channels plus seasonality plus discount features. They also test two prior scales: one weakly informative and one stronger shrinkage prior. Instead of choosing the model only by training error, they compute log evidence for each specification. They may find that Model C has slightly better fit but substantially worse evidence because the extra variables are weakly supported and increase complexity. In that case, evidence favors Model B as the more plausible explanatory model. This gives a principled basis for choosing a model that is both useful and disciplined.
-### The Formula (Fragment-First) | Symbol | Meaning |
+  
+### The Formula (Fragment-First) 
+
+| Symbol | Meaning |
 | --- | --- |
 | $X$ | Design matrix |
 | $y$ | Response vector |
@@ -45,7 +48,9 @@ flowchart TD A["Specify model M"] --> B["Choose prior p(w | M)"] B --> C["Specif
 | $S_0$ | Prior covariance of $w$ |
 | $\sigma^2$ | Observation noise variance |
 | $C$ | Marginal covariance of $y$ under the model |
-| $\log p(y \mid X, M)$ | Log evidence | Canonical definition: $$
+| $\log p(y \mid X, M)$ | Log evidence |
+
+ Canonical definition: $$
 p(y \mid X, M) = \int p(y \mid X, w, M)\,p(w \mid M)\,dw
 $$ Bayesian Linear Regression assumptions: $$
 w \sim \mathcal{N}(m_0, S_0)
