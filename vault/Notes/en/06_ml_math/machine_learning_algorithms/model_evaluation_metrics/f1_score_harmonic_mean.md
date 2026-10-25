@@ -85,7 +85,7 @@ $R = 40 / (40 + 20) = 40 / 60 = 0.667$
 
 *Step 3: Compute F1*
 $F1 = 2 \times 0.80 \times 0.667 / (0.80 + 0.667) = 1.067 / 1.467 = 0.727$ *Verification using the alternative formula*:
-$F1 = 2 \times 40 / (2 \times 40 + 10 + 20) = 80 / 110 = 0.727$ ✓
+$F1 = 2 \times 40 / (2 \times 40 + 10 + 20) = 80 / 110 = 0.727$
 
 ## Code examples
 

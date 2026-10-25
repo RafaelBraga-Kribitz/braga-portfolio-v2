@@ -5,7 +5,7 @@ tags:
 - linear-algebra
 ---
 
-# Minkowski Distance ($L p$ norm)
+# Minkowski Distance (Lₚ norm)
 
 $$
 D(x,y) = \left( \sum_{i=1}^n |x_i - y_i|^p \right)^{1/p}

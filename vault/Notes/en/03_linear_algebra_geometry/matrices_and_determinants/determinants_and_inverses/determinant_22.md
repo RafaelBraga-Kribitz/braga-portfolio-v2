@@ -90,7 +90,7 @@ Anti-diagonal: $a_{12} \cdot a_{21} = (-2) \cdot 3 = -6$.
 $\det(A) = 5 - (-6) = 5 + 6 = 11$.
 Since $\det(A) = 11 \neq 0$, the matrix is invertible.
 Inverse: $A^{-1} = \frac{1}{11}\begin{bmatrix}1 & 2 \\ -3 & 5\end{bmatrix}$.
-Verify: $A \cdot A^{-1} = \frac{1}{11}\begin{bmatrix}5-6 & 10-10 \\ 3-3 & 6+5\end{bmatrix} = \frac{1}{11}\begin{bmatrix}-1 & 0 \\ 0 & 11\end{bmatrix}$... let me recompute properly: $A^{-1} = \frac{1}{11}\begin{bmatrix}1 & 2 \\ -3 & 5\end{bmatrix}$. Check: $A A^{-1} = \frac{1}{11}\begin{bmatrix}5\cdot1+(-2)(-3) & 5\cdot2+(-2)(5) \\ 3\cdot1+1\cdot(-3) & 3\cdot2+1\cdot5\end{bmatrix} = \frac{1}{11}\begin{bmatrix}11 & 0 \\ 0 & 11\end{bmatrix} = I$ ✓.
+Verify: $A \cdot A^{-1} = \frac{1}{11}\begin{bmatrix}5-6 & 10-10 \\ 3-3 & 6+5\end{bmatrix} = \frac{1}{11}\begin{bmatrix}-1 & 0 \\ 0 & 11\end{bmatrix}$... let me recompute properly: $A^{-1} = \frac{1}{11}\begin{bmatrix}1 & 2 \\ -3 & 5\end{bmatrix}$. Check: $A A^{-1} = \frac{1}{11}\begin{bmatrix}5\cdot1+(-2)(-3) & 5\cdot2+(-2)(5) \\ 3\cdot1+1\cdot(-3) & 3\cdot2+1\cdot5\end{bmatrix} = \frac{1}{11}\begin{bmatrix}11 & 0 \\ 0 & 11\end{bmatrix} = I$.
 
 ## Code examples
 

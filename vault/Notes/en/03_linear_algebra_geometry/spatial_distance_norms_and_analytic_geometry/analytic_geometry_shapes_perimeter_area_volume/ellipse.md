@@ -90,7 +90,7 @@ Foci: $c = \sqrt{a^2 - b^2} = \sqrt{12} \approx 3.46$ along $x$: $(\pm 3.46, 0)$
 $A = \pi \cdot 4 \cdot 2 = 8\pi \approx 25.13$.
 
 *Step 3: Check a point is on the ellipse*
-Point $(2\sqrt{2}, \sqrt{2})$: $\frac{(2\sqrt{2})^2}{16} + \frac{(\sqrt{2})^2}{4} = \frac{8}{16} + \frac{2}{4} = 0.5 + 0.5 = 1$ ✓.
+Point $(2\sqrt{2}, \sqrt{2})$: $\frac{(2\sqrt{2})^2}{16} + \frac{(\sqrt{2})^2}{4} = \frac{8}{16} + \frac{2}{4} = 0.5 + 0.5 = 1$.
 
 ## Code examples
 

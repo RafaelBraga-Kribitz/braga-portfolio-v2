@@ -62,8 +62,8 @@ A data scientist estimates a 10-asset covariance matrix from only 8 weeks of dat
 ## The formula in words
 
 "The matrix never stretches any direction to a negative value, but it may map some directions to zero — meaning those directions are in the null space and carry no information." Tiny numeric example: $A = \begin{bmatrix}1 & 1 \\ 1 & 1\end{bmatrix}$ (rank 1, PSD but not PD).
-$x^T A x = [a,b]\begin{bmatrix}1&1\\1&1\end{bmatrix}\begin{bmatrix}a\\b\end{bmatrix} = (a+b)^2 \geq 0$ ✓.
-But take $x = [1, -1]^T$: $(1 + (-1))^2 = 0$. Non-zero $x$ gives zero ✓, confirming PSD (not PD).
+$x^T A x = [a,b]\begin{bmatrix}1&1\\1&1\end{bmatrix}\begin{bmatrix}a\\b\end{bmatrix} = (a+b)^2 \geq 0$.
+But take $x = [1, -1]^T$: $(1 + (-1))^2 = 0$. Non-zero $x$ gives zero, confirming PSD (not PD).
 Eigenvalues: $\lambda_1 = 2$, $\lambda_2 = 0$ (one zero eigenvalue, matrix is singular).
 
 ## Critical Concepts
@@ -79,7 +79,7 @@ Eigenvalues: $\lambda_1 = 2$, $\lambda_2 = 0$ (one zero eigenvalue, matrix is si
 
 *Step 1: Compute the quadratic form and check sign*
 $A = \begin{bmatrix}2 & -2 \\ -2 & 2\end{bmatrix}$, $x = [a, b]^T$.
-$x^T A x = [a,b]\begin{bmatrix}2 & -2 \\ -2 & 2\end{bmatrix}\begin{bmatrix}a \\ b\end{bmatrix} = 2a^2 - 2ab - 2ab + 2b^2 = 2(a-b)^2 \geq 0$ ✓.
+$x^T A x = [a,b]\begin{bmatrix}2 & -2 \\ -2 & 2\end{bmatrix}\begin{bmatrix}a \\ b\end{bmatrix} = 2a^2 - 2ab - 2ab + 2b^2 = 2(a-b)^2 \geq 0$.
 
 *Step 2: Find the direction where the quadratic form equals zero*
 $2(a-b)^2 = 0 \Rightarrow a = b$. Take $x = [1,1]^T$: $x^T A x = 2(1-1)^2 = 0$.
@@ -87,7 +87,7 @@ So $x = [1,1]^T$ is in the null space of $A$: the matrix is PSD but not PD.
 
 *Step 3: Verify via eigenvalues*
 $\det(A - \lambda I) = (2-\lambda)^2 - 4 = \lambda^2 - 4\lambda = \lambda(\lambda-4) = 0$.
-$\lambda_1 = 4 > 0$, $\lambda_2 = 0$. One zero eigenvalue: PSD, not PD ✓.
+$\lambda_1 = 4 > 0$, $\lambda_2 = 0$. One zero eigenvalue: PSD, not PD.
 
 ## Code examples
 

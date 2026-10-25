@@ -26,7 +26,7 @@ flowchart TD
     C --> E["Base-10: log_a(x) = log10(x) / log10(a)"]
     D --> F["DA: log2(x) = ln(x) / ln(2) — Shannon entropy"]
     D --> G["DA: all log bases are proportional — same shape, different scale"]
-    C --> H["Inverse: log_a(a) = ln(a)/ln(a) = 1 ✓"]
+    C --> H["Inverse: log_a(a) = ln(a)/ln(a) = 1"]
     C --> I["Reciprocal: log_a(c) = 1/log_c(a) — useful shortcut"]
 ```
 
@@ -68,7 +68,7 @@ Breaking the notation:
 - $\log_a x = \frac{\ln x}{\ln a}$ (use with `math.log(x) / math.log(a)`).
 - $\log_a x = \frac{\log_{10} x}{\log_{10} a}$ (use with `math.log10(x) / math.log10(a)`). **Reciprocal identity** (derived from change of base): $\log_a c = \frac{1}{\log_c a}$.
 
-This means the logarithms in opposite directions are reciprocals. **Proportionality**: all logarithms are proportional to each other. $\log_a x = \frac{1}{\ln a} \cdot \ln x$ — the factor $1/\ln a$ is a constant for fixed $a$. **Self-check**: $\log_a a = \frac{\ln a}{\ln a} = 1$ ✓. $\log_a 1 = \frac{\ln 1}{\ln a} = \frac{0}{\ln a} = 0$ ✓.
+This means the logarithms in opposite directions are reciprocals. **Proportionality**: all logarithms are proportional to each other. $\log_a x = \frac{1}{\ln a} \cdot \ln x$ — the factor $1/\ln a$ is a constant for fixed $a$. **Self-check**: $\log_a a = \frac{\ln a}{\ln a} = 1$. $\log_a 1 = \frac{\ln 1}{\ln a} = \frac{0}{\ln a} = 0$.
 
 ## The formula in words
 
@@ -97,10 +97,10 @@ $\ln 512 = \ln(2^9) = 9\ln 2 \approx 9 \times 0.6931 = 6.238$. $\ln 8 = \ln(2^3)
 $\log_8 512 = 6.238 / 2.079 = 3$.
 
 *Step 4: Verify*
-$8^3 = 512$. ✓
+$8^3 = 512$.
 
 *Step 5: Quick check using base 2*
-$\log_8 512 = \frac{\log_2 512}{\log_2 8} = \frac{9}{3} = 3$. ✓
+$\log_8 512 = \frac{\log_2 512}{\log_2 8} = \frac{9}{3} = 3$.
 
 ## Code examples
 

@@ -87,7 +87,7 @@ $\mathcal{L}(x, \lambda) = (x-3)^2 + \lambda(x-2)$
 $\partial \mathcal{L}/\partial x = 2(x-3) + \lambda = 0 \Rightarrow x^* = 3 - \lambda/2$
 
 *Step 4: Complementary slackness*
-If $x^* = 2$ (boundary): $3 - \lambda/2 = 2 \Rightarrow \lambda = 2$. Check: $\lambda = 2 \geq 0$ ✓.
+If $x^* = 2$ (boundary): $3 - \lambda/2 = 2 \Rightarrow \lambda = 2$. Check: $\lambda = 2 \geq 0$.
 Constraint is active: $g(x^*) = 0$. Complementary slackness satisfied. Solution: $x^* = 2$, $f^* = 1$.
 
 ## Code examples

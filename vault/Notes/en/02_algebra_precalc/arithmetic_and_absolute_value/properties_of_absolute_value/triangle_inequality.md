@@ -102,10 +102,10 @@ $|b| = |-7| = 7$.
 $|a| + |b| = 3 + 7 = 10$.
 
 *Step 3: Check the inequality*
-$4 \le 10$. ✓ The inequality holds. Since $a$ and $b$ have opposite signs, cancellation occurs and we get strict inequality: $4 < 10$.
+$4 \le 10$. The inequality holds. Since $a$ and $b$ have opposite signs, cancellation occurs and we get strict inequality: $4 < 10$.
 
 *Step 4: Equality case for contrast*
-$a = 3, b = 5$ (same sign): $|3+5| = 8$, $|3|+|5| = 8$. $8 \le 8$. ✓ Equality holds.
+$a = 3, b = 5$ (same sign): $|3+5| = 8$, $|3|+|5| = 8$. $8 \le 8$. Equality holds.
 
 *Step 5: Error bounding interpretation*
 If bias error $= 3$ (systematic overestimate) and noise error $= -7$ (random component in the opposite direction), the actual total error magnitude is $|3 + (-7)| = 4$. The triangle inequality guarantees the total can be at most $3 + 7 = 10$. Actual total is 4, well within the bound. The partial cancellation was beneficial — but you cannot count on it in advance, so the bound of 10 is the safe guarantee.

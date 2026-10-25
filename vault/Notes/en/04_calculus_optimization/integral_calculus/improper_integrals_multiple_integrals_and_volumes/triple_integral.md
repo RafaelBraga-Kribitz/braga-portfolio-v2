@@ -122,7 +122,7 @@ $$
 \int_0^1 (x + 1)\,dx = \left[\frac{x^2}{2} + x\right]_0^1 = \frac{1}{2} + 1 = \frac{3}{2}
 $$
 
-Result: $\iiint_{[0,1]^3} (x + y + z)\,dx\,dy\,dz = \frac{3}{2} = 1.5$. By symmetry: $E[X + Y + Z]$ for $(X,Y,Z) \sim \text{Uniform}([0,1]^3)$ is $E[X]+E[Y]+E[Z] = 3 \times 0.5 = 1.5$ ✓
+Result: $\iiint_{[0,1]^3} (x + y + z)\,dx\,dy\,dz = \frac{3}{2} = 1.5$. By symmetry: $E[X + Y + Z]$ for $(X,Y,Z) \sim \text{Uniform}([0,1]^3)$ is $E[X]+E[Y]+E[Z] = 3 \times 0.5 = 1.5$
 
 ## Code examples
 

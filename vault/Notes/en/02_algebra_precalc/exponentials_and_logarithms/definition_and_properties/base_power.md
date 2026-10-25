@@ -87,10 +87,10 @@ $100 = 10^2$. So $\log_{100} x = \log_{10^2} x = \frac{1}{2}\log_{10} x$.
 $\log_{100} 1000 = \frac{1}{2}\log_{10} 1000 = \frac{1}{2} \times 3 = 1.5$.
 
 *Step 3: Verify directly*
-$100^{1.5} = (10^2)^{1.5} = 10^3 = 1000$. ✓
+$100^{1.5} = (10^2)^{1.5} = 10^3 = 1000$.
 
 *Step 4: Interpret*
-$\log_{100} 1000 = 1.5$ means: to get $1000$ from base $100$, you need the $1.5$th power. $100^{1.5} = 1000$. ✓
+$\log_{100} 1000 = 1.5$ means: to get $1000$ from base $100$, you need the $1.5$th power. $100^{1.5} = 1000$.
 
 ## Code examples
 

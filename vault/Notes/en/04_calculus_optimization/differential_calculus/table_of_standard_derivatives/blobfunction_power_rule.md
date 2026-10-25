@@ -5,7 +5,7 @@ tags:
 - calculus
 ---
 
-# BlobFunction Power Rule
+# Blob/Function Power Rule
 
 $$
 \frac{d}{dx}[f(x)]^n = n[f(x)]^{n-1} f'(x)

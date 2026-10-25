@@ -95,7 +95,7 @@ $k=3$: $1 \cdot 2^0 \cdot x^3 = x^3$.
 $(2 + x)^3 = 8 + 12x + 6x^2 + x^3$.
 
 *Step 5: Verify by substitution*
-$x = 1$: $(2+1)^3 = 27$. Formula: $8 + 12 + 6 + 1 = 27$. ✓
+$x = 1$: $(2+1)^3 = 27$. Formula: $8 + 12 + 6 + 1 = 27$.
 
 ## Code examples
 

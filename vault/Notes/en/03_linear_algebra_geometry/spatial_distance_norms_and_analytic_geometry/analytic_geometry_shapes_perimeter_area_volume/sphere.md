@@ -84,7 +84,7 @@ $V = \frac{4}{3}\pi(6)^3 = \frac{4}{3}\pi(216) = 288\pi \approx 904.78$.
 $S = 4\pi(6)^2 = 4\pi(36) = 144\pi \approx 452.39$.
 
 *Step 3: Compute the surface-to-volume ratio and verify*
-$S/V = 144\pi / (288\pi) = 1/2 = 3/R = 3/6 = 0.5$ ✓.
+$S/V = 144\pi / (288\pi) = 1/2 = 3/R = 3/6 = 0.5$.
 
 ## Code examples
 

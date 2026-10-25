@@ -5,7 +5,7 @@ tags:
 - linear-algebra
 ---
 
-# Projection of $x$ onto 1D subspace (line) $U$ spanned by $b$
+# Projection of x onto 1D subspace (line) U spanned by b
 
 $$
 \pi_U(x) = \frac{b b^T}{b^T b} x

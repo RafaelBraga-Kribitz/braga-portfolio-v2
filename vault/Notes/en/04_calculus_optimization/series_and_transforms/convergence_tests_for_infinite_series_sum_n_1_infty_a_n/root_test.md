@@ -86,7 +86,7 @@ $|a_n|^{1/n} = \left(\frac{n}{2n+1}\right)$
 $L = \lim_{n \to \infty} \frac{n}{2n+1} = \lim_{n \to \infty} \frac{1}{2 + 1/n} = \frac{1}{2}$
 
 *Step 4: Conclude*
-$L = 1/2 < 1$ → **CONVERGES absolutely** by Root Test. *Verification*: $\sum_{n=1}^{1000} (n/(2n+1))^n \approx 0.6065$ — partial sum is finite. ✓
+$L = 1/2 < 1$ → **CONVERGES absolutely** by Root Test. *Verification*: $\sum_{n=1}^{1000} (n/(2n+1))^n \approx 0.6065$ — partial sum is finite.
 
 ## Code examples
 

@@ -63,7 +63,7 @@ A search engine ranks product descriptions by semantic similarity to a query. Ea
 $\langle x, y \rangle = 3 \cdot 1 + 4 \cdot 2 = 11$.
 $\|x\| = \sqrt{9+16} = 5$, $\|y\| = \sqrt{1+4} = \sqrt{5} \approx 2.236$.
 $\|x\| \|y\| = 5\sqrt{5} \approx 11.18$.
-Check: $|11| \leq 11.18$ ✓. Cosine similarity: $11 / 11.18 \approx 0.984$ (very high directional similarity).
+Check: $|11| \leq 11.18$. Cosine similarity: $11 / 11.18 \approx 0.984$ (very high directional similarity).
 
 ## Critical Concepts
 
@@ -84,7 +84,7 @@ $\|x\| = \sqrt{1+4+4} = 3$, $\|y\| = \sqrt{4+1+0} = \sqrt{5} \approx 2.236$.
 *Step 2: Evaluate the Cauchy-Schwarz bound*
 $|\langle x, y \rangle| = 4$.
 $\|x\| \|y\| = 3\sqrt{5} \approx 6.708$.
-Check: $4 \leq 6.708$ ✓. The inequality holds with room to spare (vectors are not parallel).
+Check: $4 \leq 6.708$. The inequality holds with room to spare (vectors are not parallel).
 
 *Step 3: Compute cosine similarity and interpret the angle*
 $\cos\theta = \langle x, y \rangle / (\|x\| \|y\|) = 4 / (3\sqrt{5}) \approx 0.596$.

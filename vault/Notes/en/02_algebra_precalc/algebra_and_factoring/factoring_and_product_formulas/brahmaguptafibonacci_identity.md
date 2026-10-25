@@ -80,7 +80,7 @@ $|z|^2 = \text{Re}(z)^2 + \text{Im}(z)^2$, so $|z_1|^2 |z_2|^2 = |z_1 z_2|^2$
 
 ### Example in a business
 
-A DA validates the Cauchy-Schwarz inequality for two feature vectors. Vectors $\mathbf{u} = (3, 4)$ and $\mathbf{v} = (1, 2)$: $\|\mathbf{u}\|^2 = 9 + 16 = 25$, $\|\mathbf{v}\|^2 = 1 + 4 = 5$. Product: $25 \times 5 = 125$. Dot product squared: $(3 \cdot 1 + 4 \cdot 2)^2 = 11^2 = 121$. Cauchy-Schwarz: $121 \le 125$. ✓ The Brahmagupta-Fibonacci identity says $125 = (3 \cdot 1 - 4 \cdot 2)^2 + (3 \cdot 2 + 4 \cdot 1)^2 = (-5)^2 + 10^2 = 25 + 100 = 125$. ✓ This confirms the identity and provides the geometric structure behind Cauchy-Schwarz.
+A DA validates the Cauchy-Schwarz inequality for two feature vectors. Vectors $\mathbf{u} = (3, 4)$ and $\mathbf{v} = (1, 2)$: $\|\mathbf{u}\|^2 = 9 + 16 = 25$, $\|\mathbf{v}\|^2 = 1 + 4 = 5$. Product: $25 \times 5 = 125$. Dot product squared: $(3 \cdot 1 + 4 \cdot 2)^2 = 11^2 = 121$. Cauchy-Schwarz: $121 \le 125$. The Brahmagupta-Fibonacci identity says $125 = (3 \cdot 1 - 4 \cdot 2)^2 + (3 \cdot 2 + 4 \cdot 1)^2 = (-5)^2 + 10^2 = 25 + 100 = 125$. This confirms the identity and provides the geometric structure behind Cauchy-Schwarz.
 
 ## The formula, piece by piece
 
@@ -124,15 +124,15 @@ $(a^2+b^2)(c^2+d^2) = (9+16)(1+4) = 25 \times 5 = 125$.
 *Step 2: Compute Form 1 — $(ac-bd)^2 + (ad+bc)^2$*
 $ac - bd = 3 \cdot 1 - 4 \cdot 2 = 3 - 8 = -5$.
 $ad + bc = 3 \cdot 2 + 4 \cdot 1 = 6 + 4 = 10$.
-$(−5)^2 + 10^2 = 25 + 100 = 125$. ✓
+$(−5)^2 + 10^2 = 25 + 100 = 125$.
 
 *Step 3: Compute Form 2 — $(ac+bd)^2 + (ad-bc)^2$*
 $ac + bd = 3 + 8 = 11$.
 $ad - bc = 6 - 4 = 2$.
-$11^2 + 2^2 = 121 + 4 = 125$. ✓
+$11^2 + 2^2 = 121 + 4 = 125$.
 
 *Step 4: Verify Cauchy-Schwarz*
-Dot product squared: $(ac+bd)^2 = 121 \le 125$. ✓ $\Rightarrow$ Pearson $r^2 = 121/125 < 1$.
+Dot product squared: $(ac+bd)^2 = 121 \le 125$. $\Rightarrow$ Pearson $r^2 = 121/125 < 1$.
 
 ## Code examples
 

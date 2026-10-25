@@ -68,8 +68,8 @@ A quant analyst wants to simulate 10,000 correlated weekly return scenarios for 
 
 "No matter what non-zero direction you point, the matrix always stretches that direction positively outward rather than compressing or flipping it." Tiny numeric example: $A = \begin{bmatrix}2 & 1 \\ 1 & 2\end{bmatrix}$, $x = [a, b]^T$.
 $x^T A x = [a, b]\begin{bmatrix}2 & 1 \\ 1 & 2\end{bmatrix}\begin{bmatrix}a \\ b\end{bmatrix} = [a,b]\begin{bmatrix}2a+b \\ a+2b\end{bmatrix} = 2a^2 + 2ab + 2b^2 = 2(a^2 + ab + b^2)$.
-Note: $a^2 + ab + b^2 = (a + b/2)^2 + 3b^2/4 > 0$ for $(a,b) \neq (0,0)$ ✓.
-Eigenvalues: $\lambda_1 = 3$, $\lambda_2 = 1$ (both positive) ✓.
+Note: $a^2 + ab + b^2 = (a + b/2)^2 + 3b^2/4 > 0$ for $(a,b) \neq (0,0)$.
+Eigenvalues: $\lambda_1 = 3$, $\lambda_2 = 1$ (both positive).
 
 ## Critical Concepts
 
@@ -89,12 +89,12 @@ $x^T A x = [a,b]\begin{bmatrix}3 & 1 \\ 1 & 2\end{bmatrix}\begin{bmatrix}a \\ b\
 *Step 2: Verify positivity by completing the square*
 $3a^2 + 2ab + 2b^2 = 3(a + b/3)^2 + 2b^2 - b^2/3 = 3(a + b/3)^2 + 5b^2/3$.
 Both terms are non-negative; the sum is zero only when $a + b/3 = 0$ and $b = 0$, i.e., $a = b = 0$.
-Therefore $x^T A x > 0$ for all $x \neq 0$ ✓.
+Therefore $x^T A x > 0$ for all $x \neq 0$.
 
 *Step 3: Verify via eigenvalues as a cross-check*
 $\det(A - \lambda I) = (3-\lambda)(2-\lambda) - 1 = \lambda^2 - 5\lambda + 5 = 0$.
 $\lambda = (5 \pm \sqrt{5})/2$, so $\lambda_1 \approx 3.618$ and $\lambda_2 \approx 1.382$.
-Both eigenvalues are positive ✓. Consistent with the PD conclusion.
+Both eigenvalues are positive. Consistent with the PD conclusion.
 
 ## Code examples
 

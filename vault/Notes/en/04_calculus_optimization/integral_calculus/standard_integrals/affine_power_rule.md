@@ -47,7 +47,7 @@ $$
 \int (ax+b)^n\,dx = \int u^n\cdot\frac{du}{a} = \frac{1}{a}\cdot\frac{u^{n+1}}{n+1} + C = \frac{(ax+b)^{n+1}}{a(n+1)} + C
 $$
 
-The factor $1/a$ comes from the chain rule compensation. Verification: $\frac{d}{dx}\!\left[\frac{(ax+b)^{n+1}}{a(n+1)}\right] = \frac{(n+1)(ax+b)^n \cdot a}{a(n+1)} = (ax+b)^n$ ✓
+The factor $1/a$ comes from the chain rule compensation. Verification: $\frac{d}{dx}\!\left[\frac{(ax+b)^{n+1}}{a(n+1)}\right] = \frac{(n+1)(ax+b)^n \cdot a}{a(n+1)} = (ax+b)^n$
 
 ### Example in a business
 
@@ -91,7 +91,7 @@ $a = 3$, $b = 2$, $n = 4$. Not $-1$, so formula applies.
 $n + 1 = 5$. Result: $\frac{(3x+2)^5}{3 \cdot 5} + C = \frac{(3x+2)^5}{15} + C$.
 
 *Step 3: Verify by differentiating*
-$\frac{d}{dx}\!\left[\frac{(3x+2)^5}{15}\right] = \frac{5(3x+2)^4 \cdot 3}{15} = \frac{15(3x+2)^4}{15} = (3x+2)^4$ ✓
+$\frac{d}{dx}\!\left[\frac{(3x+2)^5}{15}\right] = \frac{5(3x+2)^4 \cdot 3}{15} = \frac{15(3x+2)^4}{15} = (3x+2)^4$
 
 *Step 4: Evaluate a definite example*
 $\int_0^1 (3x+2)^4\,dx = \left[\frac{(3x+2)^5}{15}\right]_0^1 = \frac{5^5}{15} - \frac{2^5}{15} = \frac{3125 - 32}{15} = \frac{3093}{15} = 206.2$

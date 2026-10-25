@@ -65,9 +65,9 @@ After running PCA on a customer feature matrix, a data scientist checks that the
 ## The formula in words
 
 "Every vector in the set has length 1, and any two distinct vectors in the set are perpendicular to each other." Tiny numeric example: $v_1 = [1, 0]^T$, $v_2 = [0, 1]^T$.
-$\langle v_1, v_2 \rangle = 1 \cdot 0 + 0 \cdot 1 = 0 = \delta_{12}$ ✓.
-$\langle v_1, v_1 \rangle = 1 \cdot 1 + 0 \cdot 0 = 1 = \delta_{11}$ ✓.
-$\langle v_2, v_2 \rangle = 0 \cdot 0 + 1 \cdot 1 = 1 = \delta_{22}$ ✓.
+$\langle v_1, v_2 \rangle = 1 \cdot 0 + 0 \cdot 1 = 0 = \delta_{12}$.
+$\langle v_1, v_1 \rangle = 1 \cdot 1 + 0 \cdot 0 = 1 = \delta_{11}$.
+$\langle v_2, v_2 \rangle = 0 \cdot 0 + 1 \cdot 1 = 1 = \delta_{22}$.
 These are the standard basis vectors $e_1, e_2$, the simplest orthonormal set.
 
 ## Critical Concepts
@@ -86,14 +86,14 @@ Given three vectors: $v_1 = [1,0,0]^T$, $v_2 = [0,1/\sqrt{2}, 1/\sqrt{2}]^T$, $v
 Need to check: $\langle v_1,v_1\rangle$, $\langle v_2,v_2\rangle$, $\langle v_3,v_3\rangle$, $\langle v_1,v_2\rangle$, $\langle v_1,v_3\rangle$, $\langle v_2,v_3\rangle$.
 
 *Step 2: Check unit-norm conditions (diagonal of Gram matrix)*
-$\langle v_1,v_1\rangle = 1^2 + 0 + 0 = 1$ ✓.
-$\langle v_2,v_2\rangle = 0 + (1/\sqrt{2})^2 + (1/\sqrt{2})^2 = 0.5 + 0.5 = 1$ ✓.
-$\langle v_3,v_3\rangle = 0 + (1/\sqrt{2})^2 + (-1/\sqrt{2})^2 = 0.5 + 0.5 = 1$ ✓.
+$\langle v_1,v_1\rangle = 1^2 + 0 + 0 = 1$.
+$\langle v_2,v_2\rangle = 0 + (1/\sqrt{2})^2 + (1/\sqrt{2})^2 = 0.5 + 0.5 = 1$.
+$\langle v_3,v_3\rangle = 0 + (1/\sqrt{2})^2 + (-1/\sqrt{2})^2 = 0.5 + 0.5 = 1$.
 
 *Step 3: Check orthogonality conditions (off-diagonal of Gram matrix)*
-$\langle v_1,v_2\rangle = 1 \cdot 0 + 0 \cdot (1/\sqrt{2}) + 0 \cdot (1/\sqrt{2}) = 0$ ✓.
-$\langle v_1,v_3\rangle = 1 \cdot 0 + 0 + 0 = 0$ ✓.
-$\langle v_2,v_3\rangle = 0 + (1/\sqrt{2})(1/\sqrt{2}) + (1/\sqrt{2})(-1/\sqrt{2}) = 0.5 - 0.5 = 0$ ✓.
+$\langle v_1,v_2\rangle = 1 \cdot 0 + 0 \cdot (1/\sqrt{2}) + 0 \cdot (1/\sqrt{2}) = 0$.
+$\langle v_1,v_3\rangle = 1 \cdot 0 + 0 + 0 = 0$.
+$\langle v_2,v_3\rangle = 0 + (1/\sqrt{2})(1/\sqrt{2}) + (1/\sqrt{2})(-1/\sqrt{2}) = 0.5 - 0.5 = 0$.
 All six conditions satisfied: the set is orthonormal.
 
 ## Code examples

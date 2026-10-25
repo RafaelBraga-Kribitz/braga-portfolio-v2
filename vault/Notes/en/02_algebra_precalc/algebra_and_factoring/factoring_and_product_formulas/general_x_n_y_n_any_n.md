@@ -5,7 +5,7 @@ tags:
 - algebra
 ---
 
-# General $x^n - y^n$ (any $n$)
+# General xⁿ − yⁿ (any n)
 
 $$
 a^n - b^n = (a - b)(a^{n-1} + a^{n-2}b + \dots + b^{n-1})
@@ -82,13 +82,13 @@ Task: compute the sum $1 + 2 + 4 + 8 + 16$ using the geometric series formula, a
 This is $\sum_{k=0}^{4} 2^k = 1 + 2 + 4 + 8 + 16$. Using the formula: $\frac{2^5 - 1}{2 - 1} = \frac{32 - 1}{1} = 31$.
 
 *Step 2: Verify by direct addition*
-$1 + 2 + 4 + 8 + 16 = 31$. ✓
+$1 + 2 + 4 + 8 + 16 = 31$.
 
 *Step 3: Connect to the identity*
-$2^5 - 1^5 = (2 - 1)(2^4 + 2^3 \cdot 1 + 2^2 \cdot 1^2 + 2 \cdot 1^3 + 1^4) = 1 \cdot (16 + 8 + 4 + 2 + 1) = 31$. ✓
+$2^5 - 1^5 = (2 - 1)(2^4 + 2^3 \cdot 1 + 2^2 \cdot 1^2 + 2 \cdot 1^3 + 1^4) = 1 \cdot (16 + 8 + 4 + 2 + 1) = 31$.
 
 *Step 4: Limit application*
-$\lim_{a \to 2} \frac{a^5 - 2^5}{a - 2} = 5 \cdot 2^4 = 80$. Check at $a = 2.0001$: $(2.0001^5 - 32) / 0.0001 \approx 80$. ✓
+$\lim_{a \to 2} \frac{a^5 - 2^5}{a - 2} = 5 \cdot 2^4 = 80$. Check at $a = 2.0001$: $(2.0001^5 - 32) / 0.0001 \approx 80$.
 
 ## Code examples
 

@@ -105,7 +105,7 @@ Result: $\frac{23}{20}$.
 *Step 5: Simplify*
 $\gcd(23, 20) = 1$ — already fully reduced.
 Final answer: $\frac{23}{20} = 1.15$.
-Verify with decimals: $\frac{2}{5} + \frac{3}{4} = 0.4 + 0.75 = 1.15$. ✓
+Verify with decimals: $\frac{2}{5} + \frac{3}{4} = 0.4 + 0.75 = 1.15$.
 
 ## Code examples
 

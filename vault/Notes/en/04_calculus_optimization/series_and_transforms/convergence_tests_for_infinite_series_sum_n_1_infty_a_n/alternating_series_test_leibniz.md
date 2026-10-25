@@ -78,16 +78,16 @@ Test: $\sum_{n=1}^\infty \frac{(-1)^{n+1}}{n} = 1 - \frac{1}{2} + \frac{1}{3} - 
 $a_n = 1/n > 0$ for all n ≥ 1.
 
 *Step 2: Check condition 1 (decreasing)*
-$a_{n+1} = 1/(n+1) < 1/n = a_n$ for all n ≥ 1. ✓ Strictly decreasing.
+$a_{n+1} = 1/(n+1) < 1/n = a_n$ for all n ≥ 1. Strictly decreasing.
 
 *Step 3: Check condition 2 (limit = 0)*
-$\lim_{n \to \infty} 1/n = 0$. ✓
+$\lim_{n \to \infty} 1/n = 0$.
 
 *Step 4: Conclusion*
 Both conditions satisfied → **series CONVERGES** by Leibniz.
 
 *Step 5: Verify the sum*
-True sum = ln(2) ≈ 0.6931. S_4 = 1 - 0.5 + 0.333 - 0.25 = 0.583. Error bound: a_5 = 0.2. Actual error: 0.110 ≤ 0.2 ✓.
+True sum = ln(2) ≈ 0.6931. S_4 = 1 - 0.5 + 0.333 - 0.25 = 0.583. Error bound: a_5 = 0.2. Actual error: 0.110 ≤ 0.2.
 
 ## Code examples
 

@@ -5,7 +5,7 @@ tags:
 - calculus
 ---
 
-# AdditionSubtraction
+# Addition/Subtraction
 
 $$
 \lim_{x \to a} [f(x) \pm g(x)] = \lim_{x \to a} f(x) \pm \lim_{x \to a} g(x)

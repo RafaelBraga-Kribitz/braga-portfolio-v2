@@ -5,7 +5,7 @@ tags:
 - linear-algebra
 ---
 
-# Manhattan Distance ($L 1$ norm, $p=1$)
+# Manhattan Distance (L₁ norm, p=1)
 
 $$
 D(x,y) = \sum_{i=1}^n |x_i - y_i|

@@ -41,6 +41,7 @@ test('Dataview fields and the excerpt', () => {
   assert.deepEqual(inlineFields('rating:: 4\nText [Due Date:: 2026-01-01] here'), { rating: '4', 'due-date': '2026-01-01' });
   assert.equal(excerpt('# T\n\nFirst [[Note|para]] with **bold**.\n\nSecond.'), 'First para with bold.');
   assert.equal(excerpt(`${'word '.repeat(60)}`, 30).endsWith('…'), true);
+  assert.equal(excerpt('# T\n\n$$\nx^2\n$$\n\nThe square of $x$.'), 'The square of x.');   // display maths is not prose
 });
 
 test('placeOf: site folders by language; templates and private folders are not pages', () => {

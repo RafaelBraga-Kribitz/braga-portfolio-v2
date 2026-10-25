@@ -72,7 +72,7 @@ Each symbol:
 
 - **Why $n \neq -1$**: if $n = -1$, then $n+1 = 0$ and we divide by zero. The antiderivative of $1/x$ is $\ln|x| + C$, a separate formula.
 - **Linearity**: integrate a polynomial term by term: $\int(ax^m + bx^n)\,dx = a\cdot\frac{x^{m+1}}{m+1} + b\cdot\frac{x^{n+1}}{n+1} + C$.
-- **Verify by differentiating**: $\frac{d}{dx}\!\left[\frac{x^{n+1}}{n+1}+C\right] = \frac{(n+1)x^n}{n+1} = x^n$ ✓
+- **Verify by differentiating**: $\frac{d}{dx}\!\left[\frac{x^{n+1}}{n+1}+C\right] = \frac{(n+1)x^n}{n+1} = x^n$
 - **Works for all real $n \neq -1$**: integers, fractions, and negative values.
 - **Definite version**: $\int_a^b x^n\,dx = \frac{b^{n+1}}{n+1} - \frac{a^{n+1}}{n+1}$.
 
@@ -87,7 +87,7 @@ $n = 3$. Since $n \neq -1$, the power rule applies.
 $n + 1 = 4$. Antiderivative: $F(x) = \frac{x^4}{4} + C$.
 
 *Step 3: Verify by differentiating*
-$\frac{d}{dx}\!\left[\frac{x^4}{4} + C\right] = \frac{4x^3}{4} = x^3$ ✓
+$\frac{d}{dx}\!\left[\frac{x^4}{4} + C\right] = \frac{4x^3}{4} = x^3$
 
 *Step 4: Evaluate the definite integral using FTC*
 $\int_0^2 x^3\,dx = F(2) - F(0) = \frac{16}{4} - \frac{0}{4} = 4$

@@ -60,7 +60,7 @@ A data scientist checks whether PCA rotation preserves the determinant of the co
 "The identity matrix is the 'do nothing' transformation. It maps every vector to itself, so it scales all volumes by exactly 1. Its determinant is 1." Tiny numeric example ($n = 3$):
 $I_3 = \begin{bmatrix}1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1\end{bmatrix}$.
 Using the $2 \times 2$ sub-formula approach (cofactor expansion along row 1):
-$\det(I_3) = 1 \cdot \det\begin{bmatrix}1 & 0 \\ 0 & 1\end{bmatrix} - 0 + 0 = 1 \cdot 1 = 1$ ✓.
+$\det(I_3) = 1 \cdot \det\begin{bmatrix}1 & 0 \\ 0 & 1\end{bmatrix} - 0 + 0 = 1 \cdot 1 = 1$.
 
 ## Critical Concepts
 
@@ -79,12 +79,12 @@ $\det(I_2) = 1 \cdot 1 - 0 \cdot 0 = 1$.
 
 *Step 2: Scale and verify the scaling rule*
 $k = 3$: $kI_2 = \begin{bmatrix}3 & 0 \\ 0 & 3\end{bmatrix}$.
-$\det(3I_2) = 3 \cdot 3 - 0 = 9 = 3^2$. Consistent with $\det(kI_n) = k^n$ ✓.
+$\det(3I_2) = 3 \cdot 3 - 0 = 9 = 3^2$. Consistent with $\det(kI_n) = k^n$.
 
 *Step 3: Verify orthogonal matrix property via det(I) = 1*
 Rotation matrix $Q = \begin{bmatrix}\cos\theta & -\sin\theta \\ \sin\theta & \cos\theta\end{bmatrix}$.
 $\det(Q) = \cos^2\theta + \sin^2\theta = 1$ (for any $\theta$).
-$Q^T Q = I$ implies $\det(Q)^2 = \det(I) = 1$, so $\det(Q) = \pm 1$ ✓.
+$Q^T Q = I$ implies $\det(Q)^2 = \det(I) = 1$, so $\det(Q) = \pm 1$.
 
 ## Code examples
 

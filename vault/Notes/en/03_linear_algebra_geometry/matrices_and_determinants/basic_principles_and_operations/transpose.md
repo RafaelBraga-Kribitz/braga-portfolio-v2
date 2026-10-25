@@ -91,8 +91,8 @@ $a_{21}=0 \to [A^T]_{12}=0$. $a_{22}=2 \to [A^T]_{22}=2$.
 $a_{31}=5 \to [A^T]_{13}=5$. $a_{32}=4 \to [A^T]_{23}=4$.
 
 *Step 3: Assemble the transposed matrix and verify with double transpose*
-$A^T = \begin{bmatrix}3 & 0 & 5 \\ -1 & 2 & 4\end{bmatrix}$ (shape $2 \times 3$ ✓).
-$(A^T)^T = A$ ✓ (rows of $A^T$ are columns of $A$).
+$A^T = \begin{bmatrix}3 & 0 & 5 \\ -1 & 2 & 4\end{bmatrix}$ (shape $2 \times 3$).
+$(A^T)^T = A$ (rows of $A^T$ are columns of $A$).
 
 ## Code examples
 

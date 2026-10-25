@@ -65,7 +65,7 @@ A data scientist runs PCA on a customer behaviour dataset with $p = 20$ features
 $A = \begin{bmatrix}5 & 2 \\ 2 & 3\end{bmatrix}$.
 $\text{tr}(A) = 5 + 3 = 8$.
 Eigenvalues: $\lambda^2 - 8\lambda + (15-4) = 0 \implies \lambda^2 - 8\lambda + 11 = 0 \implies \lambda = 4 \pm \sqrt{5}$.
-$\lambda_1 + \lambda_2 = (4+\sqrt{5}) + (4-\sqrt{5}) = 8 = \text{tr}(A)$ ✓.
+$\lambda_1 + \lambda_2 = (4+\sqrt{5}) + (4-\sqrt{5}) = 8 = \text{tr}(A)$.
 
 ## Critical Concepts
 
@@ -89,8 +89,8 @@ $\det(\lambda I - A) = (\lambda - 4)(\lambda - 2) - 1 \cdot 3 = \lambda^2 - 6\la
 $(\lambda - 1)(\lambda - 5) = 0 \implies \lambda_1 = 1, \lambda_2 = 5$.
 
 *Step 3: Verify the trace identity*
-$\lambda_1 + \lambda_2 = 1 + 5 = 6 = \text{tr}(A)$ ✓.
-Note: $\lambda_1 \cdot \lambda_2 = 5 = \det(A) = 8 - 3 = 5$ ✓ (trace = eigenvalue sum, det = eigenvalue product).
+$\lambda_1 + \lambda_2 = 1 + 5 = 6 = \text{tr}(A)$.
+Note: $\lambda_1 \cdot \lambda_2 = 5 = \det(A) = 8 - 3 = 5$ (trace = eigenvalue sum, det = eigenvalue product).
 
 ## Code examples
 

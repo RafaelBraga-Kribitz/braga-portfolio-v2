@@ -64,10 +64,10 @@ One implication is obvious ($x=0 \Rightarrow \langle x,x\rangle = 0$); the non-t
 ## The formula in words
 
 "The 'length squared' of any vector is zero or positive. The only vector with length zero is the zero vector itself — everything else has positive length." Tiny numeric example: $x = [3, -4]^T$.
-$\langle x, x \rangle = 3^2 + (-4)^2 = 9 + 16 = 25 \geq 0$ ✓.
+$\langle x, x \rangle = 3^2 + (-4)^2 = 9 + 16 = 25 \geq 0$.
 $\|x\| = \sqrt{25} = 5$.
-Now try $x = [0, 0]^T$: $\langle x, x \rangle = 0$ and indeed $x = 0$ ✓.
-Try $x = [0, 1]^T$: $\langle x, x \rangle = 0 + 1 = 1 > 0$ ✓ (non-zero vector has positive inner product with itself).
+Now try $x = [0, 0]^T$: $\langle x, x \rangle = 0$ and indeed $x = 0$.
+Try $x = [0, 1]^T$: $\langle x, x \rangle = 0 + 1 = 1 > 0$ (non-zero vector has positive inner product with itself).
 
 ## Critical Concepts
 
@@ -82,16 +82,16 @@ Try $x = [0, 1]^T$: $\langle x, x \rangle = 0 + 1 = 1 > 0$ ✓ (non-zero vector 
 
 *Step 1: Verify non-negativity for a specific non-zero vector*
 $x = [2, -1, 3]^T$.
-$\langle x, x \rangle = 2^2 + (-1)^2 + 3^2 = 4 + 1 + 9 = 14 \geq 0$ ✓.
+$\langle x, x \rangle = 2^2 + (-1)^2 + 3^2 = 4 + 1 + 9 = 14 \geq 0$.
 $\|x\| = \sqrt{14} \approx 3.742$.
 
 *Step 2: Verify the zero vector gives inner product zero*
 $x = [0, 0, 0]^T$.
-$\langle x, x \rangle = 0^2 + 0^2 + 0^2 = 0$ ✓.
+$\langle x, x \rangle = 0^2 + 0^2 + 0^2 = 0$.
 $\|x\| = \sqrt{0} = 0$ (the zero vector has zero length).
 
 *Step 3: Verify the converse — inner product zero implies zero vector*
-Suppose $\langle x, x \rangle = x_1^2 + x_2^2 + x_3^2 = 0$. Since each term $x_i^2 \geq 0$ and they sum to zero, each term must be zero: $x_1^2 = 0 \Rightarrow x_1 = 0$, and similarly $x_2 = x_3 = 0$. Therefore $x = 0$ ✓. The implication holds.
+Suppose $\langle x, x \rangle = x_1^2 + x_2^2 + x_3^2 = 0$. Since each term $x_i^2 \geq 0$ and they sum to zero, each term must be zero: $x_1^2 = 0 \Rightarrow x_1 = 0$, and similarly $x_2 = x_3 = 0$. Therefore $x = 0$. The implication holds.
 
 ## Code examples
 

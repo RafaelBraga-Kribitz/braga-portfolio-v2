@@ -100,7 +100,7 @@ $L_1/L_2 = e^{0.4055} \approx 1.50$. Model 1 is about 1.5 times more likely than
 *Step 4: Verify directly*
 $L_1 = 0.6^3 \times 0.4^2 = 0.216 \times 0.16 = 0.03456$.
 $L_2 = 0.4^3 \times 0.6^2 = 0.064 \times 0.36 = 0.02304$.
-$L_1/L_2 = 0.03456/0.02304 \approx 1.50$. ✓
+$L_1/L_2 = 0.03456/0.02304 \approx 1.50$.
 
 ## Code examples
 

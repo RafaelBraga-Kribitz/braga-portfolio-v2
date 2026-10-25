@@ -5,7 +5,7 @@ tags:
 - linear-algebra
 ---
 
-# Euclidean Norm ($L 2$ norm)
+# Euclidean Norm (L₂ norm)
 
 $$
 \|x\|_2 = \sqrt{x^T x} = \sqrt{\sum x_i^2}

@@ -93,10 +93,10 @@ $\ln(\lambda e^{-\lambda t}) = \ln \lambda - \lambda t$.
 
 *Step 4: Verify at $\lambda = 2$, $t = 0.5$*
 Direct: $\ln(2 \cdot e^{-1}) = \ln(2/e) = \ln 2 - 1 \approx 0.6931 - 1 = -0.3069$.
-Formula: $\ln 2 - 2(0.5) = 0.6931 - 1 = -0.3069$. ✓
+Formula: $\ln 2 - 2(0.5) = 0.6931 - 1 = -0.3069$.
 
 *Step 5: Reverse — reconstruct from log space*
-If $\ln(\mu) = 1.5$, then $\mu = e^{1.5} \approx 4.4817$. Verify: $\ln(4.4817) \approx 1.5$. ✓
+If $\ln(\mu) = 1.5$, then $\mu = e^{1.5} \approx 4.4817$. Verify: $\ln(4.4817) \approx 1.5$.
 
 ## Code examples
 

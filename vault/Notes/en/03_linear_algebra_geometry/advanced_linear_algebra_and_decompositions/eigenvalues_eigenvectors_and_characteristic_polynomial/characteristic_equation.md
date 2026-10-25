@@ -61,7 +61,7 @@ A risk analyst has a 2×2 correlation matrix for two revenue streams. Rather tha
 
 "Find the values of $\lambda$ for which subtracting $\lambda$ from every diagonal entry of $A$ makes the matrix non-invertible." Tiny numeric example: $A = \begin{bmatrix}4 & 1 \\ 2 & 3\end{bmatrix}$.
 $\det(A - \lambda I) = (4-\lambda)(3-\lambda) - 2 = \lambda^2 - 7\lambda + 10 = (\lambda-5)(\lambda-2) = 0$.
-Eigenvalues: $\lambda_1 = 5$, $\lambda_2 = 2$. Sum $= 7 = \text{tr}(A)$ ✓. Product $= 10 = \det(A)$ ✓.
+Eigenvalues: $\lambda_1 = 5$, $\lambda_2 = 2$. Sum $= 7 = \text{tr}(A)$. Product $= 10 = \det(A)$.
 
 ## Critical Concepts
 
@@ -83,8 +83,8 @@ $\lambda^2 - 7\lambda + 6 = 0$.
 Discriminant: $49 - 24 = 25$. Roots: $\lambda = \frac{7 \pm 5}{2}$, giving $\lambda_1 = 6$ and $\lambda_2 = 1$.
 
 *Step 3: Verify using trace and determinant*
-$\text{tr}(A) = 5 + 2 = 7 = \lambda_1 + \lambda_2 = 6 + 1$. ✓
-$\det(A) = (5)(2) - (2)(2) = 6 = \lambda_1 \cdot \lambda_2 = 6 \cdot 1$. ✓
+$\text{tr}(A) = 5 + 2 = 7 = \lambda_1 + \lambda_2 = 6 + 1$.
+$\det(A) = (5)(2) - (2)(2) = 6 = \lambda_1 \cdot \lambda_2 = 6 \cdot 1$.
 Both checks pass: eigenvalues are correct.
 
 ## Code examples

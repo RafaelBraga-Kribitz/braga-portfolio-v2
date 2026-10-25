@@ -94,9 +94,9 @@ Add 6 to all parts: $2 \le 2x \le 10$.
 Divide by 2: $1 \le x \le 5$.
 
 *Step 4: Verify the endpoints*
-$x = 1$: $|2(1) - 6| = |-4| = 4 \le 4$. ✓
-$x = 5$: $|2(5) - 6| = |4| = 4 \le 4$. ✓
-$x = 3$ (midpoint): $|2(3) - 6| = |0| = 0 \le 4$. ✓
+$x = 1$: $|2(1) - 6| = |-4| = 4 \le 4$.
+$x = 5$: $|2(5) - 6| = |4| = 4 \le 4$.
+$x = 3$ (midpoint): $|2(3) - 6| = |0| = 0 \le 4$.
 
 ## Code examples
 

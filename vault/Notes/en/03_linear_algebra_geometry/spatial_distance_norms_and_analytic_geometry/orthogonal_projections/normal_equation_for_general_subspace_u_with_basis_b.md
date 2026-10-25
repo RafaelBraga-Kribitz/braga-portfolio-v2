@@ -5,7 +5,7 @@ tags:
 - linear-algebra
 ---
 
-# Normal Equation for general subspace $U$ with basis $B$
+# Normal Equation for general subspace U with basis B
 
 $$
 B^T B \lambda = B^T x

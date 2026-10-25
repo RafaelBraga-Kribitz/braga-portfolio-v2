@@ -5,7 +5,7 @@ tags:
 - calculus
 ---
 
-# Arithmetic $n$-th term
+# Arithmetic n-th term
 
 $$
 u_n = a + (n-1)d
@@ -76,13 +76,13 @@ Each symbol:
 Sequence: 3, 7, 11, 15, ... Find $u_{20}$.
 
 *Step 1: Identify parameters*
-$a = 3$, $d = 7 - 3 = 4$ (verify: $11-7=4$ ✓)
+$a = 3$, $d = 7 - 3 = 4$ (verify: $11-7=4$)
 
 *Step 2: Apply formula*
 $u_{20} = 3 + (20-1)(4) = 3 + 76 = 79$
 
 *Step 3: Check*
-$u_{20} - u_1 = 76 = 19 \times 4 = (20-1)d$ ✓
+$u_{20} - u_1 = 76 = 19 \times 4 = (20-1)d$
 
 ## Code examples
 

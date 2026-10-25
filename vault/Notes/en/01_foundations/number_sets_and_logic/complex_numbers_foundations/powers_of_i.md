@@ -5,7 +5,7 @@ tags:
 - foundations
 ---
 
-# Powers of $i$
+# Powers of i
 
 $$
 i^1 = i

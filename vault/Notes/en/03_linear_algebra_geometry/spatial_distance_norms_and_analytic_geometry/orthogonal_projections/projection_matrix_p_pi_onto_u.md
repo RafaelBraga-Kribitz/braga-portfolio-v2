@@ -5,7 +5,7 @@ tags:
 - linear-algebra
 ---
 
-# Projection matrix $P pi$ onto $U$
+# Projection matrix Pπ onto U
 
 $$
 P_\pi = B(B^T B)^{-1} B^T

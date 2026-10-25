@@ -6,7 +6,7 @@ tags:
 slug: exponential-base-a-table-of-standard-derivatives
 ---
 
-# Exponential (Base $a$)
+# Exponential (Base a)
 
 $$
 \frac{d}{dx}(a^x) = a^x \ln a

@@ -10,7 +10,8 @@ import Base from '@/layouts/Base.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import Listing from '@/components/Listing.astro';
 import ListingRow from '@/components/ListingRow.astro';
-import { t, type Lang } from '@/lib/i18n';
+import StatusMark from '@/components/StatusMark.astro';
+import { t, isDraftLang, type Lang } from '@/lib/i18n';
 import { route, noteRoute } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
 import { libraryOf } from '@/lib/collections';
@@ -38,6 +39,7 @@ const anchor = (code: string) => `area-${code}`;
         ))}
       </Listing>
     )}
+    {isDraftLang(lang) && <div class="doc-meta"><StatusMark state="in-build" lang={lang} label={t(lang, 'draft')} /></div>}
   </section>
   {areas.map((a) => (
     <section class="section" id={anchor(a.code)}>

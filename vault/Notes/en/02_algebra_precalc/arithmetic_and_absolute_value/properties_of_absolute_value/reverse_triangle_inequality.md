@@ -90,10 +90,10 @@ $|a| - |b| = 8 - 3 = 5$.
 $\bigl| |a| - |b| \bigr| = |5| = 5$.
 
 *Step 3: Check the inequality*
-$11 \ge 5$. ✓ The inequality holds. The bound is not tight because $a$ and $b$ have opposite signs (they are on opposite sides of the origin).
+$11 \ge 5$. The inequality holds. The bound is not tight because $a$ and $b$ have opposite signs (they are on opposite sides of the origin).
 
 *Step 4: Equality case*
-$a = 8, b = 3$ (same sign): $|a - b| = |5| = 5$. $\bigl| |8| - |3| \bigr| = 5$. $5 \ge 5$. ✓ Equality.
+$a = 8, b = 3$ (same sign): $|a - b| = |5| = 5$. $\bigl| |8| - |3| \bigr| = 5$. $5 \ge 5$. Equality.
 
 *Step 5: Catastrophic cancellation scenario*
 $a = 100.001, b = 100.000$: $|a - b| = 0.001$. $\bigl| |a| - |b| \bigr| = 0.001$. Equality — this is exactly the situation where the lower bound is nearly zero, and floating-point subtraction loses precision.

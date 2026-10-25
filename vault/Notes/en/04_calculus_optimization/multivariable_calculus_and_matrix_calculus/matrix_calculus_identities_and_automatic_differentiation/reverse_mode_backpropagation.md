@@ -114,7 +114,7 @@ $\bar{v}_1 = \bar{v}_2 \cdot 1 = 14$, $\bar{x}_3 = \bar{v}_2 \cdot 1 = 14$
 
 *Step 5: Backprop through $v_1 = x_1 \cdot x_2$ (product rule)*
 $\bar{x}_1 = \bar{v}_1 \cdot x_2 = 14 \cdot 3 = 42$
-$\bar{x}_2 = \bar{v}_1 \cdot x_1 = 14 \cdot 2 = 28$ Verify: $f = (x_1 x_2 + x_3)^2$, $\frac{\partial f}{\partial x_1} = 2(x_1 x_2 + x_3) x_2 = 2(7)(3) = 42$ ✓
+$\bar{x}_2 = \bar{v}_1 \cdot x_1 = 14 \cdot 2 = 28$ Verify: $f = (x_1 x_2 + x_3)^2$, $\frac{\partial f}{\partial x_1} = 2(x_1 x_2 + x_3) x_2 = 2(7)(3) = 42$
 
 ## Code examples
 

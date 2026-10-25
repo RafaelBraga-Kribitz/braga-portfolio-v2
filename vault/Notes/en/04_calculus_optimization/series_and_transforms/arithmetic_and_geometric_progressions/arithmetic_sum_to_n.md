@@ -5,7 +5,7 @@ tags:
 - calculus
 ---
 
-# Arithmetic Sum to $n$
+# Arithmetic Sum to n
 
 $$
 S_n = \frac{n}{2}[2a + (n-1)d] = \frac{n}{2}(u_1 + u_n)
@@ -89,7 +89,7 @@ $a = 3$, $d = 4$, $n = 5$, $u_5 = 3 + 4(4) = 19$
 $S_5 = \frac{5}{2}(3 + 19) = \frac{5}{2}(22) = 55$
 
 *Step 3: Verify by direct addition*
-$3 + 7 + 11 + 15 + 19 = 55$ ✓
+$3 + 7 + 11 + 15 + 19 = 55$
 
 ## Code examples
 

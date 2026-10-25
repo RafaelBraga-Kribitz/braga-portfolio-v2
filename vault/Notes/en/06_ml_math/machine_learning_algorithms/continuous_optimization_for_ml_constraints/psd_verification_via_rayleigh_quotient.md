@@ -90,8 +90,8 @@ $\lambda_1 = 5$, $\lambda_2 = 0$
 $\lambda_{min} = 0 \geq 0$: matrix is PSD (but singular — not PD).
 
 *Step 3: Rayleigh Quotient check*
-For $x = [1, 0]^T$: $R_A = [1,0] A [1,0]^T / 1 = 4 \geq 0$ ✓
-For $x = [1, -2]^T$ (zero eigenvector): $R_A = [1,-2] A [1,-2]^T / 5 = 0 \geq 0$ ✓ All Rayleigh quotients non-negative — PSD confirmed.
+For $x = [1, 0]^T$: $R_A = [1,0] A [1,0]^T / 1 = 4 \geq 0$
+For $x = [1, -2]^T$ (zero eigenvector): $R_A = [1,-2] A [1,-2]^T / 5 = 0 \geq 0$ All Rayleigh quotients non-negative — PSD confirmed.
 
 ## Code examples
 

@@ -5,7 +5,7 @@ tags:
 - linear-algebra
 ---
 
-# Projection matrix onto orthonormal basis $B$
+# Projection matrix onto orthonormal basis B
 
 $$
 P_\pi = B B^T

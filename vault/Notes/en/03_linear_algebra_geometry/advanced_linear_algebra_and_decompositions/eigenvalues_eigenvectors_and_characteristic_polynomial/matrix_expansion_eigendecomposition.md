@@ -61,7 +61,7 @@ A quant analyst estimates a 20-asset covariance matrix from 60 weeks of returns.
 
 "A symmetric matrix is a weighted sum of projection directions, where each weight is the eigenvalue and each direction is the corresponding unit eigenvector." Tiny numeric example: $A = \begin{bmatrix}3 & 0 \\ 0 & 1\end{bmatrix}$.
 Eigenpairs: $(\lambda_1=3, v_1=[1,0]^T)$ and $(\lambda_2=1, v_2=[0,1]^T)$.
-Expansion: $3[1,0]^T[1,0] + 1[0,1]^T[0,1] = 3\begin{bmatrix}1&0\\0&0\end{bmatrix} + 1\begin{bmatrix}0&0\\0&1\end{bmatrix} = \begin{bmatrix}3&0\\0&1\end{bmatrix} = A$ ✓.
+Expansion: $3[1,0]^T[1,0] + 1[0,1]^T[0,1] = 3\begin{bmatrix}1&0\\0&0\end{bmatrix} + 1\begin{bmatrix}0&0\\0&1\end{bmatrix} = \begin{bmatrix}3&0\\0&1\end{bmatrix} = A$.
 
 ## Critical Concepts
 
@@ -86,7 +86,7 @@ $v_1 v_1^T = \frac{1}{5}\begin{bmatrix}2\\1\end{bmatrix}[2,1] = \frac{1}{5}\begi
 $v_2 v_2^T = \frac{1}{5}\begin{bmatrix}1\\-2\end{bmatrix}[1,-2] = \frac{1}{5}\begin{bmatrix}1&-2\\-2&4\end{bmatrix}$.
 
 *Step 3: Weight by eigenvalues and sum to verify reconstruction*
-$\lambda_1 v_1 v_1^T + \lambda_2 v_2 v_2^T = 5 \cdot \frac{1}{5}\begin{bmatrix}4&2\\2&1\end{bmatrix} + 0 \cdot (\ldots) = \begin{bmatrix}4&2\\2&1\end{bmatrix} = A$ ✓.
+$\lambda_1 v_1 v_1^T + \lambda_2 v_2 v_2^T = 5 \cdot \frac{1}{5}\begin{bmatrix}4&2\\2&1\end{bmatrix} + 0 \cdot (\ldots) = \begin{bmatrix}4&2\\2&1\end{bmatrix} = A$.
 Since $\lambda_2 = 0$, the second term vanishes: $A$ is rank-1.
 
 ## Code examples

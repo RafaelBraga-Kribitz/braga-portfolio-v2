@@ -73,8 +73,8 @@ $$
 ## Critical Concepts
 
 - **Disk vs. washer**: if there is a hole of inner radius $g_1(y)$ and outer radius $g_2(y)$, use the washer method: $V = \pi\int_a^b ([g_2(y)]^2 - [g_1(y)]^2)\,dy$.
-- **Sphere via y-axis**: revolving the right semicircle $x = \sqrt{r^2 - y^2}$ from $y = -r$ to $r$ gives $V = \pi\int_{-r}^r (r^2 - y^2)\,dy = \frac{4}{3}\pi r^3$ ✓ (same result as x-axis revolution, by symmetry of the sphere).
-- **Cone via y-axis**: if the curve is $x = \frac{r}{h}y$ (a line through the origin), revolving from $y = 0$ to $h$ gives $V = \pi\int_0^h \frac{r^2}{h^2}y^2\,dy = \frac{\pi r^2 h}{3}$ ✓
+- **Sphere via y-axis**: revolving the right semicircle $x = \sqrt{r^2 - y^2}$ from $y = -r$ to $r$ gives $V = \pi\int_{-r}^r (r^2 - y^2)\,dy = \frac{4}{3}\pi r^3$ (same result as x-axis revolution, by symmetry of the sphere).
+- **Cone via y-axis**: if the curve is $x = \frac{r}{h}y$ (a line through the origin), revolving from $y = 0$ to $h$ gives $V = \pi\int_0^h \frac{r^2}{h^2}y^2\,dy = \frac{\pi r^2 h}{3}$
 - **Shell method alternative**: if $y = f(x)$ is given, the shell method integrating over $x$ is $V = 2\pi\int_a^b x f(x)\,dx$. This avoids inverting $f$ to get $x = g(y)$.
 - **Quantile function connection**: for a continuous distribution, $x = F^{-1}(p)$ is the quantile at probability $p$.
 

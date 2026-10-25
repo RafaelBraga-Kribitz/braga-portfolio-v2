@@ -5,9 +5,7 @@ tags:
 - economics-business
 ---
 
-# Employment_rate_delta_e
-
-Employment Rate ($\Delta E\%$)
+# Employment Rate (ΔE%)
 
 $$
 \text{Employment Rate}_t = \left(\frac{E_t}{WAP_t}\right)\times 100,\quad \Delta E\% = \text{Employment Rate}_t - \text{Employment Rate}_{t-1}

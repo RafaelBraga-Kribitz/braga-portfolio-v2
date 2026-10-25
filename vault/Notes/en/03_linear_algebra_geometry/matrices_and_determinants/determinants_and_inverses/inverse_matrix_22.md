@@ -65,7 +65,7 @@ A data scientist solves a simple $2 \times 2$ normal equation system arising fro
 $A = \begin{bmatrix}4 & 7 \\ 2 & 6\end{bmatrix}$.
 $\det(A) = 24 - 14 = 10$.
 $A^{-1} = \frac{1}{10}\begin{bmatrix}6 & -7 \\ -2 & 4\end{bmatrix} = \begin{bmatrix}0.6 & -0.7 \\ -0.2 & 0.4\end{bmatrix}$.
-Verify: $A \cdot A^{-1} = \begin{bmatrix}4\cdot0.6+7(-0.2) & 4(-0.7)+7\cdot0.4 \\ 2\cdot0.6+6(-0.2) & 2(-0.7)+6\cdot0.4\end{bmatrix} = \begin{bmatrix}2.4-1.4 & -2.8+2.8 \\ 1.2-1.2 & -1.4+2.4\end{bmatrix} = \begin{bmatrix}1 & 0 \\ 0 & 1\end{bmatrix}$ ✓.
+Verify: $A \cdot A^{-1} = \begin{bmatrix}4\cdot0.6+7(-0.2) & 4(-0.7)+7\cdot0.4 \\ 2\cdot0.6+6(-0.2) & 2(-0.7)+6\cdot0.4\end{bmatrix} = \begin{bmatrix}2.4-1.4 & -2.8+2.8 \\ 1.2-1.2 & -1.4+2.4\end{bmatrix} = \begin{bmatrix}1 & 0 \\ 0 & 1\end{bmatrix}$.
 
 ## Critical Concepts
 
@@ -81,7 +81,7 @@ Verify: $A \cdot A^{-1} = \begin{bmatrix}4\cdot0.6+7(-0.2) & 4(-0.7)+7\cdot0.4 \
 *Step 1: Extract entries and compute the determinant*
 $A = \begin{bmatrix}5 & 3 \\ 2 & 4\end{bmatrix}$.
 $a_{11}=5$, $a_{12}=3$, $a_{21}=2$, $a_{22}=4$.
-$\det(A) = 5\cdot4 - 3\cdot2 = 20 - 6 = 14 \neq 0$ ✓.
+$\det(A) = 5\cdot4 - 3\cdot2 = 20 - 6 = 14 \neq 0$.
 
 *Step 2: Form the adjugate matrix*
 Swap diagonal: $a_{22} \leftrightarrow a_{11}$ in the adjugate: $4$ goes top-left, $5$ goes bottom-right.
@@ -90,7 +90,7 @@ Adjugate: $\begin{bmatrix}4 & -3 \\ -2 & 5\end{bmatrix}$.
 
 *Step 3: Scale by 1/det and verify*
 $A^{-1} = \frac{1}{14}\begin{bmatrix}4 & -3 \\ -2 & 5\end{bmatrix}$.
-Verify: $A A^{-1} = \frac{1}{14}\begin{bmatrix}5\cdot4+3(-2) & 5(-3)+3\cdot5 \\ 2\cdot4+4(-2) & 2(-3)+4\cdot5\end{bmatrix} = \frac{1}{14}\begin{bmatrix}14 & 0 \\ 0 & 14\end{bmatrix} = I$ ✓.
+Verify: $A A^{-1} = \frac{1}{14}\begin{bmatrix}5\cdot4+3(-2) & 5(-3)+3\cdot5 \\ 2\cdot4+4(-2) & 2(-3)+4\cdot5\end{bmatrix} = \frac{1}{14}\begin{bmatrix}14 & 0 \\ 0 & 14\end{bmatrix} = I$.
 
 ## Code examples
 

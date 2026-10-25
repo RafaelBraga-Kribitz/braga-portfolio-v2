@@ -83,12 +83,12 @@ Eigenvalues: $\lambda_1 = 2$, $\lambda_2 = 3$.
 *Step 2: Find the eigenvector for lambda_1 = 2*
 $(A - 2I)x = 0$: $\begin{bmatrix}1 & 1 \\ 0 & 0\end{bmatrix}\begin{bmatrix}x_1 \\ x_2\end{bmatrix} = 0$.
 From row 1: $x_1 + x_2 = 0$, so $x_2 = -x_1$. Eigenvector: $x = [1, -1]^T$.
-Verify: $A[1,-1]^T = [3-1, 0-2]^T = [2, -2]^T = 2[1,-1]^T$. ✓
+Verify: $A[1,-1]^T = [3-1, 0-2]^T = [2, -2]^T = 2[1,-1]^T$.
 
 *Step 3: Find the eigenvector for lambda_2 = 3*
 $(A - 3I)x = 0$: $\begin{bmatrix}0 & 1 \\ 0 & -1\end{bmatrix}\begin{bmatrix}x_1 \\ x_2\end{bmatrix} = 0$.
 From row 1: $x_2 = 0$. Eigenvector: $x = [1, 0]^T$ (any $x_1 \neq 0$).
-Verify: $A[1,0]^T = [3, 0]^T = 3[1,0]^T$. ✓
+Verify: $A[1,0]^T = [3, 0]^T = 3[1,0]^T$.
 
 ## Code examples
 

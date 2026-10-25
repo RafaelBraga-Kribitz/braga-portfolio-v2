@@ -5,7 +5,7 @@ tags:
 - probability-statistics
 ---
 
-# SummingIntegrating Out (General)
+# Summing/Integrating Out (General)
 
 $$
 p(X) = \sum_y p(X,y)
@@ -88,7 +88,7 @@ $p(Y=0) = 0.35 + 0.10 = 0.45$ (45% no umbrella)
 $p(Y=1) = 0.15 + 0.40 = 0.55$ (55% umbrella)
 
 *Step 3: Verify*
-$p(X=0) + p(X=1) = 1.0$ ✓, $p(Y=0) + p(Y=1) = 1.0$ ✓
+$p(X=0) + p(X=1) = 1.0$, $p(Y=0) + p(Y=1) = 1.0$
 
 ## Code examples
 

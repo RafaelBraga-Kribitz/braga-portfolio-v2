@@ -5,7 +5,7 @@ tags:
 - linear-algebra
 ---
 
-# Cholesky Decomposition (for PD matrix $A$)
+# Cholesky Decomposition (for PD matrix A)
 
 $$
 A = LL^T
@@ -85,10 +85,10 @@ Now compute $l_{22} = \sqrt{a_{22} - l_{21}^2} = \sqrt{3 - 1^2} = \sqrt{2} \appr
 So $L = \begin{bmatrix}2 & 0 \\ 1 & 1.4142\end{bmatrix}$.
 
 *Step 3: Verify by reconstructing A = L L^T*
-$LL^T = \begin{bmatrix}2 & 0 \\ 1 & 1.4142\end{bmatrix}\begin{bmatrix}2 & 1 \\ 0 & 1.4142\end{bmatrix}$ - $(1,1)$: $2 \cdot 2 + 0 \cdot 0 = 4$ ✓
-- $(1,2)$: $2 \cdot 1 + 0 \cdot 1.4142 = 2$ ✓
-- $(2,1)$: $1 \cdot 2 + 1.4142 \cdot 0 = 2$ ✓
-- $(2,2)$: $1 \cdot 1 + 1.4142 \cdot 1.4142 = 1 + 2 = 3$ ✓ We recover $A$ exactly (up to rounding), sanity check passes.
+$LL^T = \begin{bmatrix}2 & 0 \\ 1 & 1.4142\end{bmatrix}\begin{bmatrix}2 & 1 \\ 0 & 1.4142\end{bmatrix}$ - $(1,1)$: $2 \cdot 2 + 0 \cdot 0 = 4$
+- $(1,2)$: $2 \cdot 1 + 0 \cdot 1.4142 = 2$
+- $(2,1)$: $1 \cdot 2 + 1.4142 \cdot 0 = 2$
+- $(2,2)$: $1 \cdot 1 + 1.4142 \cdot 1.4142 = 1 + 2 = 3$ We recover $A$ exactly (up to rounding), sanity check passes.
 
 ## Code examples
 

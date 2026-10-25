@@ -48,7 +48,7 @@ $|ab| = |a||b|$ because: if $a \ge 0$ and $b \ge 0$, $|ab| = ab = |a||b|$. If $a
 
 ### Example in a business
 
-A model has a weight $w = -0.4$ applied to a feature $x = 3.5$. The contribution magnitude is $|w \cdot x| = |-0.4 \cdot 3.5| = |-1.4| = 1.4$. Using the property: $|{-0.4}| \cdot |3.5| = 0.4 \cdot 3.5 = 1.4$. ✓ This is used in SHAP and feature importance analysis: the magnitude of a weight-feature product gives the raw contribution size, independent of direction. Summing $|w_j \cdot x_j|$ over all features gives a sense of total absolute contribution.
+A model has a weight $w = -0.4$ applied to a feature $x = 3.5$. The contribution magnitude is $|w \cdot x| = |-0.4 \cdot 3.5| = |-1.4| = 1.4$. Using the property: $|{-0.4}| \cdot |3.5| = 0.4 \cdot 3.5 = 1.4$. This is used in SHAP and feature importance analysis: the magnitude of a weight-feature product gives the raw contribution size, independent of direction. Summing $|w_j \cdot x_j|$ over all features gives a sense of total absolute contribution.
 
 ## The formula, piece by piece
 
@@ -89,10 +89,10 @@ $|w \cdot x| = |10.0| = 10.0$.
 $|w| \cdot |x| = |-2.5| \cdot |-4.0| = 2.5 \cdot 4.0 = 10.0$.
 
 *Step 3: Confirm equality*
-$10.0 = 10.0$. ✓
+$10.0 = 10.0$.
 
 *Step 4: Compare to another sign combination*
-$w = 2.5, x = -4.0$: $|w \cdot x| = |{-10.0}| = 10.0$. $|w| \cdot |x| = 2.5 \cdot 4.0 = 10.0$. ✓ Same magnitude regardless of signs.
+$w = 2.5, x = -4.0$: $|w \cdot x| = |{-10.0}| = 10.0$. $|w| \cdot |x| = 2.5 \cdot 4.0 = 10.0$. Same magnitude regardless of signs.
 
 ## Code examples
 

@@ -5,7 +5,7 @@ tags:
 - linear-algebra
 ---
 
-# Rotation about $e 3$-axis
+# Rotation about e₃-axis
 
 $$
 R_3(\theta) = \begin{bmatrix} \cos\theta & -\sin\theta & 0 \\ \sin\theta & \cos\theta & 0 \\ 0 & 0 & 1 \end{bmatrix}
