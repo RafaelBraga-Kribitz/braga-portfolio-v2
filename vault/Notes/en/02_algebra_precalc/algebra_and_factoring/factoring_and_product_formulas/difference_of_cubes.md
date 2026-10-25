@@ -26,7 +26,7 @@ flowchart TD
     D --> E["Discriminant = b² - 4b² = -3b² < 0 (for b ≠ 0)"]
     C --> F["DA: cancel (x - a) factor in rational expressions"]
     C --> G["DA: derivative limit — (x³ - a³)/(x - a) → 3a² as x → a"]
-    B --> H["Verify: expand (a-b)(a²+ab+b²) = a³ - b³ ✓"]
+    B --> H["Verify: expand (a-b)(a²+ab+b²) = a³ - b³"]
     A --> I["Paired identity: a³ + b³ = (a+b)(a² - ab + b²)"]
 ```
 
@@ -46,7 +46,7 @@ The factoring is verified by direct expansion: $(a-b)(a^2+ab+b^2) = a^3 + a^2 b 
 
 ### Example in a business
 
-A data scientist simplifies a ratio that appears in a gradient computation: $\frac{w^3 - 1}{w - 1}$ (e.g., computing a finite-difference gradient approximation at $w = 1$). Using the identity: $w^3 - 1 = (w-1)(w^2 + w + 1)$, so $\frac{w^3 - 1}{w - 1} = w^2 + w + 1$ for $w \ne 1$. At $w = 1$: $1 + 1 + 1 = 3$ — which is exactly $\frac{d}{dw}w^3\big|_{w=1} = 3w^2\big|_{w=1} = 3$. ✓
+A data scientist simplifies a ratio that appears in a gradient computation: $\frac{w^3 - 1}{w - 1}$ (e.g., computing a finite-difference gradient approximation at $w = 1$). Using the identity: $w^3 - 1 = (w-1)(w^2 + w + 1)$, so $\frac{w^3 - 1}{w - 1} = w^2 + w + 1$ for $w \ne 1$. At $w = 1$: $1 + 1 + 1 = 3$ — which is exactly $\frac{d}{dw}w^3\big|_{w=1} = 3w^2\big|_{w=1} = 3$.
 
 ## The formula, piece by piece
 
@@ -55,7 +55,7 @@ Breaking the notation:
 - $a^3 - b^3$: the difference of two cubes — a degree-3 polynomial in $a$ (with $b$ as a parameter).
 - $(a - b)$: the linear factor — zero when $a = b$. This is the only real root.
 - $(a^2 + ab + b^2)$: the irreducible quadratic factor — no real roots (discriminant $< 0$ for $b \ne 0$). **Verification**: $(a-b)(a^2+ab+b^2) = a(a^2+ab+b^2) - b(a^2+ab+b^2)$
-$= a^3 + a^2 b + ab^2 - a^2 b - ab^2 - b^3 = a^3 - b^3$. ✓ **Paired identity — sum of cubes**: $a^3 + b^3 = (a+b)(a^2 - ab + b^2)$. **Memory trick**: "SOAP": Same, Opposite, Always Positive.
+$= a^3 + a^2 b + ab^2 - a^2 b - ab^2 - b^3 = a^3 - b^3$. **Paired identity — sum of cubes**: $a^3 + b^3 = (a+b)(a^2 - ab + b^2)$. **Memory trick**: "SOAP": Same, Opposite, Always Positive.
 - Same: linear factor has same sign as the original expression ($a^3 - b^3 \Rightarrow (a-b)$; $a^3 + b^3 \Rightarrow (a+b)$).
 - Opposite: middle term of quadratic has opposite sign ($-$ for difference, $+$ for sum).
 - Always Positive: last term of quadratic is always $+b^2$. **Limit application**: $\lim_{a \to b} \frac{a^3 - b^3}{a - b} = \lim_{a \to b} (a^2 + ab + b^2) = 3b^2$.
@@ -87,7 +87,7 @@ $\frac{(2x-3)(4x^2+6x+9)}{2x-3} = 4x^2 + 6x + 9$ (valid for $x \ne \frac{3}{2}$)
 
 *Step 4: Verify numerically at $x = 2$*
 $(8 \cdot 8 - 27) / (4 - 3) = (64 - 27) / 1 = 37$.
-$4(4) + 6(2) + 9 = 16 + 12 + 9 = 37$. ✓
+$4(4) + 6(2) + 9 = 16 + 12 + 9 = 37$.
 
 ## Code examples
 

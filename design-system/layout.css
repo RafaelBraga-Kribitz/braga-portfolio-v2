@@ -381,6 +381,7 @@ main > .section:first-child > .section-heading:first-child { padding-top: 0; }
 .doc-opener :is(h1, h2, h3) {
   margin: 0; font: var(--w-display) var(--t-h1) / var(--lh-tight) var(--font-display);
   letter-spacing: var(--tracking-tight); text-wrap: balance;
+  hyphens: auto; -webkit-hyphens: auto; overflow-wrap: break-word;   /* "Eigendecomposition" at display size is wider than 320 (G-06) */
 }
 .doc-opener > [class*="col-"] > * + * { margin-top: 24px; }   /* title → lead → meta, 24px each (Site 04) */
 .doc > .doc-opener > * + * { margin-top: 0; }                  /* the stacked variant spaces by its gap */

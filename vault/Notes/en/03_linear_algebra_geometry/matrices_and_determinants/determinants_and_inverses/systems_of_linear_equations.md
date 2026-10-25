@@ -72,7 +72,7 @@ A pricing analyst models demand across 4 product categories using a linear syste
 $A = \begin{bmatrix}2 & 1 \\ 5 & 3\end{bmatrix}$, $b = \begin{bmatrix}5 \\ 13\end{bmatrix}$.
 $\det(A) = 6 - 5 = 1 \neq 0$. $A^{-1} = \begin{bmatrix}3 & -1 \\ -5 & 2\end{bmatrix}$.
 $x = A^{-1}b = \begin{bmatrix}3\cdot5 + (-1)\cdot13 \\ (-5)\cdot5 + 2\cdot13\end{bmatrix} = \begin{bmatrix}2 \\ 1\end{bmatrix}$.
-Verify: $A x = \begin{bmatrix}2\cdot2+1\cdot1 \\ 5\cdot2+3\cdot1\end{bmatrix} = \begin{bmatrix}5 \\ 13\end{bmatrix} = b$ ✓.
+Verify: $A x = \begin{bmatrix}2\cdot2+1\cdot1 \\ 5\cdot2+3\cdot1\end{bmatrix} = \begin{bmatrix}5 \\ 13\end{bmatrix} = b$.
 
 ## Critical Concepts
 
@@ -96,7 +96,7 @@ $A^{-1} = \frac{1}{1}\begin{bmatrix}3 & -1 \\ -5 & 2\end{bmatrix} = \begin{bmatr
 $x = A^{-1}b = \begin{bmatrix}3 \cdot 5 - 1 \cdot 13 \\ -5 \cdot 5 + 2 \cdot 13\end{bmatrix} = \begin{bmatrix}15-13 \\ -25+26\end{bmatrix} = \begin{bmatrix}2 \\ 1\end{bmatrix}$.
 
 *Step 3: Verify the solution*
-$Ax = \begin{bmatrix}2(2)+1(1) \\ 5(2)+3(1)\end{bmatrix} = \begin{bmatrix}5 \\ 13\end{bmatrix} = b$ ✓.
+$Ax = \begin{bmatrix}2(2)+1(1) \\ 5(2)+3(1)\end{bmatrix} = \begin{bmatrix}5 \\ 13\end{bmatrix} = b$.
 Residual $\|Ax - b\| = 0$.
 
 ## Code examples

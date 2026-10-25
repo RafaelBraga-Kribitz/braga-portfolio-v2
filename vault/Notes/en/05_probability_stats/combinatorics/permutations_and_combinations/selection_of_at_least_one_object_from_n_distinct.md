@@ -5,7 +5,7 @@ tags:
 - probability-statistics
 ---
 
-# Selection of at least one object (from $n$ distinct)
+# Selection of at least one object (from n distinct)
 
 $$
 \sum_{k=1}^n \binom{n}{k} = 2^n - 1

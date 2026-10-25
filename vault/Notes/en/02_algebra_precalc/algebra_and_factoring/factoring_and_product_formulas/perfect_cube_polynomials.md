@@ -42,7 +42,7 @@ Expanding $(a \pm b)^3$ by repeated FOIL is mechanical: first $(a \pm b)^2 = a^2
 
 ### How it solves the problem
 
-The coefficients $1, 3, 3, 1$ come from $\binom{3}{k}$ for $k = 0, 1, 2, 3$. The sign for the minus case follows the pattern $(-1)^k$: $+, -, +, -$. Verified by multiplying: $(a+b)^2 = a^2 + 2ab + b^2$, then $(a^2 + 2ab + b^2)(a + b) = a^3 + 2a^2b + ab^2 + a^2b + 2ab^2 + b^3 = a^3 + 3a^2b + 3ab^2 + b^3$. ✓
+The coefficients $1, 3, 3, 1$ come from $\binom{3}{k}$ for $k = 0, 1, 2, 3$. The sign for the minus case follows the pattern $(-1)^k$: $+, -, +, -$. Verified by multiplying: $(a+b)^2 = a^2 + 2ab + b^2$, then $(a^2 + 2ab + b^2)(a + b) = a^3 + 2a^2b + ab^2 + a^2b + 2ab^2 + b^3 = a^3 + 3a^2b + 3ab^2 + b^3$.
 
 ### Example in a business
 
@@ -91,10 +91,10 @@ $(x + 2)^3 = x^3 + 3x^2(2) + 3x(2)^2 + 2^3 = x^3 + 6x^2 + 12x + 8$.
 $3^3 + 6(9) + 12(3) + 8 = 27 + 54 + 36 + 8 = 125$.
 
 *Step 4: Verify directly*
-$(3 + 2)^3 = 5^3 = 125$. ✓
+$(3 + 2)^3 = 5^3 = 125$.
 
 *Step 5: Verify the minus case — expand $(x - 1)^3$*
-$x^3 - 3x^2 + 3x - 1$. At $x = 2$: $8 - 12 + 6 - 1 = 1 = (2-1)^3 = 1$. ✓
+$x^3 - 3x^2 + 3x - 1$. At $x = 2$: $8 - 12 + 6 - 1 = 1 = (2-1)^3 = 1$.
 
 ## Code examples
 

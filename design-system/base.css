@@ -231,6 +231,7 @@ td, th, dd, output, input, .num { font-variant-numeric: var(--num); }
 .doc > h4 { font: 700 var(--t-body) / 1.4 var(--font-body); letter-spacing: 0; }
 .doc > p { text-wrap: pretty; }
 .doc > ul, .doc > ol { padding-left: 24px; display: grid; gap: var(--flow-related); }
+.doc li { min-width: 0; }   /* a grid item: a wide formula or code block scrolls inside it, the item does not grow (G-06) */
 .doc > ol { list-style: decimal-leading-zero; }
 .doc li::marker { color: var(--ink-3); font-variant-numeric: var(--num); }
 .doc strong { font-weight: 700; }

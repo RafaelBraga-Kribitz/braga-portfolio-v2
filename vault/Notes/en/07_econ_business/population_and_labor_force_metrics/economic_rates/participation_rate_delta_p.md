@@ -5,9 +5,7 @@ tags:
 - economics-business
 ---
 
-# Participation_rate_delta_p
-
-Participation Rate ($\Delta P\%$)
+# Participation Rate (ΔP%)
 
 $$
 \text{Participation Rate}_t = \left(\frac{LF_t}{WAP_t}\right)\times 100,\quad \Delta P\% = \text{Participation Rate}_t - \text{Participation Rate}_{t-1}

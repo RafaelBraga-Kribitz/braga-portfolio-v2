@@ -78,8 +78,8 @@ $$
 - **Disk method**: only valid when the curve is non-negative ($y = f(x) \geq 0$) and there is no hole. For a hole, use the washer method.
 - **Washer method**: $V = \pi\int_a^b ([f(x)]^2 - [g(x)]^2)\,dx$ where $f(x) \geq g(x) \geq 0$.
 - **Shell method alternative**: for revolution around the y-axis, use $V = 2\pi\int_a^b x f(x)\,dx$. Sometimes easier depending on the region.
-- **Sphere check**: revolving $y = \sqrt{r^2 - x^2}$ (upper semicircle) from $-r$ to $r$ around x-axis gives $V = \pi\int_{-r}^{r}(r^2 - x^2)\,dx = \frac{4}{3}\pi r^3$ ✓
-- **Cone check**: revolving $y = \frac{r}{h}x$ from $0$ to $h$ gives $V = \pi\int_0^h \frac{r^2}{h^2}x^2\,dx = \frac{1}{3}\pi r^2 h$ ✓
+- **Sphere check**: revolving $y = \sqrt{r^2 - x^2}$ (upper semicircle) from $-r$ to $r$ around x-axis gives $V = \pi\int_{-r}^{r}(r^2 - x^2)\,dx = \frac{4}{3}\pi r^3$
+- **Cone check**: revolving $y = \frac{r}{h}x$ from $0$ to $h$ gives $V = \pi\int_0^h \frac{r^2}{h^2}x^2\,dx = \frac{1}{3}\pi r^2 h$
 - **DA/DS analogy**: the volume under a bivariate normal surface (rotating the 1D Gaussian around its axis) yields $\pi\int_{-\infty}^{\infty} e^{-x^2}\,dx = \pi^{3/2}$ — the same geometric structure as the normalizing constant of the multivariate normal.
 
 ## Step-by-step calculation (tiny example)

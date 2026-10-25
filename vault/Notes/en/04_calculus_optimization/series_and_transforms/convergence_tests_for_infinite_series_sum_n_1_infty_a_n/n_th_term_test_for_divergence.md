@@ -5,7 +5,7 @@ tags:
 - calculus
 ---
 
-# $n$-th Term Test for Divergence
+# n-th Term Test for Divergence
 
 $$
 \text{If } \lim_{n \to \infty} a_n \neq 0 \text{, then } \sum_{n=1}^\infty a_n \text{ diverges}

@@ -92,7 +92,7 @@ $|a| = |-20| = 20$. $|b| = |-80| = 80$.
 $\left|\frac{-20}{-80}\right| = \frac{|-20|}{|-80|} = \frac{20}{80} = 0.25$.
 
 *Step 4: Verify directly*
-$\frac{-20}{-80} = 0.25$. $|0.25| = 0.25$. ✓ Same result.
+$\frac{-20}{-80} = 0.25$. $|0.25| = 0.25$. Same result.
 
 *Step 5: Interpret*
 The prediction is off by 25% of the actual value, regardless of the fact that both values are negative.

@@ -64,7 +64,7 @@ A data scientist builds a multi-step preprocessing pipeline: first apply a white
 "The volume stretched or shrunk by applying transformation $A$ followed by transformation $B$ is simply the product of the two individual volume factors. If either transformation collapses the space to a lower dimension (determinant zero), the combined transformation also collapses it." Tiny numeric example:
 $A = \begin{bmatrix}2 & 0 \\ 0 & 3\end{bmatrix}$, $\det(A) = 6$.
 $B = \begin{bmatrix}1 & 1 \\ 0 & 2\end{bmatrix}$, $\det(B) = 2$.
-$AB = \begin{bmatrix}2 & 2 \\ 0 & 6\end{bmatrix}$, $\det(AB) = 12 = 6 \times 2$ ✓.
+$AB = \begin{bmatrix}2 & 2 \\ 0 & 6\end{bmatrix}$, $\det(AB) = 12 = 6 \times 2$.
 
 ## Critical Concepts
 
@@ -90,7 +90,7 @@ $AB = \begin{bmatrix}3\cdot1+1\cdot2 & 3\cdot(-1)+1\cdot0 \\ 0\cdot1+2\cdot2 & 0
 
 *Step 3: Compute det(AB) directly and verify*
 $\det(AB) = 5 \cdot 0 - (-3) \cdot 4 = 0 + 12 = 12$.
-Check: $\det(AB) = 12 = \det(A) \cdot \det(B) = 6 \times 2$ ✓.
+Check: $\det(AB) = 12 = \det(A) \cdot \det(B) = 6 \times 2$.
 
 ## Code examples
 

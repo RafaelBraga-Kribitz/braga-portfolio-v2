@@ -57,7 +57,9 @@ Breaking the notation:
 - $b$: the **second component** (second coordinate or second projection).
 - $(a, b)$: the ordered pair — position determines meaning. **Equality rule:**
 
-## $(a, b) = (c, d) \iff a = c \text{ and } b = d$.
+$$
+(a, b) = (c, d) \iff a = c \text{ and } b = d
+$$
 
 Generalizations:
 

@@ -92,7 +92,7 @@ For $\tan(2x)$: $a = 2$, $b = 0$.
 $\int \tan(2x)\,dx = \frac{1}{2}\ln|\sec(2x)| + C$.
 
 *Step 3: Verify by differentiating*
-$\frac{d}{dx}\!\left[\frac{1}{2}\ln|\sec(2x)|\right] = \frac{1}{2}\cdot\frac{\sec(2x)\tan(2x)\cdot 2}{\sec(2x)} = \tan(2x)$ ✓
+$\frac{d}{dx}\!\left[\frac{1}{2}\ln|\sec(2x)|\right] = \frac{1}{2}\cdot\frac{\sec(2x)\tan(2x)\cdot 2}{\sec(2x)} = \tan(2x)$
 
 *Step 4: Evaluate a definite integral*
 $\int_0^{\pi/6} \tan(x)\,dx = [\ln|\sec(x)|]_0^{\pi/6} = \ln|\sec(\pi/6)| - \ln|\sec(0)|$

@@ -5,7 +5,7 @@ tags:
 - linear-algebra
 ---
 
-# Gram-Schmidt (Step $k$, projection subtraction)
+# Gram-Schmidt (Step k, projection subtraction)
 
 $$
 u_k = b_k - \pi_{\text{span}[u_1, \dots, u_{k-1}]}(b_k)
@@ -65,7 +65,7 @@ $\hat{q}_1 = [1, 0]^T$ (already unit-norm).
 $\langle v_2, \hat{q}_1 \rangle = 1 \cdot 1 + 1 \cdot 0 = 1$.
 $u_2 = v_2 - 1 \cdot \hat{q}_1 = [1,1]^T - [1,0]^T = [0,1]^T$.
 $\hat{q}_2 = [0,1]^T / 1 = [0,1]^T$.
-Verify: $\langle \hat{q}_1, \hat{q}_2 \rangle = 1 \cdot 0 + 0 \cdot 1 = 0$ ✓.
+Verify: $\langle \hat{q}_1, \hat{q}_2 \rangle = 1 \cdot 0 + 0 \cdot 1 = 0$.
 
 ## Critical Concepts
 
@@ -89,7 +89,7 @@ $\|u_2\| = \sqrt{1/4 + 1/4 + 1} = \sqrt{3/2} \approx 1.225$.
 $\hat{q}_2 = u_2 / \|u_2\| = [1/\sqrt{6},\, -1/\sqrt{6},\, 2/\sqrt{6}]^T \approx [0.408, -0.408, 0.816]^T$.
 
 *Step 3: Verify orthogonality between q_hat_1 and q_hat_2*
-$\langle \hat{q}_1, \hat{q}_2 \rangle = \frac{1}{\sqrt{2}} \cdot \frac{1}{\sqrt{6}} + \frac{1}{\sqrt{2}} \cdot \frac{-1}{\sqrt{6}} + 0 = \frac{1}{\sqrt{12}} - \frac{1}{\sqrt{12}} = 0$ ✓.
+$\langle \hat{q}_1, \hat{q}_2 \rangle = \frac{1}{\sqrt{2}} \cdot \frac{1}{\sqrt{6}} + \frac{1}{\sqrt{2}} \cdot \frac{-1}{\sqrt{6}} + 0 = \frac{1}{\sqrt{12}} - \frac{1}{\sqrt{12}} = 0$.
 Both vectors are unit-norm and mutually orthogonal; $\hat{q}_2$ is the new orthonormal basis vector.
 
 ## Code examples

@@ -5,7 +5,7 @@ tags:
 - machine-learning
 ---
 
-# Ridge Regression Solution ($L_2$ Penalty)
+# Ridge Regression Solution (L₂ Penalty)
 
 $$
 \theta_{MAP} = (\Phi^T \Phi + \lambda I)^{-1}\Phi^T y

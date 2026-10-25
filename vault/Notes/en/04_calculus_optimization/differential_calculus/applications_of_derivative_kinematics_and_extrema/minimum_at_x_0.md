@@ -5,7 +5,7 @@ tags:
 - calculus
 ---
 
-# Minimum at $x 0$
+# Minimum at x₀
 
 $$
 f'(x)

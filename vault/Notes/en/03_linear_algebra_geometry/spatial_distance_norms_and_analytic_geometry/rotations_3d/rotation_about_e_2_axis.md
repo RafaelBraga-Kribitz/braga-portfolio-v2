@@ -5,7 +5,7 @@ tags:
 - linear-algebra
 ---
 
-# Rotation about $e 2$-axis
+# Rotation about e₂-axis
 
 $$
 R_2(\theta) = \begin{bmatrix} \cos\theta & 0 & \sin\theta \\ 0 & 1 & 0 \\ -\sin\theta & 0 & \cos\theta \end{bmatrix}

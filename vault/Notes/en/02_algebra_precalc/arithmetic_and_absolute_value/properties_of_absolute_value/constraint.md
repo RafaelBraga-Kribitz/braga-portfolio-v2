@@ -84,7 +84,7 @@ Task: demonstrate that $\sum |e_i| = 0$ implies all $e_i = 0$, and compute MAE f
 $|3| = 3$, $|-5| = 5$, $|2| = 2$, $|0| = 0$, $|-1| = 1$.
 
 *Step 2: Check non-negativity*
-All values $\ge 0$: $3, 5, 2, 0, 1$. ✓
+All values $\ge 0$: $3, 5, 2, 0, 1$.
 
 *Step 3: Compare sum vs. absolute sum*
 Sum of residuals: $3 + (-5) + 2 + 0 + (-1) = -1$. (Not zero — biased model.)
@@ -94,7 +94,7 @@ Sum of absolute residuals: $3 + 5 + 2 + 0 + 1 = 11$.
 MAE $= \frac{11}{5} = 2.2$.
 
 *Step 5: Confirm non-negativity of MAE*
-MAE $= 2.2 \ge 0$. ✓ If all residuals were zero: MAE $= 0$.
+MAE $= 2.2 \ge 0$. If all residuals were zero: MAE $= 0$.
 
 ## Code examples
 

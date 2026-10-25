@@ -63,7 +63,7 @@ A data scientist builds a Mahalanobis anomaly detector on 5 media spend metrics.
 "The inverse of a symmetric matrix is built the same way as the matrix itself, except each eigendirection is scaled by the reciprocal of its eigenvalue instead of the eigenvalue itself." Tiny numeric example: $A = \begin{bmatrix}4 & 0 \\ 0 & 2\end{bmatrix}$.
 Eigenpairs: $(\lambda_1=4, v_1=[1,0]^T)$ and $(\lambda_2=2, v_2=[0,1]^T)$.
 Spectral inverse: $\frac{1}{4}\begin{bmatrix}1&0\\0&0\end{bmatrix} + \frac{1}{2}\begin{bmatrix}0&0\\0&1\end{bmatrix} = \begin{bmatrix}0.25&0\\0&0.5\end{bmatrix}$.
-Check: $A \cdot A^{-1} = \begin{bmatrix}4&0\\0&2\end{bmatrix}\begin{bmatrix}0.25&0\\0&0.5\end{bmatrix} = \begin{bmatrix}1&0\\0&1\end{bmatrix} = I$ ✓.
+Check: $A \cdot A^{-1} = \begin{bmatrix}4&0\\0&2\end{bmatrix}\begin{bmatrix}0.25&0\\0&0.5\end{bmatrix} = \begin{bmatrix}1&0\\0&1\end{bmatrix} = I$.
 
 ## Critical Concepts
 
@@ -91,7 +91,7 @@ $\frac{1}{\lambda_2} v_2 v_2^T = \frac{1}{2} \cdot \frac{1}{2}\begin{bmatrix}1\\
 
 *Step 3: Sum the terms and verify*
 $A^{-1} = \frac{1}{8}\begin{bmatrix}1&1\\1&1\end{bmatrix} + \frac{1}{4}\begin{bmatrix}1&-1\\-1&1\end{bmatrix} = \begin{bmatrix}3/8 & -1/8 \\ -1/8 & 3/8\end{bmatrix}$.
-Verify: $A \cdot A^{-1} = \begin{bmatrix}3&1\\1&3\end{bmatrix}\begin{bmatrix}3/8&-1/8\\-1/8&3/8\end{bmatrix} = \begin{bmatrix}9/8-1/8 & -3/8+3/8 \\ 3/8-3/8 & -1/8+9/8\end{bmatrix} = \begin{bmatrix}1&0\\0&1\end{bmatrix} = I$ ✓.
+Verify: $A \cdot A^{-1} = \begin{bmatrix}3&1\\1&3\end{bmatrix}\begin{bmatrix}3/8&-1/8\\-1/8&3/8\end{bmatrix} = \begin{bmatrix}9/8-1/8 & -3/8+3/8 \\ 3/8-3/8 & -1/8+9/8\end{bmatrix} = \begin{bmatrix}1&0\\0&1\end{bmatrix} = I$.
 
 ## Code examples
 

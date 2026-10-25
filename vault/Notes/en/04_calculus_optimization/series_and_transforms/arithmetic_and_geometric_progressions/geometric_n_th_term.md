@@ -5,7 +5,7 @@ tags:
 - calculus
 ---
 
-# Geometric $n$-th term
+# Geometric n-th term
 
 $$
 u_n = a r^{n-1}
@@ -78,13 +78,13 @@ Geometric is appropriate for multiplicative processes.
 Sequence: 2, 6, 18, 54, ... Find $u_7$.
 
 *Step 1: Identify parameters*
-$a = 2$, $r = 6/2 = 3$ (check: $18/6=3$, $54/18=3$ ✓)
+$a = 2$, $r = 6/2 = 3$ (check: $18/6=3$, $54/18=3$)
 
 *Step 2: Apply formula*
 $u_7 = 2 \cdot 3^{7-1} = 2 \cdot 3^6 = 2 \cdot 729 = 1{,}458$
 
 *Step 3: Verify*
-$u_7 / u_6 = 1{,}458/486 = 3 = r$ ✓
+$u_7 / u_6 = 1{,}458/486 = 3 = r$
 
 ## Code examples
 

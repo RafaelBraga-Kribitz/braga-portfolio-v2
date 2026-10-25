@@ -5,7 +5,7 @@ tags:
 - calculus
 ---
 
-# Green's FunctionDelta mapping (system behavior jump at $t'$)
+# Green's Function/Delta Mapping (system behavior jump at t')
 
 $$
 G(t, t') = e^{\lambda(t - t')} \Theta(t - t')

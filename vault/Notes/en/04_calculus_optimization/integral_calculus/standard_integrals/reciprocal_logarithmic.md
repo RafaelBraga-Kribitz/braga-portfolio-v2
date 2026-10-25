@@ -46,7 +46,7 @@ $$
 \int \frac{1}{ax+b}\,dx = \int \frac{1}{u}\cdot\frac{du}{a} = \frac{1}{a}\int \frac{du}{u} = \frac{1}{a}\ln|u| + C = \frac{1}{a}\ln|ax+b| + C
 $$
 
-Verification: $\frac{d}{dx}\!\left[\frac{1}{a}\ln|ax+b|\right] = \frac{1}{a}\cdot\frac{a}{ax+b} = \frac{1}{ax+b}$ ✓
+Verification: $\frac{d}{dx}\!\left[\frac{1}{a}\ln|ax+b|\right] = \frac{1}{a}\cdot\frac{a}{ax+b} = \frac{1}{ax+b}$
 
 ### Example in a business
 
@@ -91,7 +91,7 @@ $a = 3$, $b = 1$.
 $\int \frac{1}{3x+1}\,dx = \frac{1}{3}\ln|3x+1| + C$.
 
 *Step 3: Verify by differentiating*
-$\frac{d}{dx}\!\left[\frac{1}{3}\ln|3x+1|\right] = \frac{1}{3}\cdot\frac{3}{3x+1} = \frac{1}{3x+1}$ ✓
+$\frac{d}{dx}\!\left[\frac{1}{3}\ln|3x+1|\right] = \frac{1}{3}\cdot\frac{3}{3x+1} = \frac{1}{3x+1}$
 
 *Step 4: Evaluate the definite integral*
 $\int_1^4 \frac{1}{3x+1}\,dx = \frac{1}{3}\left[\ln|3(4)+1| - \ln|3(1)+1|\right] = \frac{1}{3}\left[\ln 13 - \ln 4\right] = \frac{1}{3}\ln\frac{13}{4} \approx \frac{1}{3}\times 1.179 \approx 0.393$

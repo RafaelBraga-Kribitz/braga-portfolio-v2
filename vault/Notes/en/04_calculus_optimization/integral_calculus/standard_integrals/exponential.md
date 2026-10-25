@@ -43,7 +43,7 @@ $$
 \int e^{ax+b}\,dx = \int e^u \cdot \frac{du}{a} = \frac{1}{a}e^u + C = \frac{1}{a}e^{ax+b} + C
 $$
 
-Verification: $\frac{d}{dx}\!\left[\frac{1}{a}e^{ax+b}\right] = \frac{1}{a}\cdot e^{ax+b}\cdot a = e^{ax+b}$ ✓
+Verification: $\frac{d}{dx}\!\left[\frac{1}{a}e^{ax+b}\right] = \frac{1}{a}\cdot e^{ax+b}\cdot a = e^{ax+b}$
 
 ### Example in a business
 
@@ -88,7 +88,7 @@ $a = -3$, $b = 1$.
 $\frac{1}{a} = \frac{1}{-3} = -\frac{1}{3}$. Result: $-\frac{1}{3}e^{-3x+1} + C$.
 
 *Step 3: Verify by differentiating*
-$\frac{d}{dx}\!\left[-\frac{1}{3}e^{-3x+1}\right] = -\frac{1}{3}\cdot e^{-3x+1}\cdot(-3) = e^{-3x+1}$ ✓
+$\frac{d}{dx}\!\left[-\frac{1}{3}e^{-3x+1}\right] = -\frac{1}{3}\cdot e^{-3x+1}\cdot(-3) = e^{-3x+1}$
 
 *Step 4: Evaluate the definite integral*
 $\int_0^2 e^{-3x+1}\,dx = \left[-\frac{1}{3}e^{-3x+1}\right]_0^2$

@@ -92,11 +92,11 @@ $\ln(\sigma^{-5}) = -5 \cdot \ln\sigma$.
 $-5 \cdot \ln 2 = -5 \times 0.6931 = -3.4657$.
 
 *Step 4: Verify directly*
-$\sigma^{-5} = 2^{-5} = 1/32 = 0.03125$. $\ln(0.03125) \approx -3.4657$. ✓
+$\sigma^{-5} = 2^{-5} = 1/32 = 0.03125$. $\ln(0.03125) \approx -3.4657$.
 
 *Step 5: Reverse direction — combine $3\ln 2 + 2\ln 3$*
 $3\ln 2 = \ln(2^3) = \ln 8$. $2\ln 3 = \ln(3^2) = \ln 9$. Sum: $\ln 8 + \ln 9 = \ln(8 \times 9) = \ln 72 \approx 4.2767$.
-Verify: $3 \times 0.6931 + 2 \times 1.0986 = 2.0794 + 2.1972 = 4.2766$. ✓
+Verify: $3 \times 0.6931 + 2 \times 1.0986 = 2.0794 + 2.1972 = 4.2766$.
 
 ## Code examples
 

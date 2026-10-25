@@ -85,7 +85,7 @@ $X^T X = 1^2 + 2^2 + 3^2 = 14$
 $X^T y = 1 \cdot 2 + 2 \cdot 3 + 3 \cdot 5 = 2 + 6 + 15 = 23$
 
 *Step 3: Compute $\theta_{ML}$*
-$\theta_{ML} = 23/14 \approx 1.643$ *Verify*: predictions $\hat{y} = [1.643, 3.286, 4.929]^T$. Residuals $\approx [0.357, -0.286, 0.071]^T$. Sum of residuals $\cdot X = 0.357 - 0.571 + 0.214 = 0$ ✓ (normal equations satisfied).
+$\theta_{ML} = 23/14 \approx 1.643$ *Verify*: predictions $\hat{y} = [1.643, 3.286, 4.929]^T$. Residuals $\approx [0.357, -0.286, 0.071]^T$. Sum of residuals $\cdot X = 0.357 - 0.571 + 0.214 = 0$ (normal equations satisfied).
 
 ## Code examples
 

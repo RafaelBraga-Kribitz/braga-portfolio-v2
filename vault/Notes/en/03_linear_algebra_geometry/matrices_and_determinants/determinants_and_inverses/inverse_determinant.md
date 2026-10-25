@@ -62,7 +62,7 @@ A data scientist builds a Gaussian graphical model for a portfolio of 10 assets.
 "The determinant of the inverse is one over the determinant of the original. A matrix that stretches volumes by factor $d$ has an inverse that compresses volumes by the same factor (and vice versa). The two scaling factors are always reciprocals." Tiny numeric example:
 $A = \begin{bmatrix}2 & 1 \\ 1 & 3\end{bmatrix}$. $\det(A) = 6 - 1 = 5$.
 $A^{-1} = \frac{1}{5}\begin{bmatrix}3 & -1 \\ -1 & 2\end{bmatrix}$.
-$\det(A^{-1}) = \frac{1}{25}(6 - 1) = \frac{5}{25} = \frac{1}{5}$ ✓.
+$\det(A^{-1}) = \frac{1}{25}(6 - 1) = \frac{5}{25} = \frac{1}{5}$.
 
 ## Critical Concepts
 
@@ -84,8 +84,8 @@ $A^{-1} = \frac{1}{10}\begin{bmatrix}4 & -1 \\ -2 & 3\end{bmatrix} = \begin{bmat
 
 *Step 3: Compute det(A^-1) and verify the reciprocal*
 $\det(A^{-1}) = 0.4 \cdot 0.3 - (-0.1)(-0.2) = 0.12 - 0.02 = 0.10$.
-Check: $1/\det(A) = 1/10 = 0.10$ ✓.
-Cross-check: $\det(A) \cdot \det(A^{-1}) = 10 \cdot 0.10 = 1.0$ ✓.
+Check: $1/\det(A) = 1/10 = 0.10$.
+Cross-check: $\det(A) \cdot \det(A^{-1}) = 10 \cdot 0.10 = 1.0$.
 
 ## Code examples
 

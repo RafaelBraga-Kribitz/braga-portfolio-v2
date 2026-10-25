@@ -5,7 +5,7 @@ tags:
 - algebra
 ---
 
-# Polynomial roots (degree $n$)
+# Polynomial roots (degree n)
 
 Sum $= \frac{-a_{n-1}}{a_n}$, Product $= \frac{(-1)^n a_0}{a_n}$
 

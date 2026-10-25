@@ -5,11 +5,11 @@ tags:
 - calculus
 ---
 
-# Jacobian_matrix
+# Jacobian Matrix (f: ℝⁿ → ℝᵐ)
 
-Jacobian Matrix ($f:\mathbb{R}^n \to \mathbb{R}^m$)
-
-$J_f = \begin{bmatrix} \frac{\partial f_1}{\partial x_1} & \dots & \frac{\partial f_1}{\partial x_n} \\ \vdots & \ddots & \vdots \\ \frac{\partial f_m}{\partial x_1} & \dots & \frac{\partial f_m}{\partial x_n} \end{bmatrix} \in \mathbb{R}^{m \times n}$
+$$
+J_f = \begin{bmatrix} \frac{\partial f_1}{\partial x_1} & \dots & \frac{\partial f_1}{\partial x_n} \\ \vdots & \ddots & \vdots \\ \frac{\partial f_m}{\partial x_1} & \dots & \frac{\partial f_m}{\partial x_n} \end{bmatrix} \in \mathbb{R}^{m \times n}
+$$
 
 ## Deep Breakdown
 
@@ -102,7 +102,7 @@ J_f(2,1) = \begin{bmatrix} 1 & 2 \\ 4 & 0 \\ 1 & 3 \end{bmatrix}
 $$
 
 *Step 4: Verify linear approximation for $\mathbf{h} = (0.01, 0.01)^T$*
-$J_f \mathbf{h} = [0.03, 0.04, 0.04]^T$ vs. exact $f(2.01,1.01)-f(2,1) = [0.0301, 0.0401, 0.04]^T$ ✓
+$J_f \mathbf{h} = [0.03, 0.04, 0.04]^T$ vs. exact $f(2.01,1.01)-f(2,1) = [0.0301, 0.0401, 0.04]^T$
 
 ## Code examples
 

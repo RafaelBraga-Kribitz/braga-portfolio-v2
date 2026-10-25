@@ -104,7 +104,7 @@ $2\ln(0.6) = 2 \times (-0.5108) = -1.0217$.
 $\ln L = -2.7489 - 1.0217 = -3.7706$.
 
 *Step 5: Verify*
-$\ln(0.02304) \approx -3.7706$. ✓ No underflow: $0.02304$ is fine here, but with $n = 1000$ observations it would not be.
+$\ln(0.02304) \approx -3.7706$. No underflow: $0.02304$ is fine here, but with $n = 1000$ observations it would not be.
 
 ## Code examples
 

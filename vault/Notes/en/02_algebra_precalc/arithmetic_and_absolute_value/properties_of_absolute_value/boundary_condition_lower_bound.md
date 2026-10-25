@@ -94,9 +94,9 @@ Case 2: $u \le -20 \implies x - 100 \le -20 \implies x \le 80$.
 Flag any day where revenue $\le 80$ or revenue $\ge 120$.
 
 *Step 4: Check boundary values*
-$x = 120$: $|120 - 100| = 20 \ge 20$. ✓ Flagged (boundary included).
-$x = 100$: $|100 - 100| = 0 \ge 20$? No. ✓ Not flagged.
-$x = 75$: $|75 - 100| = 25 \ge 20$. ✓ Flagged.
+$x = 120$: $|120 - 100| = 20 \ge 20$. Flagged (boundary included).
+$x = 100$: $|100 - 100| = 0 \ge 20$? No. Not flagged.
+$x = 75$: $|75 - 100| = 25 \ge 20$. Flagged.
 
 ## Code examples
 

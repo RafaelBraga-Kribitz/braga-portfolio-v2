@@ -76,13 +76,13 @@ Test: $\sum_{n=1}^\infty \frac{1}{n^2 + 1}$
 For large n: $\frac{1}{n^2+1} < \frac{1}{n^2}$
 
 *Step 2: State the inequality*
-$0 \leq \frac{1}{n^2+1} \leq \frac{1}{n^2}$ for all n ≥ 1. ✓
+$0 \leq \frac{1}{n^2+1} \leq \frac{1}{n^2}$ for all n ≥ 1.
 
 *Step 3: Check the comparison series*
 $\sum 1/n^2$ is a p-series with p=2 > 1 → **converges** (to π²/6 ≈ 1.645).
 
 *Step 4: Conclude*
-By comparison test: $\sum \frac{1}{n^2+1}$ **CONVERGES**. *Numerical check*: $\sum_{n=1}^{10000} 1/(n^2+1) \approx 1.0767$ — finite, confirmed. ✓
+By comparison test: $\sum \frac{1}{n^2+1}$ **CONVERGES**. *Numerical check*: $\sum_{n=1}^{10000} 1/(n^2+1) \approx 1.0767$ — finite, confirmed.
 
 ## Code examples
 

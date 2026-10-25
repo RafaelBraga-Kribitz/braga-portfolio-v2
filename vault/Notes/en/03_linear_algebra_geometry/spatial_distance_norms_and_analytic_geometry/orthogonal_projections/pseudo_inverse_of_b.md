@@ -5,7 +5,7 @@ tags:
 - linear-algebra
 ---
 
-# Pseudo-inverse of $B$
+# Pseudo-inverse of B
 
 $$
 (B^T B)^{-1} B^T

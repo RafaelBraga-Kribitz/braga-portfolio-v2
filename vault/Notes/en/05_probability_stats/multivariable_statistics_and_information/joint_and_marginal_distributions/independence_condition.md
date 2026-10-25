@@ -80,10 +80,10 @@ Joint PMF for (Device: 0=mobile, 1=desktop) × (Purchase: 0=no, 1=yes):
 | $f_Y$ | 0.70 | 0.30 | |
 
 *Step 1: Check independence for (X=0, Y=0)*
-$f_X(0) \cdot f_Y(0) = 0.50 \times 0.70 = 0.35 = f(0,0)$ ✓
+$f_X(0) \cdot f_Y(0) = 0.50 \times 0.70 = 0.35 = f(0,0)$
 
 *Step 2: Check for (X=0, Y=1)*
-$0.50 \times 0.30 = 0.15 = f(0,1)$ ✓
+$0.50 \times 0.30 = 0.15 = f(0,1)$
 
 *Step 3: Check all remaining cells*
 Both hold. Conclusion: X and Y are independent.

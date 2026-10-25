@@ -5,7 +5,7 @@ tags:
 - linear-algebra
 ---
 
-# Straight Line (Distance from point $M(x 1, y 1)$)
+# Straight Line (Distance from point M(x₁, y₁))
 
 $$
 d = \frac{|Ax_1 + By_1 + C|}{\sqrt{A^2 + B^2}}

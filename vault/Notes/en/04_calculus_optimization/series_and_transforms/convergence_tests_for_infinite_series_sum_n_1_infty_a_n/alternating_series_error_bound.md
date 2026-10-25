@@ -71,7 +71,7 @@ $|S - S_N| \leq a_{N+1}$ - **$S$** — The true infinite sum (unknown in practic
 Series: $S = \sum_{n=1}^\infty \frac{(-1)^{n+1}}{n} = \ln(2) \approx 0.6931$
 
 *Step 1: Verify Leibniz conditions*
-Terms: 1, 1/2, 1/3, 1/4, ... → decreasing ✓, → 0 ✓
+Terms: 1, 1/2, 1/3, 1/4, ... → decreasing, → 0
 
 *Step 2: Compute partial sum at N = 4*
 S_4 = 1 - 1/2 + 1/3 - 1/4 = 0.5833...
@@ -81,7 +81,7 @@ a_5 = 1/5 = 0.2000
 
 *Step 4: Apply error bound*
 |ln(2) - S_4| ≤ a_5 = 0.2000
-True error: |0.6931 - 0.5833| = 0.1098 ≤ 0.2000 ✓
+True error: |0.6931 - 0.5833| = 0.1098 ≤ 0.2000
 
 *Step 5: How many terms for 3 decimal places (ε = 0.001)?*
 Need a_{N+1} = 1/(N+1) < 0.001 → N+1 > 1000 → N ≥ 1000. This series converges very slowly.

@@ -5,7 +5,7 @@ tags:
 - calculus
 ---
 
-# Implicit Differentiation (If $F(x,y) = 0$)
+# Implicit Differentiation (If F(x,y) = 0)
 
 $$
 \frac{dy}{dx} = -\frac{F_x}{F_y}
@@ -76,7 +76,7 @@ $$
 ## Critical Concepts
 
 - **Implicit Function Theorem (IFT)**: if $F(x_0, y_0) = 0$ and $F_y(x_0, y_0) \neq 0$, then there exists a neighborhood of $x_0$ where the curve $F(x,y)=0$ is the graph of a differentiable function $y = f(x)$. The derivative is $-F_x/F_y$.
-- **Gradient perpendicularity**: the gradient $\nabla F = (F_x, F_y)$ is always perpendicular to the level curve $F = c$. The tangent vector to the curve is $(-F_y, F_x)$ (rotated 90°), giving slope $dy/dx = -F_x/F_y$ ✓
+- **Gradient perpendicularity**: the gradient $\nabla F = (F_x, F_y)$ is always perpendicular to the level curve $F = c$. The tangent vector to the curve is $(-F_y, F_x)$ (rotated 90°), giving slope $dy/dx = -F_x/F_y$
 - **Vertical tangent**: when $F_y = 0$ at a point, the tangent is vertical ($dy/dx$ is undefined, but $dx/dy = -F_y/F_x = 0$). Classic example: top and bottom of a circle.
 - **Extension to Jacobians**: for a system $F_i(x_1, \ldots, x_n, y_1, \ldots, y_m) = 0$, the Jacobian of $\mathbf{y}$ with respect to $\mathbf{x}$ is $-J_y^{-1} J_x$, a direct matrix analogue.
 - **SVM connection**: the SVM decision boundary $w^T x = 0$ is an implicit linear equation. Implicit differentiation gives the feature trade-off rate directly from the weight vector components.
@@ -102,8 +102,8 @@ $$
 \frac{dy}{dx}\bigg|_{(\frac{1}{\sqrt{2}}, \frac{1}{\sqrt{2}})} = -\frac{1/\sqrt{2}}{1/\sqrt{2}} = -1
 $$
 
-The tangent to the circle at 45° has slope $-1$. ✓ *Verification: from explicit form*
-$y = \sqrt{1 - x^2}$, $\frac{dy}{dx} = \frac{-x}{\sqrt{1-x^2}} = -\frac{x}{y}$ ✓
+The tangent to the circle at 45° has slope $-1$. *Verification: from explicit form*
+$y = \sqrt{1 - x^2}$, $\frac{dy}{dx} = \frac{-x}{\sqrt{1-x^2}} = -\frac{x}{y}$
 
 ## Code examples
 

@@ -96,7 +96,7 @@ Now multiply result by $\frac{1}{3}$: $\frac{1}{5} \cdot \frac{1}{3} = \frac{1}{
 $\frac{1}{15} \approx 0.0\overline{6} = 6.\overline{6}\%$ end-to-end click rate.
 
 *Step 4: Verify without cancellation*
-$\frac{4 \cdot 1 \cdot 1}{5 \cdot 4 \cdot 3} = \frac{4}{60} = \frac{1}{15}$. ✓
+$\frac{4 \cdot 1 \cdot 1}{5 \cdot 4 \cdot 3} = \frac{4}{60} = \frac{1}{15}$.
 
 ## Code examples
 

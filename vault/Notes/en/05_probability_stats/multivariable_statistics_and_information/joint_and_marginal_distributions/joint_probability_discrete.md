@@ -77,7 +77,7 @@ $(0,0),(0,1),(1,0),(1,1)$ — each corresponds to (tails-tails, tails-heads, hea
 Each pair has probability $1/4 = 0.25$.
 
 *Step 3: Verify normalisation*
-$0.25 + 0.25 + 0.25 + 0.25 = 1.0$ ✓
+$0.25 + 0.25 + 0.25 + 0.25 = 1.0$
 
 *Step 4: Read a joint probability*
 $P(X=1, Y=0) = f(1,0) = 0.25$ — probability of heads on coin 1 and tails on coin 2.

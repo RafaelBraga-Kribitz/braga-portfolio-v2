@@ -96,10 +96,10 @@ $3! = 3 \times 2 \times 1 = 6$.
 $\binom{5}{2} = \frac{120}{2 \times 6} = \frac{120}{12} = 10$.
 
 *Step 4: Verify with the shortcut formula*
-$\binom{5}{2} = \frac{5 \times 4}{2!} = \frac{20}{2} = 10$. ✓
+$\binom{5}{2} = \frac{5 \times 4}{2!} = \frac{20}{2} = 10$.
 
 *Step 5: Enumerate to confirm*
-Features: $\{A, B, C, D, E\}$. Pairs: $\{AB, AC, AD, AE, BC, BD, BE, CD, CE, DE\}$ = 10 pairs. ✓
+Features: $\{A, B, C, D, E\}$. Pairs: $\{AB, AC, AD, AE, BC, BD, BE, CD, CE, DE\}$ = 10 pairs.
 
 ## Code examples
 

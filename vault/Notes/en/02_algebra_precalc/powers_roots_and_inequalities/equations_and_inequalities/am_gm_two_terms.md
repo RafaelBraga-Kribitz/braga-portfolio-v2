@@ -98,10 +98,10 @@ By AM-GM: $\frac{1/n_1 + 1/n_2}{2} \ge \sqrt{\frac{1}{n_1 n_2}}$. Actually, simp
 By AM-HM inequality (which uses AM-GM): $\frac{n_1 + n_2}{2} \ge \frac{2}{\frac{1}{n_1} + \frac{1}{n_2}}$, so $\frac{1}{n_1} + \frac{1}{n_2} \ge \frac{4}{n_1 + n_2} = \frac{4}{100} = 0.04$.
 
 *Step 4: Equality check*
-Equality at $n_1 = n_2 = 50$: $1/50 + 1/50 = 0.02 + 0.02 = 0.04$. ✓
+Equality at $n_1 = n_2 = 50$: $1/50 + 1/50 = 0.02 + 0.02 = 0.04$.
 
 *Step 5: Verify the unequal case is worse*
-$n_1 = 20, n_2 = 80$: $1/20 + 1/80 = 0.050 + 0.0125 = 0.0625 > 0.04$. ✓
+$n_1 = 20, n_2 = 80$: $1/20 + 1/80 = 0.050 + 0.0125 = 0.0625 > 0.04$.
 
 ## Code examples
 

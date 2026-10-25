@@ -83,19 +83,19 @@ This matters in optimization: any objective that includes $x + 1/x$ has a unique
 Task: verify $x + 1/x \ge 2$ for $x = 3$ and find where equality holds.
 
 *Step 1: Compute for $x = 3$*
-$3 + 1/3 = 9/3 + 1/3 = 10/3 \approx 3.33 \ge 2$. ✓
+$3 + 1/3 = 9/3 + 1/3 = 10/3 \approx 3.33 \ge 2$.
 
 *Step 2: Compute for $x = 0.5$*
-$0.5 + 1/0.5 = 0.5 + 2 = 2.5 \ge 2$. ✓
+$0.5 + 1/0.5 = 0.5 + 2 = 2.5 \ge 2$.
 
 *Step 3: Check equality condition*
 $x + 1/x = 2 \Rightarrow x^2 - 2x + 1 = 0 \Rightarrow (x-1)^2 = 0 \Rightarrow x = 1$.
-Verify: $1 + 1/1 = 2$. ✓
+Verify: $1 + 1/1 = 2$.
 
 *Step 4: Trace the proof for $x = 3$*
-$(x - 1)^2 = (3 - 1)^2 = 4 \ge 0$. ✓
-$x^2 + 1 \ge 2x \Rightarrow 10 \ge 6$. ✓
-Dividing by $x = 3$: $10/3 \ge 2$. ✓
+$(x - 1)^2 = (3 - 1)^2 = 4 \ge 0$.
+$x^2 + 1 \ge 2x \Rightarrow 10 \ge 6$.
+Dividing by $x = 3$: $10/3 \ge 2$.
 
 ## Code examples
 

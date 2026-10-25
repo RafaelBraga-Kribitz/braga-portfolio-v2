@@ -93,7 +93,7 @@ Linear term: $[3, 3] \cdot [0.1, -0.1] = 0.3 - 0.3 = 0$
 Quadratic term: $\frac{1}{2}[0.1, -0.1] \begin{bmatrix}2&1\\1&2\end{bmatrix}[0.1,-0.1]^T = \frac{1}{2}[0.1, -0.1][0.1, -0.1]^T \cdot ...$
 $= \frac{1}{2}(2(0.01) + 2(1)(0.1)(-0.1) + 2(0.01)) = \frac{1}{2}(0.02 - 0.02 + 0.02) = 0.01$
 Taylor approx: 3 + 0 + 0.01 = **3.01**
-True value: $1.21 + 0.99 + 0.81 = 3.01$ ✓ (exact for quadratic f)
+True value: $1.21 + 0.99 + 0.81 = 3.01$ (exact for quadratic f)
 
 ## Code examples
 

@@ -99,7 +99,7 @@ A_numpy = np.array([[3, -1], [0, 4], [2, 7]])
 # a_{11} = A_numpy[0, 0], a_{32} = A_numpy[2, 1]
 ```
 
-`A_numpy.shape` returns `(3, 2)`: $m=3$, $n=2$ ✓.
+`A_numpy.shape` returns `(3, 2)`: $m=3$, $n=2$.
 
 ## Code examples
 

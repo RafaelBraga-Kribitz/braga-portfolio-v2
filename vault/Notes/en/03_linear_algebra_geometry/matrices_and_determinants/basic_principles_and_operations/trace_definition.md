@@ -62,7 +62,7 @@ A data analyst runs PCA on a marketing dataset with 10 features. The covariance 
 $A = \begin{bmatrix}3 & 7 & -1 \\ 2 & 5 & 4 \\ 0 & -3 & 2\end{bmatrix}$.
 Diagonal entries: $a_{11} = 3$, $a_{22} = 5$, $a_{33} = 2$.
 $\text{tr}(A) = 3 + 5 + 2 = 10$.
-Cross-check via eigenvalues: characteristic polynomial gives $\lambda_1 + \lambda_2 + \lambda_3 = 10$ ✓.
+Cross-check via eigenvalues: characteristic polynomial gives $\lambda_1 + \lambda_2 + \lambda_3 = 10$.
 
 ## Critical Concepts
 
@@ -77,7 +77,7 @@ Cross-check via eigenvalues: characteristic polynomial gives $\lambda_1 + \lambd
 ## Step-by-step calculation (tiny example)
 
 *Step 1: Confirm the matrix is square and extract the diagonal*
-$A = \begin{bmatrix}4 & 1 & 0 \\ 2 & -3 & 5 \\ 7 & 0 & 2\end{bmatrix}$. Shape: $3 \times 3$ ✓ (square).
+$A = \begin{bmatrix}4 & 1 & 0 \\ 2 & -3 & 5 \\ 7 & 0 & 2\end{bmatrix}$. Shape: $3 \times 3$ (square).
 Diagonal entries: $a_{11} = 4$, $a_{22} = -3$, $a_{33} = 2$.
 
 *Step 2: Sum the diagonal entries*
@@ -85,7 +85,7 @@ $\text{tr}(A) = 4 + (-3) + 2 = 3$.
 
 *Step 3: Verify the eigenvalue connection numerically*
 Eigenvalues of $A$ (computed numerically): approximately $\{6.02, -3.94, 0.92\}$.
-Sum: $6.02 + (-3.94) + 0.92 \approx 3.00$ ✓ (matches trace).
+Sum: $6.02 + (-3.94) + 0.92 \approx 3.00$ (matches trace).
 
 ## Code examples
 

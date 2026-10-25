@@ -5,7 +5,7 @@ tags:
 - foundations
 ---
 
-# Fallacy ($f$ or $c$)
+# Fallacy (f or c)
 
 False for all truth values of its components.
 

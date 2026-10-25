@@ -78,15 +78,15 @@ $A - B = \begin{bmatrix}1-5 & 2-0 \\ 3-(-1) & 4-2\end{bmatrix} = \begin{bmatrix}
 ## Step-by-step calculation (tiny example)
 
 *Step 1: Write both matrices side by side and confirm shapes match*
-$A = \begin{bmatrix}2 & -1 & 0 \\ 4 & 3 & 1\end{bmatrix}$ (shape $2 \times 3$), $B = \begin{bmatrix}1 & 2 & -3 \\ 0 & -1 & 5\end{bmatrix}$ (shape $2 \times 3$). Shapes match ✓.
+$A = \begin{bmatrix}2 & -1 & 0 \\ 4 & 3 & 1\end{bmatrix}$ (shape $2 \times 3$), $B = \begin{bmatrix}1 & 2 & -3 \\ 0 & -1 & 5\end{bmatrix}$ (shape $2 \times 3$). Shapes match.
 
 *Step 2: Add each corresponding entry*
 Row 1: $2+1=3$, $-1+2=1$, $0+(-3)=-3$.
 Row 2: $4+0=4$, $3+(-1)=2$, $1+5=6$.
 
 *Step 3: Assemble the result and verify shape*
-$A + B = \begin{bmatrix}3 & 1 & -3 \\ 4 & 2 & 6\end{bmatrix}$ (shape $2 \times 3$ ✓).
-Sanity check: sum of all entries of $A+B$ should equal sum of all entries of $A$ plus sum of all entries of $B$. $\text{sum}(A) = 9$, $\text{sum}(B) = 4$, $\text{sum}(A+B) = 3+1-3+4+2+6=13 = 9+4$ ✓.
+$A + B = \begin{bmatrix}3 & 1 & -3 \\ 4 & 2 & 6\end{bmatrix}$ (shape $2 \times 3$).
+Sanity check: sum of all entries of $A+B$ should equal sum of all entries of $A$ plus sum of all entries of $B$. $\text{sum}(A) = 9$, $\text{sum}(B) = 4$, $\text{sum}(A+B) = 3+1-3+4+2+6=13 = 9+4$.
 
 ## Code examples
 

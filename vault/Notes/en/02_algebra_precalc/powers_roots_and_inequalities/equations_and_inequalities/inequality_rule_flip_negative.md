@@ -95,8 +95,8 @@ $\frac{-3x}{-3} < \frac{12}{-3}$.
 $x < -4$.
 
 *Step 4: Verify with a specific value*
-Take $x = -5 < -4$. Check original: $-3(-5) = 15 > 12$. ✓
-Take $x = -3 > -4$. Check original: $-3(-3) = 9 \not> 12$. ✗ (correctly excluded). ✓
+Take $x = -5 < -4$. Check original: $-3(-5) = 15 > 12$.
+Take $x = -3 > -4$. Check original: $-3(-3) = 9 \not> 12$, so it is correctly excluded.
 
 *Step 5: Contrast with positive coefficient*
 If the problem were $3x > 12$: dividing by $3 > 0$ gives $x > 4$ (direction preserved). The difference is purely the sign of the divisor.

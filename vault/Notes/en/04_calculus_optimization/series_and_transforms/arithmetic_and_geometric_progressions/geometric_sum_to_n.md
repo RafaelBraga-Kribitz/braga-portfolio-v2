@@ -5,7 +5,7 @@ tags:
 - calculus
 ---
 
-# Geometric Sum to $n$
+# Geometric Sum to n
 
 $$
 S_n = \frac{a(1-r^n)}{1-r}
@@ -82,7 +82,7 @@ u_1 = 2, u_2 = 2·3 = 6, u_3 = 6·3 = 18, u_4 = 18·3 = 54
 Direct sum: 2 + 6 + 18 + 54 = **80**
 
 *Step 2: Apply formula*
-S_4 = 2·(1 - 3⁴)/(1 - 3) = 2·(1 - 81)/(−2) = 2·(−80)/(−2) = 2·40 = **80** ✓
+S_4 = 2·(1 - 3⁴)/(1 - 3) = 2·(1 - 81)/(−2) = 2·(−80)/(−2) = 2·40 = **80**
 
 *Step 3: Sanity check with r > 1 intuition*
 r = 3 > 1 → series is growing fast. The last term 54 alone is more than half the sum (54/80 = 67.5%). This is typical: in a growing geometric series, the last few terms dominate.

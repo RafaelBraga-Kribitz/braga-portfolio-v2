@@ -5,7 +5,7 @@ tags:
 - calculus
 ---
 
-# $x {i+1} = x i - gamma i (nabla f(x i))^T + alpha Delta x i$
+# Gradient Descent with Momentum (Update Rule)
 
 $$
 x_{i+1} = x_i - \gamma_i (\nabla f(x_i))^T + \alpha \Delta x_i

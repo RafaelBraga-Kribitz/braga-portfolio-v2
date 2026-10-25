@@ -5,7 +5,7 @@ tags:
 - probability-statistics
 ---
 
-# Correlation Coefficient (Pearson's $rho$)
+# Correlation Coefficient (Pearson's rho)
 
 $$
 \rho_{X,Y} = \frac{Cov(X,Y)}{\sigma_X \sigma_Y}

@@ -5,7 +5,7 @@ tags:
 - calculus
 ---
 
-# Maximum at $x 0$
+# Maximum at x₀
 
 $$
 f'(x)

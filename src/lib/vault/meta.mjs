@@ -120,11 +120,12 @@ const fieldKey = (k) => k.trim().toLowerCase().replace(/\s+/g, '-');
 /** A plain-text excerpt: the first paragraph of prose, about `max` characters, cut at a word. */
 export function excerpt(body, max = 180) {
   const paras = proseOnly(body).split(/\n\s*\n/).map((p) => p.trim())
-    .filter((p) => p && !/^(#|>|\||- |\* |\d+\. |!\[|<|---|[\p{L}\p{N}_ -]+::)/u.test(p));
+    .filter((p) => p && !/^(#|>|\||- |\* |\d+\. |!\[|<|---|\$\$|[\p{L}\p{N}_ -]+::)/u.test(p));
   const text = (paras[0] ?? '')
     .replace(/!\[\[[^\]]*\]\]/g, '')
     .replace(/\[\[([^\]|#]+)(?:#[^\]|]*)?(?:\|([^\]]+))?\]\]/g, (_, a, b) => b ?? a)
     .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/\$([^$\n]+)\$/g, '$1')   // inline maths reads as its source, without the delimiters
     .replace(/[*_~=]{1,2}([^*_~=]+)[*_~=]{1,2}/g, '$1')
     .replace(/\s+/g, ' ').trim();
   if (text.length <= max) return text;

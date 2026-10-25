@@ -84,7 +84,7 @@ For $\sin(2x+1)$: $a = 2$, $b = 1$.
 $\int \sin(2x+1)\,dx = -\frac{1}{2}\cos(2x+1) + C$.
 
 *Step 3: Verify by differentiating*
-$\frac{d}{dx}\!\left[-\frac{1}{2}\cos(2x+1)\right] = -\frac{1}{2}\cdot(-\sin(2x+1))\cdot 2 = \sin(2x+1)$ ✓
+$\frac{d}{dx}\!\left[-\frac{1}{2}\cos(2x+1)\right] = -\frac{1}{2}\cdot(-\sin(2x+1))\cdot 2 = \sin(2x+1)$
 
 *Step 4: Evaluate the definite integral*
 $\int_0^{\pi/2} \sin(2x)\,dx = \left[-\frac{1}{2}\cos(2x)\right]_0^{\pi/2}$

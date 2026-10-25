@@ -5,7 +5,7 @@ tags:
 - algebra
 ---
 
-# General $x^n + y^n$ (for odd $n$)
+# General xⁿ + yⁿ (for odd n)
 
 $$
 a^n + b^n = (a + b)(a^{n-1} - a^{n-2}b + \dots + b^{n-1})
@@ -93,10 +93,10 @@ $x^3 + 2^3 = (x + 2)(x^2 - 2x + 4)$.
 $\frac{(x+2)(x^2 - 2x + 4)}{x + 2} = x^2 - 2x + 4$ (valid for $x \ne -2$).
 
 *Step 4: Verify numerically at $x = 1$*
-$(1 + 8) / (1 + 2) = 9/3 = 3$. Formula: $1 - 2 + 4 = 3$. ✓
+$(1 + 8) / (1 + 2) = 9/3 = 3$. Formula: $1 - 2 + 4 = 3$.
 
 *Step 5: Verify the signs in the quotient*
-Sum of cubes quotient: $a^2 - ab + b^2 = x^2 - (x)(2) + 4 = x^2 - 2x + 4$. Signs alternate: $+, -, +$. ✓
+Sum of cubes quotient: $a^2 - ab + b^2 = x^2 - (x)(2) + 4 = x^2 - 2x + 4$. Signs alternate: $+, -, +$.
 
 ## Code examples
 

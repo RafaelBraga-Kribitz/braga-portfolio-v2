@@ -82,7 +82,7 @@ $= [xy + y^2/2]_0^1 = x + 1/2$
 $f_X(x) = x + 1/2$ for $0 \le x \le 1$
 
 *Step 4: Verify normalisation*
-$\int_0^1 (x + 1/2) \, dx = [x^2/2 + x/2]_0^1 = 1/2 + 1/2 = 1.0$ ✓
+$\int_0^1 (x + 1/2) \, dx = [x^2/2 + x/2]_0^1 = 1/2 + 1/2 = 1.0$
 
 ## Code examples
 

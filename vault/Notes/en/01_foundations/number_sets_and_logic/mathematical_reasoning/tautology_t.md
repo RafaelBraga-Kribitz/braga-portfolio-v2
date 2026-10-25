@@ -5,7 +5,7 @@ tags:
 - foundations
 ---
 
-# Tautology ($t$)
+# Tautology (t)
 
 True for all truth values of its components.
 

@@ -62,8 +62,8 @@ A data scientist computes the log-likelihood of a multivariate Gaussian model fo
 
 "The determinant is the product of all eigenvalues. If even one eigenvalue is zero, the determinant is zero and the matrix is singular (non-invertible). The determinant encodes the total volume scaling of the transformation." Tiny numeric example:
 $A = \begin{bmatrix}3 & 0 \\ 0 & 4\end{bmatrix}$ (diagonal). Eigenvalues: $\lambda_1 = 3$, $\lambda_2 = 4$.
-$\det(A) = 3 \cdot 4 = 12$. Direct formula: $3 \cdot 4 - 0 \cdot 0 = 12$ ✓.
-Non-diagonal: $A = \begin{bmatrix}2 & 1 \\ 1 & 2\end{bmatrix}$. Eigenvalues: $\lambda_1 = 3$, $\lambda_2 = 1$. $\det(A) = 3 \cdot 1 = 3$. Direct: $4 - 1 = 3$ ✓.
+$\det(A) = 3 \cdot 4 = 12$. Direct formula: $3 \cdot 4 - 0 \cdot 0 = 12$.
+Non-diagonal: $A = \begin{bmatrix}2 & 1 \\ 1 & 2\end{bmatrix}$. Eigenvalues: $\lambda_1 = 3$, $\lambda_2 = 1$. $\det(A) = 3 \cdot 1 = 3$. Direct: $4 - 1 = 3$.
 
 ## Critical Concepts
 

@@ -108,7 +108,7 @@ $\frac{\partial F}{\partial v}\big|_{v=5} = 3$, $\frac{\partial v}{\partial x}\b
 $\frac{\partial F}{\partial x} = 12 \cdot 3 + 3 \cdot 1 = 36 + 3 = 39$ *Verification: direct substitution*
 $F(x,y) = (xy)^2 + 3(x+y) = x^2y^2 + 3x + 3y$
 $\frac{\partial F}{\partial x} = 2xy^2 + 3$
-At $(2,3)$: $2 \cdot 2 \cdot 9 + 3 = 36 + 3 = 39$ ✓
+At $(2,3)$: $2 \cdot 2 \cdot 9 + 3 = 36 + 3 = 39$
 
 ## Code examples
 

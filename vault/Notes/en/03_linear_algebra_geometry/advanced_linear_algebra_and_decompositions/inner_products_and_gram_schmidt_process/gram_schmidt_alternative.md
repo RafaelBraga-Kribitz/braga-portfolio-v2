@@ -66,7 +66,7 @@ $\hat{q}_1 = [1,0,0]^T$, $\hat{q}_2 = [0,1,0]^T$, $v_3 = [2,3,4]^T$.
 $\langle v_3, \hat{q}_1 \rangle = 2$, $\langle v_3, \hat{q}_2 \rangle = 3$.
 $q_3 = [2,3,4]^T - 2[1,0,0]^T - 3[0,1,0]^T = [0,0,4]^T$.
 $\hat{q}_3 = [0,0,4]^T / 4 = [0,0,1]^T$.
-Check: $\langle \hat{q}_3, \hat{q}_1 \rangle = 0$, $\langle \hat{q}_3, \hat{q}_2 \rangle = 0$ ✓.
+Check: $\langle \hat{q}_3, \hat{q}_1 \rangle = 0$, $\langle \hat{q}_3, \hat{q}_2 \rangle = 0$.
 
 ## Critical Concepts
 
@@ -90,7 +90,7 @@ $\langle v_3, \hat{q}_2 \rangle = 1 \cdot 0 + 1 \cdot 1 + 1 \cdot 0 = 1$.
 *Step 3: Subtract projections and normalize to get q_hat_3*
 $q_3 = v_3 - 1 \cdot \hat{q}_1 - 1 \cdot \hat{q}_2 = [1,1,1]^T - [1,0,0]^T - [0,1,0]^T = [0,0,1]^T$.
 $\hat{q}_3 = [0,0,1]^T / 1 = [0,0,1]^T$.
-Check: $\langle \hat{q}_3, \hat{q}_1 \rangle = 0$, $\langle \hat{q}_3, \hat{q}_2 \rangle = 0$, $\|\hat{q}_3\| = 1$ ✓.
+Check: $\langle \hat{q}_3, \hat{q}_1 \rangle = 0$, $\langle \hat{q}_3, \hat{q}_2 \rangle = 0$, $\|\hat{q}_3\| = 1$.
 Result: $\{[1,0,0]^T, [0,1,0]^T, [0,0,1]^T\}$ — the standard basis $\{e_1, e_2, e_3\}$.
 
 ## Code examples

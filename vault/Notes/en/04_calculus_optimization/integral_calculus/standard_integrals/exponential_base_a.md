@@ -6,7 +6,7 @@ tags:
 slug: exponential-base-a-standard-integrals
 ---
 
-# Exponential Base $a$
+# Exponential Base a
 
 $$
 \int a^{px+q}\,dx = \frac{1}{p\ln a}a^{px+q} + C
@@ -63,7 +63,7 @@ Each symbol:
 - $a^{px+q}$: the integrand; also appears unchanged in the result
 - $p\ln a$: the denominator has two parts: $p$ (chain rule for the $px$ term) and $\ln a$ (base-conversion factor)
 - $C$: constant of integration Special cases:
-- $a = e$: $\ln e = 1$, so formula reduces to $\int e^{px+q}\,dx = \frac{1}{p}e^{px+q} + C$ ✓
+- $a = e$: $\ln e = 1$, so formula reduces to $\int e^{px+q}\,dx = \frac{1}{p}e^{px+q} + C$
 - $p = 1, q = 0$: $\int a^x\,dx = \frac{a^x}{\ln a} + C$
 - $a = 2, p = 1, q = 0$: $\int 2^x\,dx = \frac{2^x}{\ln 2} + C$
 
@@ -93,7 +93,7 @@ $p\ln a = 3\ln 2 \approx 3 \times 0.6931 = 2.079$.
 $\int 2^{3x}\,dx = \frac{2^{3x}}{3\ln 2} + C$.
 
 *Step 4: Verify by differentiating*
-$\frac{d}{dx}\!\left[\frac{2^{3x}}{3\ln 2}\right] = \frac{2^{3x}\ln 2\cdot 3}{3\ln 2} = 2^{3x}$ ✓
+$\frac{d}{dx}\!\left[\frac{2^{3x}}{3\ln 2}\right] = \frac{2^{3x}\ln 2\cdot 3}{3\ln 2} = 2^{3x}$
 
 *Step 5: Evaluate the definite integral*
 $\int_0^2 2^{3x}\,dx = \frac{2^6 - 2^0}{3\ln 2} = \frac{64 - 1}{3\ln 2} = \frac{63}{3\ln 2} \approx \frac{63}{2.079} \approx 30.30$

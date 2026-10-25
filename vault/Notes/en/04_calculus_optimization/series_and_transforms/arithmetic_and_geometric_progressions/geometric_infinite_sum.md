@@ -74,7 +74,7 @@ This comes from r = 1/(1+d), giving S = C/(1+d) / (1 - 1/(1+d)) = C/d.
 Series: a = 1, r = 0.5 (terms: 1, 0.5, 0.25, 0.125, ...)
 
 *Step 1: Verify convergence*
-|r| = 0.5 < 1 → converges. ✓
+|r| = 0.5 < 1 → converges.
 
 *Step 2: Apply formula*
 S_∞ = 1 / (1 - 0.5) = 1 / 0.5 = **2**
@@ -85,7 +85,7 @@ S_2 = 1.5
 S_3 = 1.75
 S_4 = 1.875
 S_10 = 1 × (1 - 0.5^10)/(0.5) = (1 - 0.000977)/0.5 ≈ 1.998
-The partial sums approach 2 from below. ✓
+The partial sums approach 2 from below.
 
 *Step 4: Interpret*
 Every doubling of terms adds half the remaining gap to 2. This is the geometric convergence rate.

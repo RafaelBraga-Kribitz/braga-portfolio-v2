@@ -5,7 +5,7 @@ tags:
 - machine-learning
 ---
 
-# Feature Matrix ($Phi$) Formulation
+# Feature Matrix (Phi) Formulation
 
 $$
 \theta_{ML} = (\Phi^\top \Phi)^{-1}\Phi^\top y
@@ -91,7 +91,7 @@ $\Phi^T y = [2+5+10, 2+10+30, 2+20+90]^T = [17, 42, 112]^T$
 
 *Step 4: Solve $\theta = (\Phi^T\Phi)^{-1} \Phi^T y$*
 Using a solver: $\theta = [1, 0, 1]^T$ (intercept=1, linear=0, quadratic=1).
-Prediction: $\hat{y}(x) = 1 + x^2$. Check: $\hat{y}(1)=2$, $\hat{y}(2)=5$, $\hat{y}(3)=10$ ✓ (exact fit).
+Prediction: $\hat{y}(x) = 1 + x^2$. Check: $\hat{y}(1)=2$, $\hat{y}(2)=5$, $\hat{y}(3)=10$ (exact fit).
 
 ## Code examples
 

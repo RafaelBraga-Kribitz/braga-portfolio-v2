@@ -62,8 +62,8 @@ An analyst runs a Gaussian process model to predict weekly revenue from 10 input
 
 "Adding a tiny amount to every diagonal entry of a matrix guarantees it can never compress any direction to zero or below, because the extra term $\varepsilon \|x\|^2$ always contributes positive energy in every direction." Tiny numeric example: $A = \begin{bmatrix}1 & 1 \\ 1 & 1\end{bmatrix}$ (PSD, not PD; eigenvalues 2 and 0). Take $\varepsilon = 0.1$.
 $A + \varepsilon I = \begin{bmatrix}1.1 & 1 \\ 1 & 1.1\end{bmatrix}$.
-Eigenvalues: $1.1 + 1 = 2.1$ and $1.1 - 1 = 0.1$. Both positive ✓.
-For $x = [1,-1]^T$ (was in null space of $A$): $x^T (A+\varepsilon I) x = (1-1)^2 + 0.1(1+1) = 0 + 0.2 = 0.2 > 0$ ✓.
+Eigenvalues: $1.1 + 1 = 2.1$ and $1.1 - 1 = 0.1$. Both positive.
+For $x = [1,-1]^T$ (was in null space of $A$): $x^T (A+\varepsilon I) x = (1-1)^2 + 0.1(1+1) = 0 + 0.2 = 0.2 > 0$.
 
 ## Critical Concepts
 
@@ -85,11 +85,11 @@ $A$ is PSD (eigenvalues $\geq 0$) but not PD ($\lambda_2 = 0$); Cholesky will fa
 
 *Step 2: Apply regularization with epsilon = 0.01*
 $A_\varepsilon = A + 0.01 I = \begin{bmatrix}4.01 & 2 \\ 2 & 1.01\end{bmatrix}$.
-New eigenvalues: $\lambda_1 + 0.01 = 5.01$ and $\lambda_2 + 0.01 = 0.01$. Both positive ✓.
+New eigenvalues: $\lambda_1 + 0.01 = 5.01$ and $\lambda_2 + 0.01 = 0.01$. Both positive.
 
 *Step 3: Verify via quadratic form for the formerly null-space vector*
 $x = [1, -2]^T$ was in the null space of $A$ ($A x = 0$, so $x^T A x = 0$).
-$x^T A_\varepsilon x = x^T A x + 0.01 \|x\|^2 = 0 + 0.01(1 + 4) = 0.05 > 0$ ✓.
+$x^T A_\varepsilon x = x^T A x + 0.01 \|x\|^2 = 0 + 0.01(1 + 4) = 0.05 > 0$.
 Regularization fixed the deficiency.
 
 ## Code examples

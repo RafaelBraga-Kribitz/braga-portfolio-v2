@@ -84,7 +84,7 @@ $E[XY] = (3+10+21)/3 = 34/3 \approx 11.33$
 $Cov(X,Y) = 34/3 - 2 \times 5 = 34/3 - 10 = 4/3 \approx 1.33$
 
 *Step 4: Verify with definition*
-Deviations: $(-1,-2),(0,0),(1,2)$; products: $2,0,2$; mean $= 4/3$ ✓
+Deviations: $(-1,-2),(0,0),(1,2)$; products: $2,0,2$; mean $= 4/3$
 
 ## Code examples
 

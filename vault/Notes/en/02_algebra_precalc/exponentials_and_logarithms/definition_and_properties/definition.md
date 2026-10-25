@@ -101,13 +101,13 @@ $\log_2 32 = y \iff 2^y = 32$.
 $2^1 = 2$, $2^2 = 4$, $2^3 = 8$, $2^4 = 16$, $2^5 = 32$. So $y = 5$.
 
 *Step 3: Verify*
-$2^5 = 32$. ✓ Therefore $\log_2 32 = 5$.
+$2^5 = 32$. Therefore $\log_2 32 = 5$.
 
 *Step 4: Second example — $\log_{10} 0.001$*
 $\log_{10} 0.001 = y \iff 10^y = 0.001 = 10^{-3}$. So $y = -3$.
 
 *Step 5: Verify*
-$10^{-3} = 1/1000 = 0.001$. ✓ Therefore $\log_{10} 0.001 = -3$.
+$10^{-3} = 1/1000 = 0.001$. Therefore $\log_{10} 0.001 = -3$.
 
 ## Code examples
 

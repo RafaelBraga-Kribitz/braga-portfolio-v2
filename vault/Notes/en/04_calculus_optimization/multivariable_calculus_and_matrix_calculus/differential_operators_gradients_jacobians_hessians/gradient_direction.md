@@ -101,7 +101,7 @@ $\mathbf{x}^{(1)} = [1, 1] - 0.05 \cdot [2, 8] = [0.9, 0.6]$
 
 *Step 5: Check — does $f$ decrease?*
 $f(1,1) = 1 + 4 = 5$
-$f(0.9, 0.6) = 0.81 + 4(0.36) = 0.81 + 1.44 = 2.25$ ✓ (decreased significantly)
+$f(0.9, 0.6) = 0.81 + 4(0.36) = 0.81 + 1.44 = 2.25$ (decreased significantly)
 
 ## Code examples
 

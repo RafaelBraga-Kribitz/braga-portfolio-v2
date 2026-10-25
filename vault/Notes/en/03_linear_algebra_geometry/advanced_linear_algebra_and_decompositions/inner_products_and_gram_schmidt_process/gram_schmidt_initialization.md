@@ -63,7 +63,7 @@ A data engineer builds a custom feature matrix for a regression model. The raw f
 $u_1 = [3, 4]^T$.
 $\|v_1\| = \sqrt{9+16} = 5$.
 $\hat{q}_1 = [3/5, 4/5]^T = [0.6, 0.8]^T$.
-Verify: $\|\hat{q}_1\| = \sqrt{0.36+0.64} = \sqrt{1} = 1$ ✓.
+Verify: $\|\hat{q}_1\| = \sqrt{0.36+0.64} = \sqrt{1} = 1$.
 
 ## Critical Concepts
 
@@ -85,7 +85,7 @@ $\|u_1\| = \sqrt{1^2 + 1^2 + 0^2} = \sqrt{2} \approx 1.414$.
 
 *Step 3: Normalize to get the first orthonormal basis vector*
 $\hat{q}_1 = u_1 / \|u_1\| = [1/\sqrt{2},\, 1/\sqrt{2},\, 0]^T \approx [0.707,\, 0.707,\, 0]^T$.
-Verify: $\|\hat{q}_1\|^2 = (1/\sqrt{2})^2 + (1/\sqrt{2})^2 + 0^2 = 0.5 + 0.5 = 1$ ✓.
+Verify: $\|\hat{q}_1\|^2 = (1/\sqrt{2})^2 + (1/\sqrt{2})^2 + 0^2 = 0.5 + 0.5 = 1$.
 The first orthonormal basis vector is ready; proceed to $k=2$.
 
 ## Code examples

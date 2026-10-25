@@ -62,7 +62,7 @@ A risk analyst builds a portfolio model with $p = 8$ assets. The covariance matr
 
 "Flipping a matrix along its main diagonal — swapping rows and columns — does not change the volume scaling factor it represents. The determinant is equally determined by the rows and by the columns of a matrix." Tiny numeric example:
 $A = \begin{bmatrix}1 & 2 \\ 3 & 4\end{bmatrix}$, $\det(A) = 4 - 6 = -2$.
-$A^T = \begin{bmatrix}1 & 3 \\ 2 & 4\end{bmatrix}$, $\det(A^T) = 4 - 6 = -2$ ✓.
+$A^T = \begin{bmatrix}1 & 3 \\ 2 & 4\end{bmatrix}$, $\det(A^T) = 4 - 6 = -2$.
 
 ## Critical Concepts
 
@@ -84,7 +84,7 @@ $\det(A) = 2 \cdot 3 - 5 \cdot 1 = 6 - 5 = 1$.
 
 *Step 3: Compute det(A^T) and verify equality*
 $\det(A^T) = 2 \cdot 3 - 1 \cdot 5 = 6 - 5 = 1$.
-$\det(A^T) = 1 = \det(A)$ ✓.
+$\det(A^T) = 1 = \det(A)$.
 
 ## Code examples
 

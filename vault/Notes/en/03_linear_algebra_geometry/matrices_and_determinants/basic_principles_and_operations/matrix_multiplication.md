@@ -80,7 +80,7 @@ $AB = \begin{bmatrix}19 & 22 \\ 43 & 50\end{bmatrix}$.
 ## Step-by-step calculation (tiny example)
 
 *Step 1: Verify shape compatibility and determine output shape*
-$A$ is $2 \times 3$, $B$ is $3 \times 2$. Inner dimension: $A$ has 3 columns, $B$ has 3 rows. Match ✓. Output $C = AB$ is $2 \times 2$.
+$A$ is $2 \times 3$, $B$ is $3 \times 2$. Inner dimension: $A$ has 3 columns, $B$ has 3 rows. Match. Output $C = AB$ is $2 \times 2$.
 $A = \begin{bmatrix}1 & 0 & 2 \\ -1 & 3 & 1\end{bmatrix}$, $B = \begin{bmatrix}3 & 1 \\ 2 & -1 \\ 0 & 4\end{bmatrix}$.
 
 *Step 2: Compute each of the 4 output entries*
@@ -91,7 +91,7 @@ $c_{22}$: row 2 of $A$ = $[-1, 3, 1]$, col 2 of $B$ = $[1, -1, 4]^T$. $c_{22} = 
 
 *Step 3: Assemble result and verify with NumPy*
 $AB = \begin{bmatrix}3 & 9 \\ 3 & 0\end{bmatrix}$.
-NumPy: `np.array([[1,0,2],[-1,3,1]]) @ np.array([[3,1],[2,-1],[0,4]])` → `[[3, 9], [3, 0]]` ✓.
+NumPy: `np.array([[1,0,2],[-1,3,1]]) @ np.array([[3,1],[2,-1],[0,4]])` → `[[3, 9], [3, 0]]`.
 
 ## Code examples
 

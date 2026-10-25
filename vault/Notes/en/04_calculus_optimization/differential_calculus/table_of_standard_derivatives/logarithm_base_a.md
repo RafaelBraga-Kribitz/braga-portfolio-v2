@@ -5,7 +5,7 @@ tags:
 - calculus
 ---
 
-# Logarithm (Base $a$)
+# Logarithm (Base a)
 
 $$
 \frac{d}{dx}(\log_a x) = \frac{1}{x \ln a}

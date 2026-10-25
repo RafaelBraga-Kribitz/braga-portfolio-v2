@@ -5,7 +5,7 @@ tags:
 - linear-algebra
 ---
 
-# Projection of $x$ onto general subspace $U$
+# Projection of x onto general subspace U
 
 $$
 \pi_U(x) = B(B^T B)^{-1} B^T x

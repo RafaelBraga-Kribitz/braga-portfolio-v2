@@ -88,7 +88,7 @@ Row 2: $-0.5 \cdot 8 = -4$, $-0.5 \cdot 6 = -3$, $-0.5 \cdot 10 = -5$.
 *Step 3: Assemble result and verify sum*
 $kA = \begin{bmatrix}-2 & 1 & 0 \\ -4 & -3 & -5\end{bmatrix}$.
 Sanity check: $\text{sum}(kA) = k \cdot \text{sum}(A) = -0.5 \cdot (4-2+0+8+6+10) = -0.5 \cdot 26 = -13$.
-$-2+1+0-4-3-5 = -13$ ✓.
+$-2+1+0-4-3-5 = -13$.
 
 ## Code examples
 

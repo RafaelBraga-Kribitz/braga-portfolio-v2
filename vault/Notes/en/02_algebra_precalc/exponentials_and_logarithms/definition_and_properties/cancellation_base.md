@@ -97,10 +97,10 @@ $\ln(e^{3x + 5}) = 3x + 5$.
 $3(1) + 5 = 8$.
 
 *Step 4: Verify directly*
-$\ln(e^8) = \ln(2980.96) \approx 8$. ✓
+$\ln(e^8) = \ln(2980.96) \approx 8$.
 
 *Step 5: Reverse direction — compute $e^{\ln 7}$*
-$e^{\ln 7} = 7$ directly. Verify: $\ln 7 \approx 1.9459$; $e^{1.9459} \approx 7$. ✓
+$e^{\ln 7} = 7$ directly. Verify: $\ln 7 \approx 1.9459$; $e^{1.9459} \approx 7$.
 
 ## Code examples
 

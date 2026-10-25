@@ -102,7 +102,7 @@ $\gcd(450, 150) = 150$. $\frac{450}{150} = \frac{3}{1} = 3$.
 
 *Step 5: Interpret*
 Lift = 3. The campaign converts at 3 times the baseline rate. *Shortcut — same denominator cancels*:
-Since both had denominator 50: $\frac{9/50}{3/50} = \frac{9}{3} = 3$. ✓
+Since both had denominator 50: $\frac{9/50}{3/50} = \frac{9}{3} = 3$.
 
 ## Code examples
 

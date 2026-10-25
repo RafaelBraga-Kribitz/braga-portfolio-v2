@@ -5,7 +5,7 @@ tags:
 - probability-statistics
 ---
 
-# Negative Binomial Distribution (Trials to $n$ successes)
+# Negative Binomial Distribution (Trials to n successes)
 
 $$
 P(X=x) = \binom{x-1}{n-1} p^n (1-p)^{x-n}

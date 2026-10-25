@@ -5,7 +5,7 @@ tags:
 - machine-learning
 ---
 
-# Coefficient of Determination ($R^2$)
+# Coefficient of Determination (R²)
 
 $$
 R^2 = 1 - \frac{\sum (y_i - \hat{y}_i)^2}{\sum (y_i - \bar{y})^2}

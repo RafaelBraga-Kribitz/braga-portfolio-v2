@@ -5,7 +5,7 @@ tags:
 - linear-algebra
 ---
 
-# Chebyshev Distance ($L infty$ norm, $p to infty$)
+# Chebyshev Distance (L∞ norm, p → ∞)
 
 $$
 D(x,y) = \max_i |x_i - y_i|

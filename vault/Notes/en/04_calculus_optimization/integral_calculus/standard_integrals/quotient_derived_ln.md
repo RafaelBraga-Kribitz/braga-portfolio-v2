@@ -5,7 +5,7 @@ tags:
 - calculus
 ---
 
-# Quotient-derived $ln$
+# Quotient-derived ln
 
 $$
 \int \frac{f'(u)}{f(u)}\,du = \ln|f(u)| + C

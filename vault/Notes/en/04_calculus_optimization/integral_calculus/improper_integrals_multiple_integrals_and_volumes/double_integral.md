@@ -119,7 +119,7 @@ $$
 $$
 
 Result: $\iint_D (x+y)\,dx\,dy = 3$. *Verification: swap order (integrate $x$ first)*
-$\int_0^2 \left[\int_0^1 (x + y)\,dx\right]dy = \int_0^2 [\frac{x^2}{2} + xy]_0^1\,dy = \int_0^2 (\frac{1}{2} + y)\,dy = [\frac{y}{2} + \frac{y^2}{2}]_0^2 = 1 + 2 = 3$ ✓
+$\int_0^2 \left[\int_0^1 (x + y)\,dx\right]dy = \int_0^2 [\frac{x^2}{2} + xy]_0^1\,dy = \int_0^2 (\frac{1}{2} + y)\,dy = [\frac{y}{2} + \frac{y^2}{2}]_0^2 = 1 + 2 = 3$
 
 ## Code examples
 

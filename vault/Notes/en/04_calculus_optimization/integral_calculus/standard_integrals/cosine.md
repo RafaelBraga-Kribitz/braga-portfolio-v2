@@ -85,7 +85,7 @@ $a = 3$, $b = -\pi/2$.
 $\int \cos(3x-\pi/2)\,dx = \frac{1}{3}\sin(3x-\pi/2) + C$.
 
 *Step 3: Verify by differentiating*
-$\frac{d}{dx}\!\left[\frac{1}{3}\sin(3x-\pi/2)\right] = \frac{1}{3}\cos(3x-\pi/2)\cdot 3 = \cos(3x-\pi/2)$ ✓
+$\frac{d}{dx}\!\left[\frac{1}{3}\sin(3x-\pi/2)\right] = \frac{1}{3}\cos(3x-\pi/2)\cdot 3 = \cos(3x-\pi/2)$
 
 *Step 4: Evaluate a definite integral*
 $\int_0^\pi \cos(x)\,dx = [\sin(x)]_0^\pi = \sin(\pi) - \sin(0) = 0 - 0 = 0$

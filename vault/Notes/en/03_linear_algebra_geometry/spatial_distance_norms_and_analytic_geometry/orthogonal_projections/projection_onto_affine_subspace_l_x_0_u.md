@@ -5,7 +5,7 @@ tags:
 - linear-algebra
 ---
 
-# Projection onto affine subspace $L = x 0 + U$
+# Projection onto affine subspace L = x₀ + U
 
 $$
 \pi_L(x) = x_0 + \pi_U(x - x_0)

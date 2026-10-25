@@ -5,7 +5,7 @@ tags:
 - calculus
 ---
 
-# Arithmetic $n$-th term
+# Arithmetic n-th term
 
 $$
 u_n = a + (n-1)d
@@ -72,13 +72,13 @@ $u_n = a + (n-1)d$ - **$u_n$** — The value of the n-th term.
 Sequence: a = 3, d = 5 (terms: 3, 8, 13, 18, 23, ...)
 
 *Step 1: Verify the pattern*
-u_1 = 3, u_2 = 3+5 = 8, u_3 = 8+5 = 13, u_4 = 13+5 = 18 ✓
+u_1 = 3, u_2 = 3+5 = 8, u_3 = 8+5 = 13, u_4 = 13+5 = 18
 
 *Step 2: Find u_7 directly*
 $u_7 = 3 + (7-1) \times 5 = 3 + 30 = \mathbf{33}$
 
 *Step 3: Verify by counting*
-3, 8, 13, 18, 23, 28, 33 → 7th term = 33 ✓
+3, 8, 13, 18, 23, 28, 33 → 7th term = 33
 
 *Step 4: What if we want the n-th term for n=100?*
 $u_{100} = 3 + 99 \times 5 = 3 + 495 = \mathbf{498}$
