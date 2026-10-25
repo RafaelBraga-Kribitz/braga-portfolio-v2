@@ -100,21 +100,27 @@ pairs = [(2, 1), (3, 2), (5, 3), (10, 7), (0.5, 0.25)]
 print(f"{'a':>6} {'b':>6} {'a³-b³':>10} {'(a-b)(a²+ab+b²)':>18} {'match':>6}")
 for a, b in pairs:
     lhs = a**3 - b**3
-rhs = (a - b) * (a**2 + a*b + b**2)
-print(f"{a:>6.2f} {b:>6.2f} {lhs:>10.4f} {rhs:>18.4f} {str(abs(lhs-rhs)<1e-10):>6}")   # Simplify rational expression: (x³ - a³) / (x - a)
+    rhs = (a - b) * (a**2 + a*b + b**2)
+    print(f"{a:>6.2f} {b:>6.2f} {lhs:>10.4f} {rhs:>18.4f} {str(abs(lhs-rhs)<1e-10):>6}")
+
+# Simplify rational expression: (x³ - a³) / (x - a)
 print("\nSimplification: (x³ - a³) / (x - a) = x² + ax + a²")
 a_val = 3.0
 for x in [1.0, 2.0, 4.0, 5.0]:
     if abs(x - a_val) > 1e-10:
         direct = (x**3 - a_val**3) / (x - a_val)
-    factored = x**2 + a_val * x + a_val**2
-print(f" x={x:.1f}: direct={direct:.4f} factored={factored:.4f} match={abs(direct-factored)<1e-10}")   # Derivative from first principles: d/dx(x³) at x=2 = 3(2²) = 12
+        factored = x**2 + a_val * x + a_val**2
+        print(f" x={x:.1f}: direct={direct:.4f} factored={factored:.4f} match={abs(direct-factored)<1e-10}")
+
+# Derivative from first principles: d/dx(x³) at x=2 = 3(2²) = 12
 import math
 a_limit = 2.0
 limit_results = []
 for h in [0.1, 0.01, 0.001, 0.0001]:
     diff_quot = (a_limit + h)**3 - a_limit**3
-factored_limit = ((a_limit+h)**2 + (a_limit+h)*a_limit + a_limit**2)   # a²+ab+b² limit_results.append((h, diff_quot / h, factored_limit)) print(f"\nDerivative of x³ at x={a_limit} via (x³-a³)/(x-a) → a²+ax+x² = 3a² = {3*a_limit**2}")
+    factored_limit = ((a_limit+h)**2 + (a_limit+h)*a_limit + a_limit**2)   # a²+ab+b²
+    limit_results.append((h, diff_quot / h, factored_limit))
+print(f"\nDerivative of x³ at x={a_limit} via (x³-a³)/(x-a) → a²+ax+x² = 3a² = {3*a_limit**2}")
 for h, dq, fl in limit_results:
     print(f" h={h:.4f} diff_quot/h={dq:.6f} factored_limit={fl:.6f}")
 ```
@@ -122,17 +128,22 @@ for h, dq, fl in limit_results:
 ### Beginner example (R)
 
 ```r
-# Difference of cubes in R # Verification
+# Difference of cubes in R
+# Verification
 pairs <- list(c(2,1), c(3,2), c(5,3), c(10,7))
 cat(sprintf("%-6s %-6s %-10s %-18s %s\n", "a", "b", "a³-b³", "(a-b)(a²+ab+b²)", "match"))
-for (p in pairs) { a <- p[1]; b <- p[2]
+for (p in pairs) {
+  a <- p[1]; b <- p[2]
   lhs <- a^3 - b^3
   rhs <- (a - b) * (a^2 + a*b + b^2)
   cat(sprintf("%-6.2f %-6.2f %-10.4f %-18.4f %s\n", a, b, lhs, rhs, abs(lhs - rhs) < 1e-10))
-}  # Simplify (x³ - 8) / (x - 2)
+}
+
+# Simplify (x³ - 8) / (x - 2)
 a_val <- 2.0
 cat(sprintf("\nSimplification: (x³ - %.0f³) / (x - %.0f) = x² + %.0fx + %.0f\n", a_val, a_val, a_val, a_val^2))
-for (x in c(1, 3, 4, 5)) { direct <- (x^3 - a_val^3) / (x - a_val)
+for (x in c(1, 3, 4, 5)) {
+  direct <- (x^3 - a_val^3) / (x - a_val)
   factored <- x^2 + a_val*x + a_val^2
   cat(sprintf(" x=%d: direct=%.4f factored=%.4f match=%s\n", x, direct, factored, abs(direct - factored) < 1e-10))
 }
@@ -142,7 +153,9 @@ for (x in c(1, 3, 4, 5)) { direct <- (x^3 - a_val^3) / (x - a_val)
 
 ```python
 import numpy as np
-import sympy as sp   # Scenario: symbolic and numeric polynomial simplification
+import sympy as sp
+
+# Scenario: symbolic and numeric polynomial simplification
 # Factor and simplify expressions of the form (x^3 - a^3) / (x - a)
 # Demonstrate the limit application (derivative from first principles)
 # and validate numerically over a grid
@@ -154,16 +167,21 @@ simplified = sp.simplify(expr_diff / (x - a))
 print("Symbolic factoring of a³ - b³:")
 print(f" Original: {expr_diff}")
 print(f" Factored: {factored_sym}")
-print(f" Simplified (x³-a³)/(x-a) = {simplified}")   # Derivative verification: lim_{x->a} (x³-a³)/(x-a) = 3a²
+print(f" Simplified (x³-a³)/(x-a) = {simplified}")
+
+# Derivative verification: lim_{x->a} (x³-a³)/(x-a) = 3a²
 limit_val = sp.limit((x**3 - a**3) / (x - a), x, a)
-print(f"\n Limit as x→a: {limit_val} (= derivative of x³ at a = 3a²)")   # Numeric validation grid
+print(f"\n Limit as x→a: {limit_val} (= derivative of x³ at a = 3a²)")
+
+# Numeric validation grid
 a_vals = np.array([1.0, 2.0, 3.0, 5.0, 10.0])
-x_grid = a_vals + 0.0001   # near-limit evaluation print("\nNumerical check: (x³ - a³) / (x - a) ≈ 3a²")
+x_grid = a_vals + 0.0001   # near-limit evaluation
+print("\nNumerical check: (x³ - a³) / (x - a) ≈ 3a²")
 print(f"{'a':>6} {'3a²':>8} {'ratio at x≈a':>14} {'error':>10}")
 for a_val, x_val in zip(a_vals, x_grid):
     ratio = (x_val**3 - a_val**3) / (x_val - a_val)
-exact_drv = 3 * a_val**2
-print(f"{a_val:>6.1f} {exact_drv:>8.4f} {ratio:>14.6f} {abs(ratio - exact_drv):>10.2e}")
+    exact_drv = 3 * a_val**2
+    print(f"{a_val:>6.1f} {exact_drv:>8.4f} {ratio:>14.6f} {abs(ratio - exact_drv):>10.2e}")
 ```
 
 ### Professional example (R)
@@ -173,7 +191,8 @@ print(f"{a_val:>6.1f} {exact_drv:>8.4f} {ratio:>14.6f} {abs(ratio - exact_drv):>
 a_vals <- c(1, 2, 3, 5, 10)
 x_grid <- a_vals + 0.0001
 cat("Numerical check: (x³ - a³)/(x - a) ≈ 3a²\n")
-for (i in seq_along(a_vals)) { ratio <- (x_grid[i]^3 - a_vals[i]^3) / (x_grid[i] - a_vals[i])
+for (i in seq_along(a_vals)) {
+  ratio <- (x_grid[i]^3 - a_vals[i]^3) / (x_grid[i] - a_vals[i])
   exact <- 3 * a_vals[i]^2
   cat(sprintf(" a=%.1f 3a²=%.4f ratio=%.6f error=%.2e\n", a_vals[i], exact, ratio, abs(ratio - exact)))
 }

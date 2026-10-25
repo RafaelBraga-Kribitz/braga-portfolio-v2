@@ -91,16 +91,18 @@ $|\lambda| \|x\|_2 = |-4| \cdot 3 = 4 \cdot 3 = 12$. $\checkmark$
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # -- Absolute homogeneity: verify for L2, L1, Linf norms ---
+import numpy as np
+
+# -- Absolute homogeneity: verify for L2, L1, Linf norms ---
 x = np.array([1.0, -2.0, 2.0])
 for lam in [2.0, -3.0, 0.5, -1.0, 0.0]:
     scaled_x = lam * x
-for p, name in [(2, "L2"), (1, "L1"), (np.inf, "Linf")]:
-    lhs = np.linalg.norm(scaled_x, ord=p)
-rhs = abs(lam) * np.linalg.norm(x, ord=p)
-ok = np.isclose(lhs, rhs)
-print(f"lambda={lam:4g} {name}: ||lam*x|| = {lhs:.4f}, |lam|*||x|| = {rhs:.4f}, match={ok}")
-print()
+    for p, name in [(2, "L2"), (1, "L1"), (np.inf, "Linf")]:
+        lhs = np.linalg.norm(scaled_x, ord=p)
+        rhs = abs(lam) * np.linalg.norm(x, ord=p)
+        ok = np.isclose(lhs, rhs)
+        print(f"lambda={lam:4g} {name}: ||lam*x|| = {lhs:.4f}, |lam|*||x|| = {rhs:.4f}, match={ok}")
+    print()
 ```
 
 ### Beginner example (R)
@@ -108,7 +110,8 @@ print()
 ```r
 # -- Absolute homogeneity for L2 norm ---
 x <- c(1, -2, 2)
-for (lam in c(2, -3, 0.5, -1, 0)) { scaled_x <- lam * x
+for (lam in c(2, -3, 0.5, -1, 0)) {
+  scaled_x <- lam * x
   lhs <- sqrt(sum(scaled_x^2))
   rhs <- abs(lam) * sqrt(sum(x^2))
   cat(sprintf("lambda=%4g : ||lam*x|| = %.4f, |lam|*||x|| = %.4f, match=%s\n", lam, lhs, rhs, isTRUE(all.equal(lhs, rhs))))
@@ -120,25 +123,36 @@ for (lam in c(2, -3, 0.5, -1, 0)) { scaled_x <- lam * x
 ```python
 import numpy as np
 import pandas as pd
-np.random.seed(42)   # -- Business scenario: gradient norm vs. learning rate ---
+np.random.seed(42)
+
+# -- Business scenario: gradient norm vs. learning rate ---
 # Demonstrates absolute homogeneity: ||alpha * grad||_2 = alpha * ||grad||_2
 # Shows how step size scales exactly linearly with learning rate.
 N_PARAMS = 10
-n_trials = 8   # Simulate gradient vectors of varying magnitudes
+n_trials = 8
+
+# Simulate gradient vectors of varying magnitudes
 gradients = [np.random.randn(N_PARAMS) * scale for scale in np.linspace(0.1, 5.0, n_trials)]
 learning_rates = [0.001, 0.01, 0.1, 1.0]
 results = []
 for lr in learning_rates:
     for i, grad in enumerate(gradients):
         step = lr * grad   # alpha * gradient
-    step_norm = np.linalg.norm(step)   # ||alpha * grad||
-predicted = abs(lr) * np.linalg.norm(grad)   # |alpha| * ||grad||
-results.append({ "learning_rate": lr, "grad_trial": i, "grad_norm": round(np.linalg.norm(grad), 4), "step_norm": round(step_norm, 4), "predicted_norm": round(predicted, 4), "matches": np.isclose(step_norm, predicted), })
+        step_norm = np.linalg.norm(step)   # ||alpha * grad||
+        predicted = abs(lr) * np.linalg.norm(grad)   # |alpha| * ||grad||
+        results.append({
+            "learning_rate": lr,
+            "grad_trial": i,
+            "grad_norm": round(np.linalg.norm(grad), 4),
+            "step_norm": round(step_norm, 4),
+            "predicted_norm": round(predicted, 4),
+            "matches": np.isclose(step_norm, predicted),
+        })
 df = pd.DataFrame(results)
 print("All absolute homogeneity checks pass:")
 print(f" {df['matches'].all()}")
 print(f"\nSample rows (lr=0.01):")
-print(df[df["learning_rate"]==0.01]"grad_norm","step_norm","predicted_norm","matches" .head(5).to_string(index=False))
+print(df[df["learning_rate"] == 0.01][["grad_norm", "step_norm", "predicted_norm", "matches"]].head(5).to_string(index=False))
 print("\nConclusion: step_norm = lr * grad_norm always. Step size is exactly proportional to lr.")
 ```
 

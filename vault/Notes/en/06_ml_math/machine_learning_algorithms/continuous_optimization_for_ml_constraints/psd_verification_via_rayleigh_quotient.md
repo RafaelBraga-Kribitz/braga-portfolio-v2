@@ -116,12 +116,16 @@ print(f"B^T B is PSD: {is_psd(B.T @ B)}")
 ### Beginner example (R)
 
 ```r
-is_psd <- function(mat, tolerance = 1e-8) { eigenvalues <- eigen(mat, symmetric = TRUE)$values all(eigenvalues >= -tolerance)
+is_psd <- function(mat, tolerance = 1e-8) {
+  eigenvalues <- eigen(mat, symmetric = TRUE)$values
+  all(eigenvalues >= -tolerance)
 }
 A_psd <- matrix(c(4, 2, 2, 1), nrow = 2, byrow = TRUE)
 A_not_psd <- matrix(c(1, 3, 3, 1), nrow = 2, byrow = TRUE)
 cat("A_psd is PSD:", is_psd(A_psd), "\n")
-cat("A_not_psd is PSD:", is_psd(A_not_psd), "\n")  # B^T B is always PSD
+cat("A_not_psd is PSD:", is_psd(A_not_psd), "\n")
+
+# B^T B is always PSD
 B <- matrix(rnorm(15), nrow = 5)
 cat("B^T B is PSD:", is_psd(t(B) %*% B), "\n")
 ```
@@ -129,8 +133,8 @@ cat("B^T B is PSD:", is_psd(t(B) %*% B), "\n")
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
+
 JITTER_INITIAL = 1e-10
 JITTER_MAX = 1e-3
 
@@ -140,9 +144,20 @@ def psd_report(matrix: np.ndarray) -> dict[str, object]:
     min_eig = float(eigenvalues.min())
     max_eig = float(eigenvalues.max())
     cond_num = max_eig / max(abs(min_eig), 1e-15) if min_eig != 0 else float("inf")
-    return { "is_psd": bool(min_eig >= -1e-8), "is_pd": bool(min_eig > 1e-8), "min_eigenvalue": round(min_eig, 10), "max_eigenvalue": round(max_eig, 6), "condition_number": round(cond_num, 4), "effective_rank": int(np.sum(eigenvalues > 1e-10)), }
+    return {
+        "is_psd": bool(min_eig >= -1e-8),
+        "is_pd": bool(min_eig > 1e-8),
+        "min_eigenvalue": round(min_eig, 10),
+        "max_eigenvalue": round(max_eig, 6),
+        "condition_number": round(cond_num, 4),
+        "effective_rank": int(np.sum(eigenvalues > 1e-10)),
+    }
 
-def make_psd( matrix: np.ndarray, jitter_initial: float = JITTER_INITIAL, jitter_max: float = JITTER_MAX,
+
+def make_psd(
+    matrix: np.ndarray,
+    jitter_initial: float = JITTER_INITIAL,
+    jitter_max: float = JITTER_MAX,
 ) -> tuple[np.ndarray, float]:
     # Add the smallest diagonal jitter that makes a matrix PSD.
     eigenvalues = np.linalg.eigvalsh(matrix)
@@ -168,7 +183,9 @@ if __name__ == "__main__":
     cov = raw_data.T @ raw_data / 15
     print("PSD report for sample covariance:")
     for k, v in psd_report(cov).items():
-        print(f" {k}: {v}")   # Simulate numerical degradation
+        print(f" {k}: {v}")
+
+    # Simulate numerical degradation
     cov_noisy = cov - 5e-10 * np.eye(n)
     fixed, jitter = make_psd(cov_noisy)
     print(f"\nJitter added: {jitter:.2e}")

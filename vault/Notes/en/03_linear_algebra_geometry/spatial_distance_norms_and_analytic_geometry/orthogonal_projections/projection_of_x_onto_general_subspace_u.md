@@ -95,20 +95,23 @@ Residual: $r = (2,3,4) - (1.667, 2.667, 4.333) = (0.333, 0.333, -0.333)$. $B^Tr 
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # -- Projection onto general subspace: pi_U(x) = B(B^T B)^{-1} B^T x ---
+import numpy as np
+
+# -- Projection onto general subspace: pi_U(x) = B(B^T B)^{-1} B^T x ---
 B = np.array([[1.0, 0.0], [0.0, 1.0], [1.0, 1.0]])
 x = np.array([2.0, 3.0, 4.0])
 gram_matrix = B.T @ B   # B^T B
 gram_inv = np.linalg.inv(gram_matrix)   # (B^T B)^{-1}
 coords = gram_inv @ B.T @ x   # hat_lambda
-projection = B @ coords   #
-pi_U(x)
+projection = B @ coords   # pi_U(x)
 residual = x - projection
 print(f"Gram matrix B^T B:\n{gram_matrix}")
 print(f"\nCoordinates lambda_hat: {coords.round(4)}")
 print(f"Projection pi_U(x): {projection.round(4)}")
 print(f"Residual r: {residual.round(4)}")
-print(f"B^T r (should be 0): {(B.T @ residual).round(10)}")   # Projection matrix
+print(f"B^T r (should be 0): {(B.T @ residual).round(10)}")
+
+# Projection matrix
 P_U = B @ gram_inv @ B.T
 print(f"\nProjection matrix P_U (symmetric: {np.allclose(P_U, P_U.T)}, idempotent: {np.allclose(P_U @ P_U, P_U)})")
 ```
@@ -134,20 +137,28 @@ cat("B^T r (should be 0):", round(t(B) %*% residual, 10), "\n")
 ```python
 import numpy as np
 import pandas as pd
-np.random.seed(42)   # -- Business scenario: OLS regression as projection ---
+np.random.seed(42)
+
+# -- Business scenario: OLS regression as projection ---
 # Fitted values = projection of y onto col(X).
 # Show that this minimizes ||y - y_hat||^2 (closest point in col(X) to y).
 N = 100
 # Design matrix X (intercept + 2 predictors)
-X = np.column_stack([ np.ones(N), np.random.uniform(1, 10, N), np.random.uniform(0, 5, N),
+X = np.column_stack([
+    np.ones(N),
+    np.random.uniform(1, 10, N),
+    np.random.uniform(0, 5, N),
 ])
 true_beta = np.array([2.0, 1.5, -0.8])
-y = X @ true_beta + np.random.randn(N) * 0.5   # OLS = projection: y_hat = X(X^T X)^{-1} X^T y
+y = X @ true_beta + np.random.randn(N) * 0.5
+
+# OLS = projection: y_hat = X(X^T X)^{-1} X^T y
 gram_matrix = X.T @ X
 beta_hat = np.linalg.solve(gram_matrix, X.T @ y)   # solve normal equations
-y_hat = X @ beta_hat   # fitted
-values = pi_U(y)
-residuals = y - y_hat   # Verify properties
+y_hat = X @ beta_hat   # fitted values = pi_U(y)
+residuals = y - y_hat
+
+# Verify properties
 ortho_check = X.T @ residuals   # should be ~0 (normal equations)
 ss_res = np.sum(residuals**2)
 ss_tot = np.sum((y - y.mean())**2)

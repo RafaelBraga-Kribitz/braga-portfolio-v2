@@ -103,21 +103,28 @@ def arithmetic_sum_n(a: float, d: float, n: int | np.ndarray) -> float | np.ndar
     return n / 2.0 * (2.0 * a + (n - 1) * d)
 
 def arithmetic_nth_term(a: float, d: float, n: int | np.ndarray) -> float | np.ndarray:
-    return a + (n - 1) * d   # Sequence 3, 7, 11, ...
+    return a + (n - 1) * d
+
+
+# Sequence 3, 7, 11, ...
 a_val, d_val = 3.0, 4.0
 print("Arithmetic sums (a=3, d=4):")
 for n in [5, 10, 20, 100]:
     s_formula = arithmetic_sum_n(a_val, d_val, n)
-s_brute = sum(a_val + (k - 1) * d_val for k in range(1, n + 1))
-print(f" S_{n:3d} = {s_formula:>10.1f} (brute: {s_brute:>10.1f})")   # Gauss sum 1+2+...+n
+    s_brute = sum(a_val + (k - 1) * d_val for k in range(1, n + 1))
+    print(f" S_{n:3d} = {s_formula:>10.1f} (brute: {s_brute:>10.1f})")
+
+# Gauss sum 1+2+...+n
 n_gauss = 100
-print(f"\nGauss sum 1+...+{n_gauss}: {n_gauss*(n_gauss+1)/2} (brute: {sum(range(1,n_gauss+1))})")   # Cumulative user-months (a=10000, d=500/month)
+print(f"\nGauss sum 1+...+{n_gauss}: {n_gauss*(n_gauss+1)/2} (brute: {sum(range(1,n_gauss+1))})")
+
+# Cumulative user-months (a=10000, d=500/month)
 a_dau, d_dau = 10_000.0, 500.0
 n_months = np.arange(1, 13)
 s_months = arithmetic_sum_n(a_dau, d_dau, n_months)
 u_n_months = arithmetic_nth_term(a_dau, d_dau, n_months)
 print("\nCumulative user-months (a=10000, d=500):")
-for n, s, u in zip(n_months0,2,5,11, s_months0,2,5,11, u_n_months0,2,5,11):
+for n, s, u in zip(n_months[[0, 2, 5, 11]], s_months[[0, 2, 5, 11]], u_n_months[[0, 2, 5, 11]]):
     print(f" Month {n:2d}: S={s:>8,.0f} u_n={u:>7,.0f}")
 ```
 
@@ -127,7 +134,8 @@ for n, s, u in zip(n_months0,2,5,11, s_months0,2,5,11, u_n_months0,2,5,11):
 arithmetic_sum_n <- function(a, d, n) n / 2 * (2 * a + (n - 1) * d)
 a_val <- 3; d_val <- 4
 cat("Arithmetic sums (a=3, d=4):\n")
-for (n in c(5, 10, 20, 100)) { s_formula <- arithmetic_sum_n(a_val, d_val, n)
+for (n in c(5, 10, 20, 100)) {
+  s_formula <- arithmetic_sum_n(a_val, d_val, n)
   s_brute <- sum(a_val + (seq_len(n) - 1) * d_val)
   cat(sprintf(" S_%d = %10.1f (brute: %10.1f)\n", n, s_formula, s_brute))
 }
@@ -149,20 +157,31 @@ def arithmetic_sum_n(a: float, d: float, n: int | np.ndarray) -> float | np.ndar
     return n / 2.0 * (2.0 * a + (n - 1) * d)
 
 def arithmetic_nth_term(a: float, d: float, n: int | np.ndarray) -> float | np.ndarray:
-    return a + (n - 1) * d   # 1. Cumulative DAU and infrastructure cost
+    return a + (n - 1) * d
+
+
+# 1. Cumulative DAU and infrastructure cost
 a_dau, d_dau, cost_per_user_month = 10_000.0, 500.0, 0.02   # EUR per user per month
 n_months = np.arange(1, 13)
 s_months = arithmetic_sum_n(a_dau, d_dau, n_months)
 infra_cost = s_months * cost_per_user_month
-df = pd.DataFrame({ "month": n_months, "dau": arithmetic_nth_term(a_dau, d_dau, n_months).astype(int), "cum_user_months": s_months.astype(int), "infra_cost_eur": infra_cost.round(0),
+df = pd.DataFrame({
+    "month": n_months,
+    "dau": arithmetic_nth_term(a_dau, d_dau, n_months).astype(int),
+    "cum_user_months": s_months.astype(int),
+    "infra_cost_eur": infra_cost.round(0),
 })
 print("=== Cumulative DAU and Infrastructure Cost ===")
-print(df[df["month"].isin([1, 3, 6, 12])].to_string(index=False))   # 2. Total depreciation: S_n with d = annual depreciation
+print(df[df["month"].isin([1, 3, 6, 12])].to_string(index=False))
+
+# 2. Total depreciation: S_n with d = annual depreciation
 print("\n=== Total Depreciation Over Asset Life ===")
 for name, a_asset, d_dep, life in [("Server", 80_000, -8_000, 10), ("Office", 120_000, -10_000, 12)]:
     total = arithmetic_sum_n(a_asset, d_dep, life)   # sum of book values
-total_written = a_asset - arithmetic_nth_term(a_asset, d_dep, life)
-print(f" {name}: total depreciation taken = EUR {total_written:>9,.0f}")   # 3. Loop complexity: nested loop over n items
+    total_written = a_asset - arithmetic_nth_term(a_asset, d_dep, life)
+    print(f" {name}: total depreciation taken = EUR {total_written:>9,.0f}")
+
+# 3. Loop complexity: nested loop over n items
 n_items = 1000
 total_comparisons = n_items * (n_items + 1) // 2   # Gauss sum
 print(f"\n=== Algorithm Complexity ===")

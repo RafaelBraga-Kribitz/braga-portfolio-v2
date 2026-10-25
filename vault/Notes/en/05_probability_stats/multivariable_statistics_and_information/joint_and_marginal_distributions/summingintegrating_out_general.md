@@ -95,10 +95,16 @@ $p(X=0) + p(X=1) = 1.0$ ✓, $p(Y=0) + p(Y=1) = 1.0$ ✓
 ### Beginner example (Python)
 
 ```python
-import numpy as np   # Joint distribution: weather x umbrella
+import numpy as np
+
+# Joint distribution: weather x umbrella
 # Rows: weather (sunny=0, rainy=1), Cols: umbrella (no=0, yes=1)
-joint = np.array([ [0.35, 0.15], [0.10, 0.40],
-])   # Marginalise out Y (umbrella) to get p(weather)
+joint = np.array([
+    [0.35, 0.15],
+    [0.10, 0.40],
+])
+
+# Marginalise out Y (umbrella) to get p(weather)
 marginal_weather = joint.sum(axis=1)
 # Marginalise out X (weather) to get p(umbrella)
 marginal_umbrella = joint.sum(axis=0)
@@ -111,7 +117,8 @@ print("p(umbrella):", dict(zip(["no", "yes"], marginal_umbrella.round(2))))
 ```r
 # Gaussian Mixture: marginalise over latent cluster z
 # p(x) = sum_k pi_k * N(x | mu_k, sigma_k)
-gmm_density <- function(x_val, pi_vec, mu_vec, sigma_vec) { sum(pi_vec * dnorm(x_val, mean = mu_vec, sd = sigma_vec))
+gmm_density <- function(x_val, pi_vec, mu_vec, sigma_vec) {
+  sum(pi_vec * dnorm(x_val, mean = mu_vec, sd = sigma_vec))
 }
 pi_vec <- c(0.3, 0.7)
 mu_vec <- c(-2.0, 3.0)
@@ -124,33 +131,43 @@ cat("Integral of GMM density (should be ~1):", sum(density_values) * (x_grid[2] 
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
 from scipy.stats import norm
+
 
 class GaussianMixtureMarginal:
     # Marginalise over latent mixture components: p(x) = sum_k pi_k * N(x | mu_k, sigma_k).
 
-def __init__( self, pi: np.ndarray, mu: np.ndarray, sigma: np.ndarray, ) -> None:
-    assert np.isclose(pi.sum(), 1.0), "Mixture weights must sum to 1."
-    self._pi = pi
-    self._mu = mu
-    self._sigma = sigma
+    def __init__(self, pi: np.ndarray, mu: np.ndarray, sigma: np.ndarray) -> None:
+        assert np.isclose(pi.sum(), 1.0), "Mixture weights must sum to 1."
+        self._pi = pi
+        self._mu = mu
+        self._sigma = sigma
 
-def pdf(self, x: np.ndarray) -> np.ndarray:
-    # Marginal PDF: sum over latent components.
-    densities = np.array([ pi_k * norm.pdf(x, loc=mu_k, scale=sigma_k) for pi_k, mu_k, sigma_k in zip(self._pi, self._mu, self._sigma) ])
-    return densities.sum(axis=0)
+    def pdf(self, x: np.ndarray) -> np.ndarray:
+        # Marginal PDF: sum over latent components.
+        densities = np.array([
+            pi_k * norm.pdf(x, loc=mu_k, scale=sigma_k)
+            for pi_k, mu_k, sigma_k in zip(self._pi, self._mu, self._sigma)
+        ])
+        return densities.sum(axis=0)
 
-def log_likelihood(self, data: np.ndarray) -> float:
-    return float(np.sum(np.log(self.pdf(data) + 1e-300)))
+    def log_likelihood(self, data: np.ndarray) -> float:
+        return float(np.sum(np.log(self.pdf(data) + 1e-300)))
+
 
 if __name__ == "__main__":
     rng = np.random.default_rng(seed=42)
-    gmm = GaussianMixtureMarginal( pi = np.array([0.4, 0.6]), mu = np.array([-2.0, 3.0]), sigma = np.array([1.0, 1.5]), )
+    gmm = GaussianMixtureMarginal(
+        pi=np.array([0.4, 0.6]),
+        mu=np.array([-2.0, 3.0]),
+        sigma=np.array([1.0, 1.5]),
+    )
     x_grid = np.linspace(-7, 8, 1_000)
-    area = np.trapz(gmm.pdf(x_grid), x_grid)
-    print(f"Marginal GMM density integrates to: {area:.6f} (should be ~1)")   # Simulate data and compute log-likelihood
+    area = np.trapezoid(gmm.pdf(x_grid), x_grid)
+    print(f"Marginal GMM density integrates to: {area:.6f} (should be ~1)")
+
+    # Simulate data and compute log-likelihood
     data_sample = rng.normal(loc=3.0, scale=1.5, size=200)
     ll = gmm.log_likelihood(data_sample)
     print(f"Log-likelihood on 200 samples from component 2: {ll:.2f}")

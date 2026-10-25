@@ -93,17 +93,45 @@ r = 3 > 1 → series is growing fast. The last term 54 alone is more than half t
 
 ```python
 """
-Geometric sum to
-n: S_n = a * (1 - r**n) / (1 - r) Example: summing n cohorts of customers where each cohort
+Geometric sum to n: S_n = a * (1 - r**n) / (1 - r)
+
+Example: summing n cohorts of customers where each cohort
 has retention_ratio fraction of the previous cohort's size.
-""" import numpy as np def geometric_sum(first_term: float, ratio: float, num_terms: int) -> float: """Return the sum of a finite geometric series. Parameters ---------- first_term : float The value of the first term (a). ratio : float The common ratio between consecutive terms (r). Must not equal 1. num_terms : int Number of terms to sum (n). Returns ------- float
-S_n = first_term * (1 - ratio**num_terms) / (1 - ratio) """ if ratio == 1.0: return first_term * num_terms return first_term * (1.0 - ratio**num_terms) / (1.0 - ratio) # Example: cohort revenue model
+"""
+import numpy as np
+
+
+def geometric_sum(first_term: float, ratio: float, num_terms: int) -> float:
+    """Return the sum of a finite geometric series.
+
+    Parameters
+    ----------
+    first_term : float
+        The value of the first term (a).
+    ratio : float
+        The common ratio between consecutive terms (r). Must not equal 1.
+    num_terms : int
+        Number of terms to sum (n).
+
+    Returns
+    -------
+    float
+        S_n = first_term * (1 - ratio**num_terms) / (1 - ratio)
+    """
+    if ratio == 1.0:
+        return first_term * num_terms
+    return first_term * (1.0 - ratio**num_terms) / (1.0 - ratio)
+
+
+# Example: cohort revenue model
 # 1000 users in first cohort, each worth €50/month
 # 80% monthly retention across cohorts
 FIRST_TERM_EUR = 1000.0 * 50.0   # €50,000 from cohort 1
 RETENTION_RATIO = 0.80
 NUM_MONTHS = 12
-total_revenue = geometric_sum(FIRST_TERM_EUR, RETENTION_RATIO, NUM_MONTHS)   # Verify via direct summation
+total_revenue = geometric_sum(FIRST_TERM_EUR, RETENTION_RATIO, NUM_MONTHS)
+
+# Verify via direct summation
 terms = [FIRST_TERM_EUR * RETENTION_RATIO**k for k in range(NUM_MONTHS)]
 direct_sum = sum(terms)
 print(f"Formula result : €{total_revenue:,.2f}")
@@ -114,19 +142,24 @@ print(f"Difference : €{abs(total_revenue - direct_sum):.6f}")
 ### Beginner example (R)
 
 ```r
-# Geometric sum:
-S_n = a * (1 - r^n) / (1 - r)
+# Geometric sum: S_n = a * (1 - r^n) / (1 - r)
 # Applied to NPV of a growing annuity
-geometric_sum <- function(first_term, ratio, num_terms) {  # Sum of finite geometric series # Args: # first_term : first payment (a) # ratio : growth factor per period (r), must != 1 # num_terms : number of periods (n) # Returns: total sum S_n
-  if (ratio == 1) { return(first_term * num_terms)
-  } first_term * (1 - ratio^num_terms) / (1 - ratio)
-}  # NPV: cashflow
-C_0 = 10000 growing at
-g = 5% per year
-# discounted at
-d = 10% per year, over 5 years
-# Effective
-ratio = (1 + g) / (1 + d) = 1.05 / 1.10
+geometric_sum <- function(first_term, ratio, num_terms) {
+  # Sum of finite geometric series
+  # Args:
+  #   first_term : first payment (a)
+  #   ratio      : growth factor per period (r), must != 1
+  #   num_terms  : number of periods (n)
+  # Returns: total sum S_n
+  if (ratio == 1) {
+    return(first_term * num_terms)
+  }
+  first_term * (1 - ratio^num_terms) / (1 - ratio)
+}
+
+# NPV: cashflow C_0 = 10000 growing at g = 5% per year
+# discounted at d = 10% per year, over 5 years
+# Effective ratio = (1 + g) / (1 + d) = 1.05 / 1.10
 C_0 <- 10000
 growth_rate <- 0.05
 discount_rate <- 0.10
@@ -134,8 +167,12 @@ num_years <- 5
 effective_ratio <- (1 + growth_rate) / (1 + discount_rate)
 first_pv_term <- C_0 / (1 + discount_rate)
 npv <- geometric_sum(first_pv_term, effective_ratio, num_years)
-cat(sprintf("NPV via formula : €%.2f\n", npv))  # Cross-check via sapply
-pv_terms <- sapply( seq_len(num_years), function(t) C_0 * (1 + growth_rate)^(t - 1) / (1 + discount_rate)^t
+cat(sprintf("NPV via formula : €%.2f\n", npv))
+
+# Cross-check via sapply
+pv_terms <- sapply(
+  seq_len(num_years),
+  function(t) C_0 * (1 + growth_rate)^(t - 1) / (1 + discount_rate)^t
 )
 cat(sprintf("NPV direct : €%.2f\n", sum(pv_terms)))
 ```
@@ -144,13 +181,17 @@ cat(sprintf("NPV direct : €%.2f\n", sum(pv_terms)))
 
 ```python
 """
-Geometric sum
-for customer lifetime value (LTV) modelling. Business context:
-    Monthly cohort onboarding model. Each new cohort has: - base_revenue_per_cohort: revenue generated
-if the entire cohort stayed - retention_rate :
-    fraction of cohort surviving each month - acquisition_cost : one-time cost to acquire the cohort Goal: compute
-break-even month and cumulative LTV curve.
-""" import numpy as np
+Geometric sum for customer lifetime value (LTV) modelling.
+
+Business context:
+    Monthly cohort onboarding model. Each new cohort has:
+    - base_revenue_per_cohort: revenue generated if the entire cohort stayed
+    - retention_rate : fraction of cohort surviving each month
+    - acquisition_cost : one-time cost to acquire the cohort
+
+Goal: compute break-even month and cumulative LTV curve.
+"""
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 RETENTION_RATE: float = 0.82
@@ -165,20 +206,30 @@ def geometric_sum(first_term: float, ratio: float, num_terms: int) -> float:
         return first_term * num_terms
     return first_term * (1.0 - ratio**num_terms) / (1.0 - ratio)
 
-def cumulative_ltv_curve( first_term: float, retention_rate: float, num_months: int,
+def cumulative_ltv_curve(
+    first_term: float, retention_rate: float, num_months: int,
 ) -> np.ndarray:
     """Return array of cumulative LTV after each month (1..num_months)."""
-    return np.array( [geometric_sum(first_term, retention_rate, month) for month in range(1, num_months + 1)] )
+    return np.array(
+        [geometric_sum(first_term, retention_rate, month) for month in range(1, num_months + 1)]
+    )
 
 def break_even_month(cumulative_revenue: np.ndarray, cost: float) -> int:
     """Return first month where cumulative revenue exceeds acquisition cost."""
     exceeds = np.where(cumulative_revenue > cost)[0]
     return int(exceeds[0]) + 1 if len(exceeds) > 0 else -1
-cumulative_revenue = cumulative_ltv_curve( BASE_REVENUE_PER_COHORT, RETENTION_RATE, NUM_MONTHS )
+
+
+cumulative_revenue = cumulative_ltv_curve(
+    BASE_REVENUE_PER_COHORT, RETENTION_RATE, NUM_MONTHS
+)
 net_ltv = cumulative_revenue - ACQUISITION_COST
 be_month = break_even_month(cumulative_revenue, ACQUISITION_COST)
 months = np.arange(1, NUM_MONTHS + 1)
-results_df = pd.DataFrame({ "month": months, "cumulative_revenue_eur": cumulative_revenue, "net_ltv_eur": net_ltv,
+results_df = pd.DataFrame({
+    "month": months,
+    "cumulative_revenue_eur": cumulative_revenue,
+    "net_ltv_eur": net_ltv,
 })
 print(results_df.to_string(index=False))
 print(f"\nBreak-even month: {be_month}")

@@ -126,7 +126,9 @@ y_pred <- c(2.5, 4.8, 6.5, 4.2, 5.8)
 ss_res <- sum((y_true - y_pred)^2)
 ss_tot <- sum((y_true - mean(y_true))^2)
 r_squared <- 1 - ss_res / ss_tot
-cat("R^2:", round(r_squared, 4), "\n")  # Adjusted R^2 (p predictors, n samples)
+cat("R^2:", round(r_squared, 4), "\n")
+
+# Adjusted R^2 (p predictors, n samples)
 n <- length(y_true)
 p <- 1
 adj_r2 <- 1 - (1 - r_squared) * (n - 1) / (n - p - 1)
@@ -136,17 +138,25 @@ cat("Adjusted R^2:", round(adj_r2, 4), "\n")
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 from dataclasses import dataclass
 import numpy as np
 import pandas as pd
 from sklearn.metrics import r2_score
+
+
 @dataclass
-
 class R2AnalysisResult:
-    r2: float adjusted_r2: float ss_res: float ss_tot: float n_samples: int n_features: int unexplained_variance_pct: float
+    r2: float
+    adjusted_r2: float
+    ss_res: float
+    ss_tot: float
+    n_samples: int
+    n_features: int
+    unexplained_variance_pct: float
 
-def r2_analysis( y_true: np.ndarray, y_pred: np.ndarray, n_features: int,
+
+def r2_analysis(
+    y_true: np.ndarray, y_pred: np.ndarray, n_features: int,
 ) -> R2AnalysisResult:
     # Compute R^2 and adjusted R^2 with full variance decomposition.
     n = len(y_true)
@@ -154,23 +164,38 @@ def r2_analysis( y_true: np.ndarray, y_pred: np.ndarray, n_features: int,
     ss_tot = float(np.sum((y_true - y_true.mean()) ** 2))
     r2 = float(r2_score(y_true, y_pred))
     adj_r2 = float(1 - (1 - r2) * (n - 1) / (n - n_features - 1)) if n > n_features + 1 else float("nan")
-    return R2AnalysisResult( r2=round(r2, 6), adjusted_r2=round(adj_r2, 6), ss_res=round(ss_res, 4), ss_tot=round(ss_tot, 4), n_samples=n, n_features=n_features, unexplained_variance_pct=round((1 - max(r2, 0)) * 100, 2), )
+    return R2AnalysisResult(
+        r2=round(r2, 6),
+        adjusted_r2=round(adj_r2, 6),
+        ss_res=round(ss_res, 4),
+        ss_tot=round(ss_tot, 4),
+        n_samples=n,
+        n_features=n_features,
+        unexplained_variance_pct=round((1 - max(r2, 0)) * 100, 2),
+    )
 
-def r2_feature_ablation( feature_names: list[str], y_true: np.ndarray, model_predictions: dict[str, np.ndarray],
+
+def r2_feature_ablation(
+    feature_names: list[str],
+    y_true: np.ndarray,
+    model_predictions: dict[str, np.ndarray],
 ) -> pd.DataFrame:
     # Compare R^2 across models with different feature sets (ablation study).
     rows = []
     for feature_set, y_pred in model_predictions.items():
         r2 = r2_score(y_true, y_pred)
-    rows.append({"feature_set": feature_set, "r2": round(float(r2), 4)})
+        rows.append({"feature_set": feature_set, "r2": round(float(r2), 4)})
     return pd.DataFrame(rows).sort_values("r2", ascending=False)
+
 
 if __name__ == "__main__":
     rng = np.random.default_rng(seed=42)
     n = 500
     x1 = rng.uniform(0, 10, n)
     x2 = rng.uniform(0, 5, n)
-    y_true_sim = 3.0 * x1 + 1.5 * x2 + rng.normal(0, 2.0, n)   # Simulate predictions from two models: full vs. partial features
+    y_true_sim = 3.0 * x1 + 1.5 * x2 + rng.normal(0, 2.0, n)
+
+    # Simulate predictions from two models: full vs. partial features
     y_full = 3.0 * x1 + 1.5 * x2
     y_partial = 3.0 * x1
     result = r2_analysis(y_true_sim, y_full, n_features=2)
@@ -178,7 +203,11 @@ if __name__ == "__main__":
     for field, val in result.__dict__.items():
         print(f" {field}: {val}")
     print("\nFeature ablation:")
-    ablation = r2_feature_ablation( feature_names=["x1", "x2"], y_true=y_true_sim, model_predictions={"x1_only": y_partial, "x1_and_x2": y_full}, )
+    ablation = r2_feature_ablation(
+        feature_names=["x1", "x2"],
+        y_true=y_true_sim,
+        model_predictions={"x1_only": y_partial, "x1_and_x2": y_full},
+    )
     print(ablation.to_string(index=False))
 ```
 

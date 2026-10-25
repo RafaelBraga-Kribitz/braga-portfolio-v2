@@ -100,36 +100,48 @@ Error reduces from ~0.1 to ~0.005 to ~0.00001: quadratic convergence visible.
 ```python
 import numpy as np
 
-def newton_raphson( func, func_deriv, x_init: float, tol: float = 1e-10, max_iter: int = 50,
+def newton_raphson(
+    func, func_deriv, x_init: float, tol: float = 1e-10, max_iter: int = 50,
 ) -> float:
     """Newton-Raphson root finder: solve f(x) = 0."""
     x = x_init
     for iteration in range(max_iter):
         f_val = func(x)
-    f_prime = func_deriv(x)
-    if abs(f_prime) < 1e-14:
-        raise ValueError(f"Derivative too small at x={x}; method diverges.")
-    x_new = x - f_val / f_prime
-    if abs(x_new - x) < tol:
-        print(f" Converged at iteration {iteration + 1}")
-    return x_new
-x = x_new
-raise RuntimeError(f"Newton-Raphson did not converge in {max_iter} iterations.")   # Example 1: find sqrt(2) via f(x) = x^2 - 2
+        f_prime = func_deriv(x)
+        if abs(f_prime) < 1e-14:
+            raise ValueError(f"Derivative too small at x={x}; method diverges.")
+        x_new = x - f_val / f_prime
+        if abs(x_new - x) < tol:
+            print(f" Converged at iteration {iteration + 1}")
+            return x_new
+        x = x_new
+    raise RuntimeError(f"Newton-Raphson did not converge in {max_iter} iterations.")
+
+
+# Example 1: find sqrt(2) via f(x) = x^2 - 2
 print("=== Finding sqrt(2): f(x) = x^2 - 2 ===")
-x_star = newton_raphson( func=lambda x: x**2 - 2, func_deriv=lambda x: 2 * x, x_init=1.0,
+x_star = newton_raphson(
+    func=lambda x: x**2 - 2, func_deriv=lambda x: 2 * x, x_init=1.0,
 )
 print(f"x* = {x_star:.15f}")
 print(f"True sqrt(2) = {np.sqrt(2):.15f}")
-print(f"Error = {abs(x_star - np.sqrt(2)):.2e}")   # Example 2: solve e^x = 3 (find ln(3))
+print(f"Error = {abs(x_star - np.sqrt(2)):.2e}")
+
+# Example 2: solve e^x = 3 (find ln(3))
 print("\n=== Finding ln(3): f(x) = e^x - 3 ===")
-x_star2 = newton_raphson( func=lambda x: np.exp(x) - 3, func_deriv=lambda x: np.exp(x), x_init=1.0,
+x_star2 = newton_raphson(
+    func=lambda x: np.exp(x) - 3, func_deriv=lambda x: np.exp(x), x_init=1.0,
 )
 print(f"x* = {x_star2:.15f}")
-print(f"True ln(3) = {np.log(3):.15f}")   # Example 3: Newton's method for optimization: minimize f(x) = x^4 - 4x^2
+print(f"True ln(3) = {np.log(3):.15f}")
+
+# Example 3: Newton's method for optimization: minimize f(x) = x^4 - 4x^2
 # Apply NR to f'(x) = 4x^3 - 8x, f''(x) = 12x^2 - 8
 print("\n=== Minimizing f(x) = x^4 - 4x^2 (finding zero of f') ===")
-x_opt = newton_raphson( func=lambda x: 4*x**3 - 8*x,   # f'(x) func_deriv=lambda x: 12*x**2 -
-    8,   # f''(x) x_init=1.5, # start near positive minimum at x = sqrt(2)
+x_opt = newton_raphson(
+    func=lambda x: 4*x**3 - 8*x,         # f'(x)
+    func_deriv=lambda x: 12*x**2 - 8,    # f''(x)
+    x_init=1.5,                          # start near positive minimum at x = sqrt(2)
 )
 print(f"x* = {x_opt:.10f} (true: {np.sqrt(2):.10f})")
 print(f"f(x*) = {x_opt**4 - 4*x_opt**2:.8f} (true: -4)")
@@ -139,27 +151,37 @@ print(f"f(x*) = {x_opt**4 - 4*x_opt**2:.8f} (true: -4)")
 
 ```r
 # Newton-Raphson root finding: x_{n+1} = x_n - f(x_n) / f'(x_n)
-newton_raphson <- function(func, func_deriv, x_init, tol = 1e-10, max_iter = 50) { x <- x_init
-  for (i in seq_len(max_iter)) { f_val <- func(x)
+newton_raphson <- function(func, func_deriv, x_init, tol = 1e-10, max_iter = 50) {
+  x <- x_init
+  for (i in seq_len(max_iter)) {
+    f_val <- func(x)
     f_prime <- func_deriv(x)
     if (abs(f_prime) < 1e-14) stop(sprintf("Derivative too small at x=%.4f", x))
     x_new <- x - f_val / f_prime
-    if (abs(x_new - x) < tol) { cat(sprintf(" Converged at iteration %d\n", i))
+    if (abs(x_new - x) < tol) {
+      cat(sprintf(" Converged at iteration %d\n", i))
       return(x_new)
     }
     x <- x_new
-  } stop("Newton-Raphson did not converge")
-}  # Find sqrt(2): f(x) = x^2 - 2
+  }
+  stop("Newton-Raphson did not converge")
+}
+
+# Find sqrt(2): f(x) = x^2 - 2
 cat("=== Finding sqrt(2) ===\n")
-x_star <- newton_raphson( func = function(x) x^2 - 2, func_deriv = function(x) 2 * x, x_init = 1.0
+x_star <- newton_raphson(
+  func = function(x) x^2 - 2, func_deriv = function(x) 2 * x, x_init = 1.0
 )
 cat(sprintf("x* = %.15f\n", x_star))
 cat(sprintf("True sqrt(2) = %.15f\n", sqrt(2)))
-cat(sprintf("Error = %.2e\n", abs(x_star - sqrt(2))))  # Minimizing f(x) = x^4 - 4x^2 by solving f'(x) = 0
+cat(sprintf("Error = %.2e\n", abs(x_star - sqrt(2))))
+
+# Minimizing f(x) = x^4 - 4x^2 by solving f'(x) = 0
 cat("\n=== Minimizing f(x) = x^4 - 4x^2 ===\n")
-x_opt <- newton_raphson( func = function(x) 4*x^3 - 8*x,  # f'(x)
-func_deriv = function(x) 12*x^2 - 8,  # f''(x)
-x_init = 1.5
+x_opt <- newton_raphson(
+  func = function(x) 4*x^3 - 8*x,         # f'(x)
+  func_deriv = function(x) 12*x^2 - 8,    # f''(x)
+  x_init = 1.5
 )
 cat(sprintf("x* = %.10f (true: %.10f)\n", x_opt, sqrt(2)))
 ```
@@ -169,32 +191,52 @@ cat(sprintf("x* = %.10f (true: %.10f)\n", x_opt, sqrt(2)))
 ```python
 import numpy as np
 from scipy.optimize import newton
-np.random.seed(42)   # -- IRLS: Newton-Raphson for logistic regression MLE --------------------------
+np.random.seed(42)
+
+# -- IRLS: Newton-Raphson for logistic regression MLE --------------------------
 # Logistic regression score equations solved via Newton-Raphson (IRLS)
+
 
 def sigmoid(z: np.ndarray) -> np.ndarray:
     return 1 / (1 + np.exp(-np.clip(z, -500, 500)))
 
-def irls_logistic_regression( X: np.ndarray, y: np.ndarray, max_iter: int = 20, tol: float = 1e-8,
+
+def irls_logistic_regression(
+    X: np.ndarray, y: np.ndarray, max_iter: int = 20, tol: float = 1e-8,
 ) -> np.ndarray:
-    """Iteratively Reweighted Least Squares (IRLS) for logistic regression. Newton-Raphson on log-likelihood: w_{n+1} = w_n - H^{-1} grad. H = X^T W X (Hessian, where W = diag(p(1-p))) grad = X^T (p - y) Equivalent to solving WLS: (X^T W X) w = X^T W z, z = Xw + W^{-1}(y-p). """
+    """Iteratively Reweighted Least Squares (IRLS) for logistic regression.
+
+    Newton-Raphson on log-likelihood: w_{n+1} = w_n - H^{-1} grad.
+    H = X^T W X (Hessian, where W = diag(p(1-p)))
+    grad = X^T (p - y)
+    Equivalent to solving WLS: (X^T W X) w = X^T W z, z = Xw + W^{-1}(y-p).
+    """
     n, d = X.shape
     w = np.zeros(d)
     for iteration in range(max_iter):
-        p = sigmoid(X @ w)   # Working
-        weights: W = diag(p * (1 - p))
+        p = sigmoid(X @ w)
+        # Working weights: W = diag(p * (1 - p))
         weights = p * (1 - p)
-        weights = np.maximum(weights, 1e-10)   # numerical safety # Gradient of negative log-likelihood: X^T (p - y) grad = X.T @ (p - y) # Hessian: X^T W X
+        weights = np.maximum(weights, 1e-10)   # numerical safety
+        # Gradient of negative log-likelihood: X^T (p - y)
+        grad = X.T @ (p - y)
+        # Hessian: X^T W X
         W_sqrt = np.sqrt(weights)
-        X_weighted = X * W_sqrt[:, np.newaxis]   # sqrt(W) X hessian = X_weighted.T @ X_weighted # X^T W X # Newton step: w_new = w - H^{-1} grad try:
-        w_new = w - np.linalg.solve(hessian, grad)
-    except np.linalg.LinAlgError:
-        break
-    if np.linalg.norm(w_new - w) < tol:
-        print(f" IRLS converged at iteration {iteration + 1}")
-    return w_new
-w = w_new
-return w   # Generate binary classification data
+        X_weighted = X * W_sqrt[:, np.newaxis]   # sqrt(W) X
+        hessian = X_weighted.T @ X_weighted       # X^T W X
+        # Newton step: w_new = w - H^{-1} grad
+        try:
+            w_new = w - np.linalg.solve(hessian, grad)
+        except np.linalg.LinAlgError:
+            break
+        if np.linalg.norm(w_new - w) < tol:
+            print(f" IRLS converged at iteration {iteration + 1}")
+            return w_new
+        w = w_new
+    return w
+
+
+# Generate binary classification data
 from sklearn.datasets import make_classification
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import roc_auc_score
@@ -202,7 +244,9 @@ X_raw, y = make_classification(n_samples=500, n_features=8, n_informative=5, ran
 scaler = StandardScaler()
 X = np.hstack([np.ones((len(y), 1)), scaler.fit_transform(X_raw)])   # add bias
 print("IRLS Logistic Regression (Newton-Raphson on score equations)")
-w_irls = irls_logistic_regression(X, y, max_iter=25)   # Compare to scipy (also Newton-based)
+w_irls = irls_logistic_regression(X, y, max_iter=25)
+
+# Compare to scipy (also Newton-based)
 from sklearn.linear_model import LogisticRegression
 clf = LogisticRegression(fit_intercept=True, C=1e9, solver="lbfgs", max_iter=1000)
 clf.fit(X[:, 1:], y)   # sklearn handles bias separately
@@ -211,16 +255,18 @@ auc_sklearn = roc_auc_score(y, clf.predict_proba(X[:, 1:])[:, 1])
 print(f"\nAUC (IRLS / Newton-Raphson): {auc_irls:.4f}")
 print(f"AUC (sklearn lbfgs): {auc_sklearn:.4f}")
 print(f"\nIRLS converges in <20 steps vs GD which needs >1000 steps.")
-print(f"Quadratic convergence of Newton-Raphson is the key advantage.")   # Scalar demo: Newton-Raphson via scipy.optimize.newton
+print(f"Quadratic convergence of Newton-Raphson is the key advantage.")
+
+# Scalar demo: Newton-Raphson via scipy.optimize.newton
 print("\n=== scipy.optimize.newton (scalar root finding) ===")
 # Find MLE of Poisson lambda from data: solve d/d_lambda log L = n/lambda - sum(x) = 0
 sample_data = np.random.poisson(lam=3.5, size=200)
 n_data = len(sample_data)
 sum_x = sample_data.sum()
-poisson_score = lambda lam: n_data / lam - sum_x   # d/d_lambda log
-L = 0
+poisson_score = lambda lam: n_data / lam - sum_x   # d/d_lambda log L = 0
 poisson_hess = lambda lam: -n_data / lam**2   # second derivative
-lambda_mle = newton(poisson_score, x0=1.0, fprime=poisson_hess)
+# Newton on n/lambda - sum(x) converges only for 0 < x0 < 2/mean(x), so start low
+lambda_mle = newton(poisson_score, x0=0.5, fprime=poisson_hess)
 print(f"Poisson MLE via Newton-Raphson: lambda_hat = {lambda_mle:.6f}")
 print(f"Sample mean (analytical MLE): {sample_data.mean():.6f}")
 print(f"Difference: {abs(lambda_mle - sample_data.mean()):.2e}")

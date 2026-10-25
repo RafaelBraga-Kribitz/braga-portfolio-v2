@@ -108,9 +108,11 @@ print(f"\nProduct > 0 -> roots have the {sign_of_product}")
 
 ```r
 vieta_product <- function(a, c) c / a
-quadratic_roots <- function(a, b, c) { delta <- b^2 - 4 * a * c
+quadratic_roots <- function(a, b, c) {
+  delta <- b^2 - 4 * a * c
   if (delta < 0)
-  return(NULL) c((-b + sqrt(delta)) / (2*a), (-b - sqrt(delta)) / (2*a))
+    return(NULL)
+  c((-b + sqrt(delta)) / (2*a), (-b - sqrt(delta)) / (2*a))
 }
 a <- 2; b <- -10; c <- 12
 predicted_product <- vieta_product(a, c)
@@ -127,23 +129,44 @@ cat(sprintf("Match: %s\n", isTRUE(all.equal(predicted_product, actual_product)))
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: reconstruct quadratic from known break-even prices, then validate portfolio # If you know sum S = p1+p2 and product P = p1*p2, the quadratic is:
-# p^2 - S*p + P = 0 (assuming leading
-coefficient = 1 for unit-scale revenue model) known_break_evens = pd.DataFrame({ "product": ["Widget", "Gadget", "Doohickey"], "p1": [10.0, 5.0, 20.0], "p2": [40.0, 25.0, 35.0],
-}) known_break_evens["sum_S"] = known_break_evens["p1"] + known_break_evens["p2"]
-known_break_evens["product_P"] = known_break_evens["p1"] * known_break_evens["p2"]   # Reconstruct: x^2 - S*x + P = 0 -> a=1, b=-S,
-c=P
-# Vieta's formulas (reverse): b = -S,
-c = P
+import pandas as pd
+
+# Scenario: reconstruct quadratic from known break-even prices, then validate portfolio
+# If you know sum S = p1+p2 and product P = p1*p2, the quadratic is:
+# p^2 - S*p + P = 0 (assuming leading coefficient = 1 for unit-scale revenue model)
+known_break_evens = pd.DataFrame({
+    "product": ["Widget", "Gadget", "Doohickey"],
+    "p1": [10.0, 5.0, 20.0],
+    "p2": [40.0, 25.0, 35.0],
+})
+known_break_evens["sum_S"] = known_break_evens["p1"] + known_break_evens["p2"]
+known_break_evens["product_P"] = known_break_evens["p1"] * known_break_evens["p2"]
+
+# Reconstruct: x^2 - S*x + P = 0 -> a=1, b=-S, c=P
+# Vieta's formulas (reverse): b = -S, c = P
 known_break_evens["a"] = 1.0
 known_break_evens["b"] = -known_break_evens["sum_S"]
-known_break_evens["c"] = known_break_evens["product_P"]   # Verify: compute roots from reconstructed quadratic and check they match
+known_break_evens["c"] = known_break_evens["product_P"]
 
-def recover_roots(a, b, c): delta = b**2 - 4*a*c if delta < 0: return None, None r1 = (-b + np.sqrt(delta)) / (2*a) r2 = (-b - np.sqrt(delta)) / (2*a) return sorted([r1, r2]) recovered = [ recover_roots(row.a, row.b, row.c) for _, row in known_break_evens.iterrows()
-] known_break_evens["recovered_p1"] = [r[0] for r in recovered]
+# Verify: compute roots from reconstructed quadratic and check they match
+def recover_roots(a, b, c):
+    delta = b**2 - 4*a*c
+    if delta < 0:
+        return None, None
+    r1 = (-b + np.sqrt(delta)) / (2*a)
+    r2 = (-b - np.sqrt(delta)) / (2*a)
+    return sorted([r1, r2])
+
+
+recovered = [
+    recover_roots(row.a, row.b, row.c) for _, row in known_break_evens.iterrows()
+]
+known_break_evens["recovered_p1"] = [r[0] for r in recovered]
 known_break_evens["recovered_p2"] = [r[1] for r in recovered]
-known_break_evens["match"] = np.isclose( known_break_evens["p1"].apply(min, known_break_evens["p2"]), known_break_evens["recovered_p1"]
-) print("Quadratic Reconstruction from Vieta's Formulas")
+known_break_evens["match"] = np.isclose(
+    np.minimum(known_break_evens["p1"], known_break_evens["p2"]), known_break_evens["recovered_p1"]
+)
+print("Quadratic Reconstruction from Vieta's Formulas")
 print("Given p1, p2 -> compute sum S and product P -> rebuild quadratic -> recover roots")
 print()
 print(known_break_evens[["product", "p1", "p2", "sum_S", "product_P", "b", "c", "recovered_p1", "recovered_p2"]].to_string(index=False))
@@ -153,18 +176,22 @@ print("\nRoots recovered exactly from Vieta's product and sum.")
 ### Professional example (R)
 
 ```r
-# Reconstruct quadratic from Vieta: p^2 - S*p +
-P = 0 given p1, p2
-known_break_evens <- data.frame( product = c("Widget", "Gadget", "Doohickey"), p1 = c(10, 5, 20), p2 = c(40, 25, 35)
+# Reconstruct quadratic from Vieta: p^2 - S*p + P = 0 given p1, p2
+known_break_evens <- data.frame(
+  product = c("Widget", "Gadget", "Doohickey"),
+  p1 = c(10, 5, 20),
+  p2 = c(40, 25, 35)
 )
 known_break_evens$sum_S <- known_break_evens$p1 + known_break_evens$p2
 known_break_evens$product_P <- known_break_evens$p1 * known_break_evens$p2
 known_break_evens$a <- 1
 known_break_evens$b <- -known_break_evens$sum_S
 known_break_evens$c <- known_break_evens$product_P
-recover_roots <- function(a, b, c) { delta <- b^2 - 4*a*c
+recover_roots <- function(a, b, c) {
+  delta <- b^2 - 4*a*c
   if (delta < 0)
-  return(c(NA, NA)) sort(c((-b - sqrt(delta))/(2*a), (-b + sqrt(delta))/(2*a)))
+    return(c(NA, NA))
+  sort(c((-b - sqrt(delta))/(2*a), (-b + sqrt(delta))/(2*a)))
 }
 rec <- mapply(function(a, b, c) recover_roots(a, b, c), known_break_evens$a, known_break_evens$b, known_break_evens$c)
 known_break_evens$recovered_p1 <- rec[1, ]; known_break_evens$recovered_p2 <- rec[2, ]

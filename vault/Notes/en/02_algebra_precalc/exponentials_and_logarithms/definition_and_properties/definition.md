@@ -115,9 +115,12 @@ $10^{-3} = 1/1000 = 0.001$. ✓ Therefore $\log_{10} 0.001 = -3$.
 ```python
 # Logarithm definition: y = log_a(x) iff a^y = x
 import math
-import numpy as np   # Verify the definition: log_a(x) = y means a^y = x
+import numpy as np
+
+# Verify the definition: log_a(x) = y means a^y = x
 print("Definition verification: a^(log_a(x)) == x")
-test_cases = [ (2.0, 8.0),   # log_2(8) = 3
+test_cases = [
+    (2.0, 8.0),   # log_2(8) = 3
     (10.0, 1000.0),   # log_10(1000) = 3
     (10.0, 0.001),   # log_10(0.001) = -3
     (math.e, math.e),   # ln(e) = 1
@@ -127,19 +130,24 @@ test_cases = [ (2.0, 8.0),   # log_2(8) = 3
 print(f"{'a':>6} {'x':>10} {'log_a(x)':>10} {'a^y':>10} {'verified':>8}")
 for a, x in test_cases:
     y = math.log(x, a)
-a_to_y = a ** y
-verified = abs(a_to_y - x) < 1e-9
-print(f"{a:>6.3f} {x:>10.4f} {y:>10.6f} {a_to_y:>10.6f} {str(verified):>8}")   # Special values
+    a_to_y = a ** y
+    verified = abs(a_to_y - x) < 1e-9
+    print(f"{a:>6.3f} {x:>10.4f} {y:>10.6f} {a_to_y:>10.6f} {str(verified):>8}")
+
+# Special values
 print("\nSpecial values:")
 for a in [2.0, math.e, 10.0]:
-    print(f" log_{a:.4f}(1) = {math.log(1, a):.4f} (a^0 = 1)[[")
-print(f"]] log_{a:.4f}(a) = {math.log(a, a):.4f} (a^1 = a)")   # Natural log vs log-2 vs log-10
+    print(f" log_{a:.4f}(1) = {math.log(1, a):.4f} (a^0 = 1)")
+    print(f" log_{a:.4f}(a) = {math.log(a, a):.4f} (a^1 = a)")
+
+# Natural log vs log-2 vs log-10
 print("\nThree common bases for x = 100:")
 x = 100.0
 print(f" ln(100) = {math.log(x):.6f} (base e)")
 print(f" log2(100) = {math.log2(x):.6f} (base 2)")
-print(f" log10(100) = {math.log10(x):.6f} (base 10)")   # TRAP:
-log(x + y) != log(x) + log(y)
+print(f" log10(100) = {math.log10(x):.6f} (base 10)")
+
+# TRAP: log(x + y) != log(x) + log(y)
 x_val, y_val = 3.0, 5.0
 print(f"\nTRAP: ln({x_val}+{y_val}) = {math.log(x_val + y_val):.6f}")
 print(f" ln({x_val})+ln({y_val}) = {math.log(x_val) + math.log(y_val):.6f}")
@@ -149,19 +157,30 @@ print(f" These are NOT equal — log of sum ≠ sum of logs")
 ### Beginner example (R)
 
 ```r
-# Logarithm definition in R:
-y = log_a(x) iff a^y = x  # Verify the definition
-test_cases <- list( c(a = 2, x = 8), c(a = 10, x = 1000), c(a = exp(1), x = exp(1)), c(a = exp(1), x = 1), c(a = 3, x = 81)
-) cat(sprintf("%-6s %-10s %-10s %-10s %s\n", "a", "x", "log_a(x)", "a^y", "verified"))
-for (tc in test_cases) { a <- tc["a"]; x <- tc["x"]
+# Logarithm definition in R: y = log_a(x) iff a^y = x
+# Verify the definition
+test_cases <- list(
+  c(a = 2, x = 8),
+  c(a = 10, x = 1000),
+  c(a = exp(1), x = exp(1)),
+  c(a = exp(1), x = 1),
+  c(a = 3, x = 81)
+)
+cat(sprintf("%-6s %-10s %-10s %-10s %s\n", "a", "x", "log_a(x)", "a^y", "verified"))
+for (tc in test_cases) {
+  a <- tc["a"]; x <- tc["x"]
   y <- log(x, base = a)
   a_y <- a^y
   cat(sprintf("%-6.3f %-10.4f %-10.6f %-10.6f %s\n", a, x, y, a_y, abs(a_y - x) < 1e-9))
-}  # Natural log, log2, log10
+}
+
+# Natural log, log2, log10
 cat("\nFor x = 100:\n")
 cat(sprintf(" log(100) = %.6f (base e)\n", log(100)))
 cat(sprintf(" log2(100) = %.6f (base 2)\n", log2(100)))
-cat(sprintf(" log10(100) = %.6f (base 10)\n", log10(100)))  # TRAP: log(x + y) ≠ log(x) + log(y)
+cat(sprintf(" log10(100) = %.6f (base 10)\n", log10(100)))
+
+# TRAP: log(x + y) ≠ log(x) + log(y)
 cat(sprintf("\nTRAP: ln(3+5) = %.6f\n", log(8)))
 cat(sprintf(" ln(3)+ln(5) = %.6f — NOT equal\n", log(3) + log(5)))
 ```
@@ -212,8 +231,7 @@ print(f" Revenue min: {revenue_sample.min():.4f} (all positive, safe for ln)")
 ### Professional example (R)
 
 ```r
-#
-y = ln(revenue), e^y = revenue (definition of ln)
+# y = ln(revenue), e^y = revenue (definition of ln)
 set.seed(42)
 revenue_sample <- runif(20, 100, 10000)
 log_revenue <- log(revenue_sample)

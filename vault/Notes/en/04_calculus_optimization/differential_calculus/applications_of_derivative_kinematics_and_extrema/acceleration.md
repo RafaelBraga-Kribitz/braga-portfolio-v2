@@ -99,20 +99,41 @@ $v(1) = 0$ and $a(1) = -6 < 0$: velocity is zero and decreasing. The object just
 ```python
 import numpy as np
 
-def compute_acceleration( s_fn, t: float, h: float = 1e-5 ) -> tuple[float, float, float]:
-    """ Velocity and acceleration via central finite differences. v(t) = ds/dt ≈ [s(t+h) - s(t-h)] / (2h) a(t) = d²s/dt² ≈ [s(t+h) - 2s(t) + s(t-h)] / h² """
+def compute_acceleration(s_fn, t: float, h: float = 1e-5) -> tuple[float, float, float]:
+    """
+    Velocity and acceleration via central finite differences.
+
+    v(t) = ds/dt ≈ [s(t+h) - s(t-h)] / (2h)
+    a(t) = d²s/dt² ≈ [s(t+h) - 2s(t) + s(t-h)] / h²
+    """
     v = (s_fn(t + h) - s_fn(t - h)) / (2 * h)
     a = (s_fn(t + h) - 2 * s_fn(t) + s_fn(t - h)) / (h**2)
     return s_fn(t), v, a
-examples = [ { "name": "s = 2t^3 - 9t^2 + 12t - 4", "s_fn": lambda t: 2*t**3 - 9*t**2 + 12*t - 4, "v_analytic": lambda t: 6*t**2 - 18*t + 12, "a_analytic": lambda t: 12*t - 18, }, { "name": "s = sin(t) * exp(-0.1t)", "s_fn": lambda t: np.sin(t) * np.exp(-0.1 * t), "v_analytic": lambda t: np.exp(-0.1*t) * (np.cos(t) - 0.1*np.sin(t)), "a_analytic": lambda t: np.exp(-0.1*t) * (-np.sin(t) - 0.2*np.cos(t) + 0.01*np.sin(t)), },
+
+
+examples = [
+    {
+        "name": "s = 2t^3 - 9t^2 + 12t - 4",
+        "s_fn": lambda t: 2*t**3 - 9*t**2 + 12*t - 4,
+        "v_analytic": lambda t: 6*t**2 - 18*t + 12,
+        "a_analytic": lambda t: 12*t - 18,
+    },
+    {
+        "name": "s = sin(t) * exp(-0.1t)",
+        "s_fn": lambda t: np.sin(t) * np.exp(-0.1 * t),
+        "v_analytic": lambda t: np.exp(-0.1*t) * (np.cos(t) - 0.1*np.sin(t)),
+        "a_analytic": lambda t: np.exp(-0.1*t) * (-np.sin(t) - 0.2*np.cos(t) + 0.01*np.sin(t)),
+    },
 ]
 print("Acceleration: a(t) = dv/dt = d²s/dt²")
 print(f"\n{'Function':>30} {'t':>5} {'s(t)':>8} {'v(t)':>10} {'a(t)':>10} {'a_exact':>10}")
 for ex in examples:
     for t_val in [0.5, 1.0, 2.0]:
         s_val, v_num, a_num = compute_acceleration(ex["s_fn"], t_val)
-    a_exact = ex["a_analytic"](t_val)
-print(f"{ex['name']:>30} {t_val:>5.1f} {s_val:>8.4f} {v_num:>10.4f} {a_num:>10.4f} {a_exact:>10.4f}")   # Discrete acceleration: second difference of a time series
+        a_exact = ex["a_analytic"](t_val)
+        print(f"{ex['name']:>30} {t_val:>5.1f} {s_val:>8.4f} {v_num:>10.4f} {a_num:>10.4f} {a_exact:>10.4f}")
+
+# Discrete acceleration: second difference of a time series
 print("\n--- Discrete acceleration: Δ²s_t = s_t - 2*s_{t-1} + s_{t-2} ---")
 np.random.seed(42)
 n_weeks = 15
@@ -137,18 +158,23 @@ for i in range(min(10, n_weeks - 2)):
 
 ```r
 # Acceleration: a(t) = dv/dt = d²s/dt²
-compute_acceleration <- function(s_fn, t, h = 1e-5) { s_val <- s_fn(t)
+compute_acceleration <- function(s_fn, t, h = 1e-5) {
+  s_val <- s_fn(t)
   v <- (s_fn(t + h) - s_fn(t - h)) / (2 * h)
-  a <- (s_fn(t + h) - 2 * s_fn(t) + s_fn(t - h)) / h^2 list(s = s_val, v = v, a = a)
+  a <- (s_fn(t + h) - 2 * s_fn(t) + s_fn(t - h)) / h^2
+  list(s = s_val, v = v, a = a)
 }
 s_fn <- function(t) 2*t^3 - 9*t^2 + 12*t - 4
 v_exact <- function(t) 6*t^2 - 18*t + 12
 a_exact <- function(t) 12*t - 18
 cat("Acceleration: a(t) = d²s/dt²\n\n")
 cat(sprintf("%-5s %-8s %-10s %-10s %-10s\n", "t", "s(t)", "v(t)", "a(t)", "a_exact"))
-for (t_val in c(0.5, 1.0, 1.5, 2.0, 3.0)) { res <- compute_acceleration(s_fn, t_val)
+for (t_val in c(0.5, 1.0, 1.5, 2.0, 3.0)) {
+  res <- compute_acceleration(s_fn, t_val)
   cat(sprintf("%-5.2f %-8.4f %-10.4f %-10.4f %-10.4f\n", t_val, res$s, res$v, res$a, a_exact(t_val)))
-}  # Discrete acceleration: second difference
+}
+
+# Discrete acceleration: second difference
 cat("\n--- Discrete acceleration: second difference of WAU ---\n")
 set.seed(42)
 n_weeks <- 15
@@ -157,7 +183,8 @@ wau <- 50000 + 5000 * t_weeks - 300 * t_weeks^2 + rnorm(n_weeks, sd = 500)
 vel <- diff(wau)
 acc <- diff(vel)
 cat(sprintf("%-6s %-9s %-12s %-14s\n", "Week", "WAU", "Velocity", "Acceleration"))
-for (i in 1:min(10, n_weeks - 2)) { cat(sprintf("%-6d %-9.0f %-12.1f %-14.1f\n", i, wau[i], vel[i], acc[i]))
+for (i in 1:min(10, n_weeks - 2)) {
+  cat(sprintf("%-6d %-9.0f %-12.1f %-14.1f\n", i, wau[i], vel[i], acc[i]))
 }
 ```
 
@@ -167,7 +194,9 @@ for (i in 1:min(10, n_weeks - 2)) { cat(sprintf("%-6d %-9.0f %-12.1f %-14.1f\n",
 import numpy as np
 from sklearn.datasets import make_regression
 from sklearn.preprocessing import StandardScaler
-np.random.seed(42)   # -- Acceleration = d²L/dw²: Adam's second moment as per-parameter acceleration --
+np.random.seed(42)
+
+# -- Acceleration = d²L/dw²: Adam's second moment as per-parameter acceleration --
 # Use case: A DS trains a neural net with Adam and diagnoses which parameters
 # are in "high-curvature" (high acceleration) vs "flat" (low acceleration) regions.
 # The second moment v_t ≈ E[(dL/dw)^2] is the squared gradient = proxy for curvature.
@@ -176,8 +205,7 @@ np.random.seed(42)   # -- Acceleration = d²L/dw²: Adam's second moment as per-
 # This is exactly the physics: high acceleration = large response to small force.
 #
 # Kinematic analogy:
-#
-w_t = position (weights)
+# w_t = position (weights)
 # m_t = first moment = velocity (accumulated gradient direction)
 # v_t = second moment = acceleration proxy (accumulated squared gradient magnitude)
 # alpha / sqrt(v_hat) = effective step = force / acceleration = inverse mass
@@ -195,6 +223,8 @@ def mse_grad(w: np.ndarray, X: np.ndarray, y: np.ndarray) -> tuple[float, np.nda
     loss = float(np.mean(residuals**2))
     grad = -2.0 / len(y) * X.T @ residuals
     return loss, grad
+
+
 X_raw, y = make_regression(n_samples=N, n_features=DIM, noise=1.0, random_state=42)
 scaler = StandardScaler()
 X = scaler.fit_transform(X_raw)
@@ -206,14 +236,16 @@ losses = []
 velocities = []   # |m_hat|: magnitude of velocity vector
 accelerations = []   # |v_hat|: magnitude of acceleration proxy vector
 for step in range(1, N_STEPS + 1):
-    loss, grad = mse_grad(w, X, y)   # Adam update
-m = BETA1 * m + (1 - BETA1) * grad   # velocity: gradient direction v = BETA2 * v + (1 - BETA2) * grad**2 # acceleration: gradient magnitude²
-m_hat = m / (1 - BETA1**step)   # bias-corrected velocity
-v_hat = v / (1 - BETA2**step)   # bias-corrected acceleration proxy
-w = w - ALPHA * m_hat / (np.sqrt(v_hat) + EPS)   # position update
-losses.append(loss)
-velocities.append(float(np.linalg.norm(m_hat)))
-accelerations.append(float(np.linalg.norm(v_hat)))
+    loss, grad = mse_grad(w, X, y)
+    # Adam update
+    m = BETA1 * m + (1 - BETA1) * grad      # velocity: gradient direction
+    v = BETA2 * v + (1 - BETA2) * grad**2   # acceleration: gradient magnitude²
+    m_hat = m / (1 - BETA1**step)   # bias-corrected velocity
+    v_hat = v / (1 - BETA2**step)   # bias-corrected acceleration proxy
+    w = w - ALPHA * m_hat / (np.sqrt(v_hat) + EPS)   # position update
+    losses.append(loss)
+    velocities.append(float(np.linalg.norm(m_hat)))
+    accelerations.append(float(np.linalg.norm(v_hat)))
 print("Acceleration = d²L/dw²: Adam Second Moment as Per-Parameter Curvature")
 print(f"\nN={N}, DIM={DIM}, alpha={ALPHA}, beta1={BETA1}, beta2={BETA2}")
 print(f"\nPhysical interpretation:")
@@ -224,11 +256,11 @@ print(f" step_i = alpha / (sqrt(v_hat_i) + eps): force / acceleration = inverse 
 print(f"\n{'Step':>6} {'Loss':>10} {'|Velocity|':>12} {'|Acceleration|':>16} {'Effective LR (mean)':>20}")
 for step in [1, 5, 10, 50, 100, 200, 499]:
     # effective learning rate = alpha / (sqrt(v_hat) + eps): per-parameter
-    loss, grad = mse_grad(w, X, y)
-_, g = mse_grad(w, X, y)
-v_est = BETA2**step if step < N_STEPS else v
-eff_lr_mean = float(ALPHA / (np.sqrt(accelerations[step]) + EPS))
-print(f"{step+1:>6} {losses[step]:>10.5f} {velocities[step]:>12.6f} " f"{accelerations[step]:>16.6f} {eff_lr_mean:>20.8f}")   # Final per-parameter acceleration diagnosis
+    eff_lr_mean = float(ALPHA / (np.sqrt(accelerations[step]) + EPS))
+    print(f"{step+1:>6} {losses[step]:>10.5f} {velocities[step]:>12.6f} "
+          f"{accelerations[step]:>16.6f} {eff_lr_mean:>20.8f}")
+
+# Final per-parameter acceleration diagnosis
 _, final_grad = mse_grad(w, X, y)
 v_final = BETA2 * v + (1 - BETA2) * final_grad**2
 v_hat_final = v_final / (1 - BETA2**N_STEPS)
@@ -236,8 +268,9 @@ eff_lr_per_param = ALPHA / (np.sqrt(v_hat_final) + EPS)
 print(f"\nPer-parameter acceleration diagnosis at final step:")
 print(f"{'Param':>7} {'v_hat (accel)':>15} {'Effective LR':>14} {'Interpretation':>30}")
 for i in range(DIM):
-    interpretation = "high curvature, small step" if v_hat_final[i] > np.median(v_hat_final) \ else "flat region, large step"
-print(f"w[{i}]: {v_hat_final[i]:>13.6f} {eff_lr_per_param[i]:>14.8f} {interpretation:>30}")
+    interpretation = ("high curvature, small step" if v_hat_final[i] > np.median(v_hat_final)
+                      else "flat region, large step")
+    print(f"w[{i}]: {v_hat_final[i]:>13.6f} {eff_lr_per_param[i]:>14.8f} {interpretation:>30}")
 print(f"\nAcceleration physics summary:")
 print(f" Velocity |m_hat| at step 1: {velocities[0]:.6f} (high: large initial gradient)")
 print(f" Velocity |m_hat| at final: {velocities[-1]:.8f} (low: near convergence)")

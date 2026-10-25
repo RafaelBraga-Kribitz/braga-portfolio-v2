@@ -123,25 +123,40 @@ cat(sprintf("d = %.4f\n", d))
 import numpy as np
 import pandas as pd
 from sklearn.cluster import KMeans
-np.random.seed(42)   # -- Business scenario: RFM customer segmentation in 3D ---
+np.random.seed(42)
+
+# -- Business scenario: RFM customer segmentation in 3D ---
 # RFM = Recency (days), Frequency (orders/month), Monetary (avg spend)
-N = 300   # Simulate two customer groups
-recency_1 = np.random.normal(15, 5, N/2)   # active group
-frequency_1 = np.random.normal(4, 1, N/2)
-monetary_1 = np.random.normal(150, 30, N/2)
-recency_2 = np.random.normal(90, 20, N/2)   # inactive group
-frequency_2 = np.random.normal(1, 0.5, N/2)
-monetary_2 = np.random.normal(50, 15, N/2)
-X = np.vstack([ np.column_stack([recency_1, frequency_1, monetary_1]), np.column_stack([recency_2, frequency_2, monetary_2]) ])   # Standardize (critical: equal scale so L2 distance is fair)
-X_scaled = (X - X.mean(axis=0)) / X.std(axis=0)   # k-means: internally uses L2 distance
+N = 300
+
+# Simulate two customer groups
+recency_1 = np.random.normal(15, 5, N // 2)   # active group
+frequency_1 = np.random.normal(4, 1, N // 2)
+monetary_1 = np.random.normal(150, 30, N // 2)
+recency_2 = np.random.normal(90, 20, N // 2)   # inactive group
+frequency_2 = np.random.normal(1, 0.5, N // 2)
+monetary_2 = np.random.normal(50, 15, N // 2)
+X = np.vstack([
+    np.column_stack([recency_1, frequency_1, monetary_1]),
+    np.column_stack([recency_2, frequency_2, monetary_2]),
+])
+
+# Standardize (critical: equal scale so L2 distance is fair)
+X_scaled = (X - X.mean(axis=0)) / X.std(axis=0)
+
+# k-means: internally uses L2 distance
 km = KMeans(n_clusters=2, random_state=42, n_init=10)
-labels = km.fit_predict(X_scaled)   # Show inter-centroid distance
+labels = km.fit_predict(X_scaled)
+
+# Show inter-centroid distance
 centroids = km.cluster_centers_
 centroid_dist = np.linalg.norm(centroids[0] - centroids[1])
 print(f"Centroid 0 (standardized): {centroids[0].round(3)}")
 print(f"Centroid 1 (standardized): {centroids[1].round(3)}")
 print(f"Distance between centroids: {centroid_dist:.4f} (3D Euclidean)")
-print(f"\nCluster sizes: {np.bincount(labels)}")   # Per-cluster RFM profile
+print(f"\nCluster sizes: {np.bincount(labels)}")
+
+# Per-cluster RFM profile
 df = pd.DataFrame(X, columns=["recency", "frequency", "monetary"])
 df["cluster"] = labels
 print("\nCluster profiles (mean RFM):")
@@ -151,8 +166,7 @@ print(df.groupby("cluster").mean().round(2).to_string())
 ### Professional example (R)
 
 ```r
-# 3D RFM clustering; centroid
-distance = L2 in 3D
+# 3D RFM clustering; centroid distance = L2 in 3D
 set.seed(42)
 N <- 200
 recency_1 <- rnorm(N/2, 15, 5); frequency_1 <- rnorm(N/2, 4, 1); monetary_1 <- rnorm(N/2, 150, 30)

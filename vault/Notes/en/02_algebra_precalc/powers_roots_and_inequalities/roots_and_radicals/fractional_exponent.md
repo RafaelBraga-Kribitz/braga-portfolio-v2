@@ -128,17 +128,30 @@ cat(sprintf("\nGeometric mean of [2, 8, 32]: %.4f\n", geo_mean))
 
 ```python
 import numpy as np
-import pandas as pd   # Scenario: Box-Cox power transformation for feature normalization
+import pandas as pd
+
+# Scenario: Box-Cox power transformation for feature normalization
 # Box-Cox: y = (x^lambda - 1) / lambda for lambda != 0
 # When lambda = 0.5: y ~ sqrt(x) = x^(1/2) -- fractional exponent
-np.random.seed(42)   # Skewed revenue data (right-skewed)
+np.random.seed(42)
+
+# Skewed revenue data (right-skewed)
 raw_revenue = np.random.exponential(scale=500, size=200)
 lambdas = [0.5, 1/3, 1/4, 2/3]
 results = []
 for lam in lambdas:
-    transformed = raw_revenue ** lam   # fractional
-exponent = power + root in one
-results.append({ "lambda (m/n)": f"{lam:.4f}", "root_index_approx": f"1/{round(1/lam)}", "mean_raw": raw_revenue.mean(), "mean_transformed": transformed.mean(), "std_raw": raw_revenue.std(), "std_transformed": transformed.std(), "skew_reduction_pct": ( 1 - abs(pd.Series(transformed).skew()) / abs(pd.Series(raw_revenue).skew()) ) * 100, })
+    transformed = raw_revenue ** lam   # fractional exponent = power + root in one
+    results.append({
+        "lambda (m/n)": f"{lam:.4f}",
+        "root_index_approx": f"1/{round(1/lam)}",
+        "mean_raw": raw_revenue.mean(),
+        "mean_transformed": transformed.mean(),
+        "std_raw": raw_revenue.std(),
+        "std_transformed": transformed.std(),
+        "skew_reduction_pct": (
+            1 - abs(pd.Series(transformed).skew()) / abs(pd.Series(raw_revenue).skew())
+        ) * 100,
+    })
 df = pd.DataFrame(results)
 print("Box-Cox Feature Transformation using Fractional Exponents")
 print(f"Raw data: mean={raw_revenue.mean():.1f}, std={raw_revenue.std():.1f}, skew={pd.Series(raw_revenue).skew():.3f}")
@@ -156,7 +169,16 @@ set.seed(42)
 raw_revenue <- rexp(200, 1/500)
 lambdas <- c(0.5, 1/3, 1/4, 2/3)
 skew <- function(x) mean((x - mean(x))^3) / (sd(x)^3 + 1e-12)
-results <- lapply(lambdas, function(lam) { transformed <- raw_revenue^lam data.frame( lambda = lam, mean_raw = mean(raw_revenue), mean_transformed = mean(transformed), std_raw = sd(raw_revenue), std_transformed = sd(transformed), skew_reduction_pct = (1 - abs(skew(transformed)) / abs(skew(raw_revenue))) * 100 )
+results <- lapply(lambdas, function(lam) {
+  transformed <- raw_revenue^lam
+  data.frame(
+    lambda = lam,
+    mean_raw = mean(raw_revenue),
+    mean_transformed = mean(transformed),
+    std_raw = sd(raw_revenue),
+    std_transformed = sd(transformed),
+    skew_reduction_pct = (1 - abs(skew(transformed)) / abs(skew(raw_revenue))) * 100
+  )
 })
 df <- do.call(rbind, results)
 cat("Box-Cox Feature Transformation (fractional exponents)\n")

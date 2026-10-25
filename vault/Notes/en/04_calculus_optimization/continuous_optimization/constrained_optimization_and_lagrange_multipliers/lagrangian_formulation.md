@@ -105,25 +105,40 @@ $f(2,2) = 4 + 4 = 8$. Gradient check: $\nabla f = (4, 4) = -\mu(1, 1) = 4(1,1)$.
 import numpy as np
 from scipy.optimize import minimize
 
-def lagrangian( x: np.ndarray, mu: float, objective_fn, constraint_fn ) -> float:
+def lagrangian(x: np.ndarray, mu: float, objective_fn, constraint_fn) -> float:
     """Lagrangian L(x, mu) = f(x) + mu * h(x) for equality constraint h(x)=0."""
-    return objective_fn(x) + mu * constraint_fn(x)   # Minimize x1^2 + x2^2 subject to x1 +
-x2 = 4
+    return objective_fn(x) + mu * constraint_fn(x)
 
+
+# Minimize x1^2 + x2^2 subject to x1 + x2 = 4
 def f(x: np.ndarray) -> float:
     return x[0]**2 + x[1]**2
 
+
 def h(x: np.ndarray) -> float:
-    return x[0] + x[1] - 4   # Using scipy constrained optimizer
-result = minimize( f, x0=[0.0, 0.0], constraints={"type": "eq", "fun": h}, method="SLSQP",
+    return x[0] + x[1] - 4
+
+
+# Using scipy constrained optimizer
+result = minimize(
+    f, x0=[0.0, 0.0], constraints={"type": "eq", "fun": h}, method="SLSQP",
 )
 print(f"x* = {result.x.round(6)}")
 print(f"f(x*) = {f(result.x):.6f}")
-print(f"Constraint satisfied: h(x*) = {h(result.x):.2e}")   # Compute shadow price (Lagrange multiplier) numerically
+print(f"Constraint satisfied: h(x*) = {h(result.x):.2e}")
+
+# Compute shadow price (Lagrange multiplier) numerically
 DELTA = 0.001
 
+
 def f_relaxed(x, eps=0.0):
-    return minimize(f, [0,0], constraints={"type":"eq","fun":lambda z:z[0]+z[1]-(4+eps)}, method="SLSQP").fun
+    return minimize(
+        f, [0, 0],
+        constraints={"type": "eq", "fun": lambda z: z[0] + z[1] - (4 + eps)},
+        method="SLSQP",
+    ).fun
+
+
 shadow_price = (f_relaxed(None, DELTA) - f_relaxed(None, 0)) / DELTA
 print(f"\nShadow price (lambda*) ~ {shadow_price:.4f}")
 print("(Relaxing constraint by 1 unit decreases optimal f by ~|lambda*|)")
@@ -133,16 +148,23 @@ print("(Relaxing constraint by 1 unit decreases optimal f by ~|lambda*|)")
 
 ```r
 # Lagrangian for equality-constrained optimization
-library(nloptr)  # or use base R optim with constraints # Minimize x1^2 + x2^2 subject to x1 +
-x2 = 4
+library(nloptr)  # or use base R optim with constraints
+
+# Minimize x1^2 + x2^2 subject to x1 + x2 = 4
 f_obj <- function(x) x[1]^2 + x[2]^2
-h_eq <- function(x) x[1] + x[2] - 4  # equality
-constraint = 0  # Use augmented Lagrangian (slsqp from nloptr)
+h_eq <- function(x) x[1] + x[2] - 4  # equality constraint = 0
+
+# Use augmented Lagrangian (slsqp from nloptr)
 opts <- list(algorithm = "NLOPT_LD_SLSQP", xtol_rel = 1e-8, maxeval = 1000)
-result <- nloptr::slsqp( x0 = c(0, 0), fn = f_obj, heq = h_eq, control = list(xtol_rel = 1e-8, maxeval = 1000)
-) cat(sprintf("x* = (%.6f, %.6f)\n", result$par[1], result$par[2]))
+result <- nloptr::slsqp(
+  x0 = c(0, 0), fn = f_obj, heq = h_eq,
+  control = list(xtol_rel = 1e-8, maxeval = 1000)
+)
+cat(sprintf("x* = (%.6f, %.6f)\n", result$par[1], result$par[2]))
 cat(sprintf("f(x*) = %.6f\n", f_obj(result$par)))
-cat(sprintf("Constraint: x1 + x2 = %.6f (should be 4)\n", sum(result$par)))  # Manual verification of Lagrange multiplier
+cat(sprintf("Constraint: x1 + x2 = %.6f (should be 4)\n", sum(result$par)))
+
+# Manual verification of Lagrange multiplier
 cat(sprintf("\nExpected: x1* = x2* = 2, lambda* = -4\n"))
 cat(sprintf("grad f at x*: (%.1f, %.1f), should equal -lambda*(1,1)\n", 2*result$par[1], 2*result$par[2]))
 ```
@@ -152,27 +174,43 @@ cat(sprintf("grad f at x*: (%.1f, %.1f), should equal -lambda*(1,1)\n", 2*result
 ```python
 import numpy as np
 from scipy.optimize import minimize
-np.random.seed(42)   # -- SVM via Lagrangian dual: derive support vectors --------------------------
+np.random.seed(42)
+
+# -- SVM via Lagrangian dual: derive support vectors --------------------------
 N_PER_CLASS = 25
 X_pos = np.random.randn(N_PER_CLASS, 2) + np.array([2.5, 0])
 X_neg = np.random.randn(N_PER_CLASS, 2) + np.array([-2.5, 0])
 X = np.vstack([X_pos, X_neg])
 y = np.hstack([np.ones(N_PER_CLASS), -np.ones(N_PER_CLASS)])
 N = len(y)
-C_PARAM = 1.0   # SVM dual Lagrangian: max
-sum(alpha) - 0.5 * alpha @ K @ alpha
+C_PARAM = 1.0
+
+# SVM dual Lagrangian: max sum(alpha) - 0.5 * alpha @ K @ alpha
 # where K_ij = y_i y_j x_i^T x_j
 K = np.outer(y, y) * (X @ X.T)
+
 
 def dual_negative(alpha: np.ndarray) -> float:
     return 0.5 * alpha @ K @ alpha - alpha.sum()
 
+
 def dual_gradient(alpha: np.ndarray) -> np.ndarray:
     return K @ alpha - np.ones(N)
-result = minimize( dual_negative, np.zeros(N), jac=dual_gradient, method="SLSQP", bounds=[(0, C_PARAM)] * N, constraints={"type": "eq", "fun": lambda a: a @ y, "jac": lambda a: y}, options={"ftol": 1e-10, "maxiter": 1000},
+
+
+result = minimize(
+    dual_negative,
+    np.zeros(N),
+    jac=dual_gradient,
+    method="SLSQP",
+    bounds=[(0, C_PARAM)] * N,
+    constraints={"type": "eq", "fun": lambda a: a @ y, "jac": lambda a: y},
+    options={"ftol": 1e-10, "maxiter": 1000},
 )
 alpha = result.x
-support_mask = alpha > 1e-4   # Recover primal from dual via stationarity: w = sum alpha_i y_i x_i
+support_mask = alpha > 1e-4
+
+# Recover primal from dual via stationarity: w = sum alpha_i y_i x_i
 w = (alpha * y) @ X
 b = np.mean(y[support_mask] - X[support_mask] @ w)
 print("SVM via Lagrangian Dual")
@@ -180,9 +218,11 @@ print(f"Support vectors (active constraints, lambda > 0): {support_mask.sum()} /
 print(f"\nKKT complementary slackness check:")
 for idx in np.where(support_mask)[0][:5]:
     margin = y[idx] * (X[idx] @ w + b) - 1
-print(f" Sample {idx}: alpha={alpha[idx]:.4f}, margin-1={margin:.4f} (should be ~0)")
+    print(f" Sample {idx}: alpha={alpha[idx]:.4f}, margin-1={margin:.4f} (should be ~0)")
 print(f"\nDecision boundary: {w[0]:.4f}*x1 + {w[1]:.4f}*x2 + {b:.4f} = 0")
-print(f"Margin = 2/||w|| = {2/np.linalg.norm(w):.4f}")   # Lagrange multiplier shadow price interpretation
+print(f"Margin = 2/||w|| = {2/np.linalg.norm(w):.4f}")
+
+# Lagrange multiplier shadow price interpretation
 print(f"\nLambda (alpha) interpretation:")
 print(f" alpha_i > 0: sample i lies on the margin boundary (active constraint)")
 print(f" alpha_i = 0: sample i is not a support vector (inactive constraint)")

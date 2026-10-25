@@ -100,22 +100,31 @@ import numpy as np
 
 def power_rule(n: float) -> callable:
     """Return derivative function of x^n using the power rule."""
+    def derivative(x: float) -> float:
+        return n * x ** (n - 1)
+    derivative.__doc__ = f"Derivative of x^{n}: d/dx(x^{n}) = {n}*x^{n-1}"
+    return derivative
 
-def derivative(x: float) -> float:
-    return n * x ** (n - 1)
-derivative.__doc__ = f"Derivative of x^{n}: d/dx(x^{n}) = {n}*x^{n-1}"
-return derivative   # Demonstrate power rule on common cases
-cases = [ ("x^2", 2), ("x^3", 3), ("x^(-1)", -1), ("x^(1/2)", 0.5), ("x^pi", np.pi),
+
+# Demonstrate power rule on common cases
+cases = [
+    ("x^2", 2),
+    ("x^3", 3),
+    ("x^(-1)", -1),
+    ("x^(1/2)", 0.5),
+    ("x^pi", np.pi),
 ]
 x_val = 2.0
 print(f"{'Function':>12} {'Analytical':>14} {'Numerical approx':>18} {'Match':>7}")
 for name, n in cases:
     deriv_fn = power_rule(n)
-analytical = deriv_fn(x_val)
-h = 1e-7
-numerical = (x_val**n - (x_val - h)**n) / h
-match = abs(analytical - numerical) < 1e-5
-print(f"{name:>12} {analytical:>14.6f} {numerical:>18.6f} {str(match):>7}")   # L2 gradient in practice
+    analytical = deriv_fn(x_val)
+    h = 1e-7
+    numerical = (x_val**n - (x_val - h)**n) / h
+    match = abs(analytical - numerical) < 1e-5
+    print(f"{name:>12} {analytical:>14.6f} {numerical:>18.6f} {str(match):>7}")
+
+# L2 gradient in practice
 print("\n--- L2 regularization gradient ---")
 w = np.array([1.0, -2.0, 0.5, 3.0])
 l2_gradient = 2 * w   # d/dw_j (w_j^2) = 2*w_j for each j
@@ -127,18 +136,22 @@ print(f"grad L2 = 2*w = {l2_gradient}")
 
 ```r
 # Power rule: d/dx(x^n) = n * x^(n-1)
-power_rule_deriv <- function(n) { function(x) n * x^(n - 1)
+power_rule_deriv <- function(n) {
+  function(x) n * x^(n - 1)
 }
 x_val <- 2.0
-cases <- list( "x^2" = 2, "x^3" = 3, "x^(-1)" = -1, "x^(1/2)" = 0.5
-) cat(sprintf("%-12s %-14s %-18s\n", "Function", "Analytical", "Numerical"))
-for (name in names(cases)) { n <- casesname
+cases <- list("x^2" = 2, "x^3" = 3, "x^(-1)" = -1, "x^(1/2)" = 0.5)
+cat(sprintf("%-12s %-14s %-18s\n", "Function", "Analytical", "Numerical"))
+for (name in names(cases)) {
+  n <- cases[[name]]
   deriv_fn <- power_rule_deriv(n)
   analytical <- deriv_fn(x_val)
   h <- 1e-7
   numerical <- (x_val^n - (x_val - h)^n) / h
   cat(sprintf("%-12s %-14.6f %-18.6f\n", name, analytical, numerical))
-}  # L2 gradient
+}
+
+# L2 gradient
 cat("\n--- L2 gradient ---\n")
 w <- c(1.0, -2.0, 0.5, 3.0)
 cat(sprintf("w: %s\n", paste(w, collapse=", ")))
@@ -152,12 +165,16 @@ import numpy as np
 from sklearn.datasets import make_regression
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error
-np.random.seed(42)   # -- Ridge regression: power rule drives gradient, closed form vs GD -----------
+np.random.seed(42)
+
+# -- Ridge regression: power rule drives gradient, closed form vs GD -----------
 X_raw, y = make_regression(n_samples=300, n_features=6, noise=10.0, random_state=42)
 scaler = StandardScaler()
 X = scaler.fit_transform(X_raw)
 N, D = X.shape
-LAMBDA = 0.5   # L2 regularization strength # MSE + L2: f(w) = (1/n)||y - Xw||^2 + lambda*||w||^2
+LAMBDA = 0.5   # L2 regularization strength
+
+# MSE + L2: f(w) = (1/n)||y - Xw||^2 + lambda*||w||^2
 # Gradient (power rule applied):
 # d/dw MSE = -(2/n) X^T (y - Xw) (power rule on ||y - Xw||^2)
 # d/dw L2 = 2*lambda*w (power rule: d/dw_j w_j^2 = 2w_j)
@@ -168,8 +185,15 @@ def ridge_loss(w: np.ndarray) -> float:
 
 def ridge_gradient(w: np.ndarray) -> np.ndarray:
     residuals = y - X @ w
-    grad_mse = -2 / N * X.T @ residuals   # power rule on ||y - Xw||^2 grad_l2 = 2 * LAMBDA * w # power rule on lambda*||w||^2 return grad_mse + grad_l2 # Closed form: w* = (X^T X + n*lambda*I)^{-1} X^T y
-w_closed = np.linalg.solve(X.T @ X + N * LAMBDA * np.eye(D), X.T @ y)   # Gradient descent
+    grad_mse = -2 / N * X.T @ residuals   # power rule on ||y - Xw||^2
+    grad_l2 = 2 * LAMBDA * w              # power rule on lambda*||w||^2
+    return grad_mse + grad_l2
+
+
+# Closed form: w* = (X^T X + n*lambda*I)^{-1} X^T y
+w_closed = np.linalg.solve(X.T @ X + N * LAMBDA * np.eye(D), X.T @ y)
+
+# Gradient descent
 LEARNING_RATE = 0.01
 w_gd = np.zeros(D)
 for _ in range(2000):

@@ -87,9 +87,13 @@ $(3-1) + (6-4) + (9-9) + (12-16) = 2 + 2 + 0 + (-4) = 0$. Confirmed.
 # sum[f(n) +/- g(n)] = sum f(n) +/- sum g(n)
 revenues = [18000.0, 22500.0, 15000.0, 27000.0, 16500.0]
 costs = [12000.0, 15000.0, 10000.0, 20000.0, 11200.0]
-n = len(revenues)   # Method 1: compute profit per row, then sum
+n = len(revenues)
+
+# Method 1: compute profit per row, then sum
 profits_per_row = [r - c for r, c in zip(revenues, costs)]
-total_profit_m1 = sum(profits_per_row)   # Method 2: sum revenue, sum cost, then subtract (distribution rule)
+total_profit_m1 = sum(profits_per_row)
+
+# Method 2: sum revenue, sum cost, then subtract (distribution rule)
 total_revenue = sum(revenues)
 total_cost = sum(costs)
 total_profit_m2 = total_revenue - total_cost
@@ -99,8 +103,9 @@ print(f"Profits per row: {profits_per_row}")
 print()
 print(f"Method 1 (sum profits directly): {total_profit_m1:,.2f}")
 print(f"Method 2 (sum R, sum C, subtract): {total_revenue:,.2f} - {total_cost:,.2f} = {total_profit_m2:,.2f}")
-print(f"Equal: {abs(total_profit_m1 - total_profit_m2) < 1e-9}")   # Verify: sum(f + g) =
-sum(f) + sum(g)
+print(f"Equal: {abs(total_profit_m1 - total_profit_m2) < 1e-9}")
+
+# Verify: sum(f + g) = sum(f) + sum(g)
 f_vals = [1.0, 4.0, 9.0, 16.0]
 g_vals = [2.0, 3.0, 5.0, 7.0]
 lhs = sum(f + g for f, g in zip(f_vals, g_vals))
@@ -113,8 +118,12 @@ print(f"\nsum(f+g) = {lhs}, sum(f)+sum(g) = {rhs}, equal = {lhs == rhs}")
 ```r
 # Distribution of sum over addition/subtraction
 revenues <- c(18000, 22500, 15000, 27000, 16500)
-costs <- c(12000, 15000, 10000, 20000, 11200)  # Method 1: compute profit per row, then sum
-total_profit_m1 <- sum(revenues - costs)  # Method 2: sum revenue, sum cost, subtract (distribution rule)
+costs <- c(12000, 15000, 10000, 20000, 11200)
+
+# Method 1: compute profit per row, then sum
+total_profit_m1 <- sum(revenues - costs)
+
+# Method 2: sum revenue, sum cost, subtract (distribution rule)
 total_profit_m2 <- sum(revenues) - sum(costs)
 cat(sprintf("Method 1 (sum of profits): %.2f\n", total_profit_m1))
 cat(sprintf("Method 2 (sum R - sum C): %.2f\n", total_profit_m2))
@@ -125,18 +134,31 @@ cat(sprintf("Equal: %s\n", isTRUE(all.equal(total_profit_m1, total_profit_m2))))
 
 ```python
 import pandas as pd
-import numpy as np   # Scenario: compute monthly P&L from separate revenue and cost tables
+import numpy as np
+
+# Scenario: compute monthly P&L from separate revenue and cost tables
 # Revenue aggregated from one source, costs from another
-# Distribution rule
-guarantees: total_profit = total_revenue - total_cost
+# Distribution rule guarantees: total_profit = total_revenue - total_cost
 np.random.seed(42)
-revenue_table = pd.DataFrame({ "month": range(1, 13), "channel": ["SEO","PPC","Email","SEO","PPC","Email", "SEO","PPC","Email","SEO","PPC","Email"], "revenue": np.round(np.random.uniform(30000, 80000, 12), 2),
+revenue_table = pd.DataFrame({
+    "month": range(1, 13),
+    "channel": ["SEO", "PPC", "Email", "SEO", "PPC", "Email",
+                "SEO", "PPC", "Email", "SEO", "PPC", "Email"],
+    "revenue": np.round(np.random.uniform(30000, 80000, 12), 2),
 })
-cost_table = pd.DataFrame({ "month": range(1, 13), "channel": ["SEO","PPC","Email","SEO","PPC","Email", "SEO","PPC","Email","SEO","PPC","Email"], "cost": np.round(np.random.uniform(15000, 45000, 12), 2),
-})   # Method 1: join, compute monthly profit per row, then sum
+cost_table = pd.DataFrame({
+    "month": range(1, 13),
+    "channel": ["SEO", "PPC", "Email", "SEO", "PPC", "Email",
+                "SEO", "PPC", "Email", "SEO", "PPC", "Email"],
+    "cost": np.round(np.random.uniform(15000, 45000, 12), 2),
+})
+
+# Method 1: join, compute monthly profit per row, then sum
 merged = revenue_table.merge(cost_table, on=["month", "channel"])
 merged["profit"] = merged["revenue"] - merged["cost"]
-total_profit_method1 = merged["profit"].sum()   # Method 2: sum revenues independently, sum costs independently, subtract
+total_profit_method1 = merged["profit"].sum()
+
+# Method 2: sum revenues independently, sum costs independently, subtract
 # (valid by distribution of sum over subtraction)
 total_revenue = revenue_table["revenue"].sum()
 total_cost = cost_table["cost"].sum()

@@ -106,14 +106,34 @@ def log_diff(f_val: float, f_prime_val: float) -> float:
 
 def log_diff_technique(ln_y_prime_fn, y_fn, x: float) -> float:
     """Full log-diff technique: (1/y)*y' = d/dx[ln y], so y' = y * d/dx[ln y]."""
-    return y_fn(x) * ln_y_prime_fn(x)   # Concrete examples
+    return y_fn(x) * ln_y_prime_fn(x)
+
+
+# Concrete examples
 # ---------------------------------------------------------------
 # f(x) = x^3 + 1 -> d/dx[ln(x^3+1)] = 3x^2 / (x^3+1)
 # y = x^x -> y' = x^x (ln x + 1)
 # y = x^(sin x) -> y' = x^(sin x) * (cos(x)*ln(x) + sin(x)/x)
 h = 1e-7
-examples = [ { "name": "ln(x^3 + 1)", "f": lambda x: x**3 + 1, "f_prime": lambda x: 3 * x**2, "analytic": lambda x: 3 * x**2 / (x**3 + 1), }, { "name": "ln(sin^2(x))", "f": lambda x: np.sin(x)**2, "f_prime": lambda x: 2 * np.sin(x) * np.cos(x), "analytic": lambda x: 2 * np.cos(x) / np.sin(x), }, { "name": "ln(exp(x^2))", "f": lambda x: np.exp(x**2), "f_prime": lambda x: 2 * x * np.exp(x**2), "analytic": lambda x: 2 * x,   # ln(exp(x^2)) = x^2, derivative = 2x
-},
+examples = [
+    {
+        "name": "ln(x^3 + 1)",
+        "f": lambda x: x**3 + 1,
+        "f_prime": lambda x: 3 * x**2,
+        "analytic": lambda x: 3 * x**2 / (x**3 + 1),
+    },
+    {
+        "name": "ln(sin^2(x))",
+        "f": lambda x: np.sin(x)**2,
+        "f_prime": lambda x: 2 * np.sin(x) * np.cos(x),
+        "analytic": lambda x: 2 * np.cos(x) / np.sin(x),
+    },
+    {
+        "name": "ln(exp(x^2))",
+        "f": lambda x: np.exp(x**2),
+        "f_prime": lambda x: 2 * x * np.exp(x**2),
+        "analytic": lambda x: 2 * x,   # ln(exp(x^2)) = x^2, derivative = 2x
+    },
 ]
 print("--- Formula: d/dx[ln f(x)] = f'(x) / f(x) ---")
 print(f"{'Function':>22} {'x':>5} {'LogDiff':>10} {'Analytic':>10} {'Agree':>7}")
@@ -124,34 +144,49 @@ for ex in examples:
             an = ex["analytic"](x_val)
             print(f"{ex['name']:>22} {x_val:>5.2f} {ld:>10.5f} {an:>10.5f} {str(abs(ld - an) < 1e-5):>7}")
         except Exception:
-            pass   # Variable exponent: y = x^x, y' = x^x * (ln x + 1)
+            pass
+
+# Variable exponent: y = x^x, y' = x^x * (ln x + 1)
 print("\n--- Variable exponent: y = x^x ---")
 print(f"{'x':>5} {'y=x^x':>10} {'y (log-diff)':>14} {'Numerical':>12}")
 for x_val in [0.5, 1.0, 2.0]:
     y = x_val**x_val
-yd_logdiff = y * (np.log(x_val) + 1)
-yd_num = ((x_val + h)**(x_val + h) - (x_val - h)**(x_val - h)) / (2 * h)
-print(f"{x_val:>5.1f} {y:>10.5f} {yd_logdiff:>14.5f} {yd_num:>12.5f}")
+    yd_logdiff = y * (np.log(x_val) + 1)
+    yd_num = ((x_val + h)**(x_val + h) - (x_val - h)**(x_val - h)) / (2 * h)
+    print(f"{x_val:>5.1f} {y:>10.5f} {yd_logdiff:>14.5f} {yd_num:>12.5f}")
 ```
 
 ### Beginner example (R)
 
 ```r
 # Logarithmic differentiation: d/dx[ln(f(x))] = f'(x) / f(x)
-log_diff <- function(f_val, f_prime_val) { f_prime_val / f_val
+log_diff <- function(f_val, f_prime_val) {
+  f_prime_val / f_val
 }
-examples <- list( list( name = "ln(x^3+1)", f = function(x) x^3 + 1, f_prime = function(x) 3 * x^2, analytic = function(x) 3 * x^2 / (x^3 + 1) ), list( name = "ln(sin^2(x))", f = function(x) sin(x)^2, f_prime = function(x) 2 * sin(x) * cos(x), analytic = function(x) 2 * cos(x) / sin(x) ), list( name = "ln(exp(x^2))", f = function(x) exp(x^2), f_prime = function(x) 2 * x * exp(x^2), analytic = function(x) 2 * x )
-) cat(sprintf("%-22s %-5s %-12s %-12s\n", "Function", "x", "LogDiff", "Analytic"))
-for (ex in examples) { for (x_val in c(0.5, 1.5)) { ld <- tryCatch(log_diff(ex$f(x_val), ex$f_prime(x_val)), error = function(e) NA)
+examples <- list(
+  list(name = "ln(x^3+1)", f = function(x) x^3 + 1, f_prime = function(x) 3 * x^2,
+       analytic = function(x) 3 * x^2 / (x^3 + 1)),
+  list(name = "ln(sin^2(x))", f = function(x) sin(x)^2, f_prime = function(x) 2 * sin(x) * cos(x),
+       analytic = function(x) 2 * cos(x) / sin(x)),
+  list(name = "ln(exp(x^2))", f = function(x) exp(x^2), f_prime = function(x) 2 * x * exp(x^2),
+       analytic = function(x) 2 * x)
+)
+cat(sprintf("%-22s %-5s %-12s %-12s\n", "Function", "x", "LogDiff", "Analytic"))
+for (ex in examples) {
+  for (x_val in c(0.5, 1.5)) {
+    ld <- tryCatch(log_diff(ex$f(x_val), ex$f_prime(x_val)), error = function(e) NA)
     an <- tryCatch(ex$analytic(x_val), error = function(e) NA)
-    if (!is.na(ld) && !is.na(an)) { cat(sprintf("%-22s %-5.2f %-12.5f %-12.5f\n", ex$name, x_val, ld, an))
+    if (!is.na(ld) && !is.na(an)) {
+      cat(sprintf("%-22s %-5.2f %-12.5f %-12.5f\n", ex$name, x_val, ld, an))
     }
   }
-}  # Variable exponent demo:
-y = x^x
+}
+
+# Variable exponent demo: y = x^x
 cat("\n--- y = x^x: log-diff gives y' = x^x * (ln(x) + 1) ---\n")
 h <- 1e-7
-for (x_val in c(0.5, 1.0, 2.0)) { y <- x_val^x_val
+for (x_val in c(0.5, 1.0, 2.0)) {
+  y <- x_val^x_val
   yd_ld <- y * (log(x_val) + 1)
   yd_num <- ((x_val + h)^(x_val + h) - (x_val - h)^(x_val - h)) / (2 * h)
   cat(sprintf("x = %.1f y = %.4f log-diff y' = %.5f numerical = %.5f\n", x_val, y, yd_ld, yd_num))
@@ -164,7 +199,9 @@ for (x_val in c(0.5, 1.0, 2.0)) { y <- x_val^x_val
 import numpy as np
 from sklearn.datasets import make_classification
 from sklearn.preprocessing import StandardScaler
-np.random.seed(42)   # -- Log-differentiation in MLE: logistic regression score and Fisher information --
+np.random.seed(42)
+
+# -- Log-differentiation in MLE: logistic regression score and Fisher information --
 # Use case: a DS derives and verifies the score function and Fisher information
 # for logistic regression using log-diff of the Bernoulli likelihood.
 #
@@ -193,29 +230,49 @@ def log_likelihood(w: np.ndarray, X: np.ndarray, y: np.ndarray) -> float:
     return float(np.sum(y * np.log(p) + (1 - y) * np.log(1 - p)))
 
 def score_function(w: np.ndarray, X: np.ndarray, y: np.ndarray) -> np.ndarray:
-    """ Score = d(log L)/dw, derived via log-differentiation of Bernoulli likelihood. Log-diff of p(y|x,w): d/dw[y*log(sigma) + (1-y)*log(1-sigma)] = (y - sigma(w^T x)) * x <- see derivation above Summed over all observations. """
+    """
+    Score = d(log L)/dw, derived via log-differentiation of Bernoulli likelihood.
+
+    Log-diff of p(y|x,w):
+        d/dw[y*log(sigma) + (1-y)*log(1-sigma)] = (y - sigma(w^T x)) * x   <- see derivation above
+    Summed over all observations.
+    """
     p = sigmoid(X @ w)
     return X.T @ (y - p)   # shape: (DIM,)
 
+
 def fisher_information(w: np.ndarray, X: np.ndarray) -> np.ndarray:
-    """ Fisher info matrix: I(w) = E[(score)(score)^T] = X^T * diag(p*(1-p)) * X Derived from Var[y_i] = sigma_i*(1-sigma_i) for Bernoulli. """
+    """
+    Fisher info matrix: I(w) = E[(score)(score)^T] = X^T * diag(p*(1-p)) * X
+
+    Derived from Var[y_i] = sigma_i*(1-sigma_i) for Bernoulli.
+    """
     p = sigmoid(X @ w)
-    weights = p * (1 - p)   # shape: (N,) -- Bernoulli
-    variance = sigma*(1-sigma)
+    weights = p * (1 - p)   # shape: (N,) -- Bernoulli variance = sigma*(1-sigma)
     return X.T @ (weights[:, None] * X)   # X^T diag(weights) X, shape (DIM, DIM)
+
 
 def numerical_score(w, X, y, h=1e-5):
     """Finite-difference score for verification."""
     grad = np.zeros_like(w)
     for i in range(len(w)):
-        w_plus = w.copy(); w_plus[i] += h
-    w_minus = w.copy(); w_minus[i] -= h
-    grad[i] = (log_likelihood(w_plus, X, y) - log_likelihood(w_minus, X, y)) / (2 * h)
-    return grad   # Data
-X_raw, y_raw = make_classification( n_samples=N, n_features=DIM, n_redundant=0, n_informative=DIM, random_state=42 )
+        w_plus = w.copy()
+        w_plus[i] += h
+        w_minus = w.copy()
+        w_minus[i] -= h
+        grad[i] = (log_likelihood(w_plus, X, y) - log_likelihood(w_minus, X, y)) / (2 * h)
+    return grad
+
+
+# Data
+X_raw, y_raw = make_classification(
+    n_samples=N, n_features=DIM, n_redundant=0, n_informative=DIM, random_state=42
+)
 scaler = StandardScaler()
 X = scaler.fit_transform(X_raw)
-y = y_raw.astype(float)   # Evaluate at a fixed weight vector
+y = y_raw.astype(float)
+
+# Evaluate at a fixed weight vector
 w0 = np.array([0.3, -0.5, 0.2, 0.1])
 score_analytic = score_function(w0, X, y)
 score_numerical = numerical_score(w0, X, y)

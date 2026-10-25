@@ -113,9 +113,10 @@ print(mean(abs(dF_num - integrand)) < 0.05)
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
+
 RANDOM_SEED = 42
+
 
 def arcsin_antiderivative(x: np.ndarray, a: float) -> np.ndarray:
     if a == 0:

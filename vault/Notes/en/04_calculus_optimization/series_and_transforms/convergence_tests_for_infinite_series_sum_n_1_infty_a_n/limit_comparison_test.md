@@ -93,28 +93,63 @@ L = 1 ∈ (0,∞) and $\sum b_n$ converges → $\sum \frac{n^2+1}{n^4+3}$ **CONV
 """
 Limit Comparison Test: lim(a_n / b_n) = L in (0, inf)
 → sum a_n and sum b_n have same convergence behavior.
-""" import numpy as np
+"""
+import numpy as np
 from typing import Callable
 
-def limit_comparison_test( series_a: Callable[[np.ndarray], np.ndarray], series_b: Callable[[np.ndarray], np.ndarray], series_b_converges: bool, num_terms: int = 100_000,
+
+def limit_comparison_test(
+    series_a: Callable[[np.ndarray], np.ndarray],
+    series_b: Callable[[np.ndarray], np.ndarray],
+    series_b_converges: bool,
+    num_terms: int = 100_000,
 ) -> dict:
-    """Apply limit comparison test numerically. Parameters ---------- series_a : terms a_n series_b : terms b_n (comparison, positive) series_b_converges : whether sum b_n is known to converge num_terms : how many terms to use for limit estimate Returns ------- dict with limit, conclusion """
+    """Apply limit comparison test numerically.
+
+    Parameters
+    ----------
+    series_a : terms a_n
+    series_b : terms b_n (comparison, positive)
+    series_b_converges : whether sum b_n is known to converge
+    num_terms : how many terms to use for limit estimate
+
+    Returns
+    -------
+    dict with limit, conclusion
+    """
     large_indices = np.array([1e4, 1e5, 1e6])
     ratios = series_a(large_indices) / series_b(large_indices)
     limiting_ratio = ratios[-1]
     if 0 < limiting_ratio < np.inf:
-        conclusion = ( "CONVERGES" if series_b_converges else "DIVERGES" ) + f" (same as b_n, L = {limiting_ratio:.6f})"
+        conclusion = (
+            "CONVERGES" if series_b_converges else "DIVERGES"
+        ) + f" (same as b_n, L = {limiting_ratio:.6f})"
     elif limiting_ratio == 0:
         conclusion = f"CONVERGES if sum b_n converges (L=0, a_n grows slower)"
     else:
         conclusion = f"DIVERGES if sum b_n diverges (L=inf, a_n grows faster)"
     partial_sum_a = float(np.sum(series_a(np.arange(1, num_terms + 1, dtype=float))))
-    return { "limiting_ratio": limiting_ratio, "conclusion": conclusion, "partial_sum_a": partial_sum_a, }   # Test: (n^2+1)/(n^4+3) compared to 1/n^2 (converges)
-result = limit_comparison_test( series_a=lambda n: (n**2 + 1.0) / (n**4 + 3.0), series_b=lambda n: 1.0 / n**2, series_b_converges=True,
+    return {
+        "limiting_ratio": limiting_ratio,
+        "conclusion": conclusion,
+        "partial_sum_a": partial_sum_a,
+    }
+
+
+# Test: (n^2+1)/(n^4+3) compared to 1/n^2 (converges)
+result = limit_comparison_test(
+    series_a=lambda n: (n**2 + 1.0) / (n**4 + 3.0),
+    series_b=lambda n: 1.0 / n**2,
+    series_b_converges=True,
 )
 print(f"(n^2+1)/(n^4+3): {result['conclusion']}")
-print(f" Partial sum (100k): {result['partial_sum_a']:.6f}")   # Test: (2n+1)/(n^2+n) compared to 1/n (harmonic, diverges)
-result2 = limit_comparison_test( series_a=lambda n: (2.0 * n + 1.0) / (n**2 + n), series_b=lambda n: 1.0 / n, series_b_converges=False,
+print(f" Partial sum (100k): {result['partial_sum_a']:.6f}")
+
+# Test: (2n+1)/(n^2+n) compared to 1/n (harmonic, diverges)
+result2 = limit_comparison_test(
+    series_a=lambda n: (2.0 * n + 1.0) / (n**2 + n),
+    series_b=lambda n: 1.0 / n,
+    series_b_converges=False,
 )
 print(f"(2n+1)/(n^2+n): {result2['conclusion']}")
 ```
@@ -123,22 +158,29 @@ print(f"(2n+1)/(n^2+n): {result2['conclusion']}")
 
 ```r
 # Limit Comparison Test for rational series
-limit_comparison_test <- function(a_func, b_func, b_converges, series_name) {  # Estimate limit of a_n / b_n at large n
+limit_comparison_test <- function(a_func, b_func, b_converges, series_name) {
+  # Estimate limit of a_n / b_n at large n
   large_n <- c(1e4, 1e5, 1e6)
   ratios <- a_func(large_n) / b_func(large_n)
   limiting_ratio <- tail(ratios, 1)
-  if (is.finite(limiting_ratio) && limiting_ratio > 0) { verdict <- ifelse(b_converges, "CONVERGES", "DIVERGES")
+  if (is.finite(limiting_ratio) && limiting_ratio > 0) {
+    verdict <- ifelse(b_converges, "CONVERGES", "DIVERGES")
     verdict <- paste0(verdict, sprintf(" (L = %.4f)", limiting_ratio))
-  }
-  else
-  if (limiting_ratio == 0) { verdict <- "CONVERGES if b_n converges (L=0)"
-  }
-  else { verdict <- "DIVERGES if b_n diverges (L=Inf)"
+  } else if (limiting_ratio == 0) {
+    verdict <- "CONVERGES if b_n converges (L=0)"
+  } else {
+    verdict <- "DIVERGES if b_n diverges (L=Inf)"
   }
   partial_sum_a <- sum(a_func(1:100000))
   cat(sprintf("%-35s → %s | partial_sum=%.6f\n", series_name, verdict, partial_sum_a))
-} limit_comparison_test( function(n) (n^2 + 1) / (n^4 + 3), function(n) 1 / n^2, b_converges = TRUE, series_name = "(n^2+1)/(n^4+3)"
-) limit_comparison_test( function(n) (2*n + 1) / (n^2 + n), function(n) 1 / n, b_converges = FALSE, series_name = "(2n+1)/(n^2+n)"
+}
+limit_comparison_test(
+  function(n) (n^2 + 1) / (n^4 + 3), function(n) 1 / n^2,
+  b_converges = TRUE, series_name = "(n^2+1)/(n^4+3)"
+)
+limit_comparison_test(
+  function(n) (2*n + 1) / (n^2 + n), function(n) 1 / n,
+  b_converges = FALSE, series_name = "(2n+1)/(n^2+n)"
 )
 ```
 
@@ -146,16 +188,38 @@ limit_comparison_test <- function(a_func, b_func, b_converges, series_name) {  #
 
 ```python
 """
-Limit Comparison Test
-for analyzing convergence of custom KL-divergence approximations. Business context:
-    A variational inference pipeline uses truncated series to approximate
-KL(q||p). The analyst needs to confirm the error terms form a converging series so the approximation is valid.
-""" import numpy as np NUM_TERMS: int = 50_000 def kl_error_term(n: np.ndarray) -> np.ndarray: """Approximate error term
-for KL series expansion. The true term is complex; this models the dominant behavior as ~(1/n + 1/n^2) * epsilon^n
-for fixed 0 < epsilon < 1. """ epsilon = 0.8 return (1.0 / n + 1.0 / n**2) * epsilon**n def geometric_comparison(n: np.ndarray) -> np.ndarray: """Comparison to geometric series:
-    epsilon^n.""" return 0.8**n indices = np.arange(1, NUM_TERMS + 1, dtype=float)
+Limit Comparison Test for analyzing convergence of custom KL-divergence approximations.
+
+Business context:
+    A variational inference pipeline uses truncated series to approximate KL(q||p).
+    The analyst needs to confirm the error terms form a converging series
+    so the approximation is valid.
+"""
+import numpy as np
+
+NUM_TERMS: int = 50_000
+
+
+def kl_error_term(n: np.ndarray) -> np.ndarray:
+    """Approximate error term for KL series expansion.
+
+    The true term is complex; this models the dominant behavior as
+    ~(1/n + 1/n^2) * epsilon^n for fixed 0 < epsilon < 1.
+    """
+    epsilon = 0.8
+    return (1.0 / n + 1.0 / n**2) * epsilon**n
+
+
+def geometric_comparison(n: np.ndarray) -> np.ndarray:
+    """Comparison to geometric series: epsilon^n."""
+    return 0.8**n
+
+
+indices = np.arange(1, NUM_TERMS + 1, dtype=float)
 a_vals = kl_error_term(indices)
-b_vals = geometric_comparison(indices)   # Compute limit of ratio at large n
+b_vals = geometric_comparison(indices)
+
+# Compute limit of ratio at large n
 large_n = np.array([1e4, 1e5, 1e6])
 ratios = kl_error_term(large_n) / geometric_comparison(large_n)
 limiting_ratio = ratios[-1]

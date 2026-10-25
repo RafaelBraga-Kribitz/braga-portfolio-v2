@@ -96,23 +96,27 @@ print("Standard Limit: lim_{x->0} tan(x)/x = 1")
 print(f"\n{'x (rad)':>10} {'tan(x)/x':>12} {'Error from 1':>14} {'vs sin(x)/x':>14}")
 for x in [0.5, 0.1, 0.05, 0.01, 0.001, 0.0001]:
     tan_ratio = np.tan(x) / x
-sin_ratio = np.sin(x) / x
-error = abs(tan_ratio - 1.0)
-diff_from_sin = tan_ratio - sin_ratio
-print(f"{x:>10.4f} {tan_ratio:>12.8f} {error:>14.2e} {diff_from_sin:>14.8f}")   # Small-angle approximation quality: tan(x) ≈ x
+    sin_ratio = np.sin(x) / x
+    error = abs(tan_ratio - 1.0)
+    diff_from_sin = tan_ratio - sin_ratio
+    print(f"{x:>10.4f} {tan_ratio:>12.8f} {error:>14.2e} {diff_from_sin:>14.8f}")
+
+# Small-angle approximation quality: tan(x) ≈ x
 print(f"\n--- Small-angle accuracy: |tan(x) - x| / x ---")
 print(f"{'x (deg)':>10} {'x (rad)':>10} {'tan(x)':>10} {'approx x':>10} {'rel error':>12}")
 for deg in [1, 2, 5, 10, 15, 20, 30]:
     rad = np.radians(deg)
-tanx = np.tan(rad)
-err = abs(tanx - rad) / rad
-print(f"{deg:>10} {rad:>10.5f} {tanx:>10.5f} {rad:>10.5f} {err:>12.4f}")   # Generalization: lim tan(ax)/x = a
+    tanx = np.tan(rad)
+    err = abs(tanx - rad) / rad
+    print(f"{deg:>10} {rad:>10.5f} {tanx:>10.5f} {rad:>10.5f} {err:>12.4f}")
+
+# Generalization: lim tan(ax)/x = a
 print(f"\n--- Generalization: lim_{{x->0}} tan(ax)/x = a ---")
 print(f"{'a':>6} {'Numerical (x=1e-7)':>20} {'Analytic (=a)':>14}")
 for a in [0.5, 2.0, np.pi, -1.0]:
     x = 1e-7
-numerical = np.tan(a * x) / x
-print(f"{a:>6.4f} {numerical:>20.8f} {a:>14.6f}")
+    numerical = np.tan(a * x) / x
+    print(f"{a:>6.4f} {numerical:>20.8f} {a:>14.6f}")
 ```
 
 ### Beginner example (R)
@@ -121,13 +125,17 @@ print(f"{a:>6.4f} {numerical:>20.8f} {a:>14.6f}")
 # Standard limit: lim_{x->0} tan(x)/x = 1
 cat("Standard Limit: lim_{x->0} tan(x)/x = 1\n\n")
 cat(sprintf("%-10s %-12s %-14s\n", "x (rad)", "tan(x)/x", "Error from 1"))
-for (x in c(0.5, 0.1, 0.05, 0.01, 0.001)) { ratio <- tan(x) / x
+for (x in c(0.5, 0.1, 0.05, 0.01, 0.001)) {
+  ratio <- tan(x) / x
   error <- abs(ratio - 1.0)
   cat(sprintf("%-10.4f %-12.8f %-14.2e\n", x, ratio, error))
-}  # Small angle approximation
+}
+
+# Small angle approximation
 cat("\n--- Small-angle error: |tan(x)-x|/x ---\n")
 cat(sprintf("%-10s %-10s %-10s %-12s\n", "deg", "rad", "tan(x)", "rel error"))
-for (deg in c(1, 5, 10, 20, 30)) { rad <- deg * pi / 180
+for (deg in c(1, 5, 10, 20, 30)) {
+  rad <- deg * pi / 180
   tanx <- tan(rad)
   err <- abs(tanx - rad) / rad
   cat(sprintf("%-10d %-10.5f %-10.5f %-12.4f\n", deg, rad, tanx, err))
@@ -140,16 +148,16 @@ for (deg in c(1, 5, 10, 20, 30)) { rad <- deg * pi / 180
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 from sklearn.datasets import make_regression
-np.random.seed(42)   # -- Tangent limit: Cauchy distribution and heavy-tailed robust regression --
+np.random.seed(42)
+
+# -- Tangent limit: Cauchy distribution and heavy-tailed robust regression --
 # Use case: A DS compares Gaussian and Cauchy noise assumptions in regression.
 # The Cauchy location-scale model uses arctan/tan parameterization.
 # Near the center (small residuals), lim tan(x)/x = 1 means the Cauchy
 # loss gradient looks like the Gaussian (identity) gradient.
 # At large residuals, the Cauchy loss is bounded (heavy tails), unlike L2.
 #
-# Cauchy log-likelihood:
-ell = -sum_i
-log(1 + (r_i/gamma)^2) - n*log(pi*gamma)
+# Cauchy log-likelihood: ell = -sum_i log(1 + (r_i/gamma)^2) - n*log(pi*gamma)
 # Score (gradient of log-likelihood w.r.t. w):
 # d(ell)/dw = -2/gamma^2 * X^T r / (1 + (r/gamma)^2)
 # For small r: -2r/gamma^2 ≈ -(2/gamma^2)*r [Gaussian-like]
@@ -160,21 +168,33 @@ GAMMA = 1.0   # Cauchy scale
 X_raw, y_clean = make_regression(n_samples=N, n_features=DIM, noise=0.1, random_state=42)
 scaler = StandardScaler()
 X = scaler.fit_transform(X_raw)
-y_clean /= y_clean.std()   # Add a few large outliers (Cauchy-like contamination)
+y_clean /= y_clean.std()
+
+# Add a few large outliers (Cauchy-like contamination)
 y = y_clean.copy()
 outlier_idx = np.random.choice(N, size=10, replace=False)
 y[outlier_idx] += np.random.choice([-10, 10], size=10)
 
 def cauchy_gradient(w: np.ndarray, X: np.ndarray, y: np.ndarray, gamma: float) -> np.ndarray:
-    """ Gradient of Cauchy log-likelihood w.r.t. w. d/dw[-log(1 + (r/gamma)^2)] = 2r / (gamma^2 + r^2) * X Summed: (2/N) * X^T [r / (gamma^2 + r^2)] For small r: r/(gamma^2+r^2) ≈ r/gamma^2 (tan limit: numerator ~ denominator*r for tiny r) """
+    """
+    Gradient of Cauchy log-likelihood w.r.t. w.
+
+    d/dw[-log(1 + (r/gamma)^2)] = 2r / (gamma^2 + r^2) * X
+    Summed: (2/N) * X^T [r / (gamma^2 + r^2)]
+    For small r: r/(gamma^2+r^2) ≈ r/gamma^2 (tan limit: numerator ~ denominator*r for tiny r)
+    """
     r = y - X @ w
     weights = r / (gamma**2 + r**2)   # bounded: max |weight| = 1/(2*gamma)
     return 2.0 / len(y) * X.T @ weights
 
+
 def mse_gradient(w: np.ndarray, X: np.ndarray, y: np.ndarray) -> np.ndarray:
     """Standard L2 gradient (sensitive to outliers)."""
     r = y - X @ w
-    return -2.0 / len(y) * X.T @ r   # Show gradient weight comparison at different residual sizes
+    return -2.0 / len(y) * X.T @ r
+
+
+# Show gradient weight comparison at different residual sizes
 w_demo = np.zeros(DIM)
 print("Tangent Limit: Cauchy vs Gaussian Gradient Weights vs Residual Size")
 print(f"\ngamma = {GAMMA}")
@@ -184,14 +204,18 @@ print(f"For large r: Cauchy weight saturates, Gaussian diverges")
 print(f"\n{'residual r':>12} {'Cauchy weight':>16} {'Gaussian weight':>18} {'Ratio C/G':>12}")
 for r in [0.01, 0.1, 0.5, 1.0, 2.0, 5.0, 10.0, 50.0]:
     cw = r / (GAMMA**2 + r**2)
-gw = r / GAMMA**2
-print(f"{r:>12.3f} {cw:>16.8f} {gw:>18.4f} {cw/gw:>12.6f}")   # Fit both models via gradient ascent
+    gw = r / GAMMA**2
+    print(f"{r:>12.3f} {cw:>16.8f} {gw:>18.4f} {cw/gw:>12.6f}")
+
+# Fit both models via gradient ascent
 w_cauchy = np.zeros(DIM)
 w_gauss = np.zeros(DIM)
 LR = 0.01
 for _ in range(500):
     w_cauchy = w_cauchy + LR * cauchy_gradient(w_cauchy, X, y, GAMMA)
-w_gauss = w_gauss - LR * mse_gradient(w_gauss, X, y)   # Compare predictions on clean test data
+    w_gauss = w_gauss - LR * mse_gradient(w_gauss, X, y)
+
+# Compare predictions on clean test data
 X_test = scaler.transform(np.random.randn(100, DIM))
 y_test = X_test @ np.linalg.lstsq(X[np.setdiff1d(range(N), outlier_idx)], y_clean[np.setdiff1d(range(N), outlier_idx)], rcond=None)[0][:DIM]
 mse_c = float(np.mean((X_test @ w_cauchy - y_test)**2))

@@ -117,12 +117,14 @@ print(f"<q_hat_1, q_hat_2> = {float(q1_hat @ q2_hat):.2e} (should be ~0)")
 ### Beginner example (R)
 
 ```r
-# -- Gram-Schmidt step
-k=2: subtract projection onto q_hat_1 ----------
+# -- Gram-Schmidt step k=2: subtract projection onto q_hat_1 ----------
 v1 <- c(1.0, 1.0, 0.0)
-v2 <- c(1.0, 0.0, 1.0)  # Initialization
-q1_hat <- v1 / sqrt(sum(v1^2))  # Step
-k=2
+v2 <- c(1.0, 0.0, 1.0)
+
+# Initialization
+q1_hat <- v1 / sqrt(sum(v1^2))
+
+# Step k=2
 proj_coeff <- sum(v2 * q1_hat)
 proj_vec <- proj_coeff * q1_hat
 u2 <- v2 - proj_vec
@@ -140,31 +142,41 @@ cat(sprintf("<q_hat_1, q_hat_2> = %.2e (should be ~0)\n", sum(q1_hat * q2_hat)))
 ```python
 import numpy as np
 import pandas as pd
-np.random.seed(42)   # -- Business scenario: decorrelate 4 marketing features via full Gram-Schmidt
+np.random.seed(42)
+
+# -- Business scenario: decorrelate 4 marketing features via full Gram-Schmidt
 # Produces orthonormal feature matrix Q and upper triangular R (QR decomposition).
 N_OBS = 120
 FEATURE_NAMES = ["spend_keur", "impressions_m", "clicks_k", "conversions"]
-N_FEATURES = len(FEATURE_NAMES)   # Simulate correlated feature data
-true_cov = np.array([ [4.0, 2.5, 1.8, 0.9], [2.5, 3.5, 2.0, 1.0], [1.8, 2.0, 2.5, 1.2], [0.9, 1.0, 1.2, 1.5],
+N_FEATURES = len(FEATURE_NAMES)
+
+# Simulate correlated feature data
+true_cov = np.array([
+    [4.0, 2.5, 1.8, 0.9],
+    [2.5, 3.5, 2.0, 1.0],
+    [1.8, 2.0, 2.5, 1.2],
+    [0.9, 1.0, 1.2, 1.5],
 ])
 L_sim = np.linalg.cholesky(true_cov)
 data = np.random.normal(size=(N_OBS, N_FEATURES)) @ L_sim.T
-df = pd.DataFrame(data, columns=FEATURE_NAMES)   # Build orthonormal basis via classical Gram-Schmidt (column vectors = observations)
+df = pd.DataFrame(data, columns=FEATURE_NAMES)
+
+# Build orthonormal basis via classical Gram-Schmidt (column vectors = observations)
 # Treat each feature as a vector in R^N_OBS
 A = df.to_numpy()
 Q = np.zeros_like(A)
 R = np.zeros((N_FEATURES, N_FEATURES))
 for k in range(N_FEATURES):
     v_k = A[:, k].copy()
-for i in range(k):
-    r_ik = float(A[:, k] @ Q[:, i])
-R[i, k] = r_ik
-v_k = v_k - r_ik * Q[:, i]
-r_kk = float(np.linalg.norm(v_k))
-R[k, k] = r_kk
-Q[:, k] = v_k / r_kk   # Verify Q^T
-Q = I and Q
-R = A
+    for i in range(k):
+        r_ik = float(A[:, k] @ Q[:, i])
+        R[i, k] = r_ik
+        v_k = v_k - r_ik * Q[:, i]
+    r_kk = float(np.linalg.norm(v_k))
+    R[k, k] = r_kk
+    Q[:, k] = v_k / r_kk
+
+# Verify Q^T Q = I and Q R = A
 qtq_error = np.max(np.abs(Q.T @ Q - np.eye(N_FEATURES)))
 recon_error = np.max(np.abs(A - Q @ R))
 print(f"Q^T Q - I max error: {qtq_error:.2e} (should be ~0: columns are orthonormal)")

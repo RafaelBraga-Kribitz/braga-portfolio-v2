@@ -97,14 +97,15 @@ Both sides equal 10. Grouping did not change the result.
 ### Beginner example (Python)
 
 ```python
-# Associative property: (a + b) +
-c = a + (b + c)
+# Associative property: (a + b) + c = a + (b + c)
 a, b, c = 2, 5, 3
 left_group = (a + b) + c
 right_group = a + (b + c)
 print(f"(a + b) + c = ({a} + {b}) + {c} = {a+b} + {c} = {left_group}")
 print(f"a + (b + c) = {a} + ({b} + {c}) = {a} + {b+c} = {right_group}")
-print(f"Equal: {left_group == right_group}")   # Distributed sum: partition a list and sum parts, then combine
+print(f"Equal: {left_group == right_group}")
+
+# Distributed sum: partition a list and sum parts, then combine
 data = [10, 20, 30, 40, 50, 60, 70, 80]
 partition_1 = data[:4]   # [10, 20, 30, 40]
 partition_2 = data[4:]   # [50, 60, 70, 80]
@@ -120,14 +121,15 @@ print(f"Equal: {distributed_sum == sequential_sum}")
 ### Beginner example (R)
 
 ```r
-# Associative property: (a + b) +
-c = a + (b + c)
+# Associative property: (a + b) + c = a + (b + c)
 a <- 2; b <- 5; c <- 3
 left_group <- (a + b) + c
 right_group <- a + (b + c)
 cat(sprintf("(a+b)+c = (%d+%d)+%d = %d+%d = %d\n", a, b, c, a+b, c, left_group))
 cat(sprintf("a+(b+c) = %d+(%d+%d) = %d+%d = %d\n", a, b, c, a, b+c, right_group))
-cat("Equal:", left_group == right_group, "\n")  # Distributed sum
+cat("Equal:", left_group == right_group, "\n")
+
+# Distributed sum
 data_vec <- c(10, 20, 30, 40, 50, 60, 70, 80)
 part1 <- data_vec[1:4]
 part2 <- data_vec[5:8]

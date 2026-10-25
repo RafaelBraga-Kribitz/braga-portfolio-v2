@@ -85,13 +85,19 @@ $\int_0^{0.5} (1/8 + y/2) \, dy = [y/8 + y^2/4]_0^{0.5} = 1/16 + 1/16 = 1/8 = 0.
 ### Beginner example (Python)
 
 ```python
-from scipy import integrate   # Joint PDF: f(x,y) = x + y on [0,1] x [0,1]
+from scipy import integrate
 
+# Joint PDF: f(x,y) = x + y on [0,1] x [0,1]
 def joint_pdf(x: float, y: float) -> float:
-    return x + y   # P(0 <= X <= 0.5, 0 <= Y <= 0.5)
-probability, error = integrate.dblquad( joint_pdf, 0, 0.5,   # y limits
-    (outer) 0, 0.5,   # x limits
-    (inner) )
+    return x + y
+
+
+# P(0 <= X <= 0.5, 0 <= Y <= 0.5)
+probability, error = integrate.dblquad(
+    joint_pdf,
+    0, 0.5,   # y limits (outer)
+    0, 0.5,   # x limits (inner)
+)
 print(f"P(0<=X<=0.5, 0<=Y<=0.5) = {probability:.6f}")   # expected: 0.125
 print(f"Integration error bound: {error:.2e}")
 ```
@@ -99,8 +105,12 @@ print(f"Integration error bound: {error:.2e}")
 ### Beginner example (R)
 
 ```r
-library(cubature)  # Joint PDF: f(x,y) = x + y on [0,1] x [0,1]
-joint_pdf <- function(xy) { x <- xy[1]; y <- xy[2] x + y
+library(cubature)
+
+# Joint PDF: f(x,y) = x + y on [0,1] x [0,1]
+joint_pdf <- function(xy) {
+  x <- xy[1]; y <- xy[2]
+  x + y
 }
 result <- hcubature(joint_pdf, lowerLimit = c(0, 0), upperLimit = c(0.5, 0.5))
 cat("P(0<=X<=0.5, 0<=Y<=0.5) =", result$integral, "\n")  # expected: 0.125
@@ -109,29 +119,64 @@ cat("P(0<=X<=0.5, 0<=Y<=0.5) =", result$integral, "\n")  # expected: 0.125
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
 from scipy import integrate
 from scipy.stats import multivariate_normal
 
-def bivariate_gaussian_region_probability( mean: list[float], cov: list[list[float]], x_bounds: tuple[float, float], y_bounds: tuple[float, float],
+
+def bivariate_gaussian_region_probability(
+    mean: list[float],
+    cov: list[list[float]],
+    x_bounds: tuple[float, float],
+    y_bounds: tuple[float, float],
 ) -> float:
     # P(x_low < X <= x_high, y_low < Y <= y_high) for a bivariate Gaussian.
     dist = multivariate_normal(mean=mean, cov=cov)
 
-def integrand(x: float, y: float) -> float:
-    return dist.pdf([x, y])
-probability, _ = integrate.dblquad( integrand, y_bounds[0], y_bounds[1], x_bounds[0], x_bounds[1], epsabs=1e-6, epsrel=1e-6, )
-return probability
+    def integrand(x: float, y: float) -> float:
+        return dist.pdf([x, y])
 
-def engagement_segment_probability( mean_duration: float, mean_pages: float, std_duration: float, std_pages: float, correlation: float, min_duration: float, min_pages: float,
+    probability, _ = integrate.dblquad(
+        integrand,
+        y_bounds[0], y_bounds[1],
+        x_bounds[0], x_bounds[1],
+        epsabs=1e-6, epsrel=1e-6,
+    )
+    return probability
+
+
+def engagement_segment_probability(
+    mean_duration: float,
+    mean_pages: float,
+    std_duration: float,
+    std_pages: float,
+    correlation: float,
+    min_duration: float,
+    min_pages: float,
 ) -> float:
     # P(session_duration > min_duration AND pages > min_pages).
-    cov_matrix = [ [std_duration ** 2, correlation * std_duration * std_pages], [correlation * std_duration * std_pages, std_pages ** 2], ]
-    return bivariate_gaussian_region_probability( mean=[mean_duration, mean_pages], cov=cov_matrix, x_bounds=(min_duration, np.inf), y_bounds=(min_pages, np.inf), )
+    cov_matrix = [
+        [std_duration ** 2, correlation * std_duration * std_pages],
+        [correlation * std_duration * std_pages, std_pages ** 2],
+    ]
+    return bivariate_gaussian_region_probability(
+        mean=[mean_duration, mean_pages],
+        cov=cov_matrix,
+        x_bounds=(min_duration, np.inf),
+        y_bounds=(min_pages, np.inf),
+    )
+
 
 if __name__ == "__main__":
-    prob = engagement_segment_probability( mean_duration=4.5, mean_pages=6.0, std_duration=1.5, std_pages=2.0, correlation=0.65, min_duration=6.0, min_pages=8.0, )
+    prob = engagement_segment_probability(
+        mean_duration=4.5,
+        mean_pages=6.0,
+        std_duration=1.5,
+        std_pages=2.0,
+        correlation=0.65,
+        min_duration=6.0,
+        min_pages=8.0,
+    )
     print(f"P(session_duration > 6 min AND pages > 8): {prob:.4f}")
 ```
 

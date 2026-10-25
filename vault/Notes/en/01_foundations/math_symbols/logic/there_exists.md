@@ -93,20 +93,26 @@ $\therefore \; \exists x \in \{-3, -1, 2, 5\}: x^2 > 10$ is **True** (witness: $
 
 ```python
 # ∃ x in S: P(x) corresponds to
-any(P(x) for x in S) in Python
+# any(P(x) for x in S) in Python
 domain = [-3, -1, 2, 5]
-property_p = lambda x: x ** 2 > 10   # any() short-circuits on the first True
+property_p = lambda x: x ** 2 > 10
+
+# any() short-circuits on the first True
 result = any(property_p(x) for x in domain)
-print(f"∃ x in {domain}: x^2 > 10 => {result}")   # True # Find the actual witness
+print(f"∃ x in {domain}: x^2 > 10 => {result}")   # True
+
+# Find the actual witness
 witness = next((x for x in domain if property_p(x)), None)
-print(f"Witness: x = {witness} (x^2 = {witness**2})")   # Show step-by-step (like the manual example)
+print(f"Witness: x = {witness} (x^2 = {witness**2})")
+
+# Show step-by-step (like the manual example)
 print("\nStep-by-step search:")
 for x in domain:
     check = property_p(x)
-print(f" P({x}): {x}^2 = {x**2} > 10 => {check}")
-if check:
-    print(f" Witness found at x = {x}. Stopping.")
-break
+    print(f" P({x}): {x}^2 = {x**2} > 10 => {check}")
+    if check:
+        print(f" Witness found at x = {x}. Stopping.")
+        break
 print()
 # Example where ∃ is False: ∃ x in {1, 2, 3}: x > 10?
 domain2 = [1, 2, 3]
@@ -122,15 +128,24 @@ print("No witness found: all elements checked, all failed.")
 domain <- c(-3, -1, 2, 5)
 property_p <- function(x) x^2 > 10  # any() checks ∃
 result <- any(property_p(domain))
-cat(sprintf("∃ x in {%s}: x^2 > 10 => %s\n", paste(domain, collapse=", "), result))  # TRUE # Find the witness
+cat(sprintf("∃ x in {%s}: x^2 > 10 => %s\n", paste(domain, collapse=", "), result))  # TRUE
+
+# Find the witness
 witness <- domain[property_p(domain)][1]
-cat(sprintf("Witness: x = %d (x^2 = %d)\n", witness, witness^2))  # Step-by-step
+cat(sprintf("Witness: x = %d (x^2 = %d)\n", witness, witness^2))
+
+# Step-by-step
 cat("\nStep-by-step search:\n")
-for (x in domain) { check <- property_p(x)
+for (x in domain) {
+  check <- property_p(x)
   cat(sprintf(" P(%d): %d^2 = %d > 10 => %s\n", x, x, x^2, check))
-  if (check) { cat(sprintf(" Witness found at x = %d. Stopping.\n", x)) break
+  if (check) {
+    cat(sprintf(" Witness found at x = %d. Stopping.\n", x))
+    break
   }
-}  # False case
+}
+
+# False case
 domain2 <- c(1, 2, 3)
 result2 <- any(domain2 > 10)
 cat(sprintf("\n∃ x in {1,2,3}: x > 10 => %s\n", result2))  # FALSE

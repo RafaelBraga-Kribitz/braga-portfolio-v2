@@ -126,21 +126,31 @@ cat("Cardinality of 'city':", length(unique(df$city)), "\n")  # 3
 
 ```python
 import pandas as pd
-import numpy as np   # Scenario: cardinality-aware feature profiling before model encoding
+import numpy as np
+
+# Scenario: cardinality-aware feature profiling before model encoding
 np.random.seed(42)
 N_ROWS = 5_000
-df = pd.DataFrame({ "user_id": range(N_ROWS),   # high card
-    (identifier) "country": np.random.choice(["AT", "DE", "CH", "US"], N_ROWS),   # low card
+df = pd.DataFrame({
+    "user_id": range(N_ROWS),   # high card (identifier)
+    "country": np.random.choice(["AT", "DE", "CH", "US"], N_ROWS),   # low card
     "city": np.random.choice([f"city_{i}" for i in range(200)], N_ROWS),   # medium card
     "product_category": np.random.choice(["electronics", "books", "clothing", "sports", "home"], N_ROWS),   # low card
     "session_source": np.random.choice(["organic", "paid", "email", "referral", "direct"], N_ROWS),   # low card
     "campaign_id": np.random.choice(range(3000), N_ROWS),   # high card
     "age_bucket": np.random.choice(["18-24", "25-34", "35-44", "45-54", "55+"], N_ROWS),   # low card
     "constant_col": ["active"] * N_ROWS,   # zero variance
-})   # Cardinality profiling
-cardinality_report = pd.DataFrame({ "column": df.columns, "cardinality": [df[col].nunique() for col in df.columns], "n_rows": len(df),
 })
-cardinality_report["uniqueness_ratio"] = ( cardinality_report["cardinality"] / cardinality_report["n_rows"] )
+
+# Cardinality profiling
+cardinality_report = pd.DataFrame({
+    "column": df.columns,
+    "cardinality": [df[col].nunique() for col in df.columns],
+    "n_rows": len(df),
+})
+cardinality_report["uniqueness_ratio"] = (
+    cardinality_report["cardinality"] / cardinality_report["n_rows"]
+)
 
 def recommend_encoding(card: int, n: int) -> str:
     """Recommend encoding strategy based on cardinality."""
@@ -154,7 +164,11 @@ def recommend_encoding(card: int, n: int) -> str:
     if card <= 200:
         return "TARGET ENCODE or ORDINAL"
     return "HASH or EMBED"
-cardinality_report["encoding_recommendation"] = cardinality_report.apply( lambda row: recommend_encoding(row["cardinality"], row["n_rows"]), axis=1 )
+
+
+cardinality_report["encoding_recommendation"] = cardinality_report.apply(
+    lambda row: recommend_encoding(row["cardinality"], row["n_rows"]), axis=1
+)
 print("Cardinality-Aware Feature Profiling")
 print("=" * 65)
 print(cardinality_report.to_string(index=False))
@@ -165,19 +179,28 @@ print(cardinality_report.to_string(index=False))
 ```r
 # Cardinality-aware feature profiling and encoding recommendation
 set.seed(42)
-df <- data.frame( user_id = sample(1:500, 1000, replace = TRUE), region = sample(c("N","S","E","W"), 1000, replace = TRUE), tier = sample(1:50, 1000, replace = TRUE)
-) n_rows <- nrow(df)
-cardinality_report <- data.frame( column = names(df), cardinality = sapply(df, function(col) length(unique(col))), n_rows = n_rows
+df <- data.frame(
+  user_id = sample(1:500, 1000, replace = TRUE),
+  region = sample(c("N","S","E","W"), 1000, replace = TRUE),
+  tier = sample(1:50, 1000, replace = TRUE)
 )
-recommend_encoding <- function(card, n_rows) { if (card == n_rows)
-  return("IDENTIFIER (drop or use as index)")
+n_rows <- nrow(df)
+cardinality_report <- data.frame(
+  column = names(df),
+  cardinality = sapply(df, function(col) length(unique(col))),
+  n_rows = n_rows
+)
+recommend_encoding <- function(card, n_rows) {
+  if (card == n_rows)
+    return("IDENTIFIER (drop or use as index)")
   if (card <= 10)
-  return("ONE-HOT")
+    return("ONE-HOT")
   if (card <= 200)
-  return("TARGET ENCODE or ORDINAL")
+    return("TARGET ENCODE or ORDINAL")
   return("HASH or EMBED")
 }
-cardinality_report$encoding_recommendation <- mapply( recommend_encoding, cardinality_report$cardinality, cardinality_report$n_rows
+cardinality_report$encoding_recommendation <- mapply(
+  recommend_encoding, cardinality_report$cardinality, cardinality_report$n_rows
 )
 cat("Cardinality-Aware Feature Profiling\n")
 print(cardinality_report)

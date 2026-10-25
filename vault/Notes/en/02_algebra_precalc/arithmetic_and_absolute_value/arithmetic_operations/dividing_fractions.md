@@ -109,22 +109,35 @@ Since both had denominator 50: $\frac{9/50}{3/50} = \frac{9}{3} = 3$. ✓
 ### Beginner example (Python)
 
 ```python
-# Fraction division in Python from fractions import Fraction
+# Fraction division in Python
+from fractions import Fraction
+
 # Basic: a/b ÷ c/d
 a, b = 9, 50   # 18% campaign conversion rate
-c, d = 3, 50   # 6% baseline rate # Manual KCF: keep a/b, change to multiply, flip c/d → d/c
+c, d = 3, 50   # 6% baseline rate
+
+# Manual KCF: keep a/b, change to multiply, flip c/d → d/c
 numerator = a * d   # ad
-denominator = b * c   # bc print(f"KCF manual: ({a}×{d}) / ({b}×{c}) = {numerator}/{denominator} = {numerator/denominator:.4f}") # Python Fraction (auto-simplifies)
+denominator = b * c   # bc
+print(f"KCF manual: ({a}×{d}) / ({b}×{c}) = {numerator}/{denominator} = {numerator/denominator:.4f}")
+
+# Python Fraction (auto-simplifies)
 dividend = Fraction(a, b)
 divisor = Fraction(c, d)
 lift = dividend / divisor
-print(f"Fraction class: {dividend} ÷ {divisor} = {lift} ({float(lift):.2f}×)")   # Reciprocal demonstration
+print(f"Fraction class: {dividend} ÷ {divisor} = {lift} ({float(lift):.2f}×)")
+
+# Reciprocal demonstration
 print(f"\nReciprocal of {divisor} = {Fraction(d, c)} (flip numerator and denominator)")
-print(f"Fraction reciprocal: {divisor**-1}")   # Dividing by a fraction < 1 amplifies the result
+print(f"Fraction reciprocal: {divisor**-1}")
+
+# Dividing by a fraction < 1 amplifies the result
 ctr = Fraction(3, 20)   # 15% CTR
 impressions_per_click = Fraction(1) / ctr
 print(f"\nCTR = {ctr} ({float(ctr):.1%})")
-print(f"Impressions per click = 1 ÷ {ctr} = {impressions_per_click} ({float(impressions_per_click):.1f})")   # Relative risk: A/B test
+print(f"Impressions per click = 1 ÷ {ctr} = {impressions_per_click} ({float(impressions_per_click):.1f})")
+
+# Relative risk: A/B test
 rate_treatment = Fraction(180, 1200)   # variant B
 rate_control = Fraction(60, 1000)   # control
 relative_risk = rate_treatment / rate_control
@@ -137,20 +150,25 @@ print(f" lift: {relative_risk} = {float(relative_risk):.2f}×")
 ### Beginner example (R)
 
 ```r
-# Fraction division in R # Manual KCF
+# Fraction division in R
+# Manual KCF
 a <- 9; b <- 50  # 18%
 c <- 3; d <- 50  # 6%
 numerator <- a * d  # ad
 denominator <- b * c  # bc
-cat(sprintf("KCF manual: (%d×%d) / (%d×%d) = %d/%d = %.4f\n", a, d, b, c, numerator, denominator, numerator / denominator))  # Simplify with GCD
-gcd <- function(x, y)
-if (y == 0) x
-else gcd(y, x %% y)
+cat(sprintf("KCF manual: (%d×%d) / (%d×%d) = %d/%d = %.4f\n", a, d, b, c, numerator, denominator, numerator / denominator))
+
+# Simplify with GCD
+gcd <- function(x, y) if (y == 0) x else gcd(y, x %% y)
 g <- gcd(numerator, denominator)
-cat(sprintf("Simplified: %d/%d = %.4f\n", numerator / g, denominator / g, numerator / denominator))  # Reciprocal: 1 / (c/d) = d/c
+cat(sprintf("Simplified: %d/%d = %.4f\n", numerator / g, denominator / g, numerator / denominator))
+
+# Reciprocal: 1 / (c/d) = d/c
 ctr <- 3 / 20  # 15% CTR
 impressions_per_click <- 1 / ctr
-cat(sprintf("\nCTR = %.4f | Impressions per click = 1 / %.4f = %.2f\n", ctr, ctr, impressions_per_click))  # A/B relative risk
+cat(sprintf("\nCTR = %.4f | Impressions per click = 1 / %.4f = %.2f\n", ctr, ctr, impressions_per_click))
+
+# A/B relative risk
 rate_treatment <- 180 / 1200
 rate_control <- 60 / 1000
 relative_risk <- rate_treatment / rate_control
@@ -163,23 +181,60 @@ cat(sprintf("\nRelative risk: %.4f / %.4f = %.2f×\n", rate_treatment, rate_cont
 import pandas as pd
 import numpy as np
 from fractions import Fraction
-from typing import NamedTuple   # Scenario: multi-variant lift report
+from typing import NamedTuple
+
+# Scenario: multi-variant lift report
 # Compute exact lift (fraction division) for each variant vs. control
 # Flag variants below lift threshold (underperforming vs. control)
 # Guard against zero-denominator (undefined lift when control has 0 conversions)
 np.random.seed(42)
-LIFT_THRESHOLD = Fraction(1)   # lift < 1.0 flags underperformance class VariantResult(NamedTuple): """Conversion counts for one variant or control group.""" name: str visitors: int conversions: int
+LIFT_THRESHOLD = Fraction(1)   # lift < 1.0 flags underperformance
 
-def compute_lift( variant: VariantResult, control: VariantResult ) -> dict:
-    """ Compute exact lift for one variant relative to control using fraction division. Args: variant: The variant being evaluated. control: The control group result. Returns: Dictionary with variant name, rates, exact lift fraction, and underperformance flag. Raises: ZeroDivisionError: If the control conversion rate is zero (lift is undefined). """
+
+class VariantResult(NamedTuple):
+    """Conversion counts for one variant or control group."""
+    name: str
+    visitors: int
+    conversions: int
+
+
+def compute_lift(variant: VariantResult, control: VariantResult) -> dict:
+    """
+    Compute exact lift for one variant relative to control using fraction division.
+
+    Args:
+        variant: The variant being evaluated.
+        control: The control group result.
+
+    Returns:
+        Dictionary with variant name, rates, exact lift fraction, and underperformance flag.
+
+    Raises:
+        ZeroDivisionError: If the control conversion rate is zero (lift is undefined).
+    """
     if control.conversions == 0:
-        raise ZeroDivisionError( f"Control '{control.name}' has zero conversions: lift is undefined." )
+        raise ZeroDivisionError(
+            f"Control '{control.name}' has zero conversions: lift is undefined."
+        )
     variant_rate = Fraction(variant.conversions, variant.visitors)
     control_rate = Fraction(control.conversions, control.visitors)
     lift = variant_rate / control_rate   # fraction division: KCF applied
-    return { "variant": variant.name, "variant_rate": float(variant_rate), "control_rate": float(control_rate), "lift_exact": str(lift), "lift_float": float(lift), "underperforms": lift < LIFT_THRESHOLD, }   # Simulated experiment counts
+    return {
+        "variant": variant.name,
+        "variant_rate": float(variant_rate),
+        "control_rate": float(control_rate),
+        "lift_exact": str(lift),
+        "lift_float": float(lift),
+        "underperforms": lift < LIFT_THRESHOLD,
+    }
+
+
+# Simulated experiment counts
 control_group = VariantResult("control", visitors=10_000, conversions=600)
-variants = [ VariantResult("variant_A", visitors=5_000, conversions=375), VariantResult("variant_B", visitors=4_800, conversions=240), VariantResult("variant_C", visitors=5_200, conversions=702),
+variants = [
+    VariantResult("variant_A", visitors=5_000, conversions=375),
+    VariantResult("variant_B", visitors=4_800, conversions=240),
+    VariantResult("variant_C", visitors=5_200, conversions=702),
 ]
 rows = [compute_lift(v, control_group) for v in variants]
 report = pd.DataFrame(rows)

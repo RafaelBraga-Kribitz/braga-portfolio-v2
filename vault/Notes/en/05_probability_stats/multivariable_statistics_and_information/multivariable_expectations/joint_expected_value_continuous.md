@@ -108,8 +108,12 @@ print(f"E[X] = {e_x:.6f}")   # expected: 7/12 ≈ 0.5833
 ### Beginner example (R)
 
 ```r
-library(cubature)  # E[XY] for joint PDF f(x,y) = x + y on [0,1]^2
-integrand_exy <- function(xy) { x <- xy[1]; y <- xy[2] x * y * (x + y)
+library(cubature)
+
+# E[XY] for joint PDF f(x,y) = x + y on [0,1]^2
+integrand_exy <- function(xy) {
+  x <- xy[1]; y <- xy[2]
+  x * y * (x + y)
 }
 result <- hcubature(integrand_exy, lowerLimit = c(0, 0), upperLimit = c(1, 1))
 cat("E[XY] =", result$integral, "\n")  # expected: 1/3
@@ -118,12 +122,18 @@ cat("E[XY] =", result$integral, "\n")  # expected: 1/3
 ### Professional example (Python)
 
 ```python
-from __future__ import annotations
 import numpy as np
 from scipy import integrate
 from scipy.stats import multivariate_normal
 
-def expected_profit_bivariate_gaussian( mean_revenue: float, mean_cost: float, std_revenue: float, std_cost: float, correlation: float, integration_range: float = 5.0,
+
+def expected_profit_bivariate_gaussian(
+    mean_revenue: float,
+    mean_cost: float,
+    std_revenue: float,
+    std_cost: float,
+    correlation: float,
+    integration_range: float = 5.0,
 ) -> float:
     # E[max(0, X - Y)] where (X,Y) ~ BivariateNormal.
     # Represents expected daily profit when revenue and cost are jointly normal.
@@ -132,18 +142,28 @@ def expected_profit_bivariate_gaussian( mean_revenue: float, mean_cost: float, s
     cov = [[std_revenue**2, correlation * sigma], [correlation * sigma, std_cost**2]]
     dist = multivariate_normal(mean=mean, cov=cov)
 
-def integrand(x: float, y: float) -> float:
-    profit = max(0.0, x - y)
-    return profit * dist.pdf([x, y])
-lower_x = mean_revenue - integration_range * std_revenue
-upper_x = mean_revenue + integration_range * std_revenue
-lower_y = mean_cost - integration_range * std_cost
-upper_y = mean_cost + integration_range * std_cost
-e_profit, error = integrate.dblquad( integrand, lower_y, upper_y, lower_x, upper_x, epsabs=1e-4, epsrel=1e-4 )
-return float(e_profit)
+    def integrand(x: float, y: float) -> float:
+        profit = max(0.0, x - y)
+        return profit * dist.pdf([x, y])
+
+    lower_x = mean_revenue - integration_range * std_revenue
+    upper_x = mean_revenue + integration_range * std_revenue
+    lower_y = mean_cost - integration_range * std_cost
+    upper_y = mean_cost + integration_range * std_cost
+    e_profit, error = integrate.dblquad(
+        integrand, lower_y, upper_y, lower_x, upper_x, epsabs=1e-4, epsrel=1e-4
+    )
+    return float(e_profit)
+
 
 if __name__ == "__main__":
-    e_profit = expected_profit_bivariate_gaussian( mean_revenue=1200.0, mean_cost=1000.0, std_revenue=200.0, std_cost=150.0, correlation=0.5, )
+    e_profit = expected_profit_bivariate_gaussian(
+        mean_revenue=1200.0,
+        mean_cost=1000.0,
+        std_revenue=200.0,
+        std_cost=150.0,
+        correlation=0.5,
+    )
     print(f"Expected daily profit E[max(0, Revenue - Cost)] = {e_profit:.2f}")
 ```
 
