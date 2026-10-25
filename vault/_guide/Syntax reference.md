@@ -377,6 +377,9 @@ No `.token.*` selector is needed in CSS: the built HTML carries only the six
 `<section class="footnotes">` under a hairline, with ← back references; the
 heading reads "Footnotes" or "Fußnoten" by `lang`.
 
+
+With `footnotes: side` in a note's properties (the About page), footnotes become side notes: the number stays at the reference and the note hangs in the right margin beside its paragraph (from 1280px; on narrower screens it follows the reference in the text).
+
 ## 10. Pipeline, in order
 
 | Phase | Module | Job |
