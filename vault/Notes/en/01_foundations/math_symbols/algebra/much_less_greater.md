@@ -22,7 +22,11 @@ $\ll$ means **much less than** and $\gg$ means **much greater than**. These are 
 
 ```mermaid
 flowchart TD
-    A["a << b (a much less than b)"] --> B{"What does 'much less' mean in context?"} B -- "Numerical analysis" --> C["b / a is at least 10x to 100x or more"] B -- "Big-O / algorithm analysis" --> D["Lower-order term is negligible vs dominant term"] B -- "ML regularization" --> E["Regularization term is negligible relative to main loss"] B -- "Floating point" --> F["Rounding error is much smaller than the value being computed"]
+    A["a << b (a much less than b)"] --> B{"What does 'much less' mean in context?"}
+    B -- "Numerical analysis" --> C["b / a is at least 10x to 100x or more"]
+    B -- "Big-O / algorithm analysis" --> D["Lower-order term is negligible vs dominant term"]
+    B -- "ML regularization" --> E["Regularization term is negligible relative to main loss"]
+    B -- "Floating point" --> F["Rounding error is much smaller than the value being computed"]
     C --> G["Can safely approximate: a + b approx b, a/b approx 0"]
     D --> G
     E --> G

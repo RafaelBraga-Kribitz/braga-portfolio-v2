@@ -24,10 +24,13 @@ The **multiplicative inverse** (or reciprocal) of $a$ is $\frac{1}{a}$: the uniq
 flowchart TD
     A["Given a ≠ 0"] --> B["Find multiplicative inverse: 1/a"]
     B --> C["Compute a × (1/a)"]
-    C --> D{["Result = 1?"]} D -- "Yes: 1/a is the correct inverse" --> E["a · (1/a) = 1 confirmed"] D -- "No: wrong inverse" --> F["Error: recheck"]
+    C --> D{"Result = 1?"}
+    D -- "Yes: 1/a is the correct inverse" --> E["a · (1/a) = 1 confirmed"]
+    D -- "No: wrong inverse" --> F["Error: recheck"]
     E --> G["Division: b/a = b × (1/a)"]
     E --> H["Matrix extension: A · A⁻¹ = I"]
-    A --> I{["a = 0?"]} I -- "Yes: no inverse exists" --> J["1/0 is undefined → ZeroDivisionError"]
+    A --> I{"a = 0?"}
+    I -- "Yes: no inverse exists" --> J["1/0 is undefined → ZeroDivisionError"]
 ```
 
 ## Real-world use

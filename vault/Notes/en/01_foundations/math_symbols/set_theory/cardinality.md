@@ -24,7 +24,11 @@ $|A|$ (or $\#A$) is the **cardinality** of a set $A$: the number of distinct ele
 flowchart TD
     A["Given a set A or a column"] --> B["List all elements (remove duplicates)"]
     B --> C["Count the distinct elements"]
-    C --> D{["How large is |A|?"]} D -- "Small (< ~20 values)" --> E["Low cardinality: one-hot encode or factorize"] D -- "Large (hundreds to millions)" --> F["High cardinality: embed, hash, or aggregate"] D -- "= n_rows (all unique)" --> G["Identifier column: user_id, order_id, etc."] D -- "= 1 (constant)" --> H["Zero-variance feature: drop it"]
+    C --> D{"How large is |A|?"}
+    D -- "Small (< ~20 values)" --> E["Low cardinality: one-hot encode or factorize"]
+    D -- "Large (hundreds to millions)" --> F["High cardinality: embed, hash, or aggregate"]
+    D -- "= n_rows (all unique)" --> G["Identifier column: user_id, order_id, etc."]
+    D -- "= 1 (constant)" --> H["Zero-variance feature: drop it"]
 ```
 
 ## Real-world use

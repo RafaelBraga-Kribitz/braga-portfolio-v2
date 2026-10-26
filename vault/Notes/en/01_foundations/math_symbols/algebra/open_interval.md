@@ -20,7 +20,11 @@ An open interval $(a, b)$ contains all real numbers strictly between $a$ and $b$
 
 ```mermaid
 flowchart TD
-    A["Given interval (a, b) and a value x"] --> B{"Is x > a?"} B -- "No (x <= a)" --> C["x is NOT in the interval (must be strictly greater than a)"] B -- "Yes" --> D{"Is x < b?"} D -- "No (x >= b)" --> C D -- "Yes" --> E["x IS in the interval (endpoints themselves excluded)"]
+    A["Given interval (a, b) and a value x"] --> B{"Is x > a?"}
+    B -- "No (x <= a)" --> C["x is NOT in the interval (must be strictly greater than a)"]
+    B -- "Yes" --> D{"Is x < b?"}
+    D -- "No (x >= b)" --> C
+    D -- "Yes" --> E["x IS in the interval (endpoints themselves excluded)"]
     E --> F["Action: include x in calculations"]
     C --> G["Action: exclude x"]
 ```

@@ -21,7 +21,9 @@ After summing the first N terms of a **converging alternating series**, this bou
 ```mermaid
 flowchart TD
     A["Alternating series sum S = sum(-1)^n * a_n"] --> B["Verify conditions: a_n decreasing AND lim a_n = 0"]
-    B --> C{"Conditions met?"} C -- "No" --> D["Cannot apply — use other bound"] C -- "Yes" --> E["Compute N-term partial sum S_N"]
+    B --> C{"Conditions met?"}
+    C -- "No" --> D["Cannot apply — use other bound"]
+    C -- "Yes" --> E["Compute N-term partial sum S_N"]
     E --> F["Compute next term a_(N+1)"]
     F --> G["Error bound: |S - S_N| <= a_(N+1)"]
     G --> H["If a_(N+1) < target_precision → stop summing"]

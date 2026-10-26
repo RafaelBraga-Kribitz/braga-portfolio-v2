@@ -20,7 +20,11 @@ A closed interval $[a, b]$ represents all real numbers from $a$ to $b$, **with b
 
 ```mermaid
 flowchart TD
-    A["Given interval [a, b] and a value x"] --> B{"Is x >= a?"} B -- "No" --> C["x is NOT in the interval"] B -- "Yes" --> D{"Is x <= b?"} D -- "No" --> C D -- "Yes" --> E["x IS in the interval (endpoints included)"]
+    A["Given interval [a, b] and a value x"] --> B{"Is x >= a?"}
+    B -- "No" --> C["x is NOT in the interval"]
+    B -- "Yes" --> D{"Is x <= b?"}
+    D -- "No" --> C
+    D -- "Yes" --> E["x IS in the interval (endpoints included)"]
     E --> F["Action: include x in dataset / filter / analysis"]
     C --> G["Action: exclude x"]
 ```

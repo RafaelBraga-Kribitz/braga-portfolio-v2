@@ -17,7 +17,7 @@ const observations = [
     <div class="nf-kicker"><span>ERROR / 404</span><span>OBSERVATION 01 — OUTLIER DETECTED</span></div>
     <div class="nf-layout">
       <header class="nf-copy">
-        <p class="nf-number" aria-hidden="true">404<span class="nf-dot">.</span></p>
+        <p class="nf-number" aria-hidden="true">404.</p>
         <h1 id="nf-title">Outside the<br />training distribution.</h1>
         <p class="nf-lead">Either the URL is wrong, or we've discovered something new.</p>
         <p class="nf-explain">The page you requested isn't in the dataset. No extrapolation required.</p>
@@ -25,8 +25,7 @@ const observations = [
       </header>
       <figure class="nf-figure">
         <div class="nf-plot-head"><span>FIG. 404—01</span><span>ANOMALY DETECTION / ILLUSTRATIVE</span></div>
-        <svg class="nf-chart" viewBox="0 0 640 380" role="img" aria-labelledby="nf-chart-title nf-chart-desc">
-          <title id="nf-chart-title">A missing page appears as an outlier</title>
+        <svg class="nf-chart" viewBox="0 0 640 380" role="img" aria-label="A missing page appears as an outlier" aria-describedby="nf-chart-desc">
           <desc id="nf-chart-desc">Twenty-five observations form an ascending cluster at left. A single observation marked 404 lies far outside the cluster, at the upper right.</desc>
           <g class="nf-grid">
             <path d="M58 44V326H604 M58 114H604 M58 184H604 M58 254H604 M168 44V326 M278 44V326 M388 44V326 M498 44V326" />
@@ -39,10 +38,8 @@ const observations = [
           <path class="nf-outlier-guide" d="M457 94L538 68" />
           <circle class="nf-outlier-ring" cx="550" cy="64" r="24" />
           <circle class="nf-outlier-core" cx="550" cy="64" r="5.5" />
-          <text class="nf-outlier-text" x="550" y="116" text-anchor="middle">404</text>
-          <text class="nf-axis-label" x="58" y="354">KNOWN DATA</text>
-          <text class="nf-axis-label" x="604" y="354" text-anchor="end">UNKNOWN TERRITORY →</text>
         </svg>
+        <div class="nf-axis-labels" aria-hidden="true"><span>Known data</span><span>Unknown territory →</span></div>
         <figcaption><span>01 / OBSERVED DISTRIBUTION</span><span class="nf-legend"><i aria-hidden="true"></i> UNEXPECTED OBSERVATION</span></figcaption>
       </figure>
     </div>
@@ -54,32 +51,29 @@ const observations = [
 <style>
   .notfound{width:100%;padding-block:var(--space-5) var(--space-8)}
   .nf-kicker,.nf-plot-head,.nf-figure figcaption,.nf-bottom{display:flex;justify-content:space-between;gap:var(--space-2);font-family:var(--font-mono);font-size:var(--t-mono-sm);font-weight:var(--w-medium);letter-spacing:var(--tracking-label);text-transform:uppercase}
-  .nf-kicker{border-top:var(--rule-open);padding-top:var(--space-2);color:var(--ink-2)}
+  .nf-kicker{color:var(--ink-2)}
   .nf-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:var(--space-5);align-items:center;min-height:min(72vh,740px);padding-block:var(--space-8)}
   .nf-copy{min-width:0}
   .nf-number{font-family:var(--font-display);font-weight:var(--w-wordmark);font-variant-numeric:var(--num);font-size:clamp(6rem,17vw,15rem);letter-spacing:-.085em;line-height:.85;margin:0 0 var(--space-6)}
-  .nf-dot{color:var(--accent-01)}
   .nf-copy h1{font-family:var(--font-display);font-size:clamp(2rem,3.5vw,3.75rem);line-height:var(--lh-tight);letter-spacing:var(--tracking-tight);font-weight:var(--w-display);margin:0 0 var(--space-3)}
   .nf-lead{font-size:var(--t-lead);line-height:1.45;max-width:33ch;margin:0 0 var(--space-2)}
   .nf-explain{color:var(--ink-2);max-width:42ch;margin:0 0 var(--space-5);font-size:var(--t-small)}
-  .nf-return{display:inline-flex;align-items:center;gap:var(--space-2);padding:var(--space-2) 0;border-bottom:2px solid var(--accent-01);font-weight:var(--w-semibold);text-decoration:none;color:var(--ink);transition:gap var(--dur) var(--ease)}
+  .nf-return{display:inline-flex;align-items:center;gap:var(--space-2);padding:var(--space-2) 0;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px;font-weight:var(--w-semibold);color:var(--ink);transition:gap var(--dur) var(--ease)}
   .nf-return:hover{gap:var(--space-3);color:var(--accent-01)}
-  .nf-return:focus-visible{outline:2px solid var(--accent-01);outline-offset:5px}
-  .nf-figure{margin:0;min-width:0;border-top:var(--rule-open);border-bottom:var(--rule-open);padding-block:var(--space-2)}
+  .nf-figure{margin:0;min-width:0;border-top:var(--rule-open);padding-top:var(--space-2)}
   .nf-plot-head{color:var(--ink-2)}
   .nf-chart{display:block;width:100%;height:auto;overflow:visible;margin-block:var(--space-3)}
   .nf-grid path{stroke:var(--rule-c);stroke-width:1;fill:none;opacity:.65}
   .nf-axis{stroke:var(--ink-2);stroke-width:1.5;fill:none}
   .nf-points circle{fill:var(--ink-2);opacity:.75}
   .nf-trend{stroke:var(--ink-2);stroke-width:1.5;stroke-dasharray:5 7;fill:none;opacity:.55}
-  .nf-outlier-guide{stroke:var(--accent-01);stroke-width:1.5;fill:none}
+  .nf-outlier-guide{stroke:var(--ink-2);stroke-width:1.5;fill:none}
   .nf-outlier-ring{fill:none;stroke:var(--accent-01);stroke-width:2}
-  .nf-outlier-core{fill:var(--accent-01)}
-  .nf-outlier-text{fill:var(--accent-01);font-family:var(--font-mono);font-size:21px;font-weight:700}
-  .nf-axis-label{fill:var(--ink-2);font-family:var(--font-mono);font-size:12px;letter-spacing:.06em}
+  .nf-outlier-core{fill:var(--ink)}
+  .nf-axis-labels{display:flex;justify-content:space-between;gap:var(--space-2);margin-bottom:var(--space-2);font-family:var(--font-mono);font-size:var(--t-mono-sm);letter-spacing:var(--tracking-label);text-transform:uppercase;color:var(--ink-2)}
   .nf-figure figcaption{border-top:var(--rule);padding-top:var(--space-2);color:var(--ink-2)}
   .nf-legend{display:inline-flex;align-items:center;gap:var(--space-1)}
-  .nf-legend i{width:9px;height:9px;border:2px solid var(--accent-01);border-radius:50%;display:inline-block}
+  .nf-legend i{width:9px;height:9px;border:2px solid var(--ink);display:inline-block}
   .nf-bottom{border-top:var(--rule);padding-top:var(--space-2);color:var(--ink-2)}
   .nf-de{font-size:var(--t-small);color:var(--ink-2);margin-top:var(--space-4)}
   .nf-de a{color:var(--ink);text-underline-offset:3px}

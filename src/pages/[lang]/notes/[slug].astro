@@ -1,0 +1,75 @@
+---
+// 02-02-NNN · A note of the library — the document template as the essays
+// use it: the trail 02 Writing → 02-02 Notes → the note's code; the meta
+// row with the date and reading time; the body; its tags under it (its
+// folders' tags first: area, topic, subtopic, each an archive page); the
+// end bar: ← All notes · § END · the next note in reading order, wrapping
+// to the first. One page per note per language it is written in.
+import Document from '@/layouts/Document.astro';
+import { render } from 'astro:content';
+import { t, formatDate, otherLang, type Lang } from '@/lib/i18n';
+import { route, noteRoute } from '@/lib/routes';
+import { LANGS } from '@/lib/site';
+import { notesOf, nextOf, prevOf, readingMinutes, vaultExtras, NOTES_CODE, type NoteRow } from '@/lib/collections';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const lang of LANGS) {
+    const rows = (await notesOf(lang)).map((r) => ({ ...r, id: r.entry.id }));
+    const others = await notesOf(otherLang(lang));
+    for (const row of rows) {
+      const slug = row.entry.data.slug;
+      if (slug === 'page') throw new Error(`notes: ${row.entry.id} has the slug "page", the library's pagination; give it another slug`);
+      const twin = others.find((o) => o.entry.data.slug === slug);
+      paths.push({ params: { lang, slug }, props: { row, rows, twinPath: twin ? noteRoute(slug, twin.entry.data.lang) : null } });
+    }
+  }
+  return paths;
+}
+
+type Row = NoteRow & { id: string };
+interface Props { row: Row; rows: Row[]; twinPath: string | null }
+
+const { row, rows, twinPath } = Astro.props;
+const lang = Astro.params.lang as Lang;
+const d = row.entry.data;
+const extras = vaultExtras(row.entry, lang);
+const { Content, headings, remarkPluginFrontmatter } = await render(row.entry);
+const next = nextOf(rows, row);
+const prev = prevOf(rows, row);
+const meta = [
+  { text: `${t(lang, 'published')} ${formatDate(d.date, lang)}` },
+  { text: t(lang, 'min-read').replace('{n}', String(readingMinutes(row.entry.body))) },
+  ...(d.updated ? [{ text: `${t(lang, 'updated')} ${formatDate(d.updated, lang)}` }] : []),
+];
+---
+<Document
+  lang={lang}
+  page={`notes.${d.slug}`}
+  title={d.title}
+  description={d.summary}
+  current="02"
+  hasCode={remarkPluginFrontmatter?.hasCode === true}
+  trail={[
+    { label: `02 ${t(lang, 'door.writing')}`, href: route('writing', lang) },
+    { label: `${NOTES_CODE} ${t(lang, 'notes.word')}`, href: route('notes', lang) },
+    { label: row.code, current: true },
+  ]}
+  lead={d.lead}
+  meta={meta}
+  draft={d.translationStatus === 'draft'}
+  headings={headings}
+  prev={{ href: route('notes', lang), label: t(lang, 'all-notes') }}
+  next={next && { href: noteRoute(next.entry.data.slug, lang), label: `${next.code} ${next.entry.data.title}` }}
+  nextDoc={next && noteRoute(next.entry.data.slug, lang)}
+  twinPath={twinPath}
+  seoTitle={d.seo_title}
+  seoDescription={d.seo_description}
+  canonicalUrl={d.canonical}
+  cover={extras.cover}
+  tags={extras.tags}
+  related={extras.related}
+  prevDoc={prev && noteRoute(prev.entry.data.slug, lang)}
+>
+  <Content />
+</Document>

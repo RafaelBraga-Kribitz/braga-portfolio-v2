@@ -21,7 +21,9 @@ $A \cap B$ is the **intersection** of sets $A$ and $B$: the set of elements that
 ```mermaid
 flowchart TD
     A["Sets A and B"] --> B["Iterate over elements of A"]
-    B --> C{["Is element also in B?"]} C -- "Yes: element is in both" --> D["Include in A ∩ B"] C -- "No: element is only in A" --> E["Exclude from A ∩ B"]
+    B --> C{"Is element also in B?"}
+    C -- "Yes: element is in both" --> D["Include in A ∩ B"]
+    C -- "No: element is only in A" --> E["Exclude from A ∩ B"]
     D --> F["Repeat for all elements of A"]
     E --> F
     F --> G["A ∩ B contains only shared elements"]

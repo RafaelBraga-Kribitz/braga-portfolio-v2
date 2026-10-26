@@ -26,7 +26,10 @@ flowchart TD
     B --> D["Term 2: f(x) * (dg/dx) -- f, times derivative of g"]
     C --> E["Sum both terms: dh/dx = f'g + fg'"]
     D --> E
-    E --> F{"What are f and g?"} F -- "Both scalar" --> G["Scalar product rule: standard calculus"] F -- "f scalar, g vector" --> H["d/dx (f * g_vec) = f' * g_vec + f * (dg_vec/dx)"] F -- "Both vector (dot product)" --> I["d/dx (f^T g) = (df/dx)^T g + (dg/dx)^T f or Jacobian form"]
+    E --> F{"What are f and g?"}
+    F -- "Both scalar" --> G["Scalar product rule: standard calculus"]
+    F -- "f scalar, g vector" --> H["d/dx (f * g_vec) = f' * g_vec + f * (dg_vec/dx)"]
+    F -- "Both vector (dot product)" --> I["d/dx (f^T g) = (df/dx)^T g + (dg/dx)^T f or Jacobian form"]
     G --> J["Use in: log-likelihood, regularized loss, attention scores"]
     H --> J
     I --> J

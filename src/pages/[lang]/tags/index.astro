@@ -9,7 +9,7 @@ import { t, isDraftLang, type Lang } from '@/lib/i18n';
 import StatusMark from '@/components/StatusMark.astro';
 import { withBase } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
-import { projectsOf, writingOf, libraryOf, tagPath } from '@/lib/collections';
+import { projectsOf, writingOf, notesOf, tagNames, tagPath } from '@/lib/collections';
 
 export function getStaticPaths() {
   return LANGS.map((lang) => ({ params: { lang } }));
@@ -17,7 +17,8 @@ export function getStaticPaths() {
 
 const lang = Astro.params.lang as Lang;
 const counts = new Map<string, number>();
-const notes = (await libraryOf(lang)).flatMap((a) => a.rows.map((r) => r.entry));
+const notes = (await notesOf(lang)).map((r) => r.entry);
+const names = await tagNames();
 for (const e of [...(await projectsOf(lang)), ...(await writingOf(lang)), ...notes]) for (const tag of e.data.tags) counts.set(tag, (counts.get(tag) ?? 0) + 1);
 const tags = [...counts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
 const count = (n: number) => (n === 1 ? t(lang, 'tags.count-one') : t(lang, 'tags.count').replace('{n}', String(n)));
@@ -27,7 +28,7 @@ const count = (n: number) => (n === 1 ? t(lang, 'tags.count-one') : t(lang, 'tag
     <SectionHeading number="#" word={t(lang, 'tags.title')} claim={t(lang, 'tags.index-claim')} as="h1" />
     {tags.length > 0 && (
       <Listing>
-        {tags.map(([tag, n], i) => <ListingRow code={String(i + 1).padStart(2, '0')} title={`#${tag}`} meta={[count(n)]} lang={lang} href={withBase(tagPath(tag, lang))} />)}
+        {tags.map(([tag, n], i) => <ListingRow code={String(i + 1).padStart(2, '0')} title={names.get(tag) ?? `#${tag}`} sub={names.has(tag) ? `#${tag}` : undefined} meta={[count(n)]} lang={lang} href={withBase(tagPath(tag, lang))} />)}
       </Listing>
     )}
     {isDraftLang(lang) && <div class="doc-meta"><StatusMark state="in-build" lang={lang} label={t(lang, 'draft')} /></div>}

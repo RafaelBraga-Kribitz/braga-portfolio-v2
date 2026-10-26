@@ -20,7 +20,11 @@ This test (Leibniz criterion) tells you that an **alternating series converges**
 
 ```mermaid
 flowchart TD
-    A["Series: sum (-1)^(n+1) * a_n, with a_n > 0"] --> B["Check: is a_(n+1) <= a_n for all n? (non-increasing)"] B -- "No" --> C["Test fails — try other convergence tests"] B -- "Yes" --> D["Check: lim(n→inf) a_n = 0?"] D -- "No" --> E["DIVERGES by n-th term test"] D -- "Yes" --> F["CONVERGES by Leibniz criterion"]
+    A["Series: sum (-1)^(n+1) * a_n, with a_n > 0"] --> B["Check: is a_(n+1) <= a_n for all n? (non-increasing)"]
+    B -- "No" --> C["Test fails — try other convergence tests"]
+    B -- "Yes" --> D["Check: lim(n→inf) a_n = 0?"]
+    D -- "No" --> E["DIVERGES by n-th term test"]
+    D -- "Yes" --> F["CONVERGES by Leibniz criterion"]
     F --> G["Bonus: |S - S_N| <= a_(N+1) (error bound)"]
 ```
 

@@ -20,7 +20,9 @@ A **tautology** is a logical statement (compound proposition) that is true regar
 flowchart TD
     A["Compound logical statement"] --> B["Build truth table"]
     B --> C["Evaluate for ALL combinations of variable values"]
-    C --> D{["All rows = True?"]} D -- "Yes" --> E["TAUTOLOGY: always true by structure"] D -- "No (at least one False)" --> F["NOT a tautology"]
+    C --> D{"All rows = True?"}
+    D -- "Yes" --> E["TAUTOLOGY: always true by structure"]
+    D -- "No (at least one False)" --> F["NOT a tautology"]
     E --> G["Example: p ∨ ¬p (Law of Excluded Middle)"]
 ```
 

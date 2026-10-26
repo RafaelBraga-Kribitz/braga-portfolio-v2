@@ -20,7 +20,11 @@ $\infty$ (the infinity symbol, a sideways figure-8, called the **lemniscate of B
 
 ```mermaid
 flowchart TD
-    A["Encounter infinity symbol"] --> B{"What context?"} B -- "Limit notation" --> C["As x grows without bound, f(x) approaches L"] B -- "Summation/integration bounds" --> D["Sum or integrate over all real values (no finite boundary)"] B -- "Probability distributions" --> E["Distribution support extends over all reals or all positives"] B -- "Algorithm sentinel" --> F["Initialize best_cost = infinity so any real cost is smaller"]
+    A["Encounter infinity symbol"] --> B{"What context?"}
+    B -- "Limit notation" --> C["As x grows without bound, f(x) approaches L"]
+    B -- "Summation/integration bounds" --> D["Sum or integrate over all real values (no finite boundary)"]
+    B -- "Probability distributions" --> E["Distribution support extends over all reals or all positives"]
+    B -- "Algorithm sentinel" --> F["Initialize best_cost = infinity so any real cost is smaller"]
     C --> G["Use: lim as x to inf f(x) = L"]
     D --> H["Use: integral from -inf to +inf or sum from n=0 to inf"]
     E --> I["Use: Normal is defined over (-inf, +inf)"]

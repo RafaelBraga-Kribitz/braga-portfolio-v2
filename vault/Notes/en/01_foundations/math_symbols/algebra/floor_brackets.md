@@ -20,7 +20,9 @@ The floor function $\lfloor x \rfloor$ **rounds a number down to the nearest int
 
 ```mermaid
 flowchart TD
-    A["Input: x (real number)"] --> B{"Is x already an integer?"} B -- "Yes" --> C["Output: x (no change needed)"] B -- "No" --> D["Find the largest integer <= x"]
+    A["Input: x (real number)"] --> B{"Is x already an integer?"}
+    B -- "Yes" --> C["Output: x (no change needed)"]
+    B -- "No" --> D["Find the largest integer <= x"]
     D --> E["That integer is floor(x)"]
     E --> F["Output: always an integer, always <= x"]
     C --> G["Result: floor(x) is always an integer and floor(x) <= x"]

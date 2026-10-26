@@ -24,7 +24,9 @@ flowchart TD
     B["State Premise 2"] --> C
     C --> D["Apply a logical rule or theorem"]
     D --> E["∴ Therefore: state the conclusion"]
-    E --> F{["Is the argument complete?"]} F -- "Yes" --> G["QED: proof done"] F -- "No" --> H["This conclusion becomes a new premise"]
+    E --> F{"Is the argument complete?"}
+    F -- "Yes" --> G["QED: proof done"]
+    F -- "No" --> H["This conclusion becomes a new premise"]
     H --> A
 ```
 

@@ -23,7 +23,10 @@ flowchart TD
     A["Identify the quantity x"] --> B["Record the initial value: x_old"]
     B --> C["Record the final value: x_new"]
     C --> D["Compute: delta_x = x_new - x_old"]
-    D --> E{"Sign of delta_x?"} E -- "Positive" --> F["x increased (growth)"] E -- "Zero" --> G["x did not change"] E -- "Negative" --> H["x decreased (decline)"]
+    D --> E{"Sign of delta_x?"}
+    E -- "Positive" --> F["x increased (growth)"]
+    E -- "Zero" --> G["x did not change"]
+    E -- "Negative" --> H["x decreased (decline)"]
     F --> I["Report delta and percentage change if needed"]
     G --> I
     H --> I

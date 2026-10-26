@@ -103,10 +103,9 @@ export function noteRoute(slug: string, lang: Lang): string {
   return withBase(`/${lang}/notes/${slug}/`);
 }
 
-/** A folder of the notes library: /<lang>/notes/<area>/<topic>/…/, page n (2…) at …/<n>/. */
-export function notesFolderRoute(segs: readonly string[], lang: Lang, page = 1): string {
-  const rest = [...segs, ...(page > 1 ? [String(page)] : [])];
-  return withBase(`/${lang}/notes/${rest.map((s) => `${s}/`).join('')}`);
+/** Page n of a list at a path (Ghost's /page/n/): page 1 is the path itself. */
+export function pagedRoute(path: string, page: number): string {
+  return page > 1 ? `${path}page/${page}/` : path;
 }
 
 /** Both language paths of a page id, with the base. Throws on an unknown id. */

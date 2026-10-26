@@ -20,7 +20,9 @@ $A \subset B$ means "$A$ is a **proper subset** of $B$" — every element in $A$
 
 ```mermaid
 flowchart TD
-    A["A ⊆ B: every element of A is in B"] --> B{"Is A equal to B?"} B -- "No: B has elements A doesn't" --> C["A ⊂ B (proper subset — strict)"] B -- "Yes: A and B are identical" --> D["A ⊆ B only — NOT a proper subset"]
+    A["A ⊆ B: every element of A is in B"] --> B{"Is A equal to B?"}
+    B -- "No: B has elements A doesn't" --> C["A ⊂ B (proper subset — strict)"]
+    B -- "Yes: A and B are identical" --> D["A ⊆ B only — NOT a proper subset"]
     C --> E["DA: VIP customers ⊂ all customers"]
     C --> F["ML: selected_features ⊂ all_features"]
     C --> G["|A| < |B| always when A ⊂ B"]

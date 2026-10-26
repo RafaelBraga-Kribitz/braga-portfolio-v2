@@ -20,7 +20,9 @@ A **fallacy** in formal logic (also called a **contradiction** or **absurdity**,
 flowchart TD
     A["Compound logical statement"] --> B["Build truth table"]
     B --> C["Evaluate for ALL variable assignments"]
-    C --> D{["All rows = False?"]} D -- "Yes" --> E["CONTRADICTION (Fallacy): always false"] D -- "No" --> F["Not a contradiction"]
+    C --> D{"All rows = False?"}
+    D -- "Yes" --> E["CONTRADICTION (Fallacy): always false"]
+    D -- "No" --> F["Not a contradiction"]
     E --> G["Example: p ∧ ¬p (never both true)"]
     G --> H["In code: if x > 5 and x < 3: ... (impossible)"]
 ```

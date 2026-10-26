@@ -24,7 +24,9 @@ flowchart TD
     A --> C["Compute |a| - |b| (difference of magnitudes)"]
     C --> D["Take ||a| - |b|| (unsigned difference of magnitudes)"]
     B --> E{"|a - b| ≥ ||a| - |b||?"}
-    D --> E E -- "Yes (always)" --> F["Reverse triangle inequality holds"] E -- "No" --> G["Impossible for real numbers"]
+    D --> E
+    E -- "Yes (always)" --> F["Reverse triangle inequality holds"]
+    E -- "No" --> G["Impossible for real numbers"]
     F --> H["Lower bound: distance between a,b ≥ gap in their magnitudes"]
     F --> I["Equality: a,b same sign AND max(|a|,|b|) ≥ min(|a|,|b|)"]
     F --> J["DA: if |a|≫|b|, then |a-b| ≈ |a| — subtraction by a small number changes magnitude little"]

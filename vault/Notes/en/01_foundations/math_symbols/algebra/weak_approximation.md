@@ -25,7 +25,9 @@ As $n$ grows, $f$ and $g$ become indistinguishable in relative terms. In DA/DS, 
 
 ```mermaid
 flowchart TD
-    A["Encounter tilde (~) symbol"] --> B{"What is the context?"} B -- "Probability / statistics" --> C["Distributed as: X ~ Distribution(params)"] B -- "Mathematical analysis" --> D["Asymptotically equivalent: f(n) ~ g(n) as n -> inf"]
+    A["Encounter tilde (~) symbol"] --> B{"What is the context?"}
+    B -- "Probability / statistics" --> C["Distributed as: X ~ Distribution(params)"]
+    B -- "Mathematical analysis" --> D["Asymptotically equivalent: f(n) ~ g(n) as n -> inf"]
     C --> E["Example: X ~ N(0,1) means X is standard Normal"]
     C --> F["Example: errors ~ N(0, sigma^2) is a regression assumption"]
     D --> G["Example: ln(n!) ~ n*ln(n) - n (Stirling's approximation)"]

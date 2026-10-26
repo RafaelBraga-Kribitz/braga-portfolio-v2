@@ -21,11 +21,15 @@ A double integral extends the idea of a single integral from a line (1D) to a pl
 ```mermaid
 flowchart TD
     A["Double integral: iint_D f(x,y) dx dy"] --> B["Identify the region D and order of integration"]
-    B --> C{"Rectangular region D = [a,b] x [c,d]?"} C -- "Yes (Fubini applies directly)" --> D["Inner integral: fix x, integrate over y from c to d"] C -- "No (non-rectangular D)" --> E["Express y limits as functions of x: y from g1(x) to g2(x)"]
+    B --> C{"Rectangular region D = [a,b] x [c,d]?"}
+    C -- "Yes (Fubini applies directly)" --> D["Inner integral: fix x, integrate over y from c to d"]
+    C -- "No (non-rectangular D)" --> E["Express y limits as functions of x: y from g1(x) to g2(x)"]
     D --> F["Outer integral: integrate result over x from a to b"]
     E --> F
     F --> G["Result: scalar volume or probability"]
-    G --> H{"f is a joint PDF?"} H -- "Yes" --> I["Outer integral = marginal distribution of X"] H -- "No" --> J["Result is volume under surface z = f(x,y) over D"]
+    G --> H{"f is a joint PDF?"}
+    H -- "Yes" --> I["Outer integral = marginal distribution of X"]
+    H -- "No" --> J["Result is volume under surface z = f(x,y) over D"]
 ```
 
 ## Real-world use

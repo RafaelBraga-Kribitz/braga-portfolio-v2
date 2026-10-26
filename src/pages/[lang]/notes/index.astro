@@ -1,42 +1,11 @@
 ---
-// 02 · Notes — the library's first level (owner, 25 Oct 2026; levels
-// 26 Oct): the page heading (h1) with the count, then the seven areas, one
-// row each (code, title, its topics, how many notes), each leading to its
-// own page ([...path].astro), where the next level is listed. The notes
-// are written in English; the German page keeps them in English (textLang)
-// under German chrome.
-import Base from '@/layouts/Base.astro';
-import SectionHeading from '@/components/SectionHeading.astro';
-import Listing from '@/components/Listing.astro';
-import ListingRow from '@/components/ListingRow.astro';
-import StatusMark from '@/components/StatusMark.astro';
-import { t, isDraftLang, type Lang } from '@/lib/i18n';
-import { route, notesFolderRoute } from '@/lib/routes';
+// 02-02 · Notes — the library's first page (src/components/NotesLibrary.astro).
+import NotesLibrary from '@/components/NotesLibrary.astro';
 import { LANGS } from '@/lib/site';
-import { notesTree } from '@/lib/collections';
+import type { Lang } from '@/lib/i18n';
 
 export function getStaticPaths() {
   return LANGS.map((lang) => ({ params: { lang } }));
 }
-
-const lang = Astro.params.lang as Lang;
-// a language without notes of its own shows the English library
-const own = await notesTree(lang);
-const root = own.count ? own : await notesTree('en');
-const textLang: Lang = own.count ? lang : 'en';
-const prose = t(lang, 'notes.prose').replace('{n}', String(root.count)).replace('{k}', String(root.children.length));
-const count = (n: number) => (n === 1 ? t(lang, 'notes.count-one') : t(lang, 'notes.count').replace('{n}', String(n)));
 ---
-<Base lang={lang} page="notes" title={t(lang, 'notes.word')} description={prose} current="02">
-  <section class="section">
-    <SectionHeading number="02" word={t(lang, 'notes.word')} claim={t(lang, 'notes.claim')} prose={prose} link={{ href: route('writing', lang), label: t(lang, 'all-writing') }} as="h1" />
-    {root.children.length > 0 && (
-      <Listing head={{ index: t(lang, 'index'), title: t(lang, 'notes.areas'), meta: '', trail: '' }}>
-        {root.children.map((a) => (
-          <ListingRow code={a.code} title={a.title} sub={a.children.map((c) => c.title).join(' · ')} meta={[count(a.count)]} lang={lang} textLang={textLang} href={notesFolderRoute(a.segs, lang)} />
-        ))}
-      </Listing>
-    )}
-    {isDraftLang(lang) && <div class="doc-meta"><StatusMark state="in-build" lang={lang} label={t(lang, 'draft')} /></div>}
-  </section>
-</Base>
+<NotesLibrary lang={Astro.params.lang as Lang} page={1} />

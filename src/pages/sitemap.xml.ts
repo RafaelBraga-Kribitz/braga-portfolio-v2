@@ -8,8 +8,8 @@
 // carries the base path (src/lib/routes.ts).
 import type { APIRoute } from 'astro';
 import { LANGS, type Lang } from '../lib/site';
-import { routePair, absolute, notesFolderRoute, legalPageIds, type PageId, type StaticPageId } from '../lib/routes';
-import { slugLanguages, pageOf, legalOf, notesTree, noteNodes } from '../lib/collections';
+import { routePair, absolute, legalPageIds, type PageId, type StaticPageId } from '../lib/routes';
+import { slugLanguages, pageOf, legalOf } from '../lib/collections';
 
 /** Pages built in both languages from code alone. */
 const ALWAYS: readonly StaticPageId[] = ['home', 'work', 'writing', 'notes', 'tools', 'tools.confusion-matrix', 'tools.ab-sample-size'];
@@ -39,12 +39,6 @@ export const GET: APIRoute = async () => {
     const links = alts.map((a) => `    <xhtml:link rel="alternate" hreflang="${a.hreflang}" href="${esc(a.href)}"/>`).join('\n');
     return langs.map((lang) => `  <url>\n    <loc>${esc(absolute(pair[lang]))}</loc>\n${links}\n  </url>`);
   });
-  // the notes library's folders (page 1 of each), in both languages
-  for (const node of noteNodes(await notesTree('en')).slice(1)) {
-    const alts = [...LANGS.map((l) => ({ hreflang: l, href: absolute(notesFolderRoute(node.segs, l)) })), { hreflang: 'x-default', href: absolute(notesFolderRoute(node.segs, 'en')) }];
-    const links = alts.map((a) => `    <xhtml:link rel="alternate" hreflang="${a.hreflang}" href="${esc(a.href)}"/>`).join('\n');
-    for (const l of LANGS) urls.push(`  <url>\n    <loc>${esc(absolute(notesFolderRoute(node.segs, l)))}</loc>\n${links}\n  </url>`);
-  }
   const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls.join('\n')}\n</urlset>\n`;
   return new Response(body, { headers: { 'Content-Type': 'application/xml; charset=utf-8' } });
 };

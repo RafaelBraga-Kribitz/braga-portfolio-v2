@@ -20,7 +20,9 @@ $\nexists$ means **"there does not exist"** or **"there is no."** It asserts tha
 
 ```mermaid
 flowchart TD
-    A["∄ x in S: P(x)"] --> B["Check: does ∃ x in S: P(x) hold?"] B -- "∃ holds (witness found)" --> C["∄ claim is FALSE"] B -- "∃ fails (no witness)" --> D["∄ claim is TRUE"]
+    A["∄ x in S: P(x)"] --> B["Check: does ∃ x in S: P(x) hold?"]
+    B -- "∃ holds (witness found)" --> C["∄ claim is FALSE"]
+    B -- "∃ fails (no witness)" --> D["∄ claim is TRUE"]
     D --> E["Equivalent to: ∀ x in S: NOT P(x)"]
     C --> F["The counterexample to ∄ is the witness for ∃"]
 ```

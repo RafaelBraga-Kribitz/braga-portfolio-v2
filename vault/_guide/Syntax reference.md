@@ -24,16 +24,19 @@ Markdown pipeline in `astro.config.mjs`.
   date (a daily build puts it online).
 - Sub-folders inside a language folder are fine (`Notes/en/2026/…`). In
   `Notes/`, the folders are the library's index: `<area>/<topic>/<subtopic>/`,
-  the area named with its number (`04_calculus_optimization`). Every folder
-  is a page: `/<lang>/notes/` lists the areas, an area its topics, a topic
-  its subtopics, a subtopic its notes, 12 rows a page and then numbered
-  pages. A code is a position on those pages: area 04, its second topic
-  04-02, that topic's first subtopic 04-02-01, the subtopic's fifth note
-  04-02-01-05 (notes in alphabetical order of their titles). Folder names
-  read as titles (`discrete_random_variables_drvs` → "Discrete random
-  variables (DRVs)"; awkward ones are written out in
-  `src/lib/collections.ts`), and the title, kebab-cased, is the folder's
-  URL. A note keeps `/<lang>/notes/<slug>/`.
+  the area named with its number (`04_calculus_optimization`). On the site
+  the library is flat and tagged, as Ghost publishes: `/<lang>/notes/`
+  lists every note in reading order (folder order, then title), 24 a page
+  (`/<lang>/notes/page/2/`), each coded by its place under Writing's
+  second register: 02 Writing, 02-02 Notes, 02-02-001 the first note.
+  Every folder a note sits in is also a tag of that note, next to its own
+  tags: the area's short tag (`calculus`), then the topic's and the
+  subtopic's title, kebab-cased (`differential-calculus`). Each tag has
+  its archive page, `/<lang>/tags/<tag>/`, paginated the same way; a
+  folder's tag reads as the folder's title there (`discrete_random_
+  variables_drvs` → "Discrete random variables (DRVs)"; awkward names are
+  written out in `src/lib/vault/folders.mjs`). Adding a note renumbers the
+  notes after it.
 - Two notes with the same file name in different folders collide on one
   URL: give one a `slug`. `npm run vault:check` names the pair.
 - The **slug** (the URL) is the file name in lower-case kebab-case, unless

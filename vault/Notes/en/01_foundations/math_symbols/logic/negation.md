@@ -22,7 +22,9 @@ $\lnot x$ (or $\sim x$) is **logical negation**, read as **"not $x$."** It flips
 
 ```mermaid
 flowchart TD
-    A["Input: proposition P"] --> B{["Is P True?"]} B -- "P is True" --> C["Output: NOT P is False"] B -- "P is False" --> D["Output: NOT P is True"]
+    A["Input: proposition P"] --> B{"Is P True?"}
+    B -- "P is True" --> C["Output: NOT P is False"]
+    B -- "P is False" --> D["Output: NOT P is True"]
     C --> E["Truth value is flipped"]
     D --> E
 ```

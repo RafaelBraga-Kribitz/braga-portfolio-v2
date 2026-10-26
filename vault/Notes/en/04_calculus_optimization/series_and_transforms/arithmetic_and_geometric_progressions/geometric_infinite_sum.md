@@ -20,7 +20,9 @@ This gives the **exact sum of infinitely many terms** of a geometric series, whe
 
 ```mermaid
 flowchart TD
-    A["Input: a (first term), r (common ratio)"] --> B{"|r| < 1?"} B -- "No: |r| >= 1" --> C["Series DIVERGES — no finite sum"] B -- "Yes" --> D["Apply S_inf = a / (1 - r)"]
+    A["Input: a (first term), r (common ratio)"] --> B{"|r| < 1?"}
+    B -- "No: |r| >= 1" --> C["Series DIVERGES — no finite sum"]
+    B -- "Yes" --> D["Apply S_inf = a / (1 - r)"]
     D --> E["Output: finite sum S_inf"]
     E --> F["Interpretation: geometric series converges to this value"]
 ```

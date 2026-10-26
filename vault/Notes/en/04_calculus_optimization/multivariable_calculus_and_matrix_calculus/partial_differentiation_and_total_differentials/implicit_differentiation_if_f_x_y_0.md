@@ -23,7 +23,9 @@ flowchart TD
     A["Implicit equation: F(x, y) = 0"] --> B["Differentiate both sides with respect to x"]
     B --> C["Apply chain rule: dF/dx = partial_x F + partial_y F * (dy/dx) = 0"]
     C --> D["Solve for dy/dx: dy/dx = -F_x / F_y"]
-    D --> E{"Evaluate at a specific point (x0, y0)?"} E -- "Yes" --> F["Compute F_x and F_y at (x0, y0), then ratio"] E -- "No" --> G["Leave as a function of x and y (valid on the curve)"]
+    D --> E{"Evaluate at a specific point (x0, y0)?"}
+    E -- "Yes" --> F["Compute F_x and F_y at (x0, y0), then ratio"]
+    E -- "No" --> G["Leave as a function of x and y (valid on the curve)"]
     D --> H["F_y = 0 at a point? Tangent is vertical, dy/dx undefined there"]
 ```
 
