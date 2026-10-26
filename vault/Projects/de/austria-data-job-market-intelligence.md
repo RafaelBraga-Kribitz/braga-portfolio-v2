@@ -2,7 +2,7 @@
 code: "01-01"
 kind: case
 date: "2026-09-16"
-summary: 720 Kerninserate. Eine datierte Sicht auf Stellentitel, Kenntnisse und regionale Nachfrage.
+summary: "720 Kerninserate (Momentaufnahme vom 16. Sep. 2026). Eine datierte Sicht auf Stellentitel, Kenntnisse und regionale Nachfrage."
 lead: "Eine Evidenzbasis für Berufsentscheidungen im Datenbereich in Österreich, mit Schwerpunkt Steiermark und Graz: eine eintägige Momentaufnahme von 720 Kerninseraten für Datenrollen aus fünf öffentlichen Quellen, ergänzt um das AMS JobBarometer 2020–2025 und die Saisonalität offener Stellen laut Eurostat."
 domain: Arbeitsmarkt
 tags: [ status/complete, arbeitsmarkt, datenpipeline, deskriptive-statistik ]
@@ -21,6 +21,9 @@ publish: true
 
 > [!summary] Zusammenfassung
 > SQL und Python führen eine eintägige Momentaufnahme von 720 Kerninseraten für Datenrollen an, der Stack (die eingesetzten Werkzeuge) ist auf Microsoft ausgerichtet, und in der AMS-Berufsgruppe „Data Scientist“ ist die Steiermark die einzige große Region über ihrem Niveau von 2020. Die Ergebnisse fließen in zwei Entscheidungsdokumente, die jede Rollenfamilie an einem deklarierten Kompetenzprofil bewerten; die Rohdatensammlung bleibt ein privater Forschungsdatensatz.
+
+> [!note] Stand der Daten
+> Diese Seite beschreibt die Momentaufnahme vom 16. Sep. 2026. Das Repository ist inzwischen auf die Momentaufnahme vom 18. Okt. 2026 umgestellt (Release 2026-10-19.1, 699 Kerninserate); seine README enthält die aktuellen Zahlen.
 
 ## Fragestellung
 
