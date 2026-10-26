@@ -67,4 +67,4 @@ Open to Marketing Data Analyst roles – and to second opinions on hard measure
 > [!cta] Direct line
 > [rafaelbragakribitz@gmail.com](mailto:rafaelbragakribitz@gmail.com)
 
-[^1]: Paraguay elected Mario Abdo Benítez in April 2018, by a margin of 3.9 percentage points.
+[^1]: Paraguay elected Mario Abdo Benítez in April 2018, by a margin of 3.7 percentage points (46.43% against 42.73%, official count of the electoral tribunal, TSJE).
