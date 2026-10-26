@@ -61,6 +61,9 @@ Offen für Rollen als Marketing Data Analyst – und für eine zweite Meinung z
 > [!bookmark] Anderswo
 > [GitHub](https://github.com/RafaelBraga-Kribitz) — github.com/RafaelBraga-Kribitz
 
+> [!bookmark] LinkedIn
+> [Rafael Braga-Kribitz](https://www.linkedin.com/in/rafaelbragakribitz/) — linkedin.com/in/rafaelbragakribitz
+
 > [!cta] Direkter Kontakt
 > [rafaelbragakribitz@gmail.com](mailto:rafaelbragakribitz@gmail.com)
 

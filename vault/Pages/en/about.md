@@ -61,6 +61,9 @@ Open to Marketing Data Analyst roles – and to second opinions on hard measure
 > [!bookmark] Elsewhere
 > [GitHub](https://github.com/RafaelBraga-Kribitz) — github.com/RafaelBraga-Kribitz
 
+> [!bookmark] LinkedIn
+> [Rafael Braga-Kribitz](https://www.linkedin.com/in/rafaelbragakribitz/) — linkedin.com/in/rafaelbragakribitz
+
 > [!cta] Direct line
 > [rafaelbragakribitz@gmail.com](mailto:rafaelbragakribitz@gmail.com)
 
