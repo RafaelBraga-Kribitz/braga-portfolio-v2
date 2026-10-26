@@ -106,6 +106,11 @@ Hand-copied hex values are a defect: a consumer that carries its own palette mus
   `var-pos`, bad variance `var-neg` always with ▲; **one highlight per chart in `hl` (= accent)**.
 - Categorical hue in slot order (`categorical`, 6+ = `categorical-other`), grey for parts of a whole;
   the seven scales of `color.<theme>.scales`.
+- Continuous fills (heatmaps, contours, choropleths): a one-sided magnitude takes the sequential
+  scale `seq`; a diverging scale (`div`, `two`) only around a real midpoint (zero, a tie, a target),
+  anchored at it, never at the data's own minimum. A stepped fill (contour bands, binned classes)
+  has at most one band per step of the scale it uses, never a slice of one arm cut into more bands;
+  a smooth gradient spans the whole scale.
 - Colour lives in marks, never in type: every label `ink` or `ink-2`. Figures in BKribitz Mono
   (tabular, slashed zero). No text below 12px. Hairline gridlines in `rule-c`, axes in `mid`.
 - Light and dark from the same token names; figures carry a source line.
