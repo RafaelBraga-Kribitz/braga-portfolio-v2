@@ -56,7 +56,7 @@ A support-ticket router outputs $p = (0.7, 0.2, 0.1)$ for (Billing, Tech, Sales)
 - $\sum_k p_k = 1$: exactly one class happens.
 - $[x=j]$: indicator (one-hot encoding) that the outcome is class $j$.
 - $\prod_j p_j^{[x=j]}$: every factor is $p_j^0 = 1$ except the observed class, so the product equals $p_x$.
-- $E[[X=k]] = p_k$ and $Var([X=k]) = p_k(1-p_k)$: each one-hot component is a Bernoulli.
+- $E\left[\,[X=k]\,\right] = p_k$ and $Var([X=k]) = p_k(1-p_k)$: each one-hot component is a Bernoulli.
 - $-\log p_y$: the negative log-likelihood, i.e. the cross-entropy between the one-hot label and $p$.
 
 ## The formula in words
