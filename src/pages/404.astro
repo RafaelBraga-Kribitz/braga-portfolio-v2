@@ -1,76 +1,89 @@
 ---
-// 404 — Templates specimen 01 (Not found): an error treated as data. The
-// opener (trail, the 404 numeral, the h1, the lead), then the way back and
-// the report link (UX pass, 22 Oct 2026: the reader's next step comes
-// first, the joke after it; the specimen sets them near the end), the
-// metrics callout, Fig. 404-1 as a 2 × 2 classification grid whose "1" is the
-// figure's one accent (G-15), the aside on limitations, the decision
-// and the end bar. English, with the
-// specimen's German line for German readers (GitHub Pages serves one
-// 404.html). Astro writes it to dist/404.html.
 import Base from '@/layouts/Base.astro';
-import DocOpener from '@/components/DocOpener.astro';
-import Callout from '@/components/Callout.astro';
-import DocEnd from '@/components/DocEnd.astro';
-import { route, contactRoute } from '@/lib/routes';
-import { mailParts } from '@/lib/contact.mjs';
-import { site } from '@/lib/site';
-import { dash, NBSP } from '@/lib/format.mjs';
+import { route } from '@/lib/routes';
 
-const lang = 'en' as const;
-const home = route('home', lang);
+const home = route('home', 'en');
 const homeDe = route('home', 'de');
-const n1 = `n${NBSP}=${NBSP}1`;
-// the report link opens a mail with the subject set; its address is
-// assembled on click and is not in the page (src/lib/contact.mjs)
-const mail = mailParts(site.email);
-const matrixLabel = 'Two by two matrix: you expected a page and it exists, all indexed pages; you expected a page and it does not exist, one, this request; you did not expect a page and it exists, zero; you did not expect a page and none exists, the rest of the web';
+const observations = [
+  [88, 270], [111, 252], [125, 283], [143, 225], [160, 257],
+  [177, 209], [194, 236], [210, 184], [229, 210], [246, 169],
+  [263, 190], [278, 147], [296, 169], [311, 124], [329, 146],
+  [345, 111], [363, 128], [379, 96], [399, 109], [416, 78],
+  [186, 271], [230, 249], [272, 218], [318, 191], [361, 164],
+];
 ---
-<Base lang={lang} page="notfound" title="No such page" description="The address resolves to nothing in this document. The index lists everything that exists." noindex>
-  <article class="doc" lang="en">
-    <DocOpener
-      lang={lang}
-      trail={[
-        { label: '§ Index', href: home },
-        { label: '404', current: true },
-        { label: `Observation · ${n1}`, sep: '·' },
-      ]}
-      numeral="404"
-      title="No such page."
-      lead="The address resolves to nothing in this document. The index lists everything that exists, and it is short enough to read."
-    />
-    <Callout type="cta" title="Way back">
-      <a href={home}>Back to the index <span class="glyph" aria-hidden="true">→</span></a>
-    </Callout>
-    <p class="link-line"><a href={contactRoute('en')} data-mail data-u={mail.u} data-d={mail.d} data-subject="Broken link">Report the broken link <span class="glyph" aria-hidden="true">↗</span></a></p>
-    <Callout type="metrics" title="Readings">
-      <ul>
-        <li><b>0</b><span>Pages at this address</span></li>
-        <li><b>100%</b><span>Indexed addresses that resolve</span></li>
-        <li><b>1</b><span>Request recorded, in the host’s log only</span></li>
-      </ul>
-    </Callout>
-    <figure class="fig" data-width="wide">
-      <figcaption><span class="fig-label">Fig. 404-1 · classification of this request</span><span class="fig-title">One false positive: a page was expected where none exists.</span></figcaption>
-      <div class="fig-matrix" role="img" aria-label={matrixLabel}>
-        <div></div>
-        <div class="fig-matrix-head">Page exists</div>
-        <div class="fig-matrix-head">No page exists</div>
-        <div class="fig-matrix-head" data-row>You expected a page</div>
-        <div class="fig-matrix-cell"><span class="fig-matrix-name">All indexed pages</span><span class="fig-matrix-tag">True positive</span></div>
-        <div class="fig-matrix-cell" data-accent><span class="fig-matrix-count">1</span><span class="fig-matrix-tag">False positive · this request</span></div>
-        <div class="fig-matrix-head" data-row>You did not</div>
-        <div class="fig-matrix-cell"><span class="fig-matrix-count">0</span><span class="fig-matrix-tag">False negative · nothing is hidden</span></div>
-        <div class="fig-matrix-cell"><span class="fig-matrix-name">The rest of the web</span><span class="fig-matrix-tag">True negative</span></div>
-      </div>
-      <p class="fig-source"><b>Source:</b> this request, now. Precision of the index: 100%{dash('en')}every address it lists resolves. Recall: 100%{dash('en')}nothing that exists is missing from it.</p>
-    </figure>
-    <Callout type="aside" title="Limitations">
-      <p>This page cannot tell where the address came from: a typo, an old link, or a page that moved. It records nothing about you beyond the host’s standard log. One missing page is not a trend; {n1}.</p>
-    </Callout>
-    <h2 id="nf-decision">Decision</h2>
-    <p>Return to the index. If a link on this site brought you here, the link is the error, not you{dash('en')}say so and it will be fixed.</p>
-    <p class="label" lang="de">DE · Beobachtung · {n1} · Keine solche Seite. · Die Adresse führt zu nichts in diesem Dokument. Der Index listet alles, was es gibt, und er ist kurz genug zum Lesen. · Abb. 404-1 · Ein falsch Positives: eine Seite wurde erwartet, wo keine ist. · <a href={homeDe} hreflang="de">Zurück zum Index <span class="glyph" aria-hidden="true">→</span></a></p>
-    <DocEnd lang={lang} back={{ href: home, label: 'Index' }} />
+<Base lang="en" page="notfound" title="404 — Out of distribution" description="This page is outside the training distribution. Return to known data." noindex>
+  <article class="notfound" aria-labelledby="nf-title">
+    <div class="nf-kicker"><span>ERROR / 404</span><span>OBSERVATION 01 — OUTLIER DETECTED</span></div>
+    <div class="nf-layout">
+      <header class="nf-copy">
+        <p class="nf-number" aria-hidden="true">404<span class="nf-dot">.</span></p>
+        <h1 id="nf-title">Outside the<br />training distribution.</h1>
+        <p class="nf-lead">Either the URL is wrong, or we've discovered something new.</p>
+        <p class="nf-explain">The page you requested isn't in the dataset. No extrapolation required.</p>
+        <a class="nf-return" href={home}>← <span>Return to known data</span></a>
+      </header>
+      <figure class="nf-figure">
+        <div class="nf-plot-head"><span>FIG. 404—01</span><span>ANOMALY DETECTION / ILLUSTRATIVE</span></div>
+        <svg class="nf-chart" viewBox="0 0 640 380" role="img" aria-labelledby="nf-chart-title nf-chart-desc">
+          <title id="nf-chart-title">A missing page appears as an outlier</title>
+          <desc id="nf-chart-desc">Twenty-five observations form an ascending cluster at left. A single observation marked 404 lies far outside the cluster, at the upper right.</desc>
+          <g class="nf-grid">
+            <path d="M58 44V326H604 M58 114H604 M58 184H604 M58 254H604 M168 44V326 M278 44V326 M388 44V326 M498 44V326" />
+          </g>
+          <path class="nf-axis" d="M58 44V326H604" />
+          <g class="nf-points">
+            {observations.map(([x,y]) => <circle cx={x + 25} cy={y + 15} r="4.5" />)}
+          </g>
+          <path class="nf-trend" d="M78 305L460 63" />
+          <path class="nf-outlier-guide" d="M457 94L538 68" />
+          <circle class="nf-outlier-ring" cx="550" cy="64" r="24" />
+          <circle class="nf-outlier-core" cx="550" cy="64" r="5.5" />
+          <text class="nf-outlier-text" x="550" y="116" text-anchor="middle">404</text>
+          <text class="nf-axis-label" x="58" y="354">KNOWN DATA</text>
+          <text class="nf-axis-label" x="604" y="354" text-anchor="end">UNKNOWN TERRITORY →</text>
+        </svg>
+        <figcaption><span>01 / OBSERVED DISTRIBUTION</span><span class="nf-legend"><i aria-hidden="true"></i> UNEXPECTED OBSERVATION</span></figcaption>
+      </figure>
+    </div>
+    <div class="nf-bottom"><span>MODEL STATUS / WORKING AS INTENDED</span><span>NO PAGE FOUND. NO DATA FABRICATED.</span></div>
+    <p class="nf-de" lang="de">Seite nicht gefunden. Außerhalb der Trainingsverteilung. <a href={homeDe} hreflang="de">Zur deutschen Startseite →</a></p>
   </article>
 </Base>
+
+<style>
+  .notfound{width:100%;padding-block:var(--space-5) var(--space-8)}
+  .nf-kicker,.nf-plot-head,.nf-figure figcaption,.nf-bottom{display:flex;justify-content:space-between;gap:var(--space-2);font-family:var(--font-mono);font-size:var(--t-mono-sm);font-weight:var(--w-medium);letter-spacing:var(--tracking-label);text-transform:uppercase}
+  .nf-kicker{border-top:var(--rule-open);padding-top:var(--space-2);color:var(--ink-2)}
+  .nf-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:var(--space-5);align-items:center;min-height:min(72vh,740px);padding-block:var(--space-8)}
+  .nf-copy{min-width:0}
+  .nf-number{font-family:var(--font-display);font-weight:var(--w-wordmark);font-variant-numeric:var(--num);font-size:clamp(6rem,17vw,15rem);letter-spacing:-.085em;line-height:.85;margin:0 0 var(--space-6)}
+  .nf-dot{color:var(--accent-01)}
+  .nf-copy h1{font-family:var(--font-display);font-size:clamp(2rem,3.5vw,3.75rem);line-height:var(--lh-tight);letter-spacing:var(--tracking-tight);font-weight:var(--w-display);margin:0 0 var(--space-3)}
+  .nf-lead{font-size:var(--t-lead);line-height:1.45;max-width:33ch;margin:0 0 var(--space-2)}
+  .nf-explain{color:var(--ink-2);max-width:42ch;margin:0 0 var(--space-5);font-size:var(--t-small)}
+  .nf-return{display:inline-flex;align-items:center;gap:var(--space-2);padding:var(--space-2) 0;border-bottom:2px solid var(--accent-01);font-weight:var(--w-semibold);text-decoration:none;color:var(--ink);transition:gap var(--dur) var(--ease)}
+  .nf-return:hover{gap:var(--space-3);color:var(--accent-01)}
+  .nf-return:focus-visible{outline:2px solid var(--accent-01);outline-offset:5px}
+  .nf-figure{margin:0;min-width:0;border-top:var(--rule-open);border-bottom:var(--rule-open);padding-block:var(--space-2)}
+  .nf-plot-head{color:var(--ink-2)}
+  .nf-chart{display:block;width:100%;height:auto;overflow:visible;margin-block:var(--space-3)}
+  .nf-grid path{stroke:var(--rule-c);stroke-width:1;fill:none;opacity:.65}
+  .nf-axis{stroke:var(--ink-2);stroke-width:1.5;fill:none}
+  .nf-points circle{fill:var(--ink-2);opacity:.75}
+  .nf-trend{stroke:var(--ink-2);stroke-width:1.5;stroke-dasharray:5 7;fill:none;opacity:.55}
+  .nf-outlier-guide{stroke:var(--accent-01);stroke-width:1.5;fill:none}
+  .nf-outlier-ring{fill:none;stroke:var(--accent-01);stroke-width:2}
+  .nf-outlier-core{fill:var(--accent-01)}
+  .nf-outlier-text{fill:var(--accent-01);font-family:var(--font-mono);font-size:21px;font-weight:700}
+  .nf-axis-label{fill:var(--ink-2);font-family:var(--font-mono);font-size:12px;letter-spacing:.06em}
+  .nf-figure figcaption{border-top:var(--rule);padding-top:var(--space-2);color:var(--ink-2)}
+  .nf-legend{display:inline-flex;align-items:center;gap:var(--space-1)}
+  .nf-legend i{width:9px;height:9px;border:2px solid var(--accent-01);border-radius:50%;display:inline-block}
+  .nf-bottom{border-top:var(--rule);padding-top:var(--space-2);color:var(--ink-2)}
+  .nf-de{font-size:var(--t-small);color:var(--ink-2);margin-top:var(--space-4)}
+  .nf-de a{color:var(--ink);text-underline-offset:3px}
+  @media(max-width:900px){.nf-layout{grid-template-columns:1fr;gap:var(--space-8);min-height:0}.nf-number{font-size:clamp(6rem,24vw,12rem);margin-bottom:var(--space-4)}.nf-figure{max-width:750px}}
+  @media(max-width:560px){.notfound{padding-block:var(--space-3) var(--space-6)}.nf-kicker,.nf-plot-head,.nf-figure figcaption,.nf-bottom{flex-wrap:wrap;font-size:var(--t-mono-sm)}.nf-layout{padding-block:var(--space-6);gap:var(--space-6)}.nf-number{font-size:clamp(6rem,27vw,9rem)}.nf-copy h1{font-size:clamp(2rem,8vw,3rem)}}
+  @media(prefers-reduced-motion:reduce){.nf-return{transition:none}}
+</style>
