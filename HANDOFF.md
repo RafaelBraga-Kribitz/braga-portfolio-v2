@@ -44,6 +44,8 @@ Each is recorded where it lives in the code; reverse any of them there.
 
 15. **Rules open, never close** (owner, 24 Oct 2026): a rule opens what follows it, nothing closes with a rule, and the first block under the shell has none. Every page was measured before the change (257 pairs of rules facing each other across empty space, on 75 pages at 390 and 1280) and after (none). Gate G-16 keeps it; `BUILD-BRIEF.md` §6a item 11.
 
+16. **Design system v2.1** (26 Oct 2026): `design-system/` is now the design system of record. Every owner decision since the handoff is a dated entry D-036–D-054 in `design-system/DECISIONS.md`, with the patterns added after the handoff and the rules for README banners, architecture diagrams and charts; `design-system/tokens.json` carries the tokens to the tools outside the site (`braga-portfolio-docs`, `bk-viz`).
+
 ## 3. What is left, in order
 
 1. **German editing pass** on every `/de/` document and the German chrome (`src/lib/i18n.ts`). The prompt the build used is the `german` stage in `docs/workflows/pages.workflow.js`: grammar and cases, Austrian forms (Jänner, de-AT numbers and dates, „ “ quotes), neutral formal register, meaning identical to EN, compounds that hyphenate at 320px.

@@ -36,6 +36,8 @@ source material: never edit it.
 
 ## 3. Settled decisions (summary; the full text is in handoff/HANDOFF.md)
 
+`design-system/DECISIONS.md` (v2.1, 26 Oct 2026) records every change below against the handoff as D-036–D-054 and outranks `handoff/`.
+
 - Role: **Marketing Data Analyst**. Wordmark **BRAGA**, uppercase everywhere, weight 800, letter-spacing −0.07em. The name "Rafael Braga-Kribitz" is title case with the hyphen.
 - Accent: ultramarine, `--accent-01` = #2F4BE0 light / #7C93FF dark. **One accent per section** (owner, 22 Oct 2026; replaces D-025's one per view): each section — the cover, each `.section` of an index page, a document's opener and metric strip, each h2 section of a document, a figure, a bench, the end of a document — spends the accent on at most one element, the one the reader should see first there: its earned figure, or its primary action (`.cta`, accent fill with `--on-accent` text). Gate G-15 enforces it. `--accent-02` is retired. Blue "moment" blocks use the `.dark` inversion.
 - Neutrals (light): surface #E4E6EA, surface-2 #DCDEE2, surface-3 #D4D6DA, ink #26282C, ink-2 = ink-3 #5A5C61, mid #9EA0A5 (hairlines only, never text), rule #C2C4CA. Dark: #191A1D / #2C2D30 / #484A4D / ink #F3F5F9 / ink-2 #CED0D4 / ink-3 #97999D / mid #7E8084 / rule #393A3D.

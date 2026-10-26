@@ -30,6 +30,7 @@
 .markdown-reading-view ul,
 .markdown-reading-view ol { padding-left: 24px; display: grid; gap: var(--flow-related); }
 .markdown-reading-view ol { list-style: decimal-leading-zero; }
+.markdown-reading-view li { min-width: 0; }
 .markdown-reading-view li::marker { color: var(--ink-3); font-variant-numeric: var(--num); }
 .markdown-reading-view strong { font-weight: 700; }
 .markdown-reading-view code { font: 400 max(12px, 0.9em) / 1 var(--font-mono); background: var(--surface-2); padding: 1px 4px; font-variant-numeric: var(--num); }
@@ -120,6 +121,8 @@
 .markdown-reading-view pre,
 .markdown-reading-view .code pre { font: 400 var(--t-mono) / 1.7 var(--font-mono); padding: 24px; margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 2; min-width: 0; max-width: 100%; font-variant-numeric: var(--num); }
 .markdown-reading-view pre { background: var(--surface-2); border-top: var(--rule); }
+.markdown-reading-view pre,
+.markdown-reading-view .code pre { white-space: break-spaces; }
 .markdown-reading-view pre code,
 .markdown-reading-view .code pre code { background: none; padding: 0; font: inherit; }
 .markdown-reading-view figure.fig { display: grid; gap: 16px; border-top: var(--hairline); padding-top: 16px; min-width: 0; }
@@ -165,3 +168,15 @@
 .markdown-reading-view .math math { font-size: 1.2em; display: block math; max-width: 100%; }
 .markdown-reading-view .eq-no { font: 400 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: var(--tracking-label); color: var(--ink-3); font-variant-numeric: var(--num); white-space: nowrap; }
 .markdown-reading-view p math { font-size: 1.05em; }
+.markdown-reading-view :is(p, li, td, th) math:not([display="block"]) { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+.markdown-reading-view math :is(msub, msup, msubsup, munder, mover, munderover, mmultiscripts) > :not(:first-child),
+.markdown-reading-view math mroot > :last-child,
+.markdown-reading-view math:not([display="block"]) mfrac > *,
+.markdown-reading-view math mfrac mfrac > *,
+.markdown-reading-view math :is(msub, msup, msubsup, munder, mover, munderover) > mfrac:not(:first-child) > *,
+.markdown-reading-view math :is(msub, msup, msubsup, munder, mover, munderover) > :not(:first-child) mfrac > * { font-size: max(12px, 0.71em); }
+.markdown-reading-view .noteref { font: 400 max(12px, 0.75em) / 0 var(--font-mono); color: var(--ink); vertical-align: super; margin-left: 2px; font-variant-numeric: var(--num); }
+.markdown-reading-view .sidenote { font-size: var(--t-small); line-height: 1.5; color: var(--ink-2); text-wrap: pretty; }
+.markdown-reading-view .sidenote .ref { font-family: var(--font-mono); color: var(--ink); margin-right: 6px; font-variant-numeric: var(--num); }
+.markdown-reading-view .sidenote[data-place="margin"] { display: none; }
+.markdown-reading-view .sidenote[data-place="inline"] { display: block; margin: 12px 0; padding-left: 16px; border-left: 2px solid var(--ink); }
