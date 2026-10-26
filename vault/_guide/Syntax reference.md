@@ -24,10 +24,16 @@ Markdown pipeline in `astro.config.mjs`.
   date (a daily build puts it online).
 - Sub-folders inside a language folder are fine (`Notes/en/2026/…`). In
   `Notes/`, the folders are the library's index: `<area>/<topic>/<subtopic>/`,
-  the area named with its number (`04_calculus_optimization`). The area
-  opens a section of `/<lang>/notes/`, each note is coded `<area>-<nnn>` in
-  topic, subtopic and title order, and folder names read as titles
-  (`discrete_random_variables_drvs` → "Discrete random variables (DRVs)").
+  the area named with its number (`04_calculus_optimization`). Every folder
+  is a page: `/<lang>/notes/` lists the areas, an area its topics, a topic
+  its subtopics, a subtopic its notes, 12 rows a page and then numbered
+  pages. A code is a position on those pages: area 04, its second topic
+  04-02, that topic's first subtopic 04-02-01, the subtopic's fifth note
+  04-02-01-05 (notes in alphabetical order of their titles). Folder names
+  read as titles (`discrete_random_variables_drvs` → "Discrete random
+  variables (DRVs)"; awkward ones are written out in
+  `src/lib/collections.ts`), and the title, kebab-cased, is the folder's
+  URL. A note keeps `/<lang>/notes/<slug>/`.
 - Two notes with the same file name in different folders collide on one
   URL: give one a `slug`. `npm run vault:check` names the pair.
 - The **slug** (the URL) is the file name in lower-case kebab-case, unless
