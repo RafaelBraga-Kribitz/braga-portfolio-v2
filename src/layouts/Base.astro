@@ -30,6 +30,10 @@
 // choice it follows the OS while the page is open (its aria-label names
 // the theme in force).
 //
+// Share title: the same string as <title>, so a LinkedIn or X preview
+// names the person, not only the page (the home page's own title is the
+// role, "Marketing Data Analyst").
+//
 // Share card and favicons (HANDOFF 24, AUDIT P-10): public/share-card.png
 // and public/favicon-{32,180}.png, rendered by `npm run assets`
 // (scripts/assets/build-assets.mjs). Every URL here goes through
@@ -119,7 +123,7 @@ const shareAlt = `${site.wordmark} · ${site.name} · ${site.role[lang]}`;
     <link rel="apple-touch-icon" sizes="180x180" href={withBase('/favicon-180.png')}>
     <meta property="og:type" content={ogType}>
     <meta property="og:site_name" content={site.name}>
-    <meta property="og:title" content={title}>
+    <meta property="og:title" content={`${title} · ${site.name}`}>
     <meta property="og:description" content={description}>
     <meta property="og:url" content={canonical}>
     <meta property="og:locale" content={locale[lang]}>
@@ -128,7 +132,7 @@ const shareAlt = `${site.wordmark} · ${site.name} · ${site.role[lang]}`;
     {!ogImage && <Fragment><meta property="og:image:type" content="image/png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"></Fragment>}
     <meta property="og:image:alt" content={ogImage?.alt || shareAlt}>
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content={title}>
+    <meta name="twitter:title" content={`${title} · ${site.name}`}>
     <meta name="twitter:description" content={description}>
     <meta name="twitter:image" content={shareCard}>
     <meta name="twitter:image:alt" content={ogImage?.alt || shareAlt}>
