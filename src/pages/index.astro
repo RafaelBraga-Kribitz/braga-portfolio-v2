@@ -8,11 +8,18 @@
 // /en/), so it reads as part of the site for the moment it is seen.
 import '../styles/global.css';
 import { site } from '../lib/site';
-import { absolute, alternates, route } from '../lib/routes';
+import { absolute, alternates, route, withBase } from '../lib/routes';
 import { themeColor, PREPAINT } from '../lib/theme';
 
 const en = route('home', 'en');
 const de = route('home', 'de');
+// The bare address is the one people paste into a post, and LinkedIn does
+// not follow a meta refresh: the stub carries the share tags of the home
+// page itself (same card as Base.astro), pointed at /en/.
+const description = 'Portfolio of Rafael Braga-Kribitz, Marketing Data Analyst. English and German.';
+const shareTitle = `${site.role.en} · ${site.name}`;
+const shareCard = absolute('/share-card.png');
+const shareAlt = `${site.wordmark} · ${site.name} · ${site.role.en}`;
 ---
 <!doctype html>
 <html lang="en">
@@ -24,9 +31,26 @@ const de = route('home', 'de');
     <script is:inline set:html={PREPAINT}></script>
     <meta http-equiv="refresh" content={`0; url=${en}`}>
     <title>{site.name}</title>
-    <meta name="description" content="Portfolio of Rafael Braga-Kribitz, Marketing Data Analyst. English and German.">
+    <meta name="description" content={description}>
     <link rel="canonical" href={absolute(en)}>
     {alternates('home').map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+    <link rel="icon" type="image/png" sizes="32x32" href={withBase('/favicon-32.png')}>
+    <link rel="apple-touch-icon" sizes="180x180" href={withBase('/favicon-180.png')}>
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content={site.name}>
+    <meta property="og:title" content={shareTitle}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={absolute(en)}>
+    <meta property="og:image" content={shareCard}>
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content={shareAlt}>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content={shareTitle}>
+    <meta name="twitter:description" content={description}>
+    <meta name="twitter:image" content={shareCard}>
+    <meta name="twitter:image:alt" content={shareAlt}>
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
