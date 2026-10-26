@@ -1,561 +1,239 @@
 ---
-publish: false
-date: '2026-04-16'
+publish: true
+date: '2026-10-26'
 tags:
 - machine-learning
 ---
 
-# E_step_responsibilities
-
-E-Step (Responsibilities) We are working on the **Ridge regression solution**, defined by
+# E-Step (Responsibilities)
 
 $$
-\hat{w}_{\mathrm{ridge}}=(X^\top X+\lambda I)^{-1}X^\top y,
+\gamma_{ik} = \frac{\pi_k \, \mathcal{N}(x_i \mid \mu_k, \Sigma_k)}{\sum_{j=1}^{K} \pi_j \, \mathcal{N}(x_i \mid \mu_j, \Sigma_j)}
 $$
 
-where $X$ is the design matrix, $y$ is the target vector, $I$ is the identity matrix, and $\lambda \ge 0$ is the penalty strength. Ridge regression adds an $L_2$ penalty to the least-squares objective, shrinks coefficients toward zero, and stabilizes estimation when $X^\top X$ is ill-conditioned or nearly singular. When $\lambda=0$, the solution reduces to ordinary least squares, OLS, assuming $X^\top X$ is invertible.
+, where $x_i$ is observation $i$ of $n$, $K$ the number of Gaussian components, $\pi_k$ the mixing weight ($\pi_k \ge 0$, $\sum_k \pi_k = 1$), $\mu_k$ and $\Sigma_k$ the mean and covariance of component $k$ at the current iteration; $\gamma_{ik} = p(z_i = k \mid x_i, \theta)$, written $r_{ik}$ in the M-step notes.
 
 ## Deep Breakdown
 
-Ridge regression is a regularized version of linear regression. It starts from the ordinary least-squares idea, choose coefficients that fit the data well, but adds a penalty that discourages large coefficient values. In standard linear regression, the coefficient vector $w$ is chosen by minimizing the residual sum of squares:
-
-$$
-\|y-Xw\|_2^2
-$$
-
-This works well in many settings, but it becomes unstable when predictors are strongly correlated, when the design matrix is close to singular, or when there are many predictors relative to the number of observations. In those cases, the OLS solution can have very large coefficients, high variance, and poor out-of-sample performance. Ridge regression fixes this by adding an $L_2$ penalty:
-
-$$
-\lambda \|w\|_2^2
-$$
-
-This changes the objective from pure data fit to a tradeoff between fit and coefficient size.
-
-The penalized objective becomes:
-
-$$
-\|y-Xw\|_2^2+\lambda\|w\|_2^2
-$$
-
-or, depending on scaling convention, an averaged form plus penalty.
-
-The penalty term does two things:
-
-- it shrinks coefficients toward zero,
-- it makes the optimization better conditioned.
-
-This improves numerical stability and often improves generalization by reducing variance.
-
-The closed-form Ridge solution is:
-
-$$
-\hat{w}_{\mathrm{ridge}}=(X^\top X+\lambda I)^{-1}X^\top y
-$$
-
-This looks very similar to the OLS solution:
-
-$$
-\hat{w}_{\mathrm{OLS}}=(X^\top X)^{-1}X^\top y
-$$
-
-The only difference is the added matrix $\lambda I$. But that difference is profound. Adding $\lambda I$ shifts the diagonal of $X^\top X$, which makes the matrix more stable and invertible for $\lambda>0$ under the standard full-feature penalty setup. This is why Ridge is especially useful under **multicollinearity**, where predictors are strongly correlated. In that case, OLS coefficients can become extremely unstable because the model has many nearly equivalent ways to explain the same variation. Ridge reduces that instability by shrinking the coefficient vector. Ridge is also one of the cleanest examples of the **bias-variance tradeoff**:
-
-- OLS is unbiased under the classical linear model assumptions, but can have high variance,
-- Ridge introduces bias by shrinking coefficients,
-- but this can substantially reduce variance,
-- so total prediction error can improve.
-
-In DA/DS work, Ridge regression is common in:
-
-- high-dimensional regression,
-- models with correlated predictors,
-- forecasting pipelines,
-- baseline predictive modeling,
-- situations where coefficient stability matters more than exact unbiasedness.
-
-Ridge does not usually set coefficients exactly to zero. It shrinks them continuously. That distinguishes it from Lasso, which can perform variable selection by driving some coefficients exactly to zero.
+What it tells me *(Situation Awareness)*:
+A Gaussian mixture assumes each observation was produced by one of $K$ hidden components, but the label $z_i$ is never observed. The E-step fills that gap with probabilities: holding the current parameters fixed, it applies Bayes' theorem to every point and every component. The prior is the mixing weight $\pi_k$ (how common the component is), the likelihood is the Gaussian density $\mathcal{N}(x_i \mid \mu_k, \Sigma_k)$ (how well the component explains the point), and the denominator is the mixture density at $x_i$, which makes each row of the $n \times K$ responsibility matrix sum to $1$. The result is a soft assignment: a point midway between two clusters gets, for example, $0.60$ and $0.40$ instead of a hard label. These responsibilities are the expected values of the hidden one-hot indicators, and the M-step uses them as weights to re-estimate $\pi_k$, $\mu_k$ and $\Sigma_k$. Alternating the two steps never decreases the log-likelihood. In DA/DS: responsibilities are the segment-membership probabilities reported to the business, the signal for flagging ambiguous customers (max responsibility below a threshold), the input to anomaly scoring (a low denominator means the point fits no component), and the soft counterpart of the K-means assignment step.
 
 ## Flowchart
 
 ```mermaid
 flowchart TD
-    A["Start with design matrix X and target vector y"] --> B["Write linear model y_hat = Xw"]
-    B --> C["Define least-squares loss ||y - Xw||^2"]
-    C --> D["Add L2 penalty lambda ||w||^2"]
-    D --> E["Form Ridge objective ||y - Xw||^2 + lambda ||w||^2"]
-    E --> F["Differentiate with respect to w"]
-    F --> G["Set gradient equal to zero"]
-    G --> H["Solve (X'X + lambda I) w_hat = X'y"]
-    H --> I["Interpret coefficients as shrunk and stabilized estimates"]
+    A["Current parameters: pi_k, mu_k, Sigma_k"] --> B["For each point x_i and component k"]
+    B --> C["Log numerator: ln pi_k + ln N(x_i | mu_k, Sigma_k)"]
+    C --> D["Log denominator: log-sum-exp over k"]
+    D --> E["gamma_ik = exp(numerator - denominator)"]
+    E --> F["Rows sum to 1: soft assignment"]
+    F --> G["N_k = sum over i of gamma_ik"]
+    G --> H["M-step: update pi_k, mu_k, Sigma_k"]
+    H --> I{"Log-likelihood gain < tolerance?"}
+    I -->|No| A
+    I -->|Yes| J["Final responsibilities = segment probabilities"]
 ```
 
 ## Real-world use
 
 ### Where it is used
 
-Ridge regression is used when fitting linear models with many correlated predictors, or when OLS becomes unstable due to multicollinearity or near-singular design matrices.
+Every EM fit of a Gaussian mixture (`sklearn.mixture.GaussianMixture`, R `mclust`), where `predict_proba` returns exactly these responsibilities; customer and behavioural segmentation with overlapping groups; speaker identification and background models in audio; colour-based image segmentation; anomaly detection on the mixture density; and, with other component densities, latent class models, hidden Markov models (forward-backward is an E-step) and topic models.
 
 ### Problem it solves
 
-It solves the problem that OLS can produce large, unstable coefficients when the predictor matrix is ill-conditioned. This instability leads to high variance and weak generalization.
+Fitting a mixture by maximum likelihood is hard because the log of a sum, $\sum_i \ln \sum_k \pi_k \mathcal{N}(x_i \mid \mu_k, \Sigma_k)$, has no closed-form maximiser. If the component labels were known, each component could be fitted separately with ordinary weighted means and covariances. The E-step supplies the best available substitute for the missing labels: their posterior probabilities under the current model.
 
 ### How it solves the problem
 
-It adds an $L_2$ penalty on the coefficient vector, which discourages large weights and modifies the normal equations by replacing $X^\top X$ with $X^\top X+\lambda I$. This stabilizes the inversion and shrinks the estimates.
+Bayes' theorem with $p(z_i = k) = \pi_k$ and $p(x_i \mid z_i = k) = \mathcal{N}(x_i \mid \mu_k, \Sigma_k)$ gives $p(z_i = k \mid x_i) = \gamma_{ik}$ directly. With these weights fixed, the expected complete-data log-likelihood $\sum_i \sum_k \gamma_{ik} [\ln \pi_k + \ln \mathcal{N}(x_i \mid \mu_k, \Sigma_k)]$ separates by component and has closed-form maximisers: the M-step. Because the E-step makes the lower bound on the log-likelihood touch the true log-likelihood at the current parameters, each EM iteration can only increase it or leave it unchanged.
 
 ### Example in a business
 
-Suppose a marketing analyst predicts weekly sales using many correlated media variables, impressions, clicks, spend, reach, frequency, and lagged variants. Because these predictors overlap heavily, OLS coefficients may swing wildly and become hard to trust. Ridge regression shrinks and stabilizes the coefficients, producing a model that is often more robust for forecasting, even if individual coefficients become less directly interpretable in a causal sense.
+An analyst segments 1,000 customers on two standardised behaviour scores (basket size, visit frequency) with a two-component mixture. After EM converges, the responsibilities give each customer a membership probability; the effective segment sizes are $N_1 = 569.1$ and $N_2 = 430.9$. 17.5 % of customers have a maximum responsibility below $0.9$: they sit in the overlap, so the CRM team sends them the blended offer instead of forcing a hard label that carries more than a 10 % chance of being wrong for each of them.
 
 ## The formula, piece by piece
 
-| Symbol | Meaning |
-| --- | --- |
-| $X$ | Design matrix with $n$ rows and $p$ columns |
-| $y$ | Target vector of length $n$ |
-| $w$ | Coefficient vector of length $p$ |
-| $\hat{w}_{\mathrm{ridge}}$ | Ridge-estimated coefficient vector |
-| $X^\top$ | Transpose of $X$ |
-| $X^\top X$ | Gram matrix of predictors |
-| $I$ | $p \times p$ identity matrix |
-| $\lambda$ | Ridge penalty strength, with $\lambda \ge 0$ |
-| $\|w\|_2^2$ | Squared Euclidean norm of the coefficient vector |
-
-Penalized Ridge objective:
-
-$$
-J(w)=\|y-Xw\|_2^2+\lambda\|w\|_2^2
-$$
-
-Expanded penalty term:
-
-$$
-\|w\|_2^2=w^\top w
-$$
-
-Canonical Ridge normal-equation form:
-
-$$
-(X^\top X+\lambda I)\hat{w}_{\mathrm{ridge}}=X^\top y
-$$
-
-Closed-form Ridge solution:
-
-$$
-\hat{w}_{\mathrm{ridge}}=(X^\top X+\lambda I)^{-1}X^\top y
-$$
-
-OLS special case:
-
-$$
-\lambda=0 \implies \hat{w}_{\mathrm{ridge}}=\hat{w}_{\mathrm{OLS}}
-$$
-
-Prediction formula:
-
-$$
-\hat{y}=X\hat{w}_{\mathrm{ridge}}
-$$
+- $\gamma_{ik}$: responsibility of component $k$ for point $i$; in $[0, 1]$, and $\sum_{k=1}^{K} \gamma_{ik} = 1$ for every $i$
+- $\pi_k$: prior probability of component $k$; a large $\pi_k$ pulls ambiguous points towards $k$
+- $\mathcal{N}(x_i \mid \mu_k, \Sigma_k) = (2\pi)^{-d/2} |\Sigma_k|^{-1/2} \exp\bigl(-\tfrac{1}{2}(x_i - \mu_k)^\top \Sigma_k^{-1} (x_i - \mu_k)\bigr)$: the component likelihood in $d$ dimensions; falls with the Mahalanobis distance from $\mu_k$
+- $\pi_k \mathcal{N}(x_i \mid \mu_k, \Sigma_k)$: the joint $p(x_i, z_i = k)$
+- $\sum_j \pi_j \mathcal{N}(x_i \mid \mu_j, \Sigma_j)$: the mixture density $p(x_i)$; its logarithm summed over $i$ is the log-likelihood that EM increases
+- $N_k = \sum_i \gamma_{ik}$: effective number of points in component $k$; $\sum_k N_k = n$
+- Hard limit: if all $\gamma_{ik} \in \{0, 1\}$, the E-step reduces to the K-means assignment step
+- Equal-density case: when two components have equal density at $x_i$, $\gamma_{ik} = \pi_k / (\pi_k + \pi_j)$, the prior alone decides
 
 ## The formula in words
 
-Start with the usual linear regression fit term, the squared residual size:
-
-$$
-\|y-Xw\|_2^2
-$$
-
-Then add a penalty proportional to the squared size of the coefficient vector:
-
-$$
-\lambda\|w\|_2^2
-$$
-
-The parameter $\lambda$ controls how strongly large coefficients are discouraged.
-
-- If $\lambda=0$, there is no penalty, and we get ordinary least squares.
-- If $\lambda$ is larger, coefficients are shrunk more strongly toward zero.
-
-The solution modifies the normal equations by adding $\lambda I$ to $X^\top X$. This stabilizes the matrix inversion and leads to smaller, less variable coefficients.
+"For each point, weight every component's density at that point by how common the component is, then divide by the total so the weights add up to one; the result is the probability that the point came from each component." Tiny example: with $\pi = (0.6, 0.4)$ and unit-variance components at $0$ and $3$, the point $x = 1.5$ is equally far from both means, so the densities are equal and the responsibilities are just the weights, $0.6$ and $0.4$.
 
 ## Critical Concepts
 
-- **Ridge is OLS plus an $L_2$ penalty.** It changes the regression objective by penalizing coefficient magnitude.
-- **$\lambda$ controls shrinkage strength.** Larger $\lambda$ means stronger shrinkage.
-- **Ridge improves stability under multicollinearity.** Correlated predictors make OLS unstable, and Ridge helps control that.
-- **Ridge trades bias for variance reduction.** This is the classic bias-variance tradeoff.
-- **Ridge usually does not set coefficients exactly to zero.** It shrinks continuously rather than performing hard selection.
-- **The closed-form solution resembles the normal equations.** The only change is adding $\lambda I$.
-- **Feature scaling matters.** Because the penalty acts on coefficient magnitude, predictors should usually be standardized before Ridge.
+- **It is Bayes' theorem:** prior $\pi_k$ times likelihood, divided by the evidence $p(x_i)$. See [[bayes_theorem]] and [[multivariate_gaussian_distribution]].
+- **Compute in log space:** in many dimensions or for far-away points every density underflows to $0$ and $0/0$ gives NaN. Compute $\ln \pi_k + \ln \mathcal{N}(\cdot)$, subtract the row's log-sum-exp, then exponentiate. Every library does this. See [[log_sum_exp_trick_prevents_underflowoverflow]].
+- **Soft versus hard:** K-means assigns each point wholly to the nearest centre; the E-step splits it in proportion to posterior probability, and the covariance makes "nearest" mean Mahalanobis rather than Euclidean distance. See [[k_means_objective_wcss]].
+- **Feeds every M-step update:** $\pi_k = N_k / n$, $\mu_k = \sum_i \gamma_{ik} x_i / N_k$, $\Sigma_k = \sum_i \gamma_{ik} (x_i - \mu_k)(x_i - \mu_k)^\top / N_k$. See [[effective_component_size]], [[m_step_weights_update]], [[m_step_means_update]] and [[m_step_covariance_update]].
+- **Monotone log-likelihood:** each E-step plus M-step never decreases $\sum_i \ln p(x_i)$; a decrease in practice signals a bug, usually in the E-step normalisation. See [[log_likelihood_objective]] and [[latent_variable_expected_log_likelihood]].
+- **Collapse risk:** a component whose responsibilities concentrate on one point drives $\Sigma_k \to 0$ and the likelihood to infinity; a small ridge on the covariance (`reg_covar`) prevents it.
+- **Local optima:** responsibilities depend on the starting parameters; several initialisations (`n_init`) and BIC-based choice of $K$ are standard. The mixture itself is described in [[mixture_density]].
 
 ## Step-by-step calculation (tiny example)
 
-Consider a simple regression with intercept and one predictor.
+*Two 1-D components: $\pi = (0.6, 0.4)$, $\mu = (0, 3)$, $\sigma = (1, 1)$. Responsibilities for $x = 1$.*
 
-Design matrix:
+*Step 1: Component densities*
+$\mathcal{N}(1 \mid 0, 1) = \tfrac{1}{\sqrt{2\pi}} e^{-1/2} = 0.398942 \times 0.606531 = 0.241971$; $\mathcal{N}(1 \mid 3, 1) = 0.398942 \times e^{-2} = 0.053991$.
 
-$$
-X=
-\begin{bmatrix}
-1 & 1\\
-1 & 2\\
-1 & 3
-\end{bmatrix}
-$$
+*Step 2: Weight by the priors*
+$0.6 \times 0.241971 = 0.145182$; $0.4 \times 0.053991 = 0.021596$.
 
-Target vector:
+*Step 3: Mixture density (denominator)*
+$p(x = 1) = 0.145182 + 0.021596 = 0.166778$.
 
-$$
-y=
-\begin{bmatrix}
-1\\
-2\\
-2
-\end{bmatrix}
-$$
+*Step 4: Normalise*
+$\gamma_{1} = 0.145182 / 0.166778 = 0.8705$; $\gamma_{2} = 0.021596 / 0.166778 = 0.1295$; the two sum to $1$.
 
-Choose penalty strength:
-
-$$
-\lambda=1
-$$
-
-We compute:
-
-$$
-\hat{w}_{\mathrm{ridge}}=(X^\top X+\lambda I)^{-1}X^\top y
-$$
-
-### Step 1, compute $X^\top X$ From the normal-equation setup
-
-$$
-X^\top X=
-\begin{bmatrix}
-3 & 6\\
-6 & 14
-\end{bmatrix}
-$$
-
-### Step 2, compute $X^\top y$
-
-$$
-X^\top y=
-\begin{bmatrix}
-5\\
-11
-\end{bmatrix}
-$$
-
-### Step 3, add the Ridge penalty term Since
-
-$$
-I=
-\begin{bmatrix}
-1 & 0\\
-0 & 1
-\end{bmatrix}
-$$
-
-we get:
-
-$$
-X^\top X+\lambda I=
-\begin{bmatrix}
-3 & 6\\
-6 & 14
-\end{bmatrix}
-+
-\begin{bmatrix}
-1 & 0\\
-0 & 1
-\end{bmatrix}
-=
-\begin{bmatrix}
-4 & 6\\
-6 & 15
-\end{bmatrix}
-$$
-
-### Step 4, invert the penalized matrix The determinant is
-
-$$
-(4)(15)-(6)(6)=60-36=24
-$$
-
-So:
-
-$$
-(X^\top X+\lambda I)^{-1}
-=
-\frac{1}{24}
-\begin{bmatrix}
-15 & -6\\
--6 & 4
-\end{bmatrix}
-$$
-
-### Step 5, multiply by $X^\top y$
-
-$$
-\hat{w}_{\mathrm{ridge}}
-=
-\frac{1}{24}
-\begin{bmatrix}
-15 & -6\\
--6 & 4
-\end{bmatrix}
-\begin{bmatrix}
-5\\
-11
-\end{bmatrix}
-$$
-
-First compute the matrix-vector product:
-
-$$
-\begin{bmatrix}
-15\cdot 5 + (-6)\cdot 11\\
--6\cdot 5 + 4\cdot 11
-\end{bmatrix}
-=
-\begin{bmatrix}
-75-66\\
--30+44
-\end{bmatrix}
-=
-\begin{bmatrix}
-9\\
-14
-\end{bmatrix}
-$$
-
-Now divide by 24:
-
-$$
-\hat{w}_{\mathrm{ridge}}
-=
-\begin{bmatrix}
-\frac{9}{24}\\
-\frac{14}{24}
-\end{bmatrix}
-=
-\begin{bmatrix}
-0.375\\
-0.5833
-\end{bmatrix}
-$$
-
-### Interpretation The Ridge coefficients are
-
-- intercept: 0.375
-- slope: about 0.5833 Compared with OLS, the coefficients are altered by the penalty.
-
-The solution is more stable because the penalized matrix is better conditioned.
-
-### Tiny plain-language reading
-
-Ridge keeps the model fitting the data, but it pulls the coefficients away from extreme values to make the regression more stable.
+*Step 5: Read it*
+The point is one unit from component 1 and two units from component 2; the density ratio is $e^{-1/2} / e^{-2} = e^{1.5} = 4.48$ and the prior ratio $1.5$, so the posterior odds are $4.48 \times 1.5 = 6.72$, i.e. $6.72 / 7.72 = 0.8705$ for component 1.
 
 ## Code examples
 
-### Beginner friendly Example \[Python\])
+### Beginner example (Python)
 
-```markdown
-import numpy as np # Ridge regression solution for a simple regression with intercept and one feature
-X = np.array([ [1, 1], [1, 2], [1, 3]
-], dtype=float) y = np.array([1, 2, 2], dtype=float) lambda_value = 1.0
-identity_matrix = np.eye(X.shape[1]) ridge_weights = np.linalg.inv(X.T @ X + lambda_value * identity_matrix) @ (X.T @ y) print("Ridge weights:")
-print(ridge_weights)
+```python
+import numpy as np
+from scipy.stats import norm
+
+# Two 1-D Gaussian components: weights, means, standard deviations
+pi = np.array([0.6, 0.4])
+mu = np.array([0.0, 3.0])
+sd = np.array([1.0, 1.0])
+
+x = np.array([-1.0, 1.0, 1.5, 2.0, 4.0])
+
+# E-step: weighted density of each point under each component ...
+weighted = pi * norm.pdf(x[:, None], mu, sd)        # shape (n, K)
+# ... normalised across components so each row sums to 1
+gamma = weighted / weighted.sum(axis=1, keepdims=True)
+
+print("   x   pi*N(x|comp 1)  pi*N(x|comp 2)   gamma_1  gamma_2")
+for xi, w, g in zip(x, weighted, gamma):
+    print(f"{xi:>4.1f}   {w[0]:>13.6f}  {w[1]:>14.6f}   {g[0]:>7.4f}  {g[1]:>7.4f}")
+
+print("\nRows sum to 1:", np.allclose(gamma.sum(axis=1), 1))
+print("Effective counts N_k = sum_i gamma_ik:", np.round(gamma.sum(axis=0), 4))
+
+# Log-likelihood of the data under the current parameters (EM never decreases it)
+print("log-likelihood:", round(float(np.log(weighted.sum(axis=1)).sum()), 4))
 ```
 
-Explanation
-:
-
-- `X.T @ X` computes the predictor cross-product matrix.
-- `lambda_value * identity_matrix` adds the Ridge penalty.
-- The inverse of the penalized matrix is then multiplied by `X.T @ y`.
-
-Manual check:
-
-$$
-\hat{w}_{\mathrm{ridge}}=
-\begin{bmatrix}
-0.375\\
-0.5833
-\end{bmatrix}
-$$
-
-for this setup.
-
-### Beginner friendly Example \[R\])
+### Beginner example (R)
 
 ```r
-# Ridge regression solution for a simple regression with intercept and one feature
-X <- matrix( c( 1, 1, 1, 2, 1, 3 ), nrow = 3, byrow = TRUE
-) y <- c(1, 2, 2) lambda_value <- 1
-identity_matrix <- diag(ncol(X))
-ridge_weights <- solve(t(X) %*% X + lambda_value * identity_matrix) %*% (t(X) %*% y)
-cat("Ridge weights:\n")
-print(ridge_weights)
+pi_k <- c(0.6, 0.4)
+mu   <- c(0, 3)
+sd_k <- c(1, 1)
+x    <- c(-1, 1, 1.5, 2, 4)
+
+# n x K matrix of pi_k * N(x_i | mu_k, sd_k)
+weighted <- sapply(1:2, function(k) pi_k[k] * dnorm(x, mu[k], sd_k[k]))
+gamma <- weighted / rowSums(weighted)
+print(round(cbind(x = x, gamma_1 = gamma[, 1], gamma_2 = gamma[, 2]), 4))
+
+print(rowSums(gamma))          # all 1
+print(round(colSums(gamma), 4)) # effective counts N_k
+
+# Log-space version: stable when densities underflow
+log_w <- sapply(1:2, function(k) log(pi_k[k]) + dnorm(x, mu[k], sd_k[k], log = TRUE))
+row_max <- apply(log_w, 1, max)
+log_norm <- row_max + log(rowSums(exp(log_w - row_max)))
+print(all.equal(exp(log_w - log_norm), gamma))  # TRUE
 ```
 
-Explanation
-:
+### Professional example (Python)
 
-- `diag(ncol(X))` builds the identity matrix.
-- `lambda_value * identity_matrix` is the $L_2$ penalty part.
-- `solve(...)` computes the inverse of the penalized system matrix.
+```python
+import warnings
 
-### Final Professional Example \[Python\])
+import numpy as np
+from scipy.special import logsumexp
+from scipy.stats import multivariate_normal
+from sklearn.exceptions import ConvergenceWarning
+from sklearn.mixture import GaussianMixture
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass
-from typing import Sequence import numpy as np RANDOM_SEED = 42 @dataclass(frozen=True)
-class RidgeRegressionData: design_matrix: Sequence[Sequence[float]] targets: Sequence[float] lambda_value: float def validate(self) -> None: if len(self.design_matrix) == 0: raise ValueError("At least one observation is required.") if len(self.design_matrix) != len(self.targets): raise ValueError("design_matrix and targets must have the same number of rows.") if self.lambda_value < 0: raise ValueError("lambda_value must be non-negative.") feature_count = len(self.design_matrix[0]) for row in self.design_matrix: if len(row) != feature_count: raise ValueError("All design-matrix rows must have the same length.") def ridge_solution(design_matrix: np.ndarray, targets: np.ndarray, lambda_value: float) -> np.ndarray: if lambda_value < 0: raise ValueError("lambda_value must be non-negative.") feature_count = design_matrix.shape[1] identity_matrix = np.eye(feature_count) penalized_matrix = design_matrix.T @ design_matrix + lambda_value * identity_matrix right_hand_side = design_matrix.T @ targets return np.linalg.solve(penalized_matrix, right_hand_side) def fitted_values(design_matrix: np.ndarray, weights: np.ndarray) -> np.ndarray: return design_matrix @ weights def residual_sum_of_squares(targets: np.ndarray, predictions: np.ndarray) -> float: residual_vector = targets - predictions return float(np.sum(residual_vector ** 2)) def summarize_ridge_fit(data: RidgeRegressionData) -> None: data.validate() X = np.array(data.design_matrix, dtype=float) y = np.array(data.targets, dtype=float) ridge_weights = ridge_solution(X, y, data.lambda_value) predictions = fitted_values(X, ridge_weights) rss_value = residual_sum_of_squares(y, predictions) print("Ridge regression fit") print("-" * 72) print(f"Lambda: {data.lambda_value:.4f}") print("Estimated Ridge coefficients:") print(ridge_weights) print("-" * 72) print("Observed targets:") print(y) print("Predicted targets:") print(predictions) print(f"Residual Sum of Squares: {rss_value:.6f}") def main() -> None: # Multicollinearity-oriented example: # Columns: intercept, feature_a, feature_b # feature_a and feature_b are highly related, which can destabilize OLS. design_matrix = [ [1.0, 10.0, 9.8], [1.0, 12.0, 11.9], [1.0, 13.0, 12.8], [1.0, 15.0, 15.1], [1.0, 16.0, 16.2], ] targets = [100.0, 115.0, 120.0, 140.0, 148.0] data = RidgeRegressionData( design_matrix=design_matrix, targets=targets, lambda_value=2.0, ) summarize_ridge_fit(data) if __name__ == "__main__": main()
+rng = np.random.default_rng(3)
+
+
+def e_step(X, weights, means, covs):
+    """Responsibilities in log space: stable for far-away points and high dimensions."""
+    log_w = np.column_stack([
+        np.log(weights[k]) + multivariate_normal.logpdf(X, means[k], covs[k])
+        for k in range(len(weights))
+    ])                                            # (n, K): ln pi_k + ln N(x_i | mu_k, Sigma_k)
+    log_norm = logsumexp(log_w, axis=1, keepdims=True)
+    return np.exp(log_w - log_norm), float(log_norm.sum())
+
+
+def m_step(X, gamma):
+    nk = gamma.sum(axis=0)
+    weights = nk / X.shape[0]
+    means = (gamma.T @ X) / nk[:, None]
+    covs = []
+    for k in range(gamma.shape[1]):
+        d = X - means[k]
+        covs.append((gamma[:, k, None] * d).T @ d / nk[k] + 1e-6 * np.eye(X.shape[1]))
+    return weights, means, np.array(covs)
+
+
+# --- Data: two overlapping customer segments in 2-D --------------------------
+X = np.vstack([
+    rng.multivariate_normal([0, 0], [[1.0, 0.3], [0.3, 1.0]], 600),
+    rng.multivariate_normal([2.5, 1.5], [[0.8, -0.2], [-0.2, 0.6]], 400),
+])
+
+# --- EM from a deliberately poor start ---------------------------------------
+weights = np.array([0.5, 0.5])
+means = X[rng.choice(len(X), 2, replace=False)]
+covs = np.array([np.eye(2), np.eye(2)])
+history = []
+for it in range(200):
+    gamma, ll = e_step(X, weights, means, covs)
+    history.append(ll)
+    if it > 0 and ll - history[-2] < 1e-8:
+        break
+    weights, means, covs = m_step(X, gamma)
+
+print(f"EM stopped after {len(history)} E-steps, log-likelihood {history[0]:.2f} -> {history[-1]:.2f}")
+print("log-likelihood never decreased:", bool(np.all(np.diff(history) >= -1e-9)))
+order = np.argsort(means[:, 0])
+print("weights:", np.round(weights[order], 3), " means:", np.round(means[order], 3).tolist())
+
+# --- Agreement with scikit-learn's E-step (predict_proba) ---------------------
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore", ConvergenceWarning)   # max_iter=1 is deliberate
+    gm = GaussianMixture(2, covariance_type="full", reg_covar=1e-6, means_init=means,
+                         weights_init=weights, precisions_init=np.linalg.inv(covs), max_iter=1).fit(X)
+gamma_ours, _ = e_step(X, gm.weights_, gm.means_, gm.covariances_)
+print("max |gamma_ours - sklearn| =", f"{np.abs(gamma_ours - gm.predict_proba(X)).max():.2e}")
+
+# --- Ambiguity summary: how soft are the assignments? -------------------------
+max_gamma = gamma.max(axis=1)
+print(f"points with max responsibility < 0.9: {np.mean(max_gamma < 0.9):.1%}")
+print(f"effective counts N_k: {np.round(gamma.sum(axis=0)[order], 1)}")
+
+# --- Why log space: a far point in 50 dimensions ------------------------------
+D = 50
+far = np.full((1, D), 8.0)
+w2, m2, c2 = np.array([0.5, 0.5]), np.array([np.zeros(D), np.ones(D)]), np.array([np.eye(D)] * 2)
+with np.errstate(invalid="ignore"):
+    dens = np.array([w2[k] * multivariate_normal.pdf(far, m2[k], c2[k]) for k in range(2)])
+    naive = dens / dens.sum()
+print(f"\nnaive densities: {dens}, naive gamma: {naive}")
+print("log-space gamma:", e_step(far, w2, m2, c2)[0].ravel())
 ```
 
-What
-this professional example teaches:
+From a start at two random data points with identity covariances, EM stops after 79 E-steps, raising the log-likelihood from $-3788.40$ to $-3145.11$ without a single decrease. The fitted weights $(0.569, 0.431)$ and means $(-0.126, -0.048)$, $(2.352, 1.484)$ are close to the generating $(0.6, 0.4)$, $(0, 0)$, $(2.5, 1.5)$. The log-space E-step matches scikit-learn's `predict_proba` to $1.6 \times 10^{-15}$. 17.5 % of points have no component with responsibility of at least $0.9$. In 50 dimensions, the point at $(8, \ldots, 8)$ has both densities underflow to $0$, so the naive ratio is NaN; the log-space E-step returns $1.38 \times 10^{-163}$ and $1$, since the squared distances to the two means differ by $3200 - 2450 = 750$ and $e^{-750/2} = 1.38 \times 10^{-163}$.
 
-1. Ridge modifies the normal equations by adding $\lambda I$.
-2. The penalty helps when predictors are highly correlated.
-3. `np.linalg.solve(...)` is preferable to explicitly computing an inverse.
-4. The fitted coefficients are shrunk relative to what unstable OLS might produce.
-5.
+---
 
-Ridge is especially useful in predictive pipelines where stability matters more than strict unbiasedness.
-
-## Self-check: mathematical verification
-
-### Re-derivation from the penalized objective
-
-Start with the Ridge objective:
-
-$$
-J(w)=\|y-Xw\|_2^2+\lambda\|w\|_2^2
-$$
-
-Rewrite the penalty term as:
-
-$$
-\|w\|_2^2 = w^\top w
-$$
-
-So:
-
-$$
-J(w)=(y-Xw)^\top(y-Xw)+\lambda w^\top w
-$$
-
-Expand the first term:
-
-$$
-J(w)=y^\top y - 2w^\top X^\top y + w^\top X^\top X w + \lambda w^\top w
-$$
-
-Differentiate with respect to $w$:
-
-$$
-\nabla_w J(w) = -2X^\top y + 2X^\top X w + 2\lambda w
-$$
-
-Set the gradient equal to zero:
-
-$$
--2X^\top y + 2X^\top X \hat{w}_{\mathrm{ridge}} + 2\lambda \hat{w}_{\mathrm{ridge}}=0
-$$
-
-Divide by 2:
-
-$$
--X^\top y + X^\top X \hat{w}_{\mathrm{ridge}} + \lambda \hat{w}_{\mathrm{ridge}}=0
-$$
-
-Rearrange:
-
-$$
-(X^\top X+\lambda I)\hat{w}_{\mathrm{ridge}}=X^\top y
-$$
-
-If the penalized matrix is invertible, then:
-
-$$
-\hat{w}_{\mathrm{ridge}}=(X^\top X+\lambda I)^{-1}X^\top y
-$$
-
-This matches the canonical formula exactly.
-
-### OLS special-case check
-
-If $\lambda=0$, then the penalized system becomes:
-
-$$
-(X^\top X+0\cdot I)\hat{w}=X^\top y
-$$
-
-so:
-
-$$
-X^\top X\hat{w}=X^\top y
-$$
-
-which are the ordinary normal equations.
-
-Therefore:
-
-$$
-\lambda=0 \implies \hat{w}_{\mathrm{ridge}}=\hat{w}_{\mathrm{OLS}}
-$$
-
-whenever the OLS inverse exists.
-
-### Stability check
-
-For $\lambda>0$, the diagonal of $X^\top X$ is shifted upward by $\lambda$. This improves conditioning and, in the standard setting, prevents the near-singularity problems that make OLS unstable. This confirms the stated stabilization interpretation.
-
-### Bias-variance interpretation check
-
-The Ridge solution is not the same as OLS for $\lambda>0$, so the estimator is biased relative to OLS. But the shrinkage often reduces variance substantially, especially under multicollinearity. This matches the stated bias-variance explanation.
-
-### Verbal-to-algebra consistency
-
-The verbal explanation says Ridge adds an $L_2$ penalty, shrinks coefficients, stabilizes inversion, and reduces to OLS when $\lambda=0$. The algebra confirms each of those claims.
-
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$X$`, `$y$`, `$\lambda$`, and `$\hat{w}_{\mathrm{ridge}}$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to OLS, bias-variance, multicollinearity, and high-dimensional regression are explicitly included.
-- No placeholder text remains.
-
-## Common Pitfalls and Edge Cases
-
-- **Forgetting to scale predictors:** Ridge penalizes coefficient magnitude directly, so unscaled features can distort the penalty.
-- **Penalizing the intercept unintentionally:** In many practical implementations, the intercept is excluded from the penalty.
-- **Assuming Ridge performs variable selection:** Ridge shrinks coefficients but usually does not set them exactly to zero.
-- **Choosing $\lambda$ arbitrarily:** Penalty strength is typically selected by cross-validation or a model-selection procedure.
-- **Confusing stability with causality:** More stable coefficients are not automatically causal estimates.
-- **Using $\lambda<0$:** Negative penalties break the regularization logic and are not valid Ridge regression.
-- **Interpreting shrunk coefficients exactly like OLS coefficients:** Ridge changes the estimates systematically, so interpretation is more prediction-oriented.
-- **Ignoring that OLS may still be preferable in some low-collinearity settings:** Regularization helps most when instability or variance is a real issue.
-
-## References and Standard Results
-
-- Least-squares objective, $|y-Xw|_2^2$
-- Ridge-penalized objective, $|y-Xw|_2^2+\lambda|w|_2^2$
-- Squared Euclidean norm identity, $|w|_2^2=w^\top w$
-- Ridge normal equations, $(X^\top X+\lambda I)\hat{w}_{\mathrm{ridge}}=X^\top y$
-- Closed-form Ridge solution, $\hat{w}_{\mathrm{ridge}}=(X^\top X+\lambda I)^{-1}X^\top y$
-- OLS special case when $\lambda=0$
-- Bias-variance tradeoff in regularized regression
-- Multicollinearity stabilization via diagonal loading
+*Source: domain knowledge*

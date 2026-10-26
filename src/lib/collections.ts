@@ -8,6 +8,7 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import type { Lang } from './site';
 import { vaultIndex, resolveAttachment, mediaPath } from './vault/index.mjs';
 import { related } from './vault/related.mjs';
+import { slugify } from './vault/meta.mjs';
 import { imageSize } from './vault/image-size.mjs';
 
 export type ProjectEntry = CollectionEntry<'projects'>;
@@ -80,15 +81,38 @@ export async function slugLanguages(collection: 'projects' | 'writing' | 'notes'
   return out;
 }
 
-/* ---------- the notes library (owner, 25 Oct 2026) ----------
+/* ---------- the notes library (owner, 25 Oct 2026; levels 26 Oct) ----------
    vault/Notes/<lang>/<area>/<topic>/<subtopic>/<note>.md, imported from the
-   owner's maths vault. The folder tree is the index: an area ("04_calculus_
-   optimization") opens a section, its notes are listed by topic and
-   subtopic, each coded <area>-<nnn> in that order ("04-017"). Folder names
-   read as titles through folderTitle(). */
+   owner's maths vault. The folder tree is the index, one page per folder:
+   /<lang>/notes/ lists the seven areas, an area lists its topics, a topic
+   its subtopics, a subtopic its notes (12 rows a page, then pagination).
+   Codes are positions on those pages: area 04, its second topic 04-02,
+   that topic's first subtopic 04-02-01, the subtopic's fifth note
+   04-02-01-05. A folder lists its subfolders first, then its own notes,
+   numbered on. Folder names read as titles through folderTitle(); a
+   folder's URL segment is that title, kebab-cased ("calculus-and-optimisation"). */
 
-export interface NoteRow { entry: NoteEntry; code: string; topic: string; subtopic: string }
+export interface NoteNode {
+  folder: string;
+  /** URL segments from /<lang>/notes/ ("calculus-optimization", "differential-calculus"). */
+  segs: string[];
+  code: string;
+  title: string;
+  /** Root, then the ancestors, nearest last (not this node). */
+  parents: NoteNode[];
+  children: NoteNode[];
+  notes: NoteRow[];
+  /** Notes in this folder and below. */
+  count: number;
+}
+export interface NoteRow { entry: NoteEntry; code: string; node: NoteNode; topic: string; subtopic: string }
 export interface NoteArea { code: string; folder: string; title: string; topics: string[]; rows: NoteRow[] }
+
+/** Rows a library page lists before it paginates. */
+export const NOTES_PAGE_SIZE = 12;
+
+const two = (n: number) => String(n).padStart(2, '0');
+export const folderSeg = (folder: string) => slugify(folderTitle(folder));
 
 /** Area titles: the folder's number is the code, the rest is too terse to show. */
 const AREA_TITLES: Record<string, string> = {
@@ -137,30 +161,55 @@ export function folderTitle(folder: string): string {
   return tail ? `${text} (${acr})` : text;
 }
 
-/** Non-draft notes of a language, as the library's areas, in folder order. */
-export async function libraryOf(lang: Lang): Promise<NoteArea[]> {
+/** The library of a language as a tree (the root holds the areas), every note coded by its place. */
+export async function notesTree(lang: Lang): Promise<NoteNode> {
   const list = await getCollection('notes', (e) => e.data.lang === lang && !e.data.draft);
-  const byArea = new Map<string, { entry: NoteEntry; topic: string; subtopic: string }[]>();
+  const root: NoteNode = { folder: '', segs: [], code: '', title: 'Notes', parents: [], children: [], notes: [], count: 0 };
+  const pending = new Map<NoteNode, NoteEntry[]>();
   for (const entry of list) {
     // id: Notes/<lang>/<area>/<topic>/<subtopic>/<file>
-    const parts = entry.id.split('/').slice(2, -1);
-    const area = parts[0] ?? '';
-    const bucket = byArea.get(area) ?? [];
-    bucket.push({ entry, topic: parts[1] ?? '', subtopic: parts[2] ?? '' });
-    byArea.set(area, bucket);
+    let node = root;
+    for (const folder of entry.id.split('/').slice(2, -1)) {
+      let child = node.children.find((c) => c.folder === folder);
+      if (!child) {
+        child = { folder, segs: [...node.segs, folderSeg(folder)], code: '', title: folderTitle(folder), parents: [...node.parents, node], children: [], notes: [], count: 0 };
+        node.children.push(child);
+      }
+      node = child;
+    }
+    pending.set(node, [...(pending.get(node) ?? []), entry]);
   }
-  return [...byArea.keys()].sort().map((folder, ai) => {
-    const code = /^(\d{2})_/.exec(folder)?.[1] ?? String(ai + 1).padStart(2, '0');
-    const items = byArea.get(folder)!.sort((a, b) =>
-      a.topic.localeCompare(b.topic) || a.subtopic.localeCompare(b.subtopic) || a.entry.data.title.localeCompare(b.entry.data.title));
-    const rows = items.map((it, i) => ({
-      entry: it.entry,
-      code: `${code}-${String(i + 1).padStart(3, '0')}`,
-      topic: it.topic ? folderTitle(it.topic) : '',
-      subtopic: it.subtopic ? folderTitle(it.subtopic) : '',
-    }));
-    return { code, folder, title: folderTitle(folder), topics: [...new Set(rows.map((r) => r.topic).filter(Boolean))], rows };
-  });
+  const number = (node: NoteNode): number => {
+    node.children.sort((a, b) => a.folder.localeCompare(b.folder));
+    node.children.forEach((c, i) => {
+      // an area keeps the number its folder carries ("04_calculus…" → 04)
+      c.code = node === root ? (/^(\d{2})_/.exec(c.folder)?.[1] ?? two(i + 1)) : `${node.code}-${two(i + 1)}`;
+    });
+    const entries = (pending.get(node) ?? []).sort((a, b) => a.data.title.localeCompare(b.data.title));
+    const topic = node.parents[2]?.title ?? (node.parents.length === 2 ? node.title : '');
+    const subtopic = node.parents.length >= 3 ? node.title : '';
+    node.notes = entries.map((entry, i) => ({ entry, code: `${node.code}-${two(node.children.length + i + 1)}`, node, topic, subtopic }));
+    node.count = node.notes.length + node.children.reduce((n, c) => n + number(c), 0);
+    return node.count;
+  };
+  number(root);
+  return root;
+}
+
+/** Every folder of the tree, depth first (the root first). */
+export function noteNodes(root: NoteNode): NoteNode[] {
+  return [root, ...root.children.flatMap(noteNodes)];
+}
+
+/** Every note of the tree in reading order (each folder's subfolders, then its notes). */
+export function noteRows(node: NoteNode): NoteRow[] {
+  return [...node.children.flatMap(noteRows), ...node.notes];
+}
+
+/** The library's areas with their notes in reading order (home, Writing, tags). */
+export async function libraryOf(lang: Lang): Promise<NoteArea[]> {
+  const root = await notesTree(lang);
+  return root.children.map((a) => ({ code: a.code, folder: a.folder, title: a.title, topics: a.children.map((t) => t.title), rows: noteRows(a) }));
 }
 
 /** A `pages` entry (about, system) of a language, or undefined while it is not written. */

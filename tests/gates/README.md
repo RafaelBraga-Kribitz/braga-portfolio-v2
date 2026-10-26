@@ -37,6 +37,8 @@ SITE_BASE=/braga-portfolio/ npx astro build --outDir <build> && node scripts/gat
 | `--concurrency <n>` | `3` | pages rendered in parallel (one browser throughout) |
 | `--verbose` | off | print every gate row and up to eight offenders per failure |
 | `--no-axe` | off | skip A-01 without the rest of `--quick` |
+| `--templated <prefixes>` | none (`npm run test:gates`: `/en/notes/,/de/notes/`) | pages under a prefix made from one template in bulk: the prefix page and an even spread of `--templated-sample` pages (every k-th in path order) get the full matrix; the others get the static gates and 320 + 1280 in the first theme, no axe. Owner, 26 Oct 2026: the ~500 library pages made a deploy take 40 minutes; with the sample it takes about 5 |
+| `--templated-sample <n>` | 12 | how many pages under the prefixes get the full matrix |
 | `--chromium <path>` | `/opt/pw-browsers/chromium` (or `$GATES_CHROMIUM`) | browser binary; never run `playwright install` |
 | `--pending <file>` | `tests/gates/pending-routes.json`, whatever `--dir` is (a scratch build gets the verdict `dist/` gets) | routes of the site map that a later phase builds: L-01 counts a link to one instead of failing it, and a `pending` row says how many are linked. A listed route that now exists fails the run until it is removed from the file, so the list only shrinks |
 | `--no-pending` | off | treat every unbuilt route as a broken link (the fixture self-test uses it) |

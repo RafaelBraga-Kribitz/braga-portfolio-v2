@@ -1,0 +1,40 @@
+---
+// Pagination, the design system's layout/Pagination (braga-design-system-
+// template, src/components/layout/Pagination.tsx) as links for a static
+// page: ← previous, the page numbers (the first and the last always, one
+// either side of the current, … between), next →. The current page is a
+// span with aria-current="page" in the accent, underlined; an arrow with
+// nowhere to go is left out rather than drawn disabled.
+interface Props {
+  /** Current page, 1-indexed. */
+  page: number;
+  total: number;
+  /** The URL of a page. */
+  href: (page: number) => string;
+  /** Accessible names: the nav, previous, next, "Page {n}". */
+  labels: { nav: string; prev: string; next: string; page: string };
+  siblings?: number;
+}
+
+const { page, total, href, labels, siblings = 1 } = Astro.props;
+const range: Array<number | '…'> = [1];
+const left = Math.max(2, page - siblings);
+const right = Math.min(total - 1, page + siblings);
+if (left > 2) range.push('…');
+for (let i = left; i <= right; i++) range.push(i);
+if (right < total - 1) range.push('…');
+if (total > 1) range.push(total);
+---
+{total > 1 && (
+  <nav class="pagination" aria-label={labels.nav}>
+    {page > 1 && <a class="pagination-cell" href={href(page - 1)} rel="prev" aria-label={labels.prev}>←</a>}
+    {range.map((p) =>
+      p === '…'
+        ? <span class="pagination-ellipsis" aria-hidden="true">…</span>
+        : p === page
+          ? <span class="pagination-cell" aria-current="page" aria-label={labels.page.replace('{n}', String(p))}>{p}</span>
+          : <a class="pagination-cell" href={href(p)} aria-label={labels.page.replace('{n}', String(p))}>{p}</a>
+    )}
+    {page < total && <a class="pagination-cell" href={href(page + 1)} rel="next" aria-label={labels.next}>→</a>}
+  </nav>
+)}
