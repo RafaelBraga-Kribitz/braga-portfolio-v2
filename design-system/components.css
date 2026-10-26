@@ -122,6 +122,14 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
   .lr-trail { grid-column: 2; }
   .listing-row.lr-child .lr-title { padding-left: 0; }
 }
+/* a listing of long codes (the notes library: 04-02-01-05; owner, 26 Oct
+   2026) stacks the same way below 720: the code does not fit 64px */
+@media (max-width: 720px) {
+  .listing.lr-long-code .listing-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .listing.lr-long-code :is(.lr-index, .lr-title) { grid-column: 1 / -1; }
+  .listing.lr-long-code .listing-row .lr-meta { grid-column: 1; }
+  .listing.lr-long-code .lr-trail { grid-column: 2; }
+}
 
 /* pagination (braga-design-system-template layout/Pagination; owner,
    26 Oct 2026): under a listing, mono page numbers between ← and →; the

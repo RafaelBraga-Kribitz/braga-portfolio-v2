@@ -120,7 +120,7 @@ if (props.kind === 'note') note = await noteData(props);
   <Base lang={lang} page="notes" path={folder.path} twinPath={withBase(folder.path.replace(`/${lang}/`, `/${otherLang(lang)}/`))} title={folder.title} description={folder.prose} current="02">
     <section class="section">
       <SectionHeading number={folder.node.code} word={t(lang, 'notes.word')} claim={folder.node.title} prose={folder.prose} link={folder.parentLink} as="h1" />
-      <Listing head={{ index: t(lang, 'index'), title: t(lang, 'title'), meta: '', trail: '' }}>
+      <Listing class={folder.node.segs.length > 1 ? 'lr-long-code' : undefined} head={{ index: t(lang, 'index'), title: t(lang, 'title'), meta: '', trail: '' }}>
         {folder.items.map((it) => (
           <ListingRow code={it.code} title={it.title} sub={it.sub} meta={it.count !== undefined ? [count(it.count)] : [t(lang, 'kind.note')]} lang={lang} textLang={folder!.textLang} href={it.href} />
         ))}
