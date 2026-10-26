@@ -34,6 +34,6 @@ export const site: Site = {
   address: '8054 Seiersberg, Styria, Austria',
   url: 'https://rafaelbraga-kribitz.github.io',
   github: 'https://github.com/RafaelBraga-Kribitz',
-  linkedin: '',
+  linkedin: 'https://www.linkedin.com/in/rafaelbragakribitz/',
   kaggle: '',
 };
