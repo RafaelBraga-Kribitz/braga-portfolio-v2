@@ -35,6 +35,7 @@ npx playwright install chromium
 | `npm run test:gates` | Sixteen design gates (one accent per section and rules open, never close among them), links, hreflang, scripts policy and axe on every built page, at six widths in both themes |
 | `npm run vault:check` | Audits the vault: broken links and embeds, missing translations, bad properties, Dataview queries that do not parse |
 | `npm run vault:sync` | Copies the design-system CSS into the vault's Obsidian snippets |
+| `npm run activity` | Refreshes the project build logs' data (`src/data/activity.json`) from each project repository's git history; a ```` ```buildlog ```` fence in a project note draws it |
 | `npm run verify` | All of the above in order |
 
 ## Where things are

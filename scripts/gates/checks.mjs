@@ -547,7 +547,8 @@ export function pageFacts(html) {
   return {
     lang: doc.documentElement.getAttribute('lang') || '',
     title: doc.title || '',
-    titleCount: q('title').length,
+    // the document's <title>; an SVG <title> (a chart cell's tooltip) is not one
+    titleCount: q('title').filter((t) => !t.closest('svg')).length,
     description: q('meta[name="description" i]').map((m) => m.getAttribute('content') || ''),
     viewport: q('meta[name="viewport" i]').map((m) => m.getAttribute('content') || ''),
     themeColors: q('meta[name="theme-color" i]').map((m) => ({ media: m.getAttribute('media') || '', content: m.getAttribute('content') || '' })),

@@ -394,6 +394,7 @@ With `footnotes: side` in a note's properties (the About page), footnotes become
 | mdast | `src/lib/remark/math.mjs` | keeps `$5 and $10` as text |
 | mdast | `src/lib/remark/code-lang.mjs` | unknown fence language → plain text |
 | mdast | `src/lib/remark/diagrams.mjs` | ` ```mermaid ` → SVG at build; ` ```dataview ` → a list or a table |
+| mdast | `src/lib/remark/buildlog.mjs` | ` ```buildlog ` → the build log of the note's project (`src/lib/activity/render.mjs`) |
 | mdast | `src/lib/remark/obsidian.mjs` | the H1 title, `[[links]]`, `![[embeds]]`, `#tags`, `%%comments%%`, fields, tasks |
 | mdast | `src/lib/remark/callouts.mjs` | `==mark==`, then the callouts |
 | mdast | `src/lib/remark/callouts.mjs` | `[!bars]` → the evidence figure |
@@ -440,6 +441,7 @@ Write as Obsidian writes; the site follows.
 | `- [ ]` / `- [x]` / `- [/]` / `- [-]` | □ to do / ■ done / ▤ in progress / struck-through cancelled |
 | ` ```mermaid ` | the diagram, drawn at build in the site's colours; a first `%% line` names it for screen readers |
 | ` ```dataview ` | the query's result (below) |
+| ` ```buildlog ` (empty, in a project note) | the project's build log: a line on commits and pull requests, a calendar and a weekday × hour heatmap, and the lines written by kind, from the repository's git history (`npm run activity`); in Obsidian it stays an empty code block |
 | `$x$`, `$$x$$`, ` ```lang `, `[^1]`, `> [!callout]`, tables, lists | as in §§ 4–9 |
 
 **Dataview.** A ` ```dataview ` block runs at build over the published

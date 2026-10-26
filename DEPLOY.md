@@ -78,11 +78,14 @@ UTC so a vault note with a future `date` goes online on that day:
 3. installs Playwright's Chromium for the gates (`npx playwright install
    --with-deps chromium`; in the agents' container the browser is
    preinstalled and this step is never run there);
-4. `npm run verify`: `astro check`, both lints, the unit tests, `vault:check`, the build
+4. `npm run activity` refreshes `src/data/activity.json`, the data of
+   the project build logs, from each project repository's git history
+   (public clones, no token); if it fails, the committed file is used;
+5. `npm run verify`: `astro check`, both lints, the unit tests, `vault:check`, the build
    (with `SITE_BASE` when set) and every gate over `dist/` (with the same
    base: the gate runner reads `SITE_BASE` too). A red gate stops the
    deploy;
-5. uploads `dist/` with `actions/upload-pages-artifact` and publishes it
+6. uploads `dist/` with `actions/upload-pages-artifact` and publishes it
    with `actions/deploy-pages`.
 
 One-time setup: Settings → Pages → Build and deployment → Source:

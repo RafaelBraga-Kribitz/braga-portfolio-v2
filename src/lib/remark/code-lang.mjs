@@ -33,8 +33,9 @@ export const codeLang = {
     const lang = typeof node.lang === 'string' ? node.lang : '';
     if (!lang) return;
     const key = lang.toLowerCase();
-    // math: KaTeX's; mermaid and dataview: src/lib/remark/diagrams.mjs
-    if (key === 'math' || key === 'mermaid' || key === 'dataview') return;
+    // math: KaTeX's; mermaid and dataview: src/lib/remark/diagrams.mjs;
+    // buildlog: src/lib/remark/buildlog.mjs
+    if (key === 'math' || key === 'mermaid' || key === 'dataview' || key === 'buildlog') return;
     if (KNOWN.has(key)) {
       if (key !== lang) ctx.setProperty(node, 'lang', key);
       return;

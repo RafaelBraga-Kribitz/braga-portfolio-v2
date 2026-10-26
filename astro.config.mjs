@@ -12,6 +12,7 @@ import codeLang from './src/lib/remark/code-lang.mjs';
 import callouts from './src/lib/remark/callouts.mjs';
 import obsidian from './src/lib/remark/obsidian.mjs';
 import diagrams from './src/lib/remark/diagrams.mjs';
+import buildlog from './src/lib/remark/buildlog.mjs';
 import katex from './src/lib/rehype/katex.mjs';
 import tables from './src/lib/rehype/tables.mjs';
 import code from './src/lib/rehype/code.mjs';
@@ -65,10 +66,11 @@ export default defineConfig({
       // the remark phase, in order: the $-price guard, fence languages Prism
       // cannot load → text (else their code reaches the page as raw HTML),
       // ```mermaid drawn at build and ```dataview queries run over the vault
-      // (src/lib/remark/diagrams.mjs), Obsidian's syntax (the H1 title, [[links]], ![[embeds]], #tags,
+      // (src/lib/remark/diagrams.mjs), ```buildlog drawn from the git history
+      // snapshot (src/lib/remark/buildlog.mjs), Obsidian's syntax (the H1 title, [[links]], ![[embeds]], #tags,
       // %%comments%%, Dataview fields, tasks; src/lib/remark/obsidian.mjs),
       // then ==marks== and callouts (bars included: the evidence figure)
-      mdastPlugins: [mathGuard, codeLang, diagrams, obsidian, sidenotes, callouts],
+      mdastPlugins: [mathGuard, codeLang, diagrams, buildlog, obsidian, sidenotes, callouts],
       // the rehype phase, in order. headings and footnotes are factories,
       // passed uncalled: Sätteri calls them once per document, so each page
       // gets its own slugger and its own language.

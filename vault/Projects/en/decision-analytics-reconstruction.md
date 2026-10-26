@@ -123,3 +123,8 @@ What this does not establish:
 Report each module only as far as its own check reaches: the segments as a fit to synthetic voters, the allocation gain as a solver comparison on synthetic reach, and the tracking curve as a retrodiction. The reconstruction does not claim that analytics caused the 3.70-point margin. The public result is the anchor; showing what the model can and cannot support is the point of the work.
 
 Functional: the three modules run end to end. It is a portfolio reconstruction, not a production campaign system. The repository holds the code, the case study and the validation gates.
+
+## Build log
+
+```buildlog
+```

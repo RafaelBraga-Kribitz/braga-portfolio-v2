@@ -95,3 +95,8 @@ Was diese Arbeit nicht belegt:
 Noch wird keine Strategie empfohlen. Das Projekt führt von Strompreisdaten zu einer Kosten-Risiko-Entscheidung zwischen den vier Strategien, und diese Entscheidung wartet auf den Strategiesimulator und die Referenzdatei, die mit ihm entsteht.
 
 Im Aufbau: Die Grundlagenphase ist umgesetzt; Lastprofil, Analytik, Simulator und Berichtsebene sind es nicht. Das Repository enthält die Projektcharta, die Spezifikationen und die bisherige Pipeline.
+
+## Entstehung
+
+```buildlog
+```

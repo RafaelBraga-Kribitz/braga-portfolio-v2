@@ -4,6 +4,7 @@
      on a mid baseline, caption with n, scale and source
    2 chart SVG text and strokes (the bench figure and any inline chart)
    3 IBCS roles (D-015, D-016 amended by D-033) and categorical fills
+   4 the heatmap of the build log (short interpolation, .heat-0…7)
    Colour lives in marks, never in type: every chart label is --ink
    or --ink-2. The only inline style allowed on a page is the custom
    property that positions a mark: style="--x: 50%; --w: 34%".
@@ -124,3 +125,25 @@ svg text.on-mark { fill: var(--on-mark, var(--on-accent)); }
 .var-neg::before { content: "▲"; margin-inline-end: 0.35em; }
 .ev-fill::before, .mark::before, .mark-tint::before, .swatch::before { content: none; }
 .alert::before { content: "▲"; margin-inline-end: 0.35em; }
+
+/* ---------- 4 · HEATMAP (the build log; owner, 26 Oct 2026) ----------
+     <figure class="fig" data-kind="heatmap" data-width="wide">
+       <figcaption><span class="fig-label">…</span><span class="fig-title">…</span></figcaption>
+       <div class="heat-scroll" tabindex="0" role="group" aria-label="…"><svg …>
+         <rect class="heat-3" …><title>…</title></rect> …</svg></div>
+       <p class="fig-source">…</p></figure>
+   Cells take .heat-0 (none) … .heat-7 (most): the short interpolation
+   scale, mapped per theme in tokens.css. The SVG is drawn at its own
+   size, so its 12px text is never scaled (G-01); a narrow screen scrolls
+   it in its own box (keyboard: the box takes focus).
+   src/lib/activity/render.mjs draws it. */
+figure.fig[data-kind="heatmap"] .heat-scroll { overflow-x: auto; min-width: 0; }
+figure.fig[data-kind="heatmap"] svg { width: auto; max-width: none; height: auto; }
+svg rect.heat-0 { fill: var(--heat-0); }
+svg rect.heat-1 { fill: var(--heat-1); }
+svg rect.heat-2 { fill: var(--heat-2); }
+svg rect.heat-3 { fill: var(--heat-3); }
+svg rect.heat-4 { fill: var(--heat-4); }
+svg rect.heat-5 { fill: var(--heat-5); }
+svg rect.heat-6 { fill: var(--heat-6); }
+svg rect.heat-7 { fill: var(--heat-7); }

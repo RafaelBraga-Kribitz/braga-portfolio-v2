@@ -115,6 +115,9 @@ Unter diesen Annahmen: die schlanke Hybridvariante jetzt einsetzen und die Besch
 
 Das Repository enthält den Code, die Grafiken, die Management-Zusammenfassungen und die Governance-Dokumentation.
 
+## Entstehung
 
+```buildlog
+```
 
 [^1]: Die Entwicklung folgt einem Governance-Protokoll, das in der Continuous Integration (CI, automatisierte Prüfung bei jeder Änderung) durchgesetzt wird: Jede Änderung schließt einen nachverfolgten Befund mit einem benannten Prüfskript ab, und die CI führt bei jedem Pull-Request das Skript jedes abgeschlossenen Befunds erneut aus.
