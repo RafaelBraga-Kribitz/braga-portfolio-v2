@@ -44,15 +44,6 @@ Die Marketinglaufbahn steuert die fachliche Hälfte der Arbeit bei: das Wissen, 
 | Zeitraum | Rolle | Organisation |
 |:--|:--|:--|
 | 2023–⁠2026 | Marketing Data Scientist | BioSynCare – Marketing-Messung, Experimente und Unterstützung von Entscheidungen |
-| 2021–⁠2023 | Data Scientist | Auf Anfrage |
-| 2019–⁠2021 | Analyst | Auf Anfrage |
-
-### Ausbildung
-
-| Zeitraum | Abschluss | Institution |
-|:--|:--|:--|
-| 2017–⁠2019 | MSc | Auf Anfrage |
-| 2014–⁠2017 | BSc | Auf Anfrage |
 
 ## Kontakt
 
