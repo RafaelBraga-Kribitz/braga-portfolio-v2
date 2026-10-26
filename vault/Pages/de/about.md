@@ -52,7 +52,10 @@ Offen für Rollen als Marketing Data Analyst – und für eine zweite Meinung z
 > [!bookmark] Anderswo
 > [GitHub](https://github.com/RafaelBraga-Kribitz) — github.com/RafaelBraga-Kribitz
 
+> [!bookmark] LinkedIn
+> [Rafael Braga-Kribitz](https://www.linkedin.com/in/rafaelbragakribitz/) — linkedin.com/in/rafaelbragakribitz
+
 > [!cta] Direkter Kontakt
 > [rafaelbragakribitz@gmail.com](mailto:rafaelbragakribitz@gmail.com)
 
-[^1]: Paraguay wählte Mario Abdo Benítez im April 2018 mit einem Vorsprung von 3,9 Prozentpunkten zum Präsidenten.
+[^1]: Paraguay wählte Mario Abdo Benítez im April 2018 mit einem Vorsprung von 3,7 Prozentpunkten (46,43 % zu 42,73 %, amtliches Ergebnis des Wahlgerichts TSJE) zum Präsidenten.
