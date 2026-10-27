@@ -38,4 +38,4 @@ The shortcuts are single keys and need JavaScript. They do nothing while typing 
 
 Known limitation: the interactive tools need JavaScript. Without JavaScript, the default scenario is shown as text and a table.
 
-Barriers can be reported to [rafaelbragakribitz@gmail.com](mailto:rafaelbragakribitz@gmail.com). Prepared on 20 Oct 2026, updated on 23 Oct 2026.
+Barriers can be reported to [hello@rafaelbragakribitz.com](mailto:hello@rafaelbragakribitz.com). Prepared on 20 Oct 2026, updated on 23 Oct 2026.

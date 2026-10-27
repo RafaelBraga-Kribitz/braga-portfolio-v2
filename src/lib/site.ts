@@ -3,7 +3,7 @@
 // (never invent a LinkedIn or Kaggle URL: handoff profile.yaml, COPY-01).
 //
 // `url` is the origin only (the same value as `site` in astro.config.mjs):
-// the GitHub Pages user site of the account RafaelBraga-Kribitz. A
+// the custom domain rafaelbragakribitz.com (public/CNAME, DEPLOY.md). A
 // project-page deploy adds a base path (SITE_BASE, DEPLOY.md), which
 // src/lib/routes.ts puts on every internal URL; never join `url` and a
 // path by hand, use absolute() from routes.ts.
@@ -29,10 +29,10 @@ export const site: Site = {
   name: 'Rafael Braga-Kribitz',
   wordmark: 'BRAGA',
   role: { en: 'Marketing Data Analyst', de: 'Marketing Data Analyst' },
-  email: 'rafaelbragakribitz@gmail.com',
+  email: 'hello@rafaelbragakribitz.com',
   location: { en: 'Greater Graz, Austria', de: 'Großraum Graz, Österreich' },
   address: '8054 Seiersberg, Styria, Austria',
-  url: 'https://rafaelbraga-kribitz.github.io',
+  url: 'https://rafaelbragakribitz.com',
   github: 'https://github.com/RafaelBraga-Kribitz',
   linkedin: 'https://www.linkedin.com/in/rafaelbragakribitz/',
   kaggle: '',

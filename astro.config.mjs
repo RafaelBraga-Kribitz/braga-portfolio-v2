@@ -23,9 +23,9 @@ import footnotes from './src/lib/rehype/footnotes.mjs';
 import links from './src/lib/rehype/links.mjs';
 import vaultMedia from './src/integrations/vault-media.mjs';
 
-// Origin and base path (DEPLOY.md). The origin is the GitHub Pages user
-// site of the account RafaelBraga-Kribitz (host names are lower case). A
-// project-page deploy serves under /<repo>/: build with SITE_BASE=/<repo>/
+// Origin and base path (DEPLOY.md). The origin is the custom domain
+// rafaelbragakribitz.com (public/CNAME), served by GitHub Pages at the
+// root, so the base is '/'. A project-page deploy serves under /<repo>/: build with SITE_BASE=/<repo>/
 // and every internal URL (routes.ts, Base.astro, the feed, the sitemap,
 // robots, Markdown links through links.mjs) carries it. Default '/'.
 const base = normaliseBase(process.env.SITE_BASE);
@@ -40,7 +40,7 @@ function normaliseBase(raw) {
 // The markdown pipeline (remark/rehype plugins) is configured in the
 // `markdown` block below by the content-pipeline step.
 export default defineConfig({
-  site: 'https://rafaelbraga-kribitz.github.io',
+  site: 'https://rafaelbragakribitz.com',
   base,
   output: 'static',
   trailingSlash: 'always',
