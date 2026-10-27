@@ -21,7 +21,9 @@ The constraint $|a| \ge 0$ is the non-negativity property of absolute value: the
 ```mermaid
 flowchart TD
     A["Any real number: a"] --> B["Compute |a|"]
-    B --> C{"|a| = 0?"} C -- "Yes" --> D["a must be exactly 0"] C -- "No" --> E["|a| > 0 (strictly positive)"]
+    B --> C{"|a| = 0?"}
+    C -- "Yes" --> D["a must be exactly 0"]
+    C -- "No" --> E["|a| > 0 (strictly positive)"]
     D --> F["Only way to get zero absolute value"]
     E --> G["|a| = a if a > 0"]
     E --> H["|a| = -a if a < 0 (negate to make positive)"]

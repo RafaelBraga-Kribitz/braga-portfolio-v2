@@ -20,7 +20,9 @@ $\implies$ means **"implies"** or **"if ... then ..."** It expresses a one-direc
 
 ```mermaid
 flowchart TD
-    A["Evaluate A: is it true?"] A -- "A is True" --> B["B must be True"] A -- "A is False" --> C["B can be True or False: claim is vacuously true"]
+    A["Evaluate A: is it true?"]
+    A -- "A is True" --> B["B must be True"]
+    A -- "A is False" --> C["B can be True or False: claim is vacuously true"]
     B --> D["A => B holds (non-trivial case)"]
     C --> E["A => B holds (vacuous case)"]
     D --> F["Use the implication: derive B from A"]

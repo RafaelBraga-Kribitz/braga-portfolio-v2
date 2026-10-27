@@ -24,8 +24,10 @@ flowchart TD
     A["Product notation: prod from i=1 to n of x_i"] --> B["Initialize result = 1 (multiplicative identity)"]
     B --> C["Set i = 1"]
     C --> D["Multiply result by x_i"]
-    D --> E{"i == n?"} E -- "No" --> F["i = i + 1"]
-    F --> D E -- "Yes" --> G["Return result = x_1 * x_2 * ... * x_n"]
+    D --> E{"i == n?"}
+    E -- "No" --> F["i = i + 1"]
+    F --> D
+    E -- "Yes" --> G["Return result = x_1 * x_2 * ... * x_n"]
 ```
 
 ## Real-world use

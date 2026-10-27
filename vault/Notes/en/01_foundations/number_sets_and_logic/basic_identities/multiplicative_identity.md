@@ -21,7 +21,9 @@ The **multiplicative identity** says that multiplying any number by 1 leaves it 
 ```mermaid
 flowchart TD
     A["Value a"] --> B["Multiply by 1"]
-    B --> C{["Does result change?"]} C -- "No: a × 1 = a" --> D["Multiplicative identity confirmed"] C -- "Yes: error" --> E["Check computation"]
+    B --> C{"Does result change?"}
+    C -- "No: a × 1 = a" --> D["Multiplicative identity confirmed"]
+    C -- "Yes: error" --> E["Check computation"]
     D --> F["Extends to matrices: A·I = A"]
     F --> G["Identity matrix I is the '1' of matrix algebra"]
 ```

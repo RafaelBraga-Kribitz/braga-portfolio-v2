@@ -21,7 +21,9 @@ The exponential function $e^x$ is its own derivative and its own antiderivative 
 ```mermaid
 flowchart TD
     A["Integral: int e^(ax+b) dx"] --> B["Identify a (coefficient of x) and b (constant)"]
-    B --> C["a = 0? Then integrand is constant e^b"] C -- "Yes" --> D["Result: e^b * x + C"] C -- "No" --> E["Apply formula: (1/a) * e^(ax+b) + C"]
+    B --> C["a = 0? Then integrand is constant e^b"]
+    C -- "Yes" --> D["Result: e^b * x + C"]
+    C -- "No" --> E["Apply formula: (1/a) * e^(ax+b) + C"]
     E --> F["Verify: d/dx [(1/a)*e^(ax+b)] = e^(ax+b)"]
 ```
 

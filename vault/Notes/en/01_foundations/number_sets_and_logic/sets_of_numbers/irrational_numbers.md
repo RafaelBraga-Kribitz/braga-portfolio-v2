@@ -18,7 +18,8 @@ What it tells me *(Situation Awareness)*:
 
 ```mermaid
 flowchart TD
-    A["ℚ = all fractions a/b"] --> B["Is every real number rational?"] B -- "No" --> C["Some reals cannot be written as a/b"]
+    A["ℚ = all fractions a/b"] --> B["Is every real number rational?"]
+    B -- "No" --> C["Some reals cannot be written as a/b"]
     C --> D["Irrational: non-terminating, non-repeating decimal"]
     D --> E["π = 3.14159265..."]
     D --> F["e = 2.71828182..."]

@@ -1,0 +1,18 @@
+---
+// 02-02 · Notes, page n ≥ 2 (Ghost's /page/n/; src/components/NotesLibrary.astro).
+import NotesLibrary from '@/components/NotesLibrary.astro';
+import { LANGS } from '@/lib/site';
+import { notesOf, paginate } from '@/lib/collections';
+import type { Lang } from '@/lib/i18n';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const lang of LANGS) {
+    const rows = (await notesOf(lang)).length ? await notesOf(lang) : await notesOf('en');
+    const { pages } = paginate(rows, 1);
+    for (let n = 2; n <= pages; n++) paths.push({ params: { lang, n: String(n) } });
+  }
+  return paths;
+}
+---
+<NotesLibrary lang={Astro.params.lang as Lang} page={Number(Astro.params.n)} />

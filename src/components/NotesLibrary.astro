@@ -1,0 +1,51 @@
+---
+// The notes library, one page of it (owner, 25–26 Oct 2026; Ghost style):
+// the heading (02-02 Notes, h1), on the first page the seven areas (each
+// leads to its tag's archive), then every note in reading order, 24 a
+// page, coded 02-02-NNN, with its area and subtopic as the meta, and
+// Pagination (/<lang>/notes/page/n/). The notes are written in English;
+// the German pages keep them in English (textLang) under German chrome.
+import Base from '@/layouts/Base.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import Listing from '@/components/Listing.astro';
+import ListingRow from '@/components/ListingRow.astro';
+import Pagination from '@/components/Pagination.astro';
+import StatusMark from '@/components/StatusMark.astro';
+import { t, isDraftLang, type Lang } from '@/lib/i18n';
+import { route, noteRoute, pagedRoute, withBase } from '@/lib/routes';
+import { notesOf, libraryOf, paginate, tagPath, NOTES_CODE } from '@/lib/collections';
+
+interface Props { lang: Lang; page: number }
+const { lang, page } = Astro.props;
+
+// a language without notes of its own shows the English library
+const ownRows = await notesOf(lang);
+const textLang: Lang = ownRows.length ? lang : 'en';
+const rows = ownRows.length ? ownRows : await notesOf('en');
+const areas = await libraryOf(textLang);
+const { rows: shown, pages } = paginate(rows, page);
+const base = route('notes', lang);
+const count = (n: number) => (n === 1 ? t(lang, 'notes.count-one') : t(lang, 'notes.count').replace('{n}', String(n)));
+const areaTitle = new Map(areas.map((a) => [a.folder, a.title]));
+const pageNote = pages > 1 ? ` ${t(lang, 'notes.page').replace('{p}', String(page)).replace('{t}', String(pages))}.` : '';
+const prose = t(lang, 'notes.prose').replace('{n}', String(rows.length)).replace('{k}', String(areas.length)) + pageNote;
+---
+<Base lang={lang} page="notes" path={pagedRoute(base, page)} twinPath={pagedRoute(route('notes', lang === 'en' ? 'de' : 'en'), page)} title={page > 1 ? `${t(lang, 'notes.word')} · ${t(lang, 'notes.page').replace('{p}', String(page)).replace('{t}', String(pages))}` : t(lang, 'notes.word')} description={prose} current="02">
+  <section class="section">
+    <SectionHeading number={NOTES_CODE} word={t(lang, 'notes.word')} claim={t(lang, 'notes.claim')} prose={prose} link={{ href: route('writing', lang), label: t(lang, 'all-writing') }} as="h1" />
+    {page === 1 && areas.length > 0 && (
+      <Listing head={{ index: t(lang, 'index'), title: t(lang, 'notes.areas'), meta: '', trail: '' }}>
+        {areas.map((a) => (
+          <ListingRow code={a.code} title={a.title} sub={a.topics.join(' · ')} meta={[count(a.rows.length)]} lang={lang} textLang={textLang} href={withBase(tagPath(a.tag, textLang))} />
+        ))}
+      </Listing>
+    )}
+    <Listing class="lr-long-code" head={{ index: t(lang, 'index'), title: t(lang, 'notes.all'), meta: '', trail: '' }}>
+      {shown.map((r) => (
+        <ListingRow code={r.code} title={r.entry.data.title} meta={[areaTitle.get(r.area) ?? '', r.subtopic || r.topic].filter(Boolean)} lang={lang} textLang={textLang} href={noteRoute(r.entry.data.slug, r.entry.data.lang)} />
+      ))}
+    </Listing>
+    <Pagination page={page} total={pages} href={(p) => pagedRoute(base, p)} labels={{ nav: t(lang, 'pagination.nav'), prev: t(lang, 'pagination.prev'), next: t(lang, 'pagination.next'), page: t(lang, 'pagination.page') }} />
+    {isDraftLang(lang) && <div class="doc-meta"><StatusMark state="in-build" lang={lang} label={t(lang, 'draft')} /></div>}
+  </section>
+</Base>

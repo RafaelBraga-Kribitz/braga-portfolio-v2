@@ -20,7 +20,9 @@ The affine power rule is the power rule extended to a linear argument: instead o
 
 ```mermaid
 flowchart TD
-    A["Integral: int (ax+b)^n dx"] --> B{"n = -1?"} B -- "Yes" --> C["Use reciprocal log rule: (1/a)*ln|ax+b| + C"] B -- "No" --> D["Identify a, b, n"]
+    A["Integral: int (ax+b)^n dx"] --> B{"n = -1?"}
+    B -- "Yes" --> C["Use reciprocal log rule: (1/a)*ln|ax+b| + C"]
+    B -- "No" --> D["Identify a, b, n"]
     D --> E["Increment exponent: n becomes n+1"]
     E --> F["Divide by new exponent AND by inner derivative a"]
     F --> G["Result: (ax+b)^(n+1) / (a*(n+1)) + C"]

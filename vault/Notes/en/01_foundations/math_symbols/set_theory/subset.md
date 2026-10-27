@@ -20,7 +20,9 @@ $A \subseteq B$ means "$A$ is a **subset** of $B$" — every element in $A$ is a
 
 ```mermaid
 flowchart TD
-    A["Sets A and B"] --> B{"Is every element of A also in B?"} B -- "Yes (all elements match)" --> C["A ⊆ B (A is a subset of B)"] B -- "No (some element of A is not in B)" --> D["A ⊄ B (not a subset)"]
+    A["Sets A and B"] --> B{"Is every element of A also in B?"}
+    B -- "Yes (all elements match)" --> C["A ⊆ B (A is a subset of B)"]
+    B -- "No (some element of A is not in B)" --> D["A ⊄ B (not a subset)"]
     C --> E["Special case: A = B → A ⊆ B is still True"]
     C --> F["DA: train_categories ⊆ serving_categories?"]
     D --> G["DA: foreign key violation — some fact IDs not in dimension table"]

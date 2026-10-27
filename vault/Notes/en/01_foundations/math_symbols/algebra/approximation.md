@@ -21,7 +21,9 @@ The $\approx$ symbol means **approximately equal to**. It signals that two value
 ```mermaid
 flowchart TD
     A["Exact value (e.g., sqrt(2) = 1.41421356...)"] --> B["Choose precision level for context"]
-    B --> C{"Is the value rational and finite?"} C -- "Yes" --> D["Use = (exact equality)"] C -- "No / too many digits" --> E["Round to needed decimal places"]
+    B --> C{"Is the value rational and finite?"}
+    C -- "Yes" --> D["Use = (exact equality)"]
+    C -- "No / too many digits" --> E["Round to needed decimal places"]
     E --> F["Write: a approx= rounded result"]
     F --> G["Signal to reader: not exact, but close enough for purpose"]
 ```

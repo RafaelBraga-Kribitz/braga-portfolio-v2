@@ -20,7 +20,9 @@ $x \oplus y$ is **exclusive OR** (XOR). It is true when exactly one of $x$ or $y
 
 ```mermaid
 flowchart TD
-    A["Evaluate x XOR y"] --> B{["Are x and y the same?"]} B -- "Same (both T or both F)" --> C["XOR = False: no exclusive difference"] B -- "Different (one T, one F)" --> D["XOR = True: exactly one is true"]
+    A["Evaluate x XOR y"] --> B{"Are x and y the same?"}
+    B -- "Same (both T or both F)" --> C["XOR = False: no exclusive difference"]
+    B -- "Different (one T, one F)" --> D["XOR = True: exactly one is true"]
     C --> E["x=T, y=T: False (both true: not exclusive)"]
     C --> F["x=F, y=F: False (neither true)"]
     D --> G["x=T, y=F: True (x alone)"]

@@ -25,7 +25,10 @@ flowchart TD
     C --> D["Differentiate: compute du = (du/dx) dx"]
     D --> E["Integrate: compute v = integral of dv"]
     E --> F["Apply IBP: uv - int v du"]
-    F --> G{"Is the new integral simpler?"} G -- "Yes" --> H["Solve the new integral"] G -- "No, but similar form" --> I["Apply IBP again or use circular trick"] G -- "No, still complex" --> J["Try substitution or tabular method"]
+    F --> G{"Is the new integral simpler?"}
+    G -- "Yes" --> H["Solve the new integral"]
+    G -- "No, but similar form" --> I["Apply IBP again or use circular trick"]
+    G -- "No, still complex" --> J["Try substitution or tabular method"]
     H --> K["Combine: uv - result + C"]
     I --> L["Solve algebraically if circular: 2*I = ... -> I = ..."]
 ```

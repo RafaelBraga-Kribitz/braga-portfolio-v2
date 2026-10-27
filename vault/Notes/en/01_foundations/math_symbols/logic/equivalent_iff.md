@@ -22,9 +22,15 @@ $\iff$ means **"if and only if"** (abbreviated "iff"). It is a **biconditional**
 flowchart TD
     A["A iff B: check both directions"]
     A --> B["Direction 1: A => B?"]
-    A --> C["Direction 2: B => A?"] B -- "Yes" --> D["Forward direction holds"] B -- "No" --> E["Biconditional is False"] C -- "Yes" --> F["Backward direction holds"] C -- "No" --> E
-    D --> G{["Both directions hold?"]}
-    F --> G G -- "Yes" --> H["A <=> B is True"] G -- "No" --> E
+    A --> C["Direction 2: B => A?"]
+    B -- "Yes" --> D["Forward direction holds"]
+    B -- "No" --> E["Biconditional is False"]
+    C -- "Yes" --> F["Backward direction holds"]
+    C -- "No" --> E
+    D --> G{"Both directions hold?"}
+    F --> G
+    G -- "Yes" --> H["A <=> B is True"]
+    G -- "No" --> E
 ```
 
 ## Real-world use

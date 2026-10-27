@@ -20,7 +20,9 @@ When $A$ and $B$ are independent, knowing $B$ occurred does NOT change your esti
 
 ```mermaid
 flowchart LR
-    A["Observe B"] --> B["Update P(A)?"] B -- "Independent" --> C["P(A|B) = P(A): no update"] B -- "Dependent" --> D["P(A|B) ≠ P(A): update needed"]
+    A["Observe B"] --> B["Update P(A)?"]
+    B -- "Independent" --> C["P(A|B) = P(A): no update"]
+    B -- "Dependent" --> D["P(A|B) ≠ P(A): update needed"]
     C --> E["B gives no info about A"]
     D --> F["B is informative about A"]
 ```

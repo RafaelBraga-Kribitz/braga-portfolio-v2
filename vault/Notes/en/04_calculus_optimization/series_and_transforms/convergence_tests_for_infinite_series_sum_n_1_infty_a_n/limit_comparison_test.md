@@ -21,7 +21,11 @@ The Limit Comparison Test (LCT) is more powerful and often easier to apply than 
 ```mermaid
 flowchart TD
     A["Series sum a_n and comparison sum b_n (both positive terms)"] --> B["Compute L = lim(n→inf) a_n / b_n"]
-    B --> C{"Value of L?"} C -- "0 < L < inf" --> D["SAME BEHAVIOR: both converge or both diverge"] C -- "L = 0" --> E["If sum b_n converges → sum a_n converges\n(a_n grows slower)"] C -- "L = inf" --> F["If sum b_n diverges → sum a_n diverges\n(a_n grows faster)"] C -- "Does not exist" --> G["LCT inconclusive — try direct comparison"]
+    B --> C{"Value of L?"}
+    C -- "0 < L < inf" --> D["SAME BEHAVIOR: both converge or both diverge"]
+    C -- "L = 0" --> E["If sum b_n converges → sum a_n converges\n(a_n grows slower)"]
+    C -- "L = inf" --> F["If sum b_n diverges → sum a_n diverges\n(a_n grows faster)"]
+    C -- "Does not exist" --> G["LCT inconclusive — try direct comparison"]
 ```
 
 ## Real-world use

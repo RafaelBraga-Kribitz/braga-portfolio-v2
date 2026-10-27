@@ -21,7 +21,9 @@ The symbol $x \in A$ means "$x$ is an element (member) of set $A$" — the most 
 ```mermaid
 flowchart TD
     A["Set A = a collection of elements"] --> B["Given element x"]
-    B --> C{["Is x in A?"]} C -- "Yes" --> D["x ∈ A (membership confirmed)"] C -- "No" --> E["x ∉ A (not a member)"]
+    B --> C{"Is x in A?"}
+    C -- "Yes" --> D["x ∈ A (membership confirmed)"]
+    C -- "No" --> E["x ∉ A (not a member)"]
     D --> F["DA: x in valid_categories → pass validation"]
     E --> G["DA: x not in valid_categories → flag as invalid"]
 ```

@@ -1,560 +1,221 @@
 ---
-publish: false
-date: '2026-04-16'
+publish: true
+date: '2026-10-26'
 tags:
 - machine-learning
 ---
 
-# Bayesian_information_criterion_bic
-
-Bayesian Information Criterion (BIC) We are working on the **Coefficient of Determination**, $R^2$, for a regression model, defined by
+# Bayesian Information Criterion (BIC)
 
 $$
-R^2=1-\frac{SS_{\mathrm{res}}}{SS_{\mathrm{tot}}},
+\mathrm{BIC} = k \ln n - 2 \ln \hat{L}
 $$
 
-where
-
-$$
-SS_{\mathrm{res}}=\sum_{i=1}^{N}(y_i-\hat{y}_i)^2
-$$
-
-and
-
-$$
-SS_{\mathrm{tot}}=\sum_{i=1}^{N}(y_i-\bar{y})^2.
-$$
-
-The setting is finite, unweighted regression with $SS_{\mathrm{tot}}>0$, so $R^2 \in (-\infty,1]$, where $R^2=1$ means perfect fit, $R^2=0$ matches the mean-baseline predictor, and negative values mean the model performs worse than predicting the mean.
+, where $k$ is the number of estimated parameters, $n$ the number of observations, and $\hat{L} = p(\text{data} \mid \hat{\theta}, M)$ the maximised likelihood of model $M$; lower is better, and only differences between models fitted to the same data carry meaning.
 
 ## Deep Breakdown
 
-The Coefficient of Determination, usually written as $R^2$, is one of the most widely reported regression metrics. It measures how much of the variation in the target variable $y$ is explained by the model relative to a simple baseline. That baseline is the constant model that predicts the mean of the target for every observation:
-
-$$
-\hat{y}_i^{\mathrm{baseline}}=\bar{y}
-$$
-
-So $R^2$ is not just measuring whether predictions are close to actual values. It is measuring whether the model improves on a simple average-only benchmark.
-
-The core idea is based on two sums of squares:
-
-- **Residual sum of squares**, $SS_{\mathrm{res}}$, which measures unexplained variation left in the model errors,
-- **Total sum of squares**, $SS_{\mathrm{tot}}$, which measures total variation of the target around its mean.
-
-If the model predicts very well, then residual errors are small, so $SS_{\mathrm{res}}$ is small and $R^2$ is close to 1. If the model predicts no better than the mean baseline, then $SS_{\mathrm{res}} = SS_{\mathrm{tot}}$, so:
-
-$$
-R^2=1-\frac{SS_{\mathrm{tot}}}{SS_{\mathrm{tot}}}=0
-$$
-
-If the model predicts worse than the mean baseline, then $SS_{\mathrm{res}} > SS_{\mathrm{tot}}$, so $R^2 < 0$. This last point is extremely important. Many beginners incorrectly assume that $R^2$ must always be between 0 and 1. That is false in general. On test data, validation data, or for poorly specified models, $R^2$ can be negative. In DA/DS work, $R^2$ is useful because it gives a normalized measure of model fit that is easier to compare than raw error sums.
-
-It is commonly used in:
-
-- regression model comparison,
-- stakeholder reporting,
-- forecasting and pricing summaries,
-- feature set evaluation,
-- quick assessment of fit quality.
-
-But $R^2$ has limitations. A high $R^2$ does not guarantee that the model generalizes well. It does not guarantee causal interpretation. It does not guarantee low business-relevant error. It can also increase when unnecessary variables are added, especially in-sample, which is why overfitting must be considered. That is why $R^2$ is often reported alongside MAE, MSE, or RMSE, and why adjusted $R^2$ is sometimes used for linear models with many predictors.
-
-So the correct practical view is:
-
-- $R^2$ tells you how much better the model is than the mean baseline in terms of squared-error fit,
-- but it does not replace proper validation or other regression metrics.
+What it tells me *(Situation Awareness)*:
+BIC scores a fitted model by its lack of fit, $-2 \ln \hat{L}$, plus a complexity penalty of $\ln n$ per parameter. Adding a parameter always raises $\hat{L}$ (or leaves it unchanged), so fit alone favours the largest model; the penalty demands that each extra parameter improve $2 \ln \hat{L}$ by more than $\ln n$: $4.6$ at $n = 100$, $6.9$ at $n = 1{,}000$, $13.8$ at $n = 10^6$. AIC charges a flat $2$ per parameter, so BIC is stricter whenever $n \ge 8$ ($\ln 8 = 2.08 > 2$) and grows stricter with more data. The two criteria answer different questions. BIC comes from Bayesian model comparison: it is $-2$ times a large-sample (Laplace) approximation of the log marginal likelihood $\ln p(\text{data} \mid M)$, so $e^{-\Delta \mathrm{BIC}/2}$ approximates a Bayes factor, and BIC is *consistent*: if the true model is among the candidates, the probability of selecting it tends to $1$ as $n \to \infty$. AIC targets out-of-sample predictive accuracy (expected KL divergence) and keeps a fixed, non-vanishing chance of choosing a model that is too large. In DA/DS: BIC is the default for choosing the number of clusters in a Gaussian mixture, the lag order of ARIMA models, the number of factors or latent classes, and for stepwise feature selection when a parsimonious, interpretable model matters more than the last fraction of predictive accuracy.
 
 ## Flowchart
 
 ```mermaid
 flowchart TD
-    A["Start with actual values y_i and predictions y_hat_i"] --> B["Compute target mean y_bar"]
-    B --> C["Compute residual squared errors: (y_i - y_hat_i)^2"]
-    B --> D["Compute total squared deviations: (y_i - y_bar)^2"]
-    C --> E["Sum residual squared errors to get SS_res"]
-    D --> F["Sum total squared deviations to get SS_tot"]
-    E --> G["Compute R^2 = 1 - (SS_res / SS_tot)"]
-    F --> G["Compute R^2 = 1 - (SS_res / SS_tot)"]
-    G --> H["Interpret fit relative to mean baseline"]
-    H --> I["Use with MAE, MSE, and validation checks to avoid overfitting"]
+    A["Candidate models M1..Mm, same data and response"] --> B["Fit each by maximum likelihood"]
+    B --> C["Record ln L-hat and parameter count k"]
+    C --> D["BIC = k ln n - 2 ln L-hat"]
+    D --> E["Rank: lowest BIC first"]
+    E --> F["Delta BIC to the best model"]
+    F --> G["0-2: weak evidence"]
+    F --> H["2-6: positive evidence"]
+    F --> I["6-10: strong; above 10: very strong"]
+    G --> J["Prefer the simpler model or keep both"]
+    H --> K["Select the lowest-BIC model, then check residuals"]
+    I --> K
 ```
 
 ## Real-world use
 
 ### Where it is used
 
-$R^2$ is used when evaluating regression models that predict continuous outcomes, such as sales, demand, price, revenue, delivery time, or customer value. It is especially common in dashboards, model reports, and side-by-side comparison of candidate regression models.
+Choosing the number of components in Gaussian mixture models and latent class analysis, the order $(p, q)$ of ARIMA models (`auto_arima` and R's `forecast::auto.arima` both offer BIC), the number of factors in factor analysis, change-point counts, stepwise regression (`step(..., k = log(n))` in R), structural equation models, and phylogenetics. Reported by default in `statsmodels`, R `glm`/`lm` (`BIC()`), and `sklearn.mixture.GaussianMixture.bic`.
 
 ### Problem it solves
 
-It solves the problem of expressing model fit relative to a simple baseline in a normalized way. Raw squared error alone is hard to interpret across different targets or datasets. $R^2$ turns that comparison into a dimensionless ratio-based score.
+Maximum likelihood cannot choose model size: the likelihood of a nested larger model is never lower than that of the smaller one, so ranking by $\hat{L}$ always picks the most complex candidate and overfits. Hold-out validation solves this but costs data and refits; BIC gives a single number from one fit on all the data, with a Bayesian justification and a penalty that scales with $n$.
 
 ### How it solves the problem
 
-It compares the model’s residual squared error, $SS_{\mathrm{res}}$, against the total variation of the target around its mean, $SS_{\mathrm{tot}}$. If the model leaves little unexplained variation, then the ratio $SS_{\mathrm{res}}/SS_{\mathrm{tot}}$ is small, making $R^2$ large. If the model does not improve on the mean baseline, the score is around zero. If it is worse than baseline, the score becomes negative.
+For large $n$, the log marginal likelihood of a model with $k$ free parameters expands (Laplace approximation) as $\ln p(\text{data} \mid M) = \ln \hat{L} - \tfrac{k}{2} \ln n + O(1)$. The $O(1)$ terms, which depend on the prior and the Fisher information, are dropped; multiplying by $-2$ gives BIC. The penalty is the cost of spreading prior probability over $k$ dimensions: each extra parameter has to explain the data well enough to pay for the volume of parameter space it opens up. Comparing two models, $\Delta \mathrm{BIC} = \mathrm{BIC}_2 - \mathrm{BIC}_1 \approx -2 \ln \mathrm{BF}_{21}$, so $\Delta \mathrm{BIC} = 10$ corresponds to a Bayes factor of $e^{5} \approx 148$ for model 1.
 
 ### Example in a business
 
-Suppose a pricing analyst builds a regression model to predict product demand from price, seasonality, and promotion features. A model with $R^2=0.78$ means the model explains 78% of the target variance relative to the mean baseline, under the squared-error definition. That is useful in reporting and model comparison. But the analyst still needs MAE or RMSE to know whether the absolute forecast misses are small enough for inventory or margin decisions.
+A retailer segments 900 customers on two standardised behaviour scores with a Gaussian mixture and fits $K = 1, \ldots, 6$ components. BIC values are $7287.2$, $6647.3$, $6317.7$, $6360.4$, $6392.1$, $6431.3$. $K = 3$ wins; $K = 4$ is $42.7$ higher, a Bayes factor above $10^9$ against the extra segment. Each extra full-covariance component in two dimensions costs $6$ parameters (1 weight, 2 means, 3 covariance entries), i.e. $6 \ln 900 = 40.8$ BIC points, which the fourth segment's likelihood gain does not cover. The marketing team gets three segments instead of an extra one that splits a real group in two.
 
 ## The formula, piece by piece
 
-| Symbol | Meaning |
-| --- | --- |
-| $N$ | Number of observations |
-| $y_i$ | Actual target value for observation $i$ |
-| $\hat{y}_i$ | Predicted target value for observation $i$ |
-| $\bar{y}$ | Mean of the actual target values |
-| $(y_i-\hat{y}_i)^2$ | Squared residual error for observation $i$ |
-| $(y_i-\bar{y})^2$ | Squared deviation from the mean for observation $i$ |
-| $SS_{\mathrm{res}}$ | Residual sum of squares |
-| $SS_{\mathrm{tot}}$ | Total sum of squares |
-| $R^2$ | Coefficient of Determination |
-
-Mean of the target:
-
-$$
-\bar{y}=\frac{1}{N}\sum_{i=1}^{N}y_i
-$$
-
-Residual sum of squares:
-
-$$
-SS_{\mathrm{res}}=\sum_{i=1}^{N}(y_i-\hat{y}_i)^2
-$$
-
-Total sum of squares:
-
-$$
-SS_{\mathrm{tot}}=\sum_{i=1}^{N}(y_i-\bar{y})^2
-$$
-
-Canonical formula:
-
-$$
-R^2=1-\frac{SS_{\mathrm{res}}}{SS_{\mathrm{tot}}}
-$$
-
-Domain assumptions:
-
-$$
-N>0,\quad SS_{\mathrm{tot}}>0
-$$
-
-Range:
-
-$$
-R^2 \in (-\infty,1]
-$$
-
-Key benchmark cases:
-
-$$
-R^2=1 \iff y_i=\hat{y}_i \text{ for all } i
-$$
-
-$$
-R^2=0 \iff SS_{\mathrm{res}}=SS_{\mathrm{tot}}
-$$
-
-$$
-R^2<0 \iff SS_{\mathrm{res}}>SS_{\mathrm{tot}}
-$$
+- $\hat{L}$: the likelihood at the maximum likelihood estimate $\hat{\theta}$; $\ln \hat{L}$ is the maximised log-likelihood (`llf` in statsmodels, `logLik()` in R)
+- $-2 \ln \hat{L}$: the deviance-type fit term; smaller means better fit
+- $k$: the number of free parameters, including intercepts, variances and mixture weights (counted as $K - 1$); conventions differ by software, so compare BICs from one tool only
+- $n$: the number of independent observations; for time series, the effective sample after differencing and lags
+- $k \ln n$: the complexity penalty; $\ln n$ per parameter
+- $\Delta \mathrm{BIC}$: the difference to the best model; Kass and Raftery (1995) read $0$–$2$ as weak, $2$–$6$ positive, $6$–$10$ strong, $> 10$ very strong evidence
+- $e^{-\Delta \mathrm{BIC}/2}$: approximate Bayes factor; with equal prior odds, posterior model weights are $w_i = e^{-\Delta_i/2} / \sum_j e^{-\Delta_j/2}$
+- Comparison: $\mathrm{AIC} = 2k - 2\ln \hat{L}$; the two differ only in the penalty, $\mathrm{BIC} - \mathrm{AIC} = k(\ln n - 2)$
 
 ## The formula in words
 
-First compute how much the target varies around its own mean. That is $SS_{\mathrm{tot}}$, the total variation that exists in the data before using the model. Then compute how much squared error remains after using the model. That is $SS_{\mathrm{res}}$, the unexplained variation left in the residuals. Now compare the two. The ratio
-
-$$
-\frac{SS_{\mathrm{res}}}{SS_{\mathrm{tot}}}
-$$
-
-tells us what fraction of total variation remains unexplained by the model. Subtracting that from 1 gives the fraction explained by the model, under this squared-error baseline interpretation.
-
-So:
-
-- high $R^2$ means the model explains much of the variation,
-- $R^2=0$ means the model performs like the mean predictor,
-- negative $R^2$ means the model is worse than predicting the mean,
-- $R^2=1$ means perfect predictions.
+"Start from how badly the best-fitting version of the model explains the data, and add $\ln n$ for every parameter it needed; the model with the lowest total is the one the data support most once complexity is paid for." Tiny example: with $n = 100$, a parameter costs $\ln 100 = 4.61$ points, so adding two parameters must raise $\ln \hat{L}$ by more than $4.61$ to be worth it.
 
 ## Critical Concepts
 
-- **$R^2$ is a regression metric.** It applies to continuous targets, not classification labels.
-- **$R^2$ is baseline-relative.** It measures improvement over predicting the mean of $y$.
-- **$R^2$ can be negative.** This happens when the model performs worse than the mean baseline.
-- **$R^2$ is bounded above by 1.** Perfect prediction gives $R^2=1$.
-- **$R^2$ is dimensionless.** Unlike MAE or RMSE, it has no target units.
-- **High $R^2$ does not guarantee good business error.** A model can have high $R^2$ and still produce operationally large misses.
-- **$R^2$ can encourage overfitting in-sample.** Adding predictors often increases in-sample fit, which is why validation and adjusted $R^2$ matter.
+- **BIC versus AIC:** penalty $\ln n$ versus $2$ per parameter. BIC is consistent (selects the true model with probability $\to 1$ if it is a candidate); AIC is efficient (minimises expected prediction error when the truth is not in the set) but overfits with non-vanishing probability. In the simulation below AIC picks a too-large polynomial 25 % to 30 % of the time at every $n$, BIC 10 % at $n = 50$ and 1 % at $n = 1{,}000$. See [[akaike_information_criterion_aic]].
+- **Only differences matter:** the absolute value depends on $n$ and on constants in the likelihood; a BIC of $596$ means nothing alone.
+- **Same data, same response:** models must be fitted to the identical rows and the identical $y$ (not $y$ versus $\ln y$, not after dropping rows with missing values in one model only).
+- **Approximation limits:** the derivation assumes large $n$, a regular model (identifiable parameters, MLE in the interior) and a prior that is not concentrated; for mixtures and neural networks these conditions fail, and BIC is a heuristic there, though a good one for GMMs in practice.
+- **Effective $n$:** with clustered or autocorrelated data, $n$ overstates the information and the penalty is too strong or too weak depending on which $n$ is used.
+- **Link to Bayes:** $\mathrm{BIC} \approx -2 \ln p(\text{data} \mid M)$, so BIC differences approximate log Bayes factors without choosing a prior explicitly. See [[marginal_likelihood_evidence]], [[bayes_factor_model_comparison]] and [[posterior_odds]].
 
 ## Step-by-step calculation (tiny example)
 
-Suppose a model predicts demand for 4 days.
+*Two models on the same $n = 100$ observations: A with $k = 3$, $\ln \hat{L} = -150$; B with $k = 5$, $\ln \hat{L} = -146$.*
 
-Actual values:
+*Step 1: Penalty per parameter*
+$\ln 100 = 4.6052$.
 
-$$
-y = [3,\ 5,\ 7,\ 9]
-$$
+*Step 2: BIC of A*
+$3 \times 4.6052 - 2 \times (-150) = 13.82 + 300 = 313.82$.
 
-Predicted values:
+*Step 3: BIC of B*
+$5 \times 4.6052 - 2 \times (-146) = 23.03 + 292 = 315.03$.
 
-$$
-\hat{y} = [4,\ 4,\ 8,\ 8]
-$$
+*Step 4: Compare*
+$\Delta \mathrm{BIC} = 315.03 - 313.82 = 1.21$ in favour of A; approximate Bayes factor $e^{1.21/2} = 1.83$, weak evidence. The fit gain of B ($2 \times 4 = 8$ deviance points) does not cover the penalty for 2 extra parameters ($9.21$).
 
-### Step 1, compute the mean of the actual target
-
-$$
-\bar{y}=\frac{3+5+7+9}{4}=\frac{24}{4}=6
-$$
-
-### Step 2, compute the residual sum of squares Residuals
-
-- Day 1: $3-4=-1$
-- Day 2: $5-4=1$
-- Day 3: $7-8=-1$
-- Day 4: $9-8=1$ Squared residuals:
-
-- $(-1)^2=1$
-- $(1)^2=1$
-- $(-1)^2=1$
-- $(1)^2=1$ So:
-
-$$
-SS_{\mathrm{res}}=1+1+1+1=4
-$$
-
-### Step 3, compute the total sum of squares Deviations from the mean
-
-- Day 1: $3-6=-3$
-- Day 2: $5-6=-1$
-- Day 3: $7-6=1$
-- Day 4: $9-6=3$ Squared deviations:
-
-- $(-3)^2=9$
-- $(-1)^2=1$
-- $(1)^2=1$
-- $(3)^2=9$ So:
-
-$$
-SS_{\mathrm{tot}}=9+1+1+9=20
-$$
-
-### Step 4, compute $R^2$
-
-$$
-R^2=1-\frac{SS_{\mathrm{res}}}{SS_{\mathrm{tot}}}
-=1-\frac{4}{20}
-=1-0.2
-=0.8
-$$
-
-### Interpretation The model explains 80% of the variance in the target relative to the mean baseline, under this squared-error definition.
-
-### Tiny plain-language reading
-
-Compared with just predicting the average value every time, this model removes most of the squared prediction error.
-
-### Baseline check
-
-If we predicted the mean $\bar{y}=6$ for every observation, then:
-
-$$
-SS_{\mathrm{res}}=SS_{\mathrm{tot}}
-$$
-
-and the score would be:
-
-$$
-R^2=0
-$$
-
-So the current model is clearly better than the mean baseline.
+*Step 5: Contrast with AIC*
+$\mathrm{AIC}_A = 6 + 300 = 306$, $\mathrm{AIC}_B = 10 + 292 = 302$: AIC prefers B, because it charges only $2 \times 2 = 4$ for the extra parameters. The two criteria disagree exactly when the fit gain lies between $2$ and $\ln n$ per added parameter.
 
 ## Code examples
 
-### Beginner friendly Example \[Python\])
+### Beginner example (Python)
 
 ```python
-# R-squared, R^2
-# Example: revenue prediction
-actual_values = [100, 120, 140, 160]
-predicted_values = [110, 115, 150, 155]
-target_mean = sum(actual_values) / len(actual_values)
-ss_res = 0
-ss_tot = 0
-for actual_value, predicted_value in zip(actual_values, predicted_values):
-    ss_res += (actual_value - predicted_value) ** 2
-ss_tot += (actual_value - target_mean) ** 2
-r_squared = 1 - (ss_res / ss_tot)
-print("Target mean:", target_mean)
-print("SS_res:", ss_res)
-print("SS_tot:", ss_tot)
-print("R^2:", r_squared)
+import numpy as np
+import statsmodels.api as sm
+
+# 1. BIC and AIC by hand for two candidate models on the same n = 100 rows
+n = 100
+models = {"A (k = 3)": (3, -150.0), "B (k = 5)": (5, -146.0)}
+for name, (k, loglik) in models.items():
+    bic = k * np.log(n) - 2 * loglik
+    aic = 2 * k - 2 * loglik
+    print(f"Model {name}: ln L = {loglik}, AIC = {aic:.2f}, BIC = {bic:.2f}")
+
+delta_bic = (5 * np.log(n) + 292) - (3 * np.log(n) + 300)
+print(f"Delta BIC (B - A) = {delta_bic:.2f}; approx. Bayes factor for A = {np.exp(delta_bic / 2):.2f}")
+
+# 2. BIC from a fitted regression: does adding a pure-noise feature pay off?
+rng = np.random.default_rng(7)
+x = rng.normal(size=n)
+noise_feature = rng.normal(size=n)
+y = 2.0 + 1.5 * x + rng.normal(size=n)
+
+small = sm.OLS(y, sm.add_constant(x)).fit()
+large = sm.OLS(y, sm.add_constant(np.column_stack([x, noise_feature]))).fit()
+for label, fit in (("y ~ x        ", small), ("y ~ x + noise", large)):
+    print(f"{label}: ln L = {fit.llf:.2f}, AIC = {fit.aic:.2f}, BIC = {fit.bic:.2f}")
+print("Lower BIC wins:", "y ~ x" if small.bic < large.bic else "y ~ x + noise")
 ```
 
-Explanation
-:
-
-- `target_mean` is $\bar{y}$.
-- `ss_res` adds the squared prediction errors.
-- `ss_tot` adds the squared deviations from the mean.
-- `1 - (ss_res / ss_tot)` computes the final $R^2$ score.
-
-Manual check:
-
-$$
-\bar{y}=\frac{100+120+140+160}{4}=130
-$$
-
-$$
-SS_{\mathrm{res}}=(100-110)^2+(120-115)^2+(140-150)^2+(160-155)^2
-=100+25+100+25=250
-$$
-
-$$
-SS_{\mathrm{tot}}=(100-130)^2+(120-130)^2+(140-130)^2+(160-130)^2
-=900+100+100+900=2000
-$$
-
-$$
-R^2=1-\frac{250}{2000}=1-0.125=0.875
-$$
-
-So the model explains 87.5% of the target variance relative to the mean baseline.
-
-### Beginner friendly Example \[R\])
+### Beginner example (R)
 
 ```r
-# R-squared, R^2
-# Example: price prediction
-actual_values <- c(200, 220, 210, 250)
-predicted_values <- c(205, 215, 220, 240)
-target_mean <- mean(actual_values)
-ss_res <- sum((actual_values - predicted_values)^2)
-ss_tot <- sum((actual_values - target_mean)^2)
-r_squared <- 1 - (ss_res / ss_tot)
-cat("Target mean:", target_mean, "\n")
-cat("SS_res:", ss_res, "\n")
-cat("SS_tot:", ss_tot, "\n")
-cat("R^2:", r_squared, "\n")
+n <- 100
+bic <- function(k, loglik, n) k * log(n) - 2 * loglik
+aic <- function(k, loglik) 2 * k - 2 * loglik
+cat(sprintf("Model A: AIC = %.2f, BIC = %.2f\n", aic(3, -150), bic(3, -150, n)))
+cat(sprintf("Model B: AIC = %.2f, BIC = %.2f\n", aic(5, -146), bic(5, -146, n)))
+
+# Fitted models: BIC() uses logLik(), which counts the residual variance as a parameter
+set.seed(7)
+x <- rnorm(n); noise <- rnorm(n)
+y <- 2 + 1.5 * x + rnorm(n)
+m1 <- lm(y ~ x)
+m2 <- lm(y ~ x + noise)
+print(c(BIC_small = BIC(m1), BIC_large = BIC(m2)))
+print(attr(logLik(m1), "df"))   # 3: intercept, slope, sigma
+
+# Stepwise selection with the BIC penalty instead of AIC's 2
+print(step(m2, k = log(n), trace = 0))
 ```
 
-Explanation
-:
+### Professional example (Python)
 
-- `mean(actual_values)` computes $\bar{y}$.
-- `(actual_values - predicted_values)^2` computes squared residuals.
-- `(actual_values - target_mean)^2` computes squared deviations from the mean.
-- The final ratio compares model error against baseline variation.
+```python
+import numpy as np
+from sklearn.mixture import GaussianMixture
 
-Manual check:
+rng = np.random.default_rng(0)
 
-$$
-\bar{y}=\frac{200+220+210+250}{4}=220
-$$
 
-$$
-SS_{\mathrm{res}}=(200-205)^2+(220-215)^2+(210-220)^2+(250-240)^2
-=25+25+100+100=250
-$$
+def gaussian_loglik(resid):
+    """Maximised Gaussian log-likelihood of OLS residuals (sigma^2 = RSS / n)."""
+    n = resid.size
+    s2 = np.mean(resid ** 2)
+    return -0.5 * n * (np.log(2 * np.pi * s2) + 1)
 
-$$
-SS_{\mathrm{tot}}=(200-220)^2+(220-220)^2+(210-220)^2+(250-220)^2
-=400+0+100+900=1400
-$$
 
-$$
-R^2=1-\frac{250}{1400}\approx 0.8214
-$$
+def poly_criteria(x, y, degree):
+    X = np.vander(x, degree + 1, increasing=True)
+    beta, *_ = np.linalg.lstsq(X, y, rcond=None)
+    ll = gaussian_loglik(y - X @ beta)
+    k = degree + 2                      # polynomial coefficients + noise variance
+    n = y.size
+    return 2 * k - 2 * ll, k * np.log(n) - 2 * ll
 
-So the model explains about 82.14% of the target variance relative to the mean baseline.
 
-### Final Professional Example \[Python\])
+# --- 1. Polynomial degree selection: the true curve is quadratic -------------
+x = rng.uniform(-2, 2, 200)
+y = 1.0 - 0.5 * x + 0.8 * x ** 2 + rng.normal(0, 1.0, x.size)
+print("degree    AIC       BIC")
+for d in range(1, 7):
+    aic, bic = poly_criteria(x, y, d)
+    print(f"{d:>6} {aic:>8.2f} {bic:>9.2f}")
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass
-from typing import Sequence RANDOM_SEED = 42 @dataclass(frozen=True)
-class RegressionEvaluation: actual_values: Sequence[float] predicted_values: Sequence[float] def validate(self) -> None: if len(self.actual_values) == 0: raise ValueError("At least one observation is required.") if len(self.actual_values) != len(self.predicted_values): raise ValueError("actual_values and predicted_values must have the same length.") def mean_absolute_error(actual_values: Sequence[float], predicted_values: Sequence[float]) -> float: if len(actual_values) == 0: raise ValueError("At least one observation is required.") if len(actual_values) != len(predicted_values): raise ValueError("actual_values and predicted_values must have the same length.") absolute_error_sum = 0.0 for actual_value, predicted_value in zip(actual_values, predicted_values): absolute_error_sum += abs(actual_value - predicted_value) return absolute_error_sum / len(actual_values) def mean_squared_error(actual_values: Sequence[float], predicted_values: Sequence[float]) -> float: if len(actual_values) == 0: raise ValueError("At least one observation is required.") if len(actual_values) != len(predicted_values): raise ValueError("actual_values and predicted_values must have the same length.") squared_error_sum = 0.0 for actual_value, predicted_value in zip(actual_values, predicted_values): squared_error_sum += (actual_value - predicted_value) ** 2 return squared_error_sum / len(actual_values) def r_squared_score(actual_values: Sequence[float], predicted_values: Sequence[float]) -> float: if len(actual_values) == 0: raise ValueError("At least one observation is required.") if len(actual_values) != len(predicted_values): raise ValueError("actual_values and predicted_values must have the same length.") target_mean = sum(actual_values) / len(actual_values) ss_res = 0.0 ss_tot = 0.0 for actual_value, predicted_value in zip(actual_values, predicted_values): ss_res += (actual_value - predicted_value) ** 2 ss_tot += (actual_value - target_mean) ** 2 if ss_tot == 0: raise ValueError("R^2 is undefined when SS_tot = 0, meaning the target has no variance.") return 1 - (ss_res / ss_tot) def summarize_regression_metrics(label: str, evaluation: RegressionEvaluation) -> None: evaluation.validate() mae_value = mean_absolute_error(evaluation.actual_values, evaluation.predicted_values) mse_value = mean_squared_error(evaluation.actual_values, evaluation.predicted_values) r_squared_value = r_squared_score(evaluation.actual_values, evaluation.predicted_values) print(f"Model: {label}") print(f"Observations: {len(evaluation.actual_values)}") print(f"MAE: {mae_value:.4f}") print(f"MSE: {mse_value:.4f}") print(f"R^2: {r_squared_value:.4f}") print("-" * 40) def main() -> None: # Pricing model example: # Predict weekly unit demand from price and promotion features. actual_values = [520, 505, 490, 470, 455, 440, 430, 415] predicted_values = [515, 500, 495, 468, 460, 435, 438, 410] evaluation = RegressionEvaluation( actual_values=actual_values, predicted_values=predicted_values, ) summarize_regression_metrics("Demand Regression Model", evaluation) if __name__ == "__main__": main()
+# --- 2. Consistency: how often each criterion picks the true degree ----------
+def pick_rates(n, reps=200):
+    hits = {"AIC": 0, "BIC": 0}
+    over = {"AIC": 0, "BIC": 0}
+    for _ in range(reps):
+        xs = rng.uniform(-2, 2, n)
+        ys = 1.0 - 0.5 * xs + 0.8 * xs ** 2 + rng.normal(0, 1.0, n)
+        scores = np.array([poly_criteria(xs, ys, d) for d in range(1, 7)])
+        for j, name in enumerate(("AIC", "BIC")):
+            best = 1 + int(np.argmin(scores[:, j]))
+            hits[name] += best == 2
+            over[name] += best > 2
+    return {k: (hits[k] / reps, over[k] / reps) for k in hits}
+
+print("\n     n   AIC: true / overfit   BIC: true / overfit")
+for n in (50, 200, 1000):
+    r = pick_rates(n)
+    print(f"{n:>6}   {r['AIC'][0]:>8.0%} / {r['AIC'][1]:>4.0%}       {r['BIC'][0]:>8.0%} / {r['BIC'][1]:>4.0%}")
+
+# --- 3. Number of mixture components: 3 true customer segments --------------
+centres = np.array([[0, 0], [4, 0], [2, 3.5]])
+data = np.vstack([rng.normal(c, 0.8, size=(300, 2)) for c in centres])
+print("\nK   BIC (scikit-learn GaussianMixture)")
+bics = []
+for k in range(1, 7):
+    gm = GaussianMixture(n_components=k, covariance_type="full", n_init=2, random_state=0).fit(data)
+    bics.append(gm.bic(data))
+    print(f"{k}   {bics[-1]:.1f}")
+print("BIC selects K =", 1 + int(np.argmin(bics)))
 ```
 
-What
-this professional example teaches:
+The polynomial table counts the noise variance as a parameter ($k = d + 2$). Both criteria put the quadratic first on this sample ($\mathrm{BIC} = 596.58$ against $600.09$ for the cubic), but each extra term adds $\ln 200 = 5.30$ to the BIC penalty and only $2$ to the AIC penalty, so the cubic trails by $3.51$ BIC points and only $0.21$ AIC points. The 200-replicate simulation shows the consistency property: BIC picks the true degree 90 % of the time at $n = 50$ and 99 % at $n = 1{,}000$, while AIC stays near 70 % to 75 % with a constant 25 % to 30 % overfit rate. For the mixture, BIC selects $K = 3$, the number of generating segments. In the beginner block, `statsmodels` counts $k$ without the noise variance ($k = 2$ for `y ~ x`), so its BIC ($295.80$) is $\ln 100 = 4.61$ lower than the value R's `BIC()` convention gives for the same fit ($300.41$); rankings are unaffected as long as one convention is used throughout.
 
-1. $R^2$ must be computed from both model residual variation and total target variation.
-2. The metric requires non-empty equal-length actual and predicted vectors.
-3. If the target has no variance, then $SS_{\mathrm{tot}}=0$ and the standard formula is undefined.
-4. MAE and MSE are included because $R^2$ alone is not enough for business evaluation.
-5. A model can have a good $R^2$ yet still have error magnitudes that matter operationally.
+---
 
-Plain-English interpretation of the pricing example:
-
-- If $R^2$ is high, the model tracks target variation well relative to predicting the average demand every week.
-- But the analyst still needs MAE or RMSE to know whether the forecast misses are small enough for pricing or inventory decisions.
-
-## Self-check: mathematical verification
-
-### Re-derivation from the baseline-comparison idea
-
-A mean-only baseline predicts:
-
-$$
-\hat{y}_i^{\mathrm{baseline}}=\bar{y}
-$$
-
-Its total squared error is:
-
-$$
-\sum_{i=1}^{N}(y_i-\bar{y})^2 = SS_{\mathrm{tot}}
-$$
-
-The model’s squared error is:
-
-$$
-\sum_{i=1}^{N}(y_i-\hat{y}_i)^2 = SS_{\mathrm{res}}
-$$
-
-The unexplained fraction of target variation is therefore:
-
-$$
-\frac{SS_{\mathrm{res}}}{SS_{\mathrm{tot}}}
-$$
-
-Subtracting from 1 gives the explained fraction:
-
-$$
-R^2=1-\frac{SS_{\mathrm{res}}}{SS_{\mathrm{tot}}}
-$$
-
-This matches the canonical formula exactly.
-
-### Upper-bound check Because squared terms are non-negative
-
-$$
-SS_{\mathrm{res}} \ge 0
-$$
-
-If $SS_{\mathrm{tot}}>0$, then:
-
-$$
-\frac{SS_{\mathrm{res}}}{SS_{\mathrm{tot}}} \ge 0
-$$
-
-So:
-
-$$
-R^2 = 1 - \frac{SS_{\mathrm{res}}}{SS_{\mathrm{tot}}} \le 1
-$$
-
-Thus the score cannot exceed 1.
-
-### Perfect-fit case If predictions are perfect, then
-
-$$
-y_i=\hat{y}_i \text{ for all } i
-$$
-
-So:
-
-$$
-SS_{\mathrm{res}}=0
-$$
-
-and therefore:
-
-$$
-R^2=1
-$$
-
-This is correct.
-
-### Mean-baseline case
-
-If the model predicts the mean for every observation, then:
-
-$$
-\hat{y}_i=\bar{y} \text{ for all } i
-$$
-
-So the residual sum of squares equals the total sum of squares:
-
-$$
-SS_{\mathrm{res}}=SS_{\mathrm{tot}}
-$$
-
-and therefore:
-
-$$
-R^2=0
-$$
-
-This is correct.
-
-### Negative-score case
-
-If the model is worse than the mean baseline, then:
-
-$$
-SS_{\mathrm{res}} > SS_{\mathrm{tot}}
-$$
-
-which implies:
-
-$$
-\frac{SS_{\mathrm{res}}}{SS_{\mathrm{tot}}}>1
-$$
-
-and therefore:
-
-$$
-R^2<0
-$$
-
-So negative $R^2$ is mathematically valid and must be explicitly acknowledged.
-
-### Units check
-
-Both $SS_{\mathrm{res}}$ and $SS_{\mathrm{tot}}$ are sums of squared target units. Their ratio is unitless, and subtracting from 1 preserves that. So $R^2$ is dimensionless. This matches the verbal explanation.
-
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table notation uses math mode such as `$y_i$`, `$\hat{y}_i$`, `$\bar{y}$`, `$SS_{\mathrm{res}}$`, and `$SS_{\mathrm{tot}}$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Range $(-\infty,1]$, negative values, baseline interpretation, and overfitting limitations are explicitly included.
-- No placeholder text remains.
-
-## Common Pitfalls and Edge Cases
-
-- **Assuming $R^2$ must lie between 0 and 1:** It can be negative when the model is worse than the mean baseline.
-- **Ignoring overfitting:** A high in-sample $R^2$ does not guarantee strong out-of-sample performance.
-- **Using $R^2$ alone:** A model can have a good $R^2$ but poor MAE or RMSE in business terms.
-- **Confusing variance explained with causal explanation:** $R^2$ is a predictive fit metric, not a causal claim.
-- **Comparing $R^2$ across very different targets without context:** It is dimensionless, but business usefulness can still differ.
-- **Undefined constant-target case:** If all $y_i$ are identical, then $SS_{\mathrm{tot}}=0$ and the standard formula is undefined.
-- **Believing more features automatically mean a better model:** In-sample $R^2$ often rises with additional predictors, even when generalization worsens.
-- **Ignoring residual structure:** A strong $R^2$ does not guarantee well-behaved residuals or correct model specification.
-
-## References and Standard Results
-
-- Arithmetic mean definition, $\bar{y}=\frac{1}{N}\sum_{i=1}^{N}y_i$
-- Residual sum of squares definition, $SS_{\mathrm{res}}=\sum_{i=1}^{N}(y_i-\hat{y}_i)^2$
-- Total sum of squares definition, $SS_{\mathrm{tot}}=\sum_{i=1}^{N}(y_i-\bar{y})^2$
-- Coefficient of Determination definition, $R^2=1-\frac{SS_{\mathrm{res}}}{SS_{\mathrm{tot}}}$
-- Perfect-fit characterization, $R^2=1$ if and only if all residuals are zero
-- Mean-baseline characterization, $R^2=0$ when model error equals baseline mean-predictor error
-- Negative $R^2$ condition when model error exceeds baseline error
-- Dimensionless-ratio interpretation of $R^2$
-- Overfitting caution for in-sample regression metrics
+*Source: domain knowledge*

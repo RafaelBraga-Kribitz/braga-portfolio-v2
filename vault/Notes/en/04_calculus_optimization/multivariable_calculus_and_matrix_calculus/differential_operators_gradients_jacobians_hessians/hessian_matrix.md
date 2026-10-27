@@ -24,7 +24,11 @@ flowchart TD
     B --> C["Differentiate each partial again w.r.t. each variable"]
     C --> D["Assemble d x d matrix: H[i,j] = d^2f / (dxi dxj)"]
     D --> E["Hessian is symmetric (Schwarz): H[i,j] = H[j,i]"]
-    D --> F{"Eigenvalue analysis at a critical point (grad=0)"} F -- "All eigenvalues > 0 (PD)" --> G["Local minimum"] F -- "All eigenvalues < 0 (ND)" --> H["Local maximum"] F -- "Mixed signs (indefinite)" --> I["Saddle point"] F -- "Any zero eigenvalue" --> J["Degenerate: test inconclusive"]
+    D --> F{"Eigenvalue analysis at a critical point (grad=0)"}
+    F -- "All eigenvalues > 0 (PD)" --> G["Local minimum"]
+    F -- "All eigenvalues < 0 (ND)" --> H["Local maximum"]
+    F -- "Mixed signs (indefinite)" --> I["Saddle point"]
+    F -- "Any zero eigenvalue" --> J["Degenerate: test inconclusive"]
 ```
 
 ## Real-world use

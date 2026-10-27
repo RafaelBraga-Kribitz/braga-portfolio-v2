@@ -22,7 +22,9 @@ The **additive inverse** (or negation) of $a$ is $-a$: the unique number that, w
 flowchart TD
     A["Given value a"] --> B["Find additive inverse: -a"]
     B --> C["Compute a + (-a)"]
-    C --> D{["Result = 0?"]} D -- "Yes: -a is the correct inverse" --> E["a + (-a) = 0 confirmed"] D -- "No: wrong inverse used" --> F["Error: recheck sign"]
+    C --> D{"Result = 0?"}
+    D -- "Yes: -a is the correct inverse" --> E["a + (-a) = 0 confirmed"]
+    D -- "No: wrong inverse used" --> F["Error: recheck sign"]
     E --> G["Subtraction is addition of inverse: a - b = a + (-b)"]
 ```
 
