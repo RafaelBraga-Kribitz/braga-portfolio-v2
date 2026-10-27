@@ -25,20 +25,24 @@ const observations = [
       </header>
       <figure class="nf-figure">
         <div class="nf-plot-head"><span>FIG. 404—01</span><span>ANOMALY DETECTION / ILLUSTRATIVE</span></div>
-        <svg class="nf-chart" viewBox="0 0 640 380" role="img" aria-label="A missing page appears as an outlier" aria-describedby="nf-chart-desc">
-          <desc id="nf-chart-desc">Twenty-five observations form an ascending cluster at left. A single observation marked 404 lies far outside the cluster, at the upper right.</desc>
-          <g class="nf-grid">
-            <path d="M58 44V326H604 M58 114H604 M58 184H604 M58 254H604 M168 44V326 M278 44V326 M388 44V326 M498 44V326" />
-          </g>
-          <path class="nf-axis" d="M58 44V326H604" />
-          <g class="nf-points">
-            {observations.map(([x,y]) => <circle cx={x + 25} cy={y + 15} r="4.5" />)}
-          </g>
-          <path class="nf-trend" d="M78 305L460 63" />
-          <path class="nf-outlier-guide" d="M457 94L538 68" />
-          <circle class="nf-outlier-ring" cx="550" cy="64" r="24" />
-          <circle class="nf-outlier-core" cx="550" cy="64" r="5.5" />
-        </svg>
+        <div class="nf-plot">
+          <svg class="nf-chart" viewBox="0 0 640 380" role="img" aria-label="A missing page appears as an outlier" aria-describedby="nf-chart-desc">
+            <desc id="nf-chart-desc">Twenty-five observations form an ascending cluster at left. A single observation marked 404 lies far outside the cluster, at the upper right.</desc>
+            <g class="nf-grid">
+              <path d="M58 44V326H604 M58 114H604 M58 184H604 M58 254H604 M168 44V326 M278 44V326 M388 44V326 M498 44V326" />
+            </g>
+            <path class="nf-axis" d="M58 44V326H604" />
+            <g class="nf-points">
+              {observations.map(([x,y]) => <circle cx={x + 25} cy={y + 15} r="4.5" />)}
+            </g>
+            <path class="nf-trend" d="M78 305L460 63" />
+            <path class="nf-outlier-guide" d="M457 94L538 68" />
+            <circle class="nf-outlier-ring" cx="550" cy="64" r="24" />
+            <circle class="nf-outlier-core" cx="550" cy="64" r="5.5" />
+          </svg>
+          <!-- Keep the original outlier annotation readable as the plot scales. -->
+          <span class="nf-outlier-text">404</span>
+        </div>
         <div class="nf-axis-labels" aria-hidden="true"><span>Known data</span><span>Unknown territory →</span></div>
         <figcaption><span>01 / OBSERVED DISTRIBUTION</span><span class="nf-legend"><i aria-hidden="true"></i> UNEXPECTED OBSERVATION</span></figcaption>
       </figure>
@@ -62,7 +66,9 @@ const observations = [
   .nf-return:hover{gap:var(--space-3);color:var(--accent-01)}
   .nf-figure{margin:0;min-width:0;border-top:var(--rule-open);padding-top:var(--space-2)}
   .nf-plot-head{color:var(--ink-2)}
-  .nf-chart{display:block;width:100%;height:auto;overflow:visible;margin-block:var(--space-3)}
+  .nf-plot{position:relative;margin-block:var(--space-3)}
+  .nf-chart{display:block;width:100%;height:auto;overflow:visible}
+  .nf-outlier-text{position:absolute;left:85.9375%;top:26%;transform:translateX(-50%);color:var(--ink);font-family:var(--font-mono);font-size:var(--t-mono);font-weight:var(--w-bold)}
   .nf-grid path{stroke:var(--rule-c);stroke-width:1;fill:none;opacity:.65}
   .nf-axis{stroke:var(--ink-2);stroke-width:1.5;fill:none}
   .nf-points circle{fill:var(--ink-2);opacity:.75}
