@@ -1,0 +1,3578 @@
+{
+  "audit": "BRAGA portfolio website audit",
+  "date": "2026-10-27",
+  "target": "https://rafaelbragakribitz.com/ (built from main at ecb7f4e; live origin not reachable from the audit environment)",
+  "statuses": [
+    "PASS",
+    "FAIL",
+    "NOT_APPLICABLE",
+    "NOT_ASSESSABLE",
+    "NEEDS_HUMAN",
+    "FIXED",
+    "ACCEPTED_RISK"
+  ],
+  "summary": {
+    "controls": 365,
+    "NEEDS_HUMAN": 31,
+    "PASS": 219,
+    "NOT_APPLICABLE": 22,
+    "FAIL": 2,
+    "FIXED": 8,
+    "NOT_ASSESSABLE": 76,
+    "ACCEPTED_RISK": 7
+  },
+  "evidence": {
+    "E1": "npm run verify on the audited build: astro check (0 errors), lint, 82 unit tests, vault:check, build (805 pages), gates G-01…G-16, L-01…L-07, A-01 (axe) over every page at 320/390/768/1024/1280/1440 px in light and dark — 0 failing gates",
+    "E2": "Static scan of all 805 built HTML files (titles, descriptions, canonicals, robots, sitemap coverage, external hosts, target=_blank, <img> alt/dimensions, scripts, JSON-LD)",
+    "E3": "Playwright/Chromium runtime pass over 18 representative routes: console errors at 360 and 1920 px, horizontal overflow, LCP/CLS/transfer at 390 px with 4x CPU and ~1.6 Mbps/150 ms, and text rendered with JavaScript disabled",
+    "E4": "Live origin rafaelbragakribitz.com and rafaelbraga-kribitz.github.io are not reachable from the audit container (egress proxy 403); every deployed-only check is NOT_ASSESSABLE here",
+    "E5": "Source review: src/, vault/, public/, .github/workflows/pages.yml, DEPLOY.md, package.json",
+    "E6": "Browser storage review: only localStorage[\"bk-theme\"], written on a click of the theme toggle (src/layouts/Base.astro, src/lib/theme.ts)",
+    "E7": "Image and font review: no EXIF/XMP/text chunks in portrait.webp or the PNGs; fonts are OFL-1.1 Geist derivatives with public/fonts/licenses/",
+    "E8": "npm audit --omit=dev: 2 low (katex ≤0.18.1 via mermaid), build-time only — neither is shipped to the browser"
+  },
+  "controls": [
+    {
+      "id": "LEG-001",
+      "family": "LEG",
+      "status": "NEEDS_HUMAN",
+      "priority": "P1",
+      "note": "Site describes itself as private and non-commercial (Impressum), but it is a professional portfolio used for job seeking with essays and a 524-note library. Working classification: personal-professional, no goods or services offered. Owner to confirm.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "LEG-002",
+      "family": "LEG",
+      "status": "NEEDS_HUMAN",
+      "priority": "P1",
+      "note": "MedienG §25 disclosure applies to every website; ECG §5 is doubtful for a non-commercial site. The Impressum provides both defensively. Applicability is a legal reading for the owner, not a finding.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "LEG-003",
+      "family": "LEG",
+      "status": "PASS",
+      "priority": null,
+      "note": "Impressum exists in DE (original) and EN, linked from the footer of every page.",
+      "evidence": [
+        "E1 L-01",
+        "E5"
+      ]
+    },
+    {
+      "id": "LEG-004",
+      "family": "LEG",
+      "status": "PASS",
+      "priority": null,
+      "note": "Name, place of residence (8054 Seiersberg) and e-mail; no registration or VAT numbers are claimed or invented.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "LEG-005",
+      "family": "LEG",
+      "status": "NEEDS_HUMAN",
+      "priority": "P1",
+      "note": "Privacy notice covers controller, hosting, legal basis, storage, contact and rights, but is still marked as a draft with open items. See LEG-025.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "LEG-006",
+      "family": "LEG",
+      "status": "NEEDS_HUMAN",
+      "priority": "P2",
+      "note": "GitHub is named as host. The e-mail provider (easyname, per DEPLOY.md) and any forwarding to another mailbox (DEPLOY.md mentions Gmail) are not named as recipients/processors.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "LEG-007",
+      "family": "LEG",
+      "status": "PASS",
+      "priority": null,
+      "note": "Purposes, legal bases (Art. 6(1)(b),(f)), data categories, rights (Art. 15–21) and the Austrian DSB with address are stated; log retention is deferred to GitHub's statement.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "LEG-008",
+      "family": "LEG",
+      "status": "NEEDS_HUMAN",
+      "priority": "P1",
+      "note": "Text says EU-US Data Privacy Framework certification \"will be checked before publication\". The site is published; owner to check GitHub, Inc. on dataprivacyframework.gov and finalise the transfer wording.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "LEG-009",
+      "family": "LEG",
+      "status": "PASS",
+      "priority": null,
+      "note": "No cookies, sessionStorage or IndexedDB. One localStorage key (bk-theme) after a click.",
+      "evidence": [
+        "E6"
+      ]
+    },
+    {
+      "id": "LEG-010",
+      "family": "LEG",
+      "status": "PASS",
+      "priority": null,
+      "note": "The bk-theme key stores a choice the visitor explicitly made and is needed to honour it: strictly necessary under TKG 2021 §165(3). No consent banner needed and none added.",
+      "evidence": [
+        "E6"
+      ]
+    },
+    {
+      "id": "LEG-011",
+      "family": "LEG",
+      "status": "NOT_APPLICABLE",
+      "priority": null,
+      "note": "No consent is required (LEG-010).",
+      "evidence": [
+        "E6"
+      ]
+    },
+    {
+      "id": "LEG-012",
+      "family": "LEG",
+      "status": "PASS",
+      "priority": null,
+      "note": "No third-party fonts, analytics, embeds, maps or videos; gate G-13 fails any third-party request.",
+      "evidence": [
+        "E1 G-13",
+        "E2",
+        "E3"
+      ]
+    },
+    {
+      "id": "LEG-013",
+      "family": "LEG",
+      "status": "PASS",
+      "priority": null,
+      "note": "No forms, no CV download; contact is a mailto link (assembled on click).",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "LEG-014",
+      "family": "LEG",
+      "status": "NOT_APPLICABLE",
+      "priority": null,
+      "note": "No form processing.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "LEG-015",
+      "family": "LEG",
+      "status": "NEEDS_HUMAN",
+      "priority": "P3",
+      "note": "UWG concerns commercial practices; the site offers none. Professional claims are covered under LEG-018.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "LEG-016",
+      "family": "LEG",
+      "status": "NEEDS_HUMAN",
+      "priority": "P3",
+      "note": "Fonts OFL with notice; charts and diagrams generated at build; share card and favicons generated. Owner to confirm rights to the portrait photo (photographer credit if not self-taken).",
+      "evidence": [
+        "E7"
+      ]
+    },
+    {
+      "id": "LEG-017",
+      "family": "LEG",
+      "status": "PASS",
+      "priority": null,
+      "note": "Named organisations are the owner's employer (BioSynCare), a published paper and its vendor (essay, critical commentary with citation), and public datasets. No client confidential data seen.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "LEG-018",
+      "family": "LEG",
+      "status": "NEEDS_HUMAN",
+      "priority": "P2",
+      "note": "Claims the audit cannot verify: \"part of the campaign that helped elect Mario Abdo Benítez\", \"twenty years buying marketing technology\" (essay), employment at BioSynCare 2023–2026. Owner holds the evidence.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "LEG-019",
+      "family": "LEG",
+      "status": "PASS",
+      "priority": null,
+      "note": "BaFG covers products and services offered by economic operators to consumers; a private non-commercial site is outside it. The accessibility statement says so and calls WCAG 2.2 AA voluntary. Legal reading, not legal advice.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "LEG-020",
+      "family": "LEG",
+      "status": "NOT_APPLICABLE",
+      "priority": null,
+      "note": "No downloadable CV or document is published.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "LEG-021",
+      "family": "LEG",
+      "status": "PASS",
+      "priority": null,
+      "note": "Legal notices exist in German (original) and English (translation).",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "LEG-022",
+      "family": "LEG",
+      "status": "NOT_APPLICABLE",
+      "priority": null,
+      "note": "No sponsored content, affiliate links or endorsements.",
+      "evidence": [
+        "E2",
+        "E5"
+      ]
+    },
+    {
+      "id": "LEG-023",
+      "family": "LEG",
+      "status": "NOT_APPLICABLE",
+      "priority": null,
+      "note": "No newsletter or signup.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "LEG-024",
+      "family": "LEG",
+      "status": "PASS",
+      "priority": null,
+      "note": "Only the owner's own portrait; no third-party photos or identifiable private individuals.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "LEG-025",
+      "family": "LEG",
+      "status": "FAIL",
+      "priority": "P1",
+      "note": "Live legal pages still carry pre-publication drafting notes: Impressum \"Draft. A check … is recommended before publication\"; Privacy \"Draft … DPF certification will be checked before publication\" and \"Open (item 5 of the checklist)\"; Accessibility \"Planned — One pass with a screen reader (NVDA) before publication\". Not fixed: legal wording is the owner's decision (website-manual-actions.md MA-01).",
+      "evidence": [
+        "E2",
+        "E5"
+      ]
+    },
+    {
+      "id": "LEG-026",
+      "family": "LEG",
+      "status": "PASS",
+      "priority": null,
+      "note": "This report separates law, guidance and interpretation; legal items are NEEDS_HUMAN.",
+      "evidence": []
+    },
+    {
+      "id": "PRIV-001",
+      "family": "PRIV",
+      "status": "PASS",
+      "priority": null,
+      "note": "Every request in the runtime pass is same-origin (document, one stylesheet, self-hosted fonts, the portrait, tool islands). External hostnames in HTML are link targets only: github.com, linkedin.com, docs.github.com, dsb.gv.at, doi.org.",
+      "evidence": [
+        "E2",
+        "E3"
+      ]
+    },
+    {
+      "id": "PRIV-002",
+      "family": "PRIV",
+      "status": "PASS",
+      "priority": null,
+      "note": "No third-party service receives data on page load.",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "PRIV-003",
+      "family": "PRIV",
+      "status": "PASS",
+      "priority": null,
+      "note": "Nothing set before interaction (pre-paint script only reads bk-theme).",
+      "evidence": [
+        "E6"
+      ]
+    },
+    {
+      "id": "PRIV-004",
+      "family": "PRIV",
+      "status": "PASS",
+      "priority": null,
+      "note": "After navigation and the theme toggle: bk-theme only.",
+      "evidence": [
+        "E6"
+      ]
+    },
+    {
+      "id": "PRIV-005",
+      "family": "PRIV",
+      "status": "PASS",
+      "priority": null,
+      "note": "No analytics, pixels, fingerprinting, replay, heatmaps or ad trackers.",
+      "evidence": [
+        "E2",
+        "E3",
+        "E5"
+      ]
+    },
+    {
+      "id": "PRIV-006",
+      "family": "PRIV",
+      "status": "NOT_APPLICABLE",
+      "priority": null,
+      "note": "No optional trackers.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "PRIV-007",
+      "family": "PRIV",
+      "status": "NOT_APPLICABLE",
+      "priority": null,
+      "note": "No consent management.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "PRIV-008",
+      "family": "PRIV",
+      "status": "NOT_APPLICABLE",
+      "priority": null,
+      "note": "No consent management.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "PRIV-009",
+      "family": "PRIV",
+      "status": "PASS",
+      "priority": null,
+      "note": "Fonts are self-hosted woff2 under /fonts/.",
+      "evidence": [
+        "E5",
+        "E3"
+      ]
+    },
+    {
+      "id": "PRIV-010",
+      "family": "PRIV",
+      "status": "NOT_APPLICABLE",
+      "priority": null,
+      "note": "No embeds.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "PRIV-011",
+      "family": "PRIV",
+      "status": "PASS",
+      "priority": null,
+      "note": "Network behaviour matches the privacy notice (\"every file is loaded from the site's own origin\"); see LEG-006 for the e-mail gap.",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "PRIV-012",
+      "family": "PRIV",
+      "status": "PASS",
+      "priority": null,
+      "note": "No telemetry, no console logging in shipped scripts.",
+      "evidence": [
+        "E3",
+        "E5"
+      ]
+    },
+    {
+      "id": "PRIV-013",
+      "family": "PRIV",
+      "status": "PASS",
+      "priority": null,
+      "note": "Tool state lives in the query string (numbers only, src/lib/tools/url-state.mjs); browsers' default strict-origin-when-cross-origin drops it on outbound links.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "PRIV-014",
+      "family": "PRIV",
+      "status": "PASS",
+      "priority": null,
+      "note": "No external services or persistent identifiers.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "SEO-001",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "All 805 built pages answer 200 from a GitHub-Pages-like server; live NOT_ASSESSABLE.",
+      "evidence": [
+        "E1",
+        "E4"
+      ]
+    },
+    {
+      "id": "SEO-002",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "Only /404.html and /en",
+      "evidence": [
+        ""
+      ]
+    },
+    {
+      "id": "SEO-003",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "robots.txt at the origin root: Allow /, Sitemap absolute.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEO-004",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": "P3",
+      "note": "sitemap.xml valid, 558 URLs with hreflang alternates, absolute canonical URLs. Note: 243 indexable listing pages (notes pagination, tag pages) are not listed — acceptable, owner may choose to noindex thin tag pages (SEO-024).",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEO-005",
+      "family": "SEO",
+      "status": "NEEDS_HUMAN",
+      "priority": "P2",
+      "note": "Sitemap is referenced from robots.txt; Search Console/Bing submission requires the owner (MA-04).",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "SEO-006",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "Every page has a title; duplicates are only EN/DE language pairs of tag pages and the home page (role is the same word in both languages), paired by hreflang.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEO-007",
+      "family": "SEO",
+      "status": "FIXED",
+      "priority": "P2",
+      "note": "Auto-generated descriptions of the 524 notes were fragments of raw LaTeX or label text: 277 contained TeX (e.g. \"or \\#A\"), 76 began with punctuation (\"(for a > 0)\"), 25 ended mid-sentence (\"…, defined by\"), 333 began \"What it tells me (Situation Awareness):\"; \"z = a + bi\" lost its \"=\". Fixed in the shared excerpt() (src/lib/vault/meta.mjs): 0 / 0 / 0 / 0 after. Site-wide descriptions under 50 characters 54 → 7 (all complete sentences, plus the tag index); duplicate descriptions 9 → 5 (the single-entry tag pages, SEO-024, and three near-duplicate note pairs, SEO-023).",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEO-008",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "No missing or conflicting canonicals.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEO-009",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "Canonical equals the page URL on every page except the root redirect (→ /en/).",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEO-010",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "All canonicals on https://rafaelbragakribitz.com.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEO-011",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "hreflang en/de/x-default on paired pages; single-language notes declare only themselves.",
+      "evidence": [
+        "E1 L-02"
+      ]
+    },
+    {
+      "id": "SEO-012",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "Reciprocal pairs checked by gate L-02.",
+      "evidence": [
+        "E1 L-02"
+      ]
+    },
+    {
+      "id": "SEO-013",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "html lang matches the route tree; gate L-05.",
+      "evidence": [
+        "E1 L-05"
+      ]
+    },
+    {
+      "id": "SEO-014",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "One h1, no skipped levels (gate G-09).",
+      "evidence": [
+        "E1 G-09"
+      ]
+    },
+    {
+      "id": "SEO-015",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "Descriptive anchor text; axe link-name.",
+      "evidence": [
+        "E1 A-01"
+      ]
+    },
+    {
+      "id": "SEO-016",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "Internal links resolve (gate L-01). External links NOT_ASSESSABLE from here (OPS-007).",
+      "evidence": [
+        "E1 L-01",
+        "E4"
+      ]
+    },
+    {
+      "id": "SEO-017",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "Computed over the build: every page except / and /404.html is the target of at least one internal link (0 orphans).",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEO-018",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "Plain <a href> navigation; no JS routing.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "SEO-019",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "Content is static HTML; all 18 sampled routes render their text with JavaScript disabled.",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "SEO-020",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "Only the two tools hydrate islands; their default scenario is in the HTML.",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "SEO-021",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "No redirect chains; root is a single meta-refresh to /en/ with canonical /en/ (GitHub Pages cannot send 301s).",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEO-022",
+      "family": "SEO",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "http→https and www→apex behaviour live only (MA-05).",
+      "evidence": [
+        "E4"
+      ]
+    },
+    {
+      "id": "SEO-023",
+      "family": "SEO",
+      "status": "NEEDS_HUMAN",
+      "priority": "P3",
+      "note": "Near-duplicate notes: arithmetic-n-th-term-2 / arithmetic-hmtbcth-term, jacobian-matrix / jacobian-matrix-f, unemployment-rate / unemployment-rate-delta-ue share their opening. Owner to merge or differentiate.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEO-024",
+      "family": "SEO",
+      "status": "NEEDS_HUMAN",
+      "priority": "P3",
+      "note": "19 tag pages per language list one entry (\"1 entry. …\"), indexable. Consider noindex,follow below 2 entries.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEO-025",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": "P3",
+      "note": "Readable kebab slugs; a few odd ones from folder names (arithmetic-hmtbcth-term, green-s-functiondelta-mapping-system-behavior-jump-at-t).",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEO-026",
+      "family": "SEO",
+      "status": "FIXED",
+      "priority": "P2",
+      "note": "No structured data existed (0 of 805 pages). Added schema.org JSON-LD from src/lib/structured-data.ts: WebSite + Person (home), ProfilePage (About), Article (projects, essays). Syntax and field checks pass locally; Google Rich Results Test needs the live URL (MA-04).",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEO-027",
+      "family": "SEO",
+      "status": "FIXED",
+      "priority": "P2",
+      "note": "Person, WebSite, ProfilePage and Article added where the content supports them; BreadcrumbList and notes (BlogPosting/LearningResource) left as optional (P3).",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEO-028",
+      "family": "SEO",
+      "status": "FIXED",
+      "priority": "P2",
+      "note": "IDs are stable (…/#person, …/#website, page#article); URLs absolute on the production origin; every value comes from site.ts or the entry's own front matter.",
+      "evidence": [
+        "E2",
+        "E5"
+      ]
+    },
+    {
+      "id": "SEO-029",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "No <img> without alt; portrait alt is the name.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEO-030",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "Portrait 782×978 WebP 49 KB; share card 1200×630 PNG 49 KB; width/height on every <img>.",
+      "evidence": [
+        "E2",
+        "E7"
+      ]
+    },
+    {
+      "id": "SEO-031",
+      "family": "SEO",
+      "status": "NEEDS_HUMAN",
+      "priority": "P3",
+      "note": "28 titles exceed 70 characters and will truncate, longest the German essay (127). seo_title can shorten them without changing the H1.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEO-032",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "32 px and 180 px PNG favicons.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEO-033",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "Responsive viewport; no overflow 320–1920 px.",
+      "evidence": [
+        "E1 G-06",
+        "E3"
+      ]
+    },
+    {
+      "id": "SEO-034",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "Unknown paths return status 404 with 404.html (noindex).",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "SEO-035",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "The design specimen (/system/) is noindex; unpublished vault notes are not built.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEO-036",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "robots and sitemap reference the new origin after the domain move.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEO-037",
+      "family": "SEO",
+      "status": "NEEDS_HUMAN",
+      "priority": "P2",
+      "note": "No Search Console / Bing verification is visible in the repo; requires owner access (MA-04).",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "SEO-038",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "No meta keywords or keyword stuffing.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEO-039",
+      "family": "SEO",
+      "status": "FIXED",
+      "priority": "P2",
+      "note": "Note snippets now reflect the note's first explanatory sentence (see SEO-007).",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEO-040",
+      "family": "SEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "Name, role and location in the home title, cover and About; projects named by topic.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "AEO-001",
+      "family": "AEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "Home: name, \"Marketing Data Analyst\", \"Based in Greater Graz, Austria\".",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "AEO-002",
+      "family": "AEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "Project summaries state units, dates and limits (e.g. \"snapshot of 16 Sep 2026\", \"proxies, not campaign effects\").",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "AEO-003",
+      "family": "AEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "Role is \"Marketing Data Analyst\" everywhere (site.ts single source); past job title Marketing Data Scientist is explained on About.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "AEO-004",
+      "family": "AEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "About has profile, background, approach, skills, experience and contact. See CONT-005 for completeness.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "AEO-005",
+      "family": "AEO",
+      "status": "FIXED",
+      "priority": "P2",
+      "note": "Person node with name, jobTitle, homeLocation, url, image (About), sameAs.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "AEO-006",
+      "family": "AEO",
+      "status": "FIXED",
+      "priority": "P2",
+      "note": "sameAs: GitHub and LinkedIn from site.ts (empty Kaggle left out).",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "AEO-007",
+      "family": "AEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "Project pages: Summary, Question, Data, method, result and limits sections.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "AEO-008",
+      "family": "AEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "Each project opens with a summary callout.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "AEO-009",
+      "family": "AEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "Section headings name the information (Question, Data, …).",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "AEO-010",
+      "family": "AEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "Formulas are MathML, charts carry text and tables; no text-only-in-image.",
+      "evidence": [
+        "E3",
+        "E5"
+      ]
+    },
+    {
+      "id": "AEO-011",
+      "family": "AEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "Tables have header rows; figures have titles.",
+      "evidence": [
+        "E1 A-01",
+        "E5"
+      ]
+    },
+    {
+      "id": "AEO-012",
+      "family": "AEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "Essay cites the study with DOI; About footnote cites the TSJE (see CONT-004).",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "AEO-013",
+      "family": "AEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "Documents show Published/Updated dates; Article JSON-LD carries datePublished/dateModified and author.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "AEO-014",
+      "family": "AEO",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "GitHub and LinkedIn profiles not reachable from the audit container (MA-07).",
+      "evidence": [
+        "E4"
+      ]
+    },
+    {
+      "id": "AEO-015",
+      "family": "AEO",
+      "status": "NEEDS_HUMAN",
+      "priority": "P3",
+      "note": "robots.txt allows all crawlers, AI crawlers included. Record as a deliberate policy or restrict (MA-08).",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "AEO-016",
+      "family": "AEO",
+      "status": "NOT_APPLICABLE",
+      "priority": null,
+      "note": "llms.txt is optional and experimental; not added.",
+      "evidence": []
+    },
+    {
+      "id": "AEO-017",
+      "family": "AEO",
+      "status": "NOT_APPLICABLE",
+      "priority": null,
+      "note": "No alternate Markdown views.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "AEO-018",
+      "family": "AEO",
+      "status": "NEEDS_HUMAN",
+      "priority": "P2",
+      "note": "See CONT-005: one role in the About experience table vs \"twenty years buying marketing technology\" in the essay.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "AEO-019",
+      "family": "AEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "Project summaries stand alone.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "AEO-020",
+      "family": "AEO",
+      "status": "PASS",
+      "priority": null,
+      "note": "Nothing artificial added: no FAQ, no hidden text, no unsupported schema.",
+      "evidence": []
+    },
+    {
+      "id": "AEO-021",
+      "family": "AEO",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "No search or answer-engine access from the container.",
+      "evidence": [
+        "E4"
+      ]
+    },
+    {
+      "id": "SOC-001",
+      "family": "SOC",
+      "status": "PASS",
+      "priority": null,
+      "note": "og:title/description/url/type/image/locale on every page.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SOC-002",
+      "family": "SOC",
+      "status": "PASS",
+      "priority": null,
+      "note": "twitter:card summary_large_image with title, description, image, alt.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SOC-003",
+      "family": "SOC",
+      "status": "PASS",
+      "priority": null,
+      "note": "Purpose-made share card (wordmark, name, role).",
+      "evidence": [
+        "E7"
+      ]
+    },
+    {
+      "id": "SOC-004",
+      "family": "SOC",
+      "status": "PASS",
+      "priority": null,
+      "note": "1200×630, declared type and dimensions.",
+      "evidence": [
+        "E7"
+      ]
+    },
+    {
+      "id": "SOC-005",
+      "family": "SOC",
+      "status": "PASS",
+      "priority": null,
+      "note": "Absolute URLs.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SOC-006",
+      "family": "SOC",
+      "status": "PASS",
+      "priority": null,
+      "note": "Title and description are page-specific; image is the site card unless a note sets a cover.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SOC-007",
+      "family": "SOC",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "LinkedIn Post Inspector needs the live URL (MA-06).",
+      "evidence": [
+        "E4"
+      ]
+    },
+    {
+      "id": "SOC-008",
+      "family": "SOC",
+      "status": "NEEDS_HUMAN",
+      "priority": "P2",
+      "note": "After the domain move, re-scrape the home and project URLs in LinkedIn Post Inspector (MA-06).",
+      "evidence": []
+    },
+    {
+      "id": "SOC-009",
+      "family": "SOC",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Profile links resolve? Not reachable from here (MA-07).",
+      "evidence": [
+        "E4"
+      ]
+    },
+    {
+      "id": "SOC-010",
+      "family": "SOC",
+      "status": "NEEDS_HUMAN",
+      "priority": "P3",
+      "note": "Compare LinkedIn headline with \"Marketing Data Analyst\" (MA-07).",
+      "evidence": []
+    },
+    {
+      "id": "SOC-011",
+      "family": "SOC",
+      "status": "PASS",
+      "priority": null,
+      "note": "Project and essay titles and summaries are meaningful.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SOC-012",
+      "family": "SOC",
+      "status": "PASS",
+      "priority": null,
+      "note": "No unpublished information in previews.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SOC-013",
+      "family": "SOC",
+      "status": "PASS",
+      "priority": null,
+      "note": "og:url is the canonical.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SOC-014",
+      "family": "SOC",
+      "status": "PASS",
+      "priority": null,
+      "note": "No-JS and narrow-viewport rendering work (in-app browsers).",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "SOC-015",
+      "family": "SOC",
+      "status": "PASS",
+      "priority": null,
+      "note": "No third-party share widgets.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "PERF-001",
+      "family": "PERF",
+      "status": "PASS",
+      "priority": null,
+      "note": "Lab LCP 0.81–1.48 s on 18 routes at 390 px, 4x CPU, ~1.6 Mbps/150 ms; field data unavailable.",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "PERF-002",
+      "family": "PERF",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "No field INP data. Content pages run one small inline script; tools hydrate Preact islands.",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "PERF-003",
+      "family": "PERF",
+      "status": "PASS",
+      "priority": null,
+      "note": "CLS 0–0.037 (reproducible). One run of /en/notes/sphere/ read 0.25 and did not reproduce in three reruns (0.037, late MathML layout).",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "PERF-004",
+      "family": "PERF",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "No CrUX data for a new domain (MA-04).",
+      "evidence": [
+        "E4"
+      ]
+    },
+    {
+      "id": "PERF-005",
+      "family": "PERF",
+      "status": "PASS",
+      "priority": null,
+      "note": "Mobile 360/390 px and desktop 1920 px.",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "PERF-006",
+      "family": "PERF",
+      "status": "PASS",
+      "priority": null,
+      "note": "One stylesheet, no blocking scripts (inline pre-paint only).",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "PERF-007",
+      "family": "PERF",
+      "status": "PASS",
+      "priority": null,
+      "note": "Content pages ship no JS bundle; code.js only on pages with code.",
+      "evidence": [
+        "E1 L-03"
+      ]
+    },
+    {
+      "id": "PERF-008",
+      "family": "PERF",
+      "status": "PASS",
+      "priority": null,
+      "note": "One stylesheet per page.",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "PERF-009",
+      "family": "PERF",
+      "status": "PASS",
+      "priority": null,
+      "note": "Hydration only on the two tools.",
+      "evidence": [
+        "E1 L-03"
+      ]
+    },
+    {
+      "id": "PERF-010",
+      "family": "PERF",
+      "status": "PASS",
+      "priority": null,
+      "note": "WebP portrait, PNG cards; sizes small.",
+      "evidence": [
+        "E7"
+      ]
+    },
+    {
+      "id": "PERF-011",
+      "family": "PERF",
+      "status": "NOT_APPLICABLE",
+      "priority": null,
+      "note": "Almost no below-the-fold media.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "PERF-012",
+      "family": "PERF",
+      "status": "PASS",
+      "priority": null,
+      "note": "No above-the-fold image except the About portrait (eager).",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "PERF-013",
+      "family": "PERF",
+      "status": "PASS",
+      "priority": null,
+      "note": "Self-hosted woff2, font-display: swap.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "PERF-014",
+      "family": "PERF",
+      "status": "PASS",
+      "priority": null,
+      "note": "Font swap shows in CLS ≤0.037.",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "PERF-015",
+      "family": "PERF",
+      "status": "ACCEPTED_RISK",
+      "priority": "P3",
+      "note": "Hashed /_astro/ assets; GitHub Pages fixes Cache-Control at 10 minutes and cannot be configured.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "PERF-016",
+      "family": "PERF",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Compression is the host's (live only). Uncompressed page weight 177–271 KB incl. fonts.",
+      "evidence": [
+        "E3",
+        "E4"
+      ]
+    },
+    {
+      "id": "PERF-017",
+      "family": "PERF",
+      "status": "PASS",
+      "priority": null,
+      "note": "7–12 requests per page, no duplicates.",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "PERF-018",
+      "family": "PERF",
+      "status": "PASS",
+      "priority": null,
+      "note": "No third-party dependencies at runtime.",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "PERF-019",
+      "family": "PERF",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "No performance trace taken.",
+      "evidence": []
+    },
+    {
+      "id": "PERF-020",
+      "family": "PERF",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "No performance trace taken.",
+      "evidence": []
+    },
+    {
+      "id": "PERF-021",
+      "family": "PERF",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Tool memory/CPU not profiled.",
+      "evidence": []
+    },
+    {
+      "id": "PERF-022",
+      "family": "PERF",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Tool chart update timing not measured.",
+      "evidence": []
+    },
+    {
+      "id": "PERF-023",
+      "family": "PERF",
+      "status": "PASS",
+      "priority": null,
+      "note": "Throttled mobile run (see PERF-001).",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "PERF-024",
+      "family": "PERF",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Back/forward not exercised.",
+      "evidence": []
+    },
+    {
+      "id": "PERF-025",
+      "family": "PERF",
+      "status": "PASS",
+      "priority": null,
+      "note": "Static pages paint at FCP = LCP.",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "PERF-026",
+      "family": "PERF",
+      "status": "PASS",
+      "priority": null,
+      "note": "No change traded usability for score.",
+      "evidence": []
+    },
+    {
+      "id": "A11Y-001",
+      "family": "A11Y",
+      "status": "PASS",
+      "priority": null,
+      "note": "axe image-alt on every page; portrait alt.",
+      "evidence": [
+        "E1 A-01",
+        "E2"
+      ]
+    },
+    {
+      "id": "A11Y-002",
+      "family": "A11Y",
+      "status": "PASS",
+      "priority": null,
+      "note": "Decorative glyphs aria-hidden; axe clean.",
+      "evidence": [
+        "E1 A-01"
+      ]
+    },
+    {
+      "id": "A11Y-003",
+      "family": "A11Y",
+      "status": "PASS",
+      "priority": null,
+      "note": "Header, nav, main#main, footer (gate G-10).",
+      "evidence": [
+        "E1 G-10"
+      ]
+    },
+    {
+      "id": "A11Y-004",
+      "family": "A11Y",
+      "status": "PASS",
+      "priority": null,
+      "note": "Gate G-09.",
+      "evidence": [
+        "E1 G-09"
+      ]
+    },
+    {
+      "id": "A11Y-005",
+      "family": "A11Y",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Full manual keyboard pass not run in this session; the statement records one by the owner.",
+      "evidence": []
+    },
+    {
+      "id": "A11Y-006",
+      "family": "A11Y",
+      "status": "PASS",
+      "priority": null,
+      "note": ":focus-visible outline defined in base.css/components.css. Visual check not run.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "A11Y-007",
+      "family": "A11Y",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Sticky shell vs focused element not tested manually.",
+      "evidence": []
+    },
+    {
+      "id": "A11Y-008",
+      "family": "A11Y",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Not tested manually.",
+      "evidence": []
+    },
+    {
+      "id": "A11Y-009",
+      "family": "A11Y",
+      "status": "PASS",
+      "priority": null,
+      "note": "Skip link is the first tab stop and targets #main (gate G-10).",
+      "evidence": [
+        "E1 G-10"
+      ]
+    },
+    {
+      "id": "A11Y-010",
+      "family": "A11Y",
+      "status": "PASS",
+      "priority": null,
+      "note": "Gate G-02, both themes, all widths.",
+      "evidence": [
+        "E1 G-02"
+      ]
+    },
+    {
+      "id": "A11Y-011",
+      "family": "A11Y",
+      "status": "PASS",
+      "priority": null,
+      "note": "Gate G-02 (3:1 at large sizes).",
+      "evidence": [
+        "E1 G-02"
+      ]
+    },
+    {
+      "id": "A11Y-012",
+      "family": "A11Y",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Non-text contrast not gated beyond axe.",
+      "evidence": []
+    },
+    {
+      "id": "A11Y-013",
+      "family": "A11Y",
+      "status": "PASS",
+      "priority": null,
+      "note": "Status marks always carry a label (D-029).",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "A11Y-014",
+      "family": "A11Y",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "No CVD simulation run.",
+      "evidence": []
+    },
+    {
+      "id": "A11Y-015",
+      "family": "A11Y",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "200% zoom not tested here (statement says the owner did).",
+      "evidence": []
+    },
+    {
+      "id": "A11Y-016",
+      "family": "A11Y",
+      "status": "PASS",
+      "priority": null,
+      "note": "No overflow at 320 px (= 1280 px at 400%).",
+      "evidence": [
+        "E1 G-06"
+      ]
+    },
+    {
+      "id": "A11Y-017",
+      "family": "A11Y",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Text-spacing override not tested.",
+      "evidence": []
+    },
+    {
+      "id": "A11Y-018",
+      "family": "A11Y",
+      "status": "PASS",
+      "priority": null,
+      "note": "Targets ≥24 px, ≥44 px below 768 px (gate G-05).",
+      "evidence": [
+        "E1 G-05"
+      ]
+    },
+    {
+      "id": "A11Y-019",
+      "family": "A11Y",
+      "status": "PASS",
+      "priority": null,
+      "note": "axe button-name/link-name.",
+      "evidence": [
+        "E1 A-01"
+      ]
+    },
+    {
+      "id": "A11Y-020",
+      "family": "A11Y",
+      "status": "PASS",
+      "priority": null,
+      "note": "axe ARIA rules.",
+      "evidence": [
+        "E1 A-01"
+      ]
+    },
+    {
+      "id": "A11Y-021",
+      "family": "A11Y",
+      "status": "PASS",
+      "priority": null,
+      "note": "Native <dialog>, <details>, <button>.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "A11Y-022",
+      "family": "A11Y",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "No screen reader in the container; NVDA pass is still \"planned\" in the statement (MA-03).",
+      "evidence": []
+    },
+    {
+      "id": "A11Y-023",
+      "family": "A11Y",
+      "status": "PASS",
+      "priority": null,
+      "note": "axe link rules; links underlined in prose.",
+      "evidence": [
+        "E1 A-01"
+      ]
+    },
+    {
+      "id": "A11Y-024",
+      "family": "A11Y",
+      "status": "PASS",
+      "priority": null,
+      "note": "Tool inputs labelled (axe).",
+      "evidence": [
+        "E1 A-01"
+      ]
+    },
+    {
+      "id": "A11Y-025",
+      "family": "A11Y",
+      "status": "PASS",
+      "priority": null,
+      "note": "prefers-reduced-motion sets --dur 0 (gate G-11).",
+      "evidence": [
+        "E1 G-11"
+      ]
+    },
+    {
+      "id": "A11Y-026",
+      "family": "A11Y",
+      "status": "PASS",
+      "priority": null,
+      "note": "No autoplay or flashing content.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "A11Y-027",
+      "family": "A11Y",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Chart text alternatives not reviewed one by one.",
+      "evidence": []
+    },
+    {
+      "id": "A11Y-028",
+      "family": "A11Y",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Tool keyboard operation not tested here.",
+      "evidence": []
+    },
+    {
+      "id": "A11Y-029",
+      "family": "A11Y",
+      "status": "PASS",
+      "priority": null,
+      "note": "Language links carry lang/hreflang.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "A11Y-030",
+      "family": "A11Y",
+      "status": "PASS",
+      "priority": null,
+      "note": "Shortcut panel is a native modal <dialog> with a labelled close button; axe clean.",
+      "evidence": [
+        "E1 A-01",
+        "E5"
+      ]
+    },
+    {
+      "id": "A11Y-031",
+      "family": "A11Y",
+      "status": "PASS",
+      "priority": null,
+      "note": "Breadcrumb trail is a list of links with aria-current.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "A11Y-032",
+      "family": "A11Y",
+      "status": "PASS",
+      "priority": null,
+      "note": "Contents rail sets aria-current=\"location\".",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "A11Y-033",
+      "family": "A11Y",
+      "status": "PASS",
+      "priority": null,
+      "note": "The contact split shows on hover and on keyboard focus.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "A11Y-034",
+      "family": "A11Y",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Landscape and short viewports not tested.",
+      "evidence": []
+    },
+    {
+      "id": "A11Y-035",
+      "family": "A11Y",
+      "status": "NOT_APPLICABLE",
+      "priority": null,
+      "note": "No PDFs.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "A11Y-036",
+      "family": "A11Y",
+      "status": "NEEDS_HUMAN",
+      "priority": "P2",
+      "note": "Automated checks complete (axe on every page); manual screen-reader pass outstanding (MA-03).",
+      "evidence": [
+        "E1"
+      ]
+    },
+    {
+      "id": "A11Y-037",
+      "family": "A11Y",
+      "status": "PASS",
+      "priority": null,
+      "note": "Unresolved items are recorded here; no full-conformance claim is made by this audit.",
+      "evidence": []
+    },
+    {
+      "id": "UX-001",
+      "family": "UX",
+      "status": "PASS",
+      "priority": null,
+      "note": "320–1920 px without overflow.",
+      "evidence": [
+        "E1 G-06",
+        "E3"
+      ]
+    },
+    {
+      "id": "UX-002",
+      "family": "UX",
+      "status": "PASS",
+      "priority": null,
+      "note": "Six gate widths plus 360 and 1920.",
+      "evidence": [
+        "E1",
+        "E3"
+      ]
+    },
+    {
+      "id": "UX-003",
+      "family": "UX",
+      "status": "PASS",
+      "priority": null,
+      "note": "No horizontal overflow.",
+      "evidence": [
+        "E1 G-06",
+        "E3"
+      ]
+    },
+    {
+      "id": "UX-004",
+      "family": "UX",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Visual review not performed in this session.",
+      "evidence": []
+    },
+    {
+      "id": "UX-005",
+      "family": "UX",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Visual review not performed.",
+      "evidence": []
+    },
+    {
+      "id": "UX-006",
+      "family": "UX",
+      "status": "PASS",
+      "priority": null,
+      "note": "Shell stands on the grid at every width (gate G-14).",
+      "evidence": [
+        "E1 G-14"
+      ]
+    },
+    {
+      "id": "UX-007",
+      "family": "UX",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Not exercised manually.",
+      "evidence": []
+    },
+    {
+      "id": "UX-008",
+      "family": "UX",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Not exercised manually.",
+      "evidence": []
+    },
+    {
+      "id": "UX-009",
+      "family": "UX",
+      "status": "PASS",
+      "priority": null,
+      "note": "Gate G-05.",
+      "evidence": [
+        "E1 G-05"
+      ]
+    },
+    {
+      "id": "UX-010",
+      "family": "UX",
+      "status": "PASS",
+      "priority": null,
+      "note": "Links resolve; no runtime errors on 18 routes.",
+      "evidence": [
+        "E1 L-01",
+        "E3"
+      ]
+    },
+    {
+      "id": "UX-011",
+      "family": "UX",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "External links live only.",
+      "evidence": [
+        "E4"
+      ]
+    },
+    {
+      "id": "UX-012",
+      "family": "UX",
+      "status": "PASS",
+      "priority": null,
+      "note": "Trail and \"u\" shortcut lead up one level.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "UX-013",
+      "family": "UX",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Not exercised.",
+      "evidence": []
+    },
+    {
+      "id": "UX-014",
+      "family": "UX",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Not exercised.",
+      "evidence": []
+    },
+    {
+      "id": "UX-015",
+      "family": "UX",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Not exercised.",
+      "evidence": []
+    },
+    {
+      "id": "UX-016",
+      "family": "UX",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Not exercised.",
+      "evidence": []
+    },
+    {
+      "id": "UX-017",
+      "family": "UX",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Not exercised.",
+      "evidence": []
+    },
+    {
+      "id": "UX-018",
+      "family": "UX",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Not exercised.",
+      "evidence": []
+    },
+    {
+      "id": "UX-019",
+      "family": "UX",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Not exercised.",
+      "evidence": []
+    },
+    {
+      "id": "UX-020",
+      "family": "UX",
+      "status": "NOT_APPLICABLE",
+      "priority": null,
+      "note": "No loading or empty states (static).",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "UX-021",
+      "family": "UX",
+      "status": "PASS",
+      "priority": null,
+      "note": "All 18 routes readable without JS; tools show the default scenario as text and a table.",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "UX-022",
+      "family": "UX",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Touch behaviour not exercised.",
+      "evidence": []
+    },
+    {
+      "id": "UX-023",
+      "family": "UX",
+      "status": "PASS",
+      "priority": null,
+      "note": "Copy buttons acknowledge success and failure.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "UX-024",
+      "family": "UX",
+      "status": "PASS",
+      "priority": null,
+      "note": "Language switch goes to the twin page, or the other home when none exists.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "UX-025",
+      "family": "UX",
+      "status": "PASS",
+      "priority": null,
+      "note": "One shell and footer on every page.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "UX-026",
+      "family": "UX",
+      "status": "PASS",
+      "priority": null,
+      "note": "Keyboard shortcuts are optional and listed.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "UX-027",
+      "family": "UX",
+      "status": "PASS",
+      "priority": null,
+      "note": "Home states who, what, where and lists the work.",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "UX-028",
+      "family": "UX",
+      "status": "NEEDS_HUMAN",
+      "priority": "P2",
+      "note": "Background and contact are one click from home, but there is no CV document and the About experience table has one row (CONT-005, CONT-021).",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "UX-029",
+      "family": "UX",
+      "status": "PASS",
+      "priority": null,
+      "note": "Direct deep links load; 404 for unknown paths.",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "UX-030",
+      "family": "UX",
+      "status": "PASS",
+      "priority": null,
+      "note": "Both themes gated.",
+      "evidence": [
+        "E1"
+      ]
+    },
+    {
+      "id": "DES-001",
+      "family": "DES",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Visual design review not performed; the design system's own gates passed.",
+      "evidence": [
+        "E1"
+      ]
+    },
+    {
+      "id": "DES-002",
+      "family": "DES",
+      "status": "PASS",
+      "priority": null,
+      "note": "Self-hosted BKribitz faces with system fallbacks; gate G-12.",
+      "evidence": [
+        "E1 G-12"
+      ]
+    },
+    {
+      "id": "DES-003",
+      "family": "DES",
+      "status": "PASS",
+      "priority": null,
+      "note": "Tokens only (lint: no hex outside tokens).",
+      "evidence": [
+        "E1"
+      ]
+    },
+    {
+      "id": "DES-004",
+      "family": "DES",
+      "status": "PASS",
+      "priority": null,
+      "note": "One accent per section (gate G-15).",
+      "evidence": [
+        "E1 G-15"
+      ]
+    },
+    {
+      "id": "DES-005",
+      "family": "DES",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Not reviewed visually.",
+      "evidence": []
+    },
+    {
+      "id": "DES-006",
+      "family": "DES",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Not reviewed visually.",
+      "evidence": []
+    },
+    {
+      "id": "DES-007",
+      "family": "DES",
+      "status": "PASS",
+      "priority": null,
+      "note": "Shell on the page grid (gate G-14).",
+      "evidence": [
+        "E1 G-14"
+      ]
+    },
+    {
+      "id": "DES-008",
+      "family": "DES",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Not reviewed visually.",
+      "evidence": []
+    },
+    {
+      "id": "DES-009",
+      "family": "DES",
+      "status": "PASS",
+      "priority": null,
+      "note": "Rules open, never close (gate G-16).",
+      "evidence": [
+        "E1 G-16"
+      ]
+    },
+    {
+      "id": "DES-010",
+      "family": "DES",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Not reviewed visually.",
+      "evidence": []
+    },
+    {
+      "id": "DES-011",
+      "family": "DES",
+      "status": "PASS",
+      "priority": null,
+      "note": "Class contract lint.",
+      "evidence": [
+        "E1"
+      ]
+    },
+    {
+      "id": "DES-012",
+      "family": "DES",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Not reviewed visually.",
+      "evidence": []
+    },
+    {
+      "id": "DES-013",
+      "family": "DES",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Not reviewed visually.",
+      "evidence": []
+    },
+    {
+      "id": "DES-014",
+      "family": "DES",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Not reviewed visually.",
+      "evidence": []
+    },
+    {
+      "id": "DES-015",
+      "family": "DES",
+      "status": "PASS",
+      "priority": null,
+      "note": "12 px floor (gate G-01).",
+      "evidence": [
+        "E1 G-01"
+      ]
+    },
+    {
+      "id": "DES-016",
+      "family": "DES",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Not reviewed.",
+      "evidence": []
+    },
+    {
+      "id": "DES-017",
+      "family": "DES",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Print not reviewed.",
+      "evidence": []
+    },
+    {
+      "id": "DES-018",
+      "family": "DES",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Not reviewed visually.",
+      "evidence": []
+    },
+    {
+      "id": "DES-019",
+      "family": "DES",
+      "status": "PASS",
+      "priority": null,
+      "note": "Flat, square, reduced motion (G-07, G-08, G-11).",
+      "evidence": [
+        "E1"
+      ]
+    },
+    {
+      "id": "DES-020",
+      "family": "DES",
+      "status": "PASS",
+      "priority": null,
+      "note": "No visual change made: the fixes touch meta descriptions, related-note sublines and the head.",
+      "evidence": []
+    },
+    {
+      "id": "CONT-001",
+      "family": "CONT",
+      "status": "PASS",
+      "priority": null,
+      "note": "Marketing Data Analyst, marketing measurement and decisions.",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "CONT-002",
+      "family": "CONT",
+      "status": "PASS",
+      "priority": null,
+      "note": "Home cover says who, what, where; sections number the doors.",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "CONT-003",
+      "family": "CONT",
+      "status": "PASS",
+      "priority": null,
+      "note": "Projects on the home page.",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "CONT-004",
+      "family": "CONT",
+      "status": "NEEDS_HUMAN",
+      "priority": "P3",
+      "note": "About footnote gives 46.43% vs 42.73% as the \"official count of the electoral tribunal\"; those match the TSJE preliminary count, while the final tally of valid votes is reported as 48.96% vs 45.08%. The 3.7-point margin stands either way; wording for the owner.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "CONT-005",
+      "family": "CONT",
+      "status": "NEEDS_HUMAN",
+      "priority": "P2",
+      "note": "About experience table lists only 2023–2026 (BioSynCare), while About mentions founded startups and a presidential campaign, and the essay claims twenty years buying marketing technology. Recruiters will look for the dates.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "CONT-006",
+      "family": "CONT",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "No full proofread; spot checks found no errors.",
+      "evidence": []
+    },
+    {
+      "id": "CONT-007",
+      "family": "CONT",
+      "status": "NEEDS_HUMAN",
+      "priority": "P3",
+      "note": "Library notes follow a template (\"We are working on …, defined by\", \"What it tells me (Situation Awareness)\", \"Source: domain knowledge\"). Read as study notes, they are fine; the template voice is visible.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "CONT-008",
+      "family": "CONT",
+      "status": "PASS",
+      "priority": null,
+      "note": "Spot checks: claims are qualified (proxies, simulated, in build).",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "CONT-009",
+      "family": "CONT",
+      "status": "PASS",
+      "priority": null,
+      "note": "Projects open with the question.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "CONT-010",
+      "family": "CONT",
+      "status": "PASS",
+      "priority": null,
+      "note": "Observed vs. simulated stated (\"Allocation gains are proxies\", demo data named).",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "CONT-011",
+      "family": "CONT",
+      "status": "PASS",
+      "priority": null,
+      "note": "Spot checks: units and dates given.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "CONT-012",
+      "family": "CONT",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Charts not reviewed one by one.",
+      "evidence": []
+    },
+    {
+      "id": "CONT-013",
+      "family": "CONT",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "IBCS review not performed.",
+      "evidence": []
+    },
+    {
+      "id": "CONT-014",
+      "family": "CONT",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Linked repositories not reachable.",
+      "evidence": [
+        "E4"
+      ]
+    },
+    {
+      "id": "CONT-015",
+      "family": "CONT",
+      "status": "PASS",
+      "priority": null,
+      "note": "DOI and source links present; live resolution NOT_ASSESSABLE.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "CONT-016",
+      "family": "CONT",
+      "status": "PASS",
+      "priority": null,
+      "note": "Projects are personal work.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "CONT-017",
+      "family": "CONT",
+      "status": "PASS",
+      "priority": null,
+      "note": "Consistent document template.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "CONT-018",
+      "family": "CONT",
+      "status": "PASS",
+      "priority": null,
+      "note": "Essay title, publish date; single author (now also in JSON-LD).",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "CONT-019",
+      "family": "CONT",
+      "status": "PASS",
+      "priority": null,
+      "note": "Home, About and project summaries differ in role.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "CONT-020",
+      "family": "CONT",
+      "status": "PASS",
+      "priority": null,
+      "note": "Skills listed by category, not as an inventory.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "CONT-021",
+      "family": "CONT",
+      "status": "NEEDS_HUMAN",
+      "priority": "P2",
+      "note": "A LaTeX CV exists in the repository (handoff/ds-update/cv/braga-cv.tex) but none is published; owner decides whether to offer one.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "CONT-022",
+      "family": "CONT",
+      "status": "NOT_APPLICABLE",
+      "priority": null,
+      "note": "No CV download.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "CONT-023",
+      "family": "CONT",
+      "status": "PASS",
+      "priority": null,
+      "note": "Contact on home, About, every project close; LinkedIn and GitHub on About.",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "CONT-024",
+      "family": "CONT",
+      "status": "PASS",
+      "priority": null,
+      "note": "Each door ends in a next step (all projects, contact).",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "CONT-025",
+      "family": "CONT",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Reader testing not performed.",
+      "evidence": []
+    },
+    {
+      "id": "CONT-026",
+      "family": "CONT",
+      "status": "PASS",
+      "priority": null,
+      "note": "Results stated on the site, not only in GitHub.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "CONT-027",
+      "family": "CONT",
+      "status": "PASS",
+      "priority": null,
+      "note": "Calls to action are plain (\"Email is the direct line\").",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "CONT-028",
+      "family": "CONT",
+      "status": "FAIL",
+      "priority": "P1",
+      "note": "Legal pages read as unfinished drafts (LEG-025). Project 01-04 \"In build\" is honestly labelled.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "CONT-029",
+      "family": "CONT",
+      "status": "PASS",
+      "priority": null,
+      "note": "Location consistent (Greater Graz / Seiersberg).",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "CONT-030",
+      "family": "CONT",
+      "status": "PASS",
+      "priority": null,
+      "note": "Four doors: Work, Writing, Tools, About.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "SEC-001",
+      "family": "SEC",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Certificate live only (MA-05).",
+      "evidence": [
+        "E4"
+      ]
+    },
+    {
+      "id": "SEC-002",
+      "family": "SEC",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "\"Enforce HTTPS\" is a repository setting (MA-05).",
+      "evidence": [
+        "E4"
+      ]
+    },
+    {
+      "id": "SEC-003",
+      "family": "SEC",
+      "status": "PASS",
+      "priority": null,
+      "note": "No http:// resources in any page.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEC-004",
+      "family": "SEC",
+      "status": "ACCEPTED_RISK",
+      "priority": "P3",
+      "note": "No CSP. GitHub Pages cannot send headers; a meta CSP would need hashes for the inline scripts. Value is low: no third-party code, no user input rendered. Recommendation only.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "SEC-005",
+      "family": "SEC",
+      "status": "ACCEPTED_RISK",
+      "priority": "P3",
+      "note": "frame-ancestors/X-Frame-Options cannot be set on GitHub Pages (not settable by meta). Clickjacking impact is low: no state-changing actions.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "SEC-006",
+      "family": "SEC",
+      "status": "ACCEPTED_RISK",
+      "priority": "P3",
+      "note": "No explicit Referrer-Policy; browsers default to strict-origin-when-cross-origin.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "SEC-007",
+      "family": "SEC",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Header set by the host; live only.",
+      "evidence": [
+        "E4"
+      ]
+    },
+    {
+      "id": "SEC-008",
+      "family": "SEC",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "HSTS is the host's; live only.",
+      "evidence": [
+        "E4"
+      ]
+    },
+    {
+      "id": "SEC-009",
+      "family": "SEC",
+      "status": "ACCEPTED_RISK",
+      "priority": "P3",
+      "note": "Not settable on GitHub Pages; no powerful features used.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "SEC-010",
+      "family": "SEC",
+      "status": "PASS",
+      "priority": null,
+      "note": "No external scripts.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEC-011",
+      "family": "SEC",
+      "status": "NOT_APPLICABLE",
+      "priority": null,
+      "note": "No externally hosted assets.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEC-012",
+      "family": "SEC",
+      "status": "PASS",
+      "priority": null,
+      "note": "No tokens or keys in dist/ (pattern scan).",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEC-013",
+      "family": "SEC",
+      "status": "PASS",
+      "priority": null,
+      "note": "Shipped JS holds no sensitive data; the e-mail is reversed halves by design.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "SEC-014",
+      "family": "SEC",
+      "status": "PASS",
+      "priority": null,
+      "note": "No source maps in dist/.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEC-015",
+      "family": "SEC",
+      "status": "PASS",
+      "priority": null,
+      "note": "dist/ holds only site files. Repository-level personal data: see DEP-017.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEC-016",
+      "family": "SEC",
+      "status": "ACCEPTED_RISK",
+      "priority": "P3",
+      "note": "2 low advisories (katex via mermaid), build-time only, not shipped; fix needs katex 0.19 (breaking).",
+      "evidence": [
+        "E8"
+      ]
+    },
+    {
+      "id": "SEC-017",
+      "family": "SEC",
+      "status": "PASS",
+      "priority": null,
+      "note": "set:html only with build-time own content; JSON-LD escapes \"<\".",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "SEC-018",
+      "family": "SEC",
+      "status": "PASS",
+      "priority": null,
+      "note": "No target=\"_blank\" links.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEC-019",
+      "family": "SEC",
+      "status": "NOT_APPLICABLE",
+      "priority": null,
+      "note": "No iframes.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEC-020",
+      "family": "SEC",
+      "status": "NOT_APPLICABLE",
+      "priority": null,
+      "note": "No cross-origin requests.",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "SEC-021",
+      "family": "SEC",
+      "status": "PASS",
+      "priority": null,
+      "note": "No downloads besides two specimen images under /media/.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEC-022",
+      "family": "SEC",
+      "status": "PASS",
+      "priority": null,
+      "note": "No debug endpoints.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "SEC-023",
+      "family": "SEC",
+      "status": "NEEDS_HUMAN",
+      "priority": "P2",
+      "note": "DNS at easyname per DEPLOY.md; verify no stale A/CNAME records and the GitHub domain verification TXT (MA-05).",
+      "evidence": [
+        "E4"
+      ]
+    },
+    {
+      "id": "SEC-024",
+      "family": "SEC",
+      "status": "NOT_APPLICABLE",
+      "priority": null,
+      "note": "security.txt optional; not added.",
+      "evidence": []
+    },
+    {
+      "id": "SEC-025",
+      "family": "SEC",
+      "status": "PASS",
+      "priority": null,
+      "note": "No intrusive testing performed.",
+      "evidence": []
+    },
+    {
+      "id": "DEP-001",
+      "family": "DEP",
+      "status": "PASS",
+      "priority": null,
+      "note": "Base is \"/\" on the custom domain; SITE_BASE path builds still supported and documented.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "DEP-002",
+      "family": "DEP",
+      "status": "PASS",
+      "priority": null,
+      "note": "Nested routes resolve assets (gate L-01).",
+      "evidence": [
+        "E1 L-01"
+      ]
+    },
+    {
+      "id": "DEP-003",
+      "family": "DEP",
+      "status": "PASS",
+      "priority": null,
+      "note": "Every built page loads directly.",
+      "evidence": [
+        "E1"
+      ]
+    },
+    {
+      "id": "DEP-004",
+      "family": "DEP",
+      "status": "PASS",
+      "priority": null,
+      "note": "404.html at the root; trailing-slash redirect by the host.",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "DEP-005",
+      "family": "DEP",
+      "status": "PASS",
+      "priority": null,
+      "note": "dist/ holds only intended files (pages, _astro, fonts, scripts, media, favicons, card, CNAME, feed, robots, sitemap).",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "DEP-006",
+      "family": "DEP",
+      "status": "PASS",
+      "priority": null,
+      "note": "Clean build.",
+      "evidence": [
+        "E1"
+      ]
+    },
+    {
+      "id": "DEP-007",
+      "family": "DEP",
+      "status": "FIXED",
+      "priority": "P2",
+      "note": "npm ci from the lockfile with exact versions. Defect found while verifying SEO-007: the vault loader keyed its content cache on each note's text only, so a change to meta.mjs (how a note is read) kept stale titles/summaries in node_modules/.astro until the cache was deleted — local builds were not reproducible from source (CI starts clean, so production was unaffected). Fixed: the hash of meta.mjs joins every digest (src/lib/vault/loader.mjs); verified by rebuilding on the stale cache. src/data/activity.json refresh stays intentionally time-dependent.",
+      "evidence": [
+        "E1",
+        "E2"
+      ]
+    },
+    {
+      "id": "DEP-008",
+      "family": "DEP",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Actions run logs not reviewed.",
+      "evidence": []
+    },
+    {
+      "id": "DEP-009",
+      "family": "DEP",
+      "status": "PASS",
+      "priority": "P3",
+      "note": "Workflow permissions are minimal for Pages (contents read, pages write, id-token write); scoping pages/id-token to the deploy job would be tighter.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "DEP-010",
+      "family": "DEP",
+      "status": "PASS",
+      "priority": "P3",
+      "note": "Dependencies pinned exactly; actions pinned to major tags (SHA pinning optional).",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "DEP-011",
+      "family": "DEP",
+      "status": "PASS",
+      "priority": null,
+      "note": "site, base and SITE_BASE consistent.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "DEP-012",
+      "family": "DEP",
+      "status": "PASS",
+      "priority": null,
+      "note": "No console output.",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "DEP-013",
+      "family": "DEP",
+      "status": "PASS",
+      "priority": null,
+      "note": "No runtime errors or rejections on 18 routes.",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "DEP-014",
+      "family": "DEP",
+      "status": "PASS",
+      "priority": null,
+      "note": "favicons, sitemap, robots, feed at the root.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "DEP-015",
+      "family": "DEP",
+      "status": "ACCEPTED_RISK",
+      "priority": "P3",
+      "note": "See PERF-015.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "DEP-016",
+      "family": "DEP",
+      "status": "PASS",
+      "priority": null,
+      "note": "Production build verified locally (npm run verify).",
+      "evidence": [
+        "E1"
+      ]
+    },
+    {
+      "id": "DEP-017",
+      "family": "DEP",
+      "status": "NEEDS_HUMAN",
+      "priority": "P2",
+      "note": "The public repository contains handoff/ds-update/cv/braga-cv.tex with a personal Gmail address. The site deliberately keeps its address out of the HTML; the repository publishes another one in plain text (and in git history). Owner decides (MA-09).",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "DEP-018",
+      "family": "DEP",
+      "status": "NEEDS_HUMAN",
+      "priority": "P3",
+      "note": "Public repository has no LICENSE; without one, all rights are reserved by default. Fonts carry their OFL.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "DEP-019",
+      "family": "DEP",
+      "status": "PASS",
+      "priority": null,
+      "note": "Custom domain in place: CNAME, site, robots, sitemap, canonicals.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "DEP-020",
+      "family": "DEP",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Redirect from rafaelbraga-kribitz.github.io/braga-portfolio-v2/* to the domain is GitHub's; live only (MA-05).",
+      "evidence": [
+        "E4"
+      ]
+    },
+    {
+      "id": "DEP-021",
+      "family": "DEP",
+      "status": "PASS",
+      "priority": null,
+      "note": "One workflow, no extra infrastructure.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "DEP-022",
+      "family": "DEP",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Deployed environment unreachable from the container (MA-10).",
+      "evidence": [
+        "E4"
+      ]
+    },
+    {
+      "id": "ASSET-001",
+      "family": "ASSET",
+      "status": "PASS",
+      "priority": null,
+      "note": "Portrait, 2 favicons, share card, 10 font files, 2 specimen PNGs, inline SVG/MathML.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "ASSET-002",
+      "family": "ASSET",
+      "status": "PASS",
+      "priority": null,
+      "note": "All assets referenced.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "ASSET-003",
+      "family": "ASSET",
+      "status": "PASS",
+      "priority": null,
+      "note": "Small, correctly sized.",
+      "evidence": [
+        "E7"
+      ]
+    },
+    {
+      "id": "ASSET-004",
+      "family": "ASSET",
+      "status": "PASS",
+      "priority": null,
+      "note": "SVG is generated inline at build; no external SVG.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "ASSET-005",
+      "family": "ASSET",
+      "status": "PASS",
+      "priority": null,
+      "note": "OFL 1.1 permits embedding of renamed modified cuts; notice included.",
+      "evidence": [
+        "E7"
+      ]
+    },
+    {
+      "id": "ASSET-006",
+      "family": "ASSET",
+      "status": "NEEDS_HUMAN",
+      "priority": "P3",
+      "note": "See LEG-016 (portrait).",
+      "evidence": [
+        "E7"
+      ]
+    },
+    {
+      "id": "ASSET-007",
+      "family": "ASSET",
+      "status": "PASS",
+      "priority": null,
+      "note": "No EXIF/XMP.",
+      "evidence": [
+        "E7"
+      ]
+    },
+    {
+      "id": "ASSET-008",
+      "family": "ASSET",
+      "status": "NOT_APPLICABLE",
+      "priority": null,
+      "note": "No PDFs.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "ASSET-009",
+      "family": "ASSET",
+      "status": "NOT_APPLICABLE",
+      "priority": null,
+      "note": "No CV published.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "ASSET-010",
+      "family": "ASSET",
+      "status": "NOT_APPLICABLE",
+      "priority": null,
+      "note": "No PDFs.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "ASSET-011",
+      "family": "ASSET",
+      "status": "PASS",
+      "priority": null,
+      "note": "Correct extensions; GitHub Pages sets types by extension.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "ASSET-012",
+      "family": "ASSET",
+      "status": "PASS",
+      "priority": null,
+      "note": "Largest image 49 KB.",
+      "evidence": [
+        "E7"
+      ]
+    },
+    {
+      "id": "ASSET-013",
+      "family": "ASSET",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "External documents (DOI) live only.",
+      "evidence": [
+        "E4"
+      ]
+    },
+    {
+      "id": "ASSET-014",
+      "family": "ASSET",
+      "status": "PASS",
+      "priority": null,
+      "note": "Share card used only as og/twitter image.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "I18N-001",
+      "family": "I18N",
+      "status": "PASS",
+      "priority": null,
+      "note": "English and German.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "I18N-002",
+      "family": "I18N",
+      "status": "PASS",
+      "priority": null,
+      "note": "/en/ and /de/ trees, German slugs for legal pages.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "I18N-003",
+      "family": "I18N",
+      "status": "PASS",
+      "priority": null,
+      "note": "Language link to the twin.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "I18N-004",
+      "family": "I18N",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Translation fidelity not reviewed page by page.",
+      "evidence": []
+    },
+    {
+      "id": "I18N-005",
+      "family": "I18N",
+      "status": "PASS",
+      "priority": null,
+      "note": "Chrome strings from i18n; gate L-07 marks draft-language pages.",
+      "evidence": [
+        "E1 L-07"
+      ]
+    },
+    {
+      "id": "I18N-006",
+      "family": "I18N",
+      "status": "PASS",
+      "priority": null,
+      "note": "German pages pass the overflow gate.",
+      "evidence": [
+        "E1 G-06"
+      ]
+    },
+    {
+      "id": "I18N-007",
+      "family": "I18N",
+      "status": "PASS",
+      "priority": null,
+      "note": "lang, og:locale de_AT/en_GB.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "I18N-008",
+      "family": "I18N",
+      "status": "PASS",
+      "priority": null,
+      "note": "Gate L-02.",
+      "evidence": [
+        "E1 L-02"
+      ]
+    },
+    {
+      "id": "I18N-009",
+      "family": "I18N",
+      "status": "PASS",
+      "priority": null,
+      "note": "Number/date formatting unit-tested per language.",
+      "evidence": [
+        "E1"
+      ]
+    },
+    {
+      "id": "I18N-010",
+      "family": "I18N",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Terminology not reviewed.",
+      "evidence": []
+    },
+    {
+      "id": "I18N-011",
+      "family": "I18N",
+      "status": "PASS",
+      "priority": null,
+      "note": "External links are language-neutral.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "I18N-012",
+      "family": "I18N",
+      "status": "PASS",
+      "priority": null,
+      "note": "Root goes to /en/ always; no language sniffing.",
+      "evidence": [
+        "E2"
+      ]
+    },
+    {
+      "id": "I18N-013",
+      "family": "I18N",
+      "status": "PASS",
+      "priority": null,
+      "note": "Single-language notes declare no twin.",
+      "evidence": [
+        "E1 L-02"
+      ]
+    },
+    {
+      "id": "I18N-014",
+      "family": "I18N",
+      "status": "NEEDS_HUMAN",
+      "priority": "P1",
+      "note": "Legal pages in both languages carry the drafting notes (LEG-025).",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "I18N-015",
+      "family": "I18N",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Austrian German wording not reviewed.",
+      "evidence": []
+    },
+    {
+      "id": "TOOL-001",
+      "family": "TOOL",
+      "status": "PASS",
+      "priority": null,
+      "note": "Two tools: confusion matrix, A/B sample size.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "TOOL-002",
+      "family": "TOOL",
+      "status": "PASS",
+      "priority": null,
+      "note": "Inputs labelled (axe).",
+      "evidence": [
+        "E1 A-01"
+      ]
+    },
+    {
+      "id": "TOOL-003",
+      "family": "TOOL",
+      "status": "PASS",
+      "priority": null,
+      "note": "Typed-input parser unit-tested.",
+      "evidence": [
+        "E1"
+      ]
+    },
+    {
+      "id": "TOOL-004",
+      "family": "TOOL",
+      "status": "PASS",
+      "priority": null,
+      "note": "Tool maths unit-tested against hand-computed references.",
+      "evidence": [
+        "E1"
+      ]
+    },
+    {
+      "id": "TOOL-005",
+      "family": "TOOL",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Latency not measured.",
+      "evidence": []
+    },
+    {
+      "id": "TOOL-006",
+      "family": "TOOL",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Not exercised.",
+      "evidence": []
+    },
+    {
+      "id": "TOOL-007",
+      "family": "TOOL",
+      "status": "PASS",
+      "priority": null,
+      "note": "No overflow 320–1920 px.",
+      "evidence": [
+        "E1 G-06",
+        "E3"
+      ]
+    },
+    {
+      "id": "TOOL-008",
+      "family": "TOOL",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Not reviewed.",
+      "evidence": []
+    },
+    {
+      "id": "TOOL-009",
+      "family": "TOOL",
+      "status": "PASS",
+      "priority": null,
+      "note": "Default scenario as text and table without JS.",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "TOOL-010",
+      "family": "TOOL",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Not exercised.",
+      "evidence": []
+    },
+    {
+      "id": "TOOL-011",
+      "family": "TOOL",
+      "status": "PASS",
+      "priority": null,
+      "note": "Parser rejects invalid input (unit tests).",
+      "evidence": [
+        "E1"
+      ]
+    },
+    {
+      "id": "TOOL-012",
+      "family": "TOOL",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Not exercised.",
+      "evidence": []
+    },
+    {
+      "id": "TOOL-013",
+      "family": "TOOL",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Not profiled.",
+      "evidence": []
+    },
+    {
+      "id": "TOOL-014",
+      "family": "TOOL",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Not reviewed.",
+      "evidence": []
+    },
+    {
+      "id": "TOOL-015",
+      "family": "TOOL",
+      "status": "PASS",
+      "priority": null,
+      "note": "81+1 unit tests incl. tool maths.",
+      "evidence": [
+        "E1"
+      ]
+    },
+    {
+      "id": "TOOL-016",
+      "family": "TOOL",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Not reviewed.",
+      "evidence": []
+    },
+    {
+      "id": "TOOL-017",
+      "family": "TOOL",
+      "status": "PASS",
+      "priority": null,
+      "note": "No network requests from tools.",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "TOOL-018",
+      "family": "TOOL",
+      "status": "PASS",
+      "priority": null,
+      "note": "Islands isolated; page text independent of them.",
+      "evidence": [
+        "E3"
+      ]
+    },
+    {
+      "id": "OPS-001",
+      "family": "OPS",
+      "status": "NEEDS_HUMAN",
+      "priority": "P2",
+      "note": "Search Console / Bing setup (MA-04).",
+      "evidence": []
+    },
+    {
+      "id": "OPS-002",
+      "family": "OPS",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "No access.",
+      "evidence": [
+        "E4"
+      ]
+    },
+    {
+      "id": "OPS-003",
+      "family": "OPS",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "No access.",
+      "evidence": [
+        "E4"
+      ]
+    },
+    {
+      "id": "OPS-004",
+      "family": "OPS",
+      "status": "PASS",
+      "priority": null,
+      "note": "No analytics, consistent with the privacy notice.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "OPS-005",
+      "family": "OPS",
+      "status": "PASS",
+      "priority": null,
+      "note": "None added.",
+      "evidence": []
+    },
+    {
+      "id": "OPS-006",
+      "family": "OPS",
+      "status": "NEEDS_HUMAN",
+      "priority": "P3",
+      "note": "No uptime monitoring; optional.",
+      "evidence": []
+    },
+    {
+      "id": "OPS-007",
+      "family": "OPS",
+      "status": "NEEDS_HUMAN",
+      "priority": "P3",
+      "note": "Internal links gated on every deploy; external links not monitored.",
+      "evidence": [
+        "E1"
+      ]
+    },
+    {
+      "id": "OPS-008",
+      "family": "OPS",
+      "status": "PASS",
+      "priority": null,
+      "note": "Exact pins, lockfile, npm audit available.",
+      "evidence": [
+        "E8"
+      ]
+    },
+    {
+      "id": "OPS-009",
+      "family": "OPS",
+      "status": "PASS",
+      "priority": null,
+      "note": "Dates on documents; daily rebuild for scheduled notes.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "OPS-010",
+      "family": "OPS",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Live profiles unreachable.",
+      "evidence": [
+        "E4"
+      ]
+    },
+    {
+      "id": "OPS-011",
+      "family": "OPS",
+      "status": "PASS",
+      "priority": null,
+      "note": "README and DEPLOY.md document build and deploy.",
+      "evidence": [
+        "E5"
+      ]
+    },
+    {
+      "id": "OPS-012",
+      "family": "OPS",
+      "status": "NOT_ASSESSABLE",
+      "priority": null,
+      "note": "Post-deploy check needed (MA-10).",
+      "evidence": [
+        "E4"
+      ]
+    }
+  ]
+}

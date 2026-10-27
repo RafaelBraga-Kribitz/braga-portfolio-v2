@@ -38,6 +38,7 @@ import { route, workRoute, writingRoute } from '@/lib/routes';
 import { LANGS, site } from '@/lib/site';
 import { tools } from '@/lib/catalogue';
 import { projectsOf, writingOf, writingCode, libraryOf, NOTES_CODE } from '@/lib/collections';
+import { homeGraph } from '@/lib/structured-data';
 
 export function getStaticPaths() {
   return LANGS.map((lang) => ({ params: { lang } }));
@@ -97,7 +98,7 @@ const library = (await libraryOf(lang)).length ? await libraryOf(lang) : await l
 const libraryCount = library.reduce((n, a) => n + a.rows.length, 0);
 const allProjects = projects.length ? t(lang, 'all-n-projects').replace('{n}', String(projects.length)) : t(lang, 'all-projects');
 ---
-<Base lang={lang} page="home" title={copy.title} description={copy.lead}>
+<Base lang={lang} page="home" title={copy.title} description={copy.lead} structuredData={homeGraph(lang, copy.lead)}>
   <Cover lang={lang} spec={spec} titleLines={copy.titleLines} lead={copy.lead} draft={isDraftLang(lang)} />
 
   <section class="section" id="work">

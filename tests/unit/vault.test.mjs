@@ -5,7 +5,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { fileURLToPath } from 'node:url';
-import { slugify, firstH1, inlineTags, allTags, statusOf, publicTags, inlineFields, excerpt, placeOf, readNote, pathOf, isScheduled, splitFrontmatter } from '../../src/lib/vault/meta.mjs';
+import { slugify, firstH1, inlineTags, allTags, statusOf, publicTags, inlineFields, excerpt, texText, placeOf, readNote, pathOf, isScheduled, splitFrontmatter } from '../../src/lib/vault/meta.mjs';
 import { vaultIndex, resolveNote, resolveAttachment, mediaPath, mediaKind } from '../../src/lib/vault/index.mjs';
 import { parseQuery, runQuery } from '../../src/lib/vault/dataview.mjs';
 import { related } from '../../src/lib/vault/related.mjs';
@@ -42,6 +42,23 @@ test('Dataview fields and the excerpt', () => {
   assert.equal(excerpt('# T\n\nFirst [[Note|para]] with **bold**.\n\nSecond.'), 'First para with bold.');
   assert.equal(excerpt(`${'word '.repeat(60)}`, 30).endsWith('…'), true);
   assert.equal(excerpt('# T\n\n$$\nx^2\n$$\n\nThe square of $x$.'), 'The square of x.');   // display maths is not prose
+});
+
+test('the excerpt reads as a sentence: maths as text, fragments and the breakdown label passed over', () => {
+  assert.equal(texText('\\frac{4}{3}\\pi R^3'), '4/3π R^3');
+  assert.equal(texText('x \\in \\{0, 1\\}'), 'x ∈ {0, 1}');
+  assert.equal(texText('S_{n} = \\frac{n}{2}(a_1 + a_n)'), 'S_n = n/2(a_1 + a_n)');
+  assert.equal(texText('\\left\\|x\\right\\|_2 \\le 1'), '‖x‖_2 ≤ 1');
+  assert.equal(texText('\\mathbb{R}^3'), 'ℝ^3');
+  assert.equal(texText('p \\Rightarrow q \\iff \\lnot q \\implies \\lnot p'), 'p implies q iff ¬ q implies ¬ p');   // D-030: no ⇒ or ⇔ in text
+  // "=" and "_" inside maths are not Markdown emphasis
+  assert.equal(excerpt('The argument of $z = a + bi$ is the angle $\\theta = \\arg z$ of the vector.'), 'The argument of z = a + bi is the angle θ = arg z of the vector.');
+  assert.equal(excerpt('A _real_ ==mark== and *emphasis* go, but $a_1 = b_1$ stays as it reads here.'), 'A real mark and emphasis go, but a_1 = b_1 stays as it reads here.');
+  // a fragment between formulas and a hand-over to a formula give way to the first sentence
+  assert.equal(excerpt('$$\nV\n$$\n\n, $S = 4\\pi R^2$\n\nWhat it tells me *(Situation Awareness)*:\nThe sphere has volume $V$ and surface area $S$.'), 'The sphere has volume V and surface area S.');
+  assert.equal(excerpt('We are working on churn rate, defined by\n\n$$\nc = l/n\n$$\n\nChurn is the share of customers lost in a period.'), 'Churn is the share of customers lost in a period.');
+  // with no sentence at all, the first paragraph still stands in
+  assert.equal(excerpt('(for a > 0)\n\nx'), '(for a > 0)');
 });
 
 test('placeOf: site folders by language; templates and private folders are not pages', () => {

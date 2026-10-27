@@ -38,6 +38,10 @@
 // and public/favicon-{32,180}.png, rendered by `npm run assets`
 // (scripts/assets/build-assets.mjs). Every URL here goes through
 // src/lib/routes.ts, so a project-page build (SITE_BASE) carries its base.
+//
+// Structured data (website audit, SEO-026): a page that passes
+// `structuredData` gets it as one JSON-LD graph in the head, built by
+// src/lib/structured-data.ts from site.ts and the page's own entry.
 import '../styles/global.css';
 import Shell from '../components/Shell.astro';
 import Footer from '../components/Footer.astro';
@@ -46,6 +50,7 @@ import type { Lang } from '../lib/i18n';
 import { t, otherLang } from '../lib/i18n';
 import { route, alternates, absolute, withBase, type PageId, type DoorCode } from '../lib/routes';
 import { themeColor, PREPAINT } from '../lib/theme';
+import { jsonLd } from '../lib/structured-data';
 
 // The four faces every page draws above the fold (body, bold, display,
 // mono). Preloaded so they are requested with the HTML instead of after
@@ -76,9 +81,11 @@ interface Props {
   seoDescription?: string;
   canonicalUrl?: string;
   ogImage?: { src: string; alt: string };
+  /** schema.org nodes for the head's JSON-LD graph (src/lib/structured-data.ts). */
+  structuredData?: Record<string, unknown>[];
 }
 
-const { lang, page, title: pageTitle, description: pageDescription, current, hasCode = false, noindex = false, ogType = 'website', prevDoc, nextDoc, path, twinPath, seoTitle, seoDescription, canonicalUrl, ogImage } = Astro.props;
+const { lang, page, title: pageTitle, description: pageDescription, current, hasCode = false, noindex = false, ogType = 'website', prevDoc, nextDoc, path, twinPath, seoTitle, seoDescription, canonicalUrl, ogImage, structuredData } = Astro.props;
 const title = seoTitle ?? pageTitle;
 const description = seoDescription ?? pageDescription;
 // the shortcut panel (owner, 23 Oct 2026): rows of keys and what they do
@@ -145,6 +152,7 @@ const shareAlt = `${site.wordmark} · ${site.name} · ${site.role[lang]}`;
     {prevDoc && <link rel="prev" href={prevDoc} />}
     {nextDoc && <link rel="next" href={nextDoc} />}
     <link rel="alternate" type="application/rss+xml" title={`${site.name} · RSS`} href={feed}>
+    {structuredData && structuredData.length > 0 && <script is:inline type="application/ld+json" set:html={jsonLd(structuredData)}></script>}
   </head>
   <body>
     <a class="skip" href="#main">{t(lang, 'skip')}</a>
