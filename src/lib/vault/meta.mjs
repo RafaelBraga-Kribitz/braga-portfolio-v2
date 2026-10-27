@@ -168,7 +168,7 @@ const TEX_SYMBOLS = {
   lambda: 'λ', mu: 'μ', nu: 'ν', xi: 'ξ', pi: 'π', rho: 'ρ', sigma: 'σ', tau: 'τ', phi: 'φ', varphi: 'φ', chi: 'χ', psi: 'ψ', omega: 'ω',
   Gamma: 'Γ', Delta: 'Δ', Theta: 'Θ', Lambda: 'Λ', Pi: 'Π', Sigma: 'Σ', Phi: 'Φ', Psi: 'Ψ', Omega: 'Ω',
   in: '∈', notin: '∉', le: '≤', leq: '≤', ge: '≥', geq: '≥', ne: '≠', neq: '≠', approx: '≈', sim: '∼', equiv: '≡', propto: '∝',
-  infty: '∞', to: '→', rightarrow: '→', leftarrow: '←', Rightarrow: '⇒', implies: '⇒', iff: '⇔', mapsto: '↦',
+  infty: '∞', to: '→', rightarrow: '→', leftarrow: '←', mapsto: '→', Rightarrow: 'implies', implies: 'implies', iff: 'iff', Leftrightarrow: 'iff',
   times: '×', cdot: '·', div: '÷', pm: '±', mp: '∓', sum: 'Σ', prod: '∏', int: '∫', partial: '∂', nabla: '∇',
   forall: '∀', exists: '∃', lnot: '¬', subset: '⊂', subseteq: '⊆', supset: '⊃', cup: '∪', cap: '∩', emptyset: '∅', varnothing: '∅', setminus: '∖',
   ldots: '…', cdots: '⋯', dots: '…', neg: '¬', land: '∧', lor: '∨', perp: '⊥', circ: '∘', ell: 'ℓ', mid: '|', vert: '|', Vert: '‖',
@@ -178,7 +178,11 @@ const TEX_SYMBOLS = {
 const BLACKBOARD = { R: 'ℝ', N: 'ℕ', Z: 'ℤ', Q: 'ℚ', C: 'ℂ' };
 const group = (a) => (/^[\p{L}\p{N}.√_^]*$/u.test(a.trim()) ? a.trim() : `(${a.trim()})`);
 
-/** Inline TeX as readable text, for an excerpt: \frac{4}{3}\pi R^3 → 4/3π R^3, \mathbb{R} → ℝ. */
+/**
+ * Inline TeX as readable text, for an excerpt: \frac{4}{3}\pi R^3 → 4/3π R^3,
+ * \mathbb{R} → ℝ. Arrows other than → and ← become words: the glyph
+ * inventory (D-030, gate L-06) allows no other arrow in running text.
+ */
 export function texText(tex) {
   // escaped braces are literal and survive the brace removal at the end
   let s = String(tex).replace(/\\\{/g, '\u0001').replace(/\\\}/g, '\u0002')

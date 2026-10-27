@@ -50,6 +50,7 @@ test('the excerpt reads as a sentence: maths as text, fragments and the breakdow
   assert.equal(texText('S_{n} = \\frac{n}{2}(a_1 + a_n)'), 'S_n = n/2(a_1 + a_n)');
   assert.equal(texText('\\left\\|x\\right\\|_2 \\le 1'), '‖x‖_2 ≤ 1');
   assert.equal(texText('\\mathbb{R}^3'), 'ℝ^3');
+  assert.equal(texText('p \\Rightarrow q \\iff \\lnot q \\implies \\lnot p'), 'p implies q iff ¬ q implies ¬ p');   // D-030: no ⇒ or ⇔ in text
   // "=" and "_" inside maths are not Markdown emphasis
   assert.equal(excerpt('The argument of $z = a + bi$ is the angle $\\theta = \\arg z$ of the vector.'), 'The argument of z = a + bi is the angle θ = arg z of the vector.');
   assert.equal(excerpt('A _real_ ==mark== and *emphasis* go, but $a_1 = b_1$ stays as it reads here.'), 'A real mark and emphasis go, but a_1 = b_1 stays as it reads here.');

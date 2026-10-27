@@ -27,7 +27,13 @@ regex also treated a single `=` or `_` as emphasis: "z = a + bi" became
   paragraph qualifies, the first paragraph is still used, as before.
 - The template label "What it tells me (Situation Awareness):" is dropped.
 - Inline TeX becomes readable text through `texText()` (`\frac{4}{3}` → 4/3,
-  `\pi` → π, `\mathbb{R}` → ℝ, `\le` → ≤, `\{0, 1\}` → {0, 1}).
+  `\pi` → π, `\mathbb{R}` → ℝ, `\le` → ≤, `\{0, 1\}` → {0, 1}). Arrows
+  other than → and ← become words (`\implies` → "implies", `\iff` → "iff"),
+  because the glyph inventory (D-030, gate L-06) allows no other arrow in
+  running text. A first version emitted ⇒, and L-06 failed on 11 notes
+  whose related-note line showed it. That is fixed, and every published
+  summary and title has been checked against the gate's own glyph
+  expression.
 - Inline maths is set aside before emphasis is removed, and only real
   emphasis is stripped (`**x**`, `*x*`, `_x_` at word boundaries, `==x==`,
   `~~x~~`).
@@ -112,14 +118,14 @@ URL (manual action MA-04).
 |---|---|---|
 | `astro check` | 0 errors, 0 warnings | 0 errors, 0 warnings |
 | `npm run lint` | pass | pass |
-| Unit tests | 81 pass | 82 pass |
+| Unit tests | 81 pass | 82 pass (the new test holds 11 assertions) |
 | `vault:check` | 0 errors | 0 errors |
 | Build | 805 pages | 805 pages |
 | Gates (805 pages, 2,168 rendered contexts, axe) | 0 failing | 0 failing |
 | Runtime: console errors, 18 routes × 360/1920 px | 0 | 0 |
 | Runtime: horizontal overflow, 18 routes × 360/1920 px | 0 | 0 |
-| Lab LCP, 390 px, 4× CPU, ~1.6 Mbps | 0.81–1.48 s | 0.81–1.48 s (head grows by < 1 KB on 16 pages) |
-| Lab CLS | 0–0.037 | 0–0.037 |
+| Lab LCP, 390 px, 4× CPU, ~1.6 Mbps | 0.81–1.48 s | 0.78–1.36 s (same within run-to-run noise; head grows by < 1 KB on 16 pages) |
+| Lab CLS | 0–0.037 (one unreproducible 0.25 reading) | 0–0.027 |
 
 Not deployed: the changes reach the site when the pull request is merged
 into `main` (the Pages workflow). See MA-10 for the checks after that deploy.
