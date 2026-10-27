@@ -44,7 +44,12 @@ export default defineConfig({
   base,
   output: 'static',
   trailingSlash: 'always',
-  build: { format: 'directory' },
+  // inlineStylesheets: the one stylesheet goes into each page's <head>, not
+  // a /_astro/ file. GitHub Pages caches every file for 10 minutes and takes
+  // no headers, so a separate stylesheet buys little on repeat visits and
+  // costs a render-blocking request (and a step in the font chain) on the
+  // first one.
+  build: { format: 'directory', inlineStylesheets: 'always' },
   // vaultMedia: the vault's attachments at /media/ (src/integrations/vault-media.mjs)
   integrations: [preact(), mdx(), vaultMedia({ base })],
   markdown: {

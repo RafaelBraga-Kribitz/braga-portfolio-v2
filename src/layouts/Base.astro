@@ -47,6 +47,11 @@ import { t, otherLang } from '../lib/i18n';
 import { route, alternates, absolute, withBase, type PageId, type DoorCode } from '../lib/routes';
 import { themeColor, PREPAINT } from '../lib/theme';
 
+// The four faces every page draws above the fold (body, bold, display,
+// mono). Preloaded so they are requested with the HTML instead of after
+// the first style pass; the other weights load only where a page uses them.
+const FONTS = ['BKribitz-400', 'BKribitz-700', 'BKribitz-800', 'BKribitzMono-400'];
+
 interface Props {
   lang: Lang;
   page: PageId;
@@ -114,6 +119,7 @@ const shareAlt = `${site.wordmark} · ${site.name} · ${site.role[lang]}`;
     <meta name="theme-color" media="(prefers-color-scheme: light)" content={themeColor.light}>
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content={themeColor.dark}>
     <script is:inline set:html={PREPAINT}></script>
+    {FONTS.map((f) => <link rel="preload" href={withBase(`/fonts/${f}.woff2`)} as="font" type="font/woff2" crossorigin />)}
     <title>{title} · {site.name}</title>
     <meta name="description" content={description}>
     <link rel="canonical" href={canonical}>

@@ -720,10 +720,10 @@ export function staticGates(pagePath, f, ctx) {
   // L-03 · scripts policy: content pages carry only the inline pre-paint
   // script (first script in <head>, before the stylesheets), the inline
   // theme toggle (which also runs the contact pair's copy buttons) and /scripts/code.js; /tools/<name>/ pages may also carry
-  // Astro island scripts. Non-JS script types (JSON, JSON-LD) are data.
+  // Astro island scripts; a redirect stub also its location.replace. Non-JS script types (JSON, JSON-LD) are data.
   const sOff = [];
   const JS_TYPES = new Set(['', 'text/javascript', 'application/javascript', 'module', 'text/ecmascript']);
-  const kinds = { prepaint: 0, toggle: 0, code: 0, island: 0 };
+  const kinds = { prepaint: 0, toggle: 0, code: 0, island: 0, redirect: 0 };
   for (const s of f.scripts) {
     if (!JS_TYPES.has(s.type)) continue; // data block
     let kind;
@@ -735,6 +735,7 @@ export function staticGates(pagePath, f, ctx) {
       else kind = 'other';
     } else if (/bk-theme/.test(s.text) && /dataset\.theme|data-theme/.test(s.text) && !/shell-theme/.test(s.text) && s.inHead && s.text.length <= 400) kind = 'prepaint';
     else if (/shell-theme/.test(s.text) && /bk-theme/.test(s.text)) kind = 'toggle';
+    else if (redirect && /^\s*location\.replace\(/.test(s.text) && s.inHead && s.text.length <= 200) kind = 'redirect';
     else if (/astro-island|astro:load|astro:idle|astro:visible|astro:only|self\.Astro|\(self\.Astro/.test(s.text)) kind = 'island';
     else kind = 'inline';
     const label = s.src ? `<script src="${s.src}">` : `inline <script> “${s.text.trim().slice(0, 48)}…” (${s.text.length} B)`;
