@@ -3,9 +3,12 @@
 // of 0 does the work, the canonical names /en/, and a plain pair of links
 // serves a browser that does not follow the refresh. It still carries what
 // every page carries (skip link, one main, one h1, the two theme-color
-// metas, the hreflang pair, and the pre-paint script, the one script it
-// has: a reader with a stored dark choice sees no light frame before
-// /en/), so it reads as part of the site for the moment it is seen.
+// metas, the hreflang pair, and the pre-paint script: a reader with a
+// stored dark choice sees no light frame before /en/), so it reads as part
+// of the site for the moment it is seen. A browser follows a meta refresh
+// only once the page has loaded (its stylesheet and fonts included), so a
+// second script, location.replace, leaves at once; the refresh stays for
+// a reader without JavaScript.
 import '../styles/global.css';
 import { site } from '../lib/site';
 import { absolute, alternates, route, withBase } from '../lib/routes';
@@ -29,6 +32,7 @@ const shareAlt = `${site.wordmark} · ${site.name} · ${site.role.en}`;
     <meta name="theme-color" media="(prefers-color-scheme: light)" content={themeColor.light}>
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content={themeColor.dark}>
     <script is:inline set:html={PREPAINT}></script>
+    <script is:inline set:html={`location.replace(${JSON.stringify(en)})`}></script>
     <meta http-equiv="refresh" content={`0; url=${en}`}>
     <title>{site.name}</title>
     <meta name="description" content={description}>
