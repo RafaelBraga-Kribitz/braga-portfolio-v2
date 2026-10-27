@@ -78,3 +78,7 @@ I would measure sales-accepted leads, meetings booked, opportunities created, co
 I would not measure harvest rate, records extracted, crawl coverage or F1 scores. Those are the vendor’s metrics. The pilot exists to find out whether they turn into mine.
 
 The paper is enough to justify a pilot. It is not enough to justify a purchase. That is the right place for a peer-reviewed vendor benchmark to sit: interesting, plausible, and two weeks of my data away from being believed.
+
+## Reference
+
+Kaplan, A., Seker, S. E., and Yoruk, R. (2025). A review of AI-based business lead generation: Scrapus as a case study. *Frontiers in Artificial Intelligence*, 8, Article 1606431. DOI: [10.3389/frai.2025.1606431](https://doi.org/10.3389/frai.2025.1606431).
