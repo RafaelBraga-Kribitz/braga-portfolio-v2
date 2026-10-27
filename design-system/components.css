@@ -122,6 +122,34 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
   .lr-trail { grid-column: 2; }
   .listing-row.lr-child .lr-title { padding-left: 0; }
 }
+/* a listing of long codes (the notes library: 04-02-01-05; owner, 26 Oct
+   2026) stacks the same way below 720: the code does not fit 64px */
+@media (max-width: 720px) {
+  .listing.lr-long-code .listing-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .listing.lr-long-code :is(.lr-index, .lr-title) { grid-column: 1 / -1; }
+  .listing.lr-long-code .listing-row .lr-meta { grid-column: 1; }
+  .listing.lr-long-code .lr-trail { grid-column: 2; }
+}
+
+/* pagination (braga-design-system-template layout/Pagination; owner,
+   26 Oct 2026): under a listing, mono page numbers between ← and →; the
+   current page in the accent with an accent underline, the others ink-2,
+   ink on hover. Static pages: every cell is a link, the current one a
+   span[aria-current]. 28px cells, 44px below 768 (G-05).
+     <nav class="pagination"><a class="pagination-cell">←</a> … <span class="pagination-ellipsis">…</span></nav> */
+.pagination { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin-top: var(--block-gap); }
+.pagination-cell, .pagination-ellipsis {
+  font: 400 var(--t-mono) / 1 var(--font-mono); letter-spacing: 0.02em; font-variant-numeric: var(--num);
+  min-width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;
+}
+.pagination-cell {
+  color: var(--ink-2); text-decoration: none; border-bottom: 1px solid transparent;
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.pagination-cell[aria-current="page"] { color: var(--accent-01); border-bottom-color: var(--accent-01); }
+a.pagination-cell:hover { color: var(--ink); }
+.pagination-ellipsis { color: var(--ink-3); }
+@media (max-width: 767.98px) { .pagination-cell, .pagination-ellipsis { min-width: 44px; height: 44px; } }
 
 /* ---------- 2 · STATUS in listings and meta rows (D-029) ----------
    The mark itself is in base.css; here its label typography where it

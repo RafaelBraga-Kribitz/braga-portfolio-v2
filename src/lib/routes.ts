@@ -103,6 +103,11 @@ export function noteRoute(slug: string, lang: Lang): string {
   return withBase(`/${lang}/notes/${slug}/`);
 }
 
+/** Page n of a list at a path (Ghost's /page/n/): page 1 is the path itself. */
+export function pagedRoute(path: string, page: number): string {
+  return page > 1 ? `${path}page/${page}/` : path;
+}
+
 /** Both language paths of a page id, with the base. Throws on an unknown id. */
 export function routePair(pageId: PageId): RoutePair {
   if (pageId in routes) {

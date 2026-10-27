@@ -20,7 +20,9 @@ $n!$ (read "n factorial") is the product of all positive integers from 1 up to $
 
 ```mermaid
 flowchart TD
-    A["Input: n (non-negative integer)"] --> B{"n == 0 or n == 1?"} B -- "Yes (base case)" --> C["Return 1"] B -- "No" --> D["Multiply: n * (n-1) * (n-2) * ... * 2 * 1"]
+    A["Input: n (non-negative integer)"] --> B{"n == 0 or n == 1?"}
+    B -- "Yes (base case)" --> C["Return 1"]
+    B -- "No" --> D["Multiply: n * (n-1) * (n-2) * ... * 2 * 1"]
     D --> E["Result: n!"]
     C --> F["Key: 0! = 1 by convention (not a coincidence)"]
     E --> G["Result grows extremely fast: 10! = 3628800, 20! approx 2.4e18"]

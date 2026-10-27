@@ -2,7 +2,7 @@
 code: "01-01"
 kind: case
 date: "2026-09-16"
-summary: 720 core postings. A dated view of titles, skills and regional demand.
+summary: "720 core postings (snapshot of 16 Sep 2026). A dated view of titles, skills and regional demand."
 lead: "An evidence base for data-career decisions in Austria, with a Styria and Graz focus: a one-day snapshot of 720 core data-role postings from five public sources, the AMS JobBarometer 2020–2025 and Eurostat vacancy seasonality."
 domain: Labour market
 tags: [ status/complete, job-market, data-pipeline, descriptive-statistics ]
@@ -21,6 +21,9 @@ publish: true
 
 > [!summary] Summary
 > SQL and Python lead a one-day snapshot of 720 core data-role postings, the stack is Microsoft-centred, and in the AMS “Data Scientist” class Styria is the only large region above its 2020 level. The findings feed two decision documents that score each role family against a declared skill profile; the raw collection stays a private research set.
+
+> [!note] Snapshot date
+> This page describes the snapshot of 16 Sep 2026. The repository has since moved to a snapshot of 18 Oct 2026 (release 2026-10-19.1, 699 core postings); its README carries the current figures.
 
 ## Question
 

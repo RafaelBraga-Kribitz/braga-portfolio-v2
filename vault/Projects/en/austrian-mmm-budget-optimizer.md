@@ -2,10 +2,10 @@
 code: "01-03"
 kind: case
 date: "2026-08-04"
-summary: "Bayesian media-mix modelling. A budget decision with a downside check. Under revision: the published figures are being re-estimated."
+summary: "Bayesian media-mix modelling. A budget decision with a downside check."
 lead: "A Bayesian marketing-mix model that estimates what each channel adds, tests platform-reported attribution against a known truth, and moves budget only where the evidence clears a breakeven rule."
 domain: Marketing
-tags: [ status/under-revision, marketing, media-mix-modelling, budget-optimisation ]
+tags: [ status/complete, marketing, media-mix-modelling, budget-optimisation ]
 lang: en
 slug: austrian-mmm-budget-optimizer
 metrics:
@@ -20,7 +20,7 @@ publish: true
 # Austrian MMM and budget optimiser
 
 > [!summary] Summary
-> Under revision: the published figures are being re-estimated. As published, the model is validated against a known truth before it decides anything, and on Meta’s public Robyn demo data the same weekly budget, reallocated under a breakeven rule, gains a median 15.1% of current media contribution with no loss in any of the 500 posterior draws used. The rule moves budget toward TV and Facebook, takes it from out-of-home, and holds print and search, whose interval lower bounds fall below breakeven.
+> The model is validated against a known truth before it decides anything, and on Meta’s public Robyn demo data the same weekly budget, reallocated under a breakeven rule, gains a median 15.1% of current media contribution with no loss in any of the 500 posterior draws used. The rule moves budget toward TV and Facebook, takes it from out-of-home, and holds print and search, whose interval lower bounds fall below breakeven.
 
 ## Question
 
@@ -48,7 +48,7 @@ The priors are weakly informative and identical across channels, so the estimate
 
 Validation comes before any decision, so the steps run in this order:
 
-1. Fit the model in PyMC and sample it with NUTS (nutpie): two chains of 1,000 tuning steps and 1,000 draws, target acceptance 0.9, raised to 0.99 by a recorded ladder after divergences.
+1. Fit the model in PyMC and sample it with NUTS (nutpie): two chains of 1,000 tuning steps and 1,000 draws, target acceptance 0.9, raised by a recorded ladder after divergences (the reported fits ran at 0.95 with 2,000 draws per chain).
 2. Count a fit only with R-hat below 1.01, effective sample size above 400 and zero divergences. Every fit writes those diagnostics next to itself.
 3. On Layer P, check that the sampler recovers the truth it was handed, and score the platform-style attribution against the same truth.
 4. Score the model on a 26-week holdout on both layers, against ridge regression and a seasonal naive forecast.
@@ -59,8 +59,8 @@ Validation comes before any decision, so the steps run in this order:
 
 ## Result
 
-> [!warning] Under revision
-> The published figures are being re-estimated. Every figure on this page is the published one, last validated on 16 Sep 2026.
+> [!note] Re-verified on 26 Oct 2026
+> After code fixes on 30 Sep 2026, the decision layer and the synthetic-data validation were re-run on the current code. Every figure on this page reproduced; the repository’s build log records the check.
 
 ### Validation on Layer P
 

@@ -1,406 +1,225 @@
 ---
-publish: false
-date: '2026-04-16'
+publish: true
+date: '2026-10-26'
 tags:
 - machine-learning
 ---
 
-# Eigenvector Equation (Principal Axes) We are working on the **definition of a graph**, written as $$G=(V,E),$$ where $V$ is the set of vertices, or nodes, and $E$ is the set of edges connecting vertices. Depending on the setting, the graph may be undirected or directed, weighted or unweighted. This is the foundational object of graph theory and network analysis, and it underlies adjacency matrices, degree concepts, paths, connectivity, graph machine learning, and many DA/DS applications such as social networks, recommendation systems, and relational data modeling. ## Deep Breakdown A graph is a mathematical structure used to represent **entities** and the **relationships** between them. The entities are called: - vertices, or nodes, and the relationships are called: - edges. The compact definition is: $$
-
-G=(V,E)
+# Eigenvector Equation (Principal Axes)
 
 $$
-This means: - $V$ is the set of all vertices,
-- $E$ is the set of all edges. This definition is simple, but it is the base layer for a huge amount of modern data science, graph algorithms, and network analysis. If you have: - users and friendships,
-- products and co-purchases,
-- web pages and hyperlinks,
-- proteins and interactions,
-- customers and transactions,
-- cities and roads, then you can often represent that structure as a graph. The graph definition is intentionally abstract. It does not assume what the nodes “mean” or what the edges “mean.” It only says that there are objects and relationships between objects. That abstraction is powerful because the same graph-theoretic tools can be applied across very different domains. For example: - in a social network, nodes may be people and edges may be friendships,
-- in a recommendation graph, nodes may be users and items, and edges may be interactions,
-- in graph machine learning, nodes can carry feature vectors and labels, while edges define relational structure,
-- in transport networks, nodes may be stations and edges may be direct routes. There are several important graph types.
-### Undirected graphs In an undirected graph, an edge does not have direction. If node $u$ is connected to node $v$, then node $v$ is also connected to node $u$. An edge is written as:
+S\,v_k = \lambda_k\, v_k, \qquad \|v_k\| = 1, \qquad \lambda_1 \ge \lambda_2 \ge \dots \ge \lambda_p \ge 0
 $$
 
-\{u,v\}
+, where $S = \frac{1}{n-1} X_c^\top X_c$ is the $p \times p$ sample covariance of the centred data $X_c$, $v_k$ is the $k$-th principal axis (a unit vector in feature space) and $\lambda_k$ is the variance of the data projected on that axis.
 
-$$
-This is common in mutual relationships such as friendship or physical connectivity.
-### Directed graphs In a directed graph, edges have orientation. A connection from $u$ to $v$ is not the same as a connection from $v$ to $u$. An edge is written as:
-$$
+## Deep Breakdown
 
-(u,v)
+What it tells me *(Situation Awareness)*:
+PCA looks for the directions in feature space along which the data spreads the most. The variance of the data projected on a unit vector $v$ is $v^\top S v$. Maximising $v^\top S v$ subject to $v^\top v = 1$ with a Lagrange multiplier gives $\nabla_v\big(v^\top S v - \lambda(v^\top v - 1)\big) = 2Sv - 2\lambda v = 0$, which is exactly $S v = \lambda v$. So the principal axes are the eigenvectors of $S$, and substituting back gives $v^\top S v = \lambda v^\top v = \lambda$: the eigenvalue *is* the variance captured along that axis. The largest eigenvalue gives the first principal component; the next axis is the best direction orthogonal to the first, which is the eigenvector with the second-largest eigenvalue, and so on. Because $S$ is symmetric and positive semi-definite, the spectral theorem guarantees $p$ real, non-negative eigenvalues and an orthonormal set of eigenvectors, so $S = V \Lambda V^\top$ and the axes form a rotated coordinate system in which the features are uncorrelated. The eigenvalues sum to the total variance, $\sum_k \lambda_k = \operatorname{tr}(S)$, so $\lambda_k / \operatorname{tr}(S)$ is the share of variance explained by axis $k$. In DA/DS: this equation is what `sklearn.decomposition.PCA` solves (through an SVD of $X_c$), what the scree plot shows, and what decides how many components to keep before clustering, regression or visualisation.
 
-$$
- This is common in follower networks, citations, hyperlinks, or recommendation flows.
-### Weighted graphs A graph may attach a numerical value to each edge, such as: - distance,
-- cost,
-- similarity,
-- traffic volume,
-- interaction strength. Then the edge is not just present or absent, it also has magnitude.
-### Unweighted graphs In an unweighted graph, edges only indicate whether a relationship exists.
-### Simple graphs and beyond In a simple graph: - there are no self-loops,
-- there are no multiple edges between the same pair of vertices. But more general graph models can include: - self-loops, edges from a node to itself,
-- multiedges, multiple edges between the same vertices,
-- bipartite structure,
-- hyperedges,
-- dynamic graph evolution. For a foundational definition, however, the standard idea is just: - nodes,
-- edges,
-- and the structure created by their relationships. In DA/DS, graphs matter because many real datasets are fundamentally relational. Traditional tabular analysis treats rows as independent, but graph analysis explicitly models dependence and structure between entities. This is why graph definitions are foundational for: - adjacency matrices,
-- degree,
-- paths and shortest paths,
-- connected components,
-- centrality,
-- Laplacian matrices,
-- spectral methods,
-- graph embeddings,
-- graph neural networks.
-### Flowchart (Mermaid) 
-$$
+## Flowchart
 
 ```mermaid
 flowchart TD
-    A["Start with a collection of entities"] --> B["Represent each entity as a vertex in V"]
-    B --> C["Identify relationships between entities"]
-    C --> D["Represent each relationship as an edge in E"]
-    D --> E["Define the graph G = (V, E)"]
-    E --> F["Choose graph type: directed or undirected"]
-    F --> G["Choose edge type: weighted or unweighted"]
-    G --> H["Build adjacency matrix, degree, paths, and network analysis tools"]
+    A["Raw data X, n × p"] --> B["Centre columns (optionally standardise)"]
+    B --> C["Sample covariance S = Xc^T Xc / (n − 1)"]
+    C --> D["Solve S v = λ v"]
+    D --> E["Sort eigenvalues λ1 ≥ λ2 ≥ … ≥ λp"]
+    E --> F["Eigenvectors v1 … vp = principal axes"]
+    E --> G["λk / Σλ = share of variance explained"]
+    F --> H["Keep top k axes: project Z = Xc Vk"]
+    G --> H
+    H --> I["Reconstruction error = sum of dropped λ"]
 ```
 
 ## Real-world use
 
 ### Where it is used
 
-Graph definition is used whenever the data contain relationships between entities rather than only isolated records. This includes social platforms, recommendation engines, citation networks, transaction networks, fraud rings, logistics networks, and graph ML tasks.
+Every PCA implementation, factor-style summaries of survey and KPI data, image compression and eigenfaces, decorrelating features before regression (principal component regression), yield-curve analysis in finance (level, slope, curvature are the first three axes), genomics population structure plots, anomaly detection on the residual subspace, and as the first step of whitening.
 
 ### Problem it solves
 
-It solves the problem of representing relational structure mathematically. Tabular formats often lose the explicit link structure between observations, while graphs preserve and expose those links directly.
+Data with many correlated columns is redundant and hard to read: ten KPIs that all move with store size carry roughly one signal. The eigenvector equation finds a new set of orthogonal axes, ordered by how much variance each carries, so a few axes can stand in for many columns with a measured loss.
 
 ### How it solves the problem
 
-It separates the system into two core ingredients:
-
-- vertices for the entities,
-- edges for the relationships.
-
-Once the system is written as $G=(V,E)$, many graph-theoretic and matrix-based tools become available.
+It turns "find the direction of maximum spread" into a linear-algebra problem with an exact answer. The eigenvectors give the directions (loadings), the eigenvalues give the importance of each direction, and orthogonality means each new axis carries information the previous ones do not. Keeping the top $k$ axes is the best rank-$k$ linear summary in squared error; the variance discarded equals $\sum_{j>k} \lambda_j$ (see [[residual_error_truncated_eigenvalues]]), and the scores $X_c V_k$ are the [[projection_encoding]].
 
 ### Example in a business
 
-Suppose an e-commerce company wants to build a product recommendation system. One possible graph has users and products as nodes, with edges representing clicks, purchases, or views. Another graph has products as nodes and co-purchase relations as edges. The graph definition is the first formal step before building adjacency matrices, random-walk recommenders, graph embeddings, or graph neural network models.
+A retail chain tracks five KPIs for 500 stores: revenue, footfall, basket count, margin and shrinkage. After standardising, the eigenvalues of the correlation matrix are $2.66, 1.90, 0.19, 0.14, 0.12$. The first axis (loadings about $+0.57$ on revenue, footfall and baskets) is a "store volume" factor explaining $53.1\%$ of the variance; the second ($+0.69$ margin, $-0.69$ shrinkage) is an "operational efficiency" factor explaining a further $38.0\%$. Two axes cover $91.2\%$ of the variation, so stores can be benchmarked on a two-dimensional map instead of five separate league tables.
 
 ## The formula, piece by piece
 
-| Symbol | Meaning |
-| --- | --- |
-| $G$ | Graph |
-| $V$ | Set of vertices, or nodes |
-| $E$ | Set of edges |
-| $u,v$ | Vertices in the graph |
-| ${u,v}$ | Undirected edge between $u$ and $v$ |
-| $(u,v)$ | Directed edge from $u$ to $v$ |
-| $w(u,v)$ | Weight associated with an edge, when the graph is weighted |
-| $ | V |
-| $ | E |
-
-Canonical graph definition:
-
-$$
-G=(V,E)
-$$
-
-Undirected edge form:
-
-$$
-E \subseteq \bigl\{\{u,v\}: u,v \in V,\ u \ne v\bigr\}
-$$
-
-Directed edge form:
-
-$$
-E \subseteq \bigl\{(u,v): u,v \in V,\ u \ne v\bigr\}
-$$
-
-Weighted-graph interpretation:
-
-$$
-w:E \to \mathbb{R}
-$$
-
-where each edge can have an associated numerical weight.
-
-Simple graph size notation:
-
-$$
-|V| = \text{number of nodes}, \qquad |E| = \text{number of edges}
-$$
+- $S$: sample covariance matrix, $p \times p$, symmetric and positive semi-definite; with standardised features it is the correlation matrix (see [[sample_covariance_matrix]])
+- $X_c$: data matrix with each column's mean subtracted; without centring the first axis points at the mean, not along the spread (see [[data_centering]])
+- $v_k \in \mathbb{R}^p$: $k$-th eigenvector, normalised to length $1$; its entries are the loadings of each original feature
+- $\lambda_k \ge 0$: $k$-th eigenvalue; variance of the scores $X_c v_k$
+- $S v_k = \lambda_k v_k$: multiplying the axis by $S$ only stretches it, never rotates it; the general linear-algebra statement is in [[eigenvector_equation]]
+- $V = [v_1, \dots, v_p]$: orthogonal matrix, $V^\top V = I$, and $S = V \Lambda V^\top$ with $\Lambda = \operatorname{diag}(\lambda_1, \dots, \lambda_p)$
+- $\det(S - \lambda I) = 0$: the characteristic equation whose roots are the eigenvalues
+- $\sum_k \lambda_k = \operatorname{tr}(S)$: eigenvalues partition the total variance
+- Sign ambiguity: if $v$ solves the equation, so does $-v$; libraries may return either
 
 ## The formula in words
 
-A graph $G$ is made of two sets. The first set, $V$, contains the nodes. These are the objects or entities in the network. The second set, $E$, contains the edges. These are the relationships between nodes. If the graph is undirected, an edge simply says two nodes are connected. If the graph is directed, an edge says one node points to another. If the graph is weighted, each edge can also carry a numeric value that measures strength, distance, cost, or some other quantity.
+"A principal axis is a direction that the covariance matrix only stretches, never turns; the stretch factor is the variance of the data along that direction." Tiny example: with $S = \begin{pmatrix} 2 & 1 \\ 1 & 2 \end{pmatrix}$, the direction $(1, 1)/\sqrt{2}$ comes back as $(3, 3)/\sqrt{2}$, i.e. stretched by $3$; the direction $(1, 0)$ comes back as $(2, 1)$, which is turned, so it is not an axis.
 
 ## Critical Concepts
 
-- **A graph is relational, not purely tabular.** Its core purpose is to encode structure between entities.
-- **Vertices and edges are the two primitive ingredients.** Most graph theory begins from these two sets.
-- **Directed and undirected graphs are different mathematical objects.** Direction matters in many applications.
-- **Weighted and unweighted graphs support different analyses.** Weights can change path lengths, centrality, similarity, and optimization.
-- **The same graph definition supports many domains.** Social, biological, commercial, and infrastructure networks can all be represented as graphs.
-- **Adjacency matrices are a matrix encoding of the same graph.** The graph definition comes first; the matrix is one representation of it.
-- **Degree depends on graph type.** In directed graphs, in-degree and out-degree differ; in undirected graphs, degree is just the number of incident edges.
+- **Eigenvalue = variance:** $\operatorname{Var}(X_c v_k) = v_k^\top S v_k = \lambda_k$. A zero eigenvalue means an exact linear dependency among features.
+- **Orthogonality comes free:** eigenvectors of a symmetric matrix with distinct eigenvalues are orthogonal, so principal components are uncorrelated by construction.
+- **Scale dependence:** PCA on raw covariance is dominated by the column with the largest units (revenue in euros swamps margin in %). Standardise when the units differ; then $S$ is the correlation matrix and $\sum_k \lambda_k = p$ (or $p \cdot n/(n-1)$ with mixed $\text{ddof}$ conventions).
+- **Sign and order are conventions:** `np.linalg.eigh` returns eigenvalues ascending; reverse them. Fix signs (for example, largest loading positive) before comparing runs or reporting loadings.
+- **Numerics:** compute via `eigh` (symmetric solver) or the SVD of $X_c$ rather than a general `eig`; the SVD avoids forming $X_c^\top X_c$, which squares the condition number. Singular values relate by $\lambda_k = \sigma_k^2 / (n-1)$ (see [[singular_value_decomposition]] and [[low_rank_approximation_svd]]).
+- **Repeated eigenvalues:** when $\lambda_j = \lambda_k$, any rotation within that plane is an equally valid pair of axes; the individual axes are not identifiable.
+- **How many to keep:** cumulative explained variance (for example $90\%$), the elbow of the scree plot, or the Kaiser rule ($\lambda > 1$ on standardised data).
 
 ## Step-by-step calculation (tiny example)
 
-Suppose we have three customers:
+*Four observations of two features: $(7, 4), (4, 4), (4, 1), (5, 3)$.*
 
-$$
-V=\{A,B,C\}
-$$
+*Step 1: Centre*
+Means are $(5, 3)$. Centred rows: $(2, 1), (-1, 1), (-1, -2), (0, 0)$.
 
-and suppose the following relationships exist:
+*Step 2: Covariance*
+$\sum x_1^2 = 4 + 1 + 1 + 0 = 6$, $\sum x_2^2 = 1 + 1 + 4 + 0 = 6$, $\sum x_1 x_2 = 2 - 1 + 2 + 0 = 3$. Divide by $n - 1 = 3$: $S = \begin{pmatrix} 2 & 1 \\ 1 & 2 \end{pmatrix}$.
 
-- $A$ is connected to $B$,
-- $B$ is connected to $C$.
+*Step 3: Characteristic equation*
+$\det(S - \lambda I) = (2 - \lambda)^2 - 1 = 0 \Rightarrow \lambda - 2 = \pm 1 \Rightarrow \lambda_1 = 3,\ \lambda_2 = 1$.
 
-If the graph is undirected, then:
+*Step 4: Eigenvectors*
+For $\lambda_1 = 3$: $(S - 3I)v = 0$ gives $-v_1 + v_2 = 0$, so $v_1 = (1, 1)/\sqrt{2} \approx (0.7071, 0.7071)$. For $\lambda_2 = 1$: $v_1 + v_2 = 0$, so $v_2 = (-1, 1)/\sqrt{2} \approx (-0.7071, 0.7071)$ (or its negative). Check: $S v_1 = (3, 3)/\sqrt{2} = 3 v_1$, and $v_1 \cdot v_2 = 0$.
 
-$$
-E=\bigl\{\{A,B\},\{B,C\}\bigr\}
-$$
-
-So the graph is:
-
-$$
-G=(V,E)=\left(\{A,B,C\},\bigl\{\{A,B\},\{B,C\}\bigr\}\right)
-$$
-
-### Step 1, identify the vertices The node set is
-
-$$
-V=\{A,B,C\}
-$$
-
-So:
-
-$$
-|V|=3
-$$
-
-### Step 2, identify the edges The edge set is
-
-$$
-E=\bigl\{\{A,B\},\{B,C\}\bigr\}
-$$
-
-So:
-
-$$
-|E|=2
-$$
-
-### Step 3, interpret the structure
-
-- $A$ is connected to $B$,
-- $B$ is connected to both $A$ and $C$,
-- $C$ is connected to $B$. So $B$ is the middle node.
-
-### Tiny plain-language reading
-
-This graph is a chain of three nodes:
-
-$$
-A - B - C
-$$
-
-### Directed version If the relationships are directional, for example
-
-- $A$ points to $B$,
-- $B$ points to $C$, then the edge set becomes:
-
-$$
-E=\{(A,B),(B,C)\}
-$$
-
-Now direction matters. There is a path from $A$ to $C$, but not necessarily from $C$ to $A$.
+*Step 5: Interpret*
+Total variance $\operatorname{tr}(S) = 2 + 2 = 4 = 3 + 1$. The first axis, along which both features rise together, explains $3/4 = 75\%$ of the variance; the second explains $25\%$. Scores on axis 1 are $X_c v_1 = (3, 0, -3, 0)/\sqrt{2}$, with sample variance $(4.5 + 0 + 4.5 + 0)/3 = 3 = \lambda_1$.
 
 ## Code examples
 
-### Beginner friendly Example \[Python\])
+### Beginner example (Python)
 
 ```python
-# Define a tiny undirected graph with nodes and edges
-vertices = {"A", "B", "C"}
-edges = {("A", "B"), ("B", "C")}
-print("Vertices:", vertices)
-print("Edges:", edges)
-print("Number of vertices:", len(vertices))
-print("Number of edges:", len(edges))
+import numpy as np
+
+# Four observations of two features (e.g. two correlated KPIs)
+X = np.array([[7.0, 4.0],
+              [4.0, 4.0],
+              [4.0, 1.0],
+              [5.0, 3.0]])
+
+Xc = X - X.mean(axis=0)               # centre each column
+S = Xc.T @ Xc / (len(X) - 1)          # sample covariance
+print("mean:", X.mean(axis=0))
+print("S =\n", S)
+
+# Solve S v = lambda v (eigh: for symmetric matrices, ascending order)
+eigvals, eigvecs = np.linalg.eigh(S)
+order = np.argsort(eigvals)[::-1]     # largest variance first
+eigvals, eigvecs = eigvals[order], eigvecs[:, order]
+print("eigenvalues (variances):", eigvals)
+print("principal axes (columns):\n", eigvecs.round(4))
+
+# Check the defining equation for each axis
+for k in range(2):
+    v, lam = eigvecs[:, k], eigvals[k]
+    print(f"PC{k + 1}: S v = {np.round(S @ v, 4)}, lambda v = {np.round(lam * v, 4)}")
+
+# Eigenvalue = variance of the data projected on its axis
+scores = Xc @ eigvecs
+print("variance of scores:", scores.var(axis=0, ddof=1))
+print("explained variance ratio:", eigvals / eigvals.sum())
 ```
 
-Explanation
-:
-
-- `vertices` stores the node set.
-- `edges` stores the connection pairs.
-- This is a simple graph representation in Python, not yet an adjacency matrix.
-
-### Beginner friendly Example \[R\])
+### Beginner example (R)
 
 ```r
-# Define a tiny undirected graph with nodes and edges
-vertices <- c("A", "B", "C")
-edges <- list(c("A", "B"), c("B", "C"))
-cat("Vertices:", vertices, "\n")
-cat("Edges:\n")
-print(edges)
-cat("Number of vertices:", length(vertices), "\n")
-cat("Number of edges:", length(edges), "\n")
+X <- matrix(c(7, 4,
+              4, 4,
+              4, 1,
+              5, 3), ncol = 2, byrow = TRUE)
+
+S <- cov(X)                      # centres and divides by n - 1
+print(S)                         # 2 1 / 1 2
+
+e <- eigen(S, symmetric = TRUE)  # eigenvalues already in decreasing order
+print(e$values)                  # 3 1
+print(e$vectors)                 # columns are the principal axes (signs may differ)
+
+# Check S v = lambda v for the first axis
+v1 <- e$vectors[, 1]
+print(S %*% v1)
+print(e$values[1] * v1)
+
+# Same eigenvalues from prcomp (sdev^2 = variances along the axes)
+p <- prcomp(X, center = TRUE, scale. = FALSE)
+print(p$sdev^2)                  # 3 1
+print(e$values / sum(e$values))  # 0.75 0.25
 ```
 
-Explanation
-:
+### Professional example (Python)
 
-- `vertices` contains the node names.
-- `edges` is a list of vertex pairs.
-- This directly mirrors the mathematical definition $G=(V,E)$.
+```python
+import numpy as np
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 
-### Final Professional Example \[Python\])
+rng = np.random.default_rng(42)
+n = 500
+# Five store KPIs driven by two latent factors (demand, efficiency) plus noise
+demand = rng.normal(size=n)
+efficiency = rng.normal(size=n)
+X = np.column_stack([
+    demand + 0.3 * rng.normal(size=n),                      # revenue
+    0.9 * demand + 0.4 * rng.normal(size=n),                # footfall
+    0.8 * demand + 0.2 * efficiency + 0.4 * rng.normal(size=n),  # basket count
+    efficiency + 0.3 * rng.normal(size=n),                  # margin
+    -0.9 * efficiency + 0.4 * rng.normal(size=n),           # shrinkage
+])
+names = ["revenue", "footfall", "baskets", "margin", "shrinkage"]
+Z = StandardScaler().fit_transform(X)       # PCA on the correlation scale
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass
-from typing import Hashable, Iterable RANDOM_SEED = 42 @dataclass(frozen=True)
-class Graph: vertices: tuple[Hashable, ...] edges: tuple[tuple[Hashable, Hashable], ...] is_directed: bool is_weighted: bool = False def validate(self) -> None: vertex_set = set(self.vertices) if len(vertex_set) != len(self.vertices): raise ValueError("Vertices must be unique.") for edge in self.edges: if len(edge) != 2: raise ValueError("Each edge must connect exactly two vertices.") start_vertex, end_vertex = edge if start_vertex not in vertex_set or end_vertex not in vertex_set: raise ValueError("Every edge must reference existing vertices.") def degree_counts(graph: Graph) -> dict[Hashable, int]: graph.validate() counts = {vertex: 0 for vertex in graph.vertices} if graph.is_directed: for start_vertex, end_vertex in graph.edges: counts[start_vertex] += 1 counts[end_vertex] += 1 else: for start_vertex, end_vertex in graph.edges: counts[start_vertex] += 1 counts[end_vertex] += 1 return counts def summarize_graph(graph: Graph) -> None: graph.validate() print("Graph summary") print("-" * 60) print(f"Vertices: {graph.vertices}") print(f"Edges: {graph.edges}") print(f"Directed: {graph.is_directed}") print(f"Weighted: {graph.is_weighted}") print(f"|V| = {len(graph.vertices)}") print(f"|E| = {len(graph.edges)}") print(f"Degree-style counts: {degree_counts(graph)}") def main() -> None: # Recommendation-style toy graph: # Nodes could represent users or products, edges could represent interactions. graph = Graph( vertices=("user_1", "user_2", "item_7", "item_9"), edges=( ("user_1", "item_7"), ("user_1", "item_9"), ("user_2", "item_7"), ), is_directed=False, is_weighted=False, ) summarize_graph(graph) if __name__ == "__main__": main()
+# 1. Solve S v = lambda v directly
+S = np.cov(Z, rowvar=False)                 # ddof = 1
+lam, V = np.linalg.eigh(S)
+lam, V = lam[::-1], V[:, ::-1]              # descending
+
+# 2. Same answer from scikit-learn (SVD of the centred data)
+pca = PCA().fit(Z)
+print("eigenvalues (eigh)   :", lam.round(4))
+print("explained_variance_  :", pca.explained_variance_.round(4))
+print("max |eigh - sklearn| :", np.abs(lam - pca.explained_variance_).max())
+
+# Axes agree up to sign: |cosine| between matching axes = 1
+cos = np.abs(np.sum(V * pca.components_.T, axis=0))
+print("|cos(axis_eigh, axis_sklearn)|:", cos.round(6))
+
+# 3. Axes are orthonormal and diagonalise S
+print("V^T V = I ?", np.allclose(V.T @ V, np.eye(5)))
+print("V^T S V diagonal ?", np.allclose(V.T @ S @ V, np.diag(lam)))
+
+# 4. How many axes to keep
+ratio = lam / lam.sum()
+print("explained ratio      :", ratio.round(3))
+print("cumulative           :", np.cumsum(ratio).round(3))
+print("Kaiser rule (lambda > 1) keeps", int((lam > 1).sum()), "components")
+
+# 5. Read the first two axes (loadings)
+for k in range(2):
+    v = V[:, k] * np.sign(V[np.argmax(np.abs(V[:, k])), k])  # fix the sign
+    print(f"PC{k + 1}:", ", ".join(f"{nm} {w:+.2f}" for nm, w in zip(names, v)))
+
+# 6. Power iteration: the leading axis without a full decomposition
+v = rng.normal(size=5)
+for _ in range(100):
+    v = S @ v
+    v /= np.linalg.norm(v)
+print("power iteration lambda_1 =", round(float(v @ S @ v), 4))
 ```
 
-What
-this professional example teaches:
+The direct eigen-solution and scikit-learn's SVD route agree to $2.2 \times 10^{-16}$ on the eigenvalues $2.6624, 1.9044, 0.1880, 0.1391, 0.1162$, and every pair of axes has $|\cos| = 1$, i.e. they match up to sign. The eigenvalues sum to $5.01$ rather than $5$ because `StandardScaler` divides by $n$ while `np.cov` divides by $n - 1$ ($5 \times 500/499$). Two components explain $91.2\%$ of the variance and are the only two with $\lambda > 1$; their loadings recover the two latent factors used to generate the data (volume: revenue, footfall, baskets; efficiency: margin against shrinkage). Power iteration reaches the same $\lambda_1 = 2.6624$ using only matrix-vector products, which is how leading axes are found for very large $p$.
 
-1. A graph can be encoded directly as a set of vertices and a set of edges.
-2. Validation matters, because edges must reference valid vertices.
-3. The same structure supports social graphs, recommendation graphs, and graph-ML inputs.
-4.
+---
 
-Once the graph is defined, later concepts such as adjacency matrix and degree are straightforward to build.
-
-## Self-check: mathematical verification
-
-### Re-derivation from the relational-object definition
-
-A graph is meant to represent a system of entities and pairwise relations.
-
-To encode that formally, we need:
-
-- a set of entities,
-- a set of relations between those entities.
-
-So define:
-
-$$
-V=\text{set of vertices}, \qquad E=\text{set of edges}
-$$
-
-Then the graph is the ordered pair:
-
-$$
-G=(V,E)
-$$
-
-This matches the canonical formula exactly.
-
-### Undirected-edge consistency check
-
-In an undirected graph, the relation between $u$ and $v$ is symmetric, so the edge is written as:
-
-$$
-\{u,v\}
-$$
-
-This notation correctly reflects that:
-
-$$
-\{u,v\}=\{v,u\}
-$$
-
-So direction is absent, which matches the meaning of an undirected edge.
-
-### Directed-edge consistency check
-
-In a directed graph, the relation from $u$ to $v$ is ordered, so the edge is written as:
-
-$$
-(u,v)
-$$
-
-and in general:
-
-$$
-(u,v)\ne(v,u)
-$$
-
-This correctly captures directionality.
-
-### Weighted-graph consistency check
-
-If edges have numerical strengths, costs, or similarities, then we can define a weight function:
-
-$$
-w:E \to \mathbb{R}
-$$
-
-This means every edge maps to a real value. This is the standard mathematical extension from unweighted graphs to weighted graphs.
-
-### Size notation check If $V$ and $E$ are sets, then
-
-$$
-|V|=\text{number of vertices}, \qquad |E|=\text{number of edges}
-$$
-
-This matches the usual cardinality interpretation from set theory.
-
-### Verbal-to-algebra consistency
-
-The verbal explanation says a graph is a set of nodes plus a set of relationships. Algebraically, the ordered pair $(V,E)$ expresses exactly that. The discussion of directed, undirected, weighted, and unweighted graphs is also consistent with the standard notation.
-
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$G$`, `$V$`, `$E$`, and `$|V|$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to adjacency matrix, degree, social networks, recommendation, and graph ML are explicitly included.
-- No placeholder text remains.
-
-## Common Pitfalls and Edge Cases
-
-- **Confusing nodes with edges:** Nodes are entities; edges are relationships between entities.
-- **Mixing directed and undirected interpretations:** A connection in a directed graph is not automatically symmetric.
-- **Assuming all graphs are weighted:** Many foundational graphs are unweighted.
-- **Assuming all graphs are simple:** Some graph models allow self-loops or multiple edges.
-- **Ignoring node identity constraints:** Edges must connect valid vertices in the graph.
-- **Treating relational data as independent rows when graph structure matters:** This can lose important information.
-- **Confusing a graph with one of its matrix representations:** The adjacency matrix is a representation of the graph, not the definition itself.
-- **Assuming graph analysis requires massive networks:** Even small relational systems can benefit from graph modeling.
-
-## References and Standard Results
-
-- Graph definition as an ordered pair, $G=(V,E)$
-- Vertex-set cardinality, $|V|$
-- Edge-set cardinality, $|E|$
-- Undirected edge notation, ${u,v}$
-- Directed edge notation, $(u,v)$
-- Weighted-edge function, $w:E \to \mathbb{R}$
-- Adjacency-matrix representation of graphs
-- Degree concepts in graph theory
-- Foundational use of graphs in network analysis and graph machine learning 2/2
+*Source: domain knowledge*

@@ -21,7 +21,9 @@ The factorial of $n$ counts the total number of ways to arrange $n$ distinct obj
 
 ```mermaid
 flowchart LR
-    A["Input: n (non-negative integer)"] --> B{"n == 0?"} B -- Yes --> C["Return 1 (base case)"] B -- No --> D["Multiply: n x (n-1) x ... x 1"]
+    A["Input: n (non-negative integer)"] --> B{"n == 0?"}
+    B -- Yes --> C["Return 1 (base case)"]
+    B -- No --> D["Multiply: n x (n-1) x ... x 1"]
     D --> E["Result: n!"]
 ```
 

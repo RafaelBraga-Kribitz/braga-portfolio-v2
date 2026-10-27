@@ -25,7 +25,10 @@ flowchart TD
     C --> D["Innermost integral: fix x and y, integrate over z"]
     D --> E["Middle integral: fix x, integrate result over y"]
     E --> F["Outer integral: integrate final result over x"]
-    F --> G{"f is a joint PDF?"} G -- "Yes" --> H["Result = probability P((X,Y,Z) in V)"] G -- "No, f=1" --> I["Result = geometric volume of V"] G -- "No, other f" --> J["Result = weighted sum / expectation over V"]
+    F --> G{"f is a joint PDF?"}
+    G -- "Yes" --> H["Result = probability P((X,Y,Z) in V)"]
+    G -- "No, f=1" --> I["Result = geometric volume of V"]
+    G -- "No, other f" --> J["Result = weighted sum / expectation over V"]
     H --> K["For high-dimensional cases, use Monte Carlo integration"]
 ```
 

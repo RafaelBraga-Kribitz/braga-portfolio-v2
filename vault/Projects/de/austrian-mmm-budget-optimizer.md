@@ -2,10 +2,10 @@
 code: "01-03"
 kind: case
 date: "2026-08-04"
-summary: "Bayes’sches Media-Mix-Modelling. Eine Budgetentscheidung mit Prüfung des Abwärtsrisikos. In Überarbeitung: Die veröffentlichten Zahlen werden neu geschätzt."
+summary: "Bayes’sches Media-Mix-Modelling. Eine Budgetentscheidung mit Prüfung des Abwärtsrisikos."
 lead: "Ein Bayes’sches Marketing-Mix-Modell, das schätzt, was jeder Kanal beiträgt, die von Werbeplattformen ausgewiesene Attribution an einer bekannten Wahrheit prüft und Budget nur dort verschiebt, wo die Evidenz eine Breakeven-Regel (Regel zur Gewinnschwelle) erfüllt."
 domain: Marketing
-tags: [ status/under-revision, marketing, media-mix-modelling, budgetoptimierung ]
+tags: [ status/complete, marketing, media-mix-modelling, budgetoptimierung ]
 lang: de
 slug: austrian-mmm-budget-optimizer
 metrics:
@@ -20,7 +20,7 @@ publish: true
 # MMM und Budget­optimierung für Österreich
 
 > [!summary] Zusammenfassung
-> In Überarbeitung: Die veröffentlichten Zahlen werden neu geschätzt. In der veröffentlichten Fassung wird das Modell an einer bekannten Wahrheit validiert, bevor es etwas entscheidet, und auf Metas öffentlichem Robyn-Demodatensatz bringt dasselbe Wochenbudget, nach einer Breakeven-Regel umverteilt, im Median 15,1 % des derzeitigen Deckungsbeitrags der Medien; keine der 500 verwendeten Ziehungen aus der A-posteriori-Verteilung zeigt einen Verlust. Die Regel verschiebt Budget zu TV und Facebook, zieht es von der Außenwerbung (Out-of-Home) ab und lässt Print und Search (Suchmaschinenwerbung), deren Intervall-Untergrenzen unter dem Breakeven liegen, unverändert.
+> Das Modell wird an einer bekannten Wahrheit validiert, bevor es etwas entscheidet, und auf Metas öffentlichem Robyn-Demodatensatz bringt dasselbe Wochenbudget, nach einer Breakeven-Regel umverteilt, im Median 15,1 % des derzeitigen Deckungsbeitrags der Medien; keine der 500 verwendeten Ziehungen aus der A-posteriori-Verteilung zeigt einen Verlust. Die Regel verschiebt Budget zu TV und Facebook, zieht es von der Außenwerbung (Out-of-Home) ab und lässt Print und Search (Suchmaschinenwerbung), deren Intervall-Untergrenzen unter dem Breakeven liegen, unverändert.
 
 ## Fragestellung
 
@@ -48,7 +48,7 @@ Die Priors (A-priori-Verteilungen) sind schwach informativ und für alle Kanäle
 
 Die Validierung kommt vor jeder Entscheidung; die Schritte laufen daher in dieser Reihenfolge:
 
-1. Das Modell wird in PyMC angepasst und mit NUTS (No-U-Turn Sampler; nutpie) gesampelt: zwei Ketten mit je 1.000 Tuning-Schritten und 1.000 Ziehungen, Ziel-Akzeptanzrate 0,9, nach Divergenzen über eine protokollierte Stufenfolge auf 0,99 angehoben.
+1. Das Modell wird in PyMC angepasst und mit NUTS (No-U-Turn Sampler; nutpie) gesampelt: zwei Ketten mit je 1.000 Tuning-Schritten und 1.000 Ziehungen, Ziel-Akzeptanzrate 0,9, nach Divergenzen über eine protokollierte Stufenfolge angehoben (die berichteten Anpassungen liefen mit 0,95 und 2.000 Ziehungen je Kette).
 2. Ein Fit zählt nur bei einem R-hat unter 1,01, einer effektiven Stichprobengröße über 400 und null Divergenzen. Jeder Fit legt diese Diagnosewerte neben sich ab.
 3. Auf Layer P muss der Sampler die Wahrheit wiederherstellen, die ihm vorgegeben wurde, und die plattformartige Attribution wird an derselben Wahrheit gemessen.
 4. Das Modell wird auf beiden Layern an einem Holdout (zurückgehaltener Testzeitraum) von 26 Wochen gegen zwei Vergleichsmodelle geprüft: eine Ridge-Regression und eine saisonal naive Prognose.
@@ -59,8 +59,8 @@ Die Validierung kommt vor jeder Entscheidung; die Schritte laufen daher in diese
 
 ## Ergebnis
 
-> [!warning] In Überarbeitung
-> Die veröffentlichten Zahlen werden neu geschätzt. Jede Zahl auf dieser Seite ist die veröffentlichte, zuletzt validiert am 16. Sep. 2026.
+> [!note] Erneut geprüft am 26. Okt. 2026
+> Nach Code-Korrekturen am 30. Sep. 2026 wurden die Entscheidungsebene und die Validierung auf synthetischen Daten mit dem aktuellen Code neu gerechnet. Jede Zahl auf dieser Seite wurde reproduziert; das Build-Log des Repositorys dokumentiert die Prüfung.
 
 ### Validierung auf Layer P
 

@@ -24,7 +24,11 @@ flowchart TD
     A["Limit of quotient: lim[f(x)/g(x)] as x -> a"]
     A --> B["Compute lim f(x) = L"]
     A --> C["Compute lim g(x) = M"]
-    C --> D{"Is M ≠ 0?"} D -- Yes --> E["Apply quotient law: lim[f/g] = L / M"] D -- No --> F{"Is L also 0?"} F -- Yes --> G["0/0 indeterminate: need L'Hopital or algebraic simplification"] F -- No --> H["L / 0: limit is +/-infinity or does not exist (check signs)"]
+    C --> D{"Is M ≠ 0?"}
+    D -- Yes --> E["Apply quotient law: lim[f/g] = L / M"]
+    D -- No --> F{"Is L also 0?"}
+    F -- Yes --> G["0/0 indeterminate: need L'Hopital or algebraic simplification"]
+    F -- No --> H["L / 0: limit is +/-infinity or does not exist (check signs)"]
     G --> I["Factor and cancel, or apply L'Hopital: (f'/g')"]
     H --> J["One-sided limit may differ: +inf or -inf depending on sign of g(x)"]
 ```

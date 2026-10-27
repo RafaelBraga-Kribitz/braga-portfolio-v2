@@ -23,7 +23,10 @@ The sum rule (also called the linearity of differentiation) states that the deri
 flowchart TD
     A["h(x) = f(x) + g(x)"] --> B["Derivative is linear: dh/dx = df/dx + dg/dx"]
     B --> C["Each term differentiates independently"]
-    C --> D{"What is h in practice?"} D -- "h = L_data + lambda * R(w)" --> E["nabla L = nabla L_data + lambda * nabla R"] D -- "h = (1/n) * sum_i loss_i" --> F["nabla L = (1/n) * sum_i nabla loss_i"] D -- "h = loss + sum of layer norms" --> G["Gradient splits across each additive term"]
+    C --> D{"What is h in practice?"}
+    D -- "h = L_data + lambda * R(w)" --> E["nabla L = nabla L_data + lambda * nabla R"]
+    D -- "h = (1/n) * sum_i loss_i" --> F["nabla L = (1/n) * sum_i nabla loss_i"]
+    D -- "h = loss + sum of layer norms" --> G["Gradient splits across each additive term"]
     E --> H["Standard regularized gradient descent update"]
     F --> H
     G --> H

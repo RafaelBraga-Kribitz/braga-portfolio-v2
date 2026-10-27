@@ -26,7 +26,9 @@ flowchart TD
     D --> E["Disk volume = pi * [g(y)]^2 * dy"]
     E --> F["Sum all disks: V = integral_a^b pi * [g(y)]^2 dy"]
     F --> G["Antiderivative G(y): V = pi * [G(b) - G(a)]"]
-    G --> H{"Was the original curve y = f(x)?"} H -- "Yes: invert to get x = g(y) first" --> I["Then apply the formula"] H -- "No: x = g(y) directly" --> J["Apply formula immediately"]
+    G --> H{"Was the original curve y = f(x)?"}
+    H -- "Yes: invert to get x = g(y) first" --> I["Then apply the formula"]
+    H -- "No: x = g(y) directly" --> J["Apply formula immediately"]
 ```
 
 ## Real-world use

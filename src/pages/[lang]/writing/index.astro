@@ -14,7 +14,7 @@ import StatusMark from '@/components/StatusMark.astro';
 import { t, formatDate, type Lang } from '@/lib/i18n';
 import { route, writingRoute } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
-import { writingOf, writingCode, libraryOf } from '@/lib/collections';
+import { writingOf, writingCode, libraryOf, NOTES_CODE } from '@/lib/collections';
 
 export function getStaticPaths() {
   return LANGS.map((lang) => ({ params: { lang } }));
@@ -35,7 +35,7 @@ const libraryCount = library.reduce((n, a) => n + a.rows.length, 0);
           <ListingRow code={writingCode(e, i)} title={e.data.title} sub={e.data.summary} meta={[t(lang, `kind.${e.data.kind}`), formatDate(e.data.date, lang)]} lang={lang} href={writingRoute(e.data.slug, lang)} />
         ))}
         {libraryCount > 0 && (
-          <ListingRow code={`02-${String(writing.length + 1).padStart(2, '0')}`} title={t(lang, 'notes.word')} sub={library.map((a) => a.title).join(' · ')} meta={[t(lang, 'kind.library'), t(lang, 'notes.count').replace('{n}', String(libraryCount))]} lang={lang} href={route('notes', lang)} />
+          <ListingRow code={NOTES_CODE} title={t(lang, 'notes.word')} sub={library.map((a) => a.title).join(' · ')} meta={[t(lang, 'kind.library'), t(lang, 'notes.count').replace('{n}', String(libraryCount))]} lang={lang} href={route('notes', lang)} />
         )}
       </Listing>
     )}

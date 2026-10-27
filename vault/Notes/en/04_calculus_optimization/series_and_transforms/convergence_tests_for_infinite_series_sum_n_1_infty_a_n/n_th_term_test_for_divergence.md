@@ -21,7 +21,9 @@ This is the **cheapest first check** when analyzing whether a series converges o
 ```mermaid
 flowchart TD
     A["Series: sum a_n"] --> B["Compute lim(n→∞) a_n"]
-    B --> C{"Limit exists and equals 0?"} C -- "No (limit ≠ 0 or DNE)" --> D["DIVERGES — test complete"] C -- "Yes (limit = 0)" --> E["Inconclusive — need another test"]
+    B --> C{"Limit exists and equals 0?"}
+    C -- "No (limit ≠ 0 or DNE)" --> D["DIVERGES — test complete"]
+    C -- "Yes (limit = 0)" --> E["Inconclusive — need another test"]
     E --> F["Try: Ratio / Root / Comparison / Integral Test"]
 ```
 

@@ -23,7 +23,9 @@ The definite integral $\int_a^b f(x)\,dx$ computes the exact area enclosed betwe
 ```mermaid
 flowchart TD
     A["Define f(x) and bounds a, b"] --> B["Verify f(x) >= 0 on all of a, b"]
-    B --> C{"Does f(x) go below 0?"} C -- "Yes" --> D["Use absolute area: integral of |f(x)| dx"] C -- "No" --> E["Find antiderivative F(x) such that F'(x) = f(x)"]
+    B --> C{"Does f(x) go below 0?"}
+    C -- "Yes" --> D["Use absolute area: integral of |f(x)| dx"]
+    C -- "No" --> E["Find antiderivative F(x) such that F'(x) = f(x)"]
     E --> F["Apply FTC: A = F(b) - F(a)"]
     F --> G["A is the total positive area under the curve"]
     D --> H["Split interval at zeros and sum absolute sub-integrals"]

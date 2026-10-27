@@ -20,7 +20,9 @@ Adding fractions requires a common denominator — two fractions cannot be summe
 
 ```mermaid
 flowchart TD
-    A["Two fractions: a/b and c/d"] --> B{"Same denominator?"} B -- "Yes" --> C["Add numerators: (a+c)/b"] B -- "No" --> D["Cross-multiply: common denom = bd"]
+    A["Two fractions: a/b and c/d"] --> B{"Same denominator?"}
+    B -- "Yes" --> C["Add numerators: (a+c)/b"]
+    B -- "No" --> D["Cross-multiply: common denom = bd"]
     D --> E["Convert a/b → ad/bd and c/d → bc/bd"]
     E --> F["Add numerators: (ad + bc)/bd"]
     F --> G["Simplify: divide by GCD(ad+bc, bd)"]

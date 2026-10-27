@@ -22,8 +22,9 @@ The **commutative property of multiplication** says that the order of factors do
 flowchart TD
     A["Two values: a and b"] --> B["Option 1: a × b"]
     A --> C["Option 2: b × a"]
-    B --> D{["Same product?"]}
-    C --> D D -- "Yes: multiplication is commutative" --> E["a·b = b·a confirmed"]
+    B --> D{"Same product?"}
+    C --> D
+    D -- "Yes: multiplication is commutative" --> E["a·b = b·a confirmed"]
     E --> F["CAUTION: matrix multiplication is NOT commutative"]
     F --> G["AB ≠ BA in general for matrices"]
 ```

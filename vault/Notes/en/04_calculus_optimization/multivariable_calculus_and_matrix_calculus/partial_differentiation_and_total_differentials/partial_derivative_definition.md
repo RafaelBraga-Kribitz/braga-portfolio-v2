@@ -24,7 +24,9 @@ flowchart TD
     B --> C["Treat all OTHER variables as constants"]
     C --> D["Apply single-variable derivative rules to f, treating constants as numbers"]
     D --> E["Result: partial/partial_x f(x, y, ...)"]
-    E --> F{"What does the result represent?"} F -- "Scalar" --> G["Rate of change of f in the x-direction at a specific point"] F -- "Function of remaining vars" --> H["A new multivariate function giving slope at every point"]
+    E --> F{"What does the result represent?"}
+    F -- "Scalar" --> G["Rate of change of f in the x-direction at a specific point"]
+    F -- "Function of remaining vars" --> H["A new multivariate function giving slope at every point"]
     E --> I["Numerical check: finite difference (f(x+h,y)-f(x,y))/h as h->0"]
 ```
 

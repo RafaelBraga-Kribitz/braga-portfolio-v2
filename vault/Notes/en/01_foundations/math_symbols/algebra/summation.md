@@ -23,8 +23,10 @@ flowchart TD
     A["Summation: sum from i=1 to n of x_i"] --> B["Initialize accumulator = 0 (additive identity)"]
     B --> C["Set i = 1"]
     C --> D["Add x_i to accumulator"]
-    D --> E{"i == n?"} E -- "No" --> F["i = i + 1"]
-    F --> D E -- "Yes" --> G["Return accumulator = x_1 + x_2 + ... + x_n"]
+    D --> E{"i == n?"}
+    E -- "No" --> F["i = i + 1"]
+    F --> D
+    E -- "Yes" --> G["Return accumulator = x_1 + x_2 + ... + x_n"]
 ```
 
 ## Real-world use

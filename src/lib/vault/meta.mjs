@@ -18,6 +18,7 @@
 // only with the property `publish: true` (owner, 23 Oct 2026); without it,
 // it stays in the vault.
 import { parse as parseYaml } from 'yaml';
+import { folderTags } from './folders.mjs';
 
 /** Site folder → collection, and the writing kind a folder implies. */
 export const SITE_FOLDERS = {
@@ -160,7 +161,8 @@ export const baseName = (rel) => String(rel).split('/').pop().replace(/\.md$/i, 
 export function readNote(rel, source) {
   const place = placeOf(rel);
   const { data, body } = splitFrontmatter(source);
-  const tags = allTags(data, body);
+  // a library note's folders are tags too (folders.mjs), area first
+  const tags = [...new Set([...folderTags(rel), ...allTags(data, body)])];
   const title = firstH1(body) ?? (typeof data.title === 'string' ? data.title : undefined) ?? baseName(rel);
   const slug = typeof data.slug === 'string' && data.slug ? data.slug : slugify(baseName(rel));
   const fields = inlineFields(body);
