@@ -115,6 +115,9 @@ Under these assumptions, deploy the lean hybrid now and defer humanoid procureme
 
 The repository holds the code, the charts, the executive summaries and the governance record.
 
+## Build log
 
+```buildlog
+```
 
 [^1]: The build runs under a governance protocol enforced in continuous integration (CI): every change closes a tracked finding with a named verification script, and CI re-runs the script of every closed finding on each pull request.

@@ -19,6 +19,7 @@
     "verify": "npm run check && npm run lint && npm run test:unit && npm run vault:check && npm run build && npm run test:gates",
     "assets": "node scripts/assets/build-assets.mjs",
     "vault:check": "node scripts/vault/check.mjs",
+    "activity": "node scripts/activity/snapshot.mjs",
     "vault:sync": "node scripts/vault/sync-obsidian.mjs"
   },
   "dependencies": {

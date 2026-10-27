@@ -36,6 +36,7 @@ npx playwright install chromium
 | `npm run vault:check` | Audits the vault: broken links and embeds, missing translations, bad properties, Dataview queries that do not parse |
 | `npm run tokens:export` | Writes `design-system/tokens.json` from `tokens.css` |
 | `npm run vault:sync` | Copies the design-system CSS into the vault's Obsidian snippets |
+| `npm run activity` | Refreshes the project build logs' data (`src/data/activity.json`) from each project repository's git history; a ```` ```buildlog ```` fence in a project note draws it |
 | `npm run verify` | All of the above in order |
 
 ## Where things are

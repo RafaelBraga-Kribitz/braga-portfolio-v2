@@ -6,6 +6,8 @@
 // `publish: true`, a draft, or dated in the future) never reaches the
 // schema or the store: a private note is read, never validated, never
 // built. Rendering, caching and the dev watcher stay Astro's.
+import { createHash } from 'node:crypto';
+import { existsSync, readFileSync } from 'node:fs';
 import { relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readNote, isScheduled } from './meta.mjs';
@@ -13,6 +15,12 @@ import { VAULT_DIR } from './index.mjs';
 
 /** Not on the site: no `publish: true`, a draft, or dated after today (scheduled). */
 export const offline = (data) => data.publish !== true || data.draft === true || isScheduled(data);
+
+// A note with a ```buildlog fence renders from src/data/activity.json and
+// src/lib/activity/render.mjs, not from its text alone: their hash joins
+// its digest, so the content cache re-renders it when either changes.
+const BUILDLOG_INPUTS = ['../../data/activity.json', '../activity/render.mjs'].map((p) => fileURLToPath(new URL(p, import.meta.url)));
+const buildlogSalt = () => createHash('sha1').update(BUILDLOG_INPUTS.map((f) => (existsSync(f) ? readFileSync(f) : '')).join('\0')).digest('hex');
 
 /**
  * @param {typeof import('astro/loaders').glob} glob
@@ -55,7 +63,9 @@ export function vaultLoader(glob, { name, folders, filePattern, generateId }) {
         },
       });
       const parseData = (props) => (offline(props.data) ? Promise.resolve(props.data) : ctx.parseData(props));
-      return inner.load({ ...ctx, entryTypes, store, parseData });
+      const salt = buildlogSalt();
+      const generateDigest = (data) => ctx.generateDigest(typeof data === 'string' && data.includes('```buildlog') ? `${data}\0${salt}` : data);
+      return inner.load({ ...ctx, entryTypes, store, parseData, generateDigest });
     },
   };
 }

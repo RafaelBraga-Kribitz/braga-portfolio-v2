@@ -66,6 +66,7 @@ The handoff's specimens do not show these; the site is their specimen, and `READ
 | One-link paragraph `p.link-line`, `dd.link-line` | everywhere | A 24px box (44 × 44 below 768). |
 | Bench readouts `.range-value`, `.range-note` | tools | Every readout is an editable field; refused or clamped entries say so; inputs live in the URL; below 768 the verdict leads and stays in view. |
 | Metric strip stacking; spec terms ≤ 40% | documents | The strip stacks below 560; spec terms take `fit-content(40%)`. |
+| Build log `figure.fig[data-kind=heatmap]`, `.heat-0…7` (D-055) | projects (a ` ```buildlog ` fence) | Commits per day and per weekday × hour from the repository's git history, plus lines written by kind as an evidence figure. **Exception to D-053, owner, 26 Oct 2026:** the heatmaps take the short interpolation scale, not `seq`, chosen over `seq` and long interpolation after a side-by-side in both themes; seven steps (`--heat-1…7`), more = darker on light, lighter on dark; at most one bin per step. To return to D-053, point `--heat-1…7` at `--chart-seq-*` in tokens.css. |
 
 ## 3. The system outside the site
 

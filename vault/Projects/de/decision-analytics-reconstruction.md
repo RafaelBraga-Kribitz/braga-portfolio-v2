@@ -123,3 +123,8 @@ Was diese Arbeit nicht belegt:
 Jedes Modul wird nur so weit berichtet, wie seine eigene Prüfung reicht: die Segmente als Anpassung an synthetische Wahlberechtigte, der Allokationsgewinn als Solver-Vergleich auf synthetischer Reichweite und die Tracking-Kurve als Retrodiktion. Die Rekonstruktion behauptet nicht, dass Analytik den Vorsprung von 3,70 Prozentpunkten verursacht hat. Das öffentliche Ergebnis ist der Anker; zu zeigen, was das Modell stützen kann und was nicht, ist der Zweck der Arbeit.
 
 Funktionsfähig: Die drei Module laufen durchgängig. Es ist eine Portfolio-Rekonstruktion, kein produktives Kampagnensystem. Das Repository enthält den Code, die Fallstudie und die Validierungsprüfungen (Gates).
+
+## Entstehung
+
+```buildlog
+```

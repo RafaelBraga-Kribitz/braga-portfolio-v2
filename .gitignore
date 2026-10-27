@@ -14,3 +14,4 @@ vault/.trash/
 vault/.smart-env/
 vault/.smart-connections/
 .DS_Store
+.cache/activity/

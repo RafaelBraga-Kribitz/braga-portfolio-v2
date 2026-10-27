@@ -130,3 +130,8 @@ Under the written rule, move budget toward TV and Facebook, take it from out-of-
 > The rule names the conditions itself. A re-estimate in which the lower bound of TV’s or Facebook’s marginal-ROAS 90% interval falls to 2.50 or below stops the move toward that channel, and a 10th percentile of the reallocation gain that is no longer positive stops the reallocation. The optimiser also assumes that response curves hold at the new spend levels and that competitors do not react; the recommendation rests on both, and neither is established.
 
 Code, reports and the decision memo are in the repository. The numbers in its README are rendered from the report files, and a test checks that the two agree.
+
+## Build log
+
+```buildlog
+```

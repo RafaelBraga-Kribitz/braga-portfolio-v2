@@ -130,3 +130,8 @@ Nach der schriftlich festgelegten Regel wird Budget zu TV und Facebook verschobe
 > Die Regel nennt die Bedingungen selbst. Fällt bei einer Neuschätzung die Untergrenze des Intervalls zu 90 % für den marginalen ROAS von TV oder Facebook auf 2,50 oder darunter, endet die Verschiebung zu diesem Kanal; ist das 10. Perzentil des Umverteilungsgewinns nicht mehr positiv, endet die Umverteilung. Der Optimierer nimmt außerdem an, dass die Reaktionskurven bei den neuen Ausgabenniveaus gelten und dass Mitbewerber nicht reagieren; die Empfehlung beruht auf beiden Annahmen, und keine davon ist belegt.
 
 Code, Berichte und das Entscheidungsmemo liegen im Repository. Die Zahlen in seiner README werden aus den Berichtsdateien erzeugt, und ein Test prüft, dass beide übereinstimmen.
+
+## Entstehung
+
+```buildlog
+```

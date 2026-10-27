@@ -42,6 +42,13 @@ jobs:
       - name: Install Chromium for the gates
         run: npx playwright install --with-deps chromium
 
+      # the project build logs read each repository's git history
+      # (scripts/activity/snapshot.mjs); if that fails, the committed
+      # src/data/activity.json is built instead
+      - name: Refresh the build logs
+        run: npm run activity
+        continue-on-error: true
+
       # astro check, lint, unit tests, the build (with SITE_BASE) and every
       # gate over dist/ (the gate runner reads SITE_BASE as its --base)
       - name: Verify

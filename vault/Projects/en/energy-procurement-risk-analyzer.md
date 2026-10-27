@@ -95,3 +95,8 @@ What this does not establish:
 No strategy is recommended yet. The project leads from electricity-price records to a cost-risk decision between the four strategies, and that decision waits for the strategy simulator and the source-of-truth file that arrives with it.
 
 In build: the foundation stage is implemented, and the load profile, analytics, simulator and reporting are not. The repository holds the charter, the specifications and the pipeline so far.
+
+## Build log
+
+```buildlog
+```

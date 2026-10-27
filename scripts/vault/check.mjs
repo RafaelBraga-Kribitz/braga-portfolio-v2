@@ -24,6 +24,8 @@ import { SNIPPETS } from './sync-obsidian.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const index = vaultIndex();
+const ACTIVITY = fileURLToPath(new URL('../../src/data/activity.json', import.meta.url));
+const activity = existsSync(ACTIVITY) ? JSON.parse(readFileSync(ACTIVITY, 'utf8')) : { projects: {} };
 const out = [];
 const say = (level, note, line, msg) => out.push({ level, where: `vault/${note?.rel ?? note}${line ? `:${line}` : ''}`, msg });
 
@@ -96,9 +98,10 @@ for (const note of index.notes) {
   }
   if (d.cover && !resolveAttachment(index, String(d.cover).replace(/^!?\[\[|\]\]$/g, ''))) say('error', note, 0, `cover "${d.cover}": no such image in the vault`);
 
-  // fences: dataview parses, mermaid drawn
-  for (const m of note.body.matchAll(/^```(dataview|mermaid)[^\n]*\n([\s\S]*?)^```/gm)) {
+  // fences: dataview parses, mermaid drawn, buildlog has its data
+  for (const m of note.body.matchAll(/^```(dataview|mermaid|buildlog)[^\n]*\n([\s\S]*?)^```/gm)) {
     const line = lineOf(note, m.index);
+    if (m[1] === 'buildlog') { if (!activity.projects?.[d.slug]) say('warn', note, line, `buildlog: no activity data for "${d.slug}" (run npm run activity)`); continue; }
     if (m[1] === 'dataview') { try { parseQuery(m[2]); } catch (e) { say('error', note, line, `dataview: ${e.message}`); } }
     else if (!mermaidCached(m[2].replace(/\n$/, ''))) say('info', note, line, 'a new diagram: drawn at the next build (needs Chromium: npx playwright install chromium)');
   }
