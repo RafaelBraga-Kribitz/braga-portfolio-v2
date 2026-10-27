@@ -13,7 +13,7 @@ publish: true
 
 ## Verantwortlicher
 
-Rafael Braga-Kribitz, 8054 Seiersberg, Österreich, [rafaelbragakribitz@gmail.com](mailto:rafaelbragakribitz@gmail.com).
+Rafael Braga-Kribitz, 8054 Seiersberg, Österreich, [hello@rafaelbragakribitz.com](mailto:hello@rafaelbragakribitz.com).
 
 ## Hosting und Server-Protokolle
 

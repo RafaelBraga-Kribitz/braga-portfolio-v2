@@ -9,12 +9,13 @@ add the trailing slash to a folder URL (GitHub Pages does all three).
 
 | Setting | Where | Value now |
 |---|---|---|
-| Origin | `site` in `astro.config.mjs` **and** `url` in `src/lib/site.ts` (keep them equal) | `https://rafaelbraga-kribitz.github.io` |
-| Base path | the `SITE_BASE` environment variable at build time (read by `astro.config.mjs` as `base`) | `/` by default |
+| Origin | `site` in `astro.config.mjs` **and** `url` in `src/lib/site.ts` (keep them equal) | `https://rafaelbragakribitz.com` |
+| Base path | the `SITE_BASE` environment variable at build time (read by `astro.config.mjs` as `base`) | `/` (fixed in the workflow) |
 
-The origin is a guess built from the GitHub account name
-(`RafaelBraga-Kribitz`; host names are lower case, so the user site is
-`rafaelbraga-kribitz.github.io`). Confirm it before launch.
+The site is live on the custom domain (option 3 below, chosen 27 Oct
+2026). Until then it was the project site
+`https://rafaelbraga-kribitz.github.io/braga-portfolio-v2/`, which GitHub
+now redirects to the domain.
 
 Every internal URL goes through `src/lib/routes.ts` (`route()`,
 `withBase()`, `absolute()`), so the base reaches the shell, the footer,
@@ -55,9 +56,9 @@ node scripts/gates/server.mjs --dir /tmp/bk-base --base /braga-portfolio/   # lo
 
 L-01 fails any internal link that misses the base.
 
-## Option 3 · custom domain
+## Option 3 · custom domain (in use)
 
-E.g. `https://example.com/` (none is chosen yet).
+`https://rafaelbragakribitz.com/`, registered at easyname.
 
 - Set the origin in both places (`astro.config.mjs` `site`, `src/lib/site.ts`
   `url`).
@@ -66,6 +67,36 @@ E.g. `https://example.com/` (none is chosen yet).
   the same domain under Settings → Pages → Custom domain; enforce HTTPS.
 - Keep the user site or project site repository as it is: GitHub redirects
   the `github.io` address to the custom domain.
+
+### DNS at easyname (domain `rafaelbragakribitz.com`)
+
+easyname → Webhosting & Domains → the domain → DNS. Switch from
+"automatisch" to manual records, keep the mail (MX, SPF) records, and set:
+
+| Host | Type | Value |
+|---|---|---|
+| `@` | A | `185.199.108.153` |
+| `@` | A | `185.199.109.153` |
+| `@` | A | `185.199.110.153` |
+| `@` | A | `185.199.111.153` |
+| `@` | AAAA | `2606:50c0:8000::153` |
+| `@` | AAAA | `2606:50c0:8001::153` |
+| `@` | AAAA | `2606:50c0:8002::153` |
+| `@` | AAAA | `2606:50c0:8003::153` |
+| `www` | CNAME | `rafaelbraga-kribitz.github.io.` |
+| `_github-pages-challenge-RafaelBraga-Kribitz` | TXT | the code GitHub shows (account Settings → Pages → Add a domain) |
+
+Remove any other A, AAAA or CNAME record on `@` and `www` (easyname's
+parking page). Then Settings → Pages → Custom domain:
+`rafaelbragakribitz.com`, wait for the DNS check, tick **Enforce HTTPS**.
+
+### Email
+
+The published address (`email` in `src/lib/site.ts`, the Impressum,
+privacy and accessibility notes, the About page) is
+`hello@rafaelbragakribitz.com`. At easyname it is an alias (or a
+forwarding) of the main mailbox `rafael@rafaelbragakribitz.com`; mail to it
+lands in that mailbox or is forwarded to the owner's Gmail.
 
 ## The workflow
 

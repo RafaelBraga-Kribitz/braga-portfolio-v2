@@ -13,7 +13,7 @@ publish: true
 
 ## Controller
 
-Rafael Braga-Kribitz, 8054 Seiersberg, Austria, [rafaelbragakribitz@gmail.com](mailto:rafaelbragakribitz@gmail.com).
+Rafael Braga-Kribitz, 8054 Seiersberg, Austria, [hello@rafaelbragakribitz.com](mailto:hello@rafaelbragakribitz.com).
 
 ## Hosting and server logs
 

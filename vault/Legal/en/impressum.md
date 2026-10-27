@@ -16,7 +16,7 @@ Disclosure under § 25 of the Austrian Media Act (Mediengesetz) and information
 > [!spec] Media owner and publisher
 > - Name — Rafael Braga-Kribitz
 > - Place of residence — 8054 Seiersberg, Styria, Austria
-> - Email — [rafaelbragakribitz@gmail.com](mailto:rafaelbragakribitz@gmail.com)
+> - Email — [hello@rafaelbragakribitz.com](mailto:hello@rafaelbragakribitz.com)
 > - Business purpose — None. A private, non-commercial website; no goods or services are offered.
 > - Editorial line — Documentation of the owner’s own analytical work in marketing and decision analysis.
 

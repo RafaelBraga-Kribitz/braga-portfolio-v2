@@ -1,7 +1,8 @@
 # Build, verify and publish the site with GitHub Pages (DEPLOY.md).
 # One-time setup: Settings → Pages → Source: GitHub Actions.
-# A project-site deploy sets the repository variable SITE_BASE to
-# /<repository>/; a user site or a custom domain leaves it unset.
+# The site is served at the custom domain rafaelbragakribitz.com
+# (public/CNAME), so it is built at the root: SITE_BASE is '/' here and the
+# repository variable of the old project-site deploy is ignored.
 name: Deploy to GitHub Pages
 
 on:
@@ -27,7 +28,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      SITE_BASE: ${{ vars.SITE_BASE || '/' }}
+      SITE_BASE: /
     steps:
       - uses: actions/checkout@v4
 

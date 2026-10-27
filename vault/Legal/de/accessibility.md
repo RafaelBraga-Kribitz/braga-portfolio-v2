@@ -37,4 +37,4 @@ Die Kürzel sind einzelne Tasten und benötigen JavaScript. Beim Tippen in ein F
 
 Bekannte Einschränkung: Die interaktiven Werkzeuge benötigen JavaScript. Ohne JavaScript wird das Standardszenario als Text und Tabelle angezeigt.
 
-Rückmeldungen zu Barrieren an [rafaelbragakribitz@gmail.com](mailto:rafaelbragakribitz@gmail.com). Erstellt am 20. Okt. 2026, aktualisiert am 23. Okt. 2026.
+Rückmeldungen zu Barrieren an [hello@rafaelbragakribitz.com](mailto:hello@rafaelbragakribitz.com). Erstellt am 20. Okt. 2026, aktualisiert am 23. Okt. 2026.
