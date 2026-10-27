@@ -131,7 +131,7 @@ A blockquote without a marker stays a quotation. The authoring guide, on the ord
 ### Bookmark · `[!bookmark]`
 
 > [!bookmark] Next
-> [01-04 Energy procurement risk analyser](/en/work/energy-procurement-risk-analyzer/) — From electricity-price records to a cost-risk decision. In build.
+> [01-04 Energy procurement risk analyser](/en/work/energy-procurement-risk-analyzer/) — €27.04 million. What the wrong electricity strategy cost one constructed 50 GWh load over 2021–2025.
 
 ## Actions
 

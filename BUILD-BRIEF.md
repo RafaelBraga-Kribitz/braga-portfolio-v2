@@ -87,7 +87,7 @@ Project slugs, codes and statuses (the Site specimen's order; dates from the sou
 | 01-01 | `austria-data-job-market-intelligence` | Austria data-job market intelligence | Labour market | complete |
 | 01-02 | `decision-analytics-reconstruction` | Decision analytics reconstruction | Decision science | functional |
 | 01-03 | `austrian-mmm-budget-optimizer` | Austrian MMM and budget optimiser | Marketing | under-revision |
-| 01-04 | `energy-procurement-risk-analyzer` | Energy procurement risk analyser | Energy | in-build |
+| 01-04 | `energy-procurement-risk-analyzer` | Energy procurement risk analyser | Energy | functional |
 | 01-05 | `warehouse-humanoid-tco` | Warehouse humanoid TCO | Operations | complete |
 
 Order (UX pass, 22 Oct 2026, serial position): complete projects open and close the list; the

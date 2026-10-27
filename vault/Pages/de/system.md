@@ -131,7 +131,7 @@ Ein Zitatblock ohne Markierung bleibt ein Zitat. Der Autorenleitfaden über die 
 ### Lesezeichen · `[!bookmark]`
 
 > [!bookmark] Weiter
-> [01-04 Risikoanalyse für die Energiebeschaffung](/de/work/energy-procurement-risk-analyzer/) — Von Strompreisdaten zu einer Kosten-Risiko-Entscheidung. Im Aufbau.
+> [01-04 Risikoanalyse für die Energiebeschaffung](/de/work/energy-procurement-risk-analyzer/) — € 27,04 Mio. Was die falsche Stromstrategie eine konstruierte 50-GWh-Last in den Jahren 2021–2025 kostete.
 
 ## Aktionen
 
