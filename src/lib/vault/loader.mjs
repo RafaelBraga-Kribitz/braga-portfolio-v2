@@ -16,6 +16,13 @@ import { VAULT_DIR } from './index.mjs';
 /** Not on the site: no `publish: true`, a draft, or dated after today (scheduled). */
 export const offline = (data) => data.publish !== true || data.draft === true || isScheduled(data);
 
+// A note's entry is its text as read by meta.mjs (title, slug, summary …),
+// so the reader's hash joins every digest: a change to meta.mjs re-reads
+// every note instead of keeping the store's old properties (website audit:
+// the excerpt fix reached the pages only once the cache was cleared).
+const READER = fileURLToPath(new URL('./meta.mjs', import.meta.url));
+const readerSalt = () => createHash('sha1').update(readFileSync(READER)).digest('hex');
+
 // A note with a ```buildlog fence renders from src/data/activity.json and
 // src/lib/activity/render.mjs, not from its text alone: their hash joins
 // its digest, so the content cache re-renders it when either changes.
@@ -64,7 +71,9 @@ export function vaultLoader(glob, { name, folders, filePattern, generateId }) {
       });
       const parseData = (props) => (offline(props.data) ? Promise.resolve(props.data) : ctx.parseData(props));
       const salt = buildlogSalt();
-      const generateDigest = (data) => ctx.generateDigest(typeof data === 'string' && data.includes('```buildlog') ? `${data}\0${salt}` : data);
+      const reader = readerSalt();
+      const generateDigest = (data) => ctx.generateDigest(typeof data !== 'string' ? data
+        : `${data}\0${reader}${data.includes('```buildlog') ? `\0${salt}` : ''}`);
       return inner.load({ ...ctx, entryTypes, store, parseData, generateDigest });
     },
   };

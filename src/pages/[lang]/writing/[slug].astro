@@ -12,6 +12,7 @@ import { t, formatDate, type Lang } from '@/lib/i18n';
 import { route, writingRoute } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
 import { otherLang } from '@/lib/i18n';
+import { articleGraph } from '@/lib/structured-data';
 import { writingOf, writingCode, nextOf, prevOf, readingMinutes, vaultExtras, type WritingEntry } from '@/lib/collections';
 
 export async function getStaticPaths() {
@@ -39,6 +40,9 @@ const code = writingCode(entry, list.findIndex((e) => e.id === entry.id));
 const next = nextOf(list, entry);
 const prev = prevOf(list, entry);
 const nextCode = next ? writingCode(next, list.findIndex((e) => e.id === next.id)) : '';
+
+// the document as a schema.org Article by the Person (src/lib/structured-data.ts)
+const structuredData = articleGraph(lang, { path: writingRoute(d.slug, lang), title: d.seo_title ?? d.title, description: d.seo_description ?? d.summary, date: d.date, updated: d.updated, image: extras.cover?.src });
 
 const meta = [
   { text: t(lang, `kind.${d.kind}`) },
@@ -69,6 +73,7 @@ const meta = [
   cover={extras.cover}
   tags={extras.tags}
   related={extras.related}
+  structuredData={structuredData}
   prevDoc={prev && writingRoute(prev.data.slug, lang)}
 >
   <Content />

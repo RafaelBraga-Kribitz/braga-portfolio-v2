@@ -118,20 +118,84 @@ export function inlineFields(body) {
 }
 const fieldKey = (k) => k.trim().toLowerCase().replace(/\s+/g, '-');
 
-/** A plain-text excerpt: the first paragraph of prose, about `max` characters, cut at a word. */
+/**
+ * A plain-text excerpt: the first paragraph of prose that reads as a
+ * sentence, about `max` characters, cut at a word. It stands in for a
+ * missing `summary`, so it is the meta description, the feed item and the
+ * line under a related note (website audit, SEO-007). Two kinds of
+ * paragraph are passed over when a later one reads better: a fragment
+ * left between two display formulas (", $S = 4\pi R^2$", "(for a > 0)")
+ * and a sentence that hands over to a formula ("…, defined by"). The
+ * library's breakdown label ("What it tells me (Situation Awareness):") is
+ * not part of the sentence. Inline maths reads as text (texText), and only
+ * real Markdown emphasis is removed: an "=" or "_" inside maths stays.
+ */
 export function excerpt(body, max = 180) {
-  const paras = proseOnly(body).split(/\n\s*\n/).map((p) => p.trim())
-    .filter((p) => p && !/^(#|>|\||- |\* |\d+\. |!\[|<|---|\$\$|[\p{L}\p{N}_ -]+::)/u.test(p));
-  const text = (paras[0] ?? '')
-    .replace(/!\[\[[^\]]*\]\]/g, '')
-    .replace(/\[\[([^\]|#]+)(?:#[^\]|]*)?(?:\|([^\]]+))?\]\]/g, (_, a, b) => b ?? a)
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
-    .replace(/\$([^$\n]+)\$/g, '$1')   // inline maths reads as its source, without the delimiters
-    .replace(/[*_~=]{1,2}([^*_~=]+)[*_~=]{1,2}/g, '$1')
-    .replace(/\s+/g, ' ').trim();
+  const texts = proseOnly(body).split(/\n\s*\n/).map((p) => p.trim())
+    .filter((p) => p && !/^(#|>|\||- |\* |\d+\. |!\[|<|---|\$\$|[\p{L}\p{N}_ -]+::)/u.test(p))
+    .map(plainText).filter(Boolean);
+  const text = texts.find((t) => readsAsSentence(t, max)) ?? texts[0] ?? '';
   if (text.length <= max) return text;
   const cut = text.slice(0, max + 1);
   return `${cut.slice(0, Math.max(cut.lastIndexOf(' '), max * 0.6)).replace(/[,;:.\s]+$/, '')}…`;
+}
+
+const LEAD_LABEL = /^What it tells me \(Situation Awareness\):\s*/i;
+
+/** A paragraph of Markdown as one line of text. */
+function plainText(p) {
+  const maths = [];
+  return p
+    .replace(/!\[\[[^\]]*\]\]/g, '')
+    .replace(/\[\[([^\]|#]+)(?:#[^\]|]*)?(?:\|([^\]]+))?\]\]/g, (_, a, b) => b ?? a)
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    // inline maths is set aside first, so the emphasis rules never see its _ * =
+    .replace(/\$([^$\n]+)\$/g, (_, tex) => `\u0000${maths.push(texText(tex)) - 1}\u0000`)
+    .replace(/(\*\*|__)(?=\S)(.*?\S)\1/g, '$2')
+    .replace(/\*(?=\S)([^*\n]*?\S)\*/g, '$1')
+    .replace(/(^|[^\p{L}\p{N}_])_(?=\S)([^_\n]*?\S)_(?![\p{L}\p{N}_])/gu, '$1$2')
+    .replace(/(~~|==)(?=\S)(.*?\S)\1/g, '$2')
+    .replace(/\u0000(\d+)\u0000/g, (_, i) => maths[+i])
+    .replace(/\s+/g, ' ').trim()
+    .replace(LEAD_LABEL, '');
+}
+
+/** Starts like a sentence and ends like one (or runs past the cut anyway), and is not a fragment. */
+const readsAsSentence = (t, max) => t.length >= 40 && /^[\p{Lu}\p{N}"“„‘']/u.test(t) && (t.length > max || /[.!?…)"”]$/.test(t));
+
+const TEX_SYMBOLS = {
+  alpha: 'α', beta: 'β', gamma: 'γ', delta: 'δ', epsilon: 'ε', varepsilon: 'ε', zeta: 'ζ', eta: 'η', theta: 'θ', kappa: 'κ',
+  lambda: 'λ', mu: 'μ', nu: 'ν', xi: 'ξ', pi: 'π', rho: 'ρ', sigma: 'σ', tau: 'τ', phi: 'φ', varphi: 'φ', chi: 'χ', psi: 'ψ', omega: 'ω',
+  Gamma: 'Γ', Delta: 'Δ', Theta: 'Θ', Lambda: 'Λ', Pi: 'Π', Sigma: 'Σ', Phi: 'Φ', Psi: 'Ψ', Omega: 'Ω',
+  in: '∈', notin: '∉', le: '≤', leq: '≤', ge: '≥', geq: '≥', ne: '≠', neq: '≠', approx: '≈', sim: '∼', equiv: '≡', propto: '∝',
+  infty: '∞', to: '→', rightarrow: '→', leftarrow: '←', Rightarrow: '⇒', implies: '⇒', iff: '⇔', mapsto: '↦',
+  times: '×', cdot: '·', div: '÷', pm: '±', mp: '∓', sum: 'Σ', prod: '∏', int: '∫', partial: '∂', nabla: '∇',
+  forall: '∀', exists: '∃', lnot: '¬', subset: '⊂', subseteq: '⊆', supset: '⊃', cup: '∪', cap: '∩', emptyset: '∅', varnothing: '∅', setminus: '∖',
+  ldots: '…', cdots: '⋯', dots: '…', neg: '¬', land: '∧', lor: '∨', perp: '⊥', circ: '∘', ell: 'ℓ', mid: '|', vert: '|', Vert: '‖',
+  langle: '⟨', rangle: '⟩', lfloor: '⌊', rfloor: '⌋', lceil: '⌈', rceil: '⌉', quad: ' ', qquad: ' ',
+  '|': '‖', ',': ' ', ';': ' ', ':': ' ', '!': '', ' ': ' ', '#': '#', '%': '%', '&': '&', _: '_', $: '$',
+};
+const BLACKBOARD = { R: 'ℝ', N: 'ℕ', Z: 'ℤ', Q: 'ℚ', C: 'ℂ' };
+const group = (a) => (/^[\p{L}\p{N}.√_^]*$/u.test(a.trim()) ? a.trim() : `(${a.trim()})`);
+
+/** Inline TeX as readable text, for an excerpt: \frac{4}{3}\pi R^3 → 4/3π R^3, \mathbb{R} → ℝ. */
+export function texText(tex) {
+  // escaped braces are literal and survive the brace removal at the end
+  let s = String(tex).replace(/\\\{/g, '\u0001').replace(/\\\}/g, '\u0002')
+    .replace(/\\(?:left|right|[bB]igg?[lr]?)\b\s*/g, '')
+    .replace(/\\mathbb\{([A-Z])\}/g, (_, c) => BLACKBOARD[c] ?? c);
+  for (let i = 0; i < 4; i++) {
+    s = s
+      .replace(/\\[dt]?frac\{([^{}]*)\}\{([^{}]*)\}/g, (_, a, b) => `${group(a)}/${group(b)}`)
+      .replace(/\\sqrt\{([^{}]*)\}/g, (_, a) => `√${group(a)}`)
+      .replace(/\\(?:text|textbf|textit|mathrm|mathit|mathbf|mathcal|mathsf|operatorname|bm|boldsymbol|hat|bar|tilde|vec|overline|underline|widehat|widetilde)\{([^{}]*)\}/g, '$1')
+      .replace(/([_^])\{([^{}]*)\}/g, (_, op, a) => op + group(a));
+  }
+  return s
+    .replace(/\\([A-Za-z]+|.)/g, (_, name) => TEX_SYMBOLS[name] ?? name)
+    .replace(/[{}]/g, '')
+    .replace(/\u0001/g, '{').replace(/\u0002/g, '}')
+    .replace(/\s+/g, ' ').trim();
 }
 
 /**

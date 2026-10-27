@@ -12,6 +12,7 @@ import { t, formatDate, type Lang } from '@/lib/i18n';
 import { route } from '@/lib/routes';
 import { LANGS, site } from '@/lib/site';
 import { pageOf, type PageEntry } from '@/lib/collections';
+import { profileGraph } from '@/lib/structured-data';
 
 export async function getStaticPaths() {
   const paths = [];
@@ -39,6 +40,8 @@ const portrait = {
   caption: `${site.name} · ${site.location[lang]}`,
   empty: t(lang, 'portrait.empty'),
 };
+// the profile as JSON-LD: a ProfilePage about the Person (src/lib/structured-data.ts)
+const structuredData = profileGraph(lang, { title: d.title, description: d.summary, image: photo?.src, updated: d.updated });
 const meta = d.updated ? [{ text: `${t(lang, 'updated')} ${formatDate(d.updated, lang)}` }] : [];
 ---
 <Document
@@ -56,6 +59,7 @@ const meta = d.updated ? [{ text: `${t(lang, 'updated')} ${formatDate(d.updated,
   bodyLang={d.contentLang}
   back={{ href: route('home', lang), label: t(lang, 'to-index') }}
   portrait={portrait}
+  structuredData={structuredData}
 >
   <Content />
 </Document>
