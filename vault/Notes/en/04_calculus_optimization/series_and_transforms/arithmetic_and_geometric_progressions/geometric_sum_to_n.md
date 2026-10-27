@@ -20,7 +20,9 @@ This formula gives the **total sum of the first n terms** of a geometric sequenc
 
 ```mermaid
 flowchart TD
-    A["Input: a (first term), r (ratio), n (number of terms)"] --> B{"r = 1?"} B -- "Yes" --> C["S_n = n × a (constant series)"] B -- "No" --> D["Compute r^n"]
+    A["Input: a (first term), r (ratio), n (number of terms)"] --> B{"r = 1?"}
+    B -- "Yes" --> C["S_n = n × a (constant series)"]
+    B -- "No" --> D["Compute r^n"]
     D --> E["Numerator = a × (1 - r^n)"]
     E --> F["Denominator = (1 - r)"]
     F --> G["S_n = Numerator / Denominator"]

@@ -24,8 +24,9 @@ flowchart TD
     A --> C["Option 2: group right → a+(b+c)"]
     B --> D["Sum a+b first, then add c"]
     C --> E["Sum b+c first, then add to a"]
-    D --> F{["Same final value?"]}
-    E --> F F -- "Yes: association doesn't matter" --> G["(a+b)+c = a+(b+c) confirmed"]
+    D --> F{"Same final value?"}
+    E --> F
+    F -- "Yes: association doesn't matter" --> G["(a+b)+c = a+(b+c) confirmed"]
 ```
 
 ## Real-world use

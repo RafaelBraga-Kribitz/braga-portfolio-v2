@@ -21,7 +21,9 @@ The power rule for integration is the most used antiderivative formula. It says:
 
 ```mermaid
 flowchart TD
-    A["Integral: int x^n dx"] --> B{"n = -1?"} B -- "Yes" --> C["Use reciprocal rule: ln|x| + C"] B -- "No" --> D["Increment exponent: n becomes n+1"]
+    A["Integral: int x^n dx"] --> B{"n = -1?"}
+    B -- "Yes" --> C["Use reciprocal rule: ln|x| + C"]
+    B -- "No" --> D["Increment exponent: n becomes n+1"]
     D --> E["Divide coefficient by new exponent: 1/(n+1)"]
     E --> F["Result: x^(n+1) / (n+1) + C"]
     F --> G["Verify: d/dx [x^(n+1)/(n+1)] = x^n"]

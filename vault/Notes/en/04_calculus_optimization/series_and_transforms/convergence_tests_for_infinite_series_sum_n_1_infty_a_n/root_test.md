@@ -24,7 +24,10 @@ The Root Test (Cauchy's Root Test) checks convergence by asking: what is the eve
 flowchart TD
     A["Series sum a_n"] --> B["Compute r_n = |a_n|^(1/n) (n-th root of |a_n|)"]
     B --> C["Compute L = lim(n→inf) r_n"]
-    C --> D{"Value of L?"} D -- "L < 1" --> E["CONVERGES absolutely"] D -- "L > 1 or L = inf" --> F["DIVERGES"] D -- "L = 1" --> G["INCONCLUSIVE — try Ratio Test, p-series, or Comparison"]
+    C --> D{"Value of L?"}
+    D -- "L < 1" --> E["CONVERGES absolutely"]
+    D -- "L > 1 or L = inf" --> F["DIVERGES"]
+    D -- "L = 1" --> G["INCONCLUSIVE — try Ratio Test, p-series, or Comparison"]
 ```
 
 ## Real-world use

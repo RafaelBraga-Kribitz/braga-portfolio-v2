@@ -21,8 +21,12 @@ $\forall$ is the **universal quantifier**, read as **"for all"** or **"for every
 ```mermaid
 flowchart TD
     A["∀ x in S: P(x)"] --> B["Pick any x from S"]
-    B --> C["Check property P(x)"] C -- "P(x) is True" --> D["Continue to next element"] C -- "P(x) is False" --> E["Counterexample found: ∀ claim is FALSE"]
-    D --> F{["Any elements remaining in S?"]} F -- "Yes" --> B F -- "No" --> G["All elements checked: ∀ claim is TRUE"]
+    B --> C["Check property P(x)"]
+    C -- "P(x) is True" --> D["Continue to next element"]
+    C -- "P(x) is False" --> E["Counterexample found: ∀ claim is FALSE"]
+    D --> F{"Any elements remaining in S?"}
+    F -- "Yes" --> B
+    F -- "No" --> G["All elements checked: ∀ claim is TRUE"]
 ```
 
 ## Real-world use

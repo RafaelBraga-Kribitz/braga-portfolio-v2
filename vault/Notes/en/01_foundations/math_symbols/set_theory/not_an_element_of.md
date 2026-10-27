@@ -20,7 +20,9 @@ The symbol $x \notin A$ means "$x$ is NOT a member (element) of set $A$" — the
 
 ```mermaid
 flowchart TD
-    A["Given x and set A"] --> B{["x ∈ A?"]} B -- "True" --> C["x ∈ A — belongs to A"] B -- "False" --> D["x ∉ A — does NOT belong to A"]
+    A["Given x and set A"] --> B{"x ∈ A?"}
+    B -- "True" --> C["x ∈ A — belongs to A"]
+    B -- "False" --> D["x ∉ A — does NOT belong to A"]
     D --> E["DA: filter out, flag, impute, or reject"]
     D --> F["SQL: WHERE col NOT IN (valid_values)"]
     D --> G["Pandas: ~df['col'].isin(valid_set)"]

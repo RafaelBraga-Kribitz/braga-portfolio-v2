@@ -24,8 +24,9 @@ flowchart TD
     A --> C["Option 2: distribute multiplication"]
     B --> D["Compute b+c, then multiply by a"]
     C --> E["Compute a×b and a×c separately"]
-    D --> F{["Same result?"]}
-    E --> F F -- "Yes: distributive law confirmed" --> G["a(b+c) = ab + ac"]
+    D --> F{"Same result?"}
+    E --> F
+    F -- "Yes: distributive law confirmed" --> G["a(b+c) = ab + ac"]
     G --> H["Extends to: a(b+c+d+...) = ab + ac + ad + ..."]
 ```
 

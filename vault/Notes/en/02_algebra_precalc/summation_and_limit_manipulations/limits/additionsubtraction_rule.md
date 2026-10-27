@@ -22,7 +22,11 @@ If both $\lim_{x \to a} f(x)$ and $\lim_{x \to a} g(x)$ exist (are finite), then
 flowchart TD
     A["Want: lim(x->a) of f(x) +/- g(x)"] --> B["Check: does lim f(x) exist as x->a?"]
     B --> C["Check: does lim g(x) exist as x->a?"]
-    C --> D{{"Both limits exist (finite)?"} D -->|"Yes"| E["Apply rule: lim[f+/-g] = lim f +/- lim g"] D -->|"No (at least one DNE or infinite)"| F["Rule does NOT apply directly -- use other techniques"] E --> G["Evaluate lim f(x) and lim g(x) separately"] G --> H["Combine: add or subtract the results"]
+    C --> D{"Both limits exist (finite)?"}
+    D -->|"Yes"| E["Apply rule: lim[f+/-g] = lim f +/- lim g"]
+    D -->|"No (at least one DNE or infinite)"| F["Rule does NOT apply directly -- use other techniques"]
+    E --> G["Evaluate lim f(x) and lim g(x) separately"]
+    G --> H["Combine: add or subtract the results"]
 ```
 
 ## Real-world use

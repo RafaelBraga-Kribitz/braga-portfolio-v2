@@ -20,7 +20,9 @@ $\equiv$ (the triple bar) signals **identity** or **equivalence**: the statement
 
 ```mermaid
 flowchart TD
-    A["Encounter the symbol triple-bar (equiv)"] --> B{"What is the context?"} B -- "Algebra / trigonometry / calculus" --> C["Identity: true for ALL values of the variable"] B -- "Number theory / hashing / modular arithmetic" --> D["Modular congruence: same remainder mod m"]
+    A["Encounter the symbol triple-bar (equiv)"] --> B{"What is the context?"}
+    B -- "Algebra / trigonometry / calculus" --> C["Identity: true for ALL values of the variable"]
+    B -- "Number theory / hashing / modular arithmetic" --> D["Modular congruence: same remainder mod m"]
     C --> E["Example: sin^2 theta + cos^2 theta equiv 1 for any theta"]
     D --> F["Example: 17 equiv 2 (mod 5) because 17 = 3*5 + 2"]
     E --> G["Can substitute freely in any derivation"]

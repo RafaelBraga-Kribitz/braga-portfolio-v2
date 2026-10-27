@@ -23,7 +23,9 @@ flowchart TD
     A["Complex number z = a + bi"] --> B["Plot as point (a, b) in complex plane"]
     B --> C["Draw line from origin to point"]
     C --> D["Measure angle φ from positive real axis"]
-    D --> E{["Which quadrant?"]} E -- "a>0: basic formula works" --> F["φ = arctan(b/a)"] E -- "a<0 or a=0: use atan2" --> G["φ = atan2(b, a)"]
+    D --> E{"Which quadrant?"}
+    E -- "a>0: basic formula works" --> F["φ = arctan(b/a)"]
+    E -- "a<0 or a=0: use atan2" --> G["φ = atan2(b, a)"]
     F --> H["φ ∈ (-π/2, π/2)"]
     G --> I["φ ∈ (-π, π] ← full range"]
 ```

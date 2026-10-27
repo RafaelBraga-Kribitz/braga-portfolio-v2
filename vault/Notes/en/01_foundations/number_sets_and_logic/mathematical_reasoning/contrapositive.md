@@ -20,10 +20,12 @@ The **contrapositive** of a conditional statement $p \implies q$ ("if $p$, then 
 flowchart TD
     A["Original: p → q"] --> B["Build truth table for both forms"]
     B --> C["Compare truth values row by row"]
-    C --> D{["All rows match?"]} D -- "Yes" --> E["Logically equivalent: same meaning"] D -- "No" --> F["Different statements (not contrapositive)"]
+    C --> D{"All rows match?"}
+    D -- "Yes" --> E["Logically equivalent: same meaning"]
+    D -- "No" --> F["Different statements (not contrapositive)"]
     E --> G["Contrapositive: ¬q → ¬p"]
     G --> H["Use when: proving p → q by proving ¬q → ¬p is easier"]
-    H --> I["Example: 'if valid, then no error' ↔ 'if error, then invalid'"]
+    H --> I["Example: 'if valid, then no error' is equivalent to 'if error, then invalid'"]
 ```
 
 ## Real-world use

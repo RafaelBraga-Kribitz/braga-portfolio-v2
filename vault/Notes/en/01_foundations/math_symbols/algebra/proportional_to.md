@@ -21,7 +21,9 @@ $\propto$ means **proportional to**: when one quantity changes, the other change
 ```mermaid
 flowchart TD
     A["y is proportional to x: y prop x"] --> B["There exists a constant k such that y = k*x"]
-    B --> C{"Do you need the exact value of k?"} C -- "No (qualitative analysis)" --> D["Use proportionality: doubling x doubles y"] C -- "Yes (exact computation)" --> E["Find k: k = y/x and write y = k*x"]
+    B --> C{"Do you need the exact value of k?"}
+    C -- "No (qualitative analysis)" --> D["Use proportionality: doubling x doubles y"]
+    C -- "Yes (exact computation)" --> E["Find k: k = y/x and write y = k*x"]
     D --> F["Bayesian inference: P(theta|data) prop P(data|theta) * P(theta)"]
     E --> G["Feature scaling: revenue = k * ad_spend if relationship is linear"]
 ```

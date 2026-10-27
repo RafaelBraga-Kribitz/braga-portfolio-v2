@@ -23,8 +23,10 @@ These are the two axioms that any valid PDF must satisfy: non-negativity and nor
 ```mermaid
 flowchart LR
     A["Propose a function f(x) as PDF"] --> B["Check 1: f(x) >= 0 for all x"]
-    B --> C["Check 2: ∫f(x)dx = 1 over full support"] C -- Both
-    pass --> D["Valid PDF"] C -- Either
+    B --> C["Check 2: ∫f(x)dx = 1 over full support"]
+    C -- Both
+    pass --> D["Valid PDF"]
+    C -- Either
     fails --> E["Invalid: not a probability density"]
 ```
 

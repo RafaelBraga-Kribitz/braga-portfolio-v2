@@ -21,7 +21,13 @@ The Comparison Test (Direct Comparison) says: if you can **bound a mystery serie
 ```mermaid
 flowchart TD
     A["Unknown series: sum a_n (a_n >= 0)"] --> B["Find comparison series sum b_n (b_n >= 0)"]
-    B --> C{"Which direction?"} C -- "a_n <= b_n" --> D{"Does sum b_n converge?"} D -- "Yes" --> E["CONVERGES: sum a_n <= sum b_n < inf"] D -- "No" --> F["Inconclusive (only works if b_n converges)"] C -- "a_n >= b_n" --> G{"Does sum b_n diverge?"} G -- "Yes" --> H["DIVERGES: sum a_n >= sum b_n = inf"] G -- "No" --> I["Inconclusive (only works if b_n diverges)"]
+    B --> C{"Which direction?"}
+    C -- "a_n <= b_n" --> D{"Does sum b_n converge?"}
+    D -- "Yes" --> E["CONVERGES: sum a_n <= sum b_n < inf"]
+    D -- "No" --> F["Inconclusive (only works if b_n converges)"]
+    C -- "a_n >= b_n" --> G{"Does sum b_n diverge?"}
+    G -- "Yes" --> H["DIVERGES: sum a_n >= sum b_n = inf"]
+    G -- "No" --> I["Inconclusive (only works if b_n diverges)"]
 ```
 
 ## Real-world use

@@ -7,6 +7,7 @@
 //        [--quick] [--json out.json] [--expect expect.json]
 //        [--site https://…] [--base /repo/] [--concurrency 3] [--verbose]
 //        [--pending tests/gates/pending-routes.json | --no-pending] [--draft-langs de]
+//        [--templated /en/notes/,/de/notes/] [--templated-sample 12]
 //
 // Enumerates every index.html and 404.html under --dir, serves the folder
 // (scripts/gates/server.mjs), and for each page runs
@@ -30,6 +31,15 @@
 // not fail; an entry whose page now exists fails the run until it is
 // removed, so the list only shrinks. Read by default, whatever --dir is
 // (a scratch build gets the verdict dist gets); --no-pending opts out.
+//
+// --templated: path prefixes of pages made from one template in bulk (the
+// ~500 pages of the notes library; owner, 26 Oct 2026: a deploy runs in
+// about 5 minutes, not 40). The prefix page itself and an even spread of
+// --templated-sample pages under it (every k-th in path order, so the
+// same pages each run) get the full matrix; every other page under it
+// gets the static gates and the rendered gates at 320 and 1280 in the
+// first theme, without axe. npm run test:gates passes the notes prefixes;
+// a run without --templated checks everything fully.
 //
 // --draft-langs de: the languages whose every page must show the draft
 // mark (gate L-07; DRAFT_LANGS in src/lib/i18n.ts). '' when approved.
@@ -79,6 +89,8 @@ const opts = {
   pending: flag('--no-pending') ? '' : val('--pending', join(ROOT, 'tests/gates/pending-routes.json')),
   // languages whose pages must carry the draft mark (gate L-07); mirrors
   // DRAFT_LANGS in src/lib/i18n.ts — empty both when the owner approves
+  templated: val('--templated', '') ? val('--templated', '').split(',').map((s) => s.trim()).filter(Boolean) : [],
+  templatedSample: Math.max(1, Number(val('--templated-sample', 12)) || 12),
   draftLangs: val('--draft-langs', 'de').split(',').map((s) => s.trim().toLowerCase()).filter(Boolean),
 };
 
@@ -115,6 +127,14 @@ const t0 = Date.now();
 if (!existsSync(opts.dir)) { console.error(`gates: no such directory ${opts.dir} (build first, or pass --dir)`); process.exit(2); }
 const allPages = enumerate(opts.dir);
 const pages = allPages.filter((p) => wanted(p.path));
+// --templated: the pages under a prefix that run light (see the header)
+const light = new Set();
+if (opts.templated.length) {
+  const under = pages.filter((p) => opts.templated.some((t) => p.path.startsWith(t) && p.path !== t)).map((p) => p.path).sort();
+  const step = Math.max(1, Math.floor(under.length / opts.templatedSample));
+  under.forEach((path, i) => { if (i % step !== 0) light.add(path); });
+}
+const LIGHT_WIDTHS = [320, 1280];
 if (!pages.length) { console.error(`gates: no index.html or 404.html under ${opts.dir}${opts.pages ? ' matching --pages' : ''}`); process.exit(2); }
 
 // pending routes (see the header): the set, and the entries that now exist
@@ -157,6 +177,11 @@ try {
   const jobs = [];
   for (const theme of opts.themes) for (const p of pages) {
     if (report.get(p.path).redirect) continue;
+    if (light.has(p.path)) {
+      if (theme !== opts.themes[0]) continue;
+      for (const width of opts.widths.filter((w) => LIGHT_WIDTHS.includes(w))) jobs.push({ path: p.path, theme, width, axe: false });
+      continue;
+    }
     for (const width of opts.widths) jobs.push({ path: p.path, theme, width, axe: axeWidths.includes(width) });
   }
   const contexts = {};
@@ -224,7 +249,7 @@ try {
       if (st) { gates.push({ ...st, contexts: 1, failing: st.status === 'fail' ? ['static'] : [], all: st.offenders }); continue; }
       const runs = e.runs.map((r) => ({ ctx: ctxLabel(r), res: r.results.find((x) => x.id === id) })).filter((x) => x.res);
       if (!runs.length) {
-        gates.push({ ...skipped(id, e.redirect ? 'redirect page: rendered gates do not apply' : id === 'A-01' ? (opts.axe ? `no width of ${AXE_WIDTHS.join('/')} in --widths` : 'axe off (--quick)') : 'not run'), contexts: 0, failing: [], all: [] });
+        gates.push({ ...skipped(id, e.redirect ? 'redirect page: rendered gates do not apply' : id === 'A-01' ? (light.has(p.path) ? 'templated page: axe runs on the sample (--templated)' : opts.axe ? `no width of ${AXE_WIDTHS.join('/')} in --widths` : 'axe off (--quick)') : 'not run'), contexts: 0, failing: [], all: [] });
         continue;
       }
       const failing = runs.filter((x) => x.res.status === 'fail');
@@ -248,7 +273,7 @@ try {
   const line = (a, b, c, d) => { const s = `${pad(a, pw)}  ${pad(b, 5)}  ${pad(c, 4)}  ${d}`; return s.length > cols ? s.slice(0, cols - 1) + '…' : s; };
   const ctxText = (g) => (g.failing[0] === 'static' ? 'static' : g.failing.length === g.contexts ? `all ${g.contexts} ctx` : `${g.failing.length}/${g.contexts} ctx (${g.failing.slice(0, 3).join(' ')}${g.failing.length > 3 ? ' …' : ''})`);
   const relDir = relative(process.cwd(), opts.dir);
-  console.log(`gates · ${relDir && !relDir.startsWith('..') ? relDir : opts.dir}${opts.base ? ` (base ${opts.base}/)` : ''} · ${pages.length} page${pages.length === 1 ? '' : 's'} · widths ${opts.widths.join('/')} · ${opts.themes.join('+')}${opts.axe ? ' · axe at ' + (axeWidths.join('/') || '—') : ' · no axe'}`);
+  console.log(`gates · ${relDir && !relDir.startsWith('..') ? relDir : opts.dir}${opts.base ? ` (base ${opts.base}/)` : ''} · ${pages.length} page${pages.length === 1 ? '' : 's'} · widths ${opts.widths.join('/')} · ${opts.themes.join('+')}${opts.axe ? ' · axe at ' + (axeWidths.join('/') || '—') : ' · no axe'}${light.size ? ` · ${light.size} templated pages light (${LIGHT_WIDTHS.join('/')}, ${opts.themes[0]}, no axe)` : ''}`);
   console.log(line('PAGE', 'GATE', 'STAT', 'DETAIL'));
   let failRows = 0;
   const byGate = {};

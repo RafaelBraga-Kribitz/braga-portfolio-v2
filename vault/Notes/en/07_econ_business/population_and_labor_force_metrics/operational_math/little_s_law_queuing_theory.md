@@ -1,512 +1,214 @@
 ---
-publish: false
-date: '2026-04-16'
+publish: true
+date: '2026-10-26'
 tags:
 - economics-business
 ---
 
-# Little's Law (Queuing Theory) We are working on the **sample covariance matrix** for centered multivariate data, defined by $$S=rac{1}{n-1}X^	op X,$$ where $X$ is the centered data matrix with $n$ observations and $p$ features. Under the maximum-likelihood convention for Gaussian models, one may instead use $$rac{1}{n}X^	op X.$$ The sample covariance matrix is symmetric, summarizes variances and pairwise covariances, and its eigenvectors give the principal directions in PCA. ## Deep Breakdown The sample covariance matrix is one of the core objects in multivariate statistics, PCA, and factor-style dimensionality reduction. It summarizes how features vary on their own and how they vary together. Suppose we have a dataset with: - $n$ observations,
-
-Little's Law (Queuing Theory) We are working on the **sample covariance matrix** for centered multivariate data, defined by
+# Little's Law (Queuing Theory)
 
 $$
-S=\frac{1}{n-1}X^\top X,
+L = \lambda\, W
 $$
 
-where $X$ is the centered data matrix with $n$ observations and $p$ features. Under the maximum-likelihood convention for Gaussian models, one may instead use
-
-$$
-\frac{1}{n}X^\top X.
-$$
-
-The sample covariance matrix is symmetric, summarizes variances and pairwise covariances, and its eigenvectors give the principal directions in PCA.
+, where $L$ is the long-run average number of items in the system (in queue plus in service), $\lambda$ is the long-run average arrival rate (equal to the throughput when the system is stable), and $W$ is the average time an item spends in the system; $\lambda$ and $W$ must use the same time unit.
 
 ## Deep Breakdown
 
-The sample covariance matrix is one of the core objects in multivariate statistics, PCA, and factor-style dimensionality reduction. It summarizes how features vary on their own and how they vary together.
-
-Suppose we have a dataset with:
-
-- $n$ observations,
-- $p$ numerical features.
-
-After **data centering**, each column has mean zero. That means each value now represents deviation from the feature mean rather than raw level.
-
-If the centered data matrix is:
-
-$$
-X \in \mathbb{R}^{n \times p},
-$$
-
-then the sample covariance matrix is:
-
-$$
-S=\frac{1}{n-1}X^\top X
-$$
-
-This matrix has size:
-
-$$
-p \times p
-$$
-
-so it summarizes relationships between features, not between observations. Each diagonal entry of $S$ is a sample variance:
-
-$$
-S_{jj}=\text{sample variance of feature } j
-$$
-
-Each off-diagonal entry is a sample covariance:
-
-$$
-S_{jk}=\text{sample covariance between features } j \text{ and } k
-$$
-
-So the covariance matrix tells us:
-
-- which features vary a lot,
-- which features tend to move together,
-- which features move in opposite directions,
-- how the variance is distributed across feature space.
-
-This is exactly why PCA builds on it. PCA seeks directions in feature space along which the centered data have maximum variance. Those directions are the **eigenvectors** of the covariance matrix, and the amount of variance explained along each direction is given by the corresponding **eigenvalue**. So the covariance matrix is the bridge between raw centered data and principal components. Why the factor $\frac{1}{n-1}$? That is the usual unbiased sample-covariance scaling in classical statistics. It corrects for the fact that the mean was estimated from the sample itself. In contrast, the MLE version under a multivariate Gaussian model uses:
-
-$$
-\frac{1}{n}X^\top X
-$$
-
-Both conventions produce the same eigenvectors, because they differ only by a scalar factor. The eigenvalues are rescaled, but the principal directions are unchanged.
-
-This is important for PCA:
-
-- using $\frac{1}{n-1}$ or $\frac{1}{n}$ changes variance magnitudes slightly,
-- but it does **not** change the PCA directions.
-
-The sample covariance matrix is also symmetric:
-
-$$
-S^\top = S
-$$
-
-This guarantees real eigenvalues and orthogonal eigenvectors, which makes PCA mathematically clean and computationally stable. In DA/DS work, the sample covariance matrix matters in:
-
-- PCA,
-- factor analysis foundations,
-- multivariate exploratory analysis,
-- feature redundancy detection,
-- dimensionality reduction pipelines,
-- risk models and portfolio-style covariance analysis.
-
-It is also closely related to the **correlation matrix**. If features are on very different scales, analysts often standardize first and then compute PCA on the correlation matrix instead of the covariance matrix.
+What it tells me *(Situation Awareness)*:
+Any stable system that items enter and leave (a support queue, a warehouse, a checkout line, a hiring pipeline, a server request pool) obeys one identity between three averages: how many items are inside, how fast they arrive, and how long each stays. The argument is an accounting one. Plot the number of items in the system $N(t)$ over a long window $[0, T]$. The area under that curve can be counted two ways: by time, it is $\bar{N} \cdot T$; by item, it is the sum of every item's time in the system, $\sum_i W_i$. Equating the two and dividing by $T$ gives $\bar{N} = (n/T) \cdot (\tfrac{1}{n}\sum_i W_i) = \lambda W$. Nothing in that argument depends on the arrival distribution, the service distribution, the number of servers or the queue discipline (FIFO, priority, random); it only needs the system to be stable (average arrivals equal average departures) and the window to be long enough that items straddling its edges do not matter. That makes it the most robust law in operations: given any two of $L$, $\lambda$, $W$, the third follows. In DA/DS: estimate cycle time from a WIP snapshot and a throughput count without tracking individual items, sanity-check dashboards (if backlog, intake and resolution time do not satisfy $L \approx \lambda W$, one metric is wrong), and size staff or capacity from target waiting times.
 
 ## Flowchart
 
 ```mermaid
 flowchart TD
-    A["Start with raw data matrix"] --> B["Center each feature column to mean zero"]
-    B --> C["Obtain centered matrix X"]
-    C --> D["Compute X'X"]
-    D --> E["Scale by 1 / (n - 1) to get sample covariance matrix S"]
-    E --> F["Read diagonal entries as variances"]
-    E --> G["Read off-diagonal entries as covariances"]
-    F --> H["Compute eigenvalues and eigenvectors of S"]
-    G --> H["Compute eigenvalues and eigenvectors of S"]
-    H --> I["Use eigenvectors as principal directions in PCA"]
+    A["Items arrive at rate λ"] --> B["System: queue + service"]
+    B --> C["Items leave after time W each"]
+    B --> D["N(t) = items inside at time t"]
+    D --> E["Area under N(t) = Σ time in system of all items"]
+    E --> F["Divide by window length T"]
+    F --> G["L = average N = (n / T) × (Σ Wi / n) = λ W"]
+    G --> H["Know two, get the third"]
+    H --> I["Cycle time W = WIP / throughput"]
+    H --> J["Backlog L = intake × resolution time"]
 ```
 
 ## Real-world use
 
 ### Where it is used
 
-The sample covariance matrix is used whenever multivariate numerical data must be summarized in terms of variance and co-movement. This is common in PCA, factor analysis, feature engineering, finance, marketing analytics, and scientific data analysis.
+Customer-support backlog planning, warehouse and manufacturing work-in-progress (WIP) control, retail checkout and call-centre staffing, Kanban and software-delivery metrics (WIP limits, lead time), hospital bed occupancy, inventory turnover ($\text{days of inventory} = \text{stock} / \text{daily usage}$), recruitment pipelines, and capacity planning for web servers and database connection pools.
 
 ### Problem it solves
 
-It solves the problem of describing how multiple variables vary together in a compact matrix form. Looking at each feature separately misses the structure of joint variation across variables.
+Time in system is often the metric that matters (customer wait, order lead time, ticket resolution time) but it is expensive to measure item by item. Counts in the system and arrival rates are cheap: a snapshot and a counter. Little's Law converts the cheap metrics into the expensive one and exposes inconsistent reporting.
 
 ### How it solves the problem
 
-It computes all pairwise covariances among centered features and packages them into a symmetric matrix. This makes it possible to analyze multivariate variation geometrically and algebraically through eigen-decomposition or SVD.
+Because $L = \lambda W$ holds for averages regardless of distributions, it turns a snapshot into a duration ($W = L / \lambda$) and a target duration into a capacity requirement ($L_{\max} = \lambda W_{\text{target}}$). For a fixed intake, the only way to cut time in system is to cut the number of items in the system, which is the logic behind WIP limits. Combined with a queuing model (for example M/M/c) it also shows how fast $L$ and $W$ grow as utilisation $\rho = \lambda / (c\mu)$ approaches $1$.
 
 ### Example in a business
 
-Suppose an analyst has customer features such as annual spend, purchase frequency, average basket size, and return rate. The covariance matrix reveals which features vary the most and which move together. PCA can then use this matrix to compress those features into a few latent behavioral dimensions for segmentation or visualization.
+A support desk receives $120$ tickets per day and has $180$ open tickets: average resolution time is $W = 180/120 = 1.5$ days. To meet a 1-day target at the same intake, the open backlog must fall to $120$. A fulfilment centre ships $400$ orders per hour with $1{,}000$ orders in progress on the floor, so the average order spends $2.5$ hours from release to dispatch; capping WIP at $600$ at the same throughput brings that to $1.5$ hours. A supermarket with $5$ tills, $2$ customers per minute and $2$ minutes per customer (utilisation $0.80$) averages $6.2$ customers at the checkout and $3.1$ minutes each; at $2.4$ customers per minute (utilisation $0.96$) the same tills average $26.4$ customers and $11.0$ minutes.
 
 ## The formula, piece by piece
 
-| Symbol | Meaning |
-| --- | --- |
-| $n$ | Number of observations |
-| $p$ | Number of features |
-| $X$ | Centered data matrix with shape $n \times p$ |
-| $X^\top$ | Transpose of the centered data matrix |
-| $S$ | Sample covariance matrix |
-| $S_{jk}$ | Covariance between features $j$ and $k$ |
-| $S_{jj}$ | Variance of feature $j$ |
-| $\lambda_\ell$ | Eigenvalue of $S$ |
-| $v_\ell$ | Eigenvector of $S$ |
-
-Canonical sample covariance formula for centered data:
-
-$$
-S=\frac{1}{n-1}X^\top X
-$$
-
-MLE covariance version:
-
-$$
-\Sigma_{\mathrm{MLE}}=\frac{1}{n}X^\top X
-$$
-
-Entrywise covariance formula:
-
-$$
-S_{jk}=\frac{1}{n-1}\sum_{i=1}^{n}x_{ij}x_{ik}
-$$
-
-where the data are already centered.
-
-Diagonal variance entry:
-
-$$
-S_{jj}=\frac{1}{n-1}\sum_{i=1}^{n}x_{ij}^2
-$$
-
-Symmetry property:
-
-$$
-S^\top=S
-$$
-
-Eigen-decomposition for PCA:
-
-$$
-Sv_\ell=\lambda_\ell v_\ell
-$$
+- $L$: average number of items in the system over time (time-average of $N(t)$), including those being served; work-in-progress, backlog, occupancy
+- $\lambda$: average arrival rate, items per unit time; in a stable system equal to the departure rate (throughput)
+- $W$: average time in system per item, from arrival to departure (lead time, cycle time, sojourn time)
+- Units: $\lambda$ in items per day with $W$ in days gives $L$ in items; mixing hours and days is the most common error
+- Queue-only version: $L_q = \lambda W_q$, with $L_q$ items waiting and $W_q$ time waiting before service
+- Service-only version: $L_s = \lambda / \mu$, the average number in service, where $1/\mu$ is the mean service time
+- Stability: arrivals and departures balance over the window; for a queue with $c$ servers this requires $\rho = \lambda / (c\mu) < 1$
+- Rearrangements: $W = L / \lambda$ and $\lambda = L / W$
 
 ## The formula in words
 
-Take the centered data matrix $X$.
-
-Multiply its transpose by itself:
-
-$$
-X^\top X
-$$
-
-This forms all pairwise inner products between centered feature columns. Then divide by $n-1$ to get the sample covariance matrix.
-
-The result is a matrix where:
-
-- the diagonal tells you how much each feature varies,
-- the off-diagonal tells you whether two features tend to move together or in opposite directions.
-
-Because PCA looks for directions of maximum variance, it uses the eigenvectors of this matrix as its principal directions.
+"The average number of things in a system equals how fast they arrive times how long each one stays." Tiny example: a café serves $30$ customers per hour and each stays $20$ minutes ($1/3$ hour) on average, so on average $30 \times 1/3 = 10$ customers are inside.
 
 ## Critical Concepts
 
-- **The covariance matrix requires centered data.** Without centering, the standard covariance interpretation is wrong.
-- **The covariance matrix is symmetric.** This guarantees real eigenvalues and orthogonal eigenvectors.
-- **Diagonal entries are variances.** These measure variability of individual features.
-- **Off-diagonal entries are covariances.** These measure joint movement between pairs of features.
-- **PCA directions come from eigenvectors of the covariance matrix.** This is the main reason the matrix matters in dimensionality reduction.
-- **The $1/(n-1)$ and $1/n$ conventions differ by scale only.** They do not change principal directions.
-- **Covariance is scale-dependent.** If variables are on very different scales, PCA on the correlation matrix may be more appropriate.
+- **Distribution-free:** the law holds for any arrival process, service-time distribution, number of servers and queue discipline. It does not say *what* $W$ will be, only how $L$, $\lambda$ and $W$ relate.
+- **Averages only:** it does not give the distribution of waiting times; a mean of $1.5$ days can hide a tail of tickets open for weeks. Report percentiles separately.
+- **Stability required:** if arrivals exceed capacity, the backlog grows without bound and the long-run averages do not exist. Over short windows with a growing or shrinking backlog, use the boundary-corrected form or a longer window.
+- **Consistent boundaries:** $L$, $\lambda$ and $W$ must describe the same system (for example, queue plus service, or queue only) and the same population of items.
+- **Utilisation drives waiting:** in an M/M/c queue, raising utilisation from $0.80$ to $0.96$ with 5 servers multiplies $L$ by about $4.3$ ($6.22 \to 26.44$) while $\lambda$ rises only by a factor of $1.2$, so by Little's Law $W$ rises by about $3.5$ ($3.11 \to 11.02$ minutes).
+- **WIP limits:** for a fixed throughput, lead time is proportional to WIP; reducing work started is the direct lever on lead time (Kanban, CONWIP).
+- **Inventory link:** stock on hand $=$ usage rate $\times$ average days in stock, so inventory turnover and days of supply are Little's Law applied to goods (see [[economic_order_quantity_eoq]]).
 
 ## Step-by-step calculation (tiny example)
 
-Consider the centered two-feature data matrix:
+*A support desk logs 10 tickets in a 10-hour day, all closed before the end of the day.*
 
-$$
-X=
-\begin{bmatrix}
--1 & -2\\
-0 & 0\\
-1 & 2
-\end{bmatrix}
-$$
+*Step 1: Arrival rate*
+$\lambda = 10 \text{ tickets} / 10 \text{ h} = 1.00$ ticket per hour.
 
-There are:
+*Step 2: Time in system*
+Opened and closed times give durations $1.5, 2.0, 1.0, 3.0, 1.0, 2.0, 2.5, 1.0, 2.0, 1.5$ hours. Sum $= 17.5$ h, so $W = 17.5 / 10 = 1.75$ h.
 
-$$
-n=3
-$$
+*Step 3: Apply the law*
+$L = \lambda W = 1.00 \times 1.75 = 1.75$ open tickets on average.
 
-observations and 2 features.
+*Step 4: Check by direct measurement*
+The area under the open-ticket curve $N(t)$ over the day is the sum of the durations, $17.5$ ticket-hours; divided by the $10$-hour window that is $1.75$. Both routes agree exactly because every ticket opens and closes inside the window.
 
-### Step 1, compute $X^\top$
-
-$$
-X^\top=
-\begin{bmatrix}
--1 & 0 & 1\\
--2 & 0 & 2
-\end{bmatrix}
-$$
-
-### Step 2, compute $X^\top X$
-
-$$
-X^\top X=
-\begin{bmatrix}
--1 & 0 & 1\\
--2 & 0 & 2
-\end{bmatrix}
-\begin{bmatrix}
--1 & -2\\
-0 & 0\\
-1 & 2
-\end{bmatrix}
-=
-\begin{bmatrix}
-2 & 4\\
-4 & 8
-\end{bmatrix}
-$$
-
-### Step 3, divide by $n-1$ Since
-
-$$
-n-1=2
-$$
-
-the sample covariance matrix is:
-
-$$
-S=\frac{1}{2}
-\begin{bmatrix}
-2 & 4\\
-4 & 8
-\end{bmatrix}
-=
-\begin{bmatrix}
-1 & 2\\
-2 & 4
-\end{bmatrix}
-$$
-
-### Step 4, interpret the entries The diagonal entries are
-
-$$
-S_{11}=1,\qquad S_{22}=4
-$$
-
-So feature 2 has larger variance than feature 1.
-
-The off-diagonal entries are:
-
-$$
-S_{12}=S_{21}=2
-$$
-
-So the features move together positively.
-
-### Tiny plain-language reading
-
-The two centered features are strongly aligned. One varies about four times as much as the other, and they increase or decrease together.
-
-### PCA implication
-
-Because the covariance matrix has strong positive covariance, the first principal component will point roughly along the direction where both features increase together.
+*Step 5: Use it in reverse*
+A queue at $120$ tickets per day with a backlog of $180$ implies $W = L / \lambda = 180 / 120 = 1.5$ days.
 
 ## Code examples
 
-### Beginner friendly Example \[Python\])
+### Beginner example (Python)
 
-```markdown
-import numpy as np # Centered data matrix with 3 observations and 2 features
-X = np.array([ [-1, -2], [0, 0], [1, 2]
-], dtype=float) n = X.shape[0]
-S = (1 / (n - 1)) * (X.T @ X) print("Centered data matrix X:")
-print(X)
-print("Sample covariance matrix S:")
-print(S)
+```python
+import numpy as np
+import pandas as pd
+
+# Support tickets over one 10-hour day: opened and closed times (hours)
+tickets = pd.DataFrame({
+    "opened": [0.0, 0.5, 1.0, 2.0, 3.0, 4.5, 5.0, 6.0, 7.0, 8.0],
+    "closed": [1.5, 2.5, 2.0, 5.0, 4.0, 6.5, 7.5, 7.0, 9.0, 9.5],
+})
+T = 10.0                                         # observation window (hours)
+tickets["time_in_system"] = tickets["closed"] - tickets["opened"]
+
+lam = len(tickets) / T                           # arrival rate (tickets per hour)
+W = tickets["time_in_system"].mean()             # average time in system (hours)
+print(f"lambda = {lam:.2f} tickets/hour, W = {W:.2f} hours")
+print(f"Little's Law: L = lambda * W = {lam * W:.2f} open tickets on average")
+
+# Measure L directly: time-average of the number of open tickets
+grid = np.linspace(0, T, 100_001)
+open_count = ((tickets["opened"].values[:, None] <= grid) &
+              (grid < tickets["closed"].values[:, None])).sum(axis=0)
+print(f"Measured time-average L = {open_count.mean():.2f}")
+
+# Rearranged: the average wait implied by a backlog
+backlog, rate = 180, 120                         # open tickets, tickets per day
+print(f"\nBacklog {backlog} at {rate}/day -> W = L / lambda = {backlog / rate:.1f} days")
 ```
 
-Explanation
-:
-
-- `X.T @ X` computes all pairwise column inner products.
-- Dividing by `n - 1` turns those into sample covariances.
-- The resulting matrix summarizes feature variances and covariances.
-
-Manual check:
-
-$$
-S=
-\begin{bmatrix}
-1 & 2\\
-2 & 4
-\end{bmatrix}
-$$
-
-### Beginner friendly Example \[R\])
+### Beginner example (R)
 
 ```r
-# Centered data matrix with 3 observations and 2 features
-X <- matrix( c( -1, -2, 0, 0, 1, 2 ), nrow = 3, byrow = TRUE
-) n <- nrow(X)
-S <- (1 / (n - 1)) * t(X) %*% X
-cat("Centered data matrix X:\n")
-print(X)
-cat("Sample covariance matrix S:\n")
-print(S)
+opened <- c(0.0, 0.5, 1.0, 2.0, 3.0, 4.5, 5.0, 6.0, 7.0, 8.0)
+closed <- c(1.5, 2.5, 2.0, 5.0, 4.0, 6.5, 7.5, 7.0, 9.0, 9.5)
+T_window <- 10                          # hours observed
+
+lambda <- length(opened) / T_window     # 1 ticket per hour
+W <- mean(closed - opened)              # 1.75 hours
+L <- lambda * W
+cat(sprintf("lambda = %.2f/h, W = %.2f h, L = %.2f tickets\n", lambda, W, L))
+
+# Direct time-average of the number of open tickets
+grid <- seq(0, T_window, length.out = 100001)
+open_count <- sapply(grid, function(t) sum(opened <= t & t < closed))
+cat(sprintf("measured L = %.2f\n", mean(open_count)))
+
+# Warehouse: cycle time from WIP and throughput
+wip <- 1000; throughput <- 400          # orders, orders per hour
+cat(sprintf("cycle time W = %.1f hours\n", wip / throughput))
 ```
 
-Explanation
-:
+### Professional example (Python)
 
-- `t(X) %*% X` computes the feature cross-products.
-- Multiplying by `1 / (n - 1)` gives the sample covariance matrix.
-- This matrix is the standard input to covariance-based PCA.
+```python
+import math
+import numpy as np
 
-### Final Professional Example \[Python\])
+rng = np.random.default_rng(3)
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass
-from typing import Sequence import numpy as np RANDOM_SEED = 42 @dataclass(frozen=True)
-class CovarianceAnalysisData: data_matrix: Sequence[Sequence[float]] feature_names: Sequence[str] def validate(self) -> None: if len(self.data_matrix) < 2: raise ValueError("At least two observations are required.") if len(self.feature_names) == 0: raise ValueError("At least one feature name is required.") feature_count = len(self.feature_names) for row in self.data_matrix: if len(row) != feature_count: raise ValueError("Each row must match the number of feature names.") def center_columns(data_matrix: np.ndarray) -> tuple[np.ndarray, np.ndarray]: column_means = np.mean(data_matrix, axis=0) centered_matrix = data_matrix - column_means return centered_matrix, column_means def sample_covariance_matrix(centered_matrix: np.ndarray) -> np.ndarray: observation_count = centered_matrix.shape[0] if observation_count < 2: raise ValueError("At least two observations are required.") return (centered_matrix.T @ centered_matrix) / (observation_count - 1) def summarize_covariance_analysis(data: CovarianceAnalysisData) -> None: data.validate() X = np.array(data.data_matrix, dtype=float) X_centered, column_means = center_columns(X) covariance_matrix = sample_covariance_matrix(X_centered) eigenvalues, eigenvectors = np.linalg.eigh(covariance_matrix) sort_index = np.argsort(eigenvalues)[::-1] eigenvalues = eigenvalues[sort_index] eigenvectors = eigenvectors[:, sort_index] print("Sample covariance matrix analysis") print("-" * 72) print("Feature means:") for feature_name, mean_value in zip(data.feature_names, column_means): print(f"{feature_name}: {mean_value:.6f}") print("-" * 72) print("Centered matrix:") print(X_centered) print("-" * 72) print("Sample covariance matrix:") print(covariance_matrix) print("-" * 72) print("Eigenvalues:") print(eigenvalues) print("-" * 72) print("Eigenvectors (principal directions):") print(eigenvectors) def main() -> None: # Customer behavior example: # Columns: annual_spend, purchase_frequency, basket_size data = CovarianceAnalysisData( feature_names=["annual_spend", "purchase_frequency", "basket_size"], data_matrix=[ [1200.0, 12.0, 100.0], [1500.0, 15.0, 110.0], [1800.0, 18.0, 130.0], [1600.0, 14.0, 115.0], ], ) summarize_covariance_analysis(data) if __name__ == "__main__": main()
+
+def simulate_checkout(lam, mu, c, n_customers):
+    """First-come-first-served queue with c tills; Poisson arrivals, exponential service."""
+    arrivals = np.cumsum(rng.exponential(1 / lam, n_customers))
+    service = rng.exponential(1 / mu, n_customers)
+    free_at = np.zeros(c)                        # when each till becomes free
+    departures = np.empty(n_customers)
+    for i in range(n_customers):
+        k = np.argmin(free_at)
+        start = max(arrivals[i], free_at[k])
+        departures[i] = start + service[i]
+        free_at[k] = departures[i]
+    return arrivals, departures
+
+
+def time_average_in_system(arrivals, departures, t0, t1):
+    """Exact integral of N(t) over [t0, t1] divided by the window length."""
+    overlap = np.clip(np.minimum(departures, t1) - np.maximum(arrivals, t0), 0, None)
+    return overlap.sum() / (t1 - t0)
+
+
+def erlang_c_L(lam, mu, c):
+    """Theoretical mean number in an M/M/c system."""
+    a, rho = lam / mu, lam / (c * mu)
+    tail = a ** c / (math.factorial(c) * (1 - rho))
+    p_wait = tail / (sum(a ** k / math.factorial(k) for k in range(c)) + tail)
+    Lq = p_wait * rho / (1 - rho)
+    return Lq + a
+
+
+lam, mu, c = 2.0, 0.5, 5                         # 2 customers/min, 2 min per customer, 5 tills
+arr, dep = simulate_checkout(lam, mu, c, 200_000)
+t0, t1 = arr[10_000], arr[-10_000]               # drop warm-up and the unfinished tail
+inside = (arr >= t0) & (arr < t1)
+
+L = time_average_in_system(arr, dep, t0, t1)
+lam_hat = inside.sum() / (t1 - t0)
+W = (dep - arr)[inside].mean()
+print(f"utilisation rho = {lam / (c * mu):.2f}")
+print(f"measured L          = {L:.3f}")
+print(f"lambda_hat * W      = {lam_hat:.3f} x {W:.3f} = {lam_hat * W:.3f}")
+print(f"Erlang C theory L   = {erlang_c_L(lam, mu, c):.3f}")
+
+# Planning: what happens to queue length as arrivals grow, tills fixed at 5
+for lam_test in (1.5, 2.0, 2.25, 2.4):
+    L_th = erlang_c_L(lam_test, mu, c)
+    print(f"lambda={lam_test:.2f}/min, rho={lam_test / (c * mu):.2f}: "
+          f"L={L_th:6.2f}, W=L/lambda={L_th / lam_test:5.2f} min")
 ```
 
-What
-this professional example teaches:
+The simulated 5-till checkout (Poisson arrivals at $2$ per minute, exponential service with mean $2$ minutes, utilisation $0.80$) gives a measured time-average of $6.142$ customers in the system and $\hat{\lambda} W = 1.994 \times 3.081 = 6.142$: Little's Law holds on the simulated data to three decimals, with no assumption about the queue beyond stability. The Erlang C formula predicts $L = 6.216$; the gap is sampling noise in the simulation, not a failure of the law. The planning table shows the non-linear cost of utilisation: as arrivals rise from $1.5$ to $2.4$ per minute ($\rho$ from $0.60$ to $0.96$), average time in the system rises from $2.24$ to $11.02$ minutes, and the average number of customers at the tills from $3.35$ to $26.44$.
 
-1. The covariance matrix is computed from centered data, not raw data.
-2. Its diagonal entries are feature variances and its off-diagonal entries are covariances.
-3. Eigen-decomposition of the covariance matrix gives PCA directions and explained-variance magnitudes.
-4. This is the standard covariance-based route to PCA.
-5.
+---
 
-In business data, it reveals which behavioral variables move together before dimensionality reduction.
-
-## Self-check: mathematical verification
-
-### Re-derivation from the covariance definition
-
-For centered features $j$ and $k$, the sample covariance is:
-
-$$
-S_{jk}=\frac{1}{n-1}\sum_{i=1}^{n}x_{ij}x_{ik}
-$$
-
-If we stack all centered observations into the matrix:
-
-$$
-X=
-\begin{bmatrix}
-x_{11} & \cdots & x_{1p}\\
-\vdots & \ddots & \vdots\\
-x_{n1} & \cdots & x_{np}
-\end{bmatrix}
-$$
-
-then the $(j,k)$ entry of $X^\top X$ is:
-
-$$
-(X^\top X)_{jk}=\sum_{i=1}^{n}x_{ij}x_{ik}
-$$
-
-Therefore:
-
-$$
-S_{jk}=\frac{1}{n-1}(X^\top X)_{jk}
-$$
-
-Since this holds for every pair $(j,k)$, the full matrix form is:
-
-$$
-S=\frac{1}{n-1}X^\top X
-$$
-
-This matches the canonical formula exactly.
-
-### Symmetry check Take the transpose
-
-$$
-S^\top = \left(\frac{1}{n-1}X^\top X\right)^\top
-$$
-
-Using transpose rules:
-
-$$
-S^\top = \frac{1}{n-1}(X^\top X)^\top
-= \frac{1}{n-1}X^\top X
-= S
-$$
-
-So the covariance matrix is symmetric, as stated.
-
-### Diagonal interpretation check For feature $j$, the diagonal entry is
-
-$$
-S_{jj}=\frac{1}{n-1}\sum_{i=1}^{n}x_{ij}^2
-$$
-
-because the feature is centered. This is exactly the sample variance of feature $j$. So the diagonal interpretation is correct.
-
-### PCA eigenvector connection check PCA solves for directions $v$ that maximize variance of the projected centered data.
-
-This leads to the eigenvalue problem:
-
-$$
-Sv=\lambda v
-$$
-
-Therefore the eigenvectors of $S$ are principal directions and the eigenvalues give the variances along those directions. This matches the stated PCA connection.
-
-### Scaling convention check If instead one uses
-
-$$
-\frac{1}{n}X^\top X
-$$
-
-the result differs only by a positive scalar factor:
-
-$$
-\frac{n-1}{n}
-$$
-
-relative to the sample covariance matrix. Multiplying a matrix by a positive scalar rescales eigenvalues but does not change eigenvectors. So the note about unchanged principal directions is mathematically correct.
-
-### Verbal-to-algebra consistency
-
-The verbal explanation says the covariance matrix summarizes variances and covariances, is symmetric, and provides eigenvectors for PCA. The algebra confirms all of these claims.
-
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$S$`, `$X$`, `$n$`, and `$\lambda_\ell$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to eigenvalues, PCA, factor analysis, and data centering are explicitly included.
-- No placeholder text remains.
-
-## Common Pitfalls and Edge Cases
-
-- **Using raw rather than centered data:** Standard covariance formulas assume deviations from the mean.
-- **Confusing covariance with correlation:** Covariance depends on scale, while correlation is scale-normalized.
-- **Assuming the $1/(n-1)$ versus $1/n$ choice changes PCA directions:** It changes magnitudes, not eigenvectors.
-- **Ignoring feature scaling:** Large-scale variables can dominate the covariance matrix and therefore the PCA solution.
-- **Using too few observations:** Covariance estimates become unstable when sample size is very small.
-- **Interpreting covariance as causality:** Positive or negative covariance indicates co-movement, not causal effect.
-- **Assuming symmetry implies independence:** Symmetry is a matrix property, not a statement about variables being independent.
-- **Applying PCA without checking whether covariance structure is meaningful:** Nonlinear or categorical structures may require different methods.
-
-## References and Standard Results
-
-- Sample covariance definition, $S=\frac{1}{n-1}X^\top X$
-- MLE covariance version, $\frac{1}{n}X^\top X$
-- Entrywise covariance identity, $S_{jk}=\frac{1}{n-1}\sum_{i=1}^{n}x_{ij}x_{ik}$
-- Variance as the diagonal of the covariance matrix
-- Symmetry property of covariance matrices
-- Eigen-decomposition equation, $Sv_\ell=\lambda_\ell v_\ell$
-- PCA as variance maximization on centered data
-- Connection between covariance-based PCA and SVD of centered data
+*Source: domain knowledge*

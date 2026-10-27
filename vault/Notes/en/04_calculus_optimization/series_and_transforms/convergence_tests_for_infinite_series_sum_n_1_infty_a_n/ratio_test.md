@@ -24,7 +24,10 @@ The Ratio Test (d'Alembert's test) checks convergence by asking: how does each t
 flowchart TD
     A["Series sum a_n"] --> B["Compute ratio r_n = |a_(n+1) / a_n|"]
     B --> C["Compute L = lim(n→inf) r_n"]
-    C --> D{"Value of L?"} D -- "L < 1" --> E["CONVERGES absolutely"] D -- "L > 1 or L = inf" --> F["DIVERGES"] D -- "L = 1" --> G["INCONCLUSIVE — try another test"]
+    C --> D{"Value of L?"}
+    D -- "L < 1" --> E["CONVERGES absolutely"]
+    D -- "L > 1 or L = inf" --> F["DIVERGES"]
+    D -- "L = 1" --> G["INCONCLUSIVE — try another test"]
     G --> H["e.g., p-series 1/n^p: ratio → 1, inconclusive"]
 ```
 

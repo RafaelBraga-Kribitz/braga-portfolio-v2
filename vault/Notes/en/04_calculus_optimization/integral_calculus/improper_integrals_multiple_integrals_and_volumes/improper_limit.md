@@ -24,7 +24,9 @@ flowchart TD
     B --> C["Find antiderivative F(x)"]
     C --> D["Evaluate: F(b) - F(a)"]
     D --> E["Take limit as b -> inf"]
-    E --> F{"Does the limit exist and is finite?"} F -- "Yes" --> G["Converges to L = lim F(b) - F(a)"] F -- "No (blows up or oscillates)" --> H["Diverges: integral does not exist"]
+    E --> F{"Does the limit exist and is finite?"}
+    F -- "Yes" --> G["Converges to L = lim F(b) - F(a)"]
+    F -- "No (blows up or oscillates)" --> H["Diverges: integral does not exist"]
     G --> I["Use L as the value of the improper integral"]
 ```
 

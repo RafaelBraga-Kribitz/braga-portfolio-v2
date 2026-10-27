@@ -21,7 +21,9 @@ The **additive identity** says that adding zero to any number leaves that number
 ```mermaid
 flowchart TD
     A["Start with value a"] --> B["Add 0 to a"]
-    B --> C{["Is addend = 0?"]} C -- "Yes: identity element" --> D["Result = a (unchanged)"] C -- "No: non-zero addend" --> E["Result ≠ a (value changes)"]
+    B --> C{"Is addend = 0?"}
+    C -- "Yes: identity element" --> D["Result = a (unchanged)"]
+    C -- "No: non-zero addend" --> E["Result ≠ a (value changes)"]
     D --> F["a + 0 = a confirmed"]
 ```
 

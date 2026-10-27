@@ -20,7 +20,9 @@ The ceiling function $\lceil x \rceil$ **rounds a number up to the nearest integ
 
 ```mermaid
 flowchart TD
-    A["Input: x (real number)"] --> B{"Is x already an integer?"} B -- "Yes" --> C["Output: x (no change needed)"] B -- "No" --> D["Find floor of x: the largest integer <= x"]
+    A["Input: x (real number)"] --> B{"Is x already an integer?"}
+    B -- "Yes" --> C["Output: x (no change needed)"]
+    B -- "No" --> D["Find floor of x: the largest integer <= x"]
     D --> E["Add 1: ceiling = floor(x) + 1"]
     E --> F["Output: smallest integer >= x"]
     C --> G["Result: always an integer, always >= x"]

@@ -23,7 +23,9 @@ flowchart TD
     A["Two real numbers: a, b"] --> B["Compute |a + b|"]
     A --> C["Compute |a| + |b|"]
     B --> D{"|a+b| ≤ |a|+|b|?"}
-    C --> D D -- "Yes (always true)" --> E["Triangle inequality holds"] D -- "No" --> F["Impossible for real numbers"]
+    C --> D
+    D -- "Yes (always true)" --> E["Triangle inequality holds"]
+    D -- "No" --> F["Impossible for real numbers"]
     E --> G["Equality: a,b same sign (or one is zero)"]
     E --> H["Strict inequality: a,b opposite signs — cancellation occurs"]
     E --> I["DA: required property for a valid distance metric"]

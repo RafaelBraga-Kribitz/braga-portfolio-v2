@@ -25,7 +25,9 @@ flowchart TD
     C --> D["Evaluate slope: k = f(x_n, y_n)"]
     D --> E["Step forward: y_(n+1) = y_n + h * k"]
     E --> F["Update: x_(n+1) = x_n + h"]
-    F --> G{"n+1 < total steps?"} G -- "Yes" --> D G -- "No" --> H["Output trajectory: x_0, x_1, ..., y_0, y_1, ..."]
+    F --> G{"n+1 < total steps?"}
+    G -- "Yes" --> D
+    G -- "No" --> H["Output trajectory: x_0, x_1, ..., y_0, y_1, ..."]
 ```
 
 ## Real-world use

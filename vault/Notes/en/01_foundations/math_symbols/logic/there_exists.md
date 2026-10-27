@@ -21,7 +21,11 @@ $\exists$ is the **existential quantifier**, read as **"there exists"** or **"th
 ```mermaid
 flowchart TD
     A["∃ x in S: P(x)"] --> B["Pick any x from S"]
-    B --> C["Check property P(x)"] C -- "P(x) is True" --> D["Witness found: ∃ claim is TRUE"] C -- "P(x) is False" --> E{["Any elements remaining in S?"]} E -- "Yes" --> B E -- "No" --> F["All elements failed: ∃ claim is FALSE"]
+    B --> C["Check property P(x)"]
+    C -- "P(x) is True" --> D["Witness found: ∃ claim is TRUE"]
+    C -- "P(x) is False" --> E{"Any elements remaining in S?"}
+    E -- "Yes" --> B
+    E -- "No" --> F["All elements failed: ∃ claim is FALSE"]
 ```
 
 ## Real-world use

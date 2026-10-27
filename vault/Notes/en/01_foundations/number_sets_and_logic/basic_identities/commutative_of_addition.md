@@ -22,8 +22,9 @@ The **commutative property of addition** says that the order of addends does not
 flowchart TD
     A["Two values: a and b"] --> B["Option 1: compute a + b"]
     A --> C["Option 2: compute b + a"]
-    B --> D{["Same result?"]}
-    C --> D D -- "Yes: order irrelevant" --> E["a + b = b + a confirmed"]
+    B --> D{"Same result?"}
+    C --> D
+    D -- "Yes: order irrelevant" --> E["a + b = b + a confirmed"]
     E --> F["Applies to all real numbers, vectors, matrices"]
 ```
 

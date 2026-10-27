@@ -16,7 +16,9 @@ Absolute value tells you **how far a number is from zero** on the number line, c
 
 ```mermaid
 flowchart TD
-    A["Input: x"] --> B{"Is x >= 0?"} B -- "Yes" --> C["Output: x (keep as-is)"] B -- "No" --> D["Output: -x (flip the sign)"]
+    A["Input: x"] --> B{"Is x >= 0?"}
+    B -- "Yes" --> C["Output: x (keep as-is)"]
+    B -- "No" --> D["Output: -x (flip the sign)"]
     C --> E["Result is always >= 0"]
     D --> E
 ```
