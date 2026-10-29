@@ -395,7 +395,8 @@ export async function pageGates(opts = {}) {
   // nearest of SCOPES; inside article.doc and outside those, the h2
   // section the element follows. Hover and focus are not at rest. Code
   // panels are left out: their syntax colours are a palette of their own
-  // (D-035) that happens to share a value with the dark accent.
+  // (D-035) that happens to share a value with the dark accent. So is
+  // mathematics: every formula is set in the accent (D-048, 29 Oct 2026).
   const SCOPES = 'figure, .bench-tool, .cover, .doc-opener, .metric-strip, .doc-close, .doc-end, main > .section, header, footer, nav';
   const accentOf = (el) => tokenOf(el, '--accent-01');
   const painted = (el) => {
@@ -409,7 +410,7 @@ export async function pageGates(opts = {}) {
     for (const [, p] of pseudos(el)) { const pb = parseColor(p.backgroundColor); if ((pb && pb[3] > 0.5 && same(pb, acc)) || same(parseColor(p.color), acc)) return true; }
     return false;
   };
-  const spotsAll = shown.filter((el) => !srOnly(el) && !el.closest('.code, pre') && painted(el));
+  const spotsAll = shown.filter((el) => !srOnly(el) && !el.closest('.code, pre, math') && painted(el));
   const spotSet = new Set(spotsAll.map((el) => el.ownerSVGElement || el));
   const spots = Array.from(spotSet).filter((el) => { for (let n = el.parentElement; n; n = n.parentElement) if (spotSet.has(n)) return false; return true; });
   const scopeOf = (el) => {

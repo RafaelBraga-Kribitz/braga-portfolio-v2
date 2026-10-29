@@ -326,6 +326,10 @@ itself, never the page, and the keyboard can reach that scroll.
   no HTML layer, so no inline style, no KaTeX stylesheet and no KaTeX
   fonts; the page ships no math script and the browser lays the formula
   out. The TeX source stays in the MathML `<annotation>`.
+- Every formula, inline and display, is set in the accent (`--accent-01`)
+  and bold (owner, 29 Oct 2026; D-048 amended). It does not count as the
+  section's one accent (G-15), so a section can hold formulae and still
+  spend its accent on an earned figure.
 - Display output: `<div class="math"><div class="math-body" tabindex="0"><math display="block">…</math></div><span class="eq-no">(01-04-1)</span></div>`.
   A long formula scrolls inside `.math-body` on a phone (MathML does not
   wrap); `tabindex="0"` keeps that scroll region reachable by keyboard.

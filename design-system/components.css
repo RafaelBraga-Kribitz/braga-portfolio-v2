@@ -493,6 +493,9 @@ figure.fig[data-kind="diagram"] .nodeLabel, figure.fig[data-kind="diagram"] .edg
 /* MathML neither wraps nor shrinks: the cell scrolls, the number never overprints */
 .math .math-body { min-width: 0; overflow: auto hidden; padding-block: 6px; display: grid; gap: 8px; }
 .math math { font-size: 1.2em; display: block math; max-width: 100%; }
+/* every formula, block or inline, is set in the accent and bold (owner,
+   29 Oct 2026; D-048 amended); exempt from one accent per section (G-15) */
+math { color: var(--accent-01); font-weight: 700; }
 .eq-no {
   font: 400 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: var(--tracking-label);
   color: var(--ink-3); font-variant-numeric: var(--num); white-space: nowrap;
