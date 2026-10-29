@@ -45,7 +45,8 @@
 
   /* accent · D-004 ultramarine, one hue, two values. One accent per
      section (owner, 22 Oct 2026; replaces D-025): the section's earned
-     figure or its primary action. --accent-02 retired (D-005). */
+     figure or its primary action. Mathematics is set in the accent, bold,
+     and not counted (owner, 29 Oct 2026; D-048). --accent-02 retired (D-005). */
   --accent-01: #2F4BE0;
   --on-accent: #FFFFFF;
 
