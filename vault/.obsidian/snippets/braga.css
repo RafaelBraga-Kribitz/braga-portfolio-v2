@@ -166,6 +166,7 @@
 .markdown-reading-view .math { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: center; padding-block: 16px; border-top: var(--rule); font-variant-numeric: var(--num); }
 .markdown-reading-view .math .math-body { min-width: 0; overflow: auto hidden; padding-block: 6px; display: grid; gap: 8px; }
 .markdown-reading-view .math math { font-size: 1.2em; display: block math; max-width: 100%; }
+.markdown-reading-view math { color: var(--accent-01); font-weight: 700; }
 .markdown-reading-view .eq-no { font: 400 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: var(--tracking-label); color: var(--ink-3); font-variant-numeric: var(--num); white-space: nowrap; }
 .markdown-reading-view p math { font-size: 1.05em; }
 .markdown-reading-view :is(p, li, td, th) math:not([display="block"]) { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
