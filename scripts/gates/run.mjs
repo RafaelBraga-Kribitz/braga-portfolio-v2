@@ -12,7 +12,7 @@
 // Enumerates every index.html and 404.html under --dir, serves the folder
 // (scripts/gates/server.mjs), and for each page runs
 //   once           L-01…L-07 over the raw HTML file (pageFacts → staticGates)
-//   width × theme  G-01…G-16 in the rendered page (pageGates)
+//   width × theme  G-01…G-17 in the rendered page (pageGates)
 //   390, 1280      A-01 axe (wcag2a, wcag2aa, wcag21aa), both themes
 // One browser; one context per theme (theme set by an init script that
 // writes localStorage['bk-theme'], as the reader's stored choice would);

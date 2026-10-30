@@ -18,6 +18,8 @@ body { margin: 0; padding: 0 16px; font: 400 16px / 1.5 Georgia, serif; }
 .g16-close { border-bottom: 1px solid var(--ink); padding-bottom: 8px; margin: 0 0 48px; }   /* G-16 */
 .g16-open  { border-top: 1px solid var(--ink); padding-top: 8px; margin: 0; }
 .rounded  { border: 1px solid var(--ink); border-radius: 8px; padding: 8px; }   /* G-07 */
+.math-body { width: 200px; overflow: auto hidden; }              /* G-17: a formula wider than its box */
+.math-body p { white-space: nowrap; margin: 0; }
 .shadow   { box-shadow: 0 2px 8px var(--ink); padding: 8px; }    /* G-08 */
 .gradient { background-image: linear-gradient(var(--surface), var(--surface-3)); padding: 8px; }  /* G-08 */
 .short    { display: block; height: 20px; line-height: 20px; overflow: hidden; }  /* G-05 */

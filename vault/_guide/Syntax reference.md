@@ -98,7 +98,8 @@ repository: https://github.com/…   # optional
 dependencies, configuration), in the vocabulary of the job-market
 project's skills taxonomy (`config/skills_taxonomy.json` in its
 repository), most sought first. The Work listings show the first six,
-two to a line, before the arrow; the project page shows all of them as tags
+boxed, two to a line (paired by length so the lines come out even),
+before the arrow; the project page shows all of them as tags
 under the lead; each keyword is a tag (`Power BI` → `#power-bi`) whose
 page lists every project, essay and note that carries it.
 
@@ -361,8 +362,22 @@ itself, never the page, and the keyboard can reach that scroll.
   section's one accent (G-15), so a section can hold formulae and still
   spend its accent on an earned figure.
 - Display output: `<div class="math"><div class="math-body" tabindex="0"><math display="block">…</math></div><span class="eq-no">(01-04-1)</span></div>`.
-  A long formula scrolls inside `.math-body` on a phone (MathML does not
-  wrap); `tabindex="0"` keeps that scroll region reachable by keyboard.
+  The site never scrolls sideways (owner, 30 Oct 2026), and MathML does
+  not wrap, so the build breaks a long formula itself: as written, then
+  broken before its relations (=, ≤ …), separators (`\quad`), signs
+  (+, −), at your own line breaks inside a product (shown with ×) and
+  between the words of a `\text{…}`; each version is laid out aligned on
+  its relations or flush left. The page carries the versions and shows the
+  least broken one that fits the column at every width (container
+  queries, no script). Where no version fits (a fraction, a
+  `\left(…\right)` group or a `cases` block never breaks), the formula
+  shrinks to the column, never below 13px. Gate G-17 fails a page where a
+  formula is still wider than its column.
+  To help: put a line break in the TeX where a long product may break;
+  keep a very wide fraction or `cases` row short (name a part, define it
+  after: `n = \lceil A^2/(p_1-p_0)^2 \rceil`, then `A = …`); a formula
+  written with `\\` or `&`, or as an `aligned` block, is laid out as you
+  wrote it and only shrinks.
 - Display blocks are numbered per page in document order:
   `(<code>-1)`, `(<code>-2)` when the frontmatter has a two-group `code`
   (a project, `01-05`), else `(1)`, `(2)` (an essay: its `02-01-007` would

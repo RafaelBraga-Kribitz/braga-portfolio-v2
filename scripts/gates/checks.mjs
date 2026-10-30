@@ -6,7 +6,7 @@
 // failing on tests/gates/fixtures/bad/ (see tests/gates/README.md).
 //
 // Three kinds of function:
-//   pageGates(opts)   G-01…G-16. Runs INSIDE the page (page.evaluate), so it
+//   pageGates(opts)   G-01…G-17. Runs INSIDE the page (page.evaluate), so it
 //                     is self-contained: no closure over this module.
 //   pageFacts(html)   runs inside a blank page; parses the raw HTML file with
 //                     DOMParser (no script runs) and returns plain data for
@@ -38,6 +38,7 @@ export const GATES = [
   ['G-14', 'Shell on the page grid'],
   ['G-15', 'One accent per section'],
   ['G-16', 'Rules open, never close'],
+  ['G-17', 'Formulas fit their column'],
   ['L-01', 'Internal links resolve'],
   ['L-02', 'hreflang pairs'],
   ['L-03', 'Scripts policy'],
@@ -61,7 +62,7 @@ export function result(id, offenders, total, noteOk, noteFail, extra) {
 export const skipped = (id, why) => ({ id, name: GATE_NAME[id] || id, status: 'skip', count: 0, total: 0, summary: why, offenders: [] });
 
 /* ================================================================
-   G-01 … G-16 — inside the page. Keep this function self-contained.
+   G-01 … G-17 — inside the page. Keep this function self-contained.
    opts: { foreign: string[] }   third-party requests seen on the wire
    ================================================================ */
 export async function pageGates(opts = {}) {
@@ -483,6 +484,17 @@ export async function pageGates(opts = {}) {
     if (!fills.some((k) => k.y2 > a.y + 1 && k.y1 < b.y - 1 && k.x2 > x1 && k.x1 < x2)) rOff.push(`${desc(a.el)} [${a.side}] · ${Math.round(b.y - a.y)}px of empty space · ${desc(b.el)} [${b.side}]`);
   }
   out.push(result('G-16', 'Rules open, never close', rOff, segs.length, `${segs.length} rules, none facing another across empty space`, '%n rules face the next rule across empty space'));
+
+  // G-17 · formulas fit their column (owner, 30 Oct 2026: the site never
+  // scrolls sideways). A display formula's box (.math-body) holds the
+  // version of the formula the container queries chose
+  // (src/lib/math-fit.mjs); that version must not be wider than the box.
+  const formulas = Array.from(doc.querySelectorAll('.math-body')).filter((el) => visible(el) && !skip(el));
+  const tooWide = formulas.filter((el) => el.scrollWidth > el.clientWidth + 1).map((el) => {
+    const tex = (el.querySelector('math:not([style*="none"]) annotation')?.textContent || '').replace(/\s+/g, ' ').slice(0, 60);
+    return `${desc(el)} · ${el.scrollWidth}px in ${el.clientWidth}px${tex ? ` · ${tex}` : ''}`;
+  });
+  out.push(result('G-17', 'Formulas fit their column', tooWide, formulas.length, `${formulas.length} display formulas, each inside its column`, '%n display formulas are wider than their column'));
 
   return { results: out, theme: doc.documentElement.dataset.theme || '', vw, elements: all.length };
 }

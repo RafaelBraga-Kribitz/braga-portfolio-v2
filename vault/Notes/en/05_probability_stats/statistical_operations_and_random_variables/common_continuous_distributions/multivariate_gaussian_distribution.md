@@ -8,7 +8,8 @@ tags:
 # Multivariate Gaussian Distribution
 
 $$
-f(\mathbf{x}) = \frac{1}{(2\pi)^{d/2} \lvert \Sigma \rvert^{1/2}} \exp\left(-\frac{1}{2} (\mathbf{x} - \boldsymbol{\mu})^\top \Sigma^{-1} (\mathbf{x} - \boldsymbol{\mu})\right)
+f(\mathbf{x}) = \frac{1}{(2\pi)^{d/2} \lvert \Sigma \rvert^{1/2}}
+\exp\left(-\frac{1}{2} (\mathbf{x} - \boldsymbol{\mu})^\top \Sigma^{-1} (\mathbf{x} - \boldsymbol{\mu})\right)
 $$
 
 , where $\mathbf{x}, \boldsymbol{\mu} \in \mathbb{R}^d$ and $\Sigma$ is a symmetric positive-definite $d \times d$ covariance matrix

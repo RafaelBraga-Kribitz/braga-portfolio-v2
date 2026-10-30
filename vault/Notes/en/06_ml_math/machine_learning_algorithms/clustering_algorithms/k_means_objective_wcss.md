@@ -128,7 +128,7 @@ $$
 Optimization statement:
 
 $$
-\min_{\{C_1,\dots,C_K\},\{\mu_1,\dots,\mu_K\}} \sum_{k=1}^{K}\sum_{x_i \in C_k}\|x_i-\mu_k\|^2
+\min_{\substack{C_1,\dots,C_K \\ \mu_1,\dots,\mu_K}} \sum_{k=1}^{K}\sum_{x_i \in C_k}\|x_i-\mu_k\|^2
 $$
 
 ## The formula in words
