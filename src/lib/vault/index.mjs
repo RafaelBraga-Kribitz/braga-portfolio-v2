@@ -17,7 +17,7 @@ export const MEDIA = {
   image: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'avif', 'svg'],
   video: ['mp4', 'webm', 'mov', 'm4v'],
   audio: ['mp3', 'm4a', 'wav', 'ogg', 'flac'],
-  file: ['pdf', 'zip', 'csv', 'xlsx', 'docx', 'pptx', 'txt'],
+  file: ['pdf', 'epub', 'zip', 'csv', 'xlsx', 'docx', 'pptx', 'txt'],
 };
 export const mediaKind = (name) => {
   const ext = extname(String(name)).slice(1).toLowerCase();

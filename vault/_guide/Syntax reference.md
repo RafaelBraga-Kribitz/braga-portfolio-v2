@@ -442,7 +442,7 @@ Write as Obsidian writes; the site follows.
 | `![[photo.png]]`, `![[photo.png\|300]]`, `![[photo.png\|A caption]]` | a figure; a number sets the size (small ≤ 320, medium ≤ 560, else full), text the caption |
 | two or more `![[image]]` in one paragraph | a gallery (two or three across) |
 | `![[clip.mp4]]`, `![[talk.mp3]]` | video or audio from the vault, with controls |
-| `![[file.pdf]]` | a file card that opens the file |
+| `![[file.pdf]]`, `![[book.epub]]` | a file card that opens the file (pdf, epub, zip, csv, xlsx, docx, pptx, txt) |
 | `![[Other note]]` | a card linking to that note, with its summary |
 | `![alt](photo.png "Caption")` | a figure, as `![[…]]` |
 | a YouTube or Vimeo link alone on a line | a video card that links out (nothing loads from YouTube until the reader clicks) |
