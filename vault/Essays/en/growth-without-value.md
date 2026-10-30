@@ -1,5 +1,5 @@
 ---
-code: "02-04"
+code: "02-01-003"
 kind: essay
 date: "2026-10-30"
 summary: "A funnel that doubles its leads and halves their cost can still cut expected contribution by two thirds. The objective function comes before the dashboard."

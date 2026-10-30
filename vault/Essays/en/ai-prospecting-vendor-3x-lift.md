@@ -1,5 +1,5 @@
 ---
-code: "02-01"
+code: "02-01-001"
 kind: essay
 date: "2026-09-19"
 summary: "A vendor-authored benchmark on AI prospecting is enough to justify a pilot, not a purchase. Four buyer conditions close the gap."

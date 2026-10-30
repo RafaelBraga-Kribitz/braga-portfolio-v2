@@ -44,7 +44,9 @@ export const mathNumber = {
       const n = (typeof ctx.data[COUNTER] === 'number' ? ctx.data[COUNTER] : 0) + 1;
       ctx.data[COUNTER] = n;
       const fm = ctx.data.astro && ctx.data.astro.frontmatter;
-      const code = fm && typeof fm.code === 'string' && fm.code ? `${fm.code}-` : '';
+      // a two-group code prefixes the number, (01-04-1); a three-group essay
+      // code would make a fourth group, so an essay numbers plainly, (1)
+      const code = fm && typeof fm.code === 'string' && /^\d{2}-\d{2}$/.test(fm.code) ? `${fm.code}-` : '';
       ctx.wrapNode(node, {
         type: 'element', tagName: 'div', properties: { className: ['math'] },
         children: [{ type: 'element', tagName: 'span', properties: { className: ['eq-no'] }, children: [{ type: 'text', value: `(${code}${n})` }] }],

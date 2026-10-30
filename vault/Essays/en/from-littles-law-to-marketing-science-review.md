@@ -1,5 +1,5 @@
 ---
-code: "02-08"
+code: "02-01-007"
 kind: essay
 date: "2026-10-30"
 summary: "A review of the John Little Festschrift, fifteen chapters on making marketing models that managers use, and an opinionated 2027 update to its chapter on strategic marketing metrics."
@@ -49,7 +49,7 @@ The thirteen research chapters that follow carry his two habits: rigorous models
 - **Chapter 14**, Ceprini and Little, applies the generalised form of Little’s Law to the management of an investment portfolio. It is a working prototype, run on one customer profile and a short history of prices, and it is the weakest chapter as evidence; it is also touching to see Little, at eighty-six, return to the law that bears his name.
 - **Chapter 15** is the editors’ short closing tribute.
 
-> [!bars] Fig. 02-08-1 · Online reach on a fixed budget
+> [!bars] Fig. 1 · Online reach on a fixed budget
 > Optimising the schedule, then capping frequency over four weeks, lifts reach from 15.5% to 31.4%.
 > - Largest site — 15.5
 > - Top five — 19.5

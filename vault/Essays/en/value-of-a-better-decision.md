@@ -1,5 +1,5 @@
 ---
-code: "02-07"
+code: "02-01-006"
 kind: essay
 date: "2026-10-30"
 summary: "An experiment can be valid and still unnecessary. A worked example of the value of information, the cost of waiting and the choice to act."
@@ -162,9 +162,9 @@ Before committing, write down a switching value: the effect, cost or timing assu
 
 The downloads are the manuscript edition of 30 October 2026: 24 chapters, a glossary and five appendices, including the source-verification notes. The company cases in the book are invented teaching examples, and the final index follows the author’s review.
 
-![[b2b-saas-funnel-book.pdf|B2B SaaS Funnel Book, manuscript edition (PDF, 15 MB)]]
-
-![[b2b-saas-funnel-book.epub|B2B SaaS Funnel Book, manuscript edition (EPUB, 6 MB)]]
+> [!download] Download the book
+> - [[b2b-saas-funnel-book.pdf|PDF]] — 15 MB
+> - [[b2b-saas-funnel-book.epub|EPUB]] — 6 MB
 
 > [!bookmark]
 > [Part 1 · When a better funnel produces a worse business](/en/writing/growth-without-value/) — the series from the start: the objective function comes before the dashboard.

@@ -37,7 +37,7 @@ import { t, formatDate, isDraftLang, type Lang } from '@/lib/i18n';
 import { route, workRoute, writingRoute } from '@/lib/routes';
 import { LANGS, site } from '@/lib/site';
 import { tools } from '@/lib/catalogue';
-import { projectsOf, writingOf, writingCode, libraryOf, NOTES_CODE } from '@/lib/collections';
+import { projectsOf, writingOf, writingCode, libraryOf, ESSAYS_CODE, NOTES_CODE, HOME_ESSAYS } from '@/lib/collections';
 import { homeGraph } from '@/lib/structured-data';
 
 export function getStaticPaths() {
@@ -93,7 +93,9 @@ const spec = [
 ];
 const projects = await projectsOf(lang);
 const writing = await writingOf(lang);
-// the notes library closes the writing listing as one row (owner, 25 Oct 2026)
+// the five newest essays, then Writing's two categories as rows in code
+// order: 02-01 all essays, 02-02 the notes library (owner, 30 Oct 2026)
+const latest = writing.slice(0, HOME_ESSAYS);
 const library = (await libraryOf(lang)).length ? await libraryOf(lang) : await libraryOf('en');
 const libraryCount = library.reduce((n, a) => n + a.rows.length, 0);
 const allProjects = projects.length ? t(lang, 'all-n-projects').replace('{n}', String(projects.length)) : t(lang, 'all-projects');
@@ -115,10 +117,13 @@ const allProjects = projects.length ? t(lang, 'all-n-projects').replace('{n}', S
   <section class="section" id="writing">
     <SectionHeading number="02" word={t(lang, 'door.writing')} claim={t(lang, 'writing.claim')} prose={copy.writing.prose} link={{ href: route('writing', lang), label: t(lang, 'all-writing') }} />
     {writing.length + libraryCount > 0 && (
-      <Listing>
-        {writing.map((e, i) => (
-          <ListingRow code={writingCode(e, i)} title={e.data.title} sub={e.data.summary} meta={[t(lang, `kind.${e.data.kind}`), formatDate(e.data.date, lang)]} lang={lang} href={writingRoute(e.data.slug, lang)} />
+      <Listing class="lr-long-code">
+        {latest.map((e) => (
+          <ListingRow code={writingCode(e, writing)} title={e.data.title} sub={e.data.summary} meta={[t(lang, `kind.${e.data.kind}`), formatDate(e.data.date, lang)]} lang={lang} href={writingRoute(e.data.slug, lang)} />
         ))}
+        {writing.length > 0 && (
+          <ListingRow code={ESSAYS_CODE} title={t(lang, 'all-n-essays').replace('{n}', String(writing.length))} sub={t(lang, 'essays.sub')} meta={[t(lang, 'essays.word')]} lang={lang} href={`${route('writing', lang)}#essays`} />
+        )}
         {libraryCount > 0 && (
           <ListingRow code={NOTES_CODE} title={t(lang, 'notes.word')} sub={library.map((a) => a.title).join(' · ')} meta={[t(lang, 'kind.library'), t(lang, 'notes.count').replace('{n}', String(libraryCount))]} lang={lang} href={route('notes', lang)} />
         )}

@@ -98,8 +98,16 @@ The page ends on the contact button and the repository link.
 
 ### Essays and notes
 
-`code` is optional (`02-NN` by place otherwise); `kind` comes from the
-folder (Essays → essay, Notes → note). Notes need no `summary`.
+Writing has two categories with stable codes: **02-01 Essays** and
+**02-02 Notes**. An essay's `code` is `02-01-` and a three-digit number,
+given once and kept for good: the first essay is `02-01-001`, the next one
+published takes the next free number (`code: "02-01-008"`). Without a
+`code` the build numbers the essay by its date; write the code down when
+you publish, so a back-dated essay can never shift the others. Lists show
+the newest essay first; the number does not change with the list. A
+three-group code is the longest the site uses, so inside an essay figures
+are `Fig. 1 · …` and equations `(1)`. `kind` comes from the folder
+(Essays → essay, Notes → note). Notes need no `summary`.
 
 ### Pages and legal
 
@@ -241,6 +249,17 @@ dash is its second line; → inside the site, ↗ outside
 > [The A/B bench](/en/tools/ab-sample-size/) — sample size per arm, worked.
 ```
 
+**download** · one thing in several files, as one button: the title is the
+face (in the accent, the section's one accent); each list item is a link to
+a vault file, then an optional note after a dash. On hover or keyboard
+focus the button splits into one cell per file (two to four files); each
+file opens in a new tab, so the reader keeps the page.
+```md
+> [!download] Download the book
+> - [[book.pdf|PDF]] — 15 MB
+> - [[book.epub|EPUB]] — 6 MB
+```
+
 **cta** · the page's one primary link-button; the title is hidden
 ```md
 > [!cta]
@@ -264,7 +283,7 @@ caption with the source. Not a callout on the page: it becomes
 > source: supplied project record, 16 Sep 2026.
 ```
 
-- The title is the kicker (`Fig. <code>-<n> · <subject>`); the first line
+- The title is the kicker (`Fig. <code>-<n> · <subject>` in a project, `Fig. <n> · <subject>` in an essay); the first line
   under it is the finding, a sentence that says what the bars show.
 - One list item per bar: `label — value` (a spaced em or en dash). The
   value is a bare number: digits, a decimal point (`.` or `,`), a minus
@@ -334,8 +353,9 @@ itself, never the page, and the keyboard can reach that scroll.
   A long formula scrolls inside `.math-body` on a phone (MathML does not
   wrap); `tabindex="0"` keeps that scroll region reachable by keyboard.
 - Display blocks are numbered per page in document order:
-  `(<code>-1)`, `(<code>-2)` when the frontmatter has a `code`, else `(1)`,
-  `(2)`. Never type a number.
+  `(<code>-1)`, `(<code>-2)` when the frontmatter has a two-group `code`
+  (a project, `01-05`), else `(1)`, `(2)` (an essay: its `02-01-007` would
+  make a fourth group). Never type a number.
 - Prices are not math: `$5 and $10` stays text. Inline math must hug its
   dollars (`$x$`, not `$ x $`) and the closing `$` must not be followed by a
   digit. In a paragraph that holds both a price and inline math, escape the

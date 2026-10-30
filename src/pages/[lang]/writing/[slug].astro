@@ -13,7 +13,7 @@ import { route, writingRoute } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
 import { otherLang } from '@/lib/i18n';
 import { articleGraph } from '@/lib/structured-data';
-import { writingOf, writingCode, nextOf, prevOf, readingMinutes, vaultExtras, type WritingEntry } from '@/lib/collections';
+import { writingOf, writingCode, nextOf, prevOf, readingMinutes, vaultExtras, ESSAYS_CODE, type WritingEntry } from '@/lib/collections';
 
 export async function getStaticPaths() {
   const paths = [];
@@ -36,10 +36,10 @@ const extras = vaultExtras(entry, Astro.params.lang as Lang);
 const lang = Astro.params.lang as Lang;
 const d = entry.data;
 const { Content, headings, remarkPluginFrontmatter } = await render(entry);
-const code = writingCode(entry, list.findIndex((e) => e.id === entry.id));
+const code = writingCode(entry, list);
 const next = nextOf(list, entry);
 const prev = prevOf(list, entry);
-const nextCode = next ? writingCode(next, list.findIndex((e) => e.id === next.id)) : '';
+const nextCode = next ? writingCode(next, list) : '';
 
 // the document as a schema.org Article by the Person (src/lib/structured-data.ts)
 const structuredData = articleGraph(lang, { path: writingRoute(d.slug, lang), title: d.seo_title ?? d.title, description: d.seo_description ?? d.summary, date: d.date, updated: d.updated, image: extras.cover?.src });
@@ -58,7 +58,11 @@ const meta = [
   description={d.summary}
   current="02"
   hasCode={remarkPluginFrontmatter?.hasCode === true}
-  trail={[{ label: `02 ${t(lang, 'door.writing')}`, href: route('writing', lang) }, { label: code, current: true }]}
+  trail={[
+    { label: `02 ${t(lang, 'door.writing')}`, href: route('writing', lang) },
+    { label: `${ESSAYS_CODE} ${t(lang, 'essays.word')}`, href: `${route('writing', lang)}#essays` },
+    { label: code, current: true },
+  ]}
   lead={d.lead}
   meta={meta}
   draft={d.translationStatus === 'draft'}

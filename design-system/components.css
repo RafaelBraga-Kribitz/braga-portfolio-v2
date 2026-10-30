@@ -344,6 +344,56 @@ details.callout > .callout-content { padding-block: 0 24px; max-width: var(--mea
   .mail-split-face, .mail-split .mail-split-copy, .mail-split .mail-split-open { padding-inline: 12px; letter-spacing: 0; }
 }
 
+/* the download button (owner, 30 Oct 2026; a [!download] callout,
+   src/lib/remark/callouts.mjs): one thing in several files. At rest the
+   face reads as the cta in the accent (the section's one accent, G-15); on
+   hover or keyboard focus it splits into one cell per file, as the contact
+   button does. No script: the links are always in the page and in the Tab
+   order (:focus-within opens the split); a touch screen has no hover, so
+   there the cells sit under the face.
+     <div class="file-split" data-n="2">
+       <span class="file-split-face" aria-hidden="true">Download the book <span class="glyph">↗</span></span>
+       <a class="file-split-link" href="…" target="_blank" rel="noopener" aria-label="… (opens in a new tab)">PDF <span class="file-split-note">15 MB</span></a> … </div>
+   Each file opens in a new tab, so the reader keeps the page. */
+.file-split { display: inline-grid; grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 100%; vertical-align: top; }
+.file-split[data-n="3"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.file-split[data-n="4"] { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.file-split-face, .file-split-link {
+  grid-row: 1; display: flex; align-items: center; justify-content: center; gap: 12px;
+  min-height: 48px; margin: 0; padding-inline: 20px;
+  font: 500 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: var(--tracking-label); text-transform: uppercase;
+  text-decoration: none; white-space: nowrap; border-radius: 0;
+}
+.file-split-face {
+  grid-column: 1 / -1;
+  background: var(--accent-01); border: 1px solid var(--accent-01); color: var(--on-accent);
+  user-select: none; -webkit-user-select: none; cursor: default;
+}
+.file-split-face .glyph { color: inherit; }
+.file-split-link {
+  border: 1px solid var(--ink); background: var(--surface); color: var(--ink);
+  opacity: 0; pointer-events: none;
+  transition: opacity var(--dur) var(--ease), background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.file-split-link + .file-split-link { border-left-width: 0; }
+.doc .file-split .file-split-link { text-decoration: none; }  /* not the prose link underline (base.css) */
+.file-split-note { color: var(--ink-2); letter-spacing: 0; }
+.file-split-link:is(:hover, :focus-visible) { background: var(--accent-01); border-color: var(--accent-01); color: var(--on-accent); }
+.file-split-link:is(:hover, :focus-visible) .file-split-note { color: inherit; }
+@media (hover: hover) {
+  .file-split:hover .file-split-face { visibility: hidden; }
+  .file-split:hover .file-split-link { opacity: 1; pointer-events: auto; }
+}
+.file-split:focus-within .file-split-face { visibility: hidden; }
+.file-split:focus-within .file-split-link { opacity: 1; pointer-events: auto; }
+@media (hover: none) {
+  .file-split .file-split-link { grid-row: 2; border-top-width: 0; opacity: 1; pointer-events: auto; }
+  .file-split:focus-within .file-split-face { visibility: visible; }
+}
+@media (max-width: 399px) {
+  .file-split-face, .file-split-link { padding-inline: 12px; letter-spacing: 0; }
+}
+
 /* the glyph (D-030): a recessive arrow or separator beside a label */
 .glyph { color: var(--ink-2); }
 

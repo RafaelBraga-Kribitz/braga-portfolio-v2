@@ -1,5 +1,5 @@
 ---
-code: "02-05"
+code: "02-01-004"
 kind: essay
 date: "2026-10-30"
 summary: "The account most likely to buy may be the one that least needs a call. Targeting needs the effect of an action, not a forecast of the outcome."
