@@ -17,7 +17,7 @@ import { t, otherLang, formatDate, isDraftLang, type Lang } from '@/lib/i18n';
 import StatusMark from '@/components/StatusMark.astro';
 import { workRoute, writingRoute, noteRoute, pagedRoute, withBase } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
-import { projectsOf, writingOf, writingCode, notesOf, tagNames, paginate, tagPath } from '@/lib/collections';
+import { projectsOf, writingOf, writingCode, notesOf, tagNames, stackNames, entryTags, paginate, tagPath } from '@/lib/collections';
 
 export async function getStaticPaths() {
   const tagged = async (lang: Lang) => {
@@ -25,7 +25,7 @@ export async function getStaticPaths() {
     const writing = await writingOf(lang);
     const notes = await notesOf(lang);
     const rows = [
-      ...projects.map((p) => ({ tags: p.data.tags, date: p.data.date, order: p.data.code, code: p.data.code, title: p.data.title, sub: p.data.summary, meta: [p.data.domain], status: p.data.status, href: workRoute(p.data.slug, lang) })),
+      ...projects.map((p) => ({ tags: entryTags(p), date: p.data.date, order: p.data.code, code: p.data.code, title: p.data.title, sub: p.data.summary, meta: [p.data.domain], status: p.data.status, href: workRoute(p.data.slug, lang) })),
       ...writing.map((e) => ({ tags: e.data.tags, date: e.data.date, order: writingCode(e, writing), code: writingCode(e, writing), title: e.data.title, sub: e.data.summary, meta: [t(lang, `kind.${e.data.kind}`), formatDate(e.data.date, lang)], status: undefined, href: writingRoute(e.data.slug, lang) })),
       ...notes.map((r) => ({ tags: r.entry.data.tags, date: r.entry.data.date, order: r.code, code: r.code, title: r.entry.data.title, sub: '', meta: [t(lang, 'kind.note'), r.subtopic || r.topic].filter(Boolean), status: undefined, href: noteRoute(r.entry.data.slug, lang) })),
     ];
@@ -34,7 +34,8 @@ export async function getStaticPaths() {
     return byTag;
   };
   const all = Object.fromEntries(await Promise.all(LANGS.map(async (l) => [l, await tagged(l)] as const)));
-  const names = await tagNames();
+  const folders = await tagNames();
+  const names = new Map([...(await stackNames()), ...folders]);
   const paths = [];
   for (const lang of LANGS) {
     for (const [tag, list] of all[lang]) {
@@ -44,7 +45,7 @@ export async function getStaticPaths() {
       for (let page = 1; page <= pages; page++) {
         paths.push({
           params: { lang, tag: page > 1 ? `${tag}/page/${page}` : tag },
-          props: { tag, name: names.get(tag), rows: paginate(sorted, page).rows, total: sorted.length, page, pages, twin: page === 1 ? twin : null },
+          props: { tag, name: names.get(tag), folder: folders.has(tag), rows: paginate(sorted, page).rows, total: sorted.length, page, pages, twin: page === 1 ? twin : null },
         });
       }
     }
@@ -53,18 +54,19 @@ export async function getStaticPaths() {
 }
 
 interface Row { code: string; title: string; sub: string; meta: string[]; status?: 'complete' | 'functional' | 'under-revision' | 'in-build' | 'archived'; href: string }
-interface Props { tag: string; name?: string; rows: Row[]; total: number; page: number; pages: number; twin: string | null }
+interface Props { tag: string; name?: string; folder: boolean; rows: Row[]; total: number; page: number; pages: number; twin: string | null }
 
 const lang = Astro.params.lang as Lang;
-const { tag, name, rows, total, page, pages, twin } = Astro.props;
+const { tag, name, folder, rows, total, page, pages, twin } = Astro.props;
 const base = withBase(tagPath(tag, lang));
 const pageNote = pages > 1 ? ` ${t(lang, 'notes.page').replace('{p}', String(page)).replace('{t}', String(pages))}.` : '';
 const count = total === 1 ? t(lang, 'tags.count-one') : t(lang, 'tags.count').replace('{n}', String(total));
-// a library folder's tag reads as the folder's title (Ghost's tag name); any other as #tag
+// a library folder's tag reads as the folder's title (Ghost's tag name), a
+// stack keyword as the keyword (Power BI); any other as #tag
 const claim = name ?? t(lang, 'tags.claim').replace('{tag}', `#${tag}`);
 const prose = `${name ? `#${tag} · ` : ''}${count}. ${t(lang, 'tags.prose')}${pageNote}`;
 ---
-<Base lang={lang} page="tags" path={pagedRoute(base, page)} twinPath={twin} title={`${name ?? `#${tag}`}${page > 1 ? ` · ${page}` : ''}`} description={prose} current={name ? '02' : undefined}>
+<Base lang={lang} page="tags" path={pagedRoute(base, page)} twinPath={twin} title={`${name ?? `#${tag}`}${page > 1 ? ` · ${page}` : ''}`} description={prose} current={folder ? '02' : undefined}>
   <section class="section">
     <SectionHeading number="#" word={t(lang, 'tags.word')} claim={claim} prose={prose} link={{ href: withBase(`/${lang}/tags/`), label: t(lang, 'tags.title') }} as="h1" />
     <Listing class="lr-long-code">

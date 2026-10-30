@@ -13,6 +13,7 @@ metrics:
   - { value: "€453,000", label: Lowest five-year present cost, accent: true }
   - { value: "€0.374", label: Cost per order }
   - { value: "99.8%", label: Draws won by the lean hybrid }
+stack: [ "SQL", "Python", "Polars", "DuckDB", "dbt", "Docker", "CI/CD" ]
 repository: https://github.com/RafaelBraga-Kribitz/warehouse_humanoid_tco
 translationStatus: approved
 publish: true

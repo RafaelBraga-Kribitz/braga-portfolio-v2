@@ -1,5 +1,5 @@
 ---
-// 02-02 · Notes — the library's first page (src/components/NotesLibrary.astro).
+// 02-02 · Notes — the library's index of areas (src/components/NotesLibrary.astro).
 import NotesLibrary from '@/components/NotesLibrary.astro';
 import { LANGS } from '@/lib/site';
 import type { Lang } from '@/lib/i18n';
@@ -8,4 +8,4 @@ export function getStaticPaths() {
   return LANGS.map((lang) => ({ params: { lang } }));
 }
 ---
-<NotesLibrary lang={Astro.params.lang as Lang} page={1} />
+<NotesLibrary lang={Astro.params.lang as Lang} />

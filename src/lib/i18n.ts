@@ -85,6 +85,7 @@ const en = {
   'all-writing': 'All writing',
   'essays.word': 'Essays',
   'date': 'Date',
+  'stack': 'Stack',
   'all-n-essays': 'All {n} essays',
   'essays.sub': 'Newest first. Each keeps its number for good.',
   // the notes library (owner, 25 Oct 2026)
@@ -208,6 +209,7 @@ const de: Record<ChromeKey, string> = {
   'all-writing': 'Alle Texte',
   'essays.word': 'Essays',
   'date': 'Datum',
+  'stack': 'Stack',
   'all-n-essays': 'Alle {n} Essays',
   'essays.sub': 'Die neuesten zuerst. Jeder behält seine Nummer.',
   'notes.word': 'Notizen',

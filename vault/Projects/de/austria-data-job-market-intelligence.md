@@ -12,6 +12,7 @@ metrics:
   - { value: "720", label: Kerninserate, accent: true }
   - { value: "83 % / 95 %", label: "Titelpräzision, streng / großzügig" }
   - { value: "24 %", label: Dublettenquote }
+stack: [ "Python", "Power BI", "DAX", "pandas", "scikit-learn", "Clustering", "CI/CD" ]
 repository: https://github.com/RafaelBraga-Kribitz/austria-data-job-market-intelligence
 translationStatus: draft
 publish: true

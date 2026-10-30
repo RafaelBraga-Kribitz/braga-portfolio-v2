@@ -136,6 +136,11 @@ export const projectSchema = z
     lang,
     slug,
     metrics: z.array(metric).default([]),
+    /** Technical keywords the project uses (owner, 30 Oct 2026), in the
+        vocabulary of the job-market project's skills taxonomy (SQL, Python,
+        Power BI, dbt…): the listings show the first five beside the meta,
+        the project page shows all of them as tags, and each is a tag page. */
+    stack: z.array(z.string().min(1)).default([]),
     repository: z.url().optional(),
     ...publishing,
     translationStatus: z.enum(TRANSLATION_STATUSES).default('approved'),

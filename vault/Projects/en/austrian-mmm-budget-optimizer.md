@@ -12,6 +12,7 @@ metrics:
   - { value: "91%", label: Curve coverage }
   - { value: "26 of 28", label: Parameters recovered }
   - { value: "+45%", label: "Platform over-credit, paid search", accent: true }
+stack: [ "Python", "Power BI", "DAX", "PyMC", "Bayesian", "Jupyter", "CI/CD" ]
 repository: https://github.com/RafaelBraga-Kribitz/austrian-mmm-budget-optimizer
 translationStatus: approved
 publish: true

@@ -12,6 +12,7 @@
 import type { Lang, StatusState } from '../lib/i18n';
 import { t } from '../lib/i18n';
 import StatusMark from './StatusMark.astro';
+import { withBase } from '../lib/routes';
 
 interface Crumb {
   label: string;
@@ -33,6 +34,8 @@ interface Props {
   title: string;
   lead?: string;
   meta?: MetaItem[];
+  /** Keyword tags between the lead and the meta row (a project's stack). */
+  keywords?: { label: string; href: string }[];
   draft?: boolean;
   /** Trail on three columns, body on nine (Site s04). */
   grid?: boolean;
@@ -49,7 +52,7 @@ interface Props {
   id?: string;
 }
 
-const { lang, trail, numeral, title, lead, meta = [], draft = false, grid = false, id, portrait, part } = Astro.props;
+const { lang, trail, numeral, title, lead, meta = [], keywords = [], draft = false, grid = false, id, portrait, part } = Astro.props;
 const hasMeta = meta.length > 0 || draft;
 ---
 {part === 'side' ? (
@@ -98,6 +101,7 @@ const hasMeta = meta.length > 0 || draft;
         <h1>{title}</h1>
       )}
       {lead && <p class="doc-lead">{lead}</p>}
+      {keywords.length > 0 && <p class="doc-tags">{keywords.map((k) => <a class="tag" href={withBase(k.href)}>{k.label}</a>)}</p>}
       {hasMeta && (
         <div class="doc-meta">
           {draft && <StatusMark state="in-build" lang={lang} label={t(lang, 'draft')} />}

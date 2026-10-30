@@ -37,7 +37,7 @@ import { t, formatDate, isDraftLang, type Lang } from '@/lib/i18n';
 import { route, workRoute, writingRoute } from '@/lib/routes';
 import { LANGS, site } from '@/lib/site';
 import { tools } from '@/lib/catalogue';
-import { projectsOf, writingOf, writingCode, libraryOf, ESSAYS_CODE, NOTES_CODE, HOME_ESSAYS } from '@/lib/collections';
+import { projectsOf, writingOf, writingCode, libraryOf, ESSAYS_CODE, NOTES_CODE, HOME_ESSAYS, LISTING_KEYWORDS } from '@/lib/collections';
 import { homeGraph } from '@/lib/structured-data';
 
 export function getStaticPaths() {
@@ -106,9 +106,9 @@ const allProjects = projects.length ? t(lang, 'all-n-projects').replace('{n}', S
   <section class="section" id="work">
     <SectionHeading number="01" word={t(lang, 'door.work')} claim={t(lang, 'work.claim')} prose={t(lang, 'work.prose')} link={{ href: route('work', lang), label: allProjects }} />
     {projects.length > 0 && (
-      <Listing>
+      <Listing keys>
         {projects.map((p) => (
-          <ListingRow code={p.data.code} title={p.data.title} sub={p.data.summary} meta={[p.data.domain]} status={p.data.status} lang={lang} href={workRoute(p.data.slug, lang)} />
+          <ListingRow code={p.data.code} title={p.data.title} sub={p.data.summary} meta={[p.data.domain]} status={p.data.status} keys={p.data.stack.slice(0, LISTING_KEYWORDS)} lang={lang} href={workRoute(p.data.slug, lang)} />
         ))}
       </Listing>
     )}

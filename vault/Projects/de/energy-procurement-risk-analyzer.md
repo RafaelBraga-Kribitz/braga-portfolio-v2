@@ -12,6 +12,7 @@ metrics:
   - { value: "4", label: Übernommene Datenquellen }
   - { value: "4", label: "Beschaffungsstrategien, noch nicht bewertet" }
   - { value: "50 GWh", label: "Jahresverbrauch, konstruiert" }
+stack: [ "SQL", "Python", "Azure", "Power BI", "DAX", "DuckDB", "dbt", "statsmodels", "Time series", "CI/CD" ]
 repository: https://github.com/RafaelBraga-Kribitz/energy-procurement-risk-analyzer
 translationStatus: draft
 publish: true

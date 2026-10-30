@@ -79,6 +79,8 @@ interface Props {
   seoDescription?: string;
   canonicalUrl?: string;
   cover?: { src: string; alt: string; width?: number; height?: number };
+  /** A project's stack keywords as tags under the lead (owner, 30 Oct 2026). */
+  keywords?: { label: string; href: string }[];
   /** The note's tags (links to their pages) and its related notes. */
   tags?: { label: string; href: string }[];
   related?: { href: string; title: string; sub?: string }[];
@@ -93,14 +95,14 @@ interface Props {
 const {
   lang, page, title, heading, description, current, hasCode = false, noindex = false,
   trail, lead, meta = [], draft = false, headings, metrics = [], prev, next, back, bodyLang, close, portrait, prevDoc, nextDoc,
-  twinPath, seoTitle, seoDescription, canonicalUrl, cover, tags = [], related = [], structuredData,
+  twinPath, seoTitle, seoDescription, canonicalUrl, cover, tags = [], keywords = [], related = [], structuredData,
 } = Astro.props;
 
 const sections = headings.filter((h) => h.depth === 2 && h.slug !== 'footnote-label');
 const toc = sections.map((h, i) => ({ n: String(i + 1).padStart(2, '0'), title: h.text, href: `#${h.slug}` }));
 ---
 <Base lang={lang} page={page} title={title} description={description} current={current} hasCode={hasCode} noindex={noindex} ogType="article" prevDoc={prevDoc} nextDoc={nextDoc} twinPath={twinPath} seoTitle={seoTitle} seoDescription={seoDescription} canonicalUrl={canonicalUrl} ogImage={cover && { src: cover.src, alt: cover.alt }} structuredData={structuredData}>
-  {!portrait && <DocOpener lang={lang} grid trail={trail} title={heading ?? title} lead={lead} meta={meta} draft={draft} />}
+  {!portrait && <DocOpener lang={lang} grid trail={trail} title={heading ?? title} lead={lead} keywords={keywords} meta={meta} draft={draft} />}
   <div class:list={['grid', portrait && 'doc-split']}>
     {portrait ? (
       <div class="col-3 doc-side">

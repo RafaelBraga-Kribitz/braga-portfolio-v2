@@ -57,6 +57,38 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
 .listing-head.lr-wide .lr-title { grid-column: 4 / span 7; }
 /* the meta slot stacks discipline and status (Site 03) */
 .listing-row .lr-meta { display: flex; flex-direction: column; gap: 8px; }
+/* a project's stack keywords (owner, 30 Oct 2026): mono words between the
+   meta and the arrow, for the reader who scans for skills. The first six,
+   two to a line (at most three lines); the project page shows them all */
+.lr-keys { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 16px; min-width: 0; align-content: start; white-space: nowrap; }   /* equal halves: the words line up from row to row */
+
+/* wider titles (owner, 30 Oct 2026). From 1024 a short code (01-04) takes
+   one column, so the title gains one: title 3–9, meta 10–11 (discipline
+   or kind over status or date), arrow 12. A long code (02-01-007) keeps
+   two and the title runs 4–9. A listing with stack keywords
+   (.lr-keys-list) gives them three columns before the arrow: title 3–7 (the width it
+   had on 4–8; the one-column code pays for the keywords), meta 8–9,
+   keywords 10–12, padded clear of the arrow. From 721 to 1023 the
+   canonical slots above hold and the keywords stand under the meta; below
+   720 the card shows them as one more line. */
+@media (min-width: 1024px) {
+  .lr-index { grid-column: 2 / span 1; }
+  .lr-title { grid-column: 3 / span 7; }
+  .lr-meta  { grid-column: 10 / span 2; }
+  .listing-row.lr-wide .lr-title,
+  .listing-head.lr-wide .lr-title { grid-column: 3 / span 9; }
+  .listing.lr-long-code .lr-index { grid-column: 2 / span 2; }
+  .listing.lr-long-code .lr-title { grid-column: 4 / span 6; }
+  .listing.lr-keys-list .lr-title { grid-column: 3 / span 5; }
+  .listing.lr-keys-list .lr-meta  { grid-column: 8 / span 2; }
+  .listing.lr-keys-list .lr-keys  { grid-column: 10 / span 3; grid-row: 1; padding-inline-end: 24px; }
+  .listing.lr-keys-list .lr-trail { grid-row: 1; }   /* shares column 12 with the keywords: keep it on the first line */
+}
+@media (min-width: 721px) and (max-width: 1023px) {
+  .listing.lr-keys-list .listing-row .lr-title { grid-row: 1 / span 2; }
+  .listing.lr-keys-list .listing-row .lr-keys  { grid-column: 9 / span 3; grid-row: 2; padding-top: 8px; }
+  .listing.lr-keys-list .listing-head .lr-keys { display: none; }
+}
 
 /* typographic helpers used inside slots */
 .lr-code {
@@ -111,6 +143,7 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
   .lr-meta .status { order: -1; }
   .lr-trail { grid-column: 3; align-self: end; }
   .lr-trail-word { display: none; }   /* the arrow alone says it; the word would push the meta to a second line */
+  .listing-row .lr-keys { grid-column: 2; display: flex; flex-wrap: wrap; gap: 4px 12px; }
   .listing-row.lr-child .lr-title { padding-left: var(--space-3); }
 }
 /* below 230 (owner, 24 Oct 2026): the code on its own line, the text under
@@ -120,6 +153,7 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
   .lr-index, .lr-title { grid-column: 1 / -1; }
   .listing-row .lr-meta { grid-column: 1; }
   .lr-trail { grid-column: 2; }
+  .listing-row .lr-keys { grid-column: 1; }
   .listing-row.lr-child .lr-title { padding-left: 0; }
 }
 /* a listing of long codes (the notes library: 04-02-01-05; owner, 26 Oct
@@ -129,6 +163,7 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
   .listing.lr-long-code :is(.lr-index, .lr-title) { grid-column: 1 / -1; }
   .listing.lr-long-code .listing-row .lr-meta { grid-column: 1; }
   .listing.lr-long-code .lr-trail { grid-column: 2; }
+  .listing.lr-long-code .listing-row .lr-keys { grid-column: 1; }
 }
 
 /* pagination (braga-design-system-template layout/Pagination; owner,

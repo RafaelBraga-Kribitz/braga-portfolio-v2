@@ -9,6 +9,7 @@ import type { Lang } from './site';
 import { vaultIndex, resolveAttachment, mediaPath } from './vault/index.mjs';
 import { related } from './vault/related.mjs';
 import { folderTitle, folderTag, folderTagNames } from './vault/folders.mjs';
+import { slugify } from './vault/meta.mjs';
 import { imageSize } from './vault/image-size.mjs';
 
 export type ProjectEntry = CollectionEntry<'projects'>;
@@ -193,6 +194,25 @@ export interface VaultExtras {
 }
 
 /** The tag page of a tag (no base: routes go through withBase in the page). */
+/** A stack keyword's tag: the keyword, kebab-cased (Power BI → power-bi, CI/CD → ci-cd). */
+export const stackTag = (keyword: string) => slugify(keyword);
+
+/** Every tag of an entry: its own tags, and for a project its stack keywords as tags too. */
+export function entryTags(e: { data: { tags: string[]; stack?: string[] } }): string[] {
+  return [...new Set([...e.data.tags, ...(e.data.stack ?? []).map(stackTag)])];
+}
+
+/** The display names of the stack tags (power-bi → Power BI), from every project. */
+export async function stackNames(): Promise<Map<string, string>> {
+  const all = await getCollection('projects');
+  const out = new Map<string, string>();
+  for (const p of all) for (const k of p.data.stack) out.set(stackTag(k), k);
+  return out;
+}
+
+/** How many stack keywords a listing row shows: six, two to a line (owner, 30 Oct 2026). */
+export const LISTING_KEYWORDS = 6;
+
 export const tagPath = (tag: string, lang: Lang) => `/${lang}/tags/${tag.split('/').map(encodeURIComponent).join('/')}/`;
 
 export function vaultExtras(entry: { filePath?: string; data: { tags?: string[]; cover?: string; cover_alt?: string; title: string } }, lang: Lang): VaultExtras {

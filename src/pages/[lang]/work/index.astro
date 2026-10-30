@@ -16,7 +16,7 @@ import StatusMark from '@/components/StatusMark.astro';
 import { t, type Lang } from '@/lib/i18n';
 import { workRoute } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
-import { projectsOf } from '@/lib/collections';
+import { projectsOf, LISTING_KEYWORDS } from '@/lib/collections';
 
 export function getStaticPaths() {
   return LANGS.map((lang) => ({ params: { lang } }));
@@ -29,9 +29,9 @@ const projects = await projectsOf(lang);
   <section class="section">
     <SectionHeading number="01" word={t(lang, 'door.work')} claim={t(lang, 'work.claim')} prose={t(lang, 'work.prose')} as="h1" />
     {projects.length > 0 && (
-      <Listing head={{ index: t(lang, 'index'), title: t(lang, 'project'), meta: t(lang, 'discipline-status'), trail: '' }}>
+      <Listing keys head={{ index: t(lang, 'index'), title: t(lang, 'project'), meta: t(lang, 'discipline-status'), keys: t(lang, 'stack'), trail: '' }}>
         {projects.map((p) => (
-          <ListingRow code={p.data.code} title={p.data.title} sub={p.data.summary} meta={[p.data.domain]} status={p.data.status} lang={lang} href={workRoute(p.data.slug, lang)} />
+          <ListingRow code={p.data.code} title={p.data.title} sub={p.data.summary} meta={[p.data.domain]} status={p.data.status} keys={p.data.stack.slice(0, LISTING_KEYWORDS)} lang={lang} href={workRoute(p.data.slug, lang)} />
         ))}
       </Listing>
     )}

@@ -12,6 +12,7 @@ metrics:
   - { value: "91 %", label: Kurvenabdeckung }
   - { value: "26 von 28", label: Parameter wiederhergestellt }
   - { value: "+45 %", label: "Überzurechnung durch die Plattform, Paid Search", accent: true }
+stack: [ "Python", "Power BI", "DAX", "PyMC", "Bayesian", "Jupyter", "CI/CD" ]
 repository: https://github.com/RafaelBraga-Kribitz/austrian-mmm-budget-optimizer
 translationStatus: draft
 publish: true
