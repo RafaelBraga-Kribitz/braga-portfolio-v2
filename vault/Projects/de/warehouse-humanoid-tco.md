@@ -13,6 +13,7 @@ metrics:
   - { value: "€ 453.000", label: Niedrigster Kostenbarwert über fünf Jahre, accent: true }
   - { value: "€ 0,374", label: Kosten je Auftrag }
   - { value: "99,8 %", label: Ziehungen zugunsten der Hybridvariante }
+stack: [ "SQL", "Python", "Polars", "DuckDB", "dbt", "Docker", "CI/CD" ]
 repository: https://github.com/RafaelBraga-Kribitz/warehouse_humanoid_tco
 translationStatus: draft
 publish: true

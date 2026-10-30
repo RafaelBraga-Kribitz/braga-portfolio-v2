@@ -12,6 +12,7 @@ metrics:
   - { value: "+3.70 pp", label: "Verified margin, TSJE", accent: true }
   - { value: "61.25%", label: "Turnout, TSJE" }
   - { value: "50,000", label: "Synthetic voters, 14 weeks" }
+stack: [ "Python", "PyMC", "Bayesian", "Optimisation", "scikit-learn", "FastAPI", "Streamlit", "MLflow", "Docker", "GCP", "CI/CD" ]
 repository: https://github.com/RafaelBraga-Kribitz/decision-analytics-reconstruction
 translationStatus: approved
 publish: true

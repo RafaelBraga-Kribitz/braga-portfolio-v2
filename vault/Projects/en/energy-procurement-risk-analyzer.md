@@ -12,6 +12,7 @@ metrics:
   - { value: "4", label: Sources ingested }
   - { value: "4", label: "Procurement strategies, not yet scored" }
   - { value: "50 GWh", label: "Annual load, constructed" }
+stack: [ "SQL", "Python", "Azure", "Power BI", "DAX", "DuckDB", "dbt", "statsmodels", "Time series", "CI/CD" ]
 repository: https://github.com/RafaelBraga-Kribitz/energy-procurement-risk-analyzer
 translationStatus: approved
 publish: true

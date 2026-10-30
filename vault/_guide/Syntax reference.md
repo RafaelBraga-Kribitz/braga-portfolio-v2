@@ -26,9 +26,10 @@ Markdown pipeline in `astro.config.mjs`.
   `Notes/`, the folders are the library's index: `<area>/<topic>/<subtopic>/`,
   the area named with its number (`04_calculus_optimization`). On the site
   the library is flat and tagged, as Ghost publishes: `/<lang>/notes/`
-  lists every note in reading order (folder order, then title), 24 a page
-  (`/<lang>/notes/page/2/`), each coded by its place under Writing's
-  second register: 02 Writing, 02-02 Notes, 02-02-001 the first note.
+  lists the areas, and each area's tag page lists its notes in reading
+  order (folder order, then title), 24 a page, each coded by its place
+  under Writing's second register: 02 Writing, 02-02 Notes, 02-02-001 the
+  first note.
   Every folder a note sits in is also a tag of that note, next to its own
   tags: the area's short tag (`calculus`), then the topic's and the
   subtopic's title, kebab-cased (`differential-calculus`). Each tag has
@@ -89,11 +90,21 @@ domain: Operations
 metrics:                       # the metric strip under the opener
   - { value: "€453,000", label: Five-year cost, accent: true }  # at most one accent
   - { value: "38 s", label: Cycle time }
+stack: [ "SQL", "Python", "DuckDB", "dbt" ]   # optional: the tools and methods the project uses
 repository: https://github.com/…   # optional
 ```
 
-The opener: trail `01 Work → <code>`, the title, `lead`, the meta row
-(domain · status · Published · reading time · Updated · Repository ↗).
+`stack` lists the technical keywords the project actually uses (code,
+dependencies, configuration), in the vocabulary of the job-market
+project's skills taxonomy (`config/skills_taxonomy.json` in its
+repository), most sought first. The Work listings show the first six,
+two to a line, before the arrow; the project page shows all of them as tags
+under the lead; each keyword is a tag (`Power BI` → `#power-bi`) whose
+page lists every project, essay and note that carries it.
+
+The opener: trail `01 Work → <code>`, the title, `lead`, the stack tags,
+the meta row (domain · status · Published · reading time · Updated ·
+Repository ↗).
 The page ends on the contact button and the repository link.
 
 ### Essays and notes

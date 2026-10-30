@@ -5,15 +5,17 @@
 // indexes keep it, the home page drops it, where four sections would
 // repeat it.
 interface Props {
-  head?: { index: string; title: string; meta: string; trail: string };
+  head?: { index: string; title: string; meta: string; trail: string; keys?: string };
+  /** Rows carry stack keywords (owner, 30 Oct 2026): the keyword column's layout. */
+  keys?: boolean;
   class?: string;
   /** An anchor for links into the page (the Writing page's #essays, #notes). */
   id?: string;
 }
 
-const { head, class: className, id } = Astro.props;
+const { head, class: className, id, keys = false } = Astro.props;
 ---
-<div class:list={['listing', className]} id={id}>
-  {head && <div class="listing-head"><span class="lr-index">{head.index}</span><span class="lr-title">{head.title}</span><span class="lr-meta">{head.meta}</span><span class="lr-trail">{head.trail}</span></div>}
+<div class:list={['listing', className, keys && 'lr-keys-list']} id={id}>
+  {head && <div class="listing-head"><span class="lr-index">{head.index}</span><span class="lr-title">{head.title}</span><span class="lr-meta">{head.meta}</span>{keys && <span class="lr-keys">{head.keys ?? ''}</span>}<span class="lr-trail">{head.trail}</span></div>}
   <slot />
 </div>

@@ -12,6 +12,7 @@ metrics:
   - { value: "720", label: Core postings, accent: true }
   - { value: "83% / 95%", label: "Title precision, strict / lenient" }
   - { value: "24%", label: Duplicate rate }
+stack: [ "Python", "Power BI", "DAX", "pandas", "scikit-learn", "Clustering", "CI/CD" ]
 repository: https://github.com/RafaelBraga-Kribitz/austria-data-job-market-intelligence
 translationStatus: approved
 publish: true

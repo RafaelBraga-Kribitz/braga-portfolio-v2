@@ -16,7 +16,7 @@ import { route, workRoute } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
 import { otherLang } from '@/lib/i18n';
 import { articleGraph } from '@/lib/structured-data';
-import { projectsOf, nextOf, prevOf, readingMinutes, vaultExtras, type ProjectEntry } from '@/lib/collections';
+import { projectsOf, nextOf, prevOf, readingMinutes, vaultExtras, stackTag, tagPath, type ProjectEntry } from '@/lib/collections';
 
 export async function getStaticPaths() {
   const paths = [];
@@ -63,6 +63,7 @@ const meta = [
   hasCode={remarkPluginFrontmatter?.hasCode === true}
   trail={[{ label: `01 ${t(lang, 'door.work')}`, href: route('work', lang) }, { label: d.code, current: true }]}
   lead={d.lead}
+  keywords={d.stack.map((k) => ({ label: k, href: tagPath(stackTag(k), lang) }))}
   meta={meta}
   draft={d.translationStatus === 'draft'}
   headings={headings}
