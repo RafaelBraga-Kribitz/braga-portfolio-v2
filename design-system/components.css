@@ -57,10 +57,19 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
 .listing-head.lr-wide .lr-title { grid-column: 4 / span 7; }
 /* the meta slot stacks discipline and status (Site 03) */
 .listing-row .lr-meta { display: flex; flex-direction: column; gap: 8px; }
-/* a project's stack keywords (owner, 30 Oct 2026): mono words between the
-   meta and the arrow, for the reader who scans for skills. The first six,
-   two to a line (at most three lines); the project page shows them all */
-.lr-keys { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 16px; min-width: 0; align-content: start; white-space: nowrap; }   /* equal halves: the words line up from row to row */
+/* a project's stack keywords (owner, 30 Oct 2026): boxed mono words between
+   the meta and the arrow, for the reader who scans for skills. The first
+   six, two to a line (at most three lines), each line one run across the
+   keyword columns; the pairs are chosen so the lines come out even, a long
+   keyword with a short one (src/lib/keyword-lines.mjs). The project page
+   shows the whole stack. */
+.lr-keys { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-width: 0; }
+.lr-keys-line { display: flex; gap: 8px; white-space: nowrap; }
+.lr-key {
+  font-family: var(--font-mono); font-size: var(--t-mono); line-height: 1.4;
+  color: var(--ink-2); letter-spacing: 0.02em;
+  padding: 0 6px; border: 1px solid var(--rule-c);
+}
 
 /* wider titles (owner, 30 Oct 2026). From 1024 a short code (01-04) takes
    one column, so the title gains one: title 3–9, meta 10–11 (discipline
@@ -143,7 +152,8 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
   .lr-meta .status { order: -1; }
   .lr-trail { grid-column: 3; align-self: end; }
   .lr-trail-word { display: none; }   /* the arrow alone says it; the word would push the meta to a second line */
-  .listing-row .lr-keys { grid-column: 2; display: flex; flex-wrap: wrap; gap: 4px 12px; }
+  .listing-row .lr-keys { grid-column: 2; flex-direction: row; flex-wrap: wrap; gap: 6px 8px; }
+  .listing-row .lr-keys-line { display: contents; }   /* on the card the boxes flow as one run */
   .listing-row.lr-child .lr-title { padding-left: var(--space-3); }
 }
 /* below 230 (owner, 24 Oct 2026): the code on its own line, the text under
@@ -575,9 +585,56 @@ figure.fig[data-kind="diagram"] .nodeLabel, figure.fig[data-kind="diagram"] .edg
   padding-block: 16px; border-top: var(--rule);
   font-variant-numeric: var(--num);
 }
-/* MathML neither wraps nor shrinks: the cell scrolls, the number never overprints */
-.math .math-body { min-width: 0; overflow: auto hidden; padding-block: 6px; display: grid; gap: 8px; }
+/* MathML neither wraps nor shrinks, and the site never scrolls sideways
+   (owner, 30 Oct 2026). A formula that may be wider than its column comes
+   from the build in versions, least broken first (src/lib/math-fit.mjs):
+   as written, broken at its relations, broken at its terms too; each says
+   the container widths it is shown at (data-from, data-to), and the
+   queries below show the least broken one that fits. Gate G-17 holds every
+   formula inside its column at every tested width. Should a reader's
+   maths font still run wider, the cell can be swiped, but it never shows a
+   scrollbar. */
+.math .math-body {
+  container: math / inline-size;
+  min-width: 0; overflow: auto hidden; padding-block: 6px; display: grid; gap: 8px;
+  scrollbar-width: none;
+}
+.math .math-body::-webkit-scrollbar { display: none; }
 .math math { font-size: 1.2em; display: block math; max-width: 100%; }
+/* the last resort, where no version fits (a fraction, a \left…\right group
+   or a cases block cannot break): the formula shrinks to its column, never
+   below 13px (its scripts keep their 12px floor, G-01). data-w is the
+   version's width in em with the headroom (src/lib/math-fit.mjs, fitEm). */
+.math-body > math[data-w] { font-size: clamp(13px, calc(100cqi / var(--w)), 1.2em); }
+.math-body > math[data-w="1"] { --w: 1; } .math-body > math[data-w="2"] { --w: 2; } .math-body > math[data-w="3"] { --w: 3; } .math-body > math[data-w="4"] { --w: 4; } .math-body > math[data-w="5"] { --w: 5; } .math-body > math[data-w="6"] { --w: 6; } .math-body > math[data-w="7"] { --w: 7; } .math-body > math[data-w="8"] { --w: 8; } .math-body > math[data-w="9"] { --w: 9; } .math-body > math[data-w="10"] { --w: 10; } .math-body > math[data-w="11"] { --w: 11; } .math-body > math[data-w="12"] { --w: 12; } .math-body > math[data-w="13"] { --w: 13; } .math-body > math[data-w="14"] { --w: 14; } .math-body > math[data-w="15"] { --w: 15; } .math-body > math[data-w="16"] { --w: 16; } .math-body > math[data-w="17"] { --w: 17; } .math-body > math[data-w="18"] { --w: 18; } .math-body > math[data-w="19"] { --w: 19; } .math-body > math[data-w="20"] { --w: 20; } .math-body > math[data-w="21"] { --w: 21; } .math-body > math[data-w="22"] { --w: 22; } .math-body > math[data-w="23"] { --w: 23; } .math-body > math[data-w="24"] { --w: 24; } .math-body > math[data-w="25"] { --w: 25; } .math-body > math[data-w="26"] { --w: 26; } .math-body > math[data-w="27"] { --w: 27; } .math-body > math[data-w="28"] { --w: 28; } .math-body > math[data-w="29"] { --w: 29; } .math-body > math[data-w="30"] { --w: 30; } .math-body > math[data-w="31"] { --w: 31; } .math-body > math[data-w="32"] { --w: 32; } .math-body > math[data-w="33"] { --w: 33; } .math-body > math[data-w="34"] { --w: 34; } .math-body > math[data-w="35"] { --w: 35; } .math-body > math[data-w="36"] { --w: 36; } .math-body > math[data-w="37"] { --w: 37; } .math-body > math[data-w="38"] { --w: 38; } .math-body > math[data-w="39"] { --w: 39; } .math-body > math[data-w="40"] { --w: 40; } .math-body > math[data-w="41"] { --w: 41; } .math-body > math[data-w="42"] { --w: 42; } .math-body > math[data-w="43"] { --w: 43; } .math-body > math[data-w="44"] { --w: 44; } .math-body > math[data-w="45"] { --w: 45; } .math-body > math[data-w="46"] { --w: 46; } .math-body > math[data-w="47"] { --w: 47; } .math-body > math[data-w="48"] { --w: 48; } .math-body > math[data-w="49"] { --w: 49; } .math-body > math[data-w="50"] { --w: 50; } .math-body > math[data-w="51"] { --w: 51; } .math-body > math[data-w="52"] { --w: 52; } .math-body > math[data-w="53"] { --w: 53; } .math-body > math[data-w="54"] { --w: 54; } .math-body > math[data-w="55"] { --w: 55; } .math-body > math[data-w="56"] { --w: 56; } .math-body > math[data-w="57"] { --w: 57; } .math-body > math[data-w="58"] { --w: 58; } .math-body > math[data-w="59"] { --w: 59; } .math-body > math[data-w="60"] { --w: 60; } .math-body > math[data-w="61"] { --w: 61; } .math-body > math[data-w="62"] { --w: 62; } .math-body > math[data-w="63"] { --w: 63; } .math-body > math[data-w="64"] { --w: 64; } .math-body > math[data-w="65"] { --w: 65; } .math-body > math[data-w="66"] { --w: 66; } .math-body > math[data-w="67"] { --w: 67; } .math-body > math[data-w="68"] { --w: 68; } .math-body > math[data-w="69"] { --w: 69; } .math-body > math[data-w="70"] { --w: 70; } .math-body > math[data-w="71"] { --w: 71; } .math-body > math[data-w="72"] { --w: 72; } .math-body > math[data-w="73"] { --w: 73; } .math-body > math[data-w="74"] { --w: 74; } .math-body > math[data-w="75"] { --w: 75; } .math-body > math[data-w="76"] { --w: 76; } .math-body > math[data-w="77"] { --w: 77; } .math-body > math[data-w="78"] { --w: 78; } .math-body > math[data-w="79"] { --w: 79; } .math-body > math[data-w="80"] { --w: 80; }
+.math-body > math[data-from] { display: none; }
+.math-body > math[data-from="0"] { display: block math; }
+@container math (min-width: 160px) { .math-body > math[data-from="160"] { display: block math; } .math-body > math[data-to="160"] { display: none; } }
+@container math (min-width: 200px) { .math-body > math[data-from="200"] { display: block math; } .math-body > math[data-to="200"] { display: none; } }
+@container math (min-width: 240px) { .math-body > math[data-from="240"] { display: block math; } .math-body > math[data-to="240"] { display: none; } }
+@container math (min-width: 280px) { .math-body > math[data-from="280"] { display: block math; } .math-body > math[data-to="280"] { display: none; } }
+@container math (min-width: 320px) { .math-body > math[data-from="320"] { display: block math; } .math-body > math[data-to="320"] { display: none; } }
+@container math (min-width: 360px) { .math-body > math[data-from="360"] { display: block math; } .math-body > math[data-to="360"] { display: none; } }
+@container math (min-width: 400px) { .math-body > math[data-from="400"] { display: block math; } .math-body > math[data-to="400"] { display: none; } }
+@container math (min-width: 440px) { .math-body > math[data-from="440"] { display: block math; } .math-body > math[data-to="440"] { display: none; } }
+@container math (min-width: 480px) { .math-body > math[data-from="480"] { display: block math; } .math-body > math[data-to="480"] { display: none; } }
+@container math (min-width: 520px) { .math-body > math[data-from="520"] { display: block math; } .math-body > math[data-to="520"] { display: none; } }
+@container math (min-width: 560px) { .math-body > math[data-from="560"] { display: block math; } .math-body > math[data-to="560"] { display: none; } }
+@container math (min-width: 600px) { .math-body > math[data-from="600"] { display: block math; } .math-body > math[data-to="600"] { display: none; } }
+@container math (min-width: 640px) { .math-body > math[data-from="640"] { display: block math; } .math-body > math[data-to="640"] { display: none; } }
+@container math (min-width: 680px) { .math-body > math[data-from="680"] { display: block math; } .math-body > math[data-to="680"] { display: none; } }
+@container math (min-width: 720px) { .math-body > math[data-from="720"] { display: block math; } .math-body > math[data-to="720"] { display: none; } }
+@container math (min-width: 760px) { .math-body > math[data-from="760"] { display: block math; } .math-body > math[data-to="760"] { display: none; } }
+@container math (min-width: 800px) { .math-body > math[data-from="800"] { display: block math; } .math-body > math[data-to="800"] { display: none; } }
+@container math (min-width: 880px) { .math-body > math[data-from="880"] { display: block math; } .math-body > math[data-to="880"] { display: none; } }
+@container math (min-width: 960px) { .math-body > math[data-from="960"] { display: block math; } .math-body > math[data-to="960"] { display: none; } }
+@container math (min-width: 1040px) { .math-body > math[data-from="1040"] { display: block math; } .math-body > math[data-to="1040"] { display: none; } }
+/* below 560 the number stands under the formula, flush right: the formula
+   keeps the whole column */
+@media (max-width: 559px) {
+  .math { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .math .eq-no { justify-self: end; }
+}
 /* every formula, block or inline, is set in the accent and bold (owner,
    29 Oct 2026; D-048 amended); exempt from one accent per section (G-15) */
 math { color: var(--accent-01); font-weight: 700; }
@@ -586,13 +643,16 @@ math { color: var(--accent-01); font-weight: 700; }
   color: var(--ink-3); font-variant-numeric: var(--num); white-space: nowrap;
 }
 .doc p math { font-size: 1.05em; }
-/* a formula in running text that is wider than the line scrolls in its own
-   box (MathML does not wrap); it keeps its baseline (G-06) */
-.doc :is(p, li, td, th) math:not([display="block"]) { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+/* a formula in running text that is wider than the line can be swiped in
+   its own box (MathML does not wrap), without a scrollbar (owner, 30 Oct
+   2026); it keeps its baseline (G-06) */
+.doc :is(p, li, td, th) math:not([display="block"]) { max-width: 100%; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
+.doc :is(p, li, td, th) math:not([display="block"])::-webkit-scrollbar { display: none; }
 /* scripts and inline fractions shrink to 71% per level: floored at 12px (G-01) */
 math :is(msub, msup, msubsup, munder, mover, munderover, mmultiscripts) > :not(:first-child),
 math mroot > :last-child,
 math:not([display="block"]) mfrac > *,
+math mstyle[displaystyle="false"] mfrac > *,   /* \tfrac, and a \frac in a cases row, inside a display formula */
 math mfrac mfrac > *,
 math :is(msub, msup, msubsup, munder, mover, munderover) > mfrac:not(:first-child) > *,
 math :is(msub, msup, msubsup, munder, mover, munderover) > :not(:first-child) mfrac > * { font-size: max(12px, 0.71em); }

@@ -62,21 +62,15 @@ Once the population and observation windows are right, sampling variation remain
 Consider a hypothetical account-level experiment meant to distinguish conversion of 20% from 24%: a difference of four percentage points, or a 20% relative increase. For equal arms, a common normal-approximation calculation is:
 
 $$
-n=
-\left\lceil
-\frac{
-\left[
-z_{1-\alpha/2}\sqrt{2\bar p(1-\bar p)}
-+z_{1-\beta}
-\sqrt{p_0(1-p_0)+p_1(1-p_1)}
-\right]^2
-}{
-(p_1-p_0)^2
-}
-\right\rceil,
+n=\left\lceil\frac{A^2}{(p_1-p_0)^2}\right\rceil,
 $$
 
-where $\bar p=(p_0+p_1)/2$, $\alpha$ is the two-sided false-positive rate and $1-\beta$ the desired power.
+$$
+A=z_{1-\alpha/2}\sqrt{2\bar p(1-\bar p)}
++z_{1-\beta}\sqrt{p_0(1-p_0)+p_1(1-p_1)},
+$$
+
+where $A$ collects the two error terms, $\bar p=(p_0+p_1)/2$, $\alpha$ is the two-sided false-positive rate and $1-\beta$ the desired power.
 
 At 5% significance and 80% power, the calculation gives **1,683 accounts per arm**. The normal approximation assumes independent accounts, adequate counts and the specified fixed analysis; it is not an exact finite-sample guarantee.
 

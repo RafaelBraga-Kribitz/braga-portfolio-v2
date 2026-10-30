@@ -18,12 +18,28 @@
 // A formula KaTeX cannot parse fails the build, naming the file and the
 // formula: the error fallback would render red text with an inline style.
 //
+// A display formula that may be wider than its column ships in versions
+// (owner, 30 Oct 2026: the site never scrolls sideways): as written, broken
+// at its relations, broken at its terms too (src/lib/math-fit.mjs). Each
+// <math> carries the container widths it is shown at, data-from and
+// data-to, and components.css shows the least broken one that fits:
+//
+//   <div class="math-body" tabindex="0">
+//     <math display="block" data-w="31" data-from="480">…as written…</math>
+//     <math display="block" data-w="17" data-from="0" data-to="480">…broken…</math></div>
+//
+// data-w is the version's width in em with the headroom (FIT_MARGIN),
+// rounded up: where even the narrowest version is wider than the column
+// (a fraction, a \left…\right group or a cases block cannot break),
+// components.css shrinks it to the column, never below 13px.
+//
 // KaTeX writes <math xmlns="http://www.w3.org/1998/Math/MathML">; Sätteri's
 // htmlToHast stores that attribute as ":xmlns", which serialises as an
 // invalid attribute name. In HTML the parser puts <math> in the MathML
 // namespace on its own, so the attribute is dropped before parsing.
 import katex from 'katex';
 import { htmlToHast } from 'satteri';
+import { breakVariants, mathWidth, fitRanges, fitEm } from '../math-fit.mjs';
 
 const MATHML_XMLNS = / xmlns="http:\/\/www\.w3\.org\/1998\/Math\/MathML"/g;
 
@@ -39,6 +55,14 @@ function mathOf(nodes) {
     else if (Array.isArray(n.children)) out.push(...mathOf(n.children));
   }
   return out;
+}
+
+/** KaTeX's HTML for one formula, as its one <math> element. @param {string} html @param {string} value */
+function parse(html, value) {
+  const tree = htmlToHast(html.replace(MATHML_XMLNS, ''), { fragment: true });
+  const nodes = mathOf('children' in tree ? tree.children : []);
+  if (nodes.length !== 1) throw new Error(`KaTeX returned ${nodes.length} <math> elements for: ${value}`);
+  return nodes;
 }
 
 /**
@@ -65,10 +89,28 @@ export default function katexPlugin(options = {}) {
           const where = ctx.fileURL ? ctx.fileURL.pathname : 'markdown';
           throw new Error(`KaTeX could not render ${displayMode ? 'display' : 'inline'} math in ${where}: ${error instanceof Error ? error.message : String(error)}\n  ${value}`);
         }
-        const tree = htmlToHast(html.replace(MATHML_XMLNS, ''), { fragment: true });
-        const nodes = mathOf('children' in tree ? tree.children : []);
-        if (nodes.length !== 1) throw new Error(`KaTeX returned ${nodes.length} <math> elements for: ${value}`);
-        ctx.replaceNode(inPre ? parent : node, nodes);
+        const nodes = parse(html, value);
+        if (!displayMode) { ctx.replaceNode(inPre ? parent : node, nodes); return; }
+        // the versions of a display formula, least broken first; a version
+        // KaTeX cannot render is left out (the written one always renders)
+        const versions = [nodes[0]];
+        const measure = (/** @type {string} */ tex) => {
+          try { return mathWidth(parse(katex.renderToString(tex, { ...settings, displayMode, throwOnError: true }), tex)[0]); } catch { return null; }
+        };
+        for (const tex of breakVariants(value, measure).slice(1)) {
+          try { versions.push(parse(katex.renderToString(tex, { ...settings, displayMode, throwOnError: true }), tex)[0]); } catch { /* not a version */ }
+        }
+        const widths = versions.map((m) => mathWidth(m));
+        const ranges = fitRanges(widths);
+        // every version says its width (em, with the headroom, whole): where
+        // no version fits, the one shown shrinks to the column, down to a floor
+        versions.forEach((m, i) => { m.properties = { ...m.properties, dataW: String(fitEm(widths[i])) }; });
+        const shown = versions.map((m, i) => ({ m, r: ranges[i] })).filter((v) => v.r);
+        if (shown.length === 1) { ctx.replaceNode(inPre ? parent : node, [shown[0].m]); return; }
+        for (const { m, r } of shown) {
+          m.properties = { ...m.properties, dataFrom: String(r.from), ...(Number.isFinite(r.to) ? { dataTo: String(r.to) } : {}) };
+        }
+        ctx.replaceNode(inPre ? parent : node, [{ type: 'element', tagName: 'div', properties: { className: ['math-body'], tabIndex: 0 }, children: shown.map((v) => v.m) }]);
       },
     },
   };

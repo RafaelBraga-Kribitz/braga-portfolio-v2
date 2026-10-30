@@ -5,10 +5,12 @@
 // rows carry no year since the UX pass of 22 Oct 2026: every row read
 // "2026", and the date is in the meta or on the page. ↗ marks a link that leaves the site
 // (D-030); internal rows carry →. A project row may carry its stack
-// keywords (owner, 30 Oct 2026): a column of mono words between the meta
-// and the arrow, for the reader who scans for skills.
+// keywords (owner, 30 Oct 2026): boxed mono words between the meta and the
+// arrow, for the reader who scans for skills, two to a line and paired so
+// the lines come out even (src/lib/keyword-lines.mjs).
 import type { Lang, StatusState } from '../lib/i18n';
 import StatusMark from './StatusMark.astro';
+import { keywordLines } from '../lib/keyword-lines.mjs';
 
 interface Props {
   code: string;
@@ -28,11 +30,12 @@ interface Props {
 }
 
 const { code, title, sub, meta = [], status, lang, trail, href, external = false, textLang, keys = [] } = Astro.props;
+const keyLines = keywordLines(keys);
 ---
 <a class="listing-row" href={href}>
   <span class="lr-index lr-code">{code}</span>
   <span class="lr-title" lang={textLang && textLang !== lang ? textLang : undefined}><span class="lr-title-main">{title}</span>{sub && <span class="lr-title-sub">{sub}</span>}</span>
   <span class="lr-meta">{meta.map((m) => <span class="lr-mono">{m}</span>)}{status && <StatusMark state={status} lang={lang} />}</span>
-  {keys.length > 0 && <span class="lr-keys">{keys.map((k) => <span class="lr-mono">{k}</span>)}</span>}
+  {keyLines.length > 0 && <span class="lr-keys">{keyLines.map((line) => <span class="lr-keys-line">{line.map((k) => <span class="lr-key">{k}</span>)}</span>)}</span>}
   <span class="lr-trail lr-year">{trail && <span class="lr-trail-word">{trail} </span>}<span class="lr-arrow" aria-hidden="true">{external ? '↗' : '→'}</span></span>
 </a>
