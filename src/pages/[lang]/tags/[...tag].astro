@@ -26,7 +26,7 @@ export async function getStaticPaths() {
     const notes = await notesOf(lang);
     const rows = [
       ...projects.map((p) => ({ tags: p.data.tags, date: p.data.date, order: p.data.code, code: p.data.code, title: p.data.title, sub: p.data.summary, meta: [p.data.domain], status: p.data.status, href: workRoute(p.data.slug, lang) })),
-      ...writing.map((e, i) => ({ tags: e.data.tags, date: e.data.date, order: writingCode(e, i), code: writingCode(e, i), title: e.data.title, sub: e.data.summary, meta: [t(lang, `kind.${e.data.kind}`), formatDate(e.data.date, lang)], status: undefined, href: writingRoute(e.data.slug, lang) })),
+      ...writing.map((e) => ({ tags: e.data.tags, date: e.data.date, order: writingCode(e, writing), code: writingCode(e, writing), title: e.data.title, sub: e.data.summary, meta: [t(lang, `kind.${e.data.kind}`), formatDate(e.data.date, lang)], status: undefined, href: writingRoute(e.data.slug, lang) })),
       ...notes.map((r) => ({ tags: r.entry.data.tags, date: r.entry.data.date, order: r.code, code: r.code, title: r.entry.data.title, sub: '', meta: [t(lang, 'kind.note'), r.subtopic || r.topic].filter(Boolean), status: undefined, href: noteRoute(r.entry.data.slug, lang) })),
     ];
     const byTag = new Map<string, typeof rows>();

@@ -1,5 +1,5 @@
 ---
-code: "02-01"
+code: "02-01-001"
 kind: essay
 date: "2026-09-19"
 summary: "Ein vom Anbieter selbst verfasster Benchmark zu KI-Prospecting rechtfertigt ein Pilotprojekt, keinen Kauf. Vier Bedingungen auf Käuferseite schließen die Lücke."

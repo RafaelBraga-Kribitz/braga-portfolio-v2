@@ -1,5 +1,5 @@
 ---
-code: "02-06"
+code: "02-01-005"
 kind: essay
 date: "2026-10-30"
 summary: "A reporting period can end before the outcomes inside it have had time to occur. Cohort age, competing outcomes and statistical resolution decide what a result can mean."

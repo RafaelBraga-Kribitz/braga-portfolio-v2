@@ -83,6 +83,13 @@ const slug = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'a slug is lower-cas
 /** Document code "01-04" (section · item), as in the Site specimen. */
 const code = z.string().regex(/^\d{2}-\d{2}$/, 'a code is two two-digit groups, e.g. 01-04');
 
+/**
+ * Essay code "02-01-008" (section · category · item; owner, 30 Oct 2026):
+ * 02-01 is the essays and 02-02 the notes, so a new essay never moves the
+ * notes' references, and three groups is the longest a code gets.
+ */
+const essayCode = z.string().regex(/^02-01-\d{3}$/, 'an essay code is 02-01 and a three-digit item, e.g. 02-01-008');
+
 const lang = z.enum(LANGS);
 const tags = z.array(z.string().min(1)).default([]);
 
@@ -140,8 +147,8 @@ export const projectSchema = z
 
 export const writingSchema = z.object({
   title: z.string().min(1),
-  /** Optional document code ("02-01"); equation numbers derive from it. */
-  code: code.optional(),
+  /** Optional essay code ("02-01-008"), kept for good once published; without it the essay is numbered by publication date. */
+  code: essayCode.optional(),
   kind: z.enum(WRITING_KINDS),
   date: isoDate,
   updated: isoDate.optional(),

@@ -18,6 +18,8 @@
 //   > [!cta] Call to action    → <a href>text <span class="glyph">↗</span></a>
 //   > [!bars] Fig. 01-01-1 · … → the evidence figure of the Site specimen
 //                                (pattern 05), not a callout: see "bars" below
+//   > [!download] Get the book → one button for several files, not a
+//                                callout: see "download" below
 //   ==text== in a paragraph    → <mark>text</mark> (list items and table
 //                                cells too; headings stay plain)
 //   a callout inside a callout → built by the outer one, any depth
@@ -511,6 +513,56 @@ function barsFigure(head, ctx) {
   return el('figure', { className: ['evidence'], dataWidth: 'wide' }, children);
 }
 
+/* ---------------------------------------------------------------------------
+   download · one button for one thing in several files (owner, 30 Oct 2026)
+
+     > [!download] Download the book            ← the face of the button
+     > - [[book.pdf|PDF]] — 15 MB               ← one item per file: a link
+     > - [[book.epub|EPUB]] — 6 MB                (a vault attachment), then
+                                                  an optional note
+   becomes, like the contact button (components.css), a face in the accent
+   that splits on hover or keyboard focus into one cell per file:
+     <div class="file-split" data-n="2">
+       <span class="file-split-face" aria-hidden="true">Download the book <span class="glyph">↗</span></span>
+       <a class="file-split-link" href="/media/…/book.pdf" target="_blank" rel="noopener" aria-label="Download the book: PDF, 15 MB (opens in a new tab)">PDF <span class="file-split-note">15 MB</span></a> …</div>
+   Each file opens in a new tab (owner, 30 Oct 2026), so the reader keeps
+   the page: a PDF opens in the browser's viewer, a format the browser
+   cannot show (EPUB) downloads from there. No script: the links are always
+   in the page and reachable by Tab; on a touch screen (no hover) they sit
+   under the face. Two to four files.
+   --------------------------------------------------------------------------- */
+
+/** @param {any} head @param {any[]} content @param {any} ctx */
+function downloadSplit(head, content, ctx) {
+  const where = ctx.fileURL ? ctx.fileURL.pathname : 'markdown';
+  const fail = (msg) => { throw new Error(`download callout in ${where}: ${msg}`); };
+  const label = head.title.length ? plain(head.title).trim() : 'Download';
+  const lang = ctx.data && ctx.data.astro && ctx.data.astro.frontmatter && ctx.data.astro.frontmatter.lang === 'de' ? 'de' : 'en';
+  const newTab = lang === 'de' ? 'öffnet in einem neuen Tab' : 'opens in a new tab';
+  const items = [];
+  for (const block of content) {
+    if (block.type !== 'list') continue;
+    for (const li of block.children) {
+      const para = (li.children || []).find((c) => c.type === 'paragraph');
+      const i = para ? para.children.findIndex((n) => n.type === 'link') : -1;
+      if (i < 0) fail(`“${plain(li.children || []).trim()}” has no link to a file`);
+      items.push({ link: para.children[i], note: plain(trimLead(para.children.slice(i + 1))).trim() });
+    }
+  }
+  if (items.length < 2 || items.length > 4) fail(`it takes two to four files, not ${items.length}`);
+  const cells = items.map(({ link, note }) => {
+    const name = plain(link.children).trim();
+    return el('a', { className: ['file-split-link'], href: link.url, target: '_blank', rel: ['noopener'], ariaLabel: `${label}: ${name}${note ? `, ${note}` : ''} (${newTab})` }, [
+      ...clone(link.children),
+      ...(note ? [text(' '), el('span', { className: ['file-split-note'] }, [text(note)])] : []),
+    ]);
+  });
+  return el('div', { className: ['file-split'], dataN: String(items.length) }, [
+    el('span', { className: ['file-split-face'], ariaHidden: 'true' }, [text(`${label} `), el('span', { className: ['glyph'] }, [text('↗')])]),
+    ...cells,
+  ]);
+}
+
 /**
  * Builds the callout for a blockquote's (cloned) children, or null when the
  * blockquote is an ordinary quotation. Callouts nested inside are built here
@@ -524,6 +576,7 @@ function build(blocks, ctx, node) {
   const { type, metadata, fold } = head;
   const content = head.content;
   nest(content, ctx, node);
+  if (type === 'download') return downloadSplit(head, content, ctx);
   const title = head.title.length ? head.title : [text(type === 'cta' ? 'Call to action' : titleCase(type))];
   if (type === 'spec') specList(content, ctx, node);
   else if (type === 'metrics') metricsList(content, ctx, node);

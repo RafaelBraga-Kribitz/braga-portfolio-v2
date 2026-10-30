@@ -7,11 +7,13 @@
 interface Props {
   head?: { index: string; title: string; meta: string; trail: string };
   class?: string;
+  /** An anchor for links into the page (the Writing page's #essays, #notes). */
+  id?: string;
 }
 
-const { head, class: className } = Astro.props;
+const { head, class: className, id } = Astro.props;
 ---
-<div class:list={['listing', className]}>
+<div class:list={['listing', className]} id={id}>
   {head && <div class="listing-head"><span class="lr-index">{head.index}</span><span class="lr-title">{head.title}</span><span class="lr-meta">{head.meta}</span><span class="lr-trail">{head.trail}</span></div>}
   <slot />
 </div>

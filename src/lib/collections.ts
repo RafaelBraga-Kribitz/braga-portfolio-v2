@@ -23,21 +23,50 @@ export async function projectsOf(lang: Lang): Promise<ProjectEntry[]> {
   return list.sort((a, b) => a.data.code.localeCompare(b.data.code) || a.data.slug.localeCompare(b.data.slug));
 }
 
-/** Non-draft essays of a language: by code when they have one, then newest first. */
+/**
+ * Non-draft essays of a language, newest first (owner, 30 Oct 2026): a
+ * featured essay leads, then by date, latest at the top; essays of one day
+ * by code, highest first, so the list is reverse publication order
+ * throughout and the latest essay is always the first row.
+ */
 export async function writingOf(lang: Lang): Promise<WritingEntry[]> {
   const list = await getCollection('writing', (e) => e.data.lang === lang && !e.data.draft);
+  const codes = essayCodes(list);
   return list.sort((a, b) => {
     // featured (a note's `featured: true`, Ghost's featured post) first
     if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
-    const ca = a.data.code ?? '￿';
-    const cb = b.data.code ?? '￿';
-    return ca.localeCompare(cb) || b.data.date.localeCompare(a.data.date) || a.data.slug.localeCompare(b.data.slug);
+    return b.data.date.localeCompare(a.data.date) || codes.get(b.id)!.localeCompare(codes.get(a.id)!) || a.data.slug.localeCompare(b.data.slug);
   });
 }
 
-/** The listing code of a writing entry: its own code, else 02-NN by its place in writingOf(). */
-export function writingCode(entry: WritingEntry, index: number): string {
-  return entry.data.code ?? `02-${String(index + 1).padStart(2, '0')}`;
+/** Writing's two categories (owner, 30 Oct 2026): stable references, so a new essay never renumbers the notes. */
+export const ESSAYS_CODE = '02-01';
+/** How many essays the home page lists before its link to all of them. */
+export const HOME_ESSAYS = 5;
+
+/**
+ * Every essay's code: its own `code` (02-01-008), else the next free item
+ * number in publication order (oldest first, so a new essay takes the next
+ * number and the others keep theirs). Codes are the essay's permanent
+ * reference; the listing order (writingOf) is separate from them.
+ */
+export function essayCodes(list: readonly WritingEntry[]): Map<string, string> {
+  const out = new Map<string, string>();
+  const taken = new Set(list.map((e) => e.data.code).filter(Boolean));
+  let n = 0;
+  const next = () => {
+    let c: string;
+    do c = `${ESSAYS_CODE}-${String(++n).padStart(3, '0')}`; while (taken.has(c));
+    return c;
+  };
+  const oldest = [...list].sort((a, b) => a.data.date.localeCompare(b.data.date) || a.data.slug.localeCompare(b.data.slug));
+  for (const e of oldest) out.set(e.id, e.data.code ?? next());
+  return out;
+}
+
+/** The code of one essay within its language's list. */
+export function writingCode(entry: WritingEntry, list: readonly WritingEntry[]): string {
+  return essayCodes(list).get(entry.id) ?? ESSAYS_CODE;
 }
 
 /** The entry after `current` in a list, wrapping to the first; none when the list has no other entry. */

@@ -1,5 +1,5 @@
 ---
-code: "02-03"
+code: "02-01-002"
 kind: essay
 date: "2026-10-30"
 summary: "A first-hand account of Paraguay’s 2018 presidential campaign, and what a later reconstruction taught me about allocation, evidence and uncertainty."
@@ -117,7 +117,7 @@ During the 2018 campaign, my work rested on segmentation, operational feedback, 
 
 On 22 April 2018, Mario Abdo Benítez won the presidency.
 
-> [!bars] Fig. 02-03-1 · Verified result
+> [!bars] Fig. 1 · Verified result
 > Abdo won by 95,603 votes, about 3.70 percentage points.
 > - Abdo — 46.43
 > - Alegre — 42.73
@@ -132,7 +132,7 @@ What the result cannot show is the causal effect of my contribution. The victory
 
 Even a sequence of improving polls would not establish causality: a rise in support after an advertising push might reflect the advertising, a political event, changing turnout expectations, the opponent’s actions, sampling error or some combination. And the published polls **do not show a smooth, steadily rising curve** in the first place.
 
-> [!bars] Fig. 02-03-2 · Published polls
+> [!bars] Fig. 2 · Published polls
 > Eight published polls disagreed by up to 36 points on the margin.
 > - 1 Feb — 13.2
 > - 1 Mar — 31.2
@@ -190,7 +190,7 @@ In the reconstruction, the allocator produces about **54.77% more linearised per
 
 A second exercise shows why uncertainty matters. In a retrospective week-8 scenario, the system updates one allocation assumption in response to a modelled change in the polling margin and re-solves the budget. At the scenario’s posterior mean, about $766,000 moves away from six competitive departments, and the model’s persuasion-weighted objective improves by about 1.2% against keeping the original allocation.
 
-> [!bars] Fig. 02-03-3 · Week-8 reallocation
+> [!bars] Fig. 3 · Week-8 reallocation
 > At the week-8 mean, the model moves money from the swing departments to Central and Asunción.
 > - Central — 322.5
 > - Asunción — 174.5
@@ -220,7 +220,7 @@ Here $m$ is the modelled polling margin in percentage points, 8.56 the modelled 
 
 At the pessimistic end of the uncertainty interval, the preferred direction of reallocation reverses.
 
-> [!bars] Fig. 02-03-4 · Alto Paraná under uncertainty
+> [!bars] Fig. 4 · Alto Paraná under uncertainty
 > At the pessimistic margin, the decision for Alto Paraná reverses.
 > - Optimistic — 527.7
 > - Week-8 mean — 528.8
