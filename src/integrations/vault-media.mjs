@@ -13,7 +13,7 @@ const TYPES = {
   png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', gif: 'image/gif', webp: 'image/webp', avif: 'image/avif', svg: 'image/svg+xml',
   mp4: 'video/mp4', webm: 'video/webm', mov: 'video/quicktime', m4v: 'video/mp4',
   mp3: 'audio/mpeg', m4a: 'audio/mp4', wav: 'audio/wav', ogg: 'audio/ogg', flac: 'audio/flac',
-  pdf: 'application/pdf', zip: 'application/zip', csv: 'text/csv', txt: 'text/plain',
+  pdf: 'application/pdf', epub: 'application/epub+zip', zip: 'application/zip', csv: 'text/csv', txt: 'text/plain',
 };
 
 /** @param {{ base?: string }} [opts] */
