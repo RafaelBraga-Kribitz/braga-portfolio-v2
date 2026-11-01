@@ -279,3 +279,6 @@ td, th, dd, output, input, .num { font-variant-numeric: var(--num); }
 .doc > .callout[data-callout="summary"] + .callout[data-callout="metrics"] { margin-top: var(--flow-block); }  /* abstract → metric strip */
 .doc > * + .footnotes, .doc > * + .doc-end { margin-top: var(--flow-group); }             /* document → notes · end bar */
 .doc > .footnotes + .doc-end { margin-top: var(--flow-block); }
+
+/* Avoid short fragments when the browser supports hyphenation limits. */
+.doc p { hyphenate-limit-chars: 8 4 4; }

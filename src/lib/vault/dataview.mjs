@@ -41,7 +41,6 @@ function tokenize(src) {
   return toks;
 }
 
-const KEYWORDS = ['FROM', 'WHERE', 'SORT', 'LIMIT', 'FLATTEN', 'GROUP'];
 
 /** Parses a query into { mode, fields, withoutId, from, where, sort, limit }. */
 export function parseQuery(src) {

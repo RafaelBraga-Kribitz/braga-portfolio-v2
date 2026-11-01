@@ -292,7 +292,7 @@ function ctaLink(content, ctx, node) {
   content[found.block] = el('div', { className: ['mail-split'], dataU: u, dataD: d, ...(subject ? { dataSubject: subject } : {}) }, [
     el('span', { className: ['mail-split-face'], ariaHidden: 'true' }, [el('span', { className: ['mail-split-addr'], dataU: u, dataD: d }), el('span', { className: ['glyph'] }, [text('↗')])]),
     el('button', { type: 'button', className: ['mail-split-copy'], ariaLabel: w.copyName, dataLabel: w.copy, dataCopied: w.copied, dataFailed: w.failed, hidden: true }, [text(w.copy)]),
-    el('a', { className: ['mail-split-open'], href: lang === 'de' ? '#kontakt' : '#contact', ariaLabel: w.openName, hidden: true }, [text(`${w.open} `), el('span', { className: ['glyph'], ariaHidden: 'true' }, [text('↗')])]),
+    el('a', { className: ['mail-split-open'], href: lang === 'de' ? '#kontakt' : '#contact', ariaLabel: w.fallbackName, dataOpenName: w.openName }, [text(`${w.open} `), el('span', { className: ['glyph'], ariaHidden: 'true' }, [text('↗')])]),
   ]);
 }
 

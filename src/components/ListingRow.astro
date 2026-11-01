@@ -14,6 +14,7 @@ import { keywordLines } from '../lib/keyword-lines.mjs';
 
 interface Props {
   code: string;
+  register?: boolean;
   title: string;
   sub?: string;
   meta?: string[];
@@ -29,10 +30,10 @@ interface Props {
   keys?: string[];
 }
 
-const { code, title, sub, meta = [], status, lang, trail, href, external = false, textLang, keys = [] } = Astro.props;
+const { register = false, code, title, sub, meta = [], status, lang, trail, href, external = false, textLang, keys = [] } = Astro.props;
 const keyLines = keywordLines(keys);
 ---
-<a class="listing-row" href={href}>
+<a class:list={["listing-row", register && "lr-register"]} href={href}>
   <span class="lr-index lr-code">{code}</span>
   <span class="lr-title" lang={textLang && textLang !== lang ? textLang : undefined}><span class="lr-title-main">{title}</span>{sub && <span class="lr-title-sub">{sub}</span>}</span>
   <span class="lr-meta">{meta.map((m) => <span class="lr-mono">{m}</span>)}{status && <StatusMark state={status} lang={lang} />}</span>

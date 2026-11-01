@@ -88,7 +88,7 @@ export function tokenFor(rgb) {
 
 /** An inline style attribute as SVG presentation attributes, one per declaration (no inline style on a page, gate L-04). */
 function styleToAttributes(svg) {
-  return svg.replace(/<([a-zA-Z][\w:-]*)([^<>]*?)\sstyle="([^"]*)"([^<>]*)>/g, (all, tag, before, style, after) => {
+  return svg.replace(/<([a-zA-Z][\w:-]*)([^<>]*?)\sstyle="([^"]*)"([^<>]*)>/g, (_all, tag, before, style, after) => {
     const have = new Set([...`${before} ${after}`.matchAll(/\s([\w:-]+)=/g)].map((m) => m[1]));
     const attrs = style.split(';').map((d) => d.trim()).filter(Boolean).map((d) => {
       const i = d.indexOf(':');

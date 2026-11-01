@@ -584,3 +584,8 @@ main > .doc:last-child, .doc-opener.grid + .grid { padding-bottom: 64px; }
   + :is(h2, .callout[data-callout="summary"], .callout[data-callout="metrics"], .callout[data-callout="definition"], .callout[data-callout="bookmark"], details.callout, .metric-strip, .table-scroll, .math, .toc-compact, .doc-close, .doc-end, .footnotes, figure.evidence) { margin-top: 0; }
 .section:has(> .listing:last-child):has(+ .section > .section-heading:first-child) { padding-bottom: 0; }
 .bench:has(.bench-kpis:last-child) + .bench-rule { margin-top: 0; }
+
+.cover-lead { hyphens: manual; -webkit-hyphens: manual; }
+@media (max-width: 767px) {
+  .cover-index { display: none; }
+}

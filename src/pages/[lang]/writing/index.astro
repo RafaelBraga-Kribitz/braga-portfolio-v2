@@ -15,7 +15,7 @@ import SectionHeading from '@/components/SectionHeading.astro';
 import Listing from '@/components/Listing.astro';
 import ListingRow from '@/components/ListingRow.astro';
 import StatusMark from '@/components/StatusMark.astro';
-import { t, formatDate, type Lang } from '@/lib/i18n';
+import { t, isDraftLang, formatDate, type Lang } from '@/lib/i18n';
 import { route, writingRoute } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
 import { writingOf, writingCode, listIndex, libraryOf, ESSAYS_CODE, NOTES_CODE } from '@/lib/collections';
@@ -41,10 +41,8 @@ const libraryCount = library.reduce((n, a) => n + a.rows.length, 0);
       </Listing>
     )}
     {libraryCount > 0 && (
-      <Listing id="notes" head={{ index: NOTES_CODE, title: t(lang, 'notes.word'), meta: '', trail: '' }}>
-        <ListingRow code={NOTES_CODE} title={t(lang, 'notes.word')} sub={library.map((a) => a.title).join(' · ')} meta={[t(lang, 'kind.library'), t(lang, 'notes.count').replace('{n}', String(libraryCount))]} lang={lang} href={route('notes', lang)} />
-      </Listing>
+      <a id="notes" class="writing-forward" href={route('notes', lang)}><span class="lr-code">{NOTES_CODE}</span> {t(lang, 'notes.word')} · {t(lang, 'notes.count').replace('{n}', String(libraryCount))}{lang === 'de' && ' · auf Englisch'} <span aria-hidden="true">→</span></a>
     )}
-    {lang === 'de' && <div class="doc-meta"><StatusMark state="in-build" lang={lang} label={t(lang, 'draft')} /></div>}
+    {isDraftLang(lang) && <div class="doc-meta"><StatusMark state="in-build" lang={lang} label={t(lang, 'draft')} /></div>}
   </section>
 </Base>

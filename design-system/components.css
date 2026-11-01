@@ -865,3 +865,20 @@ a.tag:hover { color: var(--ink); text-decoration-color: var(--ink); }
    block target: 24px tall, 44 below 768 (gate G-05) */
 .doc td > a:only-child { display: inline-flex; align-items: center; min-height: 24px; }
 @media (max-width: 767px) { .doc td > a:only-child { min-height: 44px; } }
+
+/* Register links lead to collections rather than individual documents. */
+.listing-row.lr-register { padding-block: var(--space-2); }
+.lr-register .lr-title-main { font-family: var(--font-mono); font-size: var(--t-body); font-weight: 400; line-height: 1.4; }
+.lr-register .lr-title-sub { font-size: var(--t-small); }
+.writing-forward { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px; min-height: 44px; padding-block: var(--space-3); margin-top: var(--block-gap); border-top: var(--rule); color: var(--ink); }
+.section-forward { display: none; }
+@media (max-width: 720px) {
+  .lr-title-main { line-height: 1.2; }
+  :is(#work, #writing, #tools) > .section-heading .section-heading-link { display: none; }
+  .section-forward { display: flex; align-items: center; gap: 8px; min-height: 44px; color: var(--ink); }
+}
+/* Preserve the primary contact accent after a touch opens the split. */
+.mail-split .mail-split-open { background: var(--accent-01); border-color: var(--accent-01); color: var(--on-accent); }
+/* The static address face remains a working contact link without script. */
+.mail-split [hidden] { display: none; }
+.mail-split:not([data-ready]) .mail-split-open { grid-column: 1 / -1; opacity: 1; pointer-events: auto; color: transparent; background: transparent; border-color: transparent; }

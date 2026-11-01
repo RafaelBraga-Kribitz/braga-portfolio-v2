@@ -183,9 +183,6 @@ function tokens(tex) {
   return out;
 }
 
-/** Joins pieces back into TeX. @param {{ t: string }[]} ps */
-const join = (ps) => ps.map((p) => p.t).join('').trim();
-
 /**
  * True when the TeX already lays itself out over lines: a line break (\\\\)
  * or an alignment point (&) at the top level, or a multi-line environment
@@ -198,9 +195,6 @@ function managed(tex) {
   if (ps.some((p) => p.top && (p.t === '&' || p.t === '\\\\'))) return true;
   return ps.length === 1 && /^\\begin\{(aligned|align\*?|gathered|gather\*?|split|multline\*?|alignedat|eqnarray\*?)\}/.test(ps[0].t);
 }
-
-/** Where a line may break, best first: a relation, a separator, a sign, the author's own line break in a product, a space inside \text. */
-const BREAK_KINDS = ['rel', 'sep', 'bin', 'nl', 'word'];
 
 /**
  * The formula cut at every place a line may break, at the top level only.

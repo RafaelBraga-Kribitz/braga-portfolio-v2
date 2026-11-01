@@ -19,9 +19,10 @@ interface Props {
   /** The language link: the same page in the other language, or that
       language's home when the page has no twin (Base.astro decides). */
   otherHref: string;
+  hasTwin?: boolean;
 }
 
-const { lang, current, otherHref } = Astro.props;
+const { lang, current, otherHref, hasTwin = true } = Astro.props;
 const other = otherLang(lang);
 const codes: Record<Lang, string> = { en: 'EN', de: 'DE' };
 ---
@@ -35,8 +36,8 @@ const codes: Record<Lang, string> = { en: 'EN', de: 'DE' };
     </nav>
     <div class="shell-cluster">
       <a class="shell-contact" href={contactRoute(lang)}>{t(lang, 'link.contact')}</a>
-      <a class="shell-lang" href={otherHref} hreflang={other} lang={other}>{codes[lang]}<span class="shell-lang-other">/ {codes[other]}</span></a>
-      <button class="shell-theme" type="button" aria-label={t(lang, 'theme.toggle')} data-label={t(lang, 'theme.toggle')} data-light={t(lang, 'theme.light')} data-dark={t(lang, 'theme.dark')}><span></span></button>
+      <a class="shell-lang" href={otherHref} hreflang={other} lang={hasTwin ? other : lang} aria-label={!hasTwin ? t(lang, 'translation.unavailable') : undefined} title={!hasTwin ? t(lang, 'translation.unavailable') : undefined}>{codes[lang]}<span class="shell-lang-other">{hasTwin ? `/ ${codes[other]}` : lang === 'en' ? 'only' : 'allein'}</span></a>
+      <button class="shell-theme" type="button" aria-pressed="false" aria-label={t(lang, 'theme.toggle')} data-label={t(lang, 'theme.toggle')} data-light={t(lang, 'theme.light')} data-dark={t(lang, 'theme.dark')}><span></span></button>
     </div>
   </div>
 </header>

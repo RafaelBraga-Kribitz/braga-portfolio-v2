@@ -11,7 +11,7 @@ import SectionHeading from '@/components/SectionHeading.astro';
 import Listing from '@/components/Listing.astro';
 import ListingRow from '@/components/ListingRow.astro';
 import StatusMark from '@/components/StatusMark.astro';
-import { t, type Lang } from '@/lib/i18n';
+import { t, isDraftLang, type Lang } from '@/lib/i18n';
 import { route } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
 import { tools, toolsProse } from '@/lib/catalogue';
@@ -46,6 +46,6 @@ const copy = {
         <ListingRow code={row.code} title={row.title} sub={row.sub} meta={[row.domain]} status={row.status} lang={lang} trail={t(lang, 'open')} href={route(row.page, lang)} />
       ))}
     </Listing>
-    {lang === 'de' && <div class="doc-meta"><StatusMark state="in-build" lang={lang} label={t(lang, 'draft')} /></div>}
+    {isDraftLang(lang) && <div class="doc-meta"><StatusMark state="in-build" lang={lang} label={t(lang, 'draft')} /></div>}
   </section>
 </Base>

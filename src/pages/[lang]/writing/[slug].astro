@@ -6,6 +6,7 @@
 // Markdown body, the end bar: ← All writing · § END · the next entry in
 // listing order, wrapping to the first). One page per language per entry
 // of the writing collection; every word comes from the entry or from i18n.
+import { readingNeighbours } from '@/lib/register.mjs';
 import Document from '@/layouts/Document.astro';
 import { render } from 'astro:content';
 import { t, formatDate, type Lang } from '@/lib/i18n';
@@ -13,7 +14,7 @@ import { route, writingRoute } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
 import { otherLang } from '@/lib/i18n';
 import { articleGraph } from '@/lib/structured-data';
-import { writingOf, writingCode, nextOf, prevOf, readingMinutes, vaultExtras, ESSAYS_CODE, type WritingEntry } from '@/lib/collections';
+import { writingOf, writingCode, readingMinutes, vaultExtras, ESSAYS_CODE, type WritingEntry } from '@/lib/collections';
 
 export async function getStaticPaths() {
   const paths = [];
@@ -37,8 +38,7 @@ const lang = Astro.params.lang as Lang;
 const d = entry.data;
 const { Content, headings, remarkPluginFrontmatter } = await render(entry);
 const code = writingCode(entry, list);
-const next = nextOf(list, entry);
-const prev = prevOf(list, entry);
+const { older: next, newer: prev } = readingNeighbours(list, entry);
 const nextCode = next ? writingCode(next, list) : '';
 
 // the document as a schema.org Article by the Person (src/lib/structured-data.ts)
@@ -67,8 +67,8 @@ const meta = [
   meta={meta}
   draft={d.translationStatus === 'draft'}
   headings={headings}
-  prev={{ href: route('writing', lang), label: t(lang, 'all-writing') }}
-  next={next && { href: writingRoute(next.data.slug, lang), label: `${nextCode} ${next.data.title}` }}
+  prev={prev ? { href: writingRoute(prev.data.slug, lang), label: `${t(lang, 'writing.newer')} · ${writingCode(prev, list)} ${prev.data.title}` } : { href: route('writing', lang), label: t(lang, 'all-writing') }}
+  next={next && { href: writingRoute(next.data.slug, lang), label: `${t(lang, 'writing.older')} · ${nextCode} ${next.data.title}` }}
   nextDoc={next && writingRoute(next.data.slug, lang)}
   twinPath={twinPath}
   seoTitle={d.seo_title}

@@ -8,7 +8,7 @@ import Base from '@/layouts/Base.astro';
 import DocOpener from '@/components/DocOpener.astro';
 import Callout from '@/components/Callout.astro';
 import AbSampleSizeBench from '@/components/tools/AbSampleSizeBench';
-import { t, type Lang } from '@/lib/i18n';
+import { t, isDraftLang, type Lang } from '@/lib/i18n';
 import { route } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
 
@@ -41,7 +41,7 @@ const copy = {
     title={copy.h1}
     lead={copy.lead}
     meta={copy.meta.map((text) => ({ text }))}
-    draft={lang === 'de'}
+    draft={isDraftLang(lang)}
   />
   <div class="tool-body">
     <AbSampleSizeBench client:load lang={lang} />
