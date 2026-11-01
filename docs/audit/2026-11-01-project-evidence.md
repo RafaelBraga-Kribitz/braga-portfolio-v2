@@ -53,4 +53,3 @@ No environment installation or execution occurred in this review. Therefore no c
 ## 9.2
 
 Not closed. This task inspected source narratives/README consistency only. Dist exists but home/Work/trail/JSON-LD/sitemap/feed equivalence was not run here, per no-full-site-check instruction. Existing static collection code may enforce some consistency; parent should use its own targeted built-artifact check. Repository-current status and historical page status can coexist only when the page makes its date explicit. Source updates require matching EN/DE and targeted rebuild checks.
-

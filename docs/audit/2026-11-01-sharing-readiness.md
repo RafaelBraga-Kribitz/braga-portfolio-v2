@@ -62,3 +62,31 @@ inputs and MMM's weak TV recovery. Energy is explicitly a July foundation
 snapshot, with a link to the newer repository state. Job-market regional
 exclusivity and an unpinned test count were removed. A repository README
 comparison is not an independent reproduction of any of the five projects.
+
+## Election source correction
+
+Directly inspected the government statistical yearbook (table 5.3.1, printed
+page 198) after the old audit and portfolio disagreed. Final totals are
+1,206,067 against 1,110,464, a 95,603-vote lead. Positive/valid candidate votes
+are 2,463,441; all ballots cast are 2,597,989. The corresponding margins are
+3.88 and 3.68 percentage points, respectively. The older audit incorrectly
+said the margin stayed the same with either denominator. See
+`2026-11-01-election-denominators.md` for sources and arithmetic.
+
+About and the project use the unambiguous vote lead in both languages; the
+essay chart names the valid-vote denominator. The repository's +3.70 Series A
+modelling convention stays explicitly separate; no upstream model refit or
+campaign contribution is claimed by this editorial correction.
+
+## Independent review
+
+Source and notes reviews found no critical defect after the two numerical
+input-validation fixes. The final broad review confirmed the election table.
+A nonblocking desktop focus-order issue remains: header controls precede doors
+in DOM order while their visual order differs. Every control is reachable;
+this is not reported as an automatic WCAG failure. Revisit with manual keyboard
+QA rather than silently changing the owner's header layout.
+
+The preliminary browser gate run was stopped after later source changes made
+its build stale. It supplies no final pass/fail claim. Final verification runs
+on the completed implementation instead.

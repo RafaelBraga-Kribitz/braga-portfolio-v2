@@ -1,3 +1,5 @@
+> **Correction, 1 Nov 2026:** MA-03’s election-percentage interpretation is superseded by [the official-yearbook denominator review](2026-11-01-election-denominators.md). The margin changes with the denominator; do not use the historical claim that it is the same either way.
+
 # Website audit · actions for the owner
 
 Audit of 27 Oct 2026 (`website-audit-report.md`). Each item needs the owner:

@@ -197,6 +197,12 @@ German first?** If English only, items 3.1–3.6 can wait, but 3.7 and 3.8 canno
   or the final figures). Files: `vault/Pages/{en,de}/about.md`,
   `vault/Projects/{en,de}/decision-analytics-reconstruction.md`,
   `vault/Essays/en/paraguay-2018-campaign-to-decision-analytics.md`.
+  Execution update: official-yearbook inspection resolves the historical
+  denominator distinction; see `docs/audit/2026-11-01-election-denominators.md`.
+  About/project copy and the essay chart now separate the official 95,603-vote
+  lead from the repository’s +3.70 modelling anchor. Built-page verification
+  remains required. The earlier preliminary/final explanation above is superseded.
+
 - [ ] **4.4 [Owner] "Part of the campaign that helped elect Mario Abdo
   Benítez"** (About, both languages) and **"twenty years buying marketing
   technology"** (AI-prospecting essay, both languages): keep the evidence at
