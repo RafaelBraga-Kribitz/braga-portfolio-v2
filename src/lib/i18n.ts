@@ -87,7 +87,7 @@ const en = {
   'date': 'Date',
   'stack': 'Stack',
   'all-n-essays': 'All {n} essays',
-  'essays.sub': 'Newest first. Each keeps its number for good.',
+  'essays.sub': 'Newest first. The code beside the date is permanent.',
   // the notes library (owner, 25 Oct 2026)
   'notes.word': 'Notes',
   'notes.claim': 'A working library of the mathematics behind the analysis.',
@@ -211,7 +211,7 @@ const de: Record<ChromeKey, string> = {
   'date': 'Datum',
   'stack': 'Stack',
   'all-n-essays': 'Alle {n} Essays',
-  'essays.sub': 'Die neuesten zuerst. Jeder behält seine Nummer.',
+  'essays.sub': 'Die neuesten zuerst. Der Code neben dem Datum bleibt.',
   'notes.word': 'Notizen',
   'notes.claim': 'Eine Arbeitsbibliothek der Mathematik hinter der Analyse.',
   'notes.prose': '{n} Notizen in {k} Bereichen, von der Notation bis zum maschinellen Lernen, auf Englisch. Jede behandelt eine Formel: was sie aussagt, ein kleines Rechenbeispiel und Code, der läuft. An Ort und Stelle überarbeitet.',

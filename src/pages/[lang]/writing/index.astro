@@ -3,9 +3,11 @@
 // claim is this page's h1; the prose is the note on the two registers,
 // essays and notes, from home.yaml), then Writing's two categories, each a
 // listing under its own head (owner, 30 Oct 2026): 02-01 Essays, every
-// essay newest first with its permanent code (02-01-008), and 02-02 Notes,
-// the library as one row. The codes are stable references: a new essay
-// never renumbers anything. The claim and the prose are i18n keys the home
+// essay newest first, counted 01, 02, … in the column with its permanent
+// code (02-01-008) in the meta beside the date (owner, 1 Nov 2026), and
+// 02-02 Notes, the library as one row. The codes are stable references: a
+// new essay never renumbers anything, and the column never counts
+// backwards. The claim and the prose are i18n keys the home
 // Index shares; the rows are the writing collection (src/lib/collections.ts).
 // German strings are drafts: the DE page carries the in-build mark.
 import Base from '@/layouts/Base.astro';
@@ -16,7 +18,7 @@ import StatusMark from '@/components/StatusMark.astro';
 import { t, formatDate, type Lang } from '@/lib/i18n';
 import { route, writingRoute } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
-import { writingOf, writingCode, libraryOf, ESSAYS_CODE, NOTES_CODE } from '@/lib/collections';
+import { writingOf, writingCode, listIndex, libraryOf, ESSAYS_CODE, NOTES_CODE } from '@/lib/collections';
 
 export function getStaticPaths() {
   return LANGS.map((lang) => ({ params: { lang } }));
@@ -32,9 +34,9 @@ const libraryCount = library.reduce((n, a) => n + a.rows.length, 0);
   <section class="section">
     <SectionHeading number="02" word={t(lang, 'door.writing')} claim={t(lang, 'writing.claim')} prose={t(lang, 'writing.prose')} as="h1" />
     {writing.length > 0 && (
-      <Listing class="lr-long-code" id="essays" head={{ index: ESSAYS_CODE, title: t(lang, 'essays.word'), meta: t(lang, 'date'), trail: '' }}>
-        {writing.map((e) => (
-          <ListingRow code={writingCode(e, writing)} title={e.data.title} sub={e.data.summary} meta={[formatDate(e.data.date, lang)]} lang={lang} href={writingRoute(e.data.slug, lang)} />
+      <Listing id="essays" head={{ index: ESSAYS_CODE, title: t(lang, 'essays.word'), meta: t(lang, 'date'), trail: '' }}>
+        {writing.map((e, i) => (
+          <ListingRow code={listIndex(i)} title={e.data.title} sub={e.data.summary} meta={[writingCode(e, writing), formatDate(e.data.date, lang)]} lang={lang} href={writingRoute(e.data.slug, lang)} />
         ))}
       </Listing>
     )}
