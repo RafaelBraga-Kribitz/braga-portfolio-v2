@@ -1,8 +1,8 @@
 // /<lang>/tags/index.json (owner, 1 Nov 2026; D-061): what the tag search
 // matches against, fetched by /scripts/tags.js on the first keystroke.
 // Arrays, not objects, to stay small: a tag is [name, tag, kind, count,
-// href], a title [title, kind, href]. Hrefs are without the base; the
-// script adds it from the form's data-index. Grows linearly with the
+// href], a title [title, kind, href]. Every href carries the deployment
+// base (SITE_BASE), so the script adds nothing to it. Grows linearly with the
 // content: ~60 bytes a tag, ~90 a title; ten times the site is ~0.5 MB,
 // ~100 KB over the wire, loaded once and only when someone types.
 import type { APIRoute } from 'astro';

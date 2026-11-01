@@ -14,7 +14,7 @@
 
 import type { Lang } from './i18n';
 import { tagPath, projectsOf, writingOf, notesOf, entryTags, stackNames } from './collections';
-import { workRoute, writingRoute, noteRoute } from './routes';
+import { workRoute, writingRoute, noteRoute, withBase } from './routes';
 import { folderTag, folderTitle } from './vault/folders.mjs';
 
 export type TagKind = 'area' | 'topic' | 'subtopic' | 'tag' | 'stack';
@@ -156,7 +156,8 @@ export async function searchIndex(lang: Lang, kindLabel: (k: TagKind) => string,
   const writing = await writingOf(lang);
   const notes = c.libraryLang === lang ? await notesOf(lang) : await notesOf(c.libraryLang);
   return {
-    tags: c.all.map((t) => [t.name, t.tag, kindLabel(t.kind), t.count, t.href] as const),
+    // every href with the deployment base (the routes already carry it; a tag path does not), so the script adds nothing
+    tags: c.all.map((t) => [t.name, t.tag, kindLabel(t.kind), t.count, withBase(t.href)] as const),
     docs: [
       ...projects.map((p) => [p.data.title, docLabel('project'), workRoute(p.data.slug, lang)] as const),
       ...writing.map((e) => [e.data.title, docLabel('essay'), writingRoute(e.data.slug, lang)] as const),

@@ -1,7 +1,8 @@
 // tags.js — the tag search (D-061). ~2 KB, progressive: the tags index is
 // the catalogue and the A–Z without it; with it the .tag-search form shows
 // and matches every tag and every title against /<lang>/tags/index.json,
-// fetched once on the first keystroke (or focus). Matching is on words:
+// fetched once on the first keystroke (or focus); its hrefs carry the
+// deployment base already. Matching is on words:
 // every word typed must occur in the name, the tag or the title, accents
 // and case ignored; names that start with the words rank first. Nothing
 // leaves the browser. The strings come from the form's data attributes.
@@ -13,7 +14,6 @@
   var out = form.querySelector('.tag-search-results');
   if (!field || !note || !out) return;
   var hint = note.textContent;
-  var base = (form.getAttribute('data-index') || '').replace(/\/[a-z]{2}\/tags\/index\.json$/, '');
   var index = null, loading = null;
   var LIMIT = 8;
 
@@ -23,8 +23,8 @@
     if (index || loading) return loading;
     loading = fetch(form.getAttribute('data-index')).then(function (r) { return r.json(); }).then(function (j) {
       index = {
-        tags: j.tags.map(function (t) { return { name: t[0], tag: t[1], kind: t[2], count: t[3], href: base + t[4], key: norm(t[0] + ' ' + t[1]) }; }),
-        docs: j.docs.map(function (d) { return { name: d[0], kind: d[1], href: base + d[2], key: norm(d[0]) }; })
+        tags: j.tags.map(function (t) { return { name: t[0], tag: t[1], kind: t[2], count: t[3], href: t[4], key: norm(t[0] + ' ' + t[1]) }; }),
+        docs: j.docs.map(function (d) { return { name: d[0], kind: d[1], href: d[2], key: norm(d[0]) }; })
       };
       return index;
     }).catch(function () { loading = null; });
