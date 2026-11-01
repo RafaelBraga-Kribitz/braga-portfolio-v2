@@ -24,16 +24,8 @@ test('consolidated note names resolve to published canonical notes', () => {
 
 for (const base of ['/', '/portfolio/']) {
   test(`former public slugs redirect under base ${base}`, async () => {
-    const previous = process.env.SITE_BASE;
-    let redirects;
-    try {
-      process.env.SITE_BASE = base;
-      const { default: config } = await import(`../../astro.config.mjs?redirect-test=${encodeURIComponent(base)}`);
-      redirects = config.redirects;
-    } finally {
-      if (previous === undefined) delete process.env.SITE_BASE;
-      else process.env.SITE_BASE = previous;
-    }
+    const { noteRedirects } = await import('../../src/lib/note-redirects.mjs');
+    const redirects = noteRedirects(base);
     for (const [oldName, canonical] of merged) {
       assert.equal(redirects[`/en/notes/${slugify(oldName)}/`], `${base}en/notes/${slugify(canonical)}/`);
     }

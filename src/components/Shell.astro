@@ -28,16 +28,19 @@ const codes: Record<Lang, string> = { en: 'EN', de: 'DE' };
 ---
 <header class="shell" lang={lang}>
   <div class="shell-bar">
-    <a class="shell-mark" href={route('home', lang)}>{site.wordmark.slice(0, 1)}<span class="wordmark-rest">{site.wordmark.slice(1)}</span></a>
+    <div class="shell-top">
+      <a class="shell-mark" href={route('home', lang)}>{site.wordmark.slice(0, 1)}<span class="wordmark-rest">{site.wordmark.slice(1)}</span></a>
+
+      <div class="shell-cluster">
+        <a class="shell-contact" href={contactRoute(lang)}>{t(lang, 'link.contact')}</a>
+        <a class="shell-lang" href={otherHref} hreflang={other} lang={hasTwin ? other : lang} aria-label={!hasTwin ? t(lang, 'translation.unavailable') : undefined} title={!hasTwin ? t(lang, 'translation.unavailable') : undefined}>{codes[lang]}<span class="shell-lang-other">{hasTwin ? `/ ${codes[other]}` : lang === 'en' ? 'only' : 'allein'}</span></a>
+        <button class="shell-theme" type="button" aria-pressed="false" aria-label={t(lang, 'theme.toggle')} data-label={t(lang, 'theme.toggle')} data-light={t(lang, 'theme.light')} data-dark={t(lang, 'theme.dark')}><span></span></button>
+      </div>
+    </div>
     <nav class="shell-doors" aria-label={t(lang, 'nav.sections')}>
       {doors.map((d) => (
         <a class="door" href={route(d.id, lang)} aria-current={d.code === current ? 'page' : undefined}><span class="door-code">{d.code}</span><span class="door-label">{doorLabel(d, lang)}</span></a>
       ))}
     </nav>
-    <div class="shell-cluster">
-      <a class="shell-contact" href={contactRoute(lang)}>{t(lang, 'link.contact')}</a>
-      <a class="shell-lang" href={otherHref} hreflang={other} lang={hasTwin ? other : lang} aria-label={!hasTwin ? t(lang, 'translation.unavailable') : undefined} title={!hasTwin ? t(lang, 'translation.unavailable') : undefined}>{codes[lang]}<span class="shell-lang-other">{hasTwin ? `/ ${codes[other]}` : lang === 'en' ? 'only' : 'allein'}</span></a>
-      <button class="shell-theme" type="button" aria-pressed="false" aria-label={t(lang, 'theme.toggle')} data-label={t(lang, 'theme.toggle')} data-light={t(lang, 'theme.light')} data-dark={t(lang, 'theme.dark')}><span></span></button>
-    </div>
   </div>
 </header>

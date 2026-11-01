@@ -7,6 +7,7 @@ import mdx from '@astrojs/mdx';
 // run on @astrojs/markdown-remark, which is not installed. The plugins below
 // are Sätteri mdast/hast visitors doing the same jobs (vault/_guide/Syntax reference.md).
 import { satteri } from '@astrojs/markdown-satteri';
+import nowrap from './src/lib/remark/nowrap.mjs';
 import mathGuard from './src/lib/remark/math.mjs';
 import codeLang from './src/lib/remark/code-lang.mjs';
 import callouts from './src/lib/remark/callouts.mjs';
@@ -44,15 +45,6 @@ export default defineConfig({
   base,
   output: 'static',
   trailingSlash: 'always',
-  // Former note filenames were public slugs. Astro applies base to source
-  // routes; destinations need it explicitly for project-page deployments.
-  // Static hosting emits an HTML redirect with a visible fallback link.
-  redirects: {
-    '/en/notes/arithmetic-n-th-term-2/': `${base}en/notes/arithmetic-n-th-term/`,
-    '/en/notes/arithmetic-hmtbcth-term/': `${base}en/notes/arithmetic-n-th-term/`,
-    '/en/notes/jacobian-matrix-f/': `${base}en/notes/jacobian-matrix/`,
-    '/en/notes/unemployment-rate-delta-ue/': `${base}en/notes/unemployment-rate/`,
-  },
   // inlineStylesheets: the one stylesheet goes into each page's <head>, not
   // a /_astro/ file. GitHub Pages caches every file for 10 minutes and takes
   // no headers, so a separate stylesheet buys little on repeat visits and
@@ -84,7 +76,7 @@ export default defineConfig({
       // snapshot (src/lib/remark/buildlog.mjs), Obsidian's syntax (the H1 title, [[links]], ![[embeds]], #tags,
       // %%comments%%, Dataview fields, tasks; src/lib/remark/obsidian.mjs),
       // then ==marks== and callouts (bars included: the evidence figure)
-      mdastPlugins: [mathGuard, codeLang, diagrams, buildlog, obsidian, sidenotes, callouts],
+      mdastPlugins: [mathGuard, codeLang, diagrams, buildlog, obsidian, sidenotes, callouts, nowrap],
       // the rehype phase, in order. headings and footnotes are factories,
       // passed uncalled: Sätteri calls them once per document, so each page
       // gets its own slugger and its own language.

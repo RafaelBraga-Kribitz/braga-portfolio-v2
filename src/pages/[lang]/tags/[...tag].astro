@@ -8,6 +8,7 @@
 // (src/lib/vault/folders.mjs: area, topic, subtopic), whose tags read as
 // the folder's title. A tag lives in one language; when the other
 // language uses the same tag, the two pages are twins.
+import { archiveSeoTitle } from '@/lib/archive-seo.mjs';
 import Base from '@/layouts/Base.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import Listing from '@/components/Listing.astro';
@@ -76,7 +77,7 @@ const node = (await tagCatalogue(lang)).byTag.get(tag);
 const children = page === 1 && node ? node.children : [];
 const childLabel = node?.kind === 'area' ? t(lang, 'tags.topics') : t(lang, 'tags.subtopics');
 ---
-<Base lang={lang} page="tags" path={pagedRoute(base, page)} twinPath={twin} title={`${name ?? `#${tag}`}${page > 1 ? ` · ${page}` : ''}`} description={prose} noindex={total < 2} current={folder ? '02' : undefined}>
+<Base lang={lang} page="tags" path={pagedRoute(base, page)} twinPath={twin} title={`${name ?? `#${tag}`}${page > 1 ? ` · ${page}` : ''}`} seoTitle={archiveSeoTitle(tag, name ?? `#${tag}`, page)} description={prose} noindex={total < 2} current={folder ? '02' : undefined}>
   <section class="section">
     {folder && <nav class="doc-trail" aria-label={t(lang, 'notes.word')}><a href={route('writing', lang)}>02 {t(lang, 'door.writing')}</a> → <a href={route('notes', lang)}>{NOTES_CODE} {t(lang, 'notes.word')}</a> → <span aria-current="page">{name}</span></nav>}
     <SectionHeading number={folder ? NOTES_CODE : '#'} word={t(lang, folder ? 'notes.word' : 'tags.word')} claim={claim} prose={prose} link={folder ? { href: route('notes', lang), label: t(lang, 'notes.word') } : { href: withBase(`/${lang}/tags/`), label: t(lang, 'tags.title') }} as="h1" />

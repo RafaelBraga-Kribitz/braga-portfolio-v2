@@ -54,7 +54,7 @@
 
 /* ---------- 2 · SHELL (shell.css P-04) ----------
    The site header at 320 / 390 / 768+ without a hamburger (D-028).
-   One DOM, self-responsive through a container query on .shell.
+   One DOM, responsive at the full-width shell’s viewport breakpoints.
      ≥ 768   one row, 80px: wordmark · doors (code + word) · EN/DE · theme
      < 768   two rows: 56px wordmark + cluster, then a 44px door strip
              under a hairline — four numbered doors, mono, edge to edge.
@@ -86,6 +86,10 @@
 /* the hairline (.shell) runs full bleed; the bar keeps to the page grid,
    so above --page-max the wordmark and the theme square stand on the
    same column lines as the content and the footer (grid.css rule 1) */
+.shell-top { display: contents; }
+.shell-mark { order: 1; }
+.shell-doors { order: 2; }
+.shell-cluster { order: 3; }
 .shell-bar {
   display: flex; align-items: center; gap: 16px 32px;
   min-height: 80px; padding-inline: var(--gutter);
@@ -115,7 +119,7 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
 .shell-cluster { display: flex; align-items: center; gap: 4px; }
 /* one row from 768: with the contact link in the cluster (UX pass, 22 Oct
    2026), the German doors need the narrower gaps until 1024 */
-@container shell (min-width: 768px) and (max-width: 1023px) {
+@media (min-width: 768px) and (max-width: 1023px) {
   .shell-bar { column-gap: 16px; }
   .shell-doors { gap: 0 16px; }
 }
@@ -148,7 +152,11 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
   clip-path: polygon(0 0, 100% 0, 0 100%);
 }
 
-@container shell (max-width: 767px) {
+@media (max-width: 767px) {
+  /* Contents wrappers let the top row stick relative to the document,
+     while the single navigation row stays in normal flow. */
+  .shell, .shell-bar { display: contents; }
+  .shell-top { display: flex; align-items: center; position: sticky; top: 0; z-index: 20; min-height: 56px; background: var(--surface); border-bottom: var(--hairline); }
   .shell-bar { flex-wrap: wrap; min-height: 0; gap: 0; padding-inline: 0; }
   .shell-mark { order: 1; display: inline-flex; align-items: center; min-height: 56px; padding-inline: var(--gutter); }
   .shell-cluster { order: 2; margin-left: auto; padding-inline: calc(var(--gutter) - 8px); }
@@ -167,7 +175,7 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
 /* compact strip: every code, only the current label. German's four labels
    need 331px, so German goes compact below 360; English (277px) holds to
    300. Below 300 every language is compact. */
-@container shell (max-width: 359px) {
+@media (max-width: 359px) {
   .shell:lang(de) .door:not([aria-current="page"]) .door-label { display: none; }
   .shell:lang(de) .door:not([aria-current="page"]) { min-width: 44px; justify-content: center; }   /* a code alone is 15px wide; the target is 44 × 44 below 768 */
 }
@@ -175,7 +183,7 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
    toggle and the theme square. The contact link leaves the header (the
    footer keeps it); the language link shows the current code alone, so it
    reads as a toggle (EN here, DE on the twin); "/ DE" stays in its name */
-@container shell (max-width: 326px) {
+@media (max-width: 326px) {
   .shell-contact { display: none; }
   .shell-lang { min-width: 44px; justify-content: center; padding-inline: 0; }   /* the code alone is 15px; the target stays 44 × 44 */
   .shell-lang-other { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; padding: 0; }
@@ -185,13 +193,13 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
 /* below 240 the four codes need every pixel: no gap, half the gutter */
 /* very small (owner, 24 Oct 2026): the wordmark becomes its B, same face,
    size and weight; the rest stays in its name for screen readers */
-@container shell (max-width: 259px) {
+@media (max-width: 259px) {
   .shell-mark .wordmark-rest { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 }
-@container shell (max-width: 239px) {
+@media (max-width: 239px) {
   .shell-doors { gap: 0; padding-inline: 8px; }
 }
-@container shell (max-width: 299px) {
+@media (max-width: 299px) {
   .door:not([aria-current="page"]) .door-label { display: none; }
   .door:not([aria-current="page"]) { min-width: 44px; justify-content: center; }  /* a code alone is 15px wide; the target stays 44 × 44 */
 }
