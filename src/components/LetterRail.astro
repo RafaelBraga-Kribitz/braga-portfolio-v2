@@ -1,0 +1,21 @@
+---
+// The letter rail of the A–Z (owner, 1 Nov 2026; D-061): the letters that
+// have tags, as pagination-style cells, each an anchor on the page or a
+// link to the letter's own page; the current letter in the accent (the
+// section's one accent, G-15). Letters with no tag are left out rather
+// than drawn disabled, as the pagination leaves out an arrow with nowhere
+// to go. 28px cells, 44 below 768 (G-05).
+interface Props {
+  groups: { letter: string; items: unknown[] }[];
+  href: (letter: string) => string;
+  label: string;
+  /** The letter this page shows (a letter page). */
+  current?: string;
+}
+const { groups, href, label, current } = Astro.props;
+---
+<nav class="letters" aria-label={label}>
+  {groups.map((g) => g.letter === current
+    ? <span class="pagination-cell" aria-current="page">{g.letter}</span>
+    : <a class="pagination-cell" href={href(g.letter)} title={`${g.items.length}`}>{g.letter}</a>)}
+</nav>

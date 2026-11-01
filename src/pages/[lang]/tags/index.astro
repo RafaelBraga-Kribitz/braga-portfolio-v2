@@ -1,36 +1,64 @@
 ---
-// The tag index (owner, 23 Oct 2026): every tag the language's published
-// projects, essays and notes carry, with how many, most used first.
+// The tag catalogue (owner, 1 Nov 2026; D-061): the tags by kind, each
+// level small whatever the whole is. Until now the page was one list of
+// every tag by count (186 rows, 33 screens on a phone); at ten times the
+// content a list fails whatever its row height. So: a search box over
+// tags and titles (progressive: /scripts/tags.js loads the index on the
+// first keystroke; without it the box is not shown), the library as its
+// seven areas with their topics as chips (the subtopics are on the area's
+// and topic's archive pages), the hand tags of essays and projects and the
+// stack keywords as chips, and one row to the A–Z (src/pages/[lang]/tags/
+// all/), the complete flat index, partitioned by letter once it outgrows
+// one page.
 import Base from '@/layouts/Base.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import Listing from '@/components/Listing.astro';
 import ListingRow from '@/components/ListingRow.astro';
+import TagChips from '@/components/TagChips.astro';
+import TagSearch from '@/components/TagSearch.astro';
 import { t, isDraftLang, type Lang } from '@/lib/i18n';
 import StatusMark from '@/components/StatusMark.astro';
 import { withBase } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
-import { projectsOf, writingOf, notesOf, tagNames, tagPath, stackNames, entryTags } from '@/lib/collections';
+import { tagCatalogue } from '@/lib/tags';
 
 export function getStaticPaths() {
   return LANGS.map((lang) => ({ params: { lang } }));
 }
 
 const lang = Astro.params.lang as Lang;
-const counts = new Map<string, number>();
-const notes = (await notesOf(lang)).map((r) => r.entry);
-const names = new Map([...(await stackNames()), ...(await tagNames())]);
-for (const e of [...(await projectsOf(lang)), ...(await writingOf(lang)), ...notes]) for (const tag of entryTags(e)) counts.set(tag, (counts.get(tag) ?? 0) + 1);
-const tags = [...counts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+const c = await tagCatalogue(lang);
 const count = (n: number) => (n === 1 ? t(lang, 'tags.count-one') : t(lang, 'tags.count').replace('{n}', String(n)));
+const prose = t(lang, 'tags.index-prose').replace('{n}', String(c.all.length)).replace('{m}', String(c.entries));
+const azHref = withBase(`/${lang}/tags/all/`);
 ---
-<Base lang={lang} page="tags" title={t(lang, 'tags.title')} description={t(lang, 'tags.index-claim')}>
+<Base lang={lang} page="tags" title={t(lang, 'tags.title')} description={prose} hasSearch>
   <section class="section">
-    <SectionHeading number="#" word={t(lang, 'tags.title')} claim={t(lang, 'tags.index-claim')} as="h1" />
-    {tags.length > 0 && (
-      <Listing>
-        {tags.map(([tag, n], i) => <ListingRow code={String(i + 1).padStart(2, '0')} title={names.get(tag) ?? `#${tag}`} sub={names.has(tag) ? `#${tag}` : undefined} meta={[count(n)]} lang={lang} href={withBase(tagPath(tag, lang))} />)}
+    <SectionHeading number="#" word={t(lang, 'tags.title')} claim={t(lang, 'tags.index-claim')} prose={prose} as="h1" link={{ href: azHref, label: t(lang, 'tags.all-n').replace('{n}', String(c.all.length)) }} />
+    <TagSearch lang={lang} />
+    {c.areas.length > 0 && (
+      <Listing class="lr-compact lr-wide" id="library" head={{ index: t(lang, 'index'), title: t(lang, 'tags.library'), meta: '', trail: '' }}>
+        {c.areas.map((a) => (
+          <Fragment>
+            <ListingRow code={a.code ?? ''} title={a.name} meta={[count(a.count)]} lang={lang} textLang={c.libraryLang} href={withBase(a.href)} />
+            {a.children.length > 0 && <TagChips items={a.children} lang={lang} textLang={c.libraryLang} sub />}
+          </Fragment>
+        ))}
       </Listing>
     )}
+    {c.hand.length > 0 && (
+      <Listing class="lr-compact lr-wide" id="hand" head={{ index: '#', title: t(lang, 'tags.hand'), meta: '', trail: '' }}>
+        <TagChips items={c.hand} lang={lang} sub />
+      </Listing>
+    )}
+    {c.stack.length > 0 && (
+      <Listing class="lr-compact lr-wide" id="stack" head={{ index: '#', title: t(lang, 'tags.stack'), meta: '', trail: '' }}>
+        <TagChips items={c.stack} lang={lang} sub />
+      </Listing>
+    )}
+    <Listing class="lr-compact lr-wide" id="az">
+      <ListingRow code="A–Z" title={t(lang, 'tags.all-n').replace('{n}', String(c.all.length))} sub={t(lang, 'tags.az-claim')} lang={lang} href={azHref} />
+    </Listing>
     {isDraftLang(lang) && <div class="doc-meta"><StatusMark state="in-build" lang={lang} label={t(lang, 'draft')} /></div>}
   </section>
 </Base>

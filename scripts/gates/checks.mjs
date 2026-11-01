@@ -586,6 +586,7 @@ export function pageFacts(html) {
     drafts: q('.status[data-state="in-build"][data-draft]').length,
     // code panels whose buttons need /scripts/code.js
     codeBlocks: q('.code .code-copy, .code .code-wrap').length,
+    searchBoxes: q('form.tag-search').length,
   };
 }
 
@@ -732,11 +733,12 @@ export function staticGates(pagePath, f, ctx) {
 
   // L-03 · scripts policy: content pages carry only the inline pre-paint
   // script (first script in <head>, before the stylesheets), the inline
-  // theme toggle (which also runs the contact pair's copy buttons) and /scripts/code.js; /tools/<name>/ pages may also carry
+  // theme toggle (which also runs the contact pair's copy buttons), /scripts/code.js and, on the
+  // tags index, /scripts/tags.js (D-061); /tools/<name>/ pages may also carry
   // Astro island scripts; a redirect stub also its location.replace. Non-JS script types (JSON, JSON-LD) are data.
   const sOff = [];
   const JS_TYPES = new Set(['', 'text/javascript', 'application/javascript', 'module', 'text/ecmascript']);
-  const kinds = { prepaint: 0, toggle: 0, code: 0, island: 0, redirect: 0 };
+  const kinds = { prepaint: 0, toggle: 0, code: 0, search: 0, island: 0, redirect: 0 };
   for (const s of f.scripts) {
     if (!JS_TYPES.has(s.type)) continue; // data block
     let kind;
@@ -744,6 +746,7 @@ export function staticGates(pagePath, f, ctx) {
       const c = classifyRef(s.src, pagePath, site, base);
       if (c.kind === 'external') kind = 'external';
       else if (c.kind === 'local' && c.path === '/scripts/code.js') kind = 'code';
+      else if (c.kind === 'local' && c.path === '/scripts/tags.js') kind = 'search';
       else if (c.kind === 'local' && c.path.startsWith('/_astro/')) kind = 'island';
       else kind = 'other';
     } else if (/bk-theme/.test(s.text) && /dataset\.theme|data-theme/.test(s.text) && !/shell-theme/.test(s.text) && s.inHead && s.text.length <= 400) kind = 'prepaint';
@@ -755,6 +758,7 @@ export function staticGates(pagePath, f, ctx) {
     if (kind === 'external') sOff.push(`${label} · third-party script`);
     else if (kind === 'other' || kind === 'inline') sOff.push(`${label} · not one of the permitted scripts`);
     else if (kind === 'island' && !isToolPage(pagePath)) sOff.push(`${label} · island script outside /tools/<name>/`);
+    else if (kind === 'search' && !/\/tags\/$/.test(pagePath)) sOff.push(`${label} · the tag search script outside /tags/`);
     else {
       kinds[kind]++;
       if (kind !== 'island' && kinds[kind] > 1) sOff.push(`${label} · second ${kind} script`);
@@ -770,6 +774,11 @@ export function staticGates(pagePath, f, ctx) {
   const panels = f.codeBlocks || 0;
   if (panels && !kinds.code) sOff.push(`${panels} code-panel button${panels === 1 ? '' : 's'} but no /scripts/code.js: they do nothing (pass hasCode to Base)`);
   if (!panels && kinds.code) sOff.push('/scripts/code.js on a page without a code panel');
+  // the tag search (D-061) exactly where the box is: the index renders the
+  // form hidden until the script marks it ready
+  const searchBox = f.searchBoxes || 0;
+  if (searchBox && !kinds.search) sOff.push('a .tag-search form but no /scripts/tags.js: the box stays hidden (pass hasSearch to Base)');
+  if (!searchBox && kinds.search) sOff.push('/scripts/tags.js on a page without a .tag-search form');
   out.push(result('L-03', sOff, f.scripts.length, `${f.scripts.length} scripts: ${Object.entries(kinds).filter(([, n]) => n).map(([k, n]) => (n > 1 ? n + ' ' : '') + k).join(', ') || 'none'}`, '%n script policy problems'));
 
   // L-04 · no inline style attributes except custom-property-only values,

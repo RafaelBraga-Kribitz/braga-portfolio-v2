@@ -1,0 +1,51 @@
+---
+// The A–Z of tags (owner, 1 Nov 2026; D-061): every tag of the language in
+// alphabetical order, grouped by letter, one compact row each, with a
+// letter rail to jump by. It is the complete flat index behind the
+// catalogue and the search's fallback without JavaScript. While the tags
+// fit one page (fewer than LETTER_PAGES_FROM) the rail's letters are
+// anchors on this page; beyond that each letter is its own page
+// (all/<letter>/) and this page is the rail with the counts, so the index
+// stays one short screen at any size.
+import Base from '@/layouts/Base.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import Listing from '@/components/Listing.astro';
+import ListingRow from '@/components/ListingRow.astro';
+import LetterRail from '@/components/LetterRail.astro';
+import { t, isDraftLang, otherLang, type Lang } from '@/lib/i18n';
+import StatusMark from '@/components/StatusMark.astro';
+import { withBase } from '@/lib/routes';
+import { LANGS } from '@/lib/site';
+import { tagCatalogue, letterGroups, LETTER_PAGES_FROM } from '@/lib/tags';
+
+export function getStaticPaths() {
+  return LANGS.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Lang;
+const c = await tagCatalogue(lang);
+const groups = letterGroups(c.all);
+const paged = c.all.length >= LETTER_PAGES_FROM;
+const base = `/${lang}/tags/all/`;
+const count = (n: number) => (n === 1 ? t(lang, 'tags.count-one') : t(lang, 'tags.count').replace('{n}', String(n)));
+const prose = t(lang, 'tags.az-prose').replace('{n}', String(c.all.length));
+const letterHref = (l: string) => (paged ? withBase(`${base}${l === '#' ? '0' : l.toLowerCase()}/`) : `#${l === '#' ? 'other' : l.toLowerCase()}`);
+---
+<Base lang={lang} page="tags" path={base} twinPath={withBase(`/${otherLang(lang)}/tags/all/`)} title={`${t(lang, 'tags.title')} · ${t(lang, 'tags.az')}`} description={`${t(lang, 'tags.az-claim')} ${prose}`}>
+  <section class="section">
+    <SectionHeading number="#" word={t(lang, 'tags.az')} claim={t(lang, 'tags.az-claim')} prose={prose} as="h1" link={{ href: withBase(`/${lang}/tags/`), label: t(lang, 'tags.title') }} />
+    <LetterRail groups={groups} href={letterHref} label={t(lang, 'tags.letters')} />
+    {paged ? (
+      <Listing class="lr-compact lr-wide" head={{ index: '#', title: t(lang, 'tags.letters'), meta: '', trail: '' }}>
+        {groups.map((g) => <ListingRow code={g.letter} title={t(lang, 'tags.az-letter').replace('{l}', g.letter)} meta={[`${g.items.length}`]} lang={lang} href={letterHref(g.letter)} />)}
+      </Listing>
+    ) : (
+      groups.map((g) => (
+        <Listing class="lr-compact lr-wide" id={g.letter === '#' ? 'other' : g.letter.toLowerCase()} head={{ index: g.letter, title: '', meta: '', trail: '' }}>
+          {g.items.map((it) => <ListingRow code="" title={it.name} sub={it.name.startsWith('#') ? undefined : `#${it.tag}`} meta={[t(lang, `tags.kind.${it.kind}`), count(it.count)]} lang={lang} textLang={it.kind === 'tag' || it.kind === 'stack' ? undefined : c.libraryLang} href={withBase(it.href)} />)}
+        </Listing>
+      ))
+    )}
+    {isDraftLang(lang) && <div class="doc-meta"><StatusMark state="in-build" lang={lang} label={t(lang, 'draft')} /></div>}
+  </section>
+</Base>

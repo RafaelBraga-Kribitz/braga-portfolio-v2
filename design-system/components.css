@@ -132,6 +132,10 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
 .lr-year { display: inline-flex; gap: 10px; align-items: baseline; color: var(--ink-2); font-variant-numeric: var(--num); }
 .lr-arrow { color: var(--ink-2); transition: color var(--dur) var(--ease); }
 .listing-row:hover .lr-arrow { color: var(--accent-01); }
+/* two listings in a row (the tag catalogue's blocks, Writing's essays then
+   notes; owner, 1 Nov 2026) stand a block apart: the first ends in white
+   space, the second opens on its head's rule */
+.listing + .listing { margin-top: var(--block-gap); }
 /* a listing without its head (the home page) opens on a rhythm rule */
 .listing > .listing-row:first-child { border-top: var(--rule); }
 /* rules open, never close (owner, 24 Oct 2026): the last row ends in white
@@ -195,6 +199,84 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
 a.pagination-cell:hover { color: var(--ink); }
 .pagination-ellipsis { color: var(--ink-3); }
 @media (max-width: 767.98px) { .pagination-cell, .pagination-ellipsis { min-width: 44px; height: 44px; } }
+
+/* compact rows (owner, 1 Nov 2026; D-061): an index of names, not of
+   works. The title at body size in the body face, 16px of padding, the
+   code column kept; the A–Z, the tag catalogue and the search results. A
+   .listing-sub is a row's second line (an area's topics as chips) on the
+   title's columns, closed by the row rule; .listing-sub-free stands on its
+   own under a heading (a tag archive's children). .tag-n is the mono count
+   after a chip's name. */
+.listing.lr-compact .listing-row { padding-block: var(--space-2); }
+.listing.lr-compact .lr-title-main {
+  font-family: var(--font-body); font-weight: 400; font-size: var(--t-body);
+  letter-spacing: 0; line-height: 1.35;
+}
+.listing.lr-compact .lr-title-sub { font-family: var(--font-mono); font-size: var(--t-mono-sm); color: var(--ink-3); margin-top: 2px; }
+.listing.lr-compact .listing-row .lr-meta { flex-direction: row; flex-wrap: wrap; gap: 4px 16px; }
+.listing-sub {
+  display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--grid-gutter);
+  padding: 12px 0 var(--space-2); border-bottom: var(--rule);   /* 12px clear of the row's rule above */
+}
+.listing-sub > .label, .listing-sub > .doc-tags { grid-column: 4 / span 8; }
+.listing-sub > .label { margin: 0 0 6px; }
+.listing-sub-free { padding-top: var(--space-2); border-bottom: 0; }
+.listing-sub-free + .listing { margin-top: var(--space-3); }
+.listing > .listing-sub:last-child { border-bottom: 0; }
+/* a chip with a count flows as text (inline-block, 24px tall), so a name
+   that wraps keeps its count after its last word instead of at the far
+   edge of the line */
+.listing-sub .doc-tags a.tag { display: inline-block; min-height: 24px; line-height: 18px; padding-block: 3px; }
+.tag-n { font-variant-numeric: var(--num); color: var(--ink-3); margin-left: 2px; }
+@media (min-width: 1024px) {
+  .listing.lr-compact .lr-index { grid-column: 2 / span 1; }
+  .listing-sub > .label, .listing-sub > .doc-tags { grid-column: 3 / span 9; }
+}
+@media (max-width: 720px) {
+  .listing.lr-compact .listing-row { padding-block: 12px; row-gap: 4px; }
+  .listing-sub { grid-template-columns: 64px minmax(0, 1fr); padding-bottom: 12px; }
+  .listing-sub > .label, .listing-sub > .doc-tags { grid-column: 2; }
+  .listing-sub-free > .label, .listing-sub-free > .doc-tags { grid-column: 1 / -1; }
+}
+
+/* the tag search (owner, 1 Nov 2026; D-061): a label, one field on the
+   title's columns in mono with the 2px rule of .range-value, a mono note
+   (the hint, then "n tags · m titles" or "Nothing matches"), the results
+   as a compact listing. Hidden until /scripts/tags.js marks the form
+   ready, so a page without script shows the catalogue alone. The field
+   is 44px tall at every width. */
+.tag-search { display: none; }
+.tag-search[data-ready] {
+  display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--grid-gutter);
+  row-gap: var(--space-1); margin-bottom: var(--block-gap); padding-top: var(--space-3);
+}
+.tag-search > .label { grid-column: 2 / span 2; align-self: center; margin: 0; }
+.tag-search-field {
+  grid-column: 4 / span 6; min-height: 44px; min-width: 0;
+  font: 400 var(--t-mono) / 1.4 var(--font-mono); letter-spacing: 0.02em; color: var(--ink);
+  background: transparent; border: 0; border-bottom: 2px solid var(--ink); padding: 0 12px; outline-offset: 4px;
+  -webkit-appearance: none; appearance: none; border-radius: 0;
+}
+.tag-search-field::placeholder { color: var(--ink-3); opacity: 1; }
+.tag-search-field::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+.tag-search-note { grid-column: 4 / span 8; margin: 0; padding-inline: 12px; }   /* on the text's own left edge */
+.tag-search-results { grid-column: 1 / -1; margin-top: var(--space-2); }
+.tag-search-results[hidden] { display: none; }
+@media (min-width: 1024px) {
+  .tag-search > .label { grid-column: 2 / span 1; }
+  .tag-search-field { grid-column: 3 / span 7; }
+  .tag-search-note { grid-column: 3 / span 9; }
+}
+@media (max-width: 720px) {
+  .tag-search[data-ready] { grid-template-columns: minmax(0, 1fr); }
+  .tag-search > .label, .tag-search-field, .tag-search-note, .tag-search-results { grid-column: 1; }
+}
+
+/* the letter rail of the A–Z (owner, 1 Nov 2026; D-061): pagination cells
+   for the letters that have tags, under the heading; the current letter
+   in the accent. On the index the cells are anchors on the page. */
+.letters { display: flex; flex-wrap: wrap; gap: 4px; margin: 0 0 var(--block-gap); }
+.letters .pagination-cell[aria-current="page"] { color: var(--accent-01); border-bottom-color: var(--accent-01); }
 
 /* ---------- 2 · STATUS in listings and meta rows (D-029) ----------
    The mark itself is in base.css; here its label typography where it

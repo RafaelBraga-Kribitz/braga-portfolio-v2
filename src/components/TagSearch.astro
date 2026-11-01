@@ -1,0 +1,27 @@
+---
+// The tag search (owner, 1 Nov 2026; D-061): one field over every tag and
+// every title (projects, essays, notes). Progressive: /scripts/tags.js
+// fetches /<lang>/tags/index.json on the first keystroke and renders the
+// matches as listing rows; the box stays hidden until the script marks it
+// ready, so without JavaScript the page is the catalogue and the A–Z. The
+// strings travel as data attributes so the script has no text of its own.
+import { t, type Lang } from '../lib/i18n';
+import { withBase } from '../lib/routes';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const id = 'tag-q';
+---
+<form class="tag-search" role="search" aria-label={t(lang, 'tags.search-name')} action={withBase(`/${lang}/tags/all/`)} method="get"
+  data-index={withBase(`/${lang}/tags/index.json`)}
+  data-none={t(lang, 'tags.search-none')}
+  data-result={t(lang, 'tags.search-result')}
+  data-tags={t(lang, 'tags.search-tags')}
+  data-titles={t(lang, 'tags.search-titles')}
+  data-one={t(lang, 'tags.count-one')}
+  data-many={t(lang, 'tags.count')}>
+  <label class="label" for={id}>{t(lang, 'tags.search')}</label>
+  <input class="tag-search-field" id={id} name="q" type="search" autocomplete="off" spellcheck="false" placeholder={t(lang, 'tags.search-placeholder')} aria-describedby="tag-q-hint">
+  <p class="tag-search-note lr-mono" id="tag-q-hint" aria-live="polite">{t(lang, 'tags.search-hint')}</p>
+  <div class="tag-search-results listing lr-compact lr-wide" hidden></div>
+</form>

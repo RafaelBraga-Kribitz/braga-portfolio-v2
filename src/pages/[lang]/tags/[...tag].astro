@@ -18,6 +18,8 @@ import StatusMark from '@/components/StatusMark.astro';
 import { workRoute, writingRoute, noteRoute, pagedRoute, withBase } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
 import { projectsOf, writingOf, writingCode, notesOf, tagNames, stackNames, entryTags, paginate, tagPath } from '@/lib/collections';
+import TagChips from '@/components/TagChips.astro';
+import { tagCatalogue } from '@/lib/tags';
 
 export async function getStaticPaths() {
   const tagged = async (lang: Lang) => {
@@ -64,11 +66,20 @@ const count = total === 1 ? t(lang, 'tags.count-one') : t(lang, 'tags.count').re
 // a library folder's tag reads as the folder's title (Ghost's tag name), a
 // stack keyword as the keyword (Power BI); any other as #tag
 const claim = name ?? t(lang, 'tags.claim').replace('{tag}', `#${tag}`);
-const prose = `${name ? `#${tag} · ` : ''}${count}. ${t(lang, 'tags.prose')}${pageNote}`;
+// a library folder's archive lists its notes in library order (the
+// folders, then the title), not newest first: every note has one date
+const prose = `${name ? `#${tag} · ` : ''}${count}. ${t(lang, folder ? 'tags.prose-library' : 'tags.prose')}${pageNote}`;
+// the folders under this one (owner, 1 Nov 2026; D-061): an area's topics,
+// a topic's subtopics, as chips before the rows, so the reader goes one
+// level down instead of through every page of the archive
+const node = (await tagCatalogue(lang)).byTag.get(tag);
+const children = page === 1 && node ? node.children : [];
+const childLabel = node?.kind === 'area' ? t(lang, 'tags.topics') : t(lang, 'tags.subtopics');
 ---
 <Base lang={lang} page="tags" path={pagedRoute(base, page)} twinPath={twin} title={`${name ?? `#${tag}`}${page > 1 ? ` · ${page}` : ''}`} description={prose} current={folder ? '02' : undefined}>
   <section class="section">
     <SectionHeading number="#" word={t(lang, 'tags.word')} claim={claim} prose={prose} link={{ href: withBase(`/${lang}/tags/`), label: t(lang, 'tags.title') }} as="h1" />
+    {children.length > 0 && <TagChips items={children} lang={lang} label={childLabel} />}
     <Listing class="lr-long-code">
       {rows.map((r) => <ListingRow code={r.code} title={r.title} sub={r.sub} meta={r.meta} status={r.status} lang={lang} href={r.href} />)}
     </Listing>

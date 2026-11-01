@@ -28,7 +28,12 @@ export async function projectsOf(lang: Lang): Promise<ProjectEntry[]> {
  * Non-draft essays of a language, newest first (owner, 30 Oct 2026): a
  * featured essay leads, then by date, latest at the top; essays of one day
  * by code, highest first, so the list is reverse publication order
- * throughout and the latest essay is always the first row.
+ * throughout and the latest essay is always the first row. The listing
+ * column shows the row's place in this list (listIndex: 01, 02, …), not
+ * the code (owner, 1 Nov 2026): a column of codes read backwards (007,
+ * 006, … 001) while every other list on the site counts upward. The
+ * permanent code stays in the row's meta, the essay's trail and the tag
+ * archives.
  */
 export async function writingOf(lang: Lang): Promise<WritingEntry[]> {
   const list = await getCollection('writing', (e) => e.data.lang === lang && !e.data.draft);
@@ -39,6 +44,14 @@ export async function writingOf(lang: Lang): Promise<WritingEntry[]> {
     return b.data.date.localeCompare(a.data.date) || codes.get(b.id)!.localeCompare(codes.get(a.id)!) || a.data.slug.localeCompare(b.data.slug);
   });
 }
+
+/**
+ * A row's place in its list as the listing column shows it: 01, 02, …
+ * (owner, 1 Nov 2026). The essay lists count their rows this way, as the
+ * notes library counts its areas; the code (02-01-007) is the essay's
+ * permanent reference and travels in the meta instead.
+ */
+export const listIndex = (i: number): string => String(i + 1).padStart(2, '0');
 
 /** Writing's two categories (owner, 30 Oct 2026): stable references, so a new essay never renumbers the notes. */
 export const ESSAYS_CODE = '02-01';
