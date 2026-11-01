@@ -21,7 +21,7 @@ publish: true
 # MMM und Budget­optimierung für Österreich
 
 > [!summary] Zusammenfassung
-> Das Modell wird an einer bekannten Wahrheit validiert, bevor es etwas entscheidet, und auf Metas öffentlichem Robyn-Demodatensatz bringt dasselbe Wochenbudget, nach einer Breakeven-Regel umverteilt, im Median 15,1 % des derzeitigen Deckungsbeitrags der Medien; keine der 500 verwendeten Ziehungen aus der A-posteriori-Verteilung zeigt einen Verlust. Die Regel verschiebt Budget zu TV und Facebook, zieht es von der Außenwerbung (Out-of-Home) ab und lässt Print und Search (Suchmaschinenwerbung), deren Intervall-Untergrenzen unter dem Breakeven liegen, unverändert.
+> Das Modell wird an einer bekannten Wahrheit validiert, bevor es etwas entscheidet, und auf Metas öffentlichem Robyn-Demodatensatz bringt dasselbe Wochenbudget, nach einer Breakeven-Regel umverteilt, im Median einen zusätzlichen Deckungsbeitrag in Höhe von 15,1 % des derzeitigen Deckungsbeitrags der Medien; keine der 500 verwendeten Ziehungen aus der A-posteriori-Verteilung zeigt einen Verlust. Die Regel verschiebt Budget zu TV und Facebook, zieht es von der Außenwerbung (Out-of-Home) ab und lässt Print und Search (Suchmaschinenwerbung), deren Intervall-Untergrenzen unter dem Breakeven liegen, unverändert.
 
 ## Fragestellung
 
@@ -53,7 +53,7 @@ Die Validierung kommt vor jeder Entscheidung; die Schritte laufen daher in diese
 2. Ein Fit zählt nur bei einem R-hat unter 1,01, einer effektiven Stichprobengröße über 400 und null Divergenzen. Jeder Fit legt diese Diagnosewerte neben sich ab.
 3. Auf Layer P muss der Sampler die Wahrheit wiederherstellen, die ihm vorgegeben wurde, und die plattformartige Attribution wird an derselben Wahrheit gemessen.
 4. Das Modell wird auf beiden Layern an einem Holdout (zurückgehaltener Testzeitraum) von 26 Wochen gegen zwei Vergleichsmodelle geprüft: eine Ridge-Regression und eine saisonal naive Prognose.
-5. Die Posterior aus Layer R geht an den Optimierer, unter einer Entscheidungsregel, die vor seinem Lauf festgelegt wird; der Umverteilungsgewinn wird über 500 Posterior-Ziehungen gelesen.
+5. Die A-posteriori-Verteilung aus Layer R geht an den Optimierer, unter einer Entscheidungsregel, die vor seinem Lauf festgelegt wird; der Umverteilungsgewinn wird über 500 Posterior-Ziehungen gelesen.
 
 > [!definition] Entscheidungsregel
 > Budget wird nur so lange zu einem Kanal verschoben, wie die Untergrenze seines Intervalls zu 90 % für den marginalen ROAS über dem Breakeven bleibt, und nur, wenn das 10. Perzentil des Umverteilungsgewinns positiv ist. Die Regel wird festgelegt, bevor der Optimierer läuft.
@@ -65,13 +65,13 @@ Die Validierung kommt vor jeder Entscheidung; die Schritte laufen daher in diese
 
 ### Validierung auf Layer P
 
-Der Sampler muss die Wahrheit wiederherstellen, die ihm vorgegeben wurde. Die Kurvenabdeckung beträgt 91 % (die wahren Reaktionskurven innerhalb des Posterior-Bands, über den beobachteten Ausgabenbereich), und 26 von 28 wahren Parameterwerten liegen innerhalb ihrer Intervalle zu 90 %. Die Abweichungen folgen einem bekannten Zielkonflikt, nicht einem Fehler: Alle fünf Effektgrößen und alle fünf Halbsättigungspunkte haben Mediane über der Wahrheit, weil eine Kurve, die höher steigt, aber später sättigt, dieselben Wochen erklärt. Die Wiederherstellung wird daher an Kurven und Anteilen beurteilt, also an dem, was eine Budgetentscheidung verwendet. Die [Validierungsübersicht des Repositorys](https://github.com/RafaelBraga-Kribitz/austrian-mmm-budget-optimizer/blob/c63e16b7f0f0f5e6452216b600c4ed619a9bdf6b/README.md) nennt auch den schwächsten Kanal: Die Kurvenabdeckung für TV beträgt 56 %, und der wahre Umsatzanteil von TV liegt knapp außerhalb seines Intervalls. Die aggregierte Abdeckung verdeckt diese Schwäche auf Kanalebene.
+Der Sampler muss die Wahrheit wiederherstellen, die ihm vorgegeben wurde. Die Kurvenabdeckung beträgt 91 % (die wahren Reaktionskurven innerhalb des Posterior-Bands, über den beobachteten Ausgabenbereich), und 26 von 28 wahren Parameterwerten liegen innerhalb ihrer Intervalle zu 90 %. Die Abweichungen folgen einem bekannten Zielkonflikt, nicht einem Fehler: Alle fünf Effektgrößen und alle fünf Halbsättigungspunkte haben Mediane über der Wahrheit, weil eine Kurve, die höher steigt, aber später sättigt, dieselben Wochen erklärt. Die Wiederherstellung wird daher an Kurven und Anteilen beurteilt, also an dem, was eine Budgetentscheidung verwendet. Die [Validierungsübersicht des Repositorys](https://github.com/RafaelBraga-Kribitz/austrian-mmm-budget-optimizer/blob/c63e16b7f0f0f5e6452216b600c4ed619a9bdf6b/README.md) nennt auch den schwächsten Kanal: Die Kurvenabdeckung für TV beträgt 56 %, und der wahre Umsatzanteil von TV liegt knapp außerhalb seines Intervalls. Die aggregierte Abdeckung verdeckt diese Schwäche auf Kanalebene.
 
 An derselben Wahrheit gemessen, rechnet der plattformartige Bericht Paid Search 45 % zu viel zu (von der Plattform ausgewiesener gegenüber wahrem inkrementellem Umsatz) und den Offline-Kanälen gar nichts.
 
 ### Umverteilung auf Layer R
 
-Auf dem öffentlichen Datensatz bringt dasselbe gesamte Wochenbudget, nach der Entscheidungsregel umverteilt, im Median ==15,1 %== des derzeitigen Deckungsbeitrags der Medien. Das 10. Perzentil liegt bei 8,8 %, und keine der 500 verwendeten Posterior-Ziehungen zeigt einen Verlust.
+Auf dem öffentlichen Datensatz bringt dasselbe gesamte Wochenbudget, nach der Entscheidungsregel umverteilt, im Median einen zusätzlichen Deckungsbeitrag in Höhe von ==15,1 %== des derzeitigen Deckungsbeitrags der Medien. Das 10. Perzentil liegt bei 8,8 %, und keine der 500 verwendeten Posterior-Ziehungen zeigt einen Verlust.
 
 > [!bars] Abb. 01-03-1 · Empfohlene Änderung der Wochenausgaben
 > Budget wandert von der Außenwerbung zu TV und Facebook.
@@ -95,7 +95,7 @@ Wochenausgaben je Kanal, derzeit und laut Empfehlung, in den Geldeinheiten des D
 | Facebook | 2.146 | 3.218 |
 | Search | 5.916 | unverändert |
 
-Der marginale ROAS, den die Regel prüft, bei den derzeitigen Ausgaben: der Median und das Intervall zu 90 %, dessen Untergrenze das Breakeven-Kriterium liest.
+Der marginale ROAS, den die Regel prüft, bei den derzeitigen Ausgaben: der Median und das Intervall zu 90 %, dessen Untergrenze für das Breakeven-Kriterium maßgeblich ist.
 
 | Kanal | Median | Intervall zu 90 % |
 |:--|--:|--:|
@@ -112,7 +112,7 @@ Das Breakeven-Kriterium ist es, das Print und Search auf dem derzeitigen Niveau 
 Auf einem Holdout von 26 Wochen gegen zwei Vergleichsmodelle hatte das Modell auf Layer P den geringsten mittleren absoluten prozentualen Fehler (MAPE): 3,0 %, gegenüber 4,7 % für die Ridge-Regression und 9,6 % für eine saisonal naive Prognose. Auf Layer R unterlag es mit 7,9 % gegenüber 5,1 % für die Ridge-Regression. Das wird so berichtet, wie es ausgefallen ist. Das Argument für das MMM ist, dass es mit Intervallen angibt, welcher Kanal den Umsatz erwirtschaftet hat; das können die Vergleichsmodelle nicht. Auf Layer P lagen 85 % der Holdout-Wochen innerhalb seiner Intervalle zu 90 %: etwas zu eng, das Modell ist also etwas zu selbstsicher.
 
 > [!quote] Ergebnis · Layer R, 500 Posterior-Ziehungen
-> Nach der Breakeven-Regel umverteilt, bringt dasselbe Wochenbudget im Median 15,1 % des derzeitigen Deckungsbeitrags der Medien, und keine der 500 Ziehungen zeigt einen Verlust.
+> Nach der Breakeven-Regel umverteilt, bringt dasselbe Wochenbudget im Median einen zusätzlichen Deckungsbeitrag in Höhe von 15,1 % des derzeitigen Deckungsbeitrags der Medien, und keine der 500 Ziehungen zeigt einen Verlust.
 
 ## Grenzen
 

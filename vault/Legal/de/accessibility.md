@@ -10,7 +10,7 @@ publish: true
 
 # Erklärung zur Barriere­freiheit
 
-Diese Website soll den Web Content Accessibility Guidelines 2.2, Stufe AA, entsprechen. Die Erklärung ist freiwillig: das Barrierefreiheitsgesetz erfasst diese private Seite nicht.
+Diese Website soll den Web Content Accessibility Guidelines 2.2, Stufe AA, entsprechen. Die Erklärung ist freiwillig: Das Barrierefreiheitsgesetz erfasst diese private Seite nicht.
 
 > [!spec] Prüfung
 > - Automatisiert — axe, beide Farbschemata, 320 bis 1.280 px, bei jeder Änderung
@@ -19,7 +19,7 @@ Diese Website soll den Web Content Accessibility Guidelines 2.2, Stufe AA, entsp
 
 ## Tastatur
 
-Jede Seite ist allein mit der Tastatur bedienbar. Die Tabulatortaste führt in Lesereihenfolge durch Links und Bedienelemente; der erste Halt ist „Zum Inhalt springen“. Der Fokus ist immer als 2 px breiter Rahmen in Tintenfarbe sichtbar. In den Werkzeugen bewegen sich die Regler mit den Pfeiltasten, und jeder Wert lässt sich auch in sein Feld eintippen.
+Jede Seite ist allein mit der Tastatur bedienbar. Die Tabulatortaste führt in Lesereihenfolge durch Links und Bedienelemente; der erste Halt ist „Zum Inhalt springen“. Der Fokus ist immer als 2 px breiter Rahmen in Tintenfarbe sichtbar. In den Werkzeugen bewegen sich die Regler mit den Pfeiltasten, und jeder Wert lässt sich auch in sein Feld eintippen.
 
 > [!spec] Kürzel
 > - 0 — Startseite

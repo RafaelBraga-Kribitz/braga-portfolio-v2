@@ -31,6 +31,8 @@ Die Wahl des Farbschemas wird erst nach einem Klick im Browser gespeichert (`loc
 
 Bei einer E-Mail werden die übermittelten Daten zur Beantwortung verarbeitet (Art. 6 Abs. 1 lit. b und f DSGVO) und danach gelöscht, sofern keine gesetzliche Aufbewahrungspflicht besteht.
 
+Die E-Mail-Adresse wird über easyname als Alias bzw. Weiterleitung betrieben; eingehende Nachrichten werden an das Gmail-Postfach des Verantwortlichen weitergeleitet. Dabei verarbeiten easyname und Google (Gmail) die Nachricht und die für Zustellung und Speicherung erforderlichen Daten.
+
 ## Ihre Rechte
 
 Auskunft, Berichtigung, Löschung, Einschränkung, Datenübertragbarkeit und Widerspruch (Art. 15 bis 21 DSGVO) sowie Beschwerde bei der Österreichischen Datenschutzbehörde, Barichgasse 40–42, 1030 Wien, [dsb.gv.at](https://www.dsb.gv.at).

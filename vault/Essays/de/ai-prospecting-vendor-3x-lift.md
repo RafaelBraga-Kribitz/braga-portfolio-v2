@@ -14,7 +14,7 @@ publish: true
 
 # Ein Anbieter von KI-Prospecting behauptet einen 3×-Uplift. Was ich vor der Unterschrift verlangen würde.
 
-Anbieter von KI-Prospecting-Tools (Werkzeugen für die KI-gestützte Suche nach potenziellen Neukunden) versprechen mehr Leads, weniger Recherche, bessere Qualifizierung und eine schnellere Pipeline. Eine aktuelle Fallstudie beziffert das: Eine KI-Prospecting-Plattform fand rund dreimal so viele relevante Leads wie ein herkömmlicher Webcrawler, bei etwa 90 % Precision und Recall (Genauigkeit und Trefferquote) in der Lead-Qualifizierung, und Vertriebsprofis bewerteten die KI-generierten Zusammenfassungen der Plattform positiv.
+Anbieter von KI-Prospecting-Tools (Werkzeugen für die KI-gestützte Suche nach potenziellen Neukunden) versprechen mehr Leads, weniger Recherche, bessere Qualifizierung und eine schnellere Pipeline. Eine aktuelle Fallstudie beziffert das: Eine KI-Prospecting-Plattform fand rund dreimal so viele relevante Leads wie ein herkömmlicher Webcrawler, bei etwa 90 % Precision und Recall (Präzision und Trefferquote) in der Lead-Qualifizierung, und Vertriebsprofis bewerteten die KI-generierten Zusammenfassungen der Plattform positiv.
 
 Es handelt sich um die Studie von Kaplan, Seker und Yoruk (2025), „A review of AI-based business lead generation: Scrapus as a case study“, erschienen in Frontiers in Artificial Intelligence. Ein Detail zählt vor allem anderen: Die an dritter Stelle genannte Person ist mit OptiWisdom affiliiert, dem Unternehmen hinter Scrapus. Hier bewertet ein Anbieter sein eigenes Produkt. Das macht die Ergebnisse nicht falsch. Es macht sie zu einer Verkaufsunterlage mit Methodenteil, und ich lese sie als solche.
 
@@ -54,7 +54,7 @@ Käuferfrage: Hinterlässt mein Idealkunde überhaupt genug beobachtbare Signale
 
 ## Precision hat eine Kostenstruktur, und das Vertriebsteam bezahlt sie
 
-Neunzig Prozent Precision klingen hervorragend, bis man sie hochrechnet. Tausend Leads bei 10 % Falsch-Positiven sind hundert schlechte Empfehlungen. Bei fünf Minuten Prüfung pro Lead ist das ein voller Arbeitstag für Leads, die nie echt waren, und zwar bei jeder Aktualisierung der Liste.
+Neunzig Prozent Precision klingen hervorragend, bis man sie hochrechnet. Tausend Leads bei einem Anteil falsch positiver Ergebnisse von 10 % sind hundert schlechte Empfehlungen. Bei fünf Minuten Prüfung pro Lead ist das ein voller Arbeitstag für Leads, die nie echt waren, und zwar bei jeder Aktualisierung der Liste.
 
 Und das setzt voraus, dass das Team sie überhaupt prüft. Ein Tool mit 90 % Precision liefert keinen geschäftlichen Nutzen, wenn der Vertrieb es ignoriert. Die Studie berichtet, dass die Nutzerinnen und Nutzer die KI-Zusammenfassungen bevorzugten. Nicht gemessen werden die Akzeptanz im Alltag, die eingesparte Zeit, die CRM-Integration und das Verhalten des Vertriebs nach der zweiten Woche. Das Implementierungsrisiko ist meist größer als das Algorithmusrisiko. Ich habe mehr Tools an Reibung scheitern sehen als an schlechten Modellen.
 
@@ -79,3 +79,7 @@ Ich würde messen: vom Vertrieb akzeptierte Leads, vereinbarte Termine, geschaff
 Ich würde nicht messen: Harvest Rate, extrahierte Datensätze, Crawl-Abdeckung oder F1-Scores. Das sind die Kennzahlen des Anbieters. Das Pilotprojekt soll herausfinden, ob daraus meine werden.
 
 Die Studie reicht, um ein Pilotprojekt zu rechtfertigen. Sie reicht nicht, um einen Kauf zu rechtfertigen. Genau dort gehört ein begutachteter (peer-reviewed) Anbieter-Benchmark hin: interessant, plausibel und zwei Wochen meiner Daten davon entfernt, geglaubt zu werden.
+
+## Literatur
+
+Kaplan, A., Seker, S. E., und Yoruk, R. (2025). A review of AI-based business lead generation: Scrapus as a case study. *Frontiers in Artificial Intelligence*, 8, Artikel 1606431. DOI: [10.3389/frai.2025.1606431](https://doi.org/10.3389/frai.2025.1606431).
