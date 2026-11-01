@@ -1,0 +1,7 @@
+Run `python scripts/notes/validate.py` from any directory. Python 3.10+ and NumPy are required; the syntax scan itself uses only the standard library.
+
+The command parses every Python fence in `vault/Notes`, rejects Python examples hidden behind Markdown or text fence labels, and checks that authoring-only “Structural verification” sections have been removed. It executes the 34 examples marked `# Reference example with a numerical check.` in isolated namespaces. Each contains an assertion against a known result or an independent calculation. It also executes both canonical Jacobian examples and compares their numerical derivatives with analytic references at six points.
+
+The runtime set covers the repaired examples in empirical/expected risk, likelihood and MAP, graph definitions, mixture density, k-means, information gain, hinge loss, AIC, precision/accuracy/recall, least-squares gradients and predictions, PCA preprocessing/covariance/encoding, and economic/business rates. Other Python fences receive syntax checks only. R examples, Mermaid diagrams, and the mathematical prose have not received exhaustive numerical review. Marked examples are trusted repository code; this command is not a sandbox for arbitrary Markdown.
+
+Run `node --test tests/unit/note-consolidation.test.mjs` to check the four former note names resolve to published canonical notes and their public slugs redirect correctly under `/` and `/portfolio/`. `npm run vault:check` checks all internal note links.

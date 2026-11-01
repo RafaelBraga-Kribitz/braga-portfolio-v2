@@ -261,21 +261,20 @@ Explanation
 
 ### Final Professional Example \[Python\])
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass
-from typing import Sequence RANDOM_SEED = 42 @dataclass(frozen=True)
-class GdpComponents: period: str consumption: float investment: float government: float exports: float imports: float def net_exports(exports: float, imports: float) -> float: return exports - imports def gdp_expenditure(components: GdpComponents) -> float: return ( components.consumption + components.investment + components.government + net_exports(components.exports, components.imports) ) def gdp_growth(current_gdp: float, previous_gdp: float) -> float: if previous_gdp == 0: raise ValueError("previous_gdp must be non-zero.") return (current_gdp - previous_gdp) / previous_gdp def summarize_gdp_series(series: Sequence[GdpComponents]) -> None: if len(series) == 0: raise ValueError("At least one period is required.") previous_gdp = None print("GDP expenditure summary") print("-" * 84) for row in series: current_gdp = gdp_expenditure(row) current_net_exports = net_exports(row.exports, row.imports) print(f"Period: {row.period}") print( f"C={row.consumption:.2f}, I={row.investment:.2f}, " f"G={row.government:.2f}, X={row.exports:.2f}, M={row.imports:.2f}" ) print(f"Net exports: {current_net_exports:.2f}") print(f"GDP: {current_gdp:.2f}") if previous_gdp is not None: growth_rate = gdp_growth(current_gdp, previous_gdp) print(f"GDP growth vs previous period: {growth_rate:.2%}") print("-" * 84) previous_gdp = current_gdp def main() -> None: series = [ GdpComponents(period="2024", consumption=500.0, investment=120.0, government=180.0, exports=90.0, imports=110.0), GdpComponents(period="2025", consumption=525.0, investment=128.0, government=185.0, exports=98.0, imports=112.0), GdpComponents(period="2026", consumption=540.0, investment=135.0, government=190.0, exports=105.0, imports=118.0), ] summarize_gdp_series(series) if __name__ == "__main__": main()
+```python
+# Reference example with a numerical check.
+import math
+
+def gdp(consumption, investment, government, exports, imports):
+    return consumption + investment + government + exports - imports
+
+components = dict(consumption=600, investment=150, government=200, exports=100, imports=80)
+value = gdp(**components)
+assert math.isclose(value, 970)
+print("Expenditure GDP:", value)
 ```
 
-What
-this professional example teaches:
-
-1. GDP can be computed directly from expenditure components for each period.
-2. Net exports are a separate interpretable component.
-3. GDP dashboards usually combine level and growth information.
-4.
-
-This structure is useful for macroeconomic reporting, time-series monitoring, and business planning.
+All components must use the same currency, period, and price basis. Imports are subtracted because imported expenditure may already be counted in consumption, investment, or government spending; this avoids counting foreign production as domestic output.
 
 ## Self-check: mathematical verification
 
@@ -340,23 +339,6 @@ The accounting identity applies to both nominal and real measures, provided all 
 ### Verbal-to-algebra consistency
 
 The verbal explanation says GDP is the expenditure total for final domestic output and that imports must be subtracted to remove foreign production. The formula expresses exactly that logic.
-
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$GDP$`, `$C$`, `$I$`, `$G$`, `$X$`, and `$M$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to GDP growth, real GDP, macro dashboards, and economic reporting are explicitly included.
-- No placeholder text remains.
 
 ## Common Pitfalls and Edge Cases
 

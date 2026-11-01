@@ -364,23 +364,6 @@ This is a weighted average of child-node impurities, so it correctly respects ch
 
 The verbal explanation says Gini impurity measures class mixing and is zero for a pure node. Algebraically, the formula behaves exactly that way. It also says the impurity is largest when classes are equiprobable, which the derivation confirms.
 
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$p_k$` and `$K$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to CART, entropy, Information Gain, and split selection are explicitly included.
-- No placeholder text remains.
-
 ## Common Pitfalls and Edge Cases
 
 - **Confusing Gini impurity with the Gini coefficient:** They are different concepts used in different domains.

@@ -44,6 +44,15 @@ export default defineConfig({
   base,
   output: 'static',
   trailingSlash: 'always',
+  // Former note filenames were public slugs. Astro applies base to source
+  // routes; destinations need it explicitly for project-page deployments.
+  // Static hosting emits an HTML redirect with a visible fallback link.
+  redirects: {
+    '/en/notes/arithmetic-n-th-term-2/': `${base}en/notes/arithmetic-n-th-term/`,
+    '/en/notes/arithmetic-hmtbcth-term/': `${base}en/notes/arithmetic-n-th-term/`,
+    '/en/notes/jacobian-matrix-f/': `${base}en/notes/jacobian-matrix/`,
+    '/en/notes/unemployment-rate-delta-ue/': `${base}en/notes/unemployment-rate/`,
+  },
   // inlineStylesheets: the one stylesheet goes into each page's <head>, not
   // a /_astro/ file. GitHub Pages caches every file for 10 minutes and takes
   // no headers, so a separate stylesheet buys little on repeat visits and

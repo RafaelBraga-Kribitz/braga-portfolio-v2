@@ -286,23 +286,6 @@ The Ridge solution is not the same as OLS for $\lambda>0$, so the estimator is b
 
 The verbal explanation says Ridge adds an $L_2$ penalty, shrinks coefficients, stabilizes inversion, and reduces to OLS when $\lambda=0$. The algebra confirms each of those claims.
 
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$X$`, `$y$`, `$\lambda$`, and `$\hat{w}_{\mathrm{ridge}}$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to OLS, bias-variance, multicollinearity, and high-dimensional regression are explicitly included.
-- No placeholder text remains.
-
 ## Common Pitfalls and Edge Cases
 
 - **Forgetting to scale predictors:** Ridge penalizes coefficient magnitude directly, so unscaled features can distort the penalty.

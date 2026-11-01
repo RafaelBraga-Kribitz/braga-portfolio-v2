@@ -289,23 +289,6 @@ For logistic regression with a linear predictor and sigmoid link, the binary cro
 
 The verbal explanation says binary cross-entropy rewards high probability on the true class and strongly penalizes confident mistakes. Algebraically, that is exactly what the negative log terms do. The explanation and the formula are aligned.
 
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$y$`, `$p$`, and `$N$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to log-likelihood, maximum likelihood, convexity, and calibration are explicitly discussed.
-- No placeholder text remains.
-
 ## Common Pitfalls and Edge Cases
 
 - **Using hard labels instead of probabilities:** Binary cross-entropy is designed for probabilistic outputs, not final class labels.

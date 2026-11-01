@@ -306,23 +306,6 @@ These sanity checks are coherent.
 
 The verbal explanation says MAE is the mean of absolute prediction errors. Algebraically, the formula computes exactly that: absolute errors first, then their arithmetic mean. The wording and the formula are aligned.
 
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table notation uses math mode such as `$N$`, `$y_i$`, and `$\hat{y}_i$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- MSE comparison and robustness-to-outliers discussion are explicitly included.
-- No placeholder text remains.
-
 ## Common Pitfalls and Edge Cases
 
 - **Confusing MAE with MSE or RMSE:** MAE averages absolute errors, not squared errors.

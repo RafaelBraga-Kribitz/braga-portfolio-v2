@@ -254,19 +254,23 @@ The model did well on the first two observations, but it was not very confident 
 
 ### Beginner friendly Example \[Python\])
 
-```markdown
-import math # Binary classification negative log-likelihood
+```python
+# Reference example with a numerical check.
+import math
+
 y_true = [1, 0, 1]
-p_pred = [0.9, 0.2, 0.4] nll = 0.0 for y_value, p_value in zip(y_true, p_pred): loss = -(y_value * math.log(p_value) + (1 - y_value) * math.log(1 - p_value)) nll += loss average_nll = nll / len(y_true) print("Total NLL:", nll)
+p_pred = [0.9, 0.2, 0.4]
+nll = 0.0
+for y_value, p_value in zip(y_true, p_pred):
+    loss = -(y_value * math.log(p_value) + (1 - y_value) * math.log(1 - p_value))
+    nll += loss
+average_nll = nll / len(y_true)
+assert math.isclose(nll, -math.log(0.9 * 0.8 * 0.4))
+print("Total NLL:", nll)
 print("Average NLL:", average_nll)
 ```
 
-Explanation
-:
-
-- For each observation, the Bernoulli log-likelihood is computed.
-- The negative sign converts it into a minimization loss.
-- The final value summarizes how well the model’s probabilities matched the observed labels.
+This small example computes the formula directly for the supplied toy data. The reusable example below adds input checks and a reference calculation.
 
 ### Beginner friendly Example \[R\])
 
@@ -293,25 +297,33 @@ Explanation
 
 ### Final Professional Example \[Python\])
 
-```markdown
-from __future__ import annotations import math
-from dataclasses import dataclass
-from typing import Sequence RANDOM_SEED = 42
-EPSILON = 1e-15 @dataclass(frozen=True)
-class BinaryProbabilisticModelOutput: true_labels: Sequence[int] predicted_probabilities: Sequence[float] def validate(self) -> None: if len(self.true_labels) == 0: raise ValueError("At least one observation is required.") if len(self.true_labels) != len(self.predicted_probabilities): raise ValueError("true_labels and predicted_probabilities must have the same length.") for label in self.true_labels: if label not in (0, 1): raise ValueError("Each true label must be 0 or 1.") for probability in self.predicted_probabilities: if not 0.0 <= probability <= 1.0: raise ValueError("Each predicted probability must lie in [0, 1].") def clip_probability(probability: float, epsilon: float = EPSILON) -> float: return min(max(probability, epsilon), 1.0 - epsilon) def negative_log_likelihood( true_labels: Sequence[int], predicted_probabilities: Sequence[float],
-) -> float: if len(true_labels) == 0: raise ValueError("At least one observation is required.") if len(true_labels) != len(predicted_probabilities): raise ValueError("true_labels and predicted_probabilities must have the same length.") total_nll = 0.0 for label, probability in zip(true_labels, predicted_probabilities): clipped_probability = clip_probability(probability) total_nll += -( label * math.log(clipped_probability) + (1 - label) * math.log(1 - clipped_probability) ) return total_nll def average_negative_log_likelihood( true_labels: Sequence[int], predicted_probabilities: Sequence[float],
-) -> float: return negative_log_likelihood(true_labels, predicted_probabilities) / len(true_labels) def summarize_probabilistic_fit(model_output: BinaryProbabilisticModelOutput) -> None: model_output.validate() total_nll = negative_log_likelihood( model_output.true_labels, model_output.predicted_probabilities, ) average_nll = average_negative_log_likelihood( model_output.true_labels, model_output.predicted_probabilities, ) print("Negative log-likelihood summary") print("-" * 72) for index, (label, probability) in enumerate( zip(model_output.true_labels, model_output.predicted_probabilities), start=1, ): clipped_probability = clip_probability(probability) loss = -( label * math.log(clipped_probability) + (1 - label) * math.log(1 - clipped_probability) ) print( f"Obs {index}: y={label}, p={probability:.6f}, " f"per-observation NLL={loss:.6f}" ) print("-" * 72) print(f"Total NLL: {total_nll:.6f}") print(f"Average NLL: {average_nll:.6f}") def main() -> None: # Binary churn-probability example model_output = BinaryProbabilisticModelOutput( true_labels=[1, 0, 1, 0, 1, 1], predicted_probabilities=[0.92, 0.15, 0.81, 0.35, 0.40, 0.73], ) summarize_probabilistic_fit(model_output) if __name__ == "__main__": main()
+```python
+# Reference example with a numerical check.
+import math
+
+def negative_log_likelihood(labels, probabilities):
+    if not labels or len(labels) != len(probabilities):
+        raise ValueError("Provide equally sized, nonempty inputs.")
+    if any(y not in (0, 1) for y in labels):
+        raise ValueError("Labels must be binary.")
+    if any(not 0 <= p <= 1 for p in probabilities):
+        raise ValueError("Probabilities must lie in [0, 1].")
+    epsilon = 1e-15
+    total = 0.0
+    for y, p in zip(labels, probabilities):
+        p = min(max(p, epsilon), 1 - epsilon)
+        total -= y * math.log(p) + (1 - y) * math.log(1 - p)
+    return total
+
+labels = [1, 0, 1]
+probabilities = [0.9, 0.2, 0.4]
+total = negative_log_likelihood(labels, probabilities)
+assert math.isclose(total, -math.log(0.9 * 0.8 * 0.4))
+print("Total NLL:", total)
+print("Average NLL:", total / len(labels))
 ```
 
-What
-this professional example teaches:
-
-1. NLL is computed directly from model-assigned probabilities for observed outcomes.
-2. Probability clipping is often used in code to avoid numerical failure from $\log(0)$.
-3. Total NLL and average NLL summarize probabilistic fit across the sample.
-4.
-
-This is the standard training objective for logistic regression and many other probabilistic classifiers.
+The function validates binary labels and probabilities, clips boundary probabilities to avoid log(0), and sums Bernoulli losses. Dividing by the observation count gives mean NLL; clipping changes exact boundary losses into finite approximations.
 
 ## Self-check: mathematical verification
 
@@ -420,23 +432,6 @@ This differs from total NLL only by the positive constant $\frac{1}{n}$, so both
 ### Verbal-to-algebra consistency
 
 The verbal explanation says NLL is the negative log of the likelihood, that minimizing it equals maximizing likelihood, and that cross-entropy is its classification special case. The derivations confirm each of these claims.
-
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$x_i$`, `$y_i$`, `$\theta$`, `$L(\theta)$`, and `$\mathrm{NLL}$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to MLE, cross-entropy, GLMs, and probabilistic training are explicitly included.
-- No placeholder text remains.
 
 ## Common Pitfalls and Edge Cases
 

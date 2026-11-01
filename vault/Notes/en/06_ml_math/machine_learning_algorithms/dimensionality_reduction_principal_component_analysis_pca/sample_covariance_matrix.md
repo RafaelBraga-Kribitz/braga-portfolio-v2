@@ -317,32 +317,20 @@ Because the covariance matrix has strong positive covariance, the first principa
 
 ### Beginner friendly Example \[Python\])
 
-```markdown
-import numpy as np # Centered data matrix with 3 observations and 2 features
-X = np.array([ [-1, -2], [0, 0], [1, 2]
-], dtype=float) n = X.shape[0]
-S = (1 / (n - 1)) * (X.T @ X) print("Centered data matrix X:")
-print(X)
-print("Sample covariance matrix S:")
+```python
+# Reference example with a numerical check.
+import numpy as np
+
+# Rows are observations; these columns are already centered.
+X = np.array([[-1, -2], [0, 0], [1, 2]], dtype=float)
+n = X.shape[0]
+S = (X.T @ X) / (n - 1)
+print("Sample covariance:")
 print(S)
+assert np.allclose(S, [[1, 2], [2, 4]])
 ```
 
-Explanation
-:
-
-- `X.T @ X` computes all pairwise column inner products.
-- Dividing by `n - 1` turns those into sample covariances.
-- The resulting matrix summarizes feature variances and covariances.
-
-Manual check:
-
-$$
-S=
-\begin{bmatrix}
-1 & 2\\
-2 & 4
-\end{bmatrix}
-$$
+This small example computes the formula directly for the supplied toy data. The reusable example below adds input checks and a reference calculation.
 
 ### Beginner friendly Example \[R\])
 
@@ -366,22 +354,25 @@ Explanation
 
 ### Final Professional Example \[Python\])
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass
-from typing import Sequence import numpy as np RANDOM_SEED = 42 @dataclass(frozen=True)
-class CovarianceAnalysisData: data_matrix: Sequence[Sequence[float]] feature_names: Sequence[str] def validate(self) -> None: if len(self.data_matrix) < 2: raise ValueError("At least two observations are required.") if len(self.feature_names) == 0: raise ValueError("At least one feature name is required.") feature_count = len(self.feature_names) for row in self.data_matrix: if len(row) != feature_count: raise ValueError("Each row must match the number of feature names.") def center_columns(data_matrix: np.ndarray) -> tuple[np.ndarray, np.ndarray]: column_means = np.mean(data_matrix, axis=0) centered_matrix = data_matrix - column_means return centered_matrix, column_means def sample_covariance_matrix(centered_matrix: np.ndarray) -> np.ndarray: observation_count = centered_matrix.shape[0] if observation_count < 2: raise ValueError("At least two observations are required.") return (centered_matrix.T @ centered_matrix) / (observation_count - 1) def summarize_covariance_analysis(data: CovarianceAnalysisData) -> None: data.validate() X = np.array(data.data_matrix, dtype=float) X_centered, column_means = center_columns(X) covariance_matrix = sample_covariance_matrix(X_centered) eigenvalues, eigenvectors = np.linalg.eigh(covariance_matrix) sort_index = np.argsort(eigenvalues)[::-1] eigenvalues = eigenvalues[sort_index] eigenvectors = eigenvectors[:, sort_index] print("Sample covariance matrix analysis") print("-" * 72) print("Feature means:") for feature_name, mean_value in zip(data.feature_names, column_means): print(f"{feature_name}: {mean_value:.6f}") print("-" * 72) print("Centered matrix:") print(X_centered) print("-" * 72) print("Sample covariance matrix:") print(covariance_matrix) print("-" * 72) print("Eigenvalues:") print(eigenvalues) print("-" * 72) print("Eigenvectors (principal directions):") print(eigenvectors) def main() -> None: # Customer behavior example: # Columns: annual_spend, purchase_frequency, basket_size data = CovarianceAnalysisData( feature_names=["annual_spend", "purchase_frequency", "basket_size"], data_matrix=[ [1200.0, 12.0, 100.0], [1500.0, 15.0, 110.0], [1800.0, 18.0, 130.0], [1600.0, 14.0, 115.0], ], ) summarize_covariance_analysis(data) if __name__ == "__main__": main()
+```python
+# Reference example with a numerical check.
+import numpy as np
+
+def sample_covariance(data):
+    data = np.asarray(data, dtype=float)
+    if data.ndim != 2 or len(data) < 2 or not np.isfinite(data).all():
+        raise ValueError("Provide at least two finite observations.")
+    centered = data - data.mean(axis=0)
+    return centered.T @ centered / (len(data) - 1)
+
+X = np.array([[-1, -2], [0, 0], [1, 2]], dtype=float)
+S = sample_covariance(X)
+assert np.allclose(S, [[1, 2], [2, 4]])
+assert np.allclose(S, np.cov(X, rowvar=False, ddof=1))
+print("Sample covariance:", S)
 ```
 
-What
-this professional example teaches:
-
-1. The covariance matrix is computed from centered data, not raw data.
-2. Its diagonal entries are feature variances and its off-diagonal entries are covariances.
-3. Eigen-decomposition of the covariance matrix gives PCA directions and explained-variance magnitudes.
-4. This is the standard covariance-based route to PCA.
-5.
-
-In business data, it reveals which behavioral variables move together before dimensionality reduction.
+Rows are observations and columns are features. Centering precedes the cross-product, and division by n-1 gives the sample covariance rather than the maximum-likelihood n denominator.
 
 ## Self-check: mathematical verification
 
@@ -475,23 +466,6 @@ relative to the sample covariance matrix. Multiplying a matrix by a positive sca
 ### Verbal-to-algebra consistency
 
 The verbal explanation says the covariance matrix summarizes variances and covariances, is symmetric, and provides eigenvectors for PCA. The algebra confirms all of these claims.
-
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$S$`, `$X$`, `$n$`, and `$\lambda_\ell$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to eigenvalues, PCA, factor analysis, and data centering are explicitly included.
-- No placeholder text remains.
 
 ## Common Pitfalls and Edge Cases
 

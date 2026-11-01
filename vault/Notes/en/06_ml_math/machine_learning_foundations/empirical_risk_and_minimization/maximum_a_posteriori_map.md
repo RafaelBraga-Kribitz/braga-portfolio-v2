@@ -324,19 +324,25 @@ The data suggest a larger parameter value, but the prior discourages large value
 
 ### Beginner friendly Example \[Python\])
 
-```markdown
-import numpy as np # Toy MAP example on a grid
-theta_values = np.linspace(-1, 4, 101) best_theta = None
-best_score = -np.inf for theta in theta_values: log_likelihood = -(theta - 3) ** 2 log_prior = -(theta ** 2) log_posterior = log_likelihood + log_prior if log_posterior > best_score: best_score = log_posterior best_theta = theta print("Approximate MAP estimate:", best_theta)
-print("Best log-posterior score:", best_score)
+```python
+# Reference example with a numerical check.
+import numpy as np
+
+theta_values = np.linspace(-1, 4, 101)
+best_theta = None
+best_score = -np.inf
+for theta in theta_values:
+    log_likelihood = -(theta - 3) ** 2
+    log_prior = -(theta ** 2)
+    log_posterior = log_likelihood + log_prior
+    if log_posterior > best_score:
+        best_score = log_posterior
+        best_theta = theta
+assert np.isclose(best_theta, 1.5)
+print("MAP estimate:", best_theta)
 ```
 
-Explanation
-:
-
-- The code evaluates many possible $\theta$ values.
-- For each one, it computes log-likelihood plus log-prior.
-- The value with the largest total score is the MAP estimate.
+This small example computes the formula directly for the supplied toy data. The reusable example below adds input checks and a reference calculation.
 
 ### Beginner friendly Example \[R\])
 
@@ -364,21 +370,32 @@ Explanation
 
 ### Final Professional Example \[Python\])
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass
-from typing import Sequence import numpy as np RANDOM_SEED = 42 @dataclass(frozen=True)
-class BayesianRidgeStyleExample: X: Sequence[Sequence[float]] y: Sequence[float] prior_precision: float def validate(self) -> None: if len(self.X) == 0: raise ValueError("At least one observation is required.") if len(self.X) != len(self.y): raise ValueError("X and y must have the same number of observations.") if self.prior_precision < 0: raise ValueError("prior_precision must be non-negative.") feature_count = len(self.X[0]) for row in self.X: if len(row) != feature_count: raise ValueError("All rows in X must have the same length.") def map_gaussian_prior_solution(X: np.ndarray, y: np.ndarray, prior_precision: float) -> np.ndarray: feature_count = X.shape[1] identity_matrix = np.eye(feature_count) return np.linalg.solve(X.T @ X + prior_precision * identity_matrix, X.T @ y) def mle_solution(X: np.ndarray, y: np.ndarray) -> np.ndarray: return np.linalg.solve(X.T @ X, X.T @ y) def summarize_map_estimation(example: BayesianRidgeStyleExample) -> None: example.validate() X = np.array(example.X, dtype=float) y = np.array(example.y, dtype=float) theta_map = map_gaussian_prior_solution(X, y, example.prior_precision) theta_mle = mle_solution(X, y) print("MAP estimation summary") print("-" * 72) print(f"Prior precision: {example.prior_precision:.4f}") print("MLE estimate:") print(theta_mle) print("MAP estimate with Gaussian prior:") print(theta_map) print("-" * 72) print("Interpretation: MAP shrinks coefficients relative to MLE.") def main() -> None: # Bayesian regression style example: # Columns: intercept, feature_1, feature_2 example = BayesianRidgeStyleExample( X=[ [1.0, 1.2, 0.8], [1.0, 2.0, 1.9], [1.0, 2.5, 2.6], [1.0, 3.2, 3.0], [1.0, 4.0, 4.1], ], y=[2.1, 3.8, 4.2, 5.9, 7.1], prior_precision=1.5, ) summarize_map_estimation(example) if __name__ == "__main__": main()
+```python
+# Reference example with a numerical check.
+import numpy as np
+
+# Gaussian observation centered at 3 and Gaussian prior centered at 0.
+theta_values = np.linspace(-1, 4, 101)
+log_posterior = -(theta_values - 3) ** 2 - theta_values ** 2
+best_theta = theta_values[np.argmax(log_posterior)]
+assert np.isclose(best_theta, 1.5)
+print("Grid MAP estimate:", best_theta)
+
+# Gaussian linear model with an isotropic Gaussian prior: MAP is ridge.
+def ridge_map(X, y, penalty):
+    X, y = np.asarray(X, dtype=float), np.asarray(y, dtype=float)
+    if X.ndim != 2 or y.shape != (X.shape[0],) or penalty <= 0:
+        raise ValueError("Require a design matrix, aligned target vector, and positive penalty.")
+    return np.linalg.solve(X.T @ X + penalty * np.eye(X.shape[1]), X.T @ y)
+
+X = np.array([[1, 0], [1, 1], [1, 2]], dtype=float)
+y = np.array([1, 2, 3], dtype=float)
+w = ridge_map(X, y, penalty=1.0)
+assert np.allclose((X.T @ X + np.eye(2)) @ w, X.T @ y)
+print("MAP coefficients:", w)
 ```
 
-What
-this professional example teaches:
-
-1. MAP can be implemented as an optimization problem that combines likelihood and prior.
-2. With a Gaussian prior, the solution looks like a Ridge-style estimator.
-3. MAP and MLE differ because MAP includes prior structure.
-4.
-
-This is useful in Bayesian regression and regularized estimation when coefficient shrinkage is desirable.
+The grid example maximizes log likelihood plus log prior. The linear model solves the Gaussian MAP normal equations; its penalty is the noise-to-prior variance ratio, and this example penalizes every coefficient including the intercept.
 
 ## Self-check: mathematical verification
 
@@ -463,23 +480,6 @@ In symmetric Gaussian cases they may coincide, but in general they need not. So 
 ### Verbal-to-algebra consistency
 
 The verbal explanation says MAP combines likelihood and prior, acts like MLE plus penalty, and reduces to MLE under a flat prior. The algebra confirms each of those claims.
-
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$\theta$`, `$D$`, `$p(D\mid\theta)$`, and `$\theta_{\mathrm{MAP}}$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to MLE, posterior, Bayes' rule, Bayesian regression, and regularization are explicitly included.
-- No placeholder text remains.
 
 ## Common Pitfalls and Edge Cases
 

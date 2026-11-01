@@ -1,4 +1,5 @@
 ---
+seo_title: "K-means objective (WCSS)"
 publish: true
 date: '2026-04-16'
 tags:
@@ -303,26 +304,30 @@ Explanation
 
 ### Final Professional Example \[Python\])
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass
-from typing import Sequence RANDOM_SEED = 42 @dataclass(frozen=True)
-class ClusterResult: points: Sequence[Sequence[float]] labels: Sequence[int] centroids: Sequence[Sequence[float]] def validate(self) -> None: if len(self.points) == 0: raise ValueError("At least one point is required.") if len(self.points) != len(self.labels): raise ValueError("points and labels must have the same length.") if len(self.centroids) == 0: raise ValueError("At least one centroid is required.") feature_count = len(self.points[0]) for point in self.points: if len(point) != feature_count: raise ValueError("All points must have the same dimension.") for centroid in self.centroids: if len(centroid) != feature_count: raise ValueError("All centroids must have the same dimension as the points.") for label in self.labels: if label < 0 or label >= len(self.centroids): raise ValueError("Each label must reference a valid centroid index.") def squared_euclidean_distance(point_a: Sequence[float], point_b: Sequence[float]) -> float: if len(point_a) != len(point_b): raise ValueError("Points must have the same dimension.") squared_distance = 0.0 for value_a, value_b in zip(point_a, point_b): squared_distance += (value_a - value_b) ** 2 return squared_distance def wcss(points: Sequence[Sequence[float]], labels: Sequence[int], centroids: Sequence[Sequence[float]]) -> float: if len(points) == 0: raise ValueError("At least one point is required.") if len(points) != len(labels): raise ValueError("points and labels must have the same length.") total_wcss = 0.0 for point, label in zip(points, labels): total_wcss += squared_euclidean_distance(point, centroids[label]) return total_wcss def cluster_counts(labels: Sequence[int], cluster_count: int) -> list[int]: counts = [0] * cluster_count for label in labels: counts[label] += 1 return counts def summarize_clustering(name: str, cluster_result: ClusterResult) -> None: cluster_result.validate() total_wcss = wcss( points=cluster_result.points, labels=cluster_result.labels, centroids=cluster_result.centroids, ) counts = cluster_counts(cluster_result.labels, len(cluster_result.centroids)) print(f"Clustering: {name}") print(f"Number of points: {len(cluster_result.points)}") print(f"Number of clusters: {len(cluster_result.centroids)}") print(f"Cluster sizes: {counts}") print(f"WCSS: {total_wcss:.4f}") print("-" * 60) def main() -> None: # Customer segmentation example: # Features: [annual_spend_standardized, purchase_frequency_standardized] points = [ [0.2, 0.1], [0.1, 0.3], [0.3, 0.2], [3.8, 4.0], [4.1, 3.9], [3.9, 4.2], ] centroids_k2 = [ [0.2, 0.2], [3.93, 4.03], ] labels_k2 = [0, 0, 0, 1, 1, 1] centroids_k3 = [ [0.2, 0.2], [3.8, 4.0], [4.0, 4.05], ] labels_k3 = [0, 0, 0, 1, 2, 2] clustering_k2 = ClusterResult(points=points, labels=labels_k2, centroids=centroids_k2) clustering_k3 = ClusterResult(points=points, labels=labels_k3, centroids=centroids_k3) summarize_clustering("K = 2", clustering_k2) summarize_clustering("K = 3", clustering_k3) if __name__ == "__main__": main()
+```python
+# Reference example with a numerical check.
+import numpy as np
+
+def within_cluster_sum_of_squares(points, labels, centroids):
+    points = np.asarray(points, dtype=float)
+    labels = np.asarray(labels, dtype=int)
+    centroids = np.asarray(centroids, dtype=float)
+    if points.ndim != 2 or centroids.ndim != 2 or points.shape[1] != centroids.shape[1]:
+        raise ValueError("Points and centroids need matching feature dimensions.")
+    if labels.shape != (len(points),) or np.any(labels < 0) or np.any(labels >= len(centroids)):
+        raise ValueError("Each point needs a valid centroid index.")
+    residuals = points - centroids[labels]
+    return float(np.sum(residuals ** 2))
+
+points = [[0, 0], [2, 0], [8, 0], [10, 0]]
+labels = [0, 0, 1, 1]
+centroids = [[1, 0], [9, 0]]
+wcss = within_cluster_sum_of_squares(points, labels, centroids)
+assert np.isclose(wcss, 4)
+print("WCSS:", wcss)
 ```
 
-What
-this professional example teaches:
-
-1. WCSS is computed by summing squared Euclidean distances from points to their assigned centroids.
-2. The objective works naturally in multidimensional feature space.
-3. Increasing $K$ often lowers WCSS, which is why WCSS alone cannot choose the best number of clusters.
-4. Standardized features are often used in customer segmentation so one variable does not dominate the distance calculation.
-5.
-
-The elbow method and business interpretation should complement WCSS in final cluster selection. Plain-English interpretation of the segmentation example:
-
-- If $K=3$ produces lower WCSS than $K=2$, the clusters are tighter.
-- But a tighter mathematical fit does not automatically mean a better business segmentation.
-- The analyst still needs to ask whether the extra cluster is stable, interpretable, and operationally useful.
+The function gathers each assigned centroid and sums squared Euclidean residuals. This evaluates fixed assignments; fitting k-means additionally alternates assignment and centroid updates.
 
 ## Self-check: mathematical verification
 
@@ -413,23 +418,6 @@ So the one-dimensional formula is a correct specialization of the general vector
 ### Verbal-to-algebra consistency
 
 The verbal explanation says WCSS measures how tightly points sit around their cluster centroids, and that K-means minimizes this quantity. Algebraically, the formula is exactly the total squared dispersion around centroids. The explanation and the formula are aligned.
-
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$K$`, `$x_i$`, `$C_k$`, and `$\mu_k$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to Lloyd algorithm, elbow method, segmentation, and customer clustering are explicitly included.
-- No placeholder text remains.
 
 ## Common Pitfalls and Edge Cases
 

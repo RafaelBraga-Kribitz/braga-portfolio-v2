@@ -424,21 +424,20 @@ At the current coefficient value, the model is underpredicting enough that the b
 
 ### Beginner friendly Example \[Python\])
 
-```markdown
-import numpy as np # Gradient of least-squares loss for a tiny example
+```python
+# Reference example with a numerical check.
+import numpy as np
+
 X = np.array([[1], [2], [3]], dtype=float)
 y = np.array([2, 2, 4], dtype=float)
-w = np.array([1.0]) n = len(y)
-gradient = (2 / n) * X.T @ (X @ w - y) print("Gradient:", gradient)
+w = np.array([1.0])
+n = len(y)
+gradient = (2 / n) * X.T @ (X @ w - y)
+assert np.allclose(gradient, [-8 / 3])
+print("MSE gradient:", gradient)
 ```
 
-Explanation
-:
-
-- `X @ w` computes predictions.
-- `X @ w - y` computes prediction-minus-truth errors.
-- `X.T @ (...)` maps the errors back into coefficient space.
-- Multiplying by `2 / n` gives the averaged-loss gradient.
+This small example computes the formula directly for the supplied toy data. The reusable example below adds input checks and a reference calculation.
 
 ## Beginner friendly Example \[R\])
 
@@ -462,21 +461,27 @@ Explanation
 
 ## Final Professional Example \[Python\])
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass
-from typing import Sequence import numpy as np RANDOM_SEED = 42 @dataclass(frozen=True)
-class LinearRegressionBatch: design_matrix: Sequence[Sequence[float]] targets: Sequence[float] weights: Sequence[float] def validate(self) -> None: if len(self.design_matrix) == 0: raise ValueError("At least one observation is required.") if len(self.design_matrix) != len(self.targets): raise ValueError("design_matrix and targets must have the same number of rows.") feature_count = len(self.weights) for row in self.design_matrix: if len(row) != feature_count: raise ValueError("Each design-matrix row must match the number of weights.") def least_squares_gradient(X: np.ndarray, y: np.ndarray, w: np.ndarray) -> np.ndarray: observation_count = len(y) if observation_count == 0: raise ValueError("At least one target is required.") return (2.0 / observation_count) * X.T @ (X @ w - y) def loss_value(X: np.ndarray, y: np.ndarray, w: np.ndarray) -> float: residual_vector = y - X @ w return float((residual_vector.T @ residual_vector) / len(y)) def gradient_descent_step(X: np.ndarray, y: np.ndarray, w: np.ndarray, learning_rate: float) -> np.ndarray: if learning_rate <= 0: raise ValueError("learning_rate must be greater than 0.") gradient = least_squares_gradient(X, y, w) return w - learning_rate * gradient def summarize_gradient(example: LinearRegressionBatch, learning_rate: float) -> None: example.validate() X = np.array(example.design_matrix, dtype=float) y = np.array(example.targets, dtype=float) w = np.array(example.weights, dtype=float) gradient = least_squares_gradient(X, y, w) current_loss = loss_value(X, y, w) updated_w = gradient_descent_step(X, y, w, learning_rate=learning_rate) updated_loss = loss_value(X, y, updated_w) print("Least-squares gradient summary") print("-" * 72) print("Current weights:") print(w) print(f"Current loss: {current_loss:.6f}") print("Gradient:") print(gradient) print("-" * 72) print(f"Learning rate: {learning_rate:.6f}") print("Updated weights after one gradient step:") print(updated_w) print(f"Updated loss: {updated_loss:.6f}") def main() -> None: # Demand-style regression example example = LinearRegressionBatch( design_matrix=[ [1.0, 10.0, 0.0], [1.0, 9.5, 1.0], [1.0, 11.0, 0.0], [1.0, 10.5, 1.0], ], targets=[120.0, 145.0, 112.0, 138.0], weights=[100.0, 1.0, 5.0], ) summarize_gradient(example, learning_rate=0.001) if __name__ == "__main__": main()
+```python
+# Reference example with a numerical check.
+import numpy as np
+
+def mse_gradient(X, y, w):
+    X, y, w = np.asarray(X, dtype=float), np.asarray(y, dtype=float), np.asarray(w, dtype=float)
+    if X.ndim != 2 or y.shape != (len(X),) or w.shape != (X.shape[1],) or len(y) == 0:
+        raise ValueError("Provide a nonempty design matrix with aligned targets and weights.")
+    return (2 / len(y)) * X.T @ (X @ w - y)
+
+X = np.array([[1], [2], [3]], dtype=float)
+y = np.array([2, 2, 4], dtype=float)
+w = np.array([1.0])
+gradient = mse_gradient(X, y, w)
+h = 1e-5
+numeric = (np.mean((X @ (w + h) - y) ** 2) - np.mean((X @ (w - h) - y) ** 2)) / (2 * h)
+assert np.allclose(gradient, [numeric])
+print("MSE gradient:", gradient)
 ```
 
-What
-this professional example teaches:
-
-1. The gradient is computed from matrix operations that scale well to larger datasets.
-2. One gradient step can be inspected directly through the resulting loss change.
-3. This is the operational core of gradient descent for linear regression.
-4.
-
-The same logic extends naturally to larger iterative optimization systems.
+The gradient uses mean squared error with no one-half factor, hence the factor 2/n. A centered finite difference independently checks the derivative on a one-feature example.
 
 ## Self-check: mathematical verification
 
@@ -613,23 +618,6 @@ has shape $p \times 1$, which matches the shape of the gradient with respect to 
 ### Verbal-to-algebra consistency
 
 The verbal explanation says the gradient maps prediction errors back into coefficient space, and that setting it to zero yields the Normal Equations. The derivation confirms both points directly.
-
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$X$`, `$w$`, `$y$`, `$\nabla_w L(w)$`, and `$\mathrm{RSS}(w)$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to least-squares objective, normal equations, iterative fitting, and large-scale regression are explicitly included.
-- No placeholder text remains.
 
 ## Common Pitfalls and Edge Cases
 

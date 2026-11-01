@@ -285,21 +285,25 @@ Explanation
 
 ### Final Professional Example \[Python\])
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass
-from typing import Sequence RANDOM_SEED = 42 @dataclass(frozen=True)
-class TimeSeriesWindow: values: Sequence[float] window_size: int def validate(self) -> None: if len(self.values) == 0: raise ValueError("At least one time-series value is required.") if self.window_size <= 0: raise ValueError("window_size must be greater than 0.") if self.window_size > len(self.values): raise ValueError("window_size cannot exceed the number of observed values.") def simple_moving_average(values: Sequence[float], window_size: int) -> list[float]: if len(values) == 0: raise ValueError("At least one time-series value is required.") if window_size <= 0: raise ValueError("window_size must be greater than 0.") if window_size > len(values): raise ValueError("window_size cannot exceed the number of observed values.") sma_values = [] for end_index in range(window_size - 1, len(values)): start_index = end_index - window_size + 1 window = values[start_index:end_index + 1] sma_values.append(sum(window) / window_size) return sma_values def summarize_sma(series: TimeSeriesWindow) -> None: series.validate() sma_values = simple_moving_average(series.values, series.window_size) print("Simple Moving Average summary") print("-" * 72) print(f"Values: {list(series.values)}") print(f"Window size: {series.window_size}") print("-" * 72) for offset, sma_value in enumerate(sma_values, start=series.window_size): print(f"SMA at time t={offset}: {sma_value:.4f}") print("-" * 72) print(f"Latest SMA (baseline next forecast): {sma_values[-1]:.4f}") def main() -> None: # Daily orders example series = TimeSeriesWindow( values=[102, 108, 99, 115, 121, 118, 125, 130, 127, 133], window_size=3, ) summarize_sma(series) if __name__ == "__main__": main()
+```python
+# Reference example with a numerical check.
+import math
+
+def moving_average(values, window):
+    if not isinstance(window, int) or not 1 <= window <= len(values):
+        raise ValueError("Window must be an integer between one and the series length.")
+    if not all(math.isfinite(value) for value in values):
+        raise ValueError("Handle missing or nonfinite observations before smoothing.")
+    return [sum(values[end - window:end]) / window for end in range(window, len(values) + 1)]
+
+values = [10, 12, 14, 16, 18]
+smoothed = moving_average(values, 3)
+assert smoothed == [12, 14, 16]
+print("Trailing three-period means:", smoothed)
+print("One-step baseline forecast:", smoothed[-1])
 ```
 
-What
-this professional example teaches:
-
-1. SMA is computed repeatedly across a rolling window.
-2. The first valid SMA appears only once enough observations exist.
-3. The latest SMA can be used as a simple baseline forecast.
-4.
-
-This is useful in demand monitoring, KPI smoothing, and dashboard trend analysis.
+Each result averages the most recent full window, so the first output aligns with the third observation for a window of three. The final trailing mean can serve as a simple next-period baseline forecast.
 
 ## Self-check: mathematical verification
 
@@ -380,23 +384,6 @@ If $x_i$ is measured in units, dollars, tickets, or customers, then summing valu
 ## Verbal-to-algebra consistency
 
 The verbal explanation says SMA is the average of the most recent $w$ values and is used to smooth time-series noise. The formula computes exactly that rolling mean.
-
-## Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$\mathrm{SMA}_t$`, `$w$`, `$x_i$`, and `$\hat{x}_{t+1}$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to EMA, forecasting, demand smoothing, and KPI trends are explicitly included.
-- No placeholder text remains.
 
 ## Common Pitfalls and Edge Cases
 

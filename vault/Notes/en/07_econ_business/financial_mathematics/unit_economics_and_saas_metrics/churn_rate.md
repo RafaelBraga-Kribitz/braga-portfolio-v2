@@ -332,21 +332,23 @@ Explanation
 
 ### Final Professional Example \[Python\])
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass
-from typing import Sequence RANDOM_SEED = 42 @dataclass(frozen=True)
-class CohortPeriod: period: str customers_start: int customers_lost: int def validate(self) -> None: if self.customers_start < 0: raise ValueError("customers_start must be non-negative.") if self.customers_lost < 0: raise ValueError("customers_lost must be non-negative.") if self.customers_lost > self.customers_start: raise ValueError("customers_lost cannot exceed customers_start.") def churn_rate_decimal(customers_start: int, customers_lost: int) -> float: if customers_start <= 0: raise ValueError("customers_start must be greater than 0.") if customers_lost < 0 or customers_lost > customers_start: raise ValueError("customers_lost must be between 0 and customers_start.") return customers_lost / customers_start def churn_rate_percent(customers_start: int, customers_lost: int) -> float: return churn_rate_decimal(customers_start, customers_lost) * 100 def retention_rate_decimal(customers_start: int, customers_lost: int) -> float: return 1 - churn_rate_decimal(customers_start, customers_lost) def expected_lifetime_periods(churn_decimal: float) -> float: if churn_decimal <= 0: raise ValueError("churn_decimal must be greater than 0 for lifetime approximation.") return 1 / churn_decimal def summarize_cohort(periods: Sequence[CohortPeriod]) -> None: if len(periods) == 0: raise ValueError("At least one period is required.") print("Customer churn summary") print("-" * 72) for row in periods: row.validate() churn_decimal = churn_rate_decimal(row.customers_start, row.customers_lost) churn_percent = churn_rate_percent(row.customers_start, row.customers_lost) retention_decimal = retention_rate_decimal(row.customers_start, row.customers_lost) print(f"Period: {row.period}") print(f"Customers at start: {row.customers_start}") print(f"Customers lost: {row.customers_lost}") print(f"Churn rate: {churn_percent:.2f}%") print(f"Retention rate: {retention_decimal:.2%}") if churn_decimal > 0: print(f"Expected lifetime approximation: {expected_lifetime_periods(churn_decimal):.2f} periods") print("-" * 72) def main() -> None: periods = [ CohortPeriod(period="Month 1", customers_start=1000, customers_lost=60), CohortPeriod(period="Month 2", customers_start=940, customers_lost=45), CohortPeriod(period="Month 3", customers_start=895, customers_lost=38), ] summarize_cohort(periods) if __name__ == "__main__": main()
+```python
+# Reference example with a numerical check.
+import math
+
+def churn_rate(customers_start, customers_lost):
+    if customers_start <= 0 or not 0 <= customers_lost <= customers_start:
+        raise ValueError("Require a positive starting cohort and losses within that cohort.")
+    return customers_lost / customers_start
+
+periods = [("January", 1000, 40), ("February", 1200, 36)]
+for period, start, lost in periods:
+    print(f"{period}: {100 * churn_rate(start, lost):.2f}%")
+assert math.isclose(churn_rate(1000, 40), 0.04)
+print("January retention:", 1 - churn_rate(1000, 40))
 ```
 
-What
-this professional example teaches:
-
-1. Churn, retention, and lifetime approximation are tightly linked.
-2. The metric is usually computed period by period for a starting cohort or active base.
-3. This structure is useful in cohort dashboards, SaaS reporting, and LTV modeling.
-4.
-
-Even a basic churn series can reveal improving or deteriorating retention dynamics.
+Customer churn divides customers lost from the starting cohort by that cohort size. New acquisitions do not enter this denominator; customer churn and revenue churn answer different questions.
 
 ## Self-check: mathematical verification
 
@@ -442,23 +444,6 @@ so it is dimensionless. Multiplying by 100 expresses it as a percentage. This is
 ### Verbal-to-algebra consistency
 
 The verbal explanation says churn is the share of the starting customer base that is lost during the period, and that it is the complement of retention. The formulas express exactly those ideas.
-
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$\mathrm{Churn\ Rate}$`, `$\mathrm{Retention\ Rate}$`, and `$c$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to LTV, retention, cohort analysis, and unit economics are explicitly included.
-- No placeholder text remains.
 
 ## Common Pitfalls and Edge Cases
 

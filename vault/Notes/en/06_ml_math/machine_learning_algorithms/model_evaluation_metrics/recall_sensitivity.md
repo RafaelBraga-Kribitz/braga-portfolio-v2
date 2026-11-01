@@ -242,26 +242,24 @@ So Recall is $80%$.
 
 ### Final Professional Example \[Python\])
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass RANDOM_SEED = 42 @dataclass(frozen=True)
-class ConfusionMatrix: tp: int tn: int fp: int fn: int def predicted_positive_count(self) -> int: return self.tp + self.fp def actual_positive_count(self) -> int: return self.tp + self.fn def total_count(self) -> int: return self.tp + self.tn + self.fp + self.fn def recall_score_from_confusion_matrix(conf_matrix: ConfusionMatrix) -> float: actual_positive_count = conf_matrix.actual_positive_count() if actual_positive_count == 0: raise ValueError("Recall is undefined when TP + FN = 0.") return conf_matrix.tp / actual_positive_count def precision_score_from_confusion_matrix(conf_matrix: ConfusionMatrix) -> float: predicted_positive_count = conf_matrix.predicted_positive_count() if predicted_positive_count == 0: return 0.0 return conf_matrix.tp / predicted_positive_count def f1_score_from_confusion_matrix(conf_matrix: ConfusionMatrix) -> float: precision_value = precision_score_from_confusion_matrix(conf_matrix) recall_value = recall_score_from_confusion_matrix(conf_matrix) if precision_value + recall_value == 0: return 0.0 return 2 * precision_value * recall_value / (precision_value + recall_value) def accuracy_score_from_confusion_matrix(conf_matrix: ConfusionMatrix) -> float: total_count = conf_matrix.total_count() if total_count == 0: raise ValueError("Accuracy is undefined when there are no observations.") return (conf_matrix.tp + conf_matrix.tn) / total_count def summarize_model(label: str, conf_matrix: ConfusionMatrix) -> None: recall_value = recall_score_from_confusion_matrix(conf_matrix) precision_value = precision_score_from_confusion_matrix(conf_matrix) f1_value = f1_score_from_confusion_matrix(conf_matrix) accuracy_value = accuracy_score_from_confusion_matrix(conf_matrix) print(f"Model: {label}") print( f"TP={conf_matrix.tp}, TN={conf_matrix.tn}, " f"FP={conf_matrix.fp}, FN={conf_matrix.fn}" ) print(f"Actual positives={conf_matrix.actual_positive_count()}") print(f"Recall={recall_value:.4f}") print(f"Precision={precision_value:.4f}") print(f"F1={f1_value:.4f}") print(f"Accuracy={accuracy_value:.4f}") print("-" * 40) def main() -> None: # Churn detection example: # Conservative threshold misses more churners, so Recall is lower. # Broad threshold catches more churners, so Recall is higher. conservative_model = ConfusionMatrix(tp=55, tn=860, fp=25, fn=60) broad_capture_model = ConfusionMatrix(tp=92, tn=760, fp=125, fn=23) summarize_model("Conservative Threshold", conservative_model) summarize_model("Broad Capture Threshold", broad_capture_model) if __name__ == "__main__": main()
+```python
+# Reference example with a numerical check.
+import math
+
+def score(tp, tn, fp, fn):
+    if any(value < 0 for value in (tp, tn, fp, fn)):
+        raise ValueError("Confusion-matrix counts cannot be negative.")
+    denominator = tp + fn
+    if denominator == 0:
+        raise ValueError("This metric is undefined for a zero denominator.")
+    return tp / denominator
+
+value = score(tp=80, tn=90, fp=20, fn=10)
+assert math.isclose(value, 0.8888888888888888)
+print("Recall Sensitivity:", value)
 ```
 
-What
-this professional example teaches:
-
-1. Recall is computed only from $TP$ and $FN$.
-2. A broader threshold often increases Recall by reducing missed positives.
-3. That same broader threshold can lower Precision by generating more false positives.
-4. The conservative threshold may keep the positive list cleaner, but it can miss many real positives.
-5. F1 is useful when both positive-class coverage and positive prediction quality matter.
-6.
-
-Accuracy is included to show that overall correctness can hide weak positive-class recovery. Plain-English interpretation of the churn example:
-
-- The conservative model contacts fewer customers and misses many real churners.
-- The broad-capture model recovers many more churners but also targets more non-churners.
-- The better choice depends on the cost of missed churners versus the cost of unnecessary outreach.
+The function computes recall sensitivity from confusion-matrix counts, rejecting negative counts and an undefined zero denominator. The returned proportion can be multiplied by 100 for a percentage.
 
 ## Self-check: mathematical verification
 
@@ -347,23 +345,6 @@ These sanity checks are coherent.
 ### Verbal-to-algebra consistency
 
 The verbal explanation says Recall is “of all actual positives, the fraction the model predicts positive.” Algebraically, the denominator counts all actual positives and the numerator counts those correctly predicted as positive. The wording and the formula are aligned.
-
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$TP$` and `$FN$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Precision, F1, and the recall–precision tradeoff are explicitly discussed.
-- No placeholder text remains.
 
 ## Common Pitfalls and Edge Cases
 

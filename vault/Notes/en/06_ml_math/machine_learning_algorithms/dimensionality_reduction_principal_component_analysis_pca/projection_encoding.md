@@ -390,24 +390,24 @@ The data vary twice as much in the first coordinate direction as in the second, 
 
 ### Beginner friendly Example \[Python\])
 
-```markdown
-import numpy as np # Eigenvectors and eigenvalues of a covariance matrix
-S = np.array([ [2, 0], [0, 1]
-], dtype=float) eigenvalues, eigenvectors = np.linalg.eigh(S) # sort from largest to smallest
+```python
+# Reference example with a numerical check.
+import numpy as np
+
+S = np.array([[2, 0], [0, 1]], dtype=float)
+eigenvalues, eigenvectors = np.linalg.eigh(S)
 order = np.argsort(eigenvalues)[::-1]
 eigenvalues = eigenvalues[order]
-eigenvectors = eigenvectors[:, order] print("Eigenvalues:")
-print(eigenvalues)
-print("Eigenvectors:")
-print(eigenvectors)
+eigenvectors = eigenvectors[:, order]
+x_centered = np.array([3, 4], dtype=float)
+principal_direction = eigenvectors[:, 0]
+encoded = x_centered @ principal_direction
+print("Eigenvalues:", eigenvalues)
+print("First-component score:", encoded)
+assert np.isclose(abs(encoded), 3)
 ```
 
-Explanation
-:
-
-- `np.linalg.eigh` is used because the covariance matrix is symmetric.
-- The eigenvectors are the principal directions.
-- The eigenvalues tell how much variance each direction explains.
+This small example computes the formula directly for the supplied toy data. The reusable example below adds input checks and a reference calculation.
 
 ### Beginner friendly Example \[R\])
 
@@ -428,21 +428,32 @@ Explanation
 
 ### Final Professional Example \[Python\])
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass
-from typing import Sequence import numpy as np RANDOM_SEED = 42 @dataclass(frozen=True)
-class PcaCovarianceExample: data_matrix: Sequence[Sequence[float]] feature_names: Sequence[str] def validate(self) -> None: if len(self.data_matrix) < 2: raise ValueError("At least two observations are required.") if len(self.feature_names) == 0: raise ValueError("At least one feature name is required.") feature_count = len(self.feature_names) for row in self.data_matrix: if len(row) != feature_count: raise ValueError("Each row must match the number of feature names.") def center_columns(X: np.ndarray) -> np.ndarray: return X - np.mean(X, axis=0) def sample_covariance_matrix(X_centered: np.ndarray) -> np.ndarray: observation_count = X_centered.shape[0] return (X_centered.T @ X_centered) / (observation_count - 1) def summarize_pca_directions(example: PcaCovarianceExample) -> None: example.validate() X = np.array(example.data_matrix, dtype=float) X_centered = center_columns(X) S = sample_covariance_matrix(X_centered) eigenvalues, eigenvectors = np.linalg.eigh(S) order = np.argsort(eigenvalues)[::-1] eigenvalues = eigenvalues[order] eigenvectors = eigenvectors[:, order] explained_variance_ratio = eigenvalues / np.sum(eigenvalues) print("PCA eigenvector-equation summary") print("-" * 72) print("Feature names:") print(list(example.feature_names)) print("-" * 72) print("Sample covariance matrix S:") print(S) print("-" * 72) print("Eigenvalues:") print(eigenvalues) print("Explained variance ratios:") print(explained_variance_ratio) print("-" * 72) print("Eigenvectors, principal axes:") print(eigenvectors) print("-" * 72) print("First principal component scores:") print(X_centered @ eigenvectors[:, 0]) def main() -> None: example = PcaCovarianceExample( feature_names=["annual_spend", "purchase_frequency", "basket_size"], data_matrix=[ [1200.0, 12.0, 100.0], [1500.0, 15.0, 110.0], [1800.0, 18.0, 130.0], [1600.0, 14.0, 115.0], ], ) summarize_pca_directions(example) if __name__ == "__main__": main()
+```python
+# Reference example with a numerical check.
+import numpy as np
+
+def pca_encode(data, components):
+    data = np.asarray(data, dtype=float)
+    if data.ndim != 2 or len(data) < 2 or not 1 <= components <= data.shape[1]:
+        raise ValueError("Require at least two observations and a valid component count.")
+    means = data.mean(axis=0)
+    centered = data - means
+    covariance = centered.T @ centered / (len(data) - 1)
+    eigenvalues, eigenvectors = np.linalg.eigh(covariance)
+    order = np.argsort(eigenvalues)[::-1]
+    basis = eigenvectors[:, order[:components]]
+    return centered @ basis, basis, means, eigenvalues[order]
+
+X = np.array([[-1, -2], [0, 0], [1, 2]], dtype=float)
+scores, basis, means, eigenvalues = pca_encode(X, components=1)
+reconstruction = scores @ basis.T + means
+assert np.allclose(reconstruction, X)
+assert np.allclose(eigenvalues, [5, 0])
+print("Encoded scores:", scores)
+print("Eigenvalues:", eigenvalues)
 ```
 
-What
-this professional example teaches:
-
-1. PCA starts from the covariance matrix of centered data.
-2. Solving the eigenvector equation gives principal directions and explained variances.
-3. Ordering eigenvalues from largest to smallest defines the PCA ranking.
-4.
-
-Projecting centered data onto leading eigenvectors gives principal component scores.
+The largest covariance eigenvalues select the projection basis. Encoding uses centered observations; reconstruction adds the means back. Eigenvector signs are arbitrary, so validate reconstructed data rather than a particular score sign.
 
 ## Self-check: mathematical verification
 
@@ -547,23 +558,6 @@ This is dimensionally and geometrically correct, because it produces the coordin
 ### Verbal-to-algebra consistency
 
 The verbal explanation says eigenvectors are the principal directions and eigenvalues are the variance along those directions. The derivation confirms both claims exactly.
-
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$S$`, `$v$`, `$\lambda$`, `$X_c$`, and `$z_k$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to sample covariance, projection, PCA, and factor analysis are explicitly included.
-- No placeholder text remains.
 
 ## Common Pitfalls and Edge Cases
 

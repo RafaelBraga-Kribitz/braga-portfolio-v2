@@ -367,21 +367,27 @@ Explanation
 
 ## Final Professional Example \[Python\])
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass
-from typing import Hashable, Sequence RANDOM_SEED = 42 @dataclass(frozen=True)
-class BipartiteGraph: v_1: Sequence[Hashable] v_2: Sequence[Hashable] edges: Sequence[tuple[Hashable, Hashable]] def validate(self) -> None: set_v_1 = set(self.v_1) set_v_2 = set(self.v_2) if len(set_v_1) != len(self.v_1): raise ValueError("v_1 must contain unique vertices.") if len(set_v_2) != len(self.v_2): raise ValueError("v_2 must contain unique vertices.") if set_v_1.intersection(set_v_2): raise ValueError("v_1 and v_2 must be disjoint.") for left_vertex, right_vertex in self.edges: if left_vertex not in set_v_1: raise ValueError("Each edge must start in v_1.") if right_vertex not in set_v_2: raise ValueError("Each edge must end in v_2.") def degree_by_partition(graph: BipartiteGraph) -> tuple[dict[Hashable, int], dict[Hashable, int]]: graph.validate() left_degrees = {vertex: 0 for vertex in graph.v_1} right_degrees = {vertex: 0 for vertex in graph.v_2} for left_vertex, right_vertex in graph.edges: left_degrees[left_vertex] += 1 right_degrees[right_vertex] += 1 return left_degrees, right_degrees def summarize_bipartite_graph(graph: BipartiteGraph) -> None: graph.validate() left_degrees, right_degrees = degree_by_partition(graph) print("Bipartite graph summary") print("-" * 72) print(f"V1: {list(graph.v_1)}") print(f"V2: {list(graph.v_2)}") print(f"Edges: {list(graph.edges)}") print(f"|V1| = {len(graph.v_1)}") print(f"|V2| = {len(graph.v_2)}") print(f"|E| = {len(graph.edges)}") print("Degrees in V1:") print(left_degrees) print("Degrees in V2:") print(right_degrees) def main() -> None: # User-item interaction graph graph = BipartiteGraph( v_1=("user_1", "user_2", "user_3"), v_2=("item_a", "item_b", "item_c", "item_d"), edges=( ("user_1", "item_a"), ("user_1", "item_b"), ("user_2", "item_b"), ("user_2", "item_c"), ("user_3", "item_c"), ("user_3", "item_d"), ), ) summarize_bipartite_graph(graph) if __name__ == "__main__": main()
+```python
+# Reference example with a numerical check.
+left = {"customer-a", "customer-b"}
+right = {"product-x", "product-y"}
+edges = [("customer-a", "product-x"), ("customer-b", "product-x")]
+
+def validate_bipartite(left, right, edges):
+    if left & right:
+        raise ValueError("Partitions must be disjoint.")
+    for u, v in edges:
+        if not ((u in left and v in right) or (u in right and v in left)):
+            raise ValueError("Each edge must cross the partitions.")
+    return True
+
+assert validate_bipartite(left, right, edges)
+degrees = {vertex: sum(vertex in edge for edge in edges) for vertex in left | right}
+assert degrees["product-x"] == 2
+print("Degrees:", degrees)
 ```
 
-What
-this professional example teaches:
-
-1. A bipartite graph is best represented with the two partitions made explicit.
-2. Validation should check disjointness and cross-partition edge structure.
-3. Degree can be analyzed separately on each side of the bipartite graph.
-4.
-
-This structure directly supports recommendation and affiliation analysis.
+The validator checks disjoint partitions and requires each edge to cross them. Degree counts describe customer activity and product popularity; isolated vertices remain in the graph with degree zero.
 
 ## Self-check: mathematical verification
 
@@ -465,23 +471,6 @@ This is a mathematically valid and standard example of a bipartite graph.
 ## Verbal-to-algebra consistency
 
 The verbal explanation says a bipartite graph has two disjoint node sets and all edges run across them. The formulas express exactly that condition.
-
-## Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$G$`, `$V_1$`, `$V_2$`, `$E$`, and `$K_{m,n}$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to complete bipartite graphs, recommendation, collaborative filtering, and affiliation networks are explicitly included.
-- No placeholder text remains.
 
 ## Common Pitfalls and Edge Cases
 

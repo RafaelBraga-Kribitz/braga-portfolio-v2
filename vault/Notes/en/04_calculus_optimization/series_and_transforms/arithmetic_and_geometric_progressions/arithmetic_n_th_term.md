@@ -1,5 +1,8 @@
 ---
 publish: true
+aliases:
+- arithmetic_n_th_term_2
+- arithmetic_hmtbcth_term
 date: '2026-04-16'
 tags:
 - calculus
@@ -42,7 +45,7 @@ The pattern is simple: u_1 = a, u_2 = a+d, u_3 = a+2d, ..., u_n = a+(n-1)d. Each
 
 ### Example in a business
 
-**Straight-line asset depreciation**: An asset costs €50,000 and depreciates by €4,000/year. After n years, book value = 50000 + (n-1)×(-4000). At n=5: book value = 50000 - 16000 = €34,000. The formula directly answers "what is this asset worth in year n?" without iterating.
+**Straight-line asset depreciation**: An asset costs €50,000 and depreciates by €4,000/year. At the start of year n (purchase time is the start of year 1), book value = 50000 + (n-1)×(-4000). At n=5: book value = 50000 - 16000 = €34,000. The formula directly answers "what is this asset worth in year n?" without iterating.
 
 ## The formula, piece by piece
 
@@ -64,7 +67,7 @@ $u_n = a + (n-1)d$ - **$u_n$** — The value of the n-th term.
 2. **d > 0**: increasing sequence (counting up, depreciation of a liability, cumulative growth).
 3. **d < 0**: decreasing sequence (straight-line depreciation of an asset, countdown).
 4. **Continuous analog**: Linear function $f(t) = a + d \cdot t$ — the arithmetic sequence is the discrete sample of a straight line.
-5. **NumPy equivalent**: `np.arange(a, a + n*d, d)` or `np.linspace(a, a + (n-1)*d, n)` generate arithmetic sequences; the n-th element (0-indexed) = a + n*d.
+5. **NumPy equivalent**: `np.arange(a, a + n*d, d)` or `np.linspace(a, a + (n-1)*d, n)` generate arithmetic sequences; the element at Python index i equals a + i*d.
 6. **Relation to arithmetic sum**: $S_n = \frac{n}{2}(u_1 + u_n) = \frac{n}{2}(2a + (n-1)d)$ — the sum formula builds on knowing u_n.
 
 ## Step-by-step calculation (tiny example)
@@ -124,7 +127,11 @@ for year in [1, 2, 5, 10, 13]:
 # Verify with numpy
 years = np.arange(1, 14)
 book_values_np = INITIAL_VALUE + (years - 1) * ANNUAL_DEPRECIATION
-print(f"\nFully depreciated at year: {np.argmin(book_values_np >= 0) + 1}")
+nonpositive = np.flatnonzero(book_values_np <= 0)
+if len(nonpositive):
+    print(f"\nFully depreciated at year: {years[nonpositive[0]]}")
+else:
+    print("\nNot fully depreciated within the displayed horizon.")
 
 # Linear learning rate decay: eta_n = 0.1 - (n-1)*0.005
 INITIAL_LR = 0.10
@@ -229,3 +236,49 @@ print(f"u_n formula confirms: u_10 = {arithmetic_sequence(FIRST_VALUE, STEP_SIZE
 ---
 
 *Source: MFB p. 160*
+
+## Inverse questions and numerical grids
+
+From two known terms with distinct indices, recover the common difference as
+
+$$
+d = \frac{u_n-u_m}{n-m}.
+$$
+
+For $d \ne 0$, the candidate position of a value $u$ is $n=(u-a)/d+1$. It belongs to the sequence only when this is a positive integer. For $d=0$, every term equals $a$ and the position cannot be recovered uniquely.
+
+The first term is at index 1 in this notation and index 0 in Python. For depreciation, define whether the first observation is purchase time or the end of the first year before applying the formula.
+
+### Numerical-grid application (Python)
+
+```python
+"""
+Arithmetic sequences in DA/DS: cohort offsets, feature bins, depreciation.
+"""
+import numpy as np
+import pandas as pd
+
+def arithmetic_nth_term(a: float, d: float, n: int | np.ndarray) -> float | np.ndarray:
+    """u_n = a + (n-1)*d."""
+    return a + (n - 1) * d   # 1. Weekly cohort follow-up offsets: weeks 1, 8, 15, 22, ... (d=7)
+cohort_weeks = arithmetic_nth_term(1, 7, np.arange(1, 9)).astype(int)
+print(f"Cohort follow-up weeks: {cohort_weeks}")   # 2. Age feature bins for marketing model
+age_edges = np.linspace(18, 68, 6).astype(int)
+print(f"Age bin edges: {age_edges}")   # 3. Depreciation register
+assets = [("Server rack", 80_000, -8_000, 10), ("Office fit-out", 120_000, -10_000, 12)]
+records = []
+for name, a, d, life in assets:
+    for yr in range(1, life + 1):
+        records.append({"asset": name, "year": yr, "book_value": arithmetic_nth_term(a, d, yr)})
+df = pd.DataFrame(records)
+print("\nDepreciation (selected years):")
+print(df[df["year"].isin([1, 3, 5, 10])].to_string(index=False))
+```
+
+---
+
+*Source: MFB p. 160*
+
+## Source-note history
+
+This note combines `arithmetic_n_th_term`, `arithmetic_n_th_term_2`, and `arithmetic_hmtbcth_term`. The latter two contained the same alternate explanation and numerical-grid example. Their aliases resolve here, and their former public URLs redirect here. Original versions remain in the [repository history](https://github.com/RafaelBraga-Kribitz/braga-portfolio-v2/commits/main/vault/Notes/en/04_calculus_optimization/series_and_transforms/arithmetic_and_geometric_progressions/).

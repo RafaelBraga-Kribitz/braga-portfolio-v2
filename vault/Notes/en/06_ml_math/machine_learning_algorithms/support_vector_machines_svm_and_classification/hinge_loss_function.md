@@ -365,21 +365,28 @@ Explanation
 
 ## Final Professional Example \[Python\])
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass
-from typing import Sequence import numpy as np RANDOM_SEED = 42 @dataclass(frozen=True)
-class LinearSvmExample: X: Sequence[Sequence[float]] y: Sequence[int] w: Sequence[float] b: float def validate(self) -> None: if len(self.X) == 0: raise ValueError("At least one observation is required.") if len(self.X) != len(self.y): raise ValueError("X and y must have the same number of observations.") feature_count = len(self.w) for row in self.X: if len(row) != feature_count: raise ValueError("Each row of X must have the same length as w.") for label in self.y: if label not in (-1, 1): raise ValueError("Each label must be -1 or +1.") def linear_score(x_row: np.ndarray, w: np.ndarray, b: float) -> float: return float(np.dot(x_row, w) + b) def hinge_loss(y_value: int, score_value: float) -> float: return max(0.0, 1.0 - y_value * score_value) def total_hinge_loss(X: np.ndarray, y: np.ndarray, w: np.ndarray, b: float) -> float: total_loss = 0.0 for x_row, y_value in zip(X, y): score_value = linear_score(x_row, w, b) total_loss += hinge_loss(int(y_value), score_value) return total_loss def summarize_svm_example(example: LinearSvmExample) -> None: example.validate() X = np.array(example.X, dtype=float) y = np.array(example.y, dtype=int) w = np.array(example.w, dtype=float) print("Linear SVM hinge-loss summary") print("-" * 72) print(f"w = {w}") print(f"b = {example.b:.4f}") print("-" * 72) for index, (x_row, y_value) in enumerate(zip(X, y), start=1): score_value = linear_score(x_row, w, example.b) signed_margin = y_value * score_value loss_value = hinge_loss(int(y_value), score_value) print( f"Obs {index}: x={x_row}, y={y_value}, " f"score={score_value:.4f}, y*f(x)={signed_margin:.4f}, " f"hinge_loss={loss_value:.4f}" ) print("-" * 72) print(f"Total hinge loss: {total_hinge_loss(X, y, w, example.b):.6f}") def main() -> None: # Toy binary classification example: # Could represent a simple fraud / non-fraud linear separator. example = LinearSvmExample( X=[ [2.0, 1.0], [1.0, 0.5], [-1.0, -1.0], [-2.0, -1.5], ], y=[1, 1, -1, -1], w=[0.8, 0.6], b=0.1, ) summarize_svm_example(example) if __name__ == "__main__": main()
+```python
+# Reference example with a numerical check.
+import numpy as np
+
+def hinge_loss(X, y, w, regularization=0.1):
+    X, y, w = np.asarray(X, dtype=float), np.asarray(y), np.asarray(w, dtype=float)
+    if X.ndim != 2 or y.shape != (X.shape[0],) or w.shape != (X.shape[1],):
+        raise ValueError("Design matrix, labels, and weights must align.")
+    if len(y) == 0 or not np.all(np.isin(y, [-1, 1])) or regularization < 0:
+        raise ValueError("Use nonempty +/-1 labels and a nonnegative penalty.")
+    margins = y * (X @ w)
+    return np.maximum(0, 1 - margins).mean() + 0.5 * regularization * (w @ w)
+
+X = [[1, 0], [0, 1], [-1, 0]]
+y = [1, -1, -1]
+w = [1.0, -0.5]
+loss = hinge_loss(X, y, w)
+assert np.isclose(loss, 1 / 6 + 0.0625)
+print("Regularized mean hinge loss:", loss)
 ```
 
-What
-this professional example teaches:
-
-1. Hinge loss is computed from the score, not only from the predicted class.
-2. The signed margin $y f(x)$ determines whether the loss is zero or positive.
-3. The same logic scales naturally to the full soft-margin SVM objective.
-4.
-
-This makes hinge loss a practical bridge between geometry and optimization in classification.
+Labels use -1 and +1. The example adds an L2 penalty to mean hinge loss; points with margin at least one contribute zero hinge loss.
 
 ## Self-check: mathematical verification
 
@@ -483,23 +490,6 @@ the two branches meet, so the function has a kink and is not differentiable ther
 ## Verbal-to-algebra consistency
 
 The verbal explanation says hinge loss penalizes margin violations, not just misclassifications. Algebraically, the threshold is at margin 1, not at margin 0, which confirms that interpretation exactly.
-
-## Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$y$`, `$f(x)$`, `$w$`, and `$C$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to hard/soft margin, dual form context, linear classifiers, and max-margin methods are explicitly included.
-- No placeholder text remains.
 
 ## Common Pitfalls and Edge Cases
 

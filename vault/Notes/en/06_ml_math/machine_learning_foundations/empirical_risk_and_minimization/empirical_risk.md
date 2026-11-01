@@ -302,24 +302,23 @@ Explanation
 
 ### Final Professional Example \[Python\])
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass
-from typing import Callable, Sequence RANDOM_SEED = 42 @dataclass(frozen=True)
-class SupervisedDataset: inputs: Sequence[float] targets: Sequence[float] def validate(self) -> None: if len(self.inputs) == 0: raise ValueError("At least one observation is required.") if len(self.inputs) != len(self.targets): raise ValueError("inputs and targets must have the same length.") def squared_loss(actual_value: float, predicted_value: float) -> float: return (actual_value - predicted_value) ** 2 def empirical_risk( actual_values: Sequence[float], predicted_values: Sequence[float], loss_function: Callable[[float, float], float],
-) -> float: if len(actual_values) == 0: raise ValueError("At least one observation is required.") if len(actual_values) != len(predicted_values): raise ValueError("actual_values and predicted_values must have the same length.") total_loss = 0.0 for actual_value, predicted_value in zip(actual_values, predicted_values): total_loss += loss_function(actual_value, predicted_value) return total_loss / len(actual_values) def linear_model_prediction(intercept: float, slope: float, x_values: Sequence[float]) -> list[float]: predictions = [] for x_value in x_values: predictions.append(intercept + slope * x_value) return predictions def summarize_training_risk( dataset: SupervisedDataset, intercept: float, slope: float,
-) -> None: dataset.validate() predictions = linear_model_prediction(intercept, slope, dataset.inputs) risk_value = empirical_risk(dataset.targets, predictions, squared_loss) print("Empirical risk summary") print("-" * 60) print(f"Model: y_hat = {intercept:.4f} + {slope:.4f} * x") print("-" * 60) for index, (x_value, actual_value, predicted_value) in enumerate( zip(dataset.inputs, dataset.targets, predictions), start=1, ): loss_value = squared_loss(actual_value, predicted_value) print( f"Obs {index}: x={x_value:.4f}, y={actual_value:.4f}, " f"y_hat={predicted_value:.4f}, loss={loss_value:.4f}" ) print("-" * 60) print(f"Empirical risk: {risk_value:.6f}") def main() -> None: # Demand-forecasting style toy example dataset = SupervisedDataset( inputs=[1.0, 2.0, 3.0, 4.0], targets=[12.0, 14.0, 15.0, 19.0], ) summarize_training_risk(dataset, intercept=10.0, slope=2.0) if __name__ == "__main__": main()
+```python
+# Reference example with a numerical check.
+import math
+
+def empirical_risk(inputs, targets, predictor, loss):
+    if not inputs or len(inputs) != len(targets):
+        raise ValueError("Provide equally sized, nonempty inputs.")
+    return sum(loss(y, predictor(x)) for x, y in zip(inputs, targets)) / len(inputs)
+
+inputs = [1.0, 2.0, 3.0]
+targets = [2.0, 2.0, 4.0]
+risk = empirical_risk(inputs, targets, lambda x: x, lambda y, estimate: (y - estimate) ** 2)
+assert math.isclose(risk, 2 / 3)
+print("Empirical mean squared loss:", risk)
 ```
 
-What
-this professional example teaches:
-
-1. Empirical risk is defined after choosing both a model and a loss function.
-2. Different candidate models produce different predictions and therefore different empirical risks.
-3. The training algorithm tries to reduce this average loss.
-4. In regression, squared loss gives a least-squares-style empirical risk.
-5.
-
-The same structure extends to classification with different losses.
+The function averages a supplied loss across observed input-target pairs. The predictor and loss are arguments, so the same routine can evaluate other models without changing the averaging rule.
 
 ## Self-check: mathematical verification
 
@@ -400,23 +399,6 @@ This is consistent with the interpretation of empirical risk as average training
 ### Verbal-to-algebra consistency
 
 The verbal explanation says empirical risk is the average training loss and the objective minimized during training. The formula computes exactly that. The file also states that low empirical risk does not ensure low expected risk, which is consistent with the distinction between sample average and population expectation.
-
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$n$`, `$x_i$`, `$y_i$`, `$L$`, and `$R_{\mathrm{emp}}(f)$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to expected risk, overfitting, model training, and generalization are explicitly included.
-- No placeholder text remains.
 
 ## Common Pitfalls and Edge Cases
 

@@ -302,24 +302,6 @@ So when Precision and Recall are equal, F1 equals that common value.
 
 The verbal explanation says F1 is a balanced summary of Precision and Recall that penalizes imbalance. Algebraically, the harmonic mean does exactly that, because it stays close to the smaller value when the two inputs are far apart. The wording and the formula are aligned.
 
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$TP$`, `$FP$`, `$FN$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Accuracy, Precision, and Recall are explicitly linked.
-- Harmonic mean versus arithmetic mean is explicitly discussed.
-- No placeholder text remains.
-
 ## Common Pitfalls and Edge Cases
 
 - **Confusing harmonic mean with arithmetic mean:** F1 is not $\frac{\mathrm{Precision}+\mathrm{Recall}}{2}$.
