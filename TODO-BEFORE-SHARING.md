@@ -1,7 +1,7 @@
 # Before the site is shared: what is missing or needs improvement
 
 Inspection of 1 Nov 2026, on branch `claude/website-inspection-numbering-kp6bes`
-(six commits ahead of `main`: Writing numbering, tags at scale). Every item below
+at the state merged into `main` as PR #31 (Writing numbering, tags at scale). Every item below
 was checked against the tree, the build and the automated checks on this date;
 nothing is carried over from an older report without being re-verified. Sources
 that fed this list: `HANDOFF.md` §3–4, `docs/audit/website-manual-actions.md`
@@ -28,23 +28,29 @@ Tick the box when the item is done *and* verified the way the item says.
 
 ## 1. Blockers: the build and the deploy pipeline
 
-- [ ] **1.1 [Eng] `astro check` fails on this branch, so `npm run verify` and the
-  Pages workflow would fail on merge.** `src/lib/tags.ts:57` reads
+- [ ] **1.1 [Eng] `astro check` fails on `main`, so the Pages deploy is red and
+  the live site is behind.** PR #31 (the Writing numbering and the tags
+  catalogue) was merged on 1 Nov 2026 at 21:27 UTC; the "Deploy to GitHub
+  Pages" run 43 on that merge failed, so `rafaelbragakribitz.com` still
+  serves the state of PR #30 (no tags catalogue, old Writing numbering) and
+  the daily 04:43 UTC build will keep failing. Cause: `src/lib/tags.ts:57` reads
   `process.env.TAGS_LETTER_PAGES_FROM`; the project has no Node type
   definitions, so TypeScript reports `ts(2580) Cannot find name 'process'`.
   Fix (one of): read it as `import.meta.env.TAGS_LETTER_PAGES_FROM` (Vite
   exposes it at build), or guard with `globalThis.process?.env`, or add
   `@types/node` to the dev dependencies. Verify: `npm run check` prints
-  `0 errors`; then `npm run verify` end to end.
+  `0 errors`; then `npm run verify` end to end; then the next Pages run on
+  `main` is green and `/en/tags/` is live.
 - [ ] **1.2 [Eng] Clear the six `astro check` hints** (unused symbols:
   `push` in `src/lib/remark/obsidian.mjs:133`, `mediaKind` import in the same
   file line 32, `KEYWORDS` in `src/lib/vault/dataview.mjs:44`, `all` in
   `src/lib/vault/mermaid.mjs:91`). Verify: `npm run check` prints `0 hints`.
-- [ ] **1.3 [Eng] Open the draft pull request for this branch into `main`, merge
-  it, and watch the "Deploy to GitHub Pages" run go green** (Actions tab).
-  The run installs Chromium and runs the full gates, so it takes several
-  minutes. Verify: the run's deploy job shows the page URL and
-  `https://rafaelbragakribitz.com/en/tags/` shows the new tags index.
+- [ ] **1.3 [Eng] After 1.1 is merged, watch the "Deploy to GitHub Pages" run
+  go green** (Actions tab). The run installs Chromium and runs the full
+  gates, so it takes several minutes. Verify: the run's deploy job shows the
+  page URL and `https://rafaelbragakribitz.com/en/tags/` shows the new tags
+  index. (This checklist itself is PR #32, one Markdown file; merging it
+  triggers a run too.)
 - [x] **1.4 [Eng] Gates on the full build.** `npm run test:gates` over the 827
   pages: 0 failing gates on 1 Nov 2026 (section 10). Re-run after every change
   in sections 2–5; any red gate is a blocker.
