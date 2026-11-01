@@ -1,0 +1,29 @@
+---
+// A run of tag chips with their counts (owner, 1 Nov 2026; D-061): the
+// project page's `p.doc-tags > a.tag` with a mono count after each name.
+// Under a listing row (`sub`) it is the row's second line, on the title's
+// columns: an area's topics on the tags index, a tag's children on its
+// archive. Chips are 24px targets (G-05's .doc-tags exception).
+import type { Lang } from '../lib/i18n';
+import { withBase } from '../lib/routes';
+import type { TagItem } from '../lib/tags';
+
+interface Props {
+  items: readonly TagItem[];
+  lang: Lang;
+  /** Language of the names when it differs from the page (the English library on a German page). */
+  textLang?: Lang;
+  /** The chips stand under a listing row, on its title columns. */
+  sub?: boolean;
+  /** A mono label before the chips ("Topics"). */
+  label?: string;
+}
+
+const { items, lang, textLang, sub = false, label } = Astro.props;
+---
+<div class:list={['listing-sub', !sub && 'listing-sub-free']}>
+  {label && <p class="label">{label}</p>}
+  <p class="doc-tags" lang={textLang && textLang !== lang ? textLang : undefined}>
+    {items.map((it) => <a class="tag" href={withBase(it.href)}>{it.name} <span class="tag-n">{it.count}</span></a>)}
+  </p>
+</div>

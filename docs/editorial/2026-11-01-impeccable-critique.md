@@ -39,7 +39,7 @@
 |---|---|---|---|
 | **P1** | Writing lists counted backwards (007 → 001) and were captioned to explain themselves | The left column means "position" everywhere else on the site; here it meant "identifier" | **Done in this change**: position 01, 02, … in the column, newest first; the permanent code in the meta beside the date; trail, tag archives and `code` unchanged |
 | **P1** | About "04 CV" has one row; Background names founder roles and the 2018 campaign that never reach the CV | A hiring manager comes to About for a timeline and seniority and leaves without either | Dated rows (ventures, campaign work, education), or retitle "Recent role" and add a `.file-split` CV download (D-057) |
-| **P1** | A Notes area row ("Foundations · 70 notes") lands on `/en/tags/foundations/`, headed as a tag archive, with "newest first" over alphabetical rows; the 29 subtopic names on `/en/notes/` are plain text | Frame switch and a false lead line; the reader sees destinations they cannot open | Notes-framed area pages (trail 02 Writing → 02-02 Notes → Foundations), a lead that matches the order, subtopics as links |
+| **P1** | A Notes area row ("Foundations · 70 notes") lands on `/en/tags/foundations/`, headed as a tag archive, with "newest first" over alphabetical rows; the 29 subtopic names on `/en/notes/` are plain text | Frame switch and a false lead line; the reader sees destinations they cannot open | **Partly done in this change (D-061)**: library archives say "in library order" and open with their topics or subtopics as linked chips; the tags index lists every area with its topics. Still open: the Notes-framed trail on area pages, and links on the Notes page's subtopic names |
 | **P2** | `/en/writing/`: the essays and Notes listings start their title column at different x; the "02-02 Notes" head sits over one row with the same label; on home the two register rows look like essays six and seven | Breaks the one grid the page is built on; a one-row listing with a head is furniture | A forward-link row under the essays instead of a second listing; a distinct style for register rows |
 | **P2** | Mobile home: the "00 / Portfolio" kicker renders after the button as an orphan; "All 5 projects →" precedes the list it summarises; the two-row shell (102 px) stays sticky on a 17-minute read | Reading order contradicts hierarchy; 12 % of the screen is chrome | Hide or move the cover index below 768; forward links after their listing below 720; only the top bar sticky |
 | **P2** | Six of seven essays are dated 30 Oct 2026 | "Newest first" is unverifiable and the archive reads as a bulk upload | Show the real written dates (`date` is the publication date; an `updated` or `written` field could carry the other) |
@@ -65,6 +65,10 @@
 1. If the codes are permanent references, who cites them? If nobody outside the site writes "02-01-004", the code belongs on the essay and in the meta, not in the column (the position this change takes).
 2. Why does 01 Work open with the project whose subject is the author looking for a job?
 3. The site says "finished arguments", then dates six of them on one day. Show the dates or the arguments; if the dates, the real ones.
+
+## The tags page (D-061)
+
+Raised by the owner after the critique: `/en/tags/` listed 186 tags as 108–132 px rows, 33 phone screens, four kinds of tag in one column sorted by count. Fixed in the same change as a shape that holds at ten times the content: browse by level (areas with their topics as chips; an archive opens with its children), search over a build-time index fetched on the first keystroke, and the complete A–Z partitioned by letter once it passes 300 tags. The index is now about four phone screens.
 
 ## The numbering decision (D-056 amended)
 

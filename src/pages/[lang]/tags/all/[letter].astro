@@ -1,0 +1,51 @@
+---
+// One letter of the A–Z (owner, 1 Nov 2026; D-061), built only once the
+// tags outgrow one page (LETTER_PAGES_FROM): /<lang>/tags/all/<letter>/,
+// "0" for the tags that start with a digit or a symbol. The rail links the
+// other letters.
+import Base from '@/layouts/Base.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import Listing from '@/components/Listing.astro';
+import ListingRow from '@/components/ListingRow.astro';
+import LetterRail from '@/components/LetterRail.astro';
+import { t, isDraftLang, otherLang, type Lang } from '@/lib/i18n';
+import StatusMark from '@/components/StatusMark.astro';
+import { withBase } from '@/lib/routes';
+import { LANGS } from '@/lib/site';
+import { tagCatalogue, letterGroups, LETTER_PAGES_FROM, type TagItem } from '@/lib/tags';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const lang of LANGS) {
+    const c = await tagCatalogue(lang);
+    if (c.all.length < LETTER_PAGES_FROM) continue;
+    const groups = letterGroups(c.all);
+    for (const g of groups) paths.push({ params: { lang, letter: g.letter === '#' ? '0' : g.letter.toLowerCase() }, props: { letter: g.letter, items: g.items, groups: groups.map((x) => ({ letter: x.letter, n: x.items.length })) } });
+  }
+  return paths;
+}
+
+interface Props { letter: string; items: TagItem[]; groups: { letter: string; n: number }[] }
+const lang = Astro.params.lang as Lang;
+const { letter, items, groups } = Astro.props;
+const c = await tagCatalogue(lang);
+// the other language's page of this letter, when it has one
+const other = await tagCatalogue(otherLang(lang));
+const twin = other.all.length >= LETTER_PAGES_FROM && letterGroups(other.all).some((g) => g.letter === letter) ? withBase(`/${otherLang(lang)}/tags/all/${Astro.params.letter}/`) : null;
+const base = `/${lang}/tags/all/`;
+const path = `${base}${Astro.params.letter}/`;
+const count = (n: number) => (n === 1 ? t(lang, 'tags.count-one') : t(lang, 'tags.count').replace('{n}', String(n)));
+const claim = t(lang, 'tags.az-letter').replace('{l}', letter);
+const prose = t(lang, 'tags.az-prose').replace('{n}', String(items.length));
+const letterHref = (l: string) => withBase(`${base}${l === '#' ? '0' : l.toLowerCase()}/`);
+---
+<Base lang={lang} page="tags" path={path} twinPath={twin} title={`${t(lang, 'tags.title')} · ${letter}`} description={`${claim} ${prose}`}>
+  <section class="section">
+    <SectionHeading number={letter} word={t(lang, 'tags.az')} claim={claim} prose={prose} as="h1" link={{ href: withBase(base), label: t(lang, 'tags.az') }} />
+    <LetterRail groups={groups.map((g) => ({ letter: g.letter, items: new Array(g.n) }))} href={letterHref} label={t(lang, 'tags.letters')} current={letter} />
+    <Listing class="lr-compact lr-wide" head={{ index: letter, title: '', meta: '', trail: '' }}>
+      {items.map((it) => <ListingRow code="" title={it.name} sub={it.name.startsWith('#') ? undefined : `#${it.tag}`} meta={[t(lang, `tags.kind.${it.kind}`), count(it.count)]} lang={lang} textLang={it.kind === 'tag' || it.kind === 'stack' ? undefined : c.libraryLang} href={withBase(it.href)} />)}
+    </Listing>
+    {isDraftLang(lang) && <div class="doc-meta"><StatusMark state="in-build" lang={lang} label={t(lang, 'draft')} /></div>}
+  </section>
+</Base>

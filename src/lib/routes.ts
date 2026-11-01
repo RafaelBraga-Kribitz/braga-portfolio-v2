@@ -204,6 +204,7 @@ export function footerGroups(lang: Lang): FooterGroup[] {
     {
       title: t(lang, 'footer.others'),
       links: [
+        { label: t(lang, 'link.tags'), href: route('tags', lang) },
         { label: t(lang, 'link.sitemap'), href: absolute('/sitemap.xml') },
         { label: t(lang, 'link.rss'), href: absolute('/feed.xml') },
         { label: t(lang, 'link.impressum'), href: route('impressum', lang) },
