@@ -226,7 +226,7 @@ a.pagination-cell:hover { color: var(--ink); }
 /* a chip with a count flows as text (inline-block, 24px tall), so a name
    that wraps keeps its count after its last word instead of at the far
    edge of the line */
-.listing-sub .doc-tags a.tag { display: inline-block; min-height: 24px; line-height: 14px; padding-block: 5px; }
+.listing-sub .doc-tags a.tag { display: inline-block; min-height: 24px; line-height: 18px; padding-block: 3px; }
 .tag-n { font-variant-numeric: var(--num); color: var(--ink-3); margin-left: 2px; }
 @media (min-width: 1024px) {
   .listing.lr-compact .lr-index { grid-column: 2 / span 1; }

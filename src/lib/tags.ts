@@ -88,9 +88,15 @@ async function build(lang: Lang): Promise<TagCatalogue> {
   for (const r of notes) for (const tag of entryTags(r.entry)) bump(tag);
 
   const items = new Map<string, TagItem>();
+  // one tag, one item. A folder title can repeat at two depths ("Algebra"
+  // is an area and a Foundations subtopic; both are #algebra, and the
+  // archive already merges them), so the item takes the shallowest kind
+  // it is seen at: area over topic over subtopic.
+  const RANK: Record<TagKind, number> = { area: 0, topic: 1, subtopic: 2, tag: 3, stack: 3 };
   const item = (tag: string, name: string, kind: TagKind, href: string): TagItem => {
     let it = items.get(tag);
     if (!it) { it = { tag, name, kind, count: counts.get(tag) ?? 0, href, children: [] }; items.set(tag, it); }
+    else if (RANK[kind] < RANK[it.kind]) { it.kind = kind; it.name = name; it.href = href; }
     return it;
   };
 
@@ -107,7 +113,7 @@ async function build(lang: Lang): Promise<TagCatalogue> {
       if (kind === 'area') {
         it.code ??= /^(\d{2})_/.exec(folder)?.[1];
         if (!areas.includes(it)) areas.push(it);
-      } else if (parent) {
+      } else if (parent && parent !== it) {
         const kids = seen.get(parent.tag) ?? new Set<string>();
         if (!kids.has(tag)) { kids.add(tag); parent.children.push(it); it.parent = parent.tag; }
         seen.set(parent.tag, kids);
