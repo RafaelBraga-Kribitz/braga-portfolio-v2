@@ -43,7 +43,7 @@ The question is the one every advertiser asks of its media plan: which channels 
 > - Contribution margin — 40%, assumed
 > - Breakeven ROAS — 2.50
 
-The priors are weakly informative and identical across channels, so the estimates come from the data rather than from a prior that already knows the answer.
+The priors are weakly informative and identical across channels, avoiding channel-specific preferred answers. This alone does not establish that the data dominate the estimates; that requires prior-sensitivity checks.
 
 ## Method
 
@@ -61,11 +61,11 @@ Validation comes before any decision, so the steps run in this order:
 ## Result
 
 > [!note] Re-verified on 26 Oct 2026
-> After code fixes on 30 Sep 2026, the decision layer and the synthetic-data validation were re-run on the current code. Every figure on this page reproduced; the repository’s build log records the check.
+> The repository’s build log records reruns of the decision layer and synthetic-data validation after code fixes on 30 Sep 2026. The figures here are reported from that work; this sharing review did not independently rerun the model.
 
 ### Validation on Layer P
 
-The sampler has to recover the truth it was handed. Curve coverage is 91% (the true response curves inside the posterior band, over the observed spend range), and 26 of 28 true parameter values lie inside their 90% intervals. The misses follow a known trade-off rather than a bug: all five effect sizes and all five half-saturation points have medians above the truth, because a curve that rises higher but saturates later fits the same weeks. Recovery is therefore judged on curves and shares, which are what a budget decision uses.
+The sampler has to recover the truth it was handed. Curve coverage is 91% (the true response curves inside the posterior band, over the observed spend range), and 26 of 28 true parameter values lie inside their 90% intervals. The misses follow a known trade-off rather than a bug: all five effect sizes and all five half-saturation points have medians above the truth, because a curve that rises higher but saturates later fits the same weeks. Recovery is therefore judged on curves and shares, which are what a budget decision uses. The [repository’s validation summary](https://github.com/RafaelBraga-Kribitz/austrian-mmm-budget-optimizer/blob/c63e16b7f0f0f5e6452216b600c4ed619a9bdf6b/README.md) also reports the weakest channel: TV curve coverage is 56%, and TV’s true revenue share lies just outside its interval. Aggregate coverage hides this channel-level weakness.
 
 Scored against the same truth, the platform-style report over-credits paid search by 45% (platform-reported against true incremental revenue) and gives the offline channels no credit at all.
 

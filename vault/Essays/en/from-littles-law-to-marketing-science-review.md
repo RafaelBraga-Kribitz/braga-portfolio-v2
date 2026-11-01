@@ -7,7 +7,7 @@ lead: "A review of From Little’s Law to Marketing Science (MIT Press, 2015), w
 tags: [ book-review, marketing-science, measurement, customer-value, decision-analysis ]
 lang: en
 slug: from-littles-law-to-marketing-science-review
-seo_title: "From Little’s Law to Marketing Science: a review and a 2027 update"
+seo_title: "Little’s Law and marketing science: review"
 translationStatus: approved
 publish: true
 ---

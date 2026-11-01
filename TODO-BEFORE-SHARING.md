@@ -8,6 +8,14 @@ that fed this list: `HANDOFF.md` §3–4, `docs/audit/website-manual-actions.md`
 (27 Oct), `docs/editorial/2026-11-01-impeccable-critique.md`, and
 `docs/handoff/agent-open-items.md`, each re-checked against the code.
 
+**Execution update, 1 Nov 2026:** The baseline tables and original inspection
+below describe the PR #32 starting tree, not the revised tree. See
+`docs/audit/2026-11-01-sharing-readiness.md` for current evidence and remaining
+blocks. A later live HTTP check returned 200 for `/en/tags/`; the earlier claim
+that it was absent is not a verified current observation. A local fix or a 200
+response does not prove which commit was deployed. German and legal drafts are
+not approved by engineering changes. CV/facts-bank work is deferred to section 12.
+
 Legend: **[Owner]** only Rafael can decide or supply the fact · **[Eng]** code or
 content change anyone can make · **[QA]** a check with a browser or a device.
 Tick the box when the item is done *and* verified the way the item says.
@@ -487,3 +495,94 @@ next to each tick.
 
 So item 1.4 is green on this tree; item 1.1 (`astro check`) is the only
 automated failure, and it is what would stop the deploy.
+
+## 11. Recruiter and data-professional review (added 1 Nov 2026)
+
+These checks extend the original inspection. A green build does not establish
+that analytical examples, professional claims or a contact channel are reliable.
+CV work is explicitly the final phase, after an owner interview (section 12).
+
+- [ ] **11.1 [Eng/QA] Review the notes as published technical work.** The
+  original 9.1 excludes the notes. An initial scan found 903 `python`/`py`
+  blocks with valid Python syntax, but also 35 `markdown` fences in 27 notes;
+  several contain collapsed Python that cannot run. Example:
+  `unemployment_rate.md`, professional example. Repair or remove malformed
+  examples without presenting pseudocode as executable code. Remove generation
+  self-check residue such as “All required sections are present” from published
+  notes. Verify Python syntax AND numerical reference results; a syntax pass
+  alone misses the Jacobian loop indentation defect in 5.15. Record coverage,
+  not a blanket claim that all 500+ notes were reviewed.
+- [ ] **11.2 [Eng] Same-snapshot arithmetic and methodological wording.** Check
+  counts, rates and denominators independently of the snapshot choice in 4.5.
+  September's Styrian share is 58/720 = 8.1%, not 7.5%. Do not call ignored
+  predictions “precision of zero”; unused predictions deliver no business
+  value. Equal weak priors do not establish data dominance without sensitivity
+  checks. A proxy-based warehouse model supports site validation before
+  procurement, rather than an unconditional deployment instruction. Apply
+  matching corrections to EN/DE and inspect the built pages.
+- [ ] **11.3 [Owner/Eng] Attribution and evidence per project.** A reader must
+  distinguish an independent portfolio study, a reconstructed historical case,
+  a simulation and delivered client/employer work. Verify the author's actual
+  contribution, collaboration, data origin, modelled versus measured outcomes,
+  and which outputs were used in a real decision. Keep evidence links beside
+  the claim. Never imply a simulated gain was realised revenue or cost savings.
+- [ ] **11.4 [QA] Reproducibility from a clean checkout of each project.** Pin
+  the release/commit behind the displayed snapshot; follow its README, install
+  its declared environment, run tests and reproduce at least one headline
+  table/figure. Where raw data are private, explain access limits and provide
+  a synthetic fixture or a reproducible public subset. Do not imply that a
+  public repository makes private-source results fully reproducible.
+- [ ] **11.5 [Owner/QA] Data and modelling credibility.** Confirm sampling,
+  missingness, deduplication, leakage prevention, baselines, uncertainty,
+  out-of-sample evaluation and sensitivity checks relevant to each project.
+  Distinguish descriptive association, modelled scenarios and causal evidence.
+  Link limitations and failure cases directly from the project narrative.
+- [ ] **11.6 [Owner] Confidentiality and publication rights.** Review employer,
+  campaign and client references, screenshots, download metadata, personal
+  identifiers and repository sample data for permission to publish. Keep
+  supporting evidence private where required. Portrait/book checks in 4.12–13
+  remain separate; do not publish private interview notes as site content.
+- [ ] **11.7 [QA] Recruiter comprehension test.** On a phone, ask a reader to
+  identify the target role, strongest relevant project, tools used, contribution,
+  evidence and limitations, then find contact details without explanation.
+  Record actual observations; do not invent user-test results. Target-role,
+  location, language proficiency, availability and work-authorisation facts
+  must come from the owner before they are added.
+- [ ] **11.8 [Eng/QA] Protect existing URLs when consolidating notes.** Rewrite
+  vault links and provide redirects from every removed public slug, including
+  canonical tags and no broken inbound links. `vault:check` alone cannot test
+  already shared links. Inspect redirects under both root and project bases.
+- [ ] **11.9 [Eng] Verify changes on pull requests.** The current Pages
+  workflow only verifies after a push to main/master or a schedule/manual run.
+  Add a pull-request verification workflow with read-only permissions and no
+  deploy job, so a deploy-blocking error can be caught before merge.
+- [ ] **11.10 [QA] Contact remains usable without clipboard or JavaScript.**
+  Test an accessible address and a useful fallback, not only visual CSS text.
+  Confirm an external sender can reach the inbox (7.4); no message is sent by
+  this implementation task. A working animation is not an end-to-end contact test.
+
+**Owner decision, 1 Nov 2026 (11.10):** Keep the address hidden from HTML.
+A readable static address/mailto fallback is therefore not being added. The
+remaining no-JavaScript screen-reader limitation is documented, not passed.
+
+## 12. Final phase: interview → facts bank → CV (owner instruction)
+
+- [ ] **12.1 [Owner] Long audio interview, after the other readiness work.**
+  Use a voice-enabled conversation if available. Work through chronology,
+  every role/venture/campaign, education, languages, methods, tools, decisions,
+  measurable outcomes, failures and lessons, collaboration, references and
+  target roles. Ask follow-ups one at a time; dates, attribution and evidence
+  take precedence over polished wording. The assistant cannot initiate a live
+  audio call from this coding workspace.
+- [ ] **12.2 [Owner/Eng] Build a private CV facts bank.** For each claim record
+  the owner's wording, dates/precision, organisation, role, contribution,
+  outcome/baseline/unit/timeframe, evidence/source, confidence, unresolved
+  questions, confidentiality and permission to publish. Keep interview-only
+  claims unverified until confirmed. Do not commit personal interview material
+  to this public repository or put it in the published vault.
+- [ ] **12.3 [Owner] Review the facts bank.** Resolve contradictions against
+  existing sources; approve which facts and names may be used publicly.
+- [ ] **12.4 [Eng/Owner] Draft and verify the CV from approved facts only.**
+  Prepare an ATS-readable CV and accessible PDF with selectable text; verify
+  dates, links, contact details, reading order, print and file metadata. Align
+  About/project claims with it, and finish 4.1–4.4 only after owner confirmation.

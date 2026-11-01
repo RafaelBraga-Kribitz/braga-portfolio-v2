@@ -1,4 +1,5 @@
 ---
+seo_title: "Green’s function and delta mapping"
 publish: true
 date: '2026-04-16'
 tags:

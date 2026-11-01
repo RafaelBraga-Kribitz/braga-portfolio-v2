@@ -2,7 +2,8 @@
 
 The second attempt at Rafael Braga-Kribitz's portfolio: a static Astro site built on the
 v2 design system (ultramarine accent, BKribitz type, hairlines, IBCS charts), in English
-and German, with no JavaScript on content pages.
+and German. Content is rendered statically; small scripts enhance navigation,
+theme, contact controls and code panels, and the tools use interactive islands.
 
 ## Run it locally
 
@@ -39,6 +40,16 @@ npx playwright install chromium
 | `npm run activity` | Refreshes the project build logs' data (`src/data/activity.json`) from each project repository's git history; a ```` ```buildlog ```` fence in a project note draws it |
 | `npm run verify` | All of the above in order |
 
+The additional numerical-note check uses Python 3.12 and NumPy 2.3.5:
+
+```bash
+python -m pip install numpy==2.3.5
+python scripts/notes/validate.py
+```
+
+It parses all Python fences and executes the repaired examples and independent
+Jacobian reference checks. It does not execute every pre-existing example.
+
 ## Where things are
 
 | Path | Holds |
@@ -55,7 +66,7 @@ npx playwright install chromium
 ## How work flows between the cloud session and this repository
 
 - `main` holds states that build and pass `npm run verify`.
-- Work in progress from the cloud session is pushed to `build/*` branches, each with a
+- Work in progress from the cloud session is pushed to `claude/*` branches, each with a
   draft pull request. Review there, then merge into `main`.
 - Work locally on your own branch; the cloud session pulls `main` before it starts a new
   step, so local changes are never overwritten.

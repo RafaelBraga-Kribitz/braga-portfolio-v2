@@ -54,10 +54,10 @@ source material: never edit it.
 - Theme (D-024): `data-theme` on `<html>`; OS default when no attribute; stored override `bk-theme` applied by the pre-paint script (first in head); `color-scheme` follows; `<meta name="theme-color">` per theme; `.dark` per element stays for moment blocks.
 - Languages (D-011): EN + DE as two built route trees joined by plain links, `hreflang` alternates and `lang` on every page. British English. Legal pages in German (primary), with an English version. German chrome and German long-form are **agent drafts for owner approval**: mark every DE page with the status mark "in-build" + label "Entwurf · Freigabe ausstehend" in its meta row until approved.
 - Footer (D-013): four groups, in the owner's order of 23 Oct 2026 — Site / Index / Others (Sitemap, RSS, Impressum, Privacy, Accessibility) / Elsewhere. DE drafts: Seite / Index / Sonstiges / Anderswo.
-- Impressum (D-014): Rafael Braga-Kribitz · 8054 Seiersberg, Styria, Austria · rafaelbragakribitz@gmail.com · non-commercial. No street address. Not legal advice.
+- Impressum (D-014): Rafael Braga-Kribitz · 8054 Seiersberg, Styria, Austria · hello@rafaelbragakribitz.com · non-commercial. No street address. Not legal advice.
 - Charts: IBCS only (D-015). Roles: ultramarine = highlight; jade #007A66 (dark #00C69F) = good variance; vermilion #CC3710 (dark #F57A5A) = bad variance, always with ▲; ochre #966400 = other side of a neutral split; teal #0A7399 replaces sky on light. Colour lives in marks, never in type: every chart label is `--ink` or `--ink-2`.
 - Numbers and dates by page language (`src/lib/format.ts`, ported from `handoff/ds-update/proposals/format.js`): EN €453,000 · 0.05 · 16 Sep 2026 · 35% · 38 s; DE € 453.000 · 0,05 · 16. Sep. 2026 · 35 % · 38 s; NBSP inside figures; real minus; en dash for ranges (spaced en dash as the English dash, O-03); one ellipsis character; quotes “ ” in EN, „ “ in DE.
-- Email: the Gmail address is used as given (open item 3 is the owner's choice; note it in the report).
+- Email: use `hello@rafaelbragakribitz.com` (see `DEPLOY.md`). The historical handoff address is superseded.
 - Voice: declarative, factual, measured. First person singular only in genuine prose; never "we", never marketing "you". Numbers carry the argument. No hype, no exclamation marks. Status is honest.
 
 ## 4. Site map

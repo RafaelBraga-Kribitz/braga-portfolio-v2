@@ -1,4 +1,5 @@
 ---
+seo_title: "Negative binomial distribution"
 publish: true
 date: '2026-04-16'
 tags:

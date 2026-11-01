@@ -112,6 +112,8 @@ Acht Umfragen sind bei Weitem zu wenige, um Prognosefähigkeit zu beanspruchen, 
 
 ## Grenzen
 
+Das [Datenregister des Repositorys](https://github.com/RafaelBraga-Kribitz/decision-analytics-reconstruction/blob/6a5d2cef1216f43572d073e8abfab57329daff85/README.md) kennzeichnet Wechselkurs, Wechselkursspanne, Kanalkosten je Einheit und Bevölkerungszahlen der Departamentos als manuell gesetzte, noch nicht verifizierte Eingaben. Der Gewinn von Modul B ist ein Solver-Vergleich unter diesen Annahmen.
+
 Was diese Arbeit nicht belegt:
 
 - **Kausaler Effekt.** Ein Vergleich mit und ohne Analytik lässt sich hier nicht verifizieren.

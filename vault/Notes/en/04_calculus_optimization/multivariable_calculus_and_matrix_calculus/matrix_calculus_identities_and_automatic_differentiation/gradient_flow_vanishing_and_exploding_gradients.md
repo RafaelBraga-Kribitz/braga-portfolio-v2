@@ -1,4 +1,5 @@
 ---
+seo_title: "Vanishing and exploding gradients"
 publish: true
 date: '2026-10-26'
 tags:

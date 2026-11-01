@@ -1,4 +1,5 @@
 ---
+seo_title: "KI-Prospecting: einen 3×-Uplift prüfen"
 code: "02-01-001"
 kind: essay
 date: "2026-09-19"
@@ -55,7 +56,7 @@ Käuferfrage: Hinterlässt mein Idealkunde überhaupt genug beobachtbare Signale
 
 Neunzig Prozent Precision klingen hervorragend, bis man sie hochrechnet. Tausend Leads bei 10 % Falsch-Positiven sind hundert schlechte Empfehlungen. Bei fünf Minuten Prüfung pro Lead ist das ein voller Arbeitstag für Leads, die nie echt waren, und zwar bei jeder Aktualisierung der Liste.
 
-Und das setzt voraus, dass das Team sie überhaupt prüft. Ein Tool mit 90 % Precision, das der Vertrieb ignoriert, hat eine Precision von null. Die Studie berichtet, dass die Nutzerinnen und Nutzer die KI-Zusammenfassungen bevorzugten. Nicht gemessen werden die Akzeptanz im Alltag, die eingesparte Zeit, die CRM-Integration und das Verhalten des Vertriebs nach der zweiten Woche. Das Implementierungsrisiko ist meist größer als das Algorithmusrisiko. Ich habe mehr Tools an Reibung scheitern sehen als an schlechten Modellen.
+Und das setzt voraus, dass das Team sie überhaupt prüft. Ein Tool mit 90 % Precision liefert keinen geschäftlichen Nutzen, wenn der Vertrieb es ignoriert. Die Studie berichtet, dass die Nutzerinnen und Nutzer die KI-Zusammenfassungen bevorzugten. Nicht gemessen werden die Akzeptanz im Alltag, die eingesparte Zeit, die CRM-Integration und das Verhalten des Vertriebs nach der zweiten Woche. Das Implementierungsrisiko ist meist größer als das Algorithmusrisiko. Ich habe mehr Tools an Reibung scheitern sehen als an schlechten Modellen.
 
 Käuferfrage: Wie viele Leads werden vom Vertrieb angenommen, zu Kosten, die das Team zu tragen bereit ist?
 

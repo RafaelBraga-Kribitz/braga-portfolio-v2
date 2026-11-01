@@ -1,5 +1,14 @@
 # HANDOFF — portfolio v2 build, state on 21 Oct 2026
 
+> **Current status, 1 Nov 2026:** This handoff preserves the historical build
+> record below. The current pre-sharing checklist is [TODO-BEFORE-SHARING.md](TODO-BEFORE-SHARING.md).
+> The site now uses a bilingual Obsidian vault, a custom GitHub Pages domain,
+> and `hello@rafaelbragakribitz.com` as its public contact address. Earlier
+> page counts, deployment choices, branch states and Gmail instructions below
+> are historical, not current instructions. Check [the readiness report](docs/audit/2026-11-01-sharing-readiness.md) for
+> verification on the latest working tree. CV work is last, after an owner
+> interview and a source-attributed facts bank.
+
 Read this first, then `README.md` (run it locally), `BUILD-BRIEF.md` (the rules the build
 follows) and `docs/PAGE-BRIEF.md` (the document template). The design decisions the
 build implements are in `handoff/HANDOFF.md` §2 and §7 and `handoff/AUDIT.md` §5; those

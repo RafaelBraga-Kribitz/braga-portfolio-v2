@@ -105,11 +105,11 @@ Die Rangfolge gilt nur unter den genannten Annahmen. Was diese Arbeit nicht bele
 - **Unabhängige Reproduktion.** Das hinterlegte Reproduktionsprotokoll wurde von einem Agenten erstellt, nicht von Dritten, die das Repository ohne Vorwissen klonen.
 
 > [!warning] Eine Annahme benachteiligt die Roboter
-> Das Modell setzt voraus, dass Arbeitskräfte zu KV-Löhnen verfügbar sind. In der österreichischen Intralogistik treiben vor allem unbesetzte Stellen die Automatisierung, nicht die Lohnarbitrage (das Ausnutzen von Lohnunterschieden); der Wert der Roboter ist daher überall dort unterschätzt, wo Stellen offen bleiben.
+> Das Modell setzt voraus, dass Arbeitskräfte zu KV-Löhnen verfügbar sind. Wenn Stellen unbesetzt bleiben, kann diese Annahme den Wert der Automatisierung unterschätzen.
 
 ## Entscheidung
 
-Unter diesen Annahmen: die schlanke Hybridvariante jetzt einsetzen und die Beschaffung humanoider Roboter zurückstellen. Die Investitionskosten sind nicht der begrenzende Faktor; ein niedrigerer Preis humanoider Roboter allein ändert die Entscheidung daher nicht.
+Unter diesen Annahmen: die schlanke Hybridvariante am Standort validieren und die Beschaffung humanoider Roboter zurückstellen. Vor einer Beschaffungsentscheidung sind Durchsatzmessungen im tatsächlichen Lager und verbindliche Lieferantenangebote nötig. Die Investitionskosten sind nicht der begrenzende Faktor; ein niedrigerer Preis humanoider Roboter allein ändert die Entscheidung daher nicht.
 
 > [!faq]- Wann lohnt sich eine erneute Prüfung?
 > Wenn die Nachfrage wächst, Arbeitskräfte knapp werden oder auf Mehrschichtbetrieb umgestellt wird. Bei der modellierten Nachfrage wird kein Preis humanoider Roboter im durchsuchten Bereich kostengleich.

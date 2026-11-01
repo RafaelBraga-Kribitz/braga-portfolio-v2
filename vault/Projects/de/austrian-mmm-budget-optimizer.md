@@ -43,7 +43,7 @@ Die Frage ist jene, die jedes werbetreibende Unternehmen an seinen Mediaplan ste
 > - Deckungs&shy;beitrags&shy;quote — 40 %, angenommen
 > - Breakeven-ROAS — 2,50
 
-Die Priors (A-priori-Verteilungen) sind schwach informativ und für alle Kanäle gleich, damit die Schätzungen aus den Daten kommen und nicht aus einer Annahme, die die Antwort schon kennt.
+Die Priors (A-priori-Verteilungen) sind schwach informativ und für alle Kanäle gleich, ohne kanalspezifische Wunschantworten vorzugeben. Das allein belegt nicht, dass die Daten die Schätzungen dominieren; dafür sind Sensitivitätsprüfungen gegenüber den Priors nötig.
 
 ## Methode
 
@@ -61,11 +61,11 @@ Die Validierung kommt vor jeder Entscheidung; die Schritte laufen daher in diese
 ## Ergebnis
 
 > [!note] Erneut geprüft am 26. Okt. 2026
-> Nach Code-Korrekturen am 30. Sep. 2026 wurden die Entscheidungsebene und die Validierung auf synthetischen Daten mit dem aktuellen Code neu gerechnet. Jede Zahl auf dieser Seite wurde reproduziert; das Build-Log des Repositorys dokumentiert die Prüfung.
+> Das Build-Log des Repositorys dokumentiert Neuberechnungen der Entscheidungsebene und der Validierung auf synthetischen Daten nach Code-Korrekturen am 30. Sep. 2026. Die Zahlen hier stammen aus dieser Arbeit; diese Prüfung vor der Weitergabe hat das Modell nicht unabhängig neu gerechnet.
 
 ### Validierung auf Layer P
 
-Der Sampler muss die Wahrheit wiederherstellen, die ihm vorgegeben wurde. Die Kurvenabdeckung beträgt 91 % (die wahren Reaktionskurven innerhalb des Posterior-Bands, über den beobachteten Ausgabenbereich), und 26 von 28 wahren Parameterwerten liegen innerhalb ihrer Intervalle zu 90 %. Die Abweichungen folgen einem bekannten Zielkonflikt, nicht einem Fehler: Alle fünf Effektgrößen und alle fünf Halbsättigungspunkte haben Mediane über der Wahrheit, weil eine Kurve, die höher steigt, aber später sättigt, dieselben Wochen erklärt. Die Wiederherstellung wird daher an Kurven und Anteilen beurteilt, also an dem, was eine Budgetentscheidung verwendet.
+Der Sampler muss die Wahrheit wiederherstellen, die ihm vorgegeben wurde. Die Kurvenabdeckung beträgt 91 % (die wahren Reaktionskurven innerhalb des Posterior-Bands, über den beobachteten Ausgabenbereich), und 26 von 28 wahren Parameterwerten liegen innerhalb ihrer Intervalle zu 90 %. Die Abweichungen folgen einem bekannten Zielkonflikt, nicht einem Fehler: Alle fünf Effektgrößen und alle fünf Halbsättigungspunkte haben Mediane über der Wahrheit, weil eine Kurve, die höher steigt, aber später sättigt, dieselben Wochen erklärt. Die Wiederherstellung wird daher an Kurven und Anteilen beurteilt, also an dem, was eine Budgetentscheidung verwendet. Die [Validierungsübersicht des Repositorys](https://github.com/RafaelBraga-Kribitz/austrian-mmm-budget-optimizer/blob/c63e16b7f0f0f5e6452216b600c4ed619a9bdf6b/README.md) nennt auch den schwächsten Kanal: Die Kurvenabdeckung für TV beträgt 56 %, und der wahre Umsatzanteil von TV liegt knapp außerhalb seines Intervalls. Die aggregierte Abdeckung verdeckt diese Schwäche auf Kanalebene.
 
 An derselben Wahrheit gemessen, rechnet der plattformartige Bericht Paid Search 45 % zu viel zu (von der Plattform ausgewiesener gegenüber wahrem inkrementellem Umsatz) und den Offline-Kanälen gar nichts.
 

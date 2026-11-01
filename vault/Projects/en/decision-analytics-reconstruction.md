@@ -112,6 +112,8 @@ Eight polls are far too few to claim forecasting skill, and the project does not
 
 ## Limitations
 
+The [repository’s data register](https://github.com/RafaelBraga-Kribitz/decision-analytics-reconstruction/blob/6a5d2cef1216f43572d073e8abfab57329daff85/README.md) identifies exchange-rate, FX-spread, channel-unit-cost and department-population inputs as hand-set and not yet verified. Module B’s gain is a solver comparison under those assumptions.
+
 What this does not establish:
 
 - **A causal effect.** A with-and-without-analytics counterfactual cannot be verified here.

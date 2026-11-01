@@ -105,11 +105,11 @@ The ranking holds only under the stated assumptions. What this does not establis
 - **Independent reproduction.** The committed reproduction log was produced by an agent, not by a third party cloning the repository cold.
 
 > [!warning] One assumption cuts against the robots
-> The model assumes labour is available at KV rates. In Austrian intralogistics the practical driver of automation is unfilled vacancies rather than wage arbitrage, so robot value is understated wherever vacancies stay open.
+> The model assumes labour is available at KV rates. If vacancies remain unfilled, that assumption can understate the value of automation.
 
 ## Decision
 
-Under these assumptions, deploy the lean hybrid now and defer humanoid procurement. Capex is not the binding constraint, so a lower humanoid price alone does not change the call.
+Under these assumptions, take the lean hybrid forward for site validation and defer humanoid procurement. Confirm warehouse-native throughput and signed supplier quotes before a procurement decision. Capex is not the binding constraint, so a lower humanoid price alone does not change the call.
 
 > [!faq]- When is the call worth revisiting?
 > Under demand growth, labour scarcity or multi-shift operation. At the modelled demand, no humanoid price in the searched range breaks even.

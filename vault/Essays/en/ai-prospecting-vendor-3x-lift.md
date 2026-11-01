@@ -1,4 +1,5 @@
 ---
+seo_title: "AI prospecting: assessing a 3× lift"
 code: "02-01-001"
 kind: essay
 date: "2026-09-19"
@@ -55,7 +56,7 @@ Buyer question: does my ideal customer leave enough observable signal for this t
 
 Ninety per cent precision sounds excellent until you multiply it. A thousand leads at 10% false positives is a hundred bad recommendations. At five minutes of review each, that is a full working day spent on leads that were never real, every time the list refreshes.
 
-And that assumes the team reviews them at all. A tool with 90% precision that sales ignores has a precision of zero. The paper reports that users preferred the AI summaries. It does not measure adoption, time saved, CRM integration or how representatives behaved after week two. Implementation risk is usually larger than algorithm risk. I have watched more tools die of friction than of bad models.
+And that assumes the team reviews them at all. A tool with 90% precision delivers no business value when sales ignores it. The paper reports that users preferred the AI summaries. It does not measure adoption, time saved, CRM integration or how representatives behaved after week two. Implementation risk is usually larger than algorithm risk. I have watched more tools die of friction than of bad models.
 
 Buyer question: how many leads reach sales acceptance at a cost the team will tolerate?
 

@@ -7,7 +7,7 @@ lead: "How an unconventional assignment in a presidential campaign shaped the wa
 tags: [ election-campaigns, decision-analytics, optimisation, measurement, uncertainty ]
 lang: en
 slug: paraguay-2018-campaign-to-decision-analytics
-seo_title: "Paraguay 2018: from campaign instinct to decision analytics"
+seo_title: "Paraguay 2018: decision analytics"
 seo_description: "What a presidential campaign in Paraguay taught me about resource allocation under uncertainty, and what a reproducible 2026 reconstruction can and cannot prove."
 translationStatus: approved
 publish: true
