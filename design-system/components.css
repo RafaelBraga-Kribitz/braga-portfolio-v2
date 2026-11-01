@@ -132,6 +132,10 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
 .lr-year { display: inline-flex; gap: 10px; align-items: baseline; color: var(--ink-2); font-variant-numeric: var(--num); }
 .lr-arrow { color: var(--ink-2); transition: color var(--dur) var(--ease); }
 .listing-row:hover .lr-arrow { color: var(--accent-01); }
+/* two listings in a row (the tag catalogue's blocks, Writing's essays then
+   notes; owner, 1 Nov 2026) stand a block apart: the first ends in white
+   space, the second opens on its head's rule */
+.listing + .listing { margin-top: var(--block-gap); }
 /* a listing without its head (the home page) opens on a rhythm rule */
 .listing > .listing-row:first-child { border-top: var(--rule); }
 /* rules open, never close (owner, 24 Oct 2026): the last row ends in white
@@ -250,12 +254,12 @@ a.pagination-cell:hover { color: var(--ink); }
 .tag-search-field {
   grid-column: 4 / span 6; min-height: 44px; min-width: 0;
   font: 400 var(--t-mono) / 1.4 var(--font-mono); letter-spacing: 0.02em; color: var(--ink);
-  background: transparent; border: 0; border-bottom: 2px solid var(--ink); padding: 0; outline-offset: 4px;
+  background: transparent; border: 0; border-bottom: 2px solid var(--ink); padding: 0 12px; outline-offset: 4px;
   -webkit-appearance: none; appearance: none; border-radius: 0;
 }
 .tag-search-field::placeholder { color: var(--ink-3); opacity: 1; }
 .tag-search-field::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
-.tag-search-note { grid-column: 4 / span 8; margin: 0; }
+.tag-search-note { grid-column: 4 / span 8; margin: 0; padding-inline: 12px; }   /* on the text's own left edge */
 .tag-search-results { grid-column: 1 / -1; margin-top: var(--space-2); }
 .tag-search-results[hidden] { display: none; }
 @media (min-width: 1024px) {
