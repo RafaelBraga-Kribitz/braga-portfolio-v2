@@ -216,11 +216,11 @@ a.pagination-cell:hover { color: var(--ink); }
 .listing.lr-compact .listing-row .lr-meta { flex-direction: row; flex-wrap: wrap; gap: 4px 16px; }
 .listing-sub {
   display: grid; grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr)); column-gap: var(--grid-gutter);
-  padding: 0 0 var(--space-2); border-bottom: var(--rule); margin-top: calc(-1 * var(--space-1));
+  padding: 12px 0 var(--space-2); border-bottom: var(--rule);   /* 12px clear of the row's rule above */
 }
 .listing-sub > .label, .listing-sub > .doc-tags { grid-column: 4 / span 8; }
 .listing-sub > .label { margin: 0 0 6px; }
-.listing-sub-free { margin-top: 0; padding-top: var(--space-2); border-bottom: 0; }
+.listing-sub-free { padding-top: var(--space-2); border-bottom: 0; }
 .listing-sub-free + .listing { margin-top: var(--space-3); }
 .listing > .listing-sub:last-child { border-bottom: 0; }
 /* a chip with a count flows as text (inline-block, 24px tall), so a name
@@ -234,7 +234,7 @@ a.pagination-cell:hover { color: var(--ink); }
 }
 @media (max-width: 720px) {
   .listing.lr-compact .listing-row { padding-block: 12px; row-gap: 4px; }
-  .listing-sub { grid-template-columns: 64px minmax(0, 1fr); margin-top: 0; padding-bottom: 12px; }
+  .listing-sub { grid-template-columns: 64px minmax(0, 1fr); padding-bottom: 12px; }
   .listing-sub > .label, .listing-sub > .doc-tags { grid-column: 2; }
   .listing-sub-free > .label, .listing-sub-free > .doc-tags { grid-column: 1 / -1; }
 }
