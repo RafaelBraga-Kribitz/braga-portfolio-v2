@@ -18,9 +18,56 @@ FENCE = re.compile(r"^```([^\n]*)\n(.*?)^```[ \t]*$", re.M | re.S)
 MARKER = "# Reference example with a numerical check."
 
 
+def check_input_domains(namespace, errors, location):
+    """Exercise invalid domains independently of the examples' happy-path assertions."""
+    import math
+    checked = 0
+
+    def reject(description, function, *arguments):
+        nonlocal checked
+        checked += 1
+        try:
+            function(*arguments)
+        except ValueError:
+            return
+        except Exception as error:
+            errors.append(f"{location}: {description}: expected ValueError, got {type(error).__name__}")
+            return
+        errors.append(f"{location}: {description}: invalid input was accepted")
+
+    if "within_cluster_sum_of_squares" in namespace:
+        wcss = namespace["within_cluster_sum_of_squares"]
+        for label in (0.9, -0.5, math.nan, math.inf, -1, 2, 1e30):
+            reject(f"WCSS label {label!r}", wcss, [[0]], [label], [[0], [100]])
+        reject("WCSS label shape", wcss, [[0]], [[0]], [[0]])
+        reject("WCSS nonfinite observation", wcss, [[math.nan]], [0], [[0]])
+        reject("WCSS nonfinite centroid", wcss, [[0]], [0], [[math.inf]])
+        assert math.isclose(wcss([[0], [2]], [0.0, 0.0], [[1]]), 2.0)
+        assert math.isclose(wcss([[0], [100]], [0, 1], [[0], [100]]), 0.0)
+    if "information_gain" in namespace:
+        gain = namespace["information_gain"]
+        entropy = namespace["entropy"]
+        reject("negative zero-total child", gain, [1, 1], [[1, -1], [0, 2]])
+        for value in (math.nan, math.inf, -1):
+            reject(f"invalid entropy count {value!r}", entropy, [value, 1])
+            reject(f"invalid parent count {value!r}", gain, [value, 1], [[value, 1]])
+            reject(f"invalid child count {value!r}", gain, [1, 1], [[value, 1], [1, 0]])
+        reject("missing children at small scale", gain, [1e-15, 1e-15], [])
+        reject("empty parent", gain, [], [[]])
+        reject("zero-total parent", gain, [0, 0], [[0, 0]])
+        reject("child class mismatch", gain, [1, 1], [[1], [0, 1]])
+        reject("child counts do not partition parent", gain, [1, 1], [[1, 0]])
+        assert math.isclose(gain([1, 1], [[1, 0], [0, 1], [0, 0]]), 1.0)
+        assert math.isclose(gain([1, 1], [[1, 1], [0, 0]]), 0.0)
+        # Finite nonnegative weights also define a distribution; tolerate roundoff.
+        assert math.isclose(gain([0.3, 0.7], [[0.1, 0.2], [0.2, 0.5]]),
+                            entropy([0.3, 0.7]) - 0.3 * entropy([0.1, 0.2]) - 0.7 * entropy([0.2, 0.5]))
+    return checked
+
+
 def validate(root=ROOT):
     errors = []
-    syntax_count = runtime_count = 0
+    syntax_count = runtime_count = domain_rejections = 0
     for path in sorted((root / "vault/Notes").rglob("*.md")):
         source = path.read_text()
         for match in FENCE.finditer(source):
@@ -41,7 +88,9 @@ def validate(root=ROOT):
                 ast.parse(code, filename=location)
                 if MARKER in code:
                     with contextlib.redirect_stdout(io.StringIO()):
-                        exec(compile(code, location, "exec"), {"__name__": "__main__"})
+                        namespace = {"__name__": "__main__"}
+                        exec(compile(code, location, "exec"), namespace)
+                        domain_rejections += check_input_domains(namespace, errors, location)
                     runtime_count += 1
             except Exception as error:
                 errors.append(f"{location}: {type(error).__name__}: {error}")
@@ -75,7 +124,7 @@ def validate(root=ROOT):
             np.testing.assert_allclose(actual, expected, rtol=1e-6, atol=1e-8)
     except Exception as error:
         errors.append(f"Jacobian numerical reference: {type(error).__name__}: {error}")
-    print(f"Python syntax: {syntax_count} blocks; repaired examples executed: {runtime_count}; Jacobian reference points: 6")
+    print(f"Python syntax: {syntax_count} blocks; repaired examples executed: {runtime_count}; Jacobian reference points: 6; domain rejection cases: {domain_rejections}")
     for error in errors:
         print(error, file=sys.stderr)
     if errors:

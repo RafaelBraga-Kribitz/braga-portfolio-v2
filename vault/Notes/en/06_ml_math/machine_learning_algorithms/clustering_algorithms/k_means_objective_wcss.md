@@ -310,12 +310,17 @@ import numpy as np
 
 def within_cluster_sum_of_squares(points, labels, centroids):
     points = np.asarray(points, dtype=float)
-    labels = np.asarray(labels, dtype=int)
+    labels = np.asarray(labels, dtype=float)
     centroids = np.asarray(centroids, dtype=float)
     if points.ndim != 2 or centroids.ndim != 2 or points.shape[1] != centroids.shape[1]:
         raise ValueError("Points and centroids need matching feature dimensions.")
-    if labels.shape != (len(points),) or np.any(labels < 0) or np.any(labels >= len(centroids)):
-        raise ValueError("Each point needs a valid centroid index.")
+    if not np.isfinite(points).all() or not np.isfinite(centroids).all():
+        raise ValueError("Points and centroids must contain only finite coordinates.")
+    if (labels.shape != (len(points),) or not np.isfinite(labels).all()
+            or np.any(labels != np.floor(labels))
+            or np.any(labels < 0) or np.any(labels >= len(centroids))):
+        raise ValueError("Each point needs a finite integer-valued centroid index in range.")
+    labels = labels.astype(np.intp)
     residuals = points - centroids[labels]
     return float(np.sum(residuals ** 2))
 
@@ -327,7 +332,7 @@ assert np.isclose(wcss, 4)
 print("WCSS:", wcss)
 ```
 
-The function gathers each assigned centroid and sums squared Euclidean residuals. This evaluates fixed assignments; fitting k-means additionally alternates assignment and centroid updates.
+The function gathers each assigned centroid and sums squared Euclidean residuals. Labels must be finite integer-valued indices; fractional assignments are rejected before conversion. Coordinates must be finite. This evaluates fixed assignments; fitting k-means additionally alternates assignment and centroid updates.
 
 ## Self-check: mathematical verification
 

@@ -349,26 +349,38 @@ Explanation
 # Reference example with a numerical check.
 import math
 
-def entropy(counts):
+def validate_counts(counts, allow_zero_total=False):
+    if not counts or any(not math.isfinite(c) or c < 0 for c in counts):
+        raise ValueError("Counts must be nonempty, finite, and nonnegative.")
     total = sum(counts)
-    if any(c < 0 for c in counts) or total <= 0:
-        raise ValueError("Counts must be nonnegative with a positive total.")
+    if not math.isfinite(total) or (total == 0 and not allow_zero_total):
+        raise ValueError("Counts need a finite positive total.")
+    return total
+
+def entropy(counts):
+    total = validate_counts(counts)
     return -sum((c / total) * math.log2(c / total) for c in counts if c)
 
 def information_gain(parent, children):
+    parent_entropy = entropy(parent)
     if any(len(child) != len(parent) for child in children):
         raise ValueError("Class counts must have matching dimensions.")
-    if [sum(child[i] for child in children) for i in range(len(parent))] != list(parent):
+    # Validate every child before skipping legitimate empty nodes in the sum.
+    child_totals = [validate_counts(child, allow_zero_total=True) for child in children]
+    reconstructed = [sum(child[i] for child in children) for i in range(len(parent))]
+    if any(not math.isclose(actual, expected, rel_tol=1e-12, abs_tol=0.0)
+           for actual, expected in zip(reconstructed, parent)):
         raise ValueError("Children must partition the parent counts.")
     total = sum(parent)
-    return entropy(parent) - sum(sum(child) / total * entropy(child) for child in children if sum(child))
+    return parent_entropy - sum(child_total / total * entropy(child)
+                                for child, child_total in zip(children, child_totals) if child_total)
 
 gain = information_gain([4, 6], [[4, 1], [0, 5]])
 assert math.isclose(gain, 0.6099865470109874)
 print("Information gain (bits):", gain)
 ```
 
-Entropy uses base-two logarithms and omits zero-probability terms. Information gain subtracts sample-weighted child entropy from parent entropy; child counts must reconstruct the parent distribution.
+Entropy uses base-two logarithms and omits zero-probability terms. Information gain subtracts sample-weighted child entropy from parent entropy; all parent and child counts must be finite and nonnegative, and child counts must reconstruct the parent distribution (within floating-point tolerance). All-zero child nodes contribute no weight, but are validated before being skipped. Finite nonnegative fractional weights are supported as well as integer counts.
 
 ## Self-check: mathematical verification
 
