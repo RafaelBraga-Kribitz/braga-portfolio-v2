@@ -2,7 +2,7 @@
 code: "01-01"
 kind: case
 date: "2026-09-16"
-summary: "720 Kerninserate (Momentaufnahme vom 16. Sep. 2026). Eine datierte Sicht auf Stellentitel, Kenntnisse und regionale Nachfrage."
+summary: "Fünf öffentliche Jobbörsen, eine getestete Python-Pipeline. Dubletten zusammengeführt, Titelregeln an 177 händisch klassifizierten Titeln geprüft, jede Zahl bis zur Quelle nachvollziehbar."
 lead: "Eine Evidenzbasis für Berufsentscheidungen im Datenbereich in Österreich, mit Schwerpunkt Steiermark und Graz: eine eintägige Momentaufnahme von 720 Kerninseraten für Datenrollen aus fünf öffentlichen Quellen, ergänzt um das AMS JobBarometer 2020–2025 und die Saisonalität offener Stellen laut Eurostat."
 domain: Arbeitsmarkt
 tags: [ status/complete, arbeitsmarkt, datenpipeline, deskriptive-statistik ]
