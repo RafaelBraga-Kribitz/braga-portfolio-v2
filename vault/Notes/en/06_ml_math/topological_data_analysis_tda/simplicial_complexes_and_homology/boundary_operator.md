@@ -20,7 +20,11 @@ $$
 and, on an oriented $k$-simplex,
 
 $$
-\partial_k [v_0,\dots,v_k] = \sum_{i=0}^{k} (-1)^i [v_0,\dots,\hat{v_i},\dots,v_k].
+\begin{aligned}
+&\partial_k [v_0,\dots,v_k] \\
+&= \sum_{i=0}^{k} (-1)^i \\
+&\quad [v_0,\dots,\hat{v_i},\dots,v_k].
+\end{aligned}
 $$
 
 It maps each $k$-simplex to the alternating formal sum of its $(k-1)$-dimensional faces, under the assumptions of an oriented simplicial complex and chain groups built from formal linear combinations of simplices.

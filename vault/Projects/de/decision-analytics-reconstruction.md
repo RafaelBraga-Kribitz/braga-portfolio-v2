@@ -1,5 +1,5 @@
 ---
-code: "01-02"
+code: "01-04"
 kind: case
 date: "2026-05-07"
 summary: Eine Rekonstruktion in drei Modulen. Allokationsgewinne sind Näherungswerte, keine Kampagneneffekte.
@@ -99,7 +99,7 @@ Bei einem Budgetrahmen von 6 Mio. USD erzeugt das MILP rund 54,77 % mehr line
 
 Die einzige echte Out-of-Sample-Prüfung (Prüfung an Daten, die nicht in die Anpassung eingehen) wird ungeschönt berichtet. Wird der Tracker mit jeweils einer zurückgehaltenen realen Umfragewelle neu angepasst und das Wahlergebnis nachweislich ausgeschlossen, erfasste das Band zu 95 % die zurückgehaltene Umfrage in 3 von 6 getesteten Wellen, bei einem Brier-Score von 0,31 für das Vorzeichen des Vorsprungs.
 
-> [!bars] Abb. 01-02-1 · Out-of-Sample-Prüfung
+> [!bars] Abb. 01-04-1 · Out-of-Sample-Prüfung
 > Das Band zu 95 % erfasste die zurückgehaltene Umfrage in 3 von 6 Wellen.
 > - Getestet — 6
 > - Erfasst — 3

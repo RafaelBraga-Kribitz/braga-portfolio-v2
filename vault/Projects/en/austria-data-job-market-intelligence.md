@@ -2,7 +2,7 @@
 code: "01-01"
 kind: case
 date: "2026-09-16"
-summary: "720 core postings (snapshot of 16 Sep 2026). A dated view of titles, skills and regional demand."
+summary: "Five public job boards, one tested Python pipeline. Duplicates merged, title rules checked against 177 hand-labelled titles, every number traced to its source."
 lead: "An evidence base for data-career decisions in Austria, with a Styria and Graz focus: a one-day snapshot of 720 core data-role postings from five public sources, the AMS JobBarometer 2020–2025 and Eurostat vacancy seasonality."
 domain: Labour market
 tags: [ status/complete, job-market, data-pipeline, descriptive-statistics ]

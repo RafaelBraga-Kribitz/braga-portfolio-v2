@@ -1,5 +1,5 @@
 ---
-code: "01-05"
+code: "01-02"
 kind: case
 date: "2026-05-21"
 updated: "2026-09-16"
@@ -65,7 +65,7 @@ One tracked finding changed the headline.[^1] An earlier version compared fixed 
 
 Of the seven scenarios, the lean hybrid of one person and three AMRs has the lowest five-year present cost. Its capital requirement is €195,000.
 
-> [!bars] Fig. 01-05-1 · Five-year present cost by scenario
+> [!bars] Fig. 01-02-1 · Five-year present cost by scenario
 > The lean hybrid costs 30% less than people alone and less than a fifth of the best humanoid case.
 > - Lean hybrid — 453
 > - Human-only — 647
