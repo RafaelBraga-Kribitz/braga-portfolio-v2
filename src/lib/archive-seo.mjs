@@ -1,6 +1,7 @@
 // SEO-only alternatives for long library folder names. Visible headings,
 // catalogue names and public slugs retain the full source labels.
 export const ARCHIVE_SEO_TITLES = {
+  'spatial-distance-norms-and-analytic-geometry': 'Spatial distance, norms and geometry',
   'improper-integrals-multiple-integrals-and-volumes': 'Improper and multiple integrals',
   'sufficient-statistics-and-the-fisher-neyman-theorem': 'Sufficient statistics · Fisher–Neyman',
   'analytic-geometry-shapes-perimeter-area-volume': 'Analytic geometry · shapes and measures',
