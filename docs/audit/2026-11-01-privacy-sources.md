@@ -19,3 +19,16 @@ Read-only source verification; no product edits or legal approval.
 ## Suggested scope of closure
 
 Can record provider-policy link verification and GitHub's published transfer/SCC/DPF statements. Cannot record independent registry-active-status verification from this quick read, a legal-compliance approval or verification of account-specific contractual/retention facts. EN/DE can accurately describe the confirmed forwarding chain without naming an assumed Google legal entity.
+
+## Registry completion, 2 Nov 2026
+
+A JavaScript-enabled Chromium visit to the official participant record 6174
+succeeded with HTTP 200. Its rendered Participation section names GitHub,
+EU–U.S. DPF Active, Non-HR Data, next certification due 3 Aug 2027. UK and Swiss
+entries also render Active, but the portfolio only needs the EU transfer fact.
+The earlier inability to inspect the registry is superseded by this check.
+Rendered text, screenshot and command result are saved under
+/workspace/readiness-artifacts/2026-11-02/dpf-record.txt, dpf-record.png and
+dpf-check.log. The European Commission/EDPB and EUR-Lex decision 2023/1795
+confirm the 10 July 2023 adequacy framework. This verifies the public listing,
+not the user's account-specific agreements or overall legal compliance.
