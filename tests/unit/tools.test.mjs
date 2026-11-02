@@ -76,7 +76,7 @@ test('A/B · a lifted rate at or above 100 % is Infinity, shown as the en dash (
    (format.dash), en-GB separators. */
 test('A/B · verdict, KPIs and live equation of the default', () => {
   const p = ab.plan({ base: 4, lift: 10, traffic: 2000, power: '80' });
-  assert.equal(p.verdict('en'), `Testable. 39,473 visitors per arm reach a 10% lift in 40${NBSP}days${NBSP}${EN_DASH} run 6 full weeks.`);
+  assert.equal(p.verdict('en'), `Testable. At the selected power, plan for 39,473 visitors per arm to detect an assumed 10% lift; estimated recruitment takes 40${NBSP}days${NBSP}${EN_DASH} run 6 full weeks.`);
   const k = p.kpis('en');
   assert.deepEqual(k.map((x) => x.value), ['39,473', '78,946', `40${NBSP}d`, `0.40${NBSP}pp`]);
   assert.equal(k[2].note, '6 full weeks · within the 8-week ceiling');
@@ -84,9 +84,9 @@ test('A/B · verdict, KPIs and live equation of the default', () => {
   assert.equal(p.eqLive('en'), 'n = (1.960 + 0.842)² · [0.0400·0.9600 + 0.0440·0.9560] / 0.0040² = 39,473');
 });
 
-test('A/B · German draft uses de-AT separators and NBSP before %', () => {
+test('A/B · German verdict uses de-AT separators and NBSP before %', () => {
   const p = ab.plan({ base: 4, lift: 10, traffic: 2000, power: '80' });
-  assert.equal(p.verdict('de'), `Testbar. 39.473 Besucher pro Arm erreichen einen Lift von 10${NBSP}% in 40${NBSP}Tagen${NBSP}${EN_DASH} 6 volle Wochen laufen lassen.`);
+  assert.equal(p.verdict('de'), `Testbar. Bei der gewählten Power 39.473 Besucher pro Arm einplanen, um einen angenommenen Lift von 10${NBSP}% nachzuweisen; für die Rekrutierung ist mit 40${NBSP}Tagen zu rechnen${NBSP}${EN_DASH} 6 volle Wochen laufen lassen.`);
   assert.equal(p.kpis('de')[3].value, `0,40${NBSP}PP`);
   assert.equal(p.kpis('de')[3].note, `4,0${NBSP}% → 4,40${NBSP}%`);
 });
