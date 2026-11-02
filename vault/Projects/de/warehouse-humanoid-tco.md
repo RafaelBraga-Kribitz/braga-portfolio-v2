@@ -1,5 +1,5 @@
 ---
-code: "01-05"
+code: "01-02"
 kind: case
 date: "2026-05-21"
 updated: "2026-09-16"
@@ -65,7 +65,7 @@ Ein nachverfolgter Befund hat das Hauptergebnis verändert.[^1] Eine frühere Ve
 
 Von den sieben Szenarien hat die schlanke Hybridvariante aus einer Person und drei AMR den niedrigsten Kostenbarwert über fünf Jahre. Ihr Investitionsbedarf beträgt € 195.000.
 
-> [!bars] Abb. 01-05-1 · Kostenbarwert über fünf Jahre nach Szenario
+> [!bars] Abb. 01-02-1 · Kostenbarwert über fünf Jahre nach Szenario
 > Die schlanke Hybridvariante kostet 30 % weniger als reines Personal und weniger als ein Fünftel des besten Humanoid-Falls.
 > - Person + 3 AMR — 453
 > - Nur Personal — 647

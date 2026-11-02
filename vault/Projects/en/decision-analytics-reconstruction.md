@@ -1,5 +1,5 @@
 ---
-code: "01-02"
+code: "01-04"
 kind: case
 date: "2026-05-07"
 summary: A three-module reconstruction. Allocation gains are proxies, not campaign effects.
@@ -99,7 +99,7 @@ On a USD 6 million envelope, the MILP produces about 54.77% more linearised pe
 
 The one true out-of-sample check is reported unflattered. Refitting the tracker with each real poll wave held out, and the election result provably excluded, the 95% band caught the held-out poll in 3 of 6 tested waves, with a Brier score of 0.31 on the sign of the margin.
 
-> [!bars] Fig. 01-02-1 · Out-of-sample check
+> [!bars] Fig. 01-04-1 · Out-of-sample check
 > The 95% band caught the held-out poll in 3 of 6 waves.
 > - Tested — 6
 > - Caught — 3

@@ -131,7 +131,7 @@ Ein Zitatblock ohne Markierung bleibt ein Zitat. Der Autorenleitfaden über die 
 ### Lesezeichen · `[!bookmark]`
 
 > [!bookmark] Weiter
-> [01-04 Risikoanalyse für die Energiebeschaffung](/de/work/energy-procurement-risk-analyzer/) — Von Strompreisdaten zu einer Kosten-Risiko-Entscheidung. Im Aufbau.
+> [01-05 Risikoanalyse für die Energiebeschaffung](/de/work/energy-procurement-risk-analyzer/) — Von Strompreisdaten zu einer Kosten-Risiko-Entscheidung. Im Aufbau.
 
 ## Aktionen
 

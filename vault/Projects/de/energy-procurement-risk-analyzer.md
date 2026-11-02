@@ -1,5 +1,5 @@
 ---
-code: "01-04"
+code: "01-05"
 kind: brief
 date: "2026-07-24"
 summary: Von Strompreisdaten zu einer Kosten-Risiko-Entscheidung. Im Aufbau.
