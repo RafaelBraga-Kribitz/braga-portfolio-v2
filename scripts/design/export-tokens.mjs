@@ -110,7 +110,7 @@ const out = {
 
 const json = JSON.stringify(out, null, 2) + '\n';
 if (process.argv.includes('--check')) {
-  const cur = existsSync(OUT) ? readFileSync(OUT, 'utf8') : '';
+  const cur = existsSync(OUT) ? readFileSync(OUT, 'utf8').replace(/\r\n/g, '\n') : ''; // ignore a CRLF checkout
   if (cur !== json) { console.error('design-system/tokens.json is stale: run `npm run tokens:export`'); process.exit(1); }
   console.log('tokens.json matches tokens.css');
 } else {
