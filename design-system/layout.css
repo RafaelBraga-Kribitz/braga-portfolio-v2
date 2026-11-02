@@ -153,10 +153,9 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
 }
 
 @media (max-width: 767px) {
-  /* Contents wrappers let the top row stick relative to the document,
-     while the single navigation row stays in normal flow. */
-  .shell, .shell-bar { display: contents; }
-  .shell-top { display: flex; align-items: center; position: sticky; top: 0; z-index: 20; min-height: 56px; background: var(--surface); border-bottom: var(--hairline); }
+  /* Keep both rows inside the original sticky glass shell. The top-row
+     wrapper stays display: contents so its children share the flex bar;
+     the shell paints the glass and the full-width bottom hairline. */
   .shell-bar { flex-wrap: wrap; min-height: 0; gap: 0; padding-inline: 0; }
   .shell-mark { order: 1; display: inline-flex; align-items: center; min-height: 56px; padding-inline: var(--gutter); }
   .shell-cluster { order: 2; margin-left: auto; padding-inline: calc(var(--gutter) - 8px); }
