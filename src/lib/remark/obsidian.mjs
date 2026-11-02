@@ -29,7 +29,7 @@
 //                          state in words for screen readers; no checkbox.
 import { fileURLToPath } from 'node:url';
 import { slug as headingSlug } from 'github-slugger';
-import { vaultIndex, noteForFile, resolveNote, resolveAttachment, mediaKind, mediaPath } from '../vault/index.mjs';
+import { vaultIndex, noteForFile, resolveNote, resolveAttachment, mediaPath } from '../vault/index.mjs';
 import { imageSize } from '../vault/image-size.mjs';
 
 const el = (tag, props, children = []) => ({
@@ -130,7 +130,6 @@ function inline(doc, value) {
     .replace(/\[([\p{L}\p{N}_ -]+)::[ \t]*([^\]]*)\]/gu, '$2');
   const out = [];
   let last = 0;
-  const push = (t) => { if (t) out.push(text(t)); };
   // wikilinks and embeds first, then tags in the text between them
   const pieces = [];
   for (const m of s.matchAll(WIKI)) {

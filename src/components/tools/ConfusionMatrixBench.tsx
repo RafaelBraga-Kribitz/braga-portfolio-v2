@@ -7,7 +7,7 @@
 // The value fields and the address-bar state are the A/B bench's (UX
 // pass, 22 Oct 2026; see AbSampleSizeBench).
 //
-// German strings are agent drafts awaiting the owner's approval (O-05).
+// German language reviewed on 1 Nov 2026; factual approval is separate.
 
 import { useState, useEffect, useRef } from 'preact/hooks';
 import { evaluate, PRESETS, DEFAULTS, BOUNDS, RULE, number, percent, currency } from '@/lib/tools/confusion-matrix.mjs';

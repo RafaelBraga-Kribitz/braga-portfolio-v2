@@ -305,21 +305,27 @@ Explanation
 
 ### Final Professional Example \[Python\])
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass
-from typing import Sequence RANDOM_SEED = 42 @dataclass(frozen=True)
-class BasketItem: name: str base_quantity: float base_price: float current_price: float def validate(self) -> None: if self.base_quantity < 0: raise ValueError("base_quantity must be non-negative.") if self.base_price < 0: raise ValueError("base_price must be non-negative.") if self.current_price < 0: raise ValueError("current_price must be non-negative.") def basket_cost_base(items: Sequence[BasketItem]) -> float: total = 0.0 for item in items: item.validate() total += item.base_quantity * item.base_price return total def basket_cost_current(items: Sequence[BasketItem]) -> float: total = 0.0 for item in items: item.validate() total += item.base_quantity * item.current_price return total def cpi_value(items: Sequence[BasketItem]) -> float: base_cost = basket_cost_base(items) current_cost = basket_cost_current(items) if base_cost == 0: raise ValueError("Base basket cost must be non-zero.") return (current_cost / base_cost) * 100 def inflation_rate(current_cpi: float, previous_cpi: float) -> float: if previous_cpi == 0: raise ValueError("previous_cpi must be non-zero.") return ((current_cpi - previous_cpi) / previous_cpi) * 100 def summarize_cpi(items: Sequence[BasketItem], previous_cpi: float | None = None) -> None: base_cost = basket_cost_base(items) current_cost = basket_cost_current(items) current_cpi = cpi_value(items) print("CPI basket summary") print("-" * 72) for item in items: print( f"{item.name}: quantity={item.base_quantity:.2f}, " f"base_price={item.base_price:.2f}, current_price={item.current_price:.2f}" ) print("-" * 72) print(f"Base basket cost: {base_cost:.2f}") print(f"Current basket cost: {current_cost:.2f}") print(f"CPI: {current_cpi:.2f}") if previous_cpi is not None: print(f"Inflation vs previous CPI {previous_cpi:.2f}: {inflation_rate(current_cpi, previous_cpi):.2f}%") def main() -> None: items = [ BasketItem(name="Bread", base_quantity=10, base_price=2.0, current_price=3.0), BasketItem(name="Milk", base_quantity=5, base_price=4.0, current_price=5.0), BasketItem(name="Electricity", base_quantity=1, base_price=30.0, current_price=36.0), ] summarize_cpi(items, previous_cpi=128.0) if __name__ == "__main__": main()
+```python
+# Reference example with a numerical check.
+import math
+
+def cpi(quantities, base_prices, current_prices):
+    if not quantities or not len(quantities) == len(base_prices) == len(current_prices):
+        raise ValueError("Basket arrays must be equally sized and nonempty.")
+    if any(x < 0 for values in (quantities, base_prices, current_prices) for x in values):
+        raise ValueError("Quantities and prices must be nonnegative.")
+    base_cost = sum(q * p for q, p in zip(quantities, base_prices))
+    if base_cost == 0:
+        raise ValueError("The base basket must have positive cost.")
+    return 100 * sum(q * p for q, p in zip(quantities, current_prices)) / base_cost
+
+index = cpi([2, 1], [10, 20], [12, 22])
+assert math.isclose(index, 115)
+print("Fixed-basket CPI:", index)
+print("Price increase since base period (%):", index - 100)
 ```
 
-What
-this professional example teaches:
-
-1. CPI is built from a fixed basket with base-period quantities.
-2. Current prices are applied to that same basket to isolate price change.
-3. CPI and inflation rate are linked but distinct.
-4.
-
-This structure is useful for macro dashboards, real-value adjustment, and business reporting.
+Base-period quantities hold the basket fixed while prices change. The base index is 100; an index of 115 means a 15% basket price increase, not a 115% increase.
 
 ## Self-check: mathematical verification
 
@@ -402,23 +408,6 @@ The quantities $q_{i,0}$ are held fixed from the base period. That means the for
 ### Verbal-to-algebra consistency
 
 The verbal explanation says CPI compares the current cost of a fixed consumer basket with the base-period cost of that same basket. The algebra shows exactly that.
-
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$\mathrm{CPI}$`, `$p_{i,t}$`, `$q_{i,0}$`, and `$\mathrm{CPI}_t$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to inflation rate, real vs nominal, macro dashboards, and deflators are explicitly included.
-- No placeholder text remains.
 
 ## Common Pitfalls and Edge Cases
 

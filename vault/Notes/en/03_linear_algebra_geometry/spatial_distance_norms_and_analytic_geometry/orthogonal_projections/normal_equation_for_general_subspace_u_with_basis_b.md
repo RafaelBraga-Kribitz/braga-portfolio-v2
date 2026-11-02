@@ -1,4 +1,5 @@
 ---
+seo_title: "Normal equation for a subspace"
 publish: true
 date: '2026-04-16'
 tags:

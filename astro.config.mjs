@@ -7,6 +7,7 @@ import mdx from '@astrojs/mdx';
 // run on @astrojs/markdown-remark, which is not installed. The plugins below
 // are Sätteri mdast/hast visitors doing the same jobs (vault/_guide/Syntax reference.md).
 import { satteri } from '@astrojs/markdown-satteri';
+import nowrap from './src/lib/remark/nowrap.mjs';
 import mathGuard from './src/lib/remark/math.mjs';
 import codeLang from './src/lib/remark/code-lang.mjs';
 import callouts from './src/lib/remark/callouts.mjs';
@@ -75,7 +76,7 @@ export default defineConfig({
       // snapshot (src/lib/remark/buildlog.mjs), Obsidian's syntax (the H1 title, [[links]], ![[embeds]], #tags,
       // %%comments%%, Dataview fields, tasks; src/lib/remark/obsidian.mjs),
       // then ==marks== and callouts (bars included: the evidence figure)
-      mdastPlugins: [mathGuard, codeLang, diagrams, buildlog, obsidian, sidenotes, callouts],
+      mdastPlugins: [mathGuard, codeLang, diagrams, buildlog, obsidian, sidenotes, callouts, nowrap],
       // the rehype phase, in order. headings and footnotes are factories,
       // passed uncalled: Sätteri calls them once per document, so each page
       // gets its own slugger and its own language.

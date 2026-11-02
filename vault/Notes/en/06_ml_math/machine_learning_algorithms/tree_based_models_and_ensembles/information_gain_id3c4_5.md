@@ -285,30 +285,31 @@ Before the split, churn and non-churn were quite mixed. After the split, one chi
 
 ### Beginner friendly Example \[Python\])
 
-```markdown
-import math # Information Gain for a simple binary split
-parent_counts = [4, 6] # churn, non-churn
+```python
+# Reference example with a numerical check.
+import math
+
+parent_counts = [4, 6]
 left_counts = [4, 1]
-right_counts = [0, 5] def entropy(class_counts): total_count = sum(class_counts) entropy_value = 0.0 for count in class_counts: if count == 0: continue probability = count / total_count entropy_value -= probability * math.log2(probability) return entropy_value parent_entropy = entropy(parent_counts)
-left_entropy = entropy(left_counts)
-right_entropy = entropy(right_counts) total_count = sum(parent_counts)
-weighted_child_entropy = ( (sum(left_counts) / total_count) * left_entropy + (sum(right_counts) / total_count) * right_entropy
-) information_gain = parent_entropy - weighted_child_entropy print("Parent entropy:", parent_entropy)
-print("Weighted child entropy:", weighted_child_entropy)
-print("Information Gain:", information_gain)
+right_counts = [0, 5]
+
+def entropy(class_counts):
+    total_count = sum(class_counts)
+    entropy_value = 0.0
+    for count in class_counts:
+        if count > 0:
+            probability = count / total_count
+            entropy_value -= probability * math.log2(probability)
+    return entropy_value
+
+weighted_child_entropy = (sum(left_counts) * entropy(left_counts)
+                          + sum(right_counts) * entropy(right_counts)) / sum(parent_counts)
+gain = entropy(parent_counts) - weighted_child_entropy
+assert math.isclose(gain, 0.6099865470109874)
+print("Information gain:", gain)
 ```
 
-Explanation
-:
-
-- `entropy(...)` computes node entropy from class counts.
-- Child entropies are weighted by child size.
-- Information Gain is parent entropy minus weighted child entropy.
-
-Manual intuition:
-
-- The right child is pure, so its entropy is zero.
-- The split therefore removes a meaningful amount of uncertainty.
+This small example computes the formula directly for the supplied toy data. The reusable example below adds input checks and a reference calculation.
 
 ### Beginner friendly Example \[R\])
 
@@ -344,25 +345,42 @@ Explanation
 
 ### Final Professional Example \[Python\])
 
-```markdown
-from __future__ import annotations import math
-from dataclasses import dataclass
-from typing import Sequence RANDOM_SEED = 42 @dataclass(frozen=True)
-class SplitEvaluation: parent_class_counts: Sequence[int] child_class_counts_list: Sequence[Sequence[int]] def validate(self) -> None: if len(self.parent_class_counts) == 0: raise ValueError("Parent class counts must not be empty.") if any(count < 0 for count in self.parent_class_counts): raise ValueError("Parent class counts must be non-negative.") if sum(self.parent_class_counts) == 0: raise ValueError("Parent node must contain at least one observation.") if len(self.child_class_counts_list) == 0: raise ValueError("At least one child node is required.") parent_total = sum(self.parent_class_counts) child_total = 0 for child_counts in self.child_class_counts_list: if len(child_counts) != len(self.parent_class_counts): raise ValueError("Each child node must have the same number of classes as the parent.") if any(count < 0 for count in child_counts): raise ValueError("Child class counts must be non-negative.") child_total += sum(child_counts) if child_total != parent_total: raise ValueError("Child node counts must sum to the parent node count.") def entropy(class_counts: Sequence[int]) -> float: if len(class_counts) == 0: raise ValueError("Class counts must not be empty.") if any(count < 0 for count in class_counts): raise ValueError("Class counts must be non-negative.") total_count = sum(class_counts) if total_count == 0: raise ValueError("Total class count must be greater than 0.") entropy_value = 0.0 for count in class_counts: if count == 0: continue probability = count / total_count entropy_value -= probability * math.log2(probability) return entropy_value def weighted_child_entropy(child_class_counts_list: Sequence[Sequence[int]]) -> float: parent_total = 0 for child_counts in child_class_counts_list: parent_total += sum(child_counts) if parent_total == 0: raise ValueError("Total child count must be greater than 0.") weighted_entropy = 0.0 for child_counts in child_class_counts_list: child_total = sum(child_counts) if child_total == 0: continue weighted_entropy += (child_total / parent_total) * entropy(child_counts) return weighted_entropy def information_gain( parent_class_counts: Sequence[int], child_class_counts_list: Sequence[Sequence[int]],
-) -> float: parent_entropy = entropy(parent_class_counts) child_entropy = weighted_child_entropy(child_class_counts_list) return parent_entropy - child_entropy def summarize_split( label: str, evaluation: SplitEvaluation,
-) -> None: evaluation.validate() parent_entropy = entropy(evaluation.parent_class_counts) child_entropy = weighted_child_entropy(evaluation.child_class_counts_list) gain_value = information_gain( evaluation.parent_class_counts, evaluation.child_class_counts_list, ) print(f"Split: {label}") print(f"Parent counts: {list(evaluation.parent_class_counts)}") print(f"Child counts: {[list(child) for child in evaluation.child_class_counts_list]}") print(f"Parent entropy: {parent_entropy:.6f}") print(f"Weighted child entropy: {child_entropy:.6f}") print(f"Information Gain: {gain_value:.6f}") print("-" * 40) def main() -> None: # Churn tree example: # Parent node has 40 churners and 60 non-churners. parent_counts = [40, 60] tenure_split = SplitEvaluation( parent_class_counts=parent_counts, child_class_counts_list=[ [25, 10], # short tenure [15, 50], # longer tenure ], ) autopay_split = SplitEvaluation( parent_class_counts=parent_counts, child_class_counts_list=[ [12, 8], # no autopay [28, 52], # autopay ], ) customer_id_like_split = SplitEvaluation( parent_class_counts=parent_counts, child_class_counts_list=[ [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [35, 60], ], ) summarize_split("Tenure bucket split", tenure_split) summarize_split("Autopay split", autopay_split) summarize_split("High-cardinality ID-like split", customer_id_like_split) if __name__ == "__main__": main()
+```python
+# Reference example with a numerical check.
+import math
+
+def validate_counts(counts, allow_zero_total=False):
+    if not counts or any(not math.isfinite(c) or c < 0 for c in counts):
+        raise ValueError("Counts must be nonempty, finite, and nonnegative.")
+    total = sum(counts)
+    if not math.isfinite(total) or (total == 0 and not allow_zero_total):
+        raise ValueError("Counts need a finite positive total.")
+    return total
+
+def entropy(counts):
+    total = validate_counts(counts)
+    return -sum((c / total) * math.log2(c / total) for c in counts if c)
+
+def information_gain(parent, children):
+    parent_entropy = entropy(parent)
+    if any(len(child) != len(parent) for child in children):
+        raise ValueError("Class counts must have matching dimensions.")
+    # Validate every child before skipping legitimate empty nodes in the sum.
+    child_totals = [validate_counts(child, allow_zero_total=True) for child in children]
+    reconstructed = [sum(child[i] for child in children) for i in range(len(parent))]
+    if any(not math.isclose(actual, expected, rel_tol=1e-12, abs_tol=0.0)
+           for actual, expected in zip(reconstructed, parent)):
+        raise ValueError("Children must partition the parent counts.")
+    total = sum(parent)
+    return parent_entropy - sum(child_total / total * entropy(child)
+                                for child, child_total in zip(children, child_totals) if child_total)
+
+gain = information_gain([4, 6], [[4, 1], [0, 5]])
+assert math.isclose(gain, 0.6099865470109874)
+print("Information gain (bits):", gain)
 ```
 
-What
-this professional example teaches:
-
-1. Information Gain is computed from entropy reduction.
-2. Split quality depends on the weighted average entropy of child nodes.
-3. High-cardinality features can appear attractive because they create many tiny pure nodes.
-4. This is why raw Information Gain can be biased and why C4.5 introduced Gain Ratio.
-5.
-
-In churn analysis, operationally meaningful features such as tenure or autopay are usually preferable to artificial identifier-like splits.
+Entropy uses base-two logarithms and omits zero-probability terms. Information gain subtracts sample-weighted child entropy from parent entropy; all parent and child counts must be finite and nonnegative, and child counts must reconstruct the parent distribution (within floating-point tolerance). All-zero child nodes contribute no weight, but are validated before being skipped. Finite nonnegative fractional weights are supported as well as integer counts.
 
 ## Self-check: mathematical verification
 
@@ -459,23 +477,6 @@ This matches the interpretation that the split provided no information about the
 ### Verbal-to-algebra consistency
 
 The verbal explanation says Information Gain measures how much a split reduces class uncertainty. Algebraically, the formula subtracts post-split weighted entropy from pre-split entropy. The explanation and the formula are aligned.
-
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$H$`, `$N_j$`, and `$\mathrm{IG}$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to entropy, Gini, high-cardinality bias, and feature importance are explicitly included.
-- No placeholder text remains.
 
 ## Common Pitfalls and Edge Cases
 

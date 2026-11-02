@@ -3,7 +3,7 @@ slug: system
 lang: de
 summary: "Jedes Element, das die Inhaltspipeline versteht, einmal gezeigt, mit dem Fall „TCO humanoider Roboter im Lager“ als Beispiel. Nicht indexiert."
 lead: "Jedes Element, das die Inhaltspipeline versteht, einmal und in der Reihenfolge des Autorenleitfadens, unter seinem Namen und seiner Markdown-Syntax. Den Inhalt liefert der Fall „TCO humanoider Roboter im Lager“."
-translationStatus: draft
+translationStatus: approved
 publish: true
 ---
 
@@ -52,7 +52,7 @@ Callouts (hervorgehobene Hinweisblöcke) folgen der Syntax von Obsidian: ein Zit
 
 Ein Zitatblock ohne Markierung bleibt ein Zitat. Der Autorenleitfaden über die Reihenfolge eines Dokuments, übersetzt:
 
-> Jedes Projekt und jeder Essay folgt einer Richtung: Frage → Daten → Methode → Ergebnis → Grenzen → Entscheidung.
+> Jedes Projekt und jeder Essay folgen einer Richtung: Frage → Daten → Methode → Ergebnis → Grenzen → Entscheidung.
 
 ### Breit · `[!note|wide]`
 

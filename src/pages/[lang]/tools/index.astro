@@ -4,14 +4,13 @@
 // owner's copy from handoff/source-content/content/data/home.yaml
 // (tools.leadParagraphs[0]) with the brief's spaced en dash (O-03,
 // format.dash: NBSP before it so no line starts with the dash).
-// German strings are drafts: the DE page carries the in-build mark
-// "Entwurf · Freigabe ausstehend" (D-011, O-05).
+// Language draft marks follow isDraftLang; German was reviewed on 1 Nov 2026.
 import Base from '@/layouts/Base.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import Listing from '@/components/Listing.astro';
 import ListingRow from '@/components/ListingRow.astro';
 import StatusMark from '@/components/StatusMark.astro';
-import { t, type Lang } from '@/lib/i18n';
+import { t, isDraftLang, type Lang } from '@/lib/i18n';
 import { route } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
 import { tools, toolsProse } from '@/lib/catalogue';
@@ -33,7 +32,7 @@ const copy = {
   },
   de: {
     title: 'Werkzeuge',
-    description: 'Zwei kleine Instrumente: eine Konfusionsmatrix mit Kosten je Fehler und eine A/B-Stichprobenbank mit Acht-Wochen-Grenze.',
+    description: 'Zwei kleine Instrumente: eine Konfusionsmatrix mit Kosten je Fehler und einen A/B-Stichprobenrechner mit Acht-Wochen-Grenze.',
     claim: 'Eine Annahme ändern.',
   },
 }[lang];
@@ -46,6 +45,6 @@ const copy = {
         <ListingRow code={row.code} title={row.title} sub={row.sub} meta={[row.domain]} status={row.status} lang={lang} trail={t(lang, 'open')} href={route(row.page, lang)} />
       ))}
     </Listing>
-    {lang === 'de' && <div class="doc-meta"><StatusMark state="in-build" lang={lang} label={t(lang, 'draft')} /></div>}
+    {isDraftLang(lang) && <div class="doc-meta"><StatusMark state="in-build" lang={lang} label={t(lang, 'draft')} /></div>}
   </section>
 </Base>

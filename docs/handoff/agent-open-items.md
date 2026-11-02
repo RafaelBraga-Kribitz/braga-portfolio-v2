@@ -1,3 +1,5 @@
+> Historical record. The current pre-sharing work is tracked in [TODO-BEFORE-SHARING.md](../../TODO-BEFORE-SHARING.md). Content now lives in `vault/`; old `src/content/` paths and resolved decisions below describe earlier states.
+
 # Agent reports: open items
 Every open item the build agents reported, grouped by agent, newest run last. Generated from the workflow journals on 21 Oct 2026. Items marked "Owner" need a decision from Rafael; the rest are engineering follow-ups. Some were resolved by a later agent: check the code before acting.
 

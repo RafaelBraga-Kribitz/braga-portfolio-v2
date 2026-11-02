@@ -338,23 +338,6 @@ So negative $R^2$ is mathematically valid and must be explicitly acknowledged.
 
 Both $SS_{\mathrm{res}}$ and $SS_{\mathrm{tot}}$ are sums of squared target units. Their ratio is unitless, and subtracting from 1 preserves that. So $R^2$ is dimensionless. This matches the verbal explanation.
 
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table notation uses math mode such as `$y_i$`, `$\hat{y}_i$`, `$\bar{y}$`, `$SS_{\mathrm{res}}$`, and `$SS_{\mathrm{tot}}$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Range $(-\infty,1]$, negative values, baseline interpretation, and overfitting limitations are explicitly included.
-- No placeholder text remains.
-
 ## Common Pitfalls and Edge Cases
 
 - **Assuming $R^2$ must lie between 0 and 1:** It can be negative when the model is worse than the mean baseline.

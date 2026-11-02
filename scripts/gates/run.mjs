@@ -41,8 +41,9 @@
 // first theme, without axe. npm run test:gates passes the notes prefixes;
 // a run without --templated checks everything fully.
 //
-// --draft-langs de: the languages whose every page must show the draft
-// mark (gate L-07; DRAFT_LANGS in src/lib/i18n.ts). '' when approved.
+// --draft-langs: languages whose every page must show the draft mark
+// (L-07; DRAFT_LANGS in src/lib/i18n.ts). Default empty after language
+// review; fixture self-tests explicitly pass de to retain coverage.
 //
 // Prints a compact table (page · gate · status · detail), writes the JSON
 // report, exits 1 on any failure. With --expect it instead exits 0 only when
@@ -87,11 +88,11 @@ const opts = {
   // the pending list applies to every build, --dir or not: a scratch build
   // of the same source must get the same verdict as dist (--no-pending opts out)
   pending: flag('--no-pending') ? '' : val('--pending', join(ROOT, 'tests/gates/pending-routes.json')),
-  // languages whose pages must carry the draft mark (gate L-07); mirrors
-  // DRAFT_LANGS in src/lib/i18n.ts — empty both when the owner approves
   templated: val('--templated', '') ? val('--templated', '').split(',').map((s) => s.trim()).filter(Boolean) : [],
   templatedSample: Math.max(1, Number(val('--templated-sample', 12)) || 12),
-  draftLangs: val('--draft-langs', 'de').split(',').map((s) => s.trim().toLowerCase()).filter(Boolean),
+  // languages whose pages must carry the draft mark (gate L-07); mirrors
+  // DRAFT_LANGS in src/lib/i18n.ts — language-reviewed DE is cleared;
+  draftLangs: val('--draft-langs', '').split(',').map((s) => s.trim().toLowerCase()).filter(Boolean),
 };
 
 function siteFromConfig() {

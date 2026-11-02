@@ -255,23 +255,26 @@ Explanation
 
 ### Final Professional Example \[Python\])
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass
-from typing import Callable, Sequence RANDOM_SEED = 42 @dataclass(frozen=True)
-class DiscreteOutcomeDistribution: actual_values: Sequence[float] predicted_values: Sequence[float] probabilities: Sequence[float] def validate(self) -> None: if len(self.actual_values) == 0: raise ValueError("At least one outcome is required.") if not ( len(self.actual_values) == len(self.predicted_values) == len(self.probabilities) ): raise ValueError("All sequences must have the same length.") if any(probability < 0 for probability in self.probabilities): raise ValueError("Probabilities must be non-negative.") probability_sum = sum(self.probabilities) if abs(probability_sum - 1.0) > 1e-9: raise ValueError("Probabilities must sum to 1.") def squared_loss(actual_value: float, predicted_value: float) -> float: return (actual_value - predicted_value) ** 2 def expected_risk( actual_values: Sequence[float], predicted_values: Sequence[float], probabilities: Sequence[float], loss_function: Callable[[float, float], float],
-) -> float: if len(actual_values) == 0: raise ValueError("At least one outcome is required.") if not ( len(actual_values) == len(predicted_values) == len(probabilities) ): raise ValueError("All sequences must have the same length.") total = 0.0 for actual_value, predicted_value, probability in zip( actual_values, predicted_values, probabilities, ): total += probability * loss_function(actual_value, predicted_value) return total def summarize_expected_risk(distribution: DiscreteOutcomeDistribution) -> None: distribution.validate() risk_value = expected_risk( actual_values=distribution.actual_values, predicted_values=distribution.predicted_values, probabilities=distribution.probabilities, loss_function=squared_loss, ) print("Expected risk summary") print("-" * 60) for index, (actual_value, predicted_value, probability) in enumerate( zip( distribution.actual_values, distribution.predicted_values, distribution.probabilities, ), start=1, ): loss_value = squared_loss(actual_value, predicted_value) weighted_loss = probability * loss_value print( f"Outcome {index}: y={actual_value:.4f}, " f"y_hat={predicted_value:.4f}, " f"probability={probability:.4f}, " f"loss={loss_value:.4f}, weighted_loss={weighted_loss:.4f}" ) print("-" * 60) print(f"Expected risk: {risk_value:.6f}") def main() -> None: # Toy forecasting example with a discrete future distribution distribution = DiscreteOutcomeDistribution( actual_values=[10.0, 15.0, 20.0], predicted_values=[12.0, 12.0, 12.0], probabilities=[0.2, 0.5, 0.3], ) summarize_expected_risk(distribution) if __name__ == "__main__": main()
+```python
+# Reference example with a numerical check.
+import math
+
+def expected_risk(actual, predicted, probabilities, loss):
+    if not actual or not len(actual) == len(predicted) == len(probabilities):
+        raise ValueError("Provide equally sized, nonempty inputs.")
+    if any(p < 0 for p in probabilities) or not math.isclose(sum(probabilities), 1):
+        raise ValueError("Probabilities must be nonnegative and sum to one.")
+    return sum(p * loss(y, estimate) for y, estimate, p in zip(actual, predicted, probabilities))
+
+actual = [0.0, 1.0, 2.0]
+predicted = [0.5, 1.0, 1.5]
+probabilities = [0.2, 0.5, 0.3]
+risk = expected_risk(actual, predicted, probabilities, lambda y, estimate: (y - estimate) ** 2)
+assert math.isclose(risk, 0.125)
+print("Expected squared loss:", risk)
 ```
 
-What
-this professional example teaches:
-
-1. Expected risk is an average over the population distribution, not over a finite training set.
-2. In a toy discrete setting, it can be computed exactly by weighting losses by probabilities.
-3. In real ML problems, the true distribution is unknown, so expected risk is usually not directly computable.
-4. This is why empirical risk, validation, and test estimates are used as practical approximations.
-5.
-
-The same framework works with different loss functions.
+This finite-distribution example weights each squared error by its probability. In practice the true distribution is unknown; the result is exact only for the specified toy distribution.
 
 ## Self-check: mathematical verification
 
@@ -350,23 +353,6 @@ This aligns with the interpretation of expected risk as average future loss.
 ### Verbal-to-algebra consistency
 
 The verbal explanation says expected risk is the true out-of-sample average loss over the unknown population and that empirical risk is a proxy. The formulas express exactly that relationship.
-
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$R(f)$`, `$L(Y,f(X))$`, and `$P_{X,Y}$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to empirical risk, generalization gap, theory of learning, and validation are explicitly included.
-- No placeholder text remains.
 
 ## Common Pitfalls and Edge Cases
 

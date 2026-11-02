@@ -14,14 +14,14 @@ metrics:
   - { value: "24 %", label: Dublettenquote }
 stack: [ "Python", "Power BI", "DAX", "pandas", "scikit-learn", "Clustering", "CI/CD" ]
 repository: https://github.com/RafaelBraga-Kribitz/austria-data-job-market-intelligence
-translationStatus: draft
+translationStatus: approved
 publish: true
 ---
 
 # Arbeitsmarkt für Datenberufe in Österreich
 
 > [!summary] Zusammenfassung
-> SQL und Python führen eine eintägige Momentaufnahme von 720 Kerninseraten für Datenrollen an, der Stack (die eingesetzten Werkzeuge) ist auf Microsoft ausgerichtet, und in der AMS-Berufsgruppe „Data Scientist“ ist die Steiermark die einzige große Region über ihrem Niveau von 2020. Die Ergebnisse fließen in zwei Entscheidungsdokumente, die jede Rollenfamilie an einem deklarierten Kompetenzprofil bewerten; die Rohdatensammlung bleibt ein privater Forschungsdatensatz.
+> SQL und Python führen eine eintägige Momentaufnahme von 720 Kerninseraten für Datenrollen an, der Stack (die eingesetzten Werkzeuge) ist auf Microsoft ausgerichtet, und in der AMS-Berufsgruppe „Data Scientist“ ist die Steiermark über ihrem Niveau von 2020. Die Ergebnisse fließen in zwei Entscheidungsdokumente, die jede Rollenfamilie an einem deklarierten Kompetenzprofil bewerten; die Rohdatensammlung bleibt ein privater Forschungsdatensatz.
 
 > [!note] Stand der Daten
 > Diese Seite beschreibt die Momentaufnahme vom 16. Sep. 2026. Das Repository ist inzwischen auf die Momentaufnahme vom 18. Okt. 2026 umgestellt (Release 2026-10-19.1, 699 Kerninserate); seine README enthält die aktuellen Zahlen.
@@ -54,7 +54,7 @@ Jeder Schritt ist ein Skript, und jede Regel steht in einer Konfigurationsdatei:
 4. Sprachanforderungen werden aus einem Fenster von 120 Zeichen beiderseits jeder Sprachnennung gelesen.
 5. Dubletten werden per Union-Find über Unternehmen, Titel, Bundesland und einen Fingerabdruck der Stellenbeschreibung gruppiert.
 
-Jede Tabelle speichert ihr n, und Anteile, die in eine Entscheidung einfließen, tragen Wilson-Intervalle zu 95 %. Die amtlichen Reihen werden als eigene Einheiten ausgewertet und nie mit Statistiken auf Inseratsebene vermischt. Eine Suite aus 67 Tests prüft das Verhalten der Regeln und die Konsistenz der Ausgaben, und ein Digest-Skript (Zusammenfassungsskript) gibt jede in den Dokumenten zitierte Zahl erneut aus den Tabellen aus.
+Jede Tabelle speichert ihr n, und Anteile, die in eine Entscheidung einfließen, tragen Wilson-Intervalle zu 95 %. Die amtlichen Reihen werden als eigene Einheiten ausgewertet und nie mit Statistiken auf Inseratsebene vermischt. Eine Testsuite prüft das Verhalten der Regeln und die Konsistenz der Ausgaben, und ein Digest-Skript (Zusammenfassungsskript) gibt jede in den Dokumenten zitierte Zahl erneut aus den Tabellen aus.
 
 > [!definition] Textbasierter Anteil
 > Ein Anteil, der aus dem Inseratstext gelesen wird, etwa eine Sprachanforderung. Sein Nenner sind die Inserate mit einer Beschreibung von mehr als 300 Zeichen.
@@ -81,7 +81,7 @@ SQL und Python führen, und der Stack ist auf Microsoft ausgerichtet: Azure und 
 
 ### Region
 
-Wien hält 48 % der offenen Kerninserate. Die Steiermark stellt 7,5 % der Momentaufnahme, aber 13,6 % des amtlichen Jahresvolumens, und ist in der AMS-Berufsgruppe „Data Scientist“ die einzige große Region über ihrem Niveau von 2020.[^1]
+Wien hält 48 % der offenen Kerninserate. Die Steiermark stellt 8,1 % der Momentaufnahme, aber 13,6 % des amtlichen Jahresvolumens, und ist in der AMS-Berufsgruppe „Data Scientist“ über ihrem Niveau von 2020.[^1]
 
 > [!bars] Abb. 01-01-2 · Region
 > 58 der 720 Kerninserate entfallen auf die Steiermark.
@@ -123,7 +123,7 @@ Data Engineering und Data Science sind die größten Rollenfamilien. Titel in Ma
 Die Saisonalität ist gegenüber dem Zyklus klein: Die Eurostat-Reihen zeigen eine unterjährige Schwankungsbreite von 5–14 %, gegenüber 255–567 % zwischen den Jahren.
 
 > [!quote] Ergebnis · Momentaufnahme vom 16. Sep. 2026 und AMS JobBarometer
-> In Inseraten für Datenrollen in Österreich liegen SQL und Python vorn, bei einem auf Microsoft ausgerichteten Stack, und in der AMS-Berufsgruppe „Data Scientist“ ist die Steiermark die einzige große Region über ihrem Niveau von 2020.
+> In Inseraten für Datenrollen in Österreich liegen SQL und Python vorn, bei einem auf Microsoft ausgerichteten Stack, und in der AMS-Berufsgruppe „Data Scientist“ ist die Steiermark über ihrem Niveau von 2020.
 
 ## Grenzen
 

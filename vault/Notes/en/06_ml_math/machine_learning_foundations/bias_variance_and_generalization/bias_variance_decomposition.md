@@ -1,4 +1,5 @@
 ---
+seo_title: "Bias–variance decomposition"
 publish: true
 date: '2026-10-26'
 tags:

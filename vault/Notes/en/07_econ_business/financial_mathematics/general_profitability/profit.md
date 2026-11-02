@@ -295,21 +295,24 @@ Explanation
 
 ### Final Professional Example \[Python\])
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass
-from typing import Sequence RANDOM_SEED = 42 @dataclass(frozen=True)
-class BusinessLine: name: str revenue: float cost: float def validate(self) -> None: if self.revenue < 0: raise ValueError("revenue must be non-negative.") if self.cost < 0: raise ValueError("cost must be non-negative.") def profit_value(revenue: float, cost: float) -> float: if revenue < 0: raise ValueError("revenue must be non-negative.") if cost < 0: raise ValueError("cost must be non-negative.") return revenue - cost def summarize_profit(lines: Sequence[BusinessLine]) -> None: if len(lines) == 0: raise ValueError("At least one business line is required.") total_revenue = 0.0 total_cost = 0.0 print("Profit summary") print("-" * 72) for line in lines: line.validate() line_profit = profit_value(line.revenue, line.cost) total_revenue += line.revenue total_cost += line.cost print(f"Business line: {line.name}") print(f"Revenue: {line.revenue:.2f}") print(f"Cost: {line.cost:.2f}") print(f"Profit: {line_profit:.2f}") print("-" * 72) total_profit = profit_value(total_revenue, total_cost) print("Total company summary") print(f"Total revenue: {total_revenue:.2f}") print(f"Total cost: {total_cost:.2f}") print(f"Total profit: {total_profit:.2f}") def main() -> None: lines = [ BusinessLine(name="Subscriptions", revenue=50000.0, cost=28000.0), BusinessLine(name="Professional Services", revenue=22000.0, cost=15000.0), BusinessLine(name="Marketplace Fees", revenue=18000.0, cost=7000.0), ] summarize_profit(lines) if __name__ == "__main__": main()
+```python
+# Reference example with a numerical check.
+import math
+
+def profit(revenue, cost):
+    if revenue < 0 or cost < 0:
+        raise ValueError("Use nonnegative revenue and cost amounts.")
+    return revenue - cost
+
+lines = [("Services", 100000, 70000), ("Products", 80000, 85000)]
+profits = {name: profit(revenue, cost) for name, revenue, cost in lines}
+assert math.isclose(sum(profits.values()), 25000)
+for name, value in profits.items():
+    print(f"{name}: {value:,.2f}")
+print("Total profit:", sum(profits.values()))
 ```
 
-What
-this professional example teaches:
-
-1. Profit can be computed per business line and in aggregate.
-2. Revenue and cost should be tracked explicitly before calculating surplus.
-3. Profit analysis scales naturally from one product line to whole-company reporting.
-4.
-
-This is useful in P&L dashboards, business reporting, and profitability monitoring.
+Subtract costs from revenue within the same accounting period and scope. Negative profit is a loss; summing business-line profit is valid only when shared costs and internal transfers have been accounted for consistently.
 
 ## Self-check: mathematical verification
 
@@ -387,23 +390,6 @@ So profit has the same currency units. This is consistent.
 ### Verbal-to-algebra consistency
 
 The verbal explanation says profit is the amount left after subtracting cost from revenue, and that the meaning depends on which costs are included. The algebra confirms the subtraction logic, and the multiple-profit-layer explanation is consistent with different cost scopes.
-
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$\mathrm{Profit}$`, `$\mathrm{Revenue}$`, and `$\mathrm{Cost}$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to profit margin, unit economics, P&L, and business reporting are explicitly included.
-- No placeholder text remains.
 
 ## Common Pitfalls and Edge Cases
 

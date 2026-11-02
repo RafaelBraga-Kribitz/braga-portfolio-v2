@@ -277,23 +277,6 @@ Therefore the MLE for $w$ is the same as the OLS solution, which is given by the
 
 The verbal explanation says the normal equations solve least squares exactly, require invertibility of $X^\top X$, and produce a projection. The derivation confirms all three claims.
 
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$X$`, `$y$`, `$\hat{w}$`, and `$X^\top X$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to least squares, projection, regression, and interpretable coefficients are explicitly included.
-- No placeholder text remains.
-
 ## Common Pitfalls and Edge Cases
 
 - **Trying to invert a singular matrix:** If predictors are collinear, $X^\top X$ is singular and the closed-form inverse does not exist.

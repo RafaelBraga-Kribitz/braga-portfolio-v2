@@ -17,8 +17,8 @@
 
 /** Button labels by language. `failed` says how to recover. */
 export const MAIL_LABELS = {
-  en: { copy: 'Copy', open: 'Open', copied: 'Copied', failed: 'Use Open', copyName: 'Copy the email address', openName: 'Write an email' },
-  de: { copy: 'Kopieren', open: 'Öffnen', copied: 'Kopiert', failed: 'Öffnen nutzen', copyName: 'E-Mail-Adresse kopieren', openName: 'E-Mail schreiben' },
+  en: { copy: 'Copy', open: 'Open', copied: 'Copied', failed: 'Use Open', copyName: 'Copy the email address', openName: 'Write an email', fallbackName: 'Contact details' },
+  de: { copy: 'Kopieren', open: 'Öffnen', copied: 'Kopiert', failed: 'Öffnen nutzen', copyName: 'E-Mail-Adresse kopieren', openName: 'E-Mail schreiben', fallbackName: 'Kontaktdaten' },
 };
 
 const reverse = (s) => Array.from(s).reverse().join('');

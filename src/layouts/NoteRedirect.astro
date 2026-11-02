@@ -1,0 +1,39 @@
+---
+// Static redirects keep the same first-paint and document standards as
+// the root redirect. No readable email address or mailto is rendered.
+import '../styles/global.css';
+import { site } from '../lib/site';
+import { absolute, withBase } from '../lib/routes';
+import { themeColor, PREPAINT } from '../lib/theme';
+import { NOTE_REDIRECTS, noteRedirects } from '../lib/note-redirects.mjs';
+
+interface Props { from: keyof typeof NOTE_REDIRECTS }
+const { from } = Astro.props;
+const target = noteRedirects(import.meta.env.BASE_URL)[`/en/notes/${from}/`];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content={themeColor.light}>
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content={themeColor.dark}>
+    <script is:inline set:html={PREPAINT}></script>
+    <script is:inline set:html={`location.replace(${JSON.stringify(target)})`}></script>
+    <meta http-equiv="refresh" content={`0; url=${target}`}>
+    <title>Note moved · {site.name}</title>
+    <meta name="description" content="This note has moved to its consolidated version.">
+    <meta name="robots" content="noindex">
+    <link rel="canonical" href={absolute(target)}>
+    <link rel="icon" type="image/png" sizes="32x32" href={withBase('/favicon-32.png')}>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <main id="main" class="grid-container">
+      <article class="doc section">
+        <h1>This note has moved.</h1>
+        <p><a href={target}>Read the consolidated note <span class="glyph" aria-hidden="true">→</span></a></p>
+      </article>
+    </main>
+  </body>
+</html>

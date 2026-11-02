@@ -1,5 +1,7 @@
 ---
 publish: true
+aliases:
+- jacobian_matrix_f
 date: '2026-04-16'
 tags:
 - calculus
@@ -119,9 +121,10 @@ def f(x: np.ndarray) -> np.ndarray:
 def analytic_jacobian(x: np.ndarray) -> np.ndarray:
     """Jacobian of f at x: 3 x 2 matrix."""
     x1, x2 = x[0], x[1]
-    return np.array([ [x2, x1],   # row 1: grad of f1
+    return np.array([
+        [x2, x1],      # row 1: grad of f1
         [2*x1, 0.0],   # row 2: grad of f2
-        [1.0, 3.0],   # row 3: grad of f3
+        [1.0, 3.0],    # row 3: grad of f3
     ])
 
 def numerical_jacobian(fn, x: np.ndarray, h: float = 1e-5) -> np.ndarray:
@@ -131,9 +134,12 @@ def numerical_jacobian(fn, x: np.ndarray, h: float = 1e-5) -> np.ndarray:
     m = len(f0)
     jac = np.zeros((m, n))
     for j in range(n):
-        e_j = np.zeros(n); e_j[j] = 1.0
-    jac[:, j] = (fn(x + h * e_j) - fn(x - h * e_j)) / (2 * h)
+        e_j = np.zeros(n)
+        e_j[j] = 1.0
+        jac[:, j] = (fn(x + h * e_j) - fn(x - h * e_j)) / (2 * h)
     return jac
+
+
 x0 = np.array([2.0, 1.0])
 j_analytic = analytic_jacobian(x0)
 j_numerical = numerical_jacobian(f, x0)
@@ -142,7 +148,9 @@ print("Analytic:")
 print(j_analytic)
 print("\nNumerical:")
 print(j_numerical.round(6))
-print(f"\nMax error: {np.abs(j_analytic - j_numerical).max():.2e}")   # Linear approximation test
+print(f"\nMax error: {np.abs(j_analytic - j_numerical).max():.2e}")
+
+# Linear approximation test
 h_vec = np.array([0.01, 0.01])
 delta_f_approx = j_analytic @ h_vec
 delta_f_exact = f(x0 + h_vec) - f(x0)
@@ -242,8 +250,8 @@ print(f"Rank: {np.linalg.matrix_rank(j_analytic)} (= K-1 = {K-1}, one zero eigen
 # Upstream: dL/dp from cross-entropy with true class = 2
 y_onehot = np.zeros(K)
 y_onehot[2] = 1.0
-delta_p = -(y_onehot / np.clip(p_test, 1e-12, 1.0))   # dL/dp
-delta_z = j_analytic.T @ delta_p                      # VJP: J^T @ upstream
+delta_p = -(y_onehot / np.clip(p_test, 1e-12, 1.0))  # dL/dp
+delta_z = j_analytic.T @ delta_p  # VJP: J^T @ upstream
 
 # Efficient combined CE + softmax gradient: delta_z = p - y
 delta_z_combined = p_test - y_onehot
@@ -255,3 +263,7 @@ print(f"Match: {np.allclose(delta_z, delta_z_combined, atol=1e-4)}")
 ---
 
 *Source: MML2 p. 155*
+
+## Source-note history
+
+Consolidated from `jacobian_matrix` and `jacobian_matrix_f`. The latter supplied the corrected centered-difference loop: every input coordinate must fill its own Jacobian column inside the loop. Both former note names resolve here. The [repository history](https://github.com/RafaelBraga-Kribitz/braga-portfolio-v2/commits/main/vault/Notes/en/04_calculus_optimization/multivariable_calculus_and_matrix_calculus/differential_operators_gradients_jacobians_hessians/) preserves the source versions.

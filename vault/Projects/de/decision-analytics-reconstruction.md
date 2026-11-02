@@ -9,23 +9,26 @@ tags: [ status/functional, wahlkampagnen, segmentierung, optimierung, bayessches
 lang: de
 slug: decision-analytics-reconstruction
 metrics:
-  - { value: "+3,70 PP", label: "Verifizierter Vorsprung, TSJE", accent: true }
+  - { value: "95.603", label: "Amtlicher Stimmenvorsprung", accent: true }
   - { value: "61,25 %", label: "Wahlbeteiligung, TSJE" }
   - { value: "50.000", label: "Synthetische Wahlberechtigte, 14 Wochen" }
 stack: [ "Python", "PyMC", "Bayesian", "Optimisation", "scikit-learn", "FastAPI", "Streamlit", "MLflow", "Docker", "GCP", "CI/CD" ]
 repository: https://github.com/RafaelBraga-Kribitz/decision-analytics-reconstruction
-translationStatus: draft
+translationStatus: approved
 publish: true
 ---
 
 # Rekonstruktion von Entscheidungs­analysen
 
 > [!summary] Zusammenfassung
-> Drei verbundene Module laufen durchgängig auf 50.000 synthetischen Wahlberechtigten, die an die verifizierten Eckdaten der Departamentos angepasst sind: Bei einem Budgetrahmen von 6 Mio. USD erzielt der Allokator rund 54,77 % mehr linearisierte Proxy-Kontakte als eine über die Departamentos gleichmäßige Verteilung, und das Unsicherheitsband des Trackers zu 95 % erfasste die zurückgehaltene Umfrage in 3 von 6 getesteten Wellen. Jedes Modul wird nur so weit berichtet, wie seine eigene Prüfung reicht: Der Gewinn gilt als Solver-Vergleich auf synthetischer Reichweite, die Tracking-Kurve als Retrodiktion, und nichts hier behauptet, dass Analytik den verifizierten Vorsprung von 3,70 Prozentpunkten verursacht hat.
+> Drei verbundene Module laufen durchgängig auf 50.000 synthetischen Wahlberechtigten, die an die verifizierten Eckdaten der Departamentos angepasst sind: Bei einem Budgetrahmen von 6 Mio. USD erzielt der Allokator rund 54,77 % mehr linearisierte Proxy-Kontakte als eine über die Departamentos gleichmäßige Verteilung, und das Unsicherheitsband des Trackers zu 95 % erfasste die zurückgehaltene Umfrage in 3 von 6 getesteten Wellen. Jedes Modul wird nur so weit berichtet, wie seine eigene Prüfung reicht: Der Gewinn gilt als Solver-Vergleich auf synthetischer Reichweite, die Tracking-Kurve als Retrodiktion, und nichts hier behauptet, dass Analytik den amtlichen Stimmenvorsprung verursacht hat.
 
 ## Fragestellung
 
-Wie lässt sich mit nur acht öffentlichen Umfragen, aggregierten Zensusdaten und einem festen Budget ein landesweites Rennen verfolgen, Geld über das ganze Land verteilen und dabei ehrlich ausweisen, was tatsächlich bekannt ist? Die Rekonstruktion arbeitet mit dem, was eine Kampagne Anfang 2018 sehen konnte, und argumentiert auf ein öffentlich bekanntes Ergebnis hin: Laut den Endergebnissen des Wahlgerichts (TSJE) gewann Mario Abdo Benítez die Präsidentschaftswahl mit einem Vorsprung von 3,70 Prozentpunkten (46,43 % gegenüber 42,73 %) bei einer Wahlbeteiligung von 61,25 %. Die Vergleichseinheiten sind linearisierte Proxy-Kontakte bei festem Budget, gemessen an einer über die Departamentos (Verwaltungsbezirke) gleichmäßigen Verteilung, und für den Tracker zurückgehaltene Umfragewellen.
+Wie lässt sich mit nur acht öffentlichen Umfragen, aggregierten Zensusdaten und einem festen Budget ein landesweites Rennen verfolgen, Geld über das ganze Land verteilen und dabei ehrlich ausweisen, was tatsächlich bekannt ist? Die Rekonstruktion arbeitet mit dem, was eine Kampagne Anfang 2018 sehen konnte, und argumentiert auf ein öffentlich bekanntes Ergebnis hin: Laut dem [amtlichen statistischen Jahrbuch, Tabelle 5.3.1](https://informacionpublica.paraguay.gov.py/public/7234448-AnuarioEstadistico2018pdf-AnuarioEstadistico2018.pdf) gewann Mario Abdo Benítez mit 1.206.067 Stimmen gegenüber 1.110.464 für Efraín Alegre, ein Vorsprung von 95.603 Stimmen. Die Vergleichseinheiten sind linearisierte Proxy-Kontakte bei festem Budget, gemessen an einer über die Departamentos (Verwaltungsbezirke) gleichmäßigen Verteilung, und für den Tracker zurückgehaltene Umfragewellen.
+
+> [!note] Historisches Ergebnis und Modellanker
+> Die Endauszählung ergibt einen Vorsprung von 95.603 Stimmen: 3,88 Prozentpunkte der gültigen Kandidatenstimmen (2.463.441) oder 3,68 Prozentpunkte aller abgegebenen Stimmen (2.597.989). Serie A des Repositorys verwendet +3,70 Prozentpunkte (46,43 % gegenüber 42,73 %) als Modellanker. Diese Konvention ist bei keinem der beiden Nenner der exakte Prozentsatz der Endauszählung. Diese redaktionelle Korrektur passt das Rekonstruktionsmodell nicht neu an.
 
 ## Daten
 
@@ -112,6 +115,8 @@ Acht Umfragen sind bei Weitem zu wenige, um Prognosefähigkeit zu beanspruchen, 
 
 ## Grenzen
 
+Das [Datenregister des Repositorys](https://github.com/RafaelBraga-Kribitz/decision-analytics-reconstruction/blob/6a5d2cef1216f43572d073e8abfab57329daff85/README.md) kennzeichnet Wechselkurs, Wechselkursspanne, Kanalkosten je Einheit und Bevölkerungszahlen der Departamentos als manuell gesetzte, noch nicht verifizierte Eingaben. Der Gewinn von Modul B ist ein Solver-Vergleich unter diesen Annahmen.
+
 Was diese Arbeit nicht belegt:
 
 - **Kausaler Effekt.** Ein Vergleich mit und ohne Analytik lässt sich hier nicht verifizieren.
@@ -121,7 +126,7 @@ Was diese Arbeit nicht belegt:
 
 ## Entscheidung
 
-Jedes Modul wird nur so weit berichtet, wie seine eigene Prüfung reicht: die Segmente als Anpassung an synthetische Wahlberechtigte, der Allokationsgewinn als Solver-Vergleich auf synthetischer Reichweite und die Tracking-Kurve als Retrodiktion. Die Rekonstruktion behauptet nicht, dass Analytik den Vorsprung von 3,70 Prozentpunkten verursacht hat. Das öffentliche Ergebnis ist der Anker; zu zeigen, was das Modell stützen kann und was nicht, ist der Zweck der Arbeit.
+Jedes Modul wird nur so weit berichtet, wie seine eigene Prüfung reicht: die Segmente als Anpassung an synthetische Wahlberechtigte, der Allokationsgewinn als Solver-Vergleich auf synthetischer Reichweite und die Tracking-Kurve als Retrodiktion. Die Rekonstruktion behauptet nicht, dass Analytik den amtlichen Stimmenvorsprung verursacht hat. Das öffentliche Ergebnis ist der Anker; zu zeigen, was das Modell stützen kann und was nicht, ist der Zweck der Arbeit.
 
 Funktionsfähig: Die drei Module laufen durchgängig. Es ist eine Portfolio-Rekonstruktion, kein produktives Kampagnensystem. Das Repository enthält den Code, die Fallstudie und die Validierungsprüfungen (Gates).
 

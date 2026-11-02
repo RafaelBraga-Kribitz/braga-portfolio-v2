@@ -42,7 +42,7 @@ SITE_BASE=/braga-portfolio/ npx astro build --outDir <build> && node scripts/gat
 | `--chromium <path>` | `/opt/pw-browsers/chromium` (or `$GATES_CHROMIUM`) | browser binary; never run `playwright install` |
 | `--pending <file>` | `tests/gates/pending-routes.json`, whatever `--dir` is (a scratch build gets the verdict `dist/` gets) | routes of the site map that a later phase builds: L-01 counts a link to one instead of failing it, and a `pending` row says how many are linked. A listed route that now exists fails the run until it is removed from the file, so the list only shrinks |
 | `--no-pending` | off | treat every unbuilt route as a broken link (the fixture self-test uses it) |
-| `--draft-langs <list>` | `de` | the languages whose every page must show the draft mark (L-07); mirrors `DRAFT_LANGS` in `src/lib/i18n.ts`. Pass `''` (and empty that list) once the owner approves the German copy |
+| `--draft-langs <list>` | empty | the languages whose every page must show the draft mark (L-07); mirrors `DRAFT_LANGS` in `src/lib/i18n.ts`. German language review cleared the blanket flag; individual legal drafts remain. Fixture self-tests explicitly pass `de` |
 
 Exit status: `1` if any gate fails (or, with `--expect`, if the failures differ
 from the expectation), `2` if the folder has no pages, `0` otherwise. Seven
@@ -111,7 +111,7 @@ sr-only pattern) are not rendered text and are left out of G-01 to G-06.
 | L-04 | No inline style | a `style` attribute declares anything but custom properties, or declares them outside the places rule 1 allows: `.ev-fill` / `.ev-mid`, a chart mark (`.mark`, `.swatch`, anything inside an `<svg>`) or anything inside an `<astro-island>` (a tool). Nothing is exempt (mathematics is native MathML, so no KaTeX layout styles reach a page; 21 Oct 2026) |
 | L-05 | Head metadata | no `<html lang>`, `<title>`, `<meta name="description">`, viewport with `width=device-width`, or exactly two `theme-color` metas (light and dark media); a redirect stub needs only lang, title and viewport |
 | L-06 | Glyph inventory | the text (or an `aria-label`, `title`, `alt`) holds a symbol outside D-030: any character of Unicode class So, an `Extended_Pictographic` character or an arrow other than → ↗ ← (©, ™, ✓, ★, ⇒, an emoji). Allowed: → ↗ ← ▲ ■ □ ▣ ▤ ⊡ and the degree sign; § · + − – … are punctuation, not symbols. Code, `pre`, `kbd`, `samp`, MathML and scripts are not checked |
-| L-07 | Draft mark | a page whose `<html lang>` is a draft language (`--draft-langs`, default `de`) has no `.status[data-state="in-build"][data-draft]` (the in-build mark with the "Entwurf · Freigabe ausstehend" label; StatusMark sets `data-draft`). Skipped on other languages and on redirect stubs |
+| L-07 | Draft mark | a page whose `<html lang>` is a draft language (`--draft-langs`, default empty; self-tests pass `de`) has no `.status[data-state="in-build"][data-draft]` (the in-build mark with the "Entwurf · Freigabe ausstehend" label; StatusMark sets `data-draft`). Skipped on other languages and on redirect stubs |
 | A-01 | axe WCAG 2.1 AA | axe-core (`@axe-core/playwright`, tags `wcag2a`, `wcag2aa`, `wcag21aa`) reports any violation, at 390 and 1280 in both themes |
 
 ### Where the port departs from checks.js

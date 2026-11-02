@@ -285,27 +285,20 @@ Centering does not change which observations are high or low relative to each ot
 
 ### Beginner friendly Example \[Python\])
 
-```markdown
-import numpy as np # Center one feature column
-x = np.array([2, 4, 6], dtype=float) x_bar = np.mean(x)
-x_centered = x - x_bar print("Original x:", x)
-print("Mean x_bar:", x_bar)
+```python
+# Reference example with a numerical check.
+import numpy as np
+
+x = np.array([2, 4, 6], dtype=float)
+x_bar = np.mean(x)
+x_centered = x - x_bar
+print("Original x:", x)
+print("Mean:", x_bar)
 print("Centered x:", x_centered)
-print("Mean of centered x:", np.mean(x_centered))
+assert np.isclose(x_centered.mean(), 0)
 ```
 
-Explanation
-:
-
-- `np.mean(x)` computes the column mean.
-- `x - x_bar` subtracts that mean from every value.
-- The final mean should be zero, up to floating-point rounding.
-
-Manual check:
-
-$$
-[2,4,6]-4=[-2,0,2]
-$$
+This small example computes the formula directly for the supplied toy data. The reusable example below adds input checks and a reference calculation.
 
 ### Beginner friendly Example \[R\])
 
@@ -329,22 +322,26 @@ Explanation
 
 ### Final Professional Example \[Python\])
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass
-from typing import Sequence import numpy as np RANDOM_SEED = 42 @dataclass(frozen=True)
-class PcaPreprocessingData: data_matrix: Sequence[Sequence[float]] feature_names: Sequence[str] def validate(self) -> None: if len(self.data_matrix) == 0: raise ValueError("At least one observation is required.") if len(self.feature_names) == 0: raise ValueError("At least one feature name is required.") feature_count = len(self.feature_names) for row in self.data_matrix: if len(row) != feature_count: raise ValueError("Each data row must match the number of feature names.") def center_columns(data_matrix: np.ndarray) -> tuple[np.ndarray, np.ndarray]: column_means = np.mean(data_matrix, axis=0) centered_matrix = data_matrix - column_means return centered_matrix, column_means def covariance_matrix(centered_matrix: np.ndarray) -> np.ndarray: observation_count = centered_matrix.shape[0] if observation_count < 2: raise ValueError("At least two observations are required to compute covariance.") return (centered_matrix.T @ centered_matrix) / (observation_count - 1) def summarize_centering(data: PcaPreprocessingData) -> None: data.validate() X = np.array(data.data_matrix, dtype=float) X_centered, column_means = center_columns(X) centered_means = np.mean(X_centered, axis=0) cov_matrix = covariance_matrix(X_centered) print("PCA centering summary") print("-" * 72) print("Feature means before centering:") for feature_name, mean_value in zip(data.feature_names, column_means): print(f"{feature_name}: {mean_value:.6f}") print("-" * 72) print("Centered data matrix:") print(X_centered) print("-" * 72) print("Feature means after centering:") for feature_name, mean_value in zip(data.feature_names, centered_means): print(f"{feature_name}: {mean_value:.6f}") print("-" * 72) print("Covariance matrix of centered data:") print(cov_matrix) def main() -> None: # Customer behavior example: # Columns: annual_spend, purchase_frequency, basket_size data = PcaPreprocessingData( feature_names=["annual_spend", "purchase_frequency", "basket_size"], data_matrix=[ [1200.0, 12.0, 100.0], [1500.0, 15.0, 110.0], [1800.0, 18.0, 130.0], [1600.0, 14.0, 115.0], ], ) summarize_centering(data) if __name__ == "__main__": main()
+```python
+# Reference example with a numerical check.
+import numpy as np
+
+def center_features(data):
+    data = np.asarray(data, dtype=float)
+    if data.ndim != 2 or len(data) == 0 or not np.isfinite(data).all():
+        raise ValueError("Provide a finite, nonempty observation-by-feature matrix.")
+    means = data.mean(axis=0)
+    return data - means, means
+
+X = [[2, 10], [4, 20], [6, 30]]
+centered, means = center_features(X)
+assert np.allclose(centered.mean(axis=0), 0)
+assert np.allclose(centered + means, X)
+print("Feature means:", means)
+print("Centered data:", centered)
 ```
 
-What
-this professional example teaches:
-
-1. PCA preprocessing starts by centering each feature column.
-2. The centered matrix has column means equal to zero.
-3. The covariance matrix is then computed from centered data.
-4. This is the basis for covariance-eigenvector PCA and SVD-based PCA.
-5.
-
-In business datasets, centering separates average customer level from customer-to-customer variation.
+Centering subtracts each feature mean across observations. Store training means and reuse them for held-out data; recomputing means on a test set changes the transformation and can leak information.
 
 ## Self-check: mathematical verification
 
@@ -435,23 +432,6 @@ If the data are not centered, the second-moment structure includes location effe
 ### Verbal-to-algebra consistency
 
 The verbal explanation says centering subtracts the column mean, makes columns zero-mean, and prepares the data for covariance-based PCA. The algebra confirms all of these claims directly.
-
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$x$`, `$\bar{x}$`, `$X$`, and `$X_c$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to covariance matrix, SVD, dimensionality reduction, and feature scaling are explicitly included.
-- No placeholder text remains.
 
 ## Common Pitfalls and Edge Cases
 

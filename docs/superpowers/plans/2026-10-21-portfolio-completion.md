@@ -1,3 +1,5 @@
+> Historical record. The current pre-sharing work is tracked in [TODO-BEFORE-SHARING.md](../../../TODO-BEFORE-SHARING.md). Content now lives in `vault/`; old `src/content/` paths and resolved decisions below describe earlier states.
+
 # Portfolio Completion Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.

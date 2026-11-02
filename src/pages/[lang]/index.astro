@@ -23,10 +23,8 @@
 // Rows come from src/lib/collections.ts, which the section indexes and the
 // sitemap read too; while a collection is empty its section shows the
 // heading without a listing. Home-only copy lives here; the Work and
-// Writing claims are i18n keys shared with the indexes. German chrome and
-// copy are agent drafts (O-05): the German cover shows the in-build mark
-// with the "Entwurf · Freigabe ausstehend" label directly under its ruled
-// footer (D-011, HANDOFF item 25), as a .label line.
+// Writing claims are i18n keys shared with the indexes. Language draft
+// marks follow isDraftLang; German was reviewed on 1 Nov 2026.
 import Base from '@/layouts/Base.astro';
 import Cover from '@/components/Cover.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
@@ -114,6 +112,7 @@ const allProjects = projects.length ? t(lang, 'all-n-projects').replace('{n}', S
         ))}
       </Listing>
     )}
+    <a class="label section-forward" href={route('work', lang)}>{allProjects} <span aria-hidden="true">→</span></a>
   </section>
 
   <section class="section" id="writing">
@@ -124,13 +123,14 @@ const allProjects = projects.length ? t(lang, 'all-n-projects').replace('{n}', S
           <ListingRow code={listIndex(i)} title={e.data.title} sub={e.data.summary} meta={[writingCode(e, writing), t(lang, `kind.${e.data.kind}`), formatDate(e.data.date, lang)]} lang={lang} href={writingRoute(e.data.slug, lang)} />
         ))}
         {writing.length > 0 && (
-          <ListingRow code={ESSAYS_CODE} title={t(lang, 'all-n-essays').replace('{n}', String(writing.length))} sub={t(lang, 'essays.sub')} meta={[t(lang, 'essays.word')]} lang={lang} href={`${route('writing', lang)}#essays`} />
+          <ListingRow register code={ESSAYS_CODE} title={t(lang, 'all-n-essays').replace('{n}', String(writing.length))} sub={t(lang, 'essays.sub')} meta={[t(lang, 'essays.word')]} lang={lang} href={`${route('writing', lang)}#essays`} />
         )}
         {libraryCount > 0 && (
-          <ListingRow code={NOTES_CODE} title={t(lang, 'notes.word')} sub={library.map((a) => a.title).join(' · ')} meta={[t(lang, 'kind.library'), t(lang, 'notes.count').replace('{n}', String(libraryCount))]} lang={lang} href={route('notes', lang)} />
+          <ListingRow register code={NOTES_CODE} title={t(lang, 'notes.word')} sub={`${lang === 'de' ? 'Notizen auf Englisch · ' : ''}${library.map((a) => a.title).join(' · ')}`} meta={[t(lang, 'kind.library'), t(lang, 'notes.count').replace('{n}', String(libraryCount))]} lang={lang} href={route('notes', lang)} />
         )}
       </Listing>
     )}
+    <a class="label section-forward" href={route('writing', lang)}>{t(lang, 'all-writing')} <span aria-hidden="true">→</span></a>
   </section>
 
   <section class="section" id="tools">
@@ -140,6 +140,7 @@ const allProjects = projects.length ? t(lang, 'all-n-projects').replace('{n}', S
         <ListingRow code={row.code} title={row.title} sub={row.sub} meta={[row.domain]} status={row.status} lang={lang} trail={t(lang, 'open')} href={route(row.page, lang)} />
       ))}
     </Listing>
+    <a class="label section-forward" href={route('tools', lang)}>{t(lang, 'all-tools')} <span aria-hidden="true">→</span></a>
   </section>
 
   <section class="section" id="about">

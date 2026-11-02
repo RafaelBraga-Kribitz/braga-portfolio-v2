@@ -58,4 +58,4 @@ Open to Marketing Data Analyst roles – and to second opinions on hard measure
 > [!cta] Direct line
 > [hello@rafaelbragakribitz.com](mailto:hello@rafaelbragakribitz.com)
 
-[^1]: Paraguay elected Mario Abdo Benítez in April 2018, by a margin of 3.7 percentage points (46.43% against 42.73%, official count of the electoral tribunal, TSJE).
+[^1]: In April 2018, Mario Abdo Benítez received 1,206,067 presidential votes against Efraín Alegre’s 1,110,464, a lead of 95,603 votes. Source: [Paraguay’s official 2018 statistical yearbook, table 5.3.1](https://informacionpublica.paraguay.gov.py/public/7234448-AnuarioEstadistico2018pdf-AnuarioEstadistico2018.pdf).

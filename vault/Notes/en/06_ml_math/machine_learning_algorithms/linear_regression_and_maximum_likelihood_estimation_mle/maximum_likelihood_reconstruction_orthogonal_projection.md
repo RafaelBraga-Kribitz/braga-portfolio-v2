@@ -1,4 +1,5 @@
 ---
+seo_title: "Maximum likelihood reconstruction"
 publish: true
 date: '2026-04-16'
 tags:
@@ -411,16 +412,20 @@ The feature matrix stores the full dataset in a structure that lets one coeffici
 
 ### Beginner friendly Example \[Python\])
 
-```markdown
-import numpy as np # Design matrix with intercept + 2 features
-X = np.array([ [1, 2, 5], [1, 3, 4], [1, 4, 6]
-], dtype=float) w = np.array([10, 2, -1], dtype=float) y_hat = X @ w print("Design matrix X:")
+```python
+# Reference example with a numerical check.
+import numpy as np
+
+X = np.array([[1, 2, 5], [1, 3, 4], [1, 4, 6]], dtype=float)
+w = np.array([10, 2, -1], dtype=float)
+y_hat = X @ w
+print("Design matrix X:")
 print(X)
-print("Coefficient vector w:")
-print(w)
-print("Predictions Xw:")
-print(y_hat)
+print("Predicted values:", y_hat)
+assert np.allclose(y_hat, [9, 12, 12])
 ```
+
+This small example computes the formula directly for the supplied toy data. The reusable example below adds input checks and a reference calculation.
 
 ### Beginner friendly Example \[R\])
 
@@ -437,11 +442,27 @@ print(y_hat)
 
 ### Final Professional Example \[Python\])
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass
-from typing import Sequence import numpy as np RANDOM_SEED = 42 @dataclass(frozen=True)
-class LinearModelDesign: feature_names: Sequence[str] design_matrix: Sequence[Sequence[float]] target_vector: Sequence[float] coefficients: Sequence[float] def validate(self) -> None: if len(self.design_matrix) == 0: raise ValueError("At least one observation is required.") if len(self.design_matrix) != len(self.target_vector): raise ValueError("design_matrix and target_vector must have the same number of rows.") if len(self.feature_names) != len(self.coefficients): raise ValueError("feature_names and coefficients must have the same length.") feature_count = len(self.coefficients) for row in self.design_matrix: if len(row) != feature_count: raise ValueError("Each design-matrix row must match the number of coefficients.") def predictions(design_matrix: np.ndarray, coefficients: np.ndarray) -> np.ndarray: return design_matrix @ coefficients def residuals(target_vector: np.ndarray, predicted_vector: np.ndarray) -> np.ndarray: return target_vector - predicted_vector def summarize_design(example: LinearModelDesign) -> None: example.validate() X = np.array(example.design_matrix, dtype=float) y = np.array(example.target_vector, dtype=float) w = np.array(example.coefficients, dtype=float) y_hat = predictions(X, w) residual_vector = residuals(y, y_hat) print("Feature matrix formulation summary") print("-" * 72) print("Feature names:") print(list(example.feature_names)) print("-" * 72) print("Design matrix X:") print(X) print("-" * 72) print("Target vector y:") print(y) print("Coefficient vector w:") print(w) print("-" * 72) print("Predictions Xw:") print(y_hat) print("Residuals y - Xw:") print(residual_vector) def main() -> None: # Demand-model style example: # Features: intercept, price, promotion_flag example = LinearModelDesign( feature_names=["intercept", "price", "promotion_flag"], design_matrix=[ [1.0, 10.0, 0.0], [1.0, 9.5, 1.0], [1.0, 11.0, 0.0], [1.0, 10.5, 1.0], ], target_vector=[120.0, 145.0, 112.0, 138.0], coefficients=[200.0, -8.0, 18.0], ) summarize_design(example) if __name__ == "__main__": main()
+```python
+# Reference example with a numerical check.
+import numpy as np
+
+X = np.array([[1, 2, 5], [1, 3, 4], [1, 4, 6]], dtype=float)
+w = np.array([10, 2, -1], dtype=float)
+y_hat = X @ w
+assert np.allclose(y_hat, [9, 12, 12])
+print("Design matrix:", X)
+print("Linear predictions:", y_hat)
+
+# With Gaussian observation noise, least squares gives the MLE fitted values.
+y = np.array([9, 11, 13], dtype=float)
+fitted_w, _, _, _ = np.linalg.lstsq(X, y, rcond=None)
+projection = X @ fitted_w
+assert np.allclose(X.T @ (y - projection), 0, atol=1e-10)
+print("Fitted coefficients:", fitted_w)
+print("Projected response:", projection)
 ```
+
+Matrix multiplication forms predictions from an intercept and two features. Least squares projects the observed response onto the design column space; the residual is orthogonal to every design column. This square full-rank toy design fits exactly.
 
 ## Self-check: mathematical verification
 
@@ -561,23 +582,6 @@ So the equivalence in structural role is correct.
 ### Verbal-to-algebra consistency
 
 The verbal explanation says rows represent observations, columns represent features, and matrix multiplication gives all predictions together. The formulas and worked example confirm exactly that.
-
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$X$`, `$\Phi$`, `$y$`, `$w$`, and `$\varepsilon$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to Normal Equations, Ridge regression, regression, and feature engineering are explicitly included.
-- No placeholder text remains.
 
 ## Common Pitfalls and Edge Cases
 

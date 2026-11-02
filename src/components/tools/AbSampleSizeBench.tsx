@@ -13,7 +13,7 @@
 // the address bar (url-state.mjs), so a scenario survives a reload and
 // can be shared.
 //
-// German strings are agent drafts awaiting the owner's approval (O-05).
+// German language reviewed on 1 Nov 2026; factual approval is separate.
 
 import { useState, useEffect, useRef } from 'preact/hooks';
 import type { ComponentChildren } from 'preact';
@@ -193,9 +193,9 @@ const T = {
     reset: 'Zurücksetzen',
     limit: 'Limit: Normalapproximation für zwei Anteile. Deckt weder sequentielles Nachschauen noch mehr als zwei Arme ab.',
     kpi: { perArm: 'Pro Arm', total: 'Gesamt', duration: 'Dauer', mde: 'Absolute MDE' } as Record<string, string>,
-    fig: 'Abb. 03-02 · Stichprobe pro Arm gegen Lift',
-    figNote: 'log-Skala · Lift 2–50 %',
-    figAlt: 'Besucher pro Arm gegen relativen Lift auf einer log-Skala, mit der Acht-Wochen-Grenze bei diesem Traffic und dem aktuellen Lift markiert.',
+    fig: 'Abb. 03-02 · Stichprobengröße pro Arm in Abhängigkeit vom Lift',
+    figNote: 'logarithmische Skala · Lift 2–50 %',
+    figAlt: 'Besucherzahl pro Arm in Abhängigkeit vom relativen Lift auf einer logarithmischen Skala; markiert sind die Acht-Wochen-Grenze bei diesem Traffic und der aktuelle Lift.',
     cap: '8-Wochen-Grenze bei diesem Traffic',
     rule: 'Regel',
   },

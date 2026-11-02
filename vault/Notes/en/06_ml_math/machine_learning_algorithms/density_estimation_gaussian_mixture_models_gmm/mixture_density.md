@@ -309,21 +309,27 @@ Explanation
 
 ### Final Professional Example \[Python\])
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass
-from typing import Sequence import math RANDOM_SEED = 42 @dataclass(frozen=True)
-class OneDimensionalGmm: mixing_weights: Sequence[float] means: Sequence[float] variances: Sequence[float] def validate(self) -> None: if len(self.mixing_weights) == 0: raise ValueError("At least one component is required.") if not ( len(self.mixing_weights) == len(self.means) == len(self.variances) ): raise ValueError("All parameter sequences must have the same length.") if any(weight < 0 for weight in self.mixing_weights): raise ValueError("Mixing weights must be non-negative.") if any(variance <= 0 for variance in self.variances): raise ValueError("Variances must be strictly positive.") total_weight = sum(self.mixing_weights) if abs(total_weight - 1.0) > 1e-9: raise ValueError("Mixing weights must sum to 1.") def gaussian_density_1d(x_value: float, mean_value: float, variance_value: float) -> float: coefficient = 1.0 / math.sqrt(2.0 * math.pi * variance_value) exponent = -((x_value - mean_value) ** 2) / (2.0 * variance_value) return coefficient * math.exp(exponent) def mixture_density_1d(model: OneDimensionalGmm, x_value: float) -> float: model.validate() density_value = 0.0 for weight, mean_value, variance_value in zip( model.mixing_weights, model.means, model.variances, ): density_value += weight * gaussian_density_1d( x_value=x_value, mean_value=mean_value, variance_value=variance_value, ) return density_value def summarize_gmm(model: OneDimensionalGmm, x_values: Sequence[float]) -> None: model.validate() print("One-dimensional GMM mixture density summary") print("-" * 72) print(f"Mixing weights: {list(model.mixing_weights)}") print(f"Means: {list(model.means)}") print(f"Variances: {list(model.variances)}") print("-" * 72) for x_value in x_values: density_value = mixture_density_1d(model, x_value) print(f"x = {x_value:.3f}, p(x) = {density_value:.6f}") def main() -> None: # Toy density-estimation example model = OneDimensionalGmm( mixing_weights=[0.7, 0.3], means=[0.0, 3.0], variances=[1.0, 0.5], ) summarize_gmm(model, x_values=[-1.0, 0.0, 1.5, 3.0, 4.0]) if __name__ == "__main__": main()
+```python
+# Reference example with a numerical check.
+import math
+
+def mixture_density(x, weights, means, deviations):
+    if not weights or not len(weights) == len(means) == len(deviations):
+        raise ValueError("Component arrays must be equally sized and nonempty.")
+    if any(w < 0 for w in weights) or not math.isclose(sum(weights), 1):
+        raise ValueError("Mixture weights must be nonnegative and sum to one.")
+    if any(s <= 0 for s in deviations):
+        raise ValueError("Standard deviations must be positive.")
+    components = [w * math.exp(-0.5 * ((x - mean) / s) ** 2) / (s * math.sqrt(2 * math.pi))
+                  for w, mean, s in zip(weights, means, deviations)]
+    return sum(components)
+
+value = mixture_density(0, [0.4, 0.6], [0, 2], [1, 1])
+assert math.isclose(value, (0.4 + 0.6 * math.exp(-2)) / math.sqrt(2 * math.pi))
+print("Mixture density at zero:", value)
 ```
 
-What
-this professional example teaches:
-
-1. A Gaussian mixture density is built component by component.
-2. Each component contributes according to both its local Gaussian value and its global mixing weight.
-3. The model can represent multiple peaks and overlapping structures.
-4.
-
-This is the probabilistic basis for soft clustering and EM-based parameter estimation.
+The density is a weighted sum of normalized Gaussian component densities. Standard deviations are positive, weights sum to one, and the result is a density rather than the probability of one exact point.
 
 ## Self-check: mathematical verification
 
@@ -428,23 +434,6 @@ The inner sum makes direct optimization difficult. This is exactly the structure
 ### Verbal-to-algebra consistency
 
 The verbal explanation says the mixture density is a weighted sum of Gaussian components, each corresponding to a latent subgroup, and that points can be softly associated with more than one component. The algebra confirms all of this directly.
-
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$p(x)$`, `$\pi_k$`, `$\mu_k$`, `$\Sigma_k$`, and `$z$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to EM, E-Step, M-Step, density estimation, clustering, and soft assignment are explicitly included.
-- No placeholder text remains.
 
 ## Common Pitfalls and Edge Cases
 

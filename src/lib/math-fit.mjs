@@ -183,9 +183,6 @@ function tokens(tex) {
   return out;
 }
 
-/** Joins pieces back into TeX. @param {{ t: string }[]} ps */
-const join = (ps) => ps.map((p) => p.t).join('').trim();
-
 /**
  * True when the TeX already lays itself out over lines: a line break (\\\\)
  * or an alignment point (&) at the top level, or a multi-line environment
@@ -198,9 +195,6 @@ function managed(tex) {
   if (ps.some((p) => p.top && (p.t === '&' || p.t === '\\\\'))) return true;
   return ps.length === 1 && /^\\begin\{(aligned|align\*?|gathered|gather\*?|split|multline\*?|alignedat|eqnarray\*?)\}/.test(ps[0].t);
 }
-
-/** Where a line may break, best first: a relation, a separator, a sign, the author's own line break in a product, a space inside \text. */
-const BREAK_KINDS = ['rel', 'sep', 'bin', 'nl', 'word'];
 
 /**
  * The formula cut at every place a line may break, at the top level only.
@@ -261,7 +255,7 @@ function fill(widths, limit) {
 /**
  * The TeX of lines of segments, in one of two layouts: `aligned` lines up
  * the relations (the first line's left side, then &= …), `stacked` sets
- * every line flush left, the continuations indented by a \quad. A product
+ * every line flush left, without adding width to continuation rows. A product
  * broken at the author's line break continues with ×.
  * @param {{ tex: string, kind: string }[]} segs @param {number[][]} lines @param {'aligned' | 'stacked'} mode
  */
@@ -274,7 +268,9 @@ function layout(segs, lines, mode) {
       const relAt = line.findIndex((i, k) => k > 0 && segs[i].kind === 'rel');
       return relAt > 0 ? `${text(line.slice(0, relAt))} &${text(line.slice(relAt))}` : `${t} &`;
     }
-    return mode === 'aligned' && segs[line[0]].kind === 'rel' ? `&${t}` : `&\\quad ${t}`;
+    // Continuations keep their own operator; added indentation can consume
+    // the last available em at the 13px font floor. Authored spacing stays in t.
+    return `&${t}`;
   });
   return `\\begin{aligned}${rows.join(' \\\\ ')}\\end{aligned}`;
 }

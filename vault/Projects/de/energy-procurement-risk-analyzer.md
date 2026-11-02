@@ -14,7 +14,7 @@ metrics:
   - { value: "50 GWh", label: "Jahresverbrauch, konstruiert" }
 stack: [ "SQL", "Python", "Azure", "Power BI", "DAX", "DuckDB", "dbt", "statsmodels", "Time series", "CI/CD" ]
 repository: https://github.com/RafaelBraga-Kribitz/energy-procurement-risk-analyzer
-translationStatus: draft
+translationStatus: approved
 publish: true
 ---
 
@@ -22,6 +22,9 @@ publish: true
 
 > [!summary] Zusammenfassung
 > Die Datenübernahme aus vier Quellen und ein in dbt modelliertes DuckDB-Warehouse sind gebaut und getestet; Ergebnisse zu den Strategien gibt es noch nicht. Empfohlen wird noch keine Strategie, und nach der projekteigenen Regel wird kein Ergebnis genannt, bevor es in der automatisch erzeugten numerischen Referenzdatei (Source of Truth) steht, die mit dem Strategiesimulator entsteht.
+
+> [!note] Stand der Grundlage · 24. Juli 2026
+> Diese Seite dokumentiert die Grundlagenphase, nicht den aktuellen Repository-Stand. Das [am 1. Nov. 2026 geprüfte Repository](https://github.com/RafaelBraga-Kribitz/energy-procurement-risk-analyzer/blob/e3e115c74f58745ce8ba4592d7c6b6ec89ef5d5e/README.md) berichtet über den ersten Lauf mit realen Daten und fertiggestellte Strategie-Engines. Deren neuere Zahlen wurden für diese Seite nicht unabhängig reproduziert.
 
 ## Fragestellung
 

@@ -340,23 +340,23 @@ Explanation
 
 ### Final Professional Example \[Python\])
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass
-from typing import Sequence RANDOM_SEED = 42 @dataclass(frozen=True)
-class SaasUnitEconomics: monthly_revenue_per_customer: float gross_margin_rate: float monthly_churn_rate: float cac: float annual_discount_rate: float def validate(self) -> None: if self.monthly_revenue_per_customer < 0: raise ValueError("monthly_revenue_per_customer must be non-negative.") if not 0 <= self.gross_margin_rate <= 1: raise ValueError("gross_margin_rate must be between 0 and 1.") if not 0 < self.monthly_churn_rate <= 1: raise ValueError("monthly_churn_rate must be between 0 and 1.") if self.cac < 0: raise ValueError("cac must be non-negative.") if self.annual_discount_rate < 0: raise ValueError("annual_discount_rate must be non-negative.") def monthly_margin(monthly_revenue_per_customer: float, gross_margin_rate: float) -> float: return monthly_revenue_per_customer * gross_margin_rate def steady_state_ltv(monthly_revenue_per_customer: float, gross_margin_rate: float, monthly_churn_rate: float) -> float: margin_value = monthly_margin(monthly_revenue_per_customer, gross_margin_rate) return margin_value / monthly_churn_rate def monthly_discount_rate_from_annual(annual_discount_rate: float) -> float: return (1 + annual_discount_rate) ** (1 / 12) - 1 def discounted_ltv( monthly_revenue_per_customer: float, gross_margin_rate: float, monthly_churn_rate: float, annual_discount_rate: float, months: int = 60,
-) -> float: if months <= 0: raise ValueError("months must be greater than 0.") margin_value = monthly_margin(monthly_revenue_per_customer, gross_margin_rate) monthly_discount_rate = monthly_discount_rate_from_annual(annual_discount_rate) ltv_value = 0.0 survival_probability = 1.0 for month in range(1, months + 1): survival_probability *= (1 - monthly_churn_rate) expected_margin = survival_probability * margin_value discount_factor = (1 + monthly_discount_rate) ** month ltv_value += expected_margin / discount_factor return ltv_value def ltv_cac_ratio(ltv_value: float, cac: float) -> float: if cac == 0: raise ValueError("cac must be non-zero for the ratio.") return ltv_value / cac def summarize_unit_economics(data: SaasUnitEconomics) -> None: data.validate() margin_value = monthly_margin(data.monthly_revenue_per_customer, data.gross_margin_rate) simple_ltv = steady_state_ltv( data.monthly_revenue_per_customer, data.gross_margin_rate, data.monthly_churn_rate, ) pv_ltv = discounted_ltv( data.monthly_revenue_per_customer, data.gross_margin_rate, data.monthly_churn_rate, data.annual_discount_rate, months=60, ) print("SaaS unit economics summary") print("-" * 72) print(f"Monthly revenue per customer: {data.monthly_revenue_per_customer:.2f}") print(f"Gross margin rate: {data.gross_margin_rate:.2%}") print(f"Monthly margin per customer: {margin_value:.2f}") print(f"Monthly churn rate: {data.monthly_churn_rate:.2%}") print(f"CAC: {data.cac:.2f}") print(f"Annual discount rate: {data.annual_discount_rate:.2%}") print("-" * 72) print(f"Steady-state LTV (m / churn): {simple_ltv:.2f}") print(f"Discounted LTV (60-month horizon): {pv_ltv:.2f}") print(f"Steady-state LTV/CAC: {ltv_cac_ratio(simple_ltv, data.cac):.2f}") print(f"Discounted LTV/CAC: {ltv_cac_ratio(pv_ltv, data.cac):.2f}") def main() -> None: data = SaasUnitEconomics( monthly_revenue_per_customer=100.0, gross_margin_rate=0.80, monthly_churn_rate=0.04, cac=500.0, annual_discount_rate=0.10, ) summarize_unit_economics(data) if __name__ == "__main__": main()
+```python
+# Reference example with a numerical check.
+import math
+
+def lifetime_value(monthly_revenue, gross_margin, monthly_churn):
+    if monthly_revenue < 0 or not 0 <= gross_margin <= 1 or not 0 < monthly_churn <= 1:
+        raise ValueError("Require nonnegative revenue, margin in [0, 1], and churn in (0, 1].")
+    return monthly_revenue * gross_margin / monthly_churn
+
+ltv = lifetime_value(100, 0.8, 0.04)
+assert math.isclose(ltv, 2000)
+cac = 500
+print("Gross-margin LTV:", ltv)
+print("LTV/CAC:", ltv / cac)
 ```
 
-What
-this professional example teaches:
-
-1. LTV can be computed at different levels of sophistication.
-2. The steady-state formula is convenient for dashboards and fast decision support.
-3. Discounted LTV is more financially realistic when future timing matters.
-4. CAC comparison is essential for interpreting whether customer acquisition is economically attractive.
-5.
-
-Subscription analytics depend heavily on churn and margin assumptions.
+This approximation assumes constant monthly revenue, margin, and churn, with no discounting or expansion revenue. Monthly churn must match the revenue period. Zero churn does not give a finite lifetime estimate under this model.
 
 ## Self-check: mathematical verification
 
@@ -423,23 +423,6 @@ is unitless because both numerator and denominator are in currency. That makes i
 ### Verbal-to-algebra consistency
 
 The verbal explanation says LTV measures total expected customer value, that churn affects lifetime, and that discounting adjusts future value. Each of these claims matches the formulas shown.
-
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$\mathrm{LTV}$`, `$m$`, `$c$`, and `$\mathrm{CAC}$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to CAC, LTV/CAC, subscription economics, and marketing ROI are explicitly included.
-- No placeholder text remains.
 
 ## Common Pitfalls and Edge Cases
 

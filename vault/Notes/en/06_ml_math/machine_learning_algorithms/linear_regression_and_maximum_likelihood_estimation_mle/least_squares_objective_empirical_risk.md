@@ -322,23 +322,6 @@ Each squared residual is a convex function of $w$, and sums of convex functions 
 
 The verbal explanation says least squares minimizes squared residuals, penalizes large misses, yields OLS, and matches MLE under Gaussian noise. The algebra confirms all of these claims.
 
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$X_i$`, `$w$`, `$y_i$`, and `$L(w)$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to normal equations, gradient, Ridge, regression, and forecasting are explicitly included.
-- No placeholder text remains.
-
 ## Common Pitfalls and Edge Cases
 
 - **Confusing residuals with squared residuals:** The objective minimizes squared residuals, not raw residuals.

@@ -12,6 +12,7 @@
 // topic's subtopics), each level small whatever the whole is, and the
 // flat A–Z is partitioned by letter once it outgrows one page.
 
+import { letterPagesFrom } from './register.mjs';
 import type { Lang } from './i18n';
 import { tagPath, projectsOf, writingOf, notesOf, entryTags, stackNames } from './collections';
 import { workRoute, writingRoute, noteRoute, withBase } from './routes';
@@ -54,7 +55,8 @@ export interface TagCatalogue {
 }
 
 /** From how many tags the A–Z index is one page per letter instead of one page (TAGS_LETTER_PAGES_FROM overrides it, to try the paged shape on a small site). */
-export const LETTER_PAGES_FROM = Number(process.env.TAGS_LETTER_PAGES_FROM) || 300;
+// Build-only Node environment: Vite does not expose unprefixed variables through import.meta.env.
+export const LETTER_PAGES_FROM = letterPagesFrom((globalThis as typeof globalThis & { process?: { env?: Record<string, string | undefined> } }).process?.env?.TAGS_LETTER_PAGES_FROM);
 
 /** The letter an A–Z index files a name under: its first letter without accents, "#" for a digit or symbol. */
 export function letterOf(name: string): string {

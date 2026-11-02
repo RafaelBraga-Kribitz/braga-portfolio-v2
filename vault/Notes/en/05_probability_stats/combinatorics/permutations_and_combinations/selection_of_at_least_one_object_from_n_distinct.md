@@ -1,4 +1,5 @@
 ---
+seo_title: "Selecting at least one object"
 publish: true
 date: '2026-04-16'
 tags:

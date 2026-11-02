@@ -9,7 +9,7 @@ tags: [ status/functional, election-campaigns, segmentation, optimisation, bayes
 lang: en
 slug: decision-analytics-reconstruction
 metrics:
-  - { value: "+3.70 pp", label: "Verified margin, TSJE", accent: true }
+  - { value: "95,603", label: "Official vote lead", accent: true }
   - { value: "61.25%", label: "Turnout, TSJE" }
   - { value: "50,000", label: "Synthetic voters, 14 weeks" }
 stack: [ "Python", "PyMC", "Bayesian", "Optimisation", "scikit-learn", "FastAPI", "Streamlit", "MLflow", "Docker", "GCP", "CI/CD" ]
@@ -21,11 +21,14 @@ publish: true
 # Decision analytics reconstruction
 
 > [!summary] Summary
-> Three connected modules run end to end on 50,000 synthetic voters raked to the verified department-level anchors: on a USD 6 million envelope the allocator finds about 54.77% more linearised persuasion-proxy contacts than a department-uniform allocation, and the poll tracker’s 95% band caught the held-out poll in 3 of 6 tested waves. Each module is reported only as far as its own check reaches, so the gain stands as a solver comparison on synthetic reach, the tracking curve as a retrodiction, and nothing here claims that analytics caused the verified margin of 3.70 percentage points.
+> Three connected modules run end to end on 50,000 synthetic voters raked to the verified department-level anchors: on a USD 6 million envelope the allocator finds about 54.77% more linearised persuasion-proxy contacts than a department-uniform allocation, and the poll tracker’s 95% band caught the held-out poll in 3 of 6 tested waves. Each module is reported only as far as its own check reaches, so the gain stands as a solver comparison on synthetic reach, the tracking curve as a retrodiction, and nothing here claims that analytics caused the official vote lead.
 
 ## Question
 
-Given only eight public polls, census aggregates and a fixed budget, how can a campaign track a national race, allocate money across the country, and stay honest about what it actually knows? The reconstruction works from what a campaign could see in early 2018 and reasons toward a result that is public: Mario Abdo Benítez won the presidential election by 3.70 percentage points (46.43% against 42.73%) on 61.25% turnout, according to the final results of the electoral tribunal (TSJE). The units of comparison are linearised persuasion-proxy contacts on a fixed budget, measured against a department-uniform allocation, and, for the tracker, held-out poll waves.
+Given only eight public polls, census aggregates and a fixed budget, how can a campaign track a national race, allocate money across the country, and stay honest about what it actually knows? The reconstruction works from what a campaign could see in early 2018 and reasons toward a result that is public: Mario Abdo Benítez won with 1,206,067 votes against Efraín Alegre’s 1,110,464, a lead of 95,603 votes, according to [the official statistical yearbook, table 5.3.1](https://informacionpublica.paraguay.gov.py/public/7234448-AnuarioEstadistico2018pdf-AnuarioEstadistico2018.pdf). The units of comparison are linearised persuasion-proxy contacts on a fixed budget, measured against a department-uniform allocation, and, for the tracker, held-out poll waves.
+
+> [!note] Historical result and modelling anchor
+> The final count is a lead of 95,603 votes: 3.88 percentage points of valid candidate votes (2,463,441), or 3.68 points of all ballots cast (2,597,989). The repository’s Series A uses +3.70 points (46.43% versus 42.73%) as its modelling anchor. That convention is not the exact final-count percentage on either denominator. This editorial correction does not refit the reconstruction.
 
 ## Data
 
@@ -112,6 +115,8 @@ Eight polls are far too few to claim forecasting skill, and the project does not
 
 ## Limitations
 
+The [repository’s data register](https://github.com/RafaelBraga-Kribitz/decision-analytics-reconstruction/blob/6a5d2cef1216f43572d073e8abfab57329daff85/README.md) identifies exchange-rate, FX-spread, channel-unit-cost and department-population inputs as hand-set and not yet verified. Module B’s gain is a solver comparison under those assumptions.
+
 What this does not establish:
 
 - **A causal effect.** A with-and-without-analytics counterfactual cannot be verified here.
@@ -121,7 +126,7 @@ What this does not establish:
 
 ## Decision
 
-Report each module only as far as its own check reaches: the segments as a fit to synthetic voters, the allocation gain as a solver comparison on synthetic reach, and the tracking curve as a retrodiction. The reconstruction does not claim that analytics caused the 3.70-point margin. The public result is the anchor; showing what the model can and cannot support is the point of the work.
+Report each module only as far as its own check reaches: the segments as a fit to synthetic voters, the allocation gain as a solver comparison on synthetic reach, and the tracking curve as a retrodiction. The reconstruction does not claim that analytics caused the official vote lead. The public result is the anchor; showing what the model can and cannot support is the point of the work.
 
 Functional: the three modules run end to end. It is a portfolio reconstruction, not a production campaign system. The repository holds the code, the case study and the validation gates.
 

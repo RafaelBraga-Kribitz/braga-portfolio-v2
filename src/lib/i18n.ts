@@ -1,7 +1,6 @@
-// Chrome strings, EN and DE. The German strings are agent drafts awaiting
-// the owner's approval (HANDOFF O-05); every DE page carries the
-// "Entwurf · Freigabe ausstehend" mark until then. t() throws on a
-// missing key, so a typo fails the build instead of rendering a blank.
+// Chrome strings, EN and DE. German language and translation parity were
+// adversarially reviewed on 1 Nov 2026. Legal, factual and publication
+// approval remain separate. t() throws on a missing key.
 
 import type { Lang } from './site';
 import { date } from './format.mjs';
@@ -11,13 +10,10 @@ export type { Lang } from './site';
 export const STATUSES = ['complete', 'functional', 'under-revision', 'in-build', 'archived'] as const;
 export type StatusState = (typeof STATUSES)[number];
 
-/**
- * Languages whose chrome is an agent draft awaiting the owner's approval
- * (HANDOFF O-05, D-011): every page in one of them shows the in-build mark
- * with the `draft` label. Empty the list when the owner approves; gate
- * L-07 (scripts/gates/checks.mjs, `--draft-langs`) checks the same set.
+/** Languages awaiting language review. Per-document drafts remain independent.
+ * L-07 (`--draft-langs`) mirrors this list; explicit fixture runs test drafts.
  */
-export const DRAFT_LANGS: readonly Lang[] = ['de'];
+export const DRAFT_LANGS: readonly Lang[] = [];
 export const isDraftLang = (lang: Lang): boolean => DRAFT_LANGS.includes(lang);
 
 const en = {
@@ -124,6 +120,9 @@ const en = {
   contents: 'Contents',
   source: 'Source',
   'doc.end': '§ END',
+  'writing.older': 'Older',
+  'writing.newer': 'Newer',
+  'translation.unavailable': 'English only · German home',
   'back-to-index': 'Back to the index',
   'to-index': 'Index',
   published: 'Published',
@@ -274,6 +273,9 @@ const de: Record<ChromeKey, string> = {
   contents: 'Inhalt',
   source: 'Quelle',
   'doc.end': '§ ENDE',
+  'writing.older': 'Älter',
+  'writing.newer': 'Neuer',
+  'translation.unavailable': 'Nur auf Deutsch · Englische Startseite',
   'back-to-index': 'Zurück zum Index',
   'to-index': 'Zum Index',
   published: 'Veröffentlicht',
@@ -287,7 +289,7 @@ const de: Record<ChromeKey, string> = {
   'tags.title': 'Tags',
   'tags.claim': 'Alles mit dem Tag {tag}.',
   'tags.index-claim': 'Jedes Tag, nach Art.',
-  'tags.index-prose': '{n} Tags über {m} Einträge. Die Bibliothek bereichsweise durchsehen, ein Tag oder einen Titel suchen oder das A–Z lesen.',
+  'tags.index-prose': '{n} Tags über {m} Einträge. Die Bibliothek bereichsweise durchsehen, nach einem Tag oder Titel suchen oder das A–Z lesen.',
   'tags.prose': 'Projekte, Essays und Notizen, die neuesten zuerst.',
   'tags.prose-library': 'Notizen in Bibliotheksreihenfolge.',
   'tags.count': '{n} Einträge',
@@ -322,7 +324,7 @@ const de: Record<ChromeKey, string> = {
   'keys.home': 'Startseite',
   'keys.doors': 'Arbeit, Schreiben, Werkzeuge, Über',
   'keys.sections': 'Nächster / vorheriger Abschnitt dieser Seite',
-  'keys.docs': 'Nächstes / vorheriges Projekt oder Essay',
+  'keys.docs': 'Nächstes / vorheriges Projekt bzw. nächster / vorheriger Essay',
   'keys.up': 'Eine Ebene höher',
   'keys.lang': 'English',
   'keys.theme': 'Hell- oder Dunkelmodus',

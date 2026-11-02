@@ -1,5 +1,7 @@
 ---
 publish: true
+aliases:
+- unemployment_rate_delta_ue
 date: '2026-04-16'
 tags:
 - economics-business
@@ -258,21 +260,24 @@ Explanation
 
 ### Final Professional Example \[Python\])
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass
-from typing import Sequence RANDOM_SEED = 42 @dataclass(frozen=True)
-class LaborMarketPeriod: period: str employed: int unemployed: int def validate(self) -> None: if self.employed < 0: raise ValueError("employed must be non-negative.") if self.unemployed < 0: raise ValueError("unemployed must be non-negative.") def labor_force(employed: int, unemployed: int) -> int: if employed < 0 or unemployed < 0: raise ValueError("Counts must be non-negative.") return employed + unemployed def unemployment_rate(employed: int, unemployed: int) -> float: lf = labor_force(employed, unemployed) if lf == 0: raise ValueError("Labor force must be greater than 0.") return (unemployed / lf) * 100 def summarize_labor_market(periods: Sequence[LaborMarketPeriod]) -> None: if len(periods) == 0: raise ValueError("At least one period is required.") print("Labor market summary") print("-" * 72) for row in periods: row.validate() lf = labor_force(row.employed, row.unemployed) u_rate = unemployment_rate(row.employed, row.unemployed) print(f"Period: {row.period}") print(f"Employed: {row.employed}") print(f"Unemployed: {row.unemployed}") print(f"Labor force: {lf}") print(f"Unemployment rate: {u_rate:.2f}%") print("-" * 72) def main() -> None: periods = [ LaborMarketPeriod(period="Q1", employed=920, unemployed=80), LaborMarketPeriod(period="Q2", employed=935, unemployed=65), LaborMarketPeriod(period="Q3", employed=940, unemployed=60), ] summarize_labor_market(periods) if __name__ == "__main__": main()
+```python
+# Reference example with a numerical check.
+import math
+
+def unemployment_rate(employed, unemployed):
+    if employed < 0 or unemployed < 0 or employed + unemployed == 0:
+        raise ValueError("Require nonnegative counts and a positive labor force.")
+    return unemployed / (employed + unemployed)
+
+periods = [("January", 950, 50), ("February", 960, 40)]
+rates = [unemployment_rate(employed, unemployed) for _, employed, unemployed in periods]
+assert math.isclose(rates[0], 0.05)
+for (period, _, _), rate in zip(periods, rates):
+    print(f"{period}: {100 * rate:.2f}%")
+print(f"Change: {100 * (rates[1] - rates[0]):.2f} percentage points")
 ```
 
-What
-this professional example teaches:
-
-1. The unemployment rate is built from employed and unemployed counts.
-2. Labor force is an intermediate calculation that must be explicit.
-3. The rate can be tracked across periods in macro dashboards.
-4.
-
-This is useful in policy analysis, regional labor monitoring, and business planning.
+The denominator is employed plus unemployed, excluding people outside the labor force. Rates are stored as fractions; multiplying a difference by 100 expresses the change in percentage points.
 
 ## Self-check: mathematical verification
 
@@ -355,23 +360,6 @@ Multiplying by 100 expresses the result as a percentage. So the units are consis
 
 The verbal explanation says the unemployment rate is the share of the labor force that is unemployed, not the share of the total population. Algebraically, the denominator is labor force, not population, which matches the explanation.
 
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$\mathrm{Unemployed}$`, `$\mathrm{Labor\ Force}$`, and `$\mathrm{Unemployment\ Rate}$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to labor force, participation rate, dashboards, and policy analysis are explicitly included.
-- No placeholder text remains.
-
 ## Common Pitfalls and Edge Cases
 
 - **Using total population as the denominator:** That is not the unemployment rate.
@@ -392,3 +380,7 @@ $$
 - Distinction between unemployment rate and participation rate
 - Labor market dashboard interpretation using headline unemployment
 - Generalization that denominator choice determines metric meaning
+
+## Source-note history
+
+The identical `unemployment_rate_delta_ue` note was consolidated here. Its alias and former public URL resolve to this note. The [repository history](https://github.com/RafaelBraga-Kribitz/braga-portfolio-v2/commits/main/vault/Notes/en/07_econ_business/population_and_labor_force_metrics/economic_rates/unemployment_rate_delta_ue.md) retains the source.

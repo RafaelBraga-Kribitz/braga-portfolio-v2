@@ -1,0 +1,46 @@
+[
+  {
+    "requested": "http://rafaelbragakribitz.com/",
+    "final": "https://rafaelbragakribitz.com/",
+    "status": 200,
+    "bytes": 79667
+  },
+  {
+    "requested": "https://rafaelbragakribitz.com/",
+    "final": "https://rafaelbragakribitz.com/",
+    "status": 200,
+    "bytes": 79667
+  },
+  {
+    "requested": "https://www.rafaelbragakribitz.com/en/",
+    "final": "https://rafaelbragakribitz.com/en/",
+    "status": 200,
+    "bytes": 104294
+  },
+  {
+    "requested": "https://rafaelbraga-kribitz.github.io/braga-portfolio-v2/en/work/",
+    "final": "https://rafaelbragakribitz.com/en/work/",
+    "status": 200,
+    "bytes": 94480
+  },
+  {
+    "requested": "https://rafaelbragakribitz.com/en/tags/",
+    "final": "https://rafaelbragakribitz.com/en/tags/",
+    "status": 200,
+    "bytes": 165113
+  },
+  {
+    "requested": "https://rafaelbragakribitz.com/nope/",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "requested": "https://rafaelbragakribitz.com/de/does-not-exist/",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "requested": "https://rafaelbragakribitz.com/feed.xml",
+    "final": "https://rafaelbragakribitz.com/feed.xml",
+    "status": 200,
+    "bytes": 4851
+  }
+]

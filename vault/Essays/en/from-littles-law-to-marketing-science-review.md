@@ -7,7 +7,7 @@ lead: "A review of From Little’s Law to Marketing Science (MIT Press, 2015), w
 tags: [ book-review, marketing-science, measurement, customer-value, decision-analysis ]
 lang: en
 slug: from-littles-law-to-marketing-science-review
-seo_title: "From Little’s Law to Marketing Science: a review and a 2027 update"
+seo_title: "Little’s Law and marketing science: review"
 translationStatus: approved
 publish: true
 ---
@@ -110,7 +110,7 @@ The framework holds. What has changed is how its quantities can be measured, and
 
 Every metric in the chapter rests on a response function: $p(C)$, $q(C)$ and $m(C)$ in growth, the residual level and decay rate in decline, the ±20% plans in maturity. The chapter is optimistic about calibrating them (“we know quite a lot”) and mostly points to econometric work on historical data.
 
-In 2027 that is the weak point. Historical spend is set by managers who respond to the market, so a regression of sales on spend mixes the effect of marketing with the reasons it was spent. The 2027 version of the chapter would say: estimate ROIMI as a causal quantity, with geo experiments and holdouts where they are affordable, and use Bayesian marketing-mix models with priors calibrated to those experiments where they are not. Open-source tools for both (Meta’s Robyn, Google’s Meridian, PyMC-Marketing) have made this ordinary practice. Little’s 1966 adaptive control, which priced its own test markets, turns out to be the template.
+In 2027 that is the weak point. Historical spend is set by managers who respond to the market, so a regression of sales on spend mixes the effect of marketing with the reasons it was spent. The 2027 version of the chapter would say: estimate ROIMI as a causal quantity, with geo experiments and holdouts where they are affordable, and use Bayesian marketing-mix models with priors calibrated to those experiments where they are not. Open-source MMM tools include Meta’s [Robyn](https://github.com/facebookexperimental/Robyn), which uses ridge regression; Bayesian options include Google’s [Meridian](https://github.com/google/meridian) and [PyMC-Marketing](https://github.com/pymc-labs/pymc-marketing). Little’s 1966 adaptive control, which priced its own test markets, turns out to be the template.
 
 The book itself shows how far that template had travelled by 2015. Chapter 8’s morphing banners learn the response of each segment while serving it, with a Gittins-index policy that, as its authors argue, beats setting aside a fixed sample for a test. Chapter 7 estimates the long-term effect of detailing and sampling on each physician and finds that the profit-maximising dynamic policy spends 20% less than the firm did. A 2027 Chapter 3 would treat its ±20% plans the same way: not as two scenarios for a planning meeting, but as arms of a continuing experiment. And Chapter 13 adds a warning for whoever fits the models: when the noise differs between conditions, a model that assumes it is constant can manufacture effects. Uncertainty is part of the model, not its residue.
 

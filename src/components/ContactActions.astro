@@ -29,5 +29,5 @@ const { u, d } = mailParts(site.email);
 <div class:list={['mail-split', className]} data-u={u} data-d={d} data-subject={subject}>
   <span class="mail-split-face" aria-hidden="true"><span class="mail-split-addr" data-u={u} data-d={d}></span><span class="glyph">↗</span></span>
   <button type="button" class="mail-split-copy" aria-label={w.copyName} data-label={w.copy} data-copied={w.copied} data-failed={w.failed} hidden>{w.copy}</button>
-  <a class="mail-split-open" href={contactRoute(lang)} aria-label={w.openName} hidden>{w.open} <span class="glyph" aria-hidden="true">↗</span></a>
+  <a class="mail-split-open" href={contactRoute(lang)} aria-label={w.fallbackName} data-open-name={w.openName}>{w.open} <span class="glyph" aria-hidden="true">↗</span></a>
 </div>

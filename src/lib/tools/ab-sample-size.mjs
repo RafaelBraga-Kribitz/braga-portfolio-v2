@@ -115,7 +115,7 @@ export function xTicks(lang = 'en') {
 const WORDS = {
   en: {
     testable: (per, lift, days, weeks) =>
-      `Testable. ${per} visitors per arm reach a ${lift} lift in ${days}${dash('en')}run ${weeks}.`,
+      `Testable. At the selected power, plan for ${per} visitors per arm to detect an assumed ${lift} lift; estimated recruitment takes ${days}${dash('en')}run ${weeks}.`,
     notTestable: (d) =>
       `Not testable at this traffic. ${unit(d, 'days', 'en')} exceeds the eight-week ceiling; accept a larger lift or add traffic.`,
     weeks: (w) => `${w} full week${w > 1 ? 's' : ''}`,
@@ -127,11 +127,11 @@ const WORDS = {
     pp: 'pp',
   },
   de: {
-    // Entwurf · Freigabe ausstehend (O-05)
+    // German language reviewed on 1 Nov 2026.
     testable: (per, lift, days, weeks) =>
-      `Testbar. ${per} Besucher pro Arm erreichen einen Lift von ${lift} in ${days}${dash('de')}${weeks} laufen lassen.`,
+      `Testbar. Bei der gewählten Power ${per} Besucher pro Arm einplanen, um einen angenommenen Lift von ${lift} nachzuweisen; für die Rekrutierung ist mit ${days} zu rechnen${dash('de')}${weeks} laufen lassen.`,
     // the subject is nominative here ("845 Tage überschreiten"), the dative
-    // "Tagen" of `days` belongs to "in 40 Tagen"
+    // "Tagen" of `days` belongs to "mit 40 Tagen zu rechnen"
     notTestable: (d) =>
       `Bei diesem Traffic nicht testbar. ${unit(d, 'Tage', 'de')} überschreiten die Acht-Wochen-Grenze; einen größeren Lift akzeptieren oder Traffic hinzufügen.`,
     weeks: (w) => `${w} volle Woche${w > 1 ? 'n' : ''}`,

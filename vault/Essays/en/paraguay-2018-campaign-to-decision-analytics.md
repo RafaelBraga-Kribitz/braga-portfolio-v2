@@ -7,7 +7,7 @@ lead: "How an unconventional assignment in a presidential campaign shaped the wa
 tags: [ election-campaigns, decision-analytics, optimisation, measurement, uncertainty ]
 lang: en
 slug: paraguay-2018-campaign-to-decision-analytics
-seo_title: "Paraguay 2018: from campaign instinct to decision analytics"
+seo_title: "Paraguay 2018: decision analytics"
 seo_description: "What a presidential campaign in Paraguay taught me about resource allocation under uncertainty, and what a reproducible 2026 reconstruction can and cannot prove."
 translationStatus: approved
 publish: true
@@ -17,7 +17,7 @@ publish: true
 
 In 2018 I travelled to Paraguay with enough clothes for one week. I expected a short consulting assignment: a few meetings, a diagnosis of the campaign’s marketing operation and a set of recommendations. I stayed to help direct the strategy of a presidential campaign.
 
-On 22 April 2018, Mario Abdo Benítez won Paraguay’s presidential election with 1,206,067 votes against 1,110,464 for his principal opponent, Efraín Alegre: a margin of about 3.70 percentage points. I had come from outside professional politics, with a background in data-driven marketing, audience analysis and growth strategy.
+On 22 April 2018, Mario Abdo Benítez won Paraguay’s presidential election with 1,206,067 votes against 1,110,464 for his principal opponent, Efraín Alegre: a lead of 95,603 votes. I had come from outside professional politics, with a background in data-driven marketing, audience analysis and growth strategy.
 
 The assignment was one of the most demanding of my career. It also exposed a distinction that has shaped my work since: **using data to justify a decision is not the same as using data to make a better decision.** The first is easy. The second requires understanding the problem, naming the available choices, estimating their consequences and accepting uncertainty.
 
@@ -118,13 +118,13 @@ During the 2018 campaign, my work rested on segmentation, operational feedback, 
 On 22 April 2018, Mario Abdo Benítez won the presidency.
 
 > [!bars] Fig. 1 · Verified result
-> Abdo won by 95,603 votes, about 3.70 percentage points.
-> - Abdo — 46.43
-> - Alegre — 42.73
+> Abdo won by 95,603 votes, or 3.88 percentage points of valid candidate votes.
+> - Abdo — 48.96
+> - Alegre — 45.08
 >
 > scale: 0–50 · unit: %
-> caption: Preference share of Mario Abdo Benítez and Efraín Alegre, 22 April 2018 (1,206,067 and 1,110,464 votes); scale 0–50%. An outcome comparison, not evidence of any campaign activity’s incremental effect.
-> source: TSJE final returns, Series A, as recorded in the reconstruction’s numeric source of truth.
+> caption: Share of 2,463,441 valid candidate votes for Mario Abdo Benítez and Efraín Alegre, 22 April 2018 (1,206,067 and 1,110,464 votes); scale 0–50%. An outcome comparison, not evidence of any campaign activity’s incremental effect.
+> source: [Official statistical yearbook 2018, table 5.3.1](https://informacionpublica.paraguay.gov.py/public/7234448-AnuarioEstadistico2018pdf-AnuarioEstadistico2018.pdf). Valid candidate votes exclude blank and null ballots.
 
 National turnout was 61.25%. It was a narrow victory, given the Colorado Party’s historical dominance and its divisions before the general election. The result was real. My part in the campaign was real, and so were the operational work, the difficult decisions and the pressure.
 
@@ -142,11 +142,11 @@ Even a sequence of improving polls would not establish causality: a rise in supp
 > - 6 Apr — 26.3
 > - 10 Apr — 24.3
 > - 18 Apr — −4.5
-> - Result — 3.7
+> - Model baseline — 3.7
 >
-> scale: −40–40 · unit: pp · centre: yes · accent: Result
-> caption: Abdo’s margin over Alegre in percentage points, by publication date, as the direct difference of the reported shares (no adjustment for undecided voters or house effects); scale −40 to +40. Each poll is one publication by a different firm with its own methods; they are not samples from one tracking panel. Outlets in date order: ABC Color, ABC Color, La Nación, Última Hora, La Nación, ABC Color, Última Hora, Radio Ñandutí. The election result of 22 April is shown for reference.
-> source: the eight tracking rows of the reconstruction’s poll fixture (polls_raw_fixture.csv); result from TSJE, Series A.
+> scale: −40–40 · unit: pp · centre: yes · accent: Model baseline
+> caption: Abdo’s margin over Alegre in percentage points, by publication date, as the direct difference of the reported shares (no adjustment for undecided voters or house effects); scale −40 to +40. Each poll is one publication by a different firm with its own methods; they are not samples from one tracking panel. Outlets in date order: ABC Color, ABC Color, La Nación, Última Hora, La Nación, ABC Color, Última Hora, Radio Ñandutí. The repository’s Series A modelling anchor (+3.70 points) is shown for reference; it is not the exact final-count margin on either official denominator. The historical result is reported separately in Fig. 1.
+> source: the eight tracking rows of the reconstruction’s poll fixture (polls_raw_fixture.csv); model baseline from the repository’s Series A, not an independently recomputed final-result percentage.
 
 Two published polls in March and April put Alegre ahead; others reported Abdo leads above 30 points. In that environment, treating any single poll as a precise measurement could lead to a poor allocation. Election observers also documented serious limits to the reliability of pre-election polling, and not only statistical noise: fieldwork, transparency, sampling and institutional incentives all changed how a poll should be read.
 

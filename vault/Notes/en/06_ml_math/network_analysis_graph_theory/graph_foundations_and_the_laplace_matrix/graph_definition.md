@@ -249,7 +249,11 @@ $$
 So the graph is:
 
 $$
-G=(V,E)=\left(\{A,B,C\},\bigl\{\{A,B\},\{B,C\}\bigr\}\right)
+\begin{aligned}
+V &= \{A,B,C\} \\
+E &= \{\{A,B\},\{B,C\}\} \\
+G &= (V,E)
+\end{aligned}
 $$
 
 ### Step 1, identify the vertices The node set is
@@ -344,21 +348,27 @@ Explanation
 
 ### Final Professional Example \[Python\])
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass
-from typing import Hashable, Iterable RANDOM_SEED = 42 @dataclass(frozen=True)
-class Graph: vertices: tuple[Hashable, ...] edges: tuple[tuple[Hashable, Hashable], ...] is_directed: bool is_weighted: bool = False def validate(self) -> None: vertex_set = set(self.vertices) if len(vertex_set) != len(self.vertices): raise ValueError("Vertices must be unique.") for edge in self.edges: if len(edge) != 2: raise ValueError("Each edge must connect exactly two vertices.") start_vertex, end_vertex = edge if start_vertex not in vertex_set or end_vertex not in vertex_set: raise ValueError("Every edge must reference existing vertices.") def degree_counts(graph: Graph) -> dict[Hashable, int]: graph.validate() counts = {vertex: 0 for vertex in graph.vertices} if graph.is_directed: for start_vertex, end_vertex in graph.edges: counts[start_vertex] += 1 counts[end_vertex] += 1 else: for start_vertex, end_vertex in graph.edges: counts[start_vertex] += 1 counts[end_vertex] += 1 return counts def summarize_graph(graph: Graph) -> None: graph.validate() print("Graph summary") print("-" * 60) print(f"Vertices: {graph.vertices}") print(f"Edges: {graph.edges}") print(f"Directed: {graph.is_directed}") print(f"Weighted: {graph.is_weighted}") print(f"|V| = {len(graph.vertices)}") print(f"|E| = {len(graph.edges)}") print(f"Degree-style counts: {degree_counts(graph)}") def main() -> None: # Recommendation-style toy graph: # Nodes could represent users or products, edges could represent interactions. graph = Graph( vertices=("user_1", "user_2", "item_7", "item_9"), edges=( ("user_1", "item_7"), ("user_1", "item_9"), ("user_2", "item_7"), ), is_directed=False, is_weighted=False, ) summarize_graph(graph) if __name__ == "__main__": main()
+```python
+# Reference example with a numerical check.
+vertices = ("A", "B", "C", "D")
+edges = (("A", "B"), ("B", "C"))
+
+def adjacency_list(vertices, edges):
+    adjacency = {vertex: set() for vertex in vertices}
+    for u, v in edges:
+        if u not in adjacency or v not in adjacency or u == v:
+            raise ValueError("A simple graph needs known, distinct endpoints.")
+        adjacency[u].add(v)
+        adjacency[v].add(u)
+    return adjacency
+
+adjacency = adjacency_list(vertices, edges)
+assert adjacency["B"] == {"A", "C"}
+assert adjacency["D"] == set()
+print(adjacency)
 ```
 
-What
-this professional example teaches:
-
-1. A graph can be encoded directly as a set of vertices and a set of edges.
-2. Validation matters, because edges must reference valid vertices.
-3. The same structure supports social graphs, recommendation graphs, and graph-ML inputs.
-4.
-
-Once the graph is defined, later concepts such as adjacency matrix and degree are straightforward to build.
+This undirected simple graph uses sets to avoid parallel edges and includes isolated vertices. Each edge appears in both endpoint adjacency sets.
 
 ## Self-check: mathematical verification
 
@@ -438,23 +448,6 @@ This matches the usual cardinality interpretation from set theory.
 ### Verbal-to-algebra consistency
 
 The verbal explanation says a graph is a set of nodes plus a set of relationships. Algebraically, the ordered pair $(V,E)$ expresses exactly that. The discussion of directed, undirected, weighted, and unweighted graphs is also consistent with the standard notation.
-
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$G$`, `$V$`, `$E$`, and `$|V|$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to adjacency matrix, degree, social networks, recommendation, and graph ML are explicitly included.
-- No placeholder text remains.
 
 ## Common Pitfalls and Edge Cases
 

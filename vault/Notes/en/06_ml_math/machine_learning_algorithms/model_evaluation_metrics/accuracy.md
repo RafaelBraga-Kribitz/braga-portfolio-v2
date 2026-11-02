@@ -234,24 +234,24 @@ So Accuracy is $82%$.
 
 ### Final Professional Example \[Python\])
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass
-from typing import Iterable RANDOM_SEED = 42 @dataclass(frozen=True)
-class ConfusionMatrix: tp: int tn: int fp: int fn: int def total(self) -> int: return self.tp + self.tn + self.fp + self.fn def correct(self) -> int: return self.tp + self.tn def accuracy_score_from_confusion_matrix(conf_matrix: ConfusionMatrix) -> float: total_count = conf_matrix.total() if total_count <= 0: raise ValueError("Total number of predictions must be greater than 0.") return conf_matrix.correct() / total_count def precision_score_from_confusion_matrix(conf_matrix: ConfusionMatrix) -> float: predicted_positive_count = conf_matrix.tp + conf_matrix.fp if predicted_positive_count == 0: return 0.0 return conf_matrix.tp / predicted_positive_count def recall_score_from_confusion_matrix(conf_matrix: ConfusionMatrix) -> float: actual_positive_count = conf_matrix.tp + conf_matrix.fn if actual_positive_count == 0: return 0.0 return conf_matrix.tp / actual_positive_count def f1_score_from_confusion_matrix(conf_matrix: ConfusionMatrix) -> float: precision_value = precision_score_from_confusion_matrix(conf_matrix) recall_value = recall_score_from_confusion_matrix(conf_matrix) if precision_value + recall_value == 0: return 0.0 return 2 * precision_value * recall_value / (precision_value + recall_value) def summarize_model(label: str, conf_matrix: ConfusionMatrix) -> None: accuracy_value = accuracy_score_from_confusion_matrix(conf_matrix) precision_value = precision_score_from_confusion_matrix(conf_matrix) recall_value = recall_score_from_confusion_matrix(conf_matrix) f1_value = f1_score_from_confusion_matrix(conf_matrix) print(f"Model: {label}") print(f"TP={conf_matrix.tp}, TN={conf_matrix.tn}, FP={conf_matrix.fp}, FN={conf_matrix.fn}") print(f"Total={conf_matrix.total()}, Correct={conf_matrix.correct()}") print(f"Accuracy={accuracy_value:.4f}") print(f"Precision={precision_value:.4f}") print(f"Recall={recall_value:.4f}") print(f"F1={f1_value:.4f}") print("-" * 40) def main() -> None: # Marketing retention example: # Only a minority of customers actually churn, so class imbalance matters. majority_baseline = ConfusionMatrix(tp=0, tn=920, fp=0, fn=80) targeted_model = ConfusionMatrix(tp=42, tn=870, fp=50, fn=38) summarize_model("Majority Baseline", majority_baseline) summarize_model("Targeted Model", targeted_model) if __name__ == "__main__": main()
+```python
+# Reference example with a numerical check.
+import math
+
+def score(tp, tn, fp, fn):
+    if any(value < 0 for value in (tp, tn, fp, fn)):
+        raise ValueError("Confusion-matrix counts cannot be negative.")
+    denominator = tp + tn + fp + fn
+    if denominator == 0:
+        raise ValueError("This metric is undefined for a zero denominator.")
+    return (tp + tn) / denominator
+
+value = score(tp=80, tn=90, fp=20, fn=10)
+assert math.isclose(value, 0.85)
+print("Accuracy:", value)
 ```
 
-What
-this professional example teaches: 1. `ConfusionMatrix` stores the four counts explicitly.
-2. `accuracy_score_from_confusion_matrix()` computes the canonical formula safely.
-3. Precision, Recall, and F1 are added because Accuracy alone is incomplete in imbalanced settings.
-4. The `majority_baseline` may have high Accuracy simply by predicting the majority class.
-5.
-
-The `targeted_model` may have lower or similar Accuracy but much better positive-class usefulness. Plain-English interpretation of the retention example:
-
-- If churn is rare, always predicting “no churn” can look strong on Accuracy.
-- But it catches no churners, so it is operationally poor.
-- A more useful model may sacrifice some overall correctness while dramatically improving the ability to identify churners.
+The function computes accuracy from confusion-matrix counts, rejecting negative counts and an undefined zero denominator. The returned proportion can be multiplied by 100 for a percentage.
 
 ## Self-check: mathematical verification
 
@@ -330,22 +330,6 @@ These edge sanity checks are coherent.
 ### Verbal-to-algebra consistency
 
 The verbal explanation says Accuracy is “the proportion of all predictions that are correct.” Algebraically, the numerator counts correct predictions and the denominator counts all predictions. The language and the formula are aligned.
-
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table notation uses math mode such as `$TP$`, `$TN$`, `$FP$`, `$FN$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- No placeholder text remains.
 
 ## Common Pitfalls and Edge Cases
 

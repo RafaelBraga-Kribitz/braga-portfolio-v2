@@ -303,26 +303,23 @@ So Model B is preferred.
 
 ### Final Professional Example \[Python\])
 
-```markdown
-from __future__ import annotations from dataclasses import dataclass
-from typing import Sequence RANDOM_SEED = 42 @dataclass(frozen=True)
-class CandidateModel: name: str parameter_count: int log_likelihood: float def aic(parameter_count: int, log_likelihood: float) -> float: if parameter_count < 0: raise ValueError("parameter_count must be non-negative.") return 2 * parameter_count - 2 * log_likelihood def aicc(parameter_count: int, log_likelihood: float, sample_size: int) -> float: if sample_size <= 0: raise ValueError("sample_size must be greater than 0.") aic_value = aic(parameter_count, log_likelihood) denominator = sample_size - parameter_count - 1 if denominator <= 0: raise ValueError("AICc is undefined when sample_size - parameter_count - 1 <= 0.") correction = (2 * parameter_count * (parameter_count + 1)) / denominator return aic_value + correction def bic(parameter_count: int, log_likelihood: float, sample_size: int) -> float: import math if sample_size <= 0: raise ValueError("sample_size must be greater than 0.") return parameter_count * math.log(sample_size) - 2 * log_likelihood def summarize_models(models: Sequence[CandidateModel], sample_size: int) -> None: if len(models) == 0: raise ValueError("At least one model is required.") scored_models = [] for model in models: aic_value = aic(model.parameter_count, model.log_likelihood) aicc_value = aicc(model.parameter_count, model.log_likelihood, sample_size) bic_value = bic(model.parameter_count, model.log_likelihood, sample_size) scored_models.append( { "name": model.name, "aic": aic_value, "aicc": aicc_value, "bic": bic_value, } ) best_aic = min(item["aic"] for item in scored_models) print(f"Sample size: {sample_size}") print("-" * 72) for item in scored_models: delta_aic = item["aic"] - best_aic print(f"Model: {item['name']}") print(f"AIC: {item['aic']:.4f}") print(f"AICc: {item['aicc']:.4f}") print(f"BIC: {item['bic']:.4f}") print(f"Delta AIC: {delta_aic:.4f}") print("-" * 72) def main() -> None: # Time-series demand forecasting example: # Competing ARIMA-like candidate models fitted by maximum likelihood. sample_size = 120 candidate_models = [ CandidateModel(name="Model 1, simpler trend model", parameter_count=4, log_likelihood=-180.5), CandidateModel(name="Model 2, trend + seasonality", parameter_count=6, log_likelihood=-175.2), CandidateModel(name="Model 3, richer seasonal structure", parameter_count=9, log_likelihood=-172.8), ] summarize_models(candidate_models, sample_size) if __name__ == "__main__": main()
+```python
+# Reference example with a numerical check.
+models = [("small", 2, -120.0), ("large", 5, -115.0)]
+
+def aic(parameter_count, log_likelihood):
+    if parameter_count < 0:
+        raise ValueError("Parameter count must be nonnegative.")
+    return 2 * parameter_count - 2 * log_likelihood
+
+scores = {name: aic(k, log_likelihood) for name, k, log_likelihood in models}
+best = min(scores, key=scores.get)
+assert scores == {"small": 244.0, "large": 240.0}
+print("AIC:", scores)
+print("Preferred candidate:", best)
 ```
 
-What
-this professional example teaches:
-
-1. AIC is computed directly from the parameter count and the maximized log-likelihood.
-2. Delta AIC helps interpret relative standing inside the candidate model set.
-3. AICc adds a small-sample correction when the sample size is not large relative to parameter count.
-4. BIC is included because it is a common alternative that penalizes complexity more heavily.
-5.
-
-In time-series and GLM workflows, model choice should consider AIC together with diagnostics and business utility. Plain-English interpretation of the forecasting example:
-
-- A more complex model may win on AIC if the likelihood improvement justifies the extra parameters.
-- But if the sample size is limited, AICc may be more reliable than plain AIC.
-- BIC may prefer a simpler model than AIC because its complexity penalty is stronger.
+Lower AIC is preferred among likelihood models fit to the same response data with comparable likelihood conventions. The penalty counts all estimated parameters; AIC is a relative comparison, not an absolute goodness-of-fit score.
 
 ## Self-check: mathematical verification
 
@@ -396,23 +393,6 @@ This matches the explanation that AIC is not an interpretable business-unit metr
 ### Verbal-to-algebra consistency
 
 The verbal explanation says AIC rewards better likelihood fit and penalizes more parameters. Algebraically, $-2\ln(\hat{L})$ decreases with better fit and $2k$ increases with complexity. The explanation and the formula are aligned.
-
-### Structural verification
-
-- Opening restatement paragraph is present.
-- All required sections are present and non-empty.
-- Block equations use `
-
-$$
-...
-$$
-
-`.
-- Symbol-table entries use math mode such as `$k$`, `$\hat{L}$`, and `$\mathrm{AIC}$`.
-- Mermaid uses `flowchart TD` and node text in `["..."]`.
-- Three code blocks are present: Python beginner, R beginner, Python professional.
-- Links to BIC, AICc, likelihood, and asymptotic out-of-sample interpretation are explicitly included.
-- No placeholder text remains.
 
 ## Common Pitfalls and Edge Cases
 

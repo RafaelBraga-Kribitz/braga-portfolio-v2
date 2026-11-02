@@ -1,4 +1,5 @@
 ---
+seo_title: "Projection onto a line"
 publish: true
 date: '2026-04-16'
 tags:
