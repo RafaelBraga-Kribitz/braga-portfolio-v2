@@ -160,9 +160,9 @@ Before committing, write down a switching value: the effect, cost or timing assu
 
 *B2B SaaS Funnel Book: One Loop* develops these arguments across the whole customer system, with worked company cases, mathematical methods, measurement designs and companion Python and SQL. The four essays adapt its reasoning; their worked examples are hypothetical.
 
-The downloads are the manuscript edition of 30 October 2026: 24 chapters, a glossary and five appendices, including the source-verification notes. The company cases in the book are invented teaching examples, and the final index follows the author’s review.
+The downloads are the alpha manuscript edition of 30 October 2026: 24 chapters, a glossary and five appendices, including the source-verification notes. This is a work in progress; the text and index will be revised. The company cases in the book are invented teaching examples.
 
-> [!download] Download the book
+> [!download] Download the alpha manuscript
 > - [[b2b-saas-funnel-book.pdf|PDF]] — 15 MB
 > - [[b2b-saas-funnel-book.epub|EPUB]] — 6 MB
 
