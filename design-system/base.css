@@ -15,9 +15,9 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 /* the sticky header's height (owner, 23 Oct 2026: the header sticks):
-   80px in one row, 101px in two rows below 768 (layout.css section 2) */
+   80px in one row; below 768, 56px + 44px rows and two 1px rules. */
 :root { --shell-h: 80px; }
-@media (max-width: 767px) { :root { --shell-h: 57px; } }
+@media (max-width: 767px) { :root { --shell-h: 102px; } }
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
