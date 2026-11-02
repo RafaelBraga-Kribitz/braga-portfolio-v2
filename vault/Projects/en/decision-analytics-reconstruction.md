@@ -5,7 +5,7 @@ date: "2026-05-07"
 summary: A three-module reconstruction. Allocation gains are proxies, not campaign effects.
 lead: "The 2018 Paraguay presidential election, reconstructed as three connected decision modules (voter segmentation, budget allocation and poll tracking) from what a campaign could see in early 2018."
 domain: Decision science
-tags: [ status/functional, election-campaigns, segmentation, optimisation, bayesian-tracking ]
+tags: [ status/complete, election-campaigns, segmentation, optimisation, bayesian-tracking ]
 lang: en
 slug: decision-analytics-reconstruction
 metrics:
@@ -128,7 +128,7 @@ What this does not establish:
 
 Report each module only as far as its own check reaches: the segments as a fit to synthetic voters, the allocation gain as a solver comparison on synthetic reach, and the tracking curve as a retrodiction. The reconstruction does not claim that analytics caused the official vote lead. The public result is the anchor; showing what the model can and cannot support is the point of the work.
 
-Functional: the three modules run end to end. It is a portfolio reconstruction, not a production campaign system. The repository holds the code, the case study and the validation gates.
+Complete: the three modules run end to end. It is a portfolio reconstruction, not a production campaign system. The repository holds the code, the case study and the validation gates.
 
 ## Build log
 

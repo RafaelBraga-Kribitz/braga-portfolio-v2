@@ -5,7 +5,7 @@ date: "2026-05-07"
 summary: Eine Rekonstruktion in drei Modulen. Allokationsgewinne sind Näherungswerte, keine Kampagneneffekte.
 lead: "Die Präsidentschaftswahl 2018 in Paraguay, rekonstruiert als drei verbundene Entscheidungsmodule (Wählersegmentierung, Budgetallokation und Umfrage-Tracking) aus dem, was eine Kampagne Anfang 2018 sehen konnte."
 domain: Entscheidungsanalytik
-tags: [ status/functional, wahlkampagnen, segmentierung, optimierung, bayessches-tracking ]
+tags: [ status/complete, wahlkampagnen, segmentierung, optimierung, bayessches-tracking ]
 lang: de
 slug: decision-analytics-reconstruction
 metrics:
@@ -128,7 +128,7 @@ Was diese Arbeit nicht belegt:
 
 Jedes Modul wird nur so weit berichtet, wie seine eigene Prüfung reicht: die Segmente als Anpassung an synthetische Wahlberechtigte, der Allokationsgewinn als Solver-Vergleich auf synthetischer Reichweite und die Tracking-Kurve als Retrodiktion. Die Rekonstruktion behauptet nicht, dass Analytik den amtlichen Stimmenvorsprung verursacht hat. Das öffentliche Ergebnis ist der Anker; zu zeigen, was das Modell stützen kann und was nicht, ist der Zweck der Arbeit.
 
-Funktionsfähig: Die drei Module laufen durchgängig. Es ist eine Portfolio-Rekonstruktion, kein produktives Kampagnensystem. Das Repository enthält den Code, die Fallstudie und die Validierungsprüfungen (Gates).
+Abgeschlossen: Die drei Module laufen durchgängig. Es ist eine Portfolio-Rekonstruktion, kein produktives Kampagnensystem. Das Repository enthält den Code, die Fallstudie und die Validierungsprüfungen (Gates).
 
 ## Entstehung
 
