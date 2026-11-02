@@ -130,14 +130,20 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
 }
 .shell-lang-other { color: var(--ink-2); padding-left: 8px; }
 /* the contact link (UX pass, 22 Oct 2026): the language link's mono, in
-   ink, with the hairline underline that marks it as a link */
+   ink, with the hairline underline that marks it as a link. The underline
+   is drawn like the current door's (.door::after), on the same line 8px
+   above the 44px box's foot, so the two rules stand level in the bar */
 .shell-contact {
+  position: relative;
   display: inline-flex; align-items: center; min-height: 44px; padding-inline: 8px; margin-right: 8px;
   font: 400 var(--t-mono-sm) / 1 var(--font-mono); letter-spacing: var(--tracking-label); text-transform: uppercase;
-  color: var(--ink); text-decoration: underline; text-decoration-thickness: 1px;
-  text-decoration-color: var(--mid); text-underline-offset: 0.3em;
+  color: var(--ink); text-decoration: none;
 }
-.shell-contact:hover { text-decoration-color: var(--ink); }
+.shell-contact::after {
+  content: ""; position: absolute; left: 8px; right: 8px; bottom: 8px;
+  height: 1px; background: var(--mid);
+}
+.shell-contact:hover::after { background: var(--ink); }
 /* theme square: half-filled on the diagonal, drawn with clip-path (no gradient) */
 .shell-theme {
   width: 44px; min-width: 44px; height: 44px; flex-shrink: 0; padding: 0; border: 0; background: transparent;
@@ -153,10 +159,10 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
 }
 
 @media (max-width: 767px) {
-  /* Contents wrappers let the top row stick relative to the document,
-     while the single navigation row stays in normal flow. */
-  .shell, .shell-bar { display: contents; }
-  .shell-top { display: flex; align-items: center; position: sticky; top: 0; z-index: 20; min-height: 56px; background: var(--surface); border-bottom: var(--hairline); }
+  /* the whole two-row header sticks, glass and hairline included (owner,
+     23 Oct 2026; restored 2 Nov 2026): .shell-top stays display: contents,
+     so the wordmark, the cluster and the door strip are one wrapping flex
+     row inside the sticky .shell, as before the .shell-top wrapper */
   .shell-bar { flex-wrap: wrap; min-height: 0; gap: 0; padding-inline: 0; }
   .shell-mark { order: 1; display: inline-flex; align-items: center; min-height: 56px; padding-inline: var(--gutter); }
   .shell-cluster { order: 2; margin-left: auto; padding-inline: calc(var(--gutter) - 8px); }

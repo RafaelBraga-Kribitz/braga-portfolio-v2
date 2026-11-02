@@ -82,8 +82,9 @@ blanket language draft mark; legal drafts retain their individual status.
 This is language clearance, not approval of career facts, rights or legal
 compliance. See `docs/audit/2026-11-02-german-ui-validation.md`.
 
-On mobile only the top header row stays sticky (57px anchor offset); the doors
-scroll away. Desktop retains its sticky row. The owner reaffirmed keeping the
+On mobile the whole two-row header stays sticky, glass and hairline included
+(101px anchor offset), as D-037 set it; a top-row-only variant (57px) shipped
+on 1 Nov and was reverted on 2 Nov at the owner's request as a regression. The owner reaffirmed keeping the
 email address hidden from HTML. Its no-JavaScript screen-reader limitation
 must be disclosed, not counted as an accessibility pass. The readiness review
 keeps the established PP unit abbreviation and the About label Über.
