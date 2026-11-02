@@ -14,7 +14,7 @@ metrics:
   - { value: "+45 %", label: "Überzurechnung durch die Plattform, Paid Search", accent: true }
 stack: [ "Python", "Power BI", "DAX", "PyMC", "Bayesian", "Jupyter", "CI/CD" ]
 repository: https://github.com/RafaelBraga-Kribitz/austrian-mmm-budget-optimizer
-translationStatus: draft
+translationStatus: approved
 publish: true
 ---
 

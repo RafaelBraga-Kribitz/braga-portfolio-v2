@@ -14,7 +14,7 @@ metrics:
   - { value: "50 GWh", label: "Jahresverbrauch, konstruiert" }
 stack: [ "SQL", "Python", "Azure", "Power BI", "DAX", "DuckDB", "dbt", "statsmodels", "Time series", "CI/CD" ]
 repository: https://github.com/RafaelBraga-Kribitz/energy-procurement-risk-analyzer
-translationStatus: draft
+translationStatus: approved
 publish: true
 ---
 

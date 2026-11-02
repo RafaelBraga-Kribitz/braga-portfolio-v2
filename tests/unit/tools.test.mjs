@@ -185,7 +185,7 @@ test('CM · the Churn default rebuilds v1\'s counts exactly and reads the verdic
   assert.equal(e.totalCost, 4400);
   assert.ok(Math.abs(e.costPerCase - 8.8) < 1e-12);
   assert.equal(e.verdict('en'), 'Errors cost €4,400 across 500 cases: 91% from the 20 churners missed, 9% from the 40 false alarms.');
-  assert.equal(e.verdict('de'), `Fehler kosten €${NBSP}4.400 über 500 Fälle: 91${NBSP}% durch 20 übersehene Abwanderer, 9${NBSP}% durch 40 Fehlalarme.`);
+  assert.equal(e.verdict('de'), `Bei 500 Fällen kosten Fehler €${NBSP}4.400: 91${NBSP}% durch 20 übersehene Abwanderer, 9${NBSP}% durch 40 Fehlalarme.`);
   const k = e.kpis('en');
   assert.deepEqual(k.map((x) => x.value), ['88.0%', '66.7%', '80.0%', '90.0%', '94.7%', '0.727', '10.0%', '20.0%', '€4,400', '€8.80']);
   assert.deepEqual(k.filter((x) => x.accent).map((x) => x.key), ['totalCost']);   // one accent per section (G-15)
@@ -210,7 +210,7 @@ test('CM · one miss and one false alarm read in the singular', () => {
   assert.deepEqual([e.tp, e.fn, e.fp, e.tn], [1, 1, 1, 97]);
   assert.equal(e.totalCost, 210);
   assert.equal(e.verdict('en'), 'Errors cost €210 across 100 cases: 95% from the 1 churner missed, 5% from the 1 false alarm.');
-  assert.equal(e.verdict('de'), `Fehler kosten €${NBSP}210 über 100 Fälle: 95${NBSP}% durch 1 übersehenen Abwanderer, 5${NBSP}% durch 1 Fehlalarm.`);
+  assert.equal(e.verdict('de'), `Bei 100 Fällen kosten Fehler €${NBSP}210: 95${NBSP}% durch 1 übersehenen Abwanderer, 5${NBSP}% durch 1 Fehlalarm.`);
 });
 
 /* Errors at a price of zero: the Churn counts (FN 20, FP 40) at €0 and €0.
@@ -227,6 +227,7 @@ test('CM · zero errors and zero denominators do not divide by zero', () => {
   assert.equal(e.totalCost, 0);
   assert.equal(e.fpShare, 0);
   assert.equal(e.verdict('en'), 'No error cost across 1,000 cases: every positive is flagged and no negative is.');
+  assert.equal(e.verdict('de'), 'Keine Fehlerkosten bei 1.000 Fällen: jeder Positive wird erkannt und kein Negativer.');
   const m = cm.metrics({ tp: 0, fp: 0, fn: 0, tn: 0 });
   assert.deepEqual(m, { accuracy: 0, precision: 0, recall: 0, specificity: 0, npv: 0, f1: 0, fpr: 0, fnr: 0 });
 });
@@ -238,7 +239,7 @@ test('CM · the two cost shares add up to 100%', () => {
   const e = cm.evaluate({ ...cm.DEFAULTS, costFP: 3, costFN: 10 });
   assert.equal(e.totalCost, 320);
   assert.equal(e.verdict('en'), 'Errors cost €320 across 500 cases: 63% from the 20 churners missed, 37% from the 40 false alarms.');
-  assert.equal(e.verdict('de'), `Fehler kosten €${NBSP}320 über 500 Fälle: 63${NBSP}% durch 20 übersehene Abwanderer, 37${NBSP}% durch 40 Fehlalarme.`);
+  assert.equal(e.verdict('de'), `Bei 500 Fällen kosten Fehler €${NBSP}320: 63${NBSP}% durch 20 übersehene Abwanderer, 37${NBSP}% durch 40 Fehlalarme.`);
 });
 
 /* No positive case: n 100 at a prevalence of 0.1 % → positives = round(0.1) = 0 ; specificity 100 % → FP 0.
@@ -248,7 +249,7 @@ test('CM · zero positives: undefined rates print a dash and the verdict says wh
   const e = cm.evaluate({ n: 100, prevalence: 0.1, sensitivity: 90, specificity: 100, costFP: 10, costFN: 200 });
   assert.deepEqual([e.positives, e.tp, e.fn, e.fp, e.tn], [0, 0, 0, 0, 100]);
   assert.equal(e.verdict('en'), 'No error cost across 100 cases, but no case is positive at this prevalence: recall and F1 are undefined.');
-  assert.equal(e.verdict('de'), 'Keine Fehlerkosten über 100 Fälle, aber bei dieser Prävalenz ist kein Fall positiv: Recall und F1 sind nicht definiert.');
+  assert.equal(e.verdict('de'), 'Keine Fehlerkosten bei 100 Fällen, aber bei dieser Prävalenz ist kein Fall positiv: Recall und F1 sind nicht definiert.');
   const v = Object.fromEntries(e.kpis('en').map((k) => [k.key, k.value]));
   assert.deepEqual([v.accuracy, v.precision, v.recall, v.specificity, v.f1, v.fnr], ['100.0%', EN_DASH, EN_DASH, '100.0%', EN_DASH, EN_DASH]);
   // with false alarms but no positives, precision is defined (0 of the flagged are positive)

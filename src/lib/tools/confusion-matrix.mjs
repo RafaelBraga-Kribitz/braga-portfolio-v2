@@ -93,7 +93,7 @@ export function cost({ fp, fn, n }, costFP, costFN) {
 
 /* ---------- words ----------
    Count phrases take the singular at 1 ("the 1 churner missed"). The
-   German draft drops the article so one strong declension serves every
+   German wording drops the article so one strong declension serves every
    count in the accusative: "durch 20 übersehene Abwanderer", "durch 1
    übersehenen Abwanderer" (all four nouns are masculine). */
 const WORDS = {
@@ -124,18 +124,18 @@ const WORDS = {
     },
   },
   de: {
-    // Entwurf · Freigabe ausstehend (O-05)
+    // German language reviewed on 1 Nov 2026.
     positive: {
       Churn: ['Abwanderer', 'Abwanderer'], Fraud: ['Betrugsfall', 'Betrugsfälle'],
       Leads: ['qualifizierten Lead', 'qualifizierte Leads'], default: ['Positiven', 'Positive'],
     },
     missed: (k, pos, one) => `${k} ${one ? 'übersehenen' : 'übersehene'} ${pos}`,
     falseAlarms: (k, one) => `${k} ${one ? 'Fehlalarm' : 'Fehlalarme'}`,
-    verdict: (c, n, s) => `Fehler kosten ${c} über ${n} Fälle: ${s.fnShare} durch ${s.missed}, ${s.fpShare} durch ${s.falseAlarms}.`,
+    verdict: (c, n, s) => `Bei ${n} Fällen kosten Fehler ${c}: ${s.fnShare} durch ${s.missed}, ${s.fpShare} durch ${s.falseAlarms}.`,
     // "für" keeps the accusative of `missed`, as "durch" does above
     free: (zero, s) => `Bei diesen Preisen fallen für ${s.missed} und ${s.falseAlarms} ${zero} an.`,
-    noErrors: (n) => `Keine Fehlerkosten über ${n} Fälle: jeder Positive wird erkannt und kein Negativer.`,
-    noPositives: (n) => `Keine Fehlerkosten über ${n} Fälle, aber bei dieser Prävalenz ist kein Fall positiv: Recall und F1 sind nicht definiert.`,
+    noErrors: (n) => `Keine Fehlerkosten bei ${n} Fällen: jeder Positive wird erkannt und kein Negativer.`,
+    noPositives: (n) => `Keine Fehlerkosten bei ${n} Fällen, aber bei dieser Prävalenz ist kein Fall positiv: Recall und F1 sind nicht definiert.`,
     perCase: 'pro Fall',
     kpis: {
       accuracy: ['Genauigkeit', '(TP + TN) / n'],

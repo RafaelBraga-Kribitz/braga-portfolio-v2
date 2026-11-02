@@ -3,7 +3,7 @@ slug: about
 lang: de
 summary: "Rafael Braga-Kribitz, Marketing Data Analyst: Hintergrund, Arbeitsweise, Kenntnisse, Lebenslauf und Kontakt."
 lead: "Marketing Data Analyst; baut die Mess- und Entscheidungssysteme hinter der Frage, wohin das Marketingbudget fließt. Das Fachwissen stammt aus selbst geführten Kampagnen, nicht nur aus ihrer Modellierung."
-translationStatus: draft
+translationStatus: approved
 publish: true
 footnotes: side
 ---

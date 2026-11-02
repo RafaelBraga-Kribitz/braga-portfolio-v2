@@ -5,8 +5,7 @@
 //
 //   tools     the two benches of BUILD-BRIEF §4 (codes 03-01, 03-02)
 //
-// German: the tool rows and the prose are agent drafts awaiting the owner's
-// approval (HANDOFF O-05).
+// German tool rows and prose language-reviewed on 1 Nov 2026.
 
 import type { Lang } from './site';
 import type { StatusState } from './i18n';

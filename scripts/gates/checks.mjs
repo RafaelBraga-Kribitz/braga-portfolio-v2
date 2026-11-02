@@ -819,7 +819,8 @@ export function staticGates(pagePath, f, ctx) {
   out.push(result('L-06', gl, 1, 'no symbol outside the D-030 inventory', '%n symbols outside the D-030 inventory'));
 
   // L-07 · draft mark: every page in a draft language (--draft-langs,
-  // DRAFT_LANGS in src/lib/i18n.ts) shows the in-build mark with the draft
+  // DRAFT_LANGS in src/lib/i18n.ts; default empty after language review)
+  // shows the in-build mark with the draft
   // label (D-011; HANDOFF item 25: drafts show their status in the page)
   const draftLangs = ctx.draftLangs || [];
   const pageLang = (f.lang || '').slice(0, 2).toLowerCase();

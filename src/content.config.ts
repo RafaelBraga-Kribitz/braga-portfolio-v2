@@ -43,7 +43,9 @@ export type ProjectKind = (typeof PROJECT_KINDS)[number];
 export const WRITING_KINDS = ['essay', 'note'] as const;
 export type WritingKind = (typeof WRITING_KINDS)[number];
 
-/** A German page stays `draft` (status mark in-build, "Entwurf · Freigabe ausstehend") until the owner approves it. */
+/** Per-document review status, independent of the blanket language flag.
+ * Linguistically reviewed nonlegal DE documents are approved; legal drafts
+ * retain their draft mark until their separate review is complete. */
 export const TRANSLATION_STATUSES = ['approved', 'draft'] as const;
 export type TranslationStatus = (typeof TRANSLATION_STATUSES)[number];
 

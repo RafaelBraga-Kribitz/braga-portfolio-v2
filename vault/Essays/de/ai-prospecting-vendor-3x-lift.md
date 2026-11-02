@@ -8,7 +8,7 @@ lead: "Ein vom Anbieter selbst verfasster Benchmark zu KI-Prospecting rechtferti
 tags: [ marketingtechnologie, messung, prospecting ]
 lang: de
 slug: ai-prospecting-vendor-3x-lift
-translationStatus: draft
+translationStatus: approved
 publish: true
 ---
 

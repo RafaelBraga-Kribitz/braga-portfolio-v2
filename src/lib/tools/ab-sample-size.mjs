@@ -127,7 +127,7 @@ const WORDS = {
     pp: 'pp',
   },
   de: {
-    // Entwurf · Freigabe ausstehend (O-05)
+    // German language reviewed on 1 Nov 2026.
     testable: (per, lift, days, weeks) =>
       `Testbar. ${per} Besucher pro Arm erreichen einen Lift von ${lift} in ${days}${dash('de')}${weeks} laufen lassen.`,
     // the subject is nominative here ("845 Tage überschreiten"), the dative

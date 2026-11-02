@@ -14,7 +14,7 @@ metrics:
   - { value: "50.000", label: "Synthetische Wahlberechtigte, 14 Wochen" }
 stack: [ "Python", "PyMC", "Bayesian", "Optimisation", "scikit-learn", "FastAPI", "Streamlit", "MLflow", "Docker", "GCP", "CI/CD" ]
 repository: https://github.com/RafaelBraga-Kribitz/decision-analytics-reconstruction
-translationStatus: draft
+translationStatus: approved
 publish: true
 ---
 
