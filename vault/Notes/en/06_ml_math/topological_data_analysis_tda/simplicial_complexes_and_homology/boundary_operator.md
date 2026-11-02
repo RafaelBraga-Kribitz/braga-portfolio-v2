@@ -23,7 +23,7 @@ $$
 \begin{aligned}
 &\partial_k [v_0,\dots,v_k] \\
 &= \sum_{i=0}^{k} (-1)^i \\
-&\quad [v_0,\dots,\hat{v_i},\dots,v_k]
+&\quad [v_0,\dots,\hat{v_i},\dots,v_k].
 \end{aligned}
 $$
 
