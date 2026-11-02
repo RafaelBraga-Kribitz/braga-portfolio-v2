@@ -8,10 +8,14 @@ tags:
 # Saddle Points in Loss Landscapes
 
 $$
-\nabla f(\boldsymbol{\theta}^*) = \mathbf{0} \quad \text{and} \quad \lambda_{\min}\big(\nabla^2 f(\boldsymbol{\theta}^*)\big) \lt 0 \lt \lambda_{\max}\big(\nabla^2 f(\boldsymbol{\theta}^*)\big)
+\begin{aligned}
+\nabla f(\boldsymbol{\theta}^*) &= \mathbf{0} \\
+\lambda_{\min}\big(\nabla^2 f(\boldsymbol{\theta}^*)\big) &\lt 0 \\
+\lambda_{\max}\big(\nabla^2 f(\boldsymbol{\theta}^*)\big) &\gt 0
+\end{aligned}
 $$
 
-, canonical example $f(x, y) = x^2 - y^2$ at the origin, with Hessian $\operatorname{diag}(2, -2)$
+All three conditions hold together. The canonical example is $f(x, y) = x^2 - y^2$ at the origin, with Hessian $\operatorname{diag}(2, -2)$
 
 ## Deep Breakdown
 

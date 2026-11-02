@@ -249,7 +249,11 @@ $$
 So the graph is:
 
 $$
-G=(V,E)=\left(\{A,B,C\},\bigl\{\{A,B\},\{B,C\}\bigr\}\right)
+\begin{aligned}
+V &= \{A,B,C\} \\
+E &= \{\{A,B\},\{B,C\}\} \\
+G &= (V,E)
+\end{aligned}
 $$
 
 ### Step 1, identify the vertices The node set is

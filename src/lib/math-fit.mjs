@@ -255,7 +255,7 @@ function fill(widths, limit) {
 /**
  * The TeX of lines of segments, in one of two layouts: `aligned` lines up
  * the relations (the first line's left side, then &= …), `stacked` sets
- * every line flush left, the continuations indented by a \quad. A product
+ * every line flush left, without adding width to continuation rows. A product
  * broken at the author's line break continues with ×.
  * @param {{ tex: string, kind: string }[]} segs @param {number[][]} lines @param {'aligned' | 'stacked'} mode
  */
@@ -268,7 +268,9 @@ function layout(segs, lines, mode) {
       const relAt = line.findIndex((i, k) => k > 0 && segs[i].kind === 'rel');
       return relAt > 0 ? `${text(line.slice(0, relAt))} &${text(line.slice(relAt))}` : `${t} &`;
     }
-    return mode === 'aligned' && segs[line[0]].kind === 'rel' ? `&${t}` : `&\\quad ${t}`;
+    // Continuations keep their own operator; added indentation can consume
+    // the last available em at the 13px font floor. Authored spacing stays in t.
+    return `&${t}`;
   });
   return `\\begin{aligned}${rows.join(' \\\\ ')}\\end{aligned}`;
 }

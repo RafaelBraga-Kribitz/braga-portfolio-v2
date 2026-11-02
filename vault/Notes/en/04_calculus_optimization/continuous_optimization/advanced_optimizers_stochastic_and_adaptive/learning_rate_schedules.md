@@ -11,15 +11,21 @@ $$
 \eta_t =
 \begin{cases}
 \eta_{\max} \, \dfrac{t}{W}, & t \lt W \\
-\eta_{\min} + \left(\eta_{\max} - \eta_{\min}\right) c_t, & W \le t \le T
+\eta_{\min} + \Delta\eta c_t, & W \le t \le T
 \end{cases}
-\qquad
-c_t = \dfrac{1 + \cos \pi p_t}{2},
-\quad
-p_t = \dfrac{t - W}{T - W}
 $$
 
-, linear warmup for $W$ steps followed by cosine annealing to step $T$; other common schedules are step decay $\eta_t = \eta_0 \gamma^{\lfloor t/s \rfloor}$ and exponential decay $\eta_t = \eta_0 e^{-kt}$
+where $0 < W < T$ and
+
+$$
+\begin{aligned}
+\Delta\eta &= \eta_{\max} - \eta_{\min} \\
+c_t &= \dfrac{1 + \cos\pi p_t}{2} \\
+p_t &= \dfrac{t - W}{T - W}
+\end{aligned}
+$$
+
+This gives linear warmup for $W$ steps followed by cosine annealing to step $T$; other common schedules are step decay $\eta_t = \eta_0 \gamma^{\lfloor t/s \rfloor}$ and exponential decay $\eta_t = \eta_0 e^{-kt}$
 
 ## Deep Breakdown
 

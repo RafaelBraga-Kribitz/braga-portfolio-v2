@@ -35,9 +35,9 @@ test('breakVariants: as written first, then fewer lines before more, aligned bef
   const v = breakVariants('a = b + c', () => 30);
   assert.equal(v[0], 'a = b + c');
   // 30em segments overflow every target: one segment a line, the
-  // relation's line aligned on it, the sign's line indented
-  assert.equal(v[1], '\\begin{aligned}a & \\\\ &= b \\\\ &\\quad + c\\end{aligned}');
-  assert.equal(v[2], '\\begin{aligned}&a \\\\ &\\quad = b \\\\ &\\quad + c\\end{aligned}');
+  // relation's line aligned on it, the sign's line flush left without added width
+  assert.equal(v[1], '\\begin{aligned}a & \\\\ &= b \\\\ &+ c\\end{aligned}');
+  assert.equal(v[2], '\\begin{aligned}&a \\\\ &= b \\\\ &+ c\\end{aligned}');
 });
 
 test('fitRanges: the least broken version that fits each column width', () => {
@@ -58,4 +58,15 @@ test('fitRanges: where nothing fits, the narrowest version stands', () => {
   assert.equal(r[1].to, Infinity);
   assert.equal(r[0], null);
   assert.equal(r[2], null);
+});
+
+
+test('generated continuation rows add no quad, while authored grouped spacing survives', () => {
+  const variants = breakVariants('a = b + c', () => 30).slice(1);
+  assert.ok(variants.length > 0);
+  assert.ok(variants.every((tex) => !tex.includes('\\quad')));
+  const authored = String.raw`\begin{aligned}a &= b \quad c \\ d &= e\end{aligned}`;
+  assert.deepEqual(breakVariants(authored, chars), [authored]);
+  const grouped = String.raw`a = \frac{x \quad y}{z} + c`;
+  assert.ok(breakVariants(grouped, () => 30).every((tex) => tex.includes(String.raw`x \quad y`)));
 });

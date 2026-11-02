@@ -7,11 +7,19 @@ tags:
 
 # Median
 
+For odd sample size $n=2m-1$, the median is
+
 $$
-\text{median}(x) = \begin{cases} x_{((n+1)/2)} & n \text{ odd} \\ \tfrac{1}{2}\left(x_{(n/2)} + x_{(n/2+1)}\right) & n \text{ even} \end{cases}
+\text{median}(x) = x_{(m)}
 $$
 
-, where $x_{(1)} \le x_{(2)} \le \dots \le x_{(n)}$ are the sorted values (order statistics)
+For even sample size $n=2m$, average the two middle values:
+
+$$
+\text{median}(x) = \frac{x_{(m)} + x_{(m+1)}}{2}
+$$
+
+Here $m$ is a positive integer: $m=(n+1)/2$ for odd $n$, and $m=n/2$ for even $n$. The values $x_{(1)} \le x_{(2)} \le \dots \le x_{(n)}$ are sorted (order statistics).
 
 ## Deep Breakdown
 
