@@ -13,8 +13,17 @@ below describe the PR #32 starting tree, not the revised tree. See
 `docs/audit/2026-11-01-sharing-readiness.md` for current evidence and remaining
 blocks. A later live HTTP check returned 200 for `/en/tags/`; the earlier claim
 that it was absent is not a verified current observation. A local fix or a 200
-response does not prove which commit was deployed. German and legal drafts are
-not approved by engineering changes. CV/facts-bank work is deferred to section 12.
+response does not prove which commit was deployed. German language review was later delegated by the owner; reviewed non-legal
+DE documents and chrome are cleared. Legal drafts remain unapproved. CV/facts-bank work is deferred to section 12.
+
+**2 Nov update:** The owner requested adversarial German proofreading and
+validation of both languages. Eight non-legal DE documents, chrome and tools
+have been reviewed; `DRAFT_LANGS = []`. Legal pages keep their document draft
+flags. Gmail delivery is confirmed; no enquiry has yet arrived, and the owner
+expects to retain correspondence. Privacy wording reflects that intended
+practice without claiming an automatic deletion schedule. The original item
+wording below is the starting inspection; completion/evidence notes supersede
+its outdated premises. CV remains last.
 
 Legend: **[Owner]** only Rafael can decide or supply the fact · **[Eng]** code or
 content change anyone can make · **[QA]** a check with a browser or a device.

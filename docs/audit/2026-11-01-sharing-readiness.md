@@ -90,3 +90,21 @@ QA rather than silently changing the owner's header layout.
 The preliminary browser gate run was stopped after later source changes made
 its build stale. It supplies no final pass/fail claim. Final verification runs
 on the completed implementation instead.
+
+## Owner steering, 1–2 November
+
+The owner delegated adversarial German proofreading and asked to validate both
+languages. Eleven German texts have been reviewed alongside EN; the UI review
+is being applied. Language clearance does not approve career facts, statutory
+disclosures, account settings or publication rights. Legal documents stay drafts.
+
+The owner confirmed Gmail receives mail and said no contact enquiries have yet
+arrived; correspondence would normally be kept, with flexibility about retention.
+Privacy copy now names the easyname-to-Gmail chain and removes the unsupported
+promise to delete after replying. The notice states purpose-limited retention;
+the owner must apply that rule in Gmail. No fixed automatic deletion schedule
+is claimed, and no mailbox setting was changed.
+
+The execution environment restarted overnight. Repository edits and commits
+survived; temporary logs did not. Final verification must be rerun and its
+results saved in the repository rather than inferred from missing logs.
