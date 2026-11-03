@@ -176,7 +176,12 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
   }
   button.door { font: 400 var(--t-mono-sm) / 1 var(--font-mono); }
   .door-code { font-size: var(--t-mono-sm); }
-  .door[aria-current="page"]::after { bottom: 0; }
+  /* below 768 the contact link and the current door stand in different
+     rows, so their rules need not share a line: both sit where the
+     contact link's text underline sat before 2 Nov 2026 (0.3em under the
+     baseline, which is 0.33em under the box's middle in this mono at
+     line-height 1), close under the word (owner, 3 Nov 2026) */
+  :is(.door[aria-current="page"], .shell-contact)::after { bottom: calc(50% - 0.63em - 1px); }
 }
 /* compact strip: every code, only the current label. German's four labels
    need 331px, so German goes compact below 360; English (277px) holds to
@@ -212,23 +217,26 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
 
 /* ---------- 3 · SITE FOOTER (Site 01 · D-013) ----------
    Place inside a .grid-container (the rule must end on the column
-   lines). Four groups on a .grid, each col-3: a .label title, 24px,
-   then the links. Below: the wordmark bar.
+   lines). Five groups on a .grid of five equal columns (owner, 3 Nov
+   2026: three or four links each, where four col-3 groups held 3 / 4 /
+   7 / 2): a .label title, 24px, then the links. The first group starts
+   and the last ends on the page grid's outer lines. Below: the wordmark bar.
      <footer class="grid-container"><div class="site-footer">
        <div class="grid">
-         <div class="col-3 site-footer-group"><div class="label">Index</div>
-           <ul class="site-footer-links"><li><a>…</a></li></ul></div> ×4
+         <nav class="site-footer-group"><p class="label">Index</p>
+           <ul class="site-footer-links"><li><a>…</a></li></ul></nav> ×5
        </div>
        <div class="site-footer-bar"><span class="site-footer-mark">BRAGA</span>
          <p class="site-footer-colophon">…<br>…</p></div>
      </div></footer> */
 .site-footer { border-top: var(--rule-open); padding-top: 48px; padding-bottom: 48px; }
+.site-footer > .grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 .site-footer-group { min-width: 0; }
 .site-footer-links,
 .site-footer-group > .label + * { margin-top: 24px; display: flex; flex-direction: column; gap: 8px; list-style: none; padding: 0; }
 .site-footer-links a,
 .site-footer-group a { font-size: var(--t-small); line-height: 1.4; color: var(--ink); text-decoration: none; gap: 6px; }   /* gap: the space before ↗ in a flex link */
-/* below 768 the four groups sit two by two: stacked, with 44px link rows,
+/* below 768 the groups sit two by two: stacked, with 44px link rows,
    the footer ran to 1,150px at 390 */
 @media (max-width: 767px) {
   .site-footer > .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 32px; }
@@ -423,6 +431,14 @@ main > .section:first-child > .section-heading:first-child { padding-top: 0; }
 .doc-split > .doc-side { min-width: 0; }
 .doc-split > .doc .doc-opener:first-child { padding-top: 0; }
 .doc-side > nav.toc { margin-top: 48px; }
+/* 600–767 (owner, 3 Nov 2026): the About page keeps the photo beside its
+   text instead of stacking it on top; the side column takes the portrait's
+   200px and the article the rest (344px at 600, a phone's measure) */
+@media (min-width: 600px) and (max-width: 767px) {
+  .grid.doc-split { grid-template-columns: minmax(0, 200px) minmax(0, 1fr); }
+  .doc-split > .doc-side { grid-column: 1; }
+  .doc-split > .doc { grid-column: 2; }
+}
 .portrait { margin: 32px 0 0; border-top: var(--rule-open); padding-top: 16px; max-width: 280px; }
 .portrait img, .portrait-empty { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; }
 /* black and white at rest; the colour returns, slowly, under the pointer

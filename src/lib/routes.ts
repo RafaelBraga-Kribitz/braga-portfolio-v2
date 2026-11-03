@@ -187,7 +187,10 @@ export function footerGroups(lang: Lang): FooterGroup[] {
   const elsewhere: FooterLink[] = [{ label: t(lang, 'link.github'), href: site.github, external: true }];
   if (site.linkedin) elsewhere.push({ label: t(lang, 'link.linkedin'), href: site.linkedin, external: true });
   if (site.kaggle) elsewhere.push({ label: t(lang, 'link.kaggle'), href: site.kaggle, external: true });
-  // order (owner, 23 Oct 2026): Site, Index, Others, Elsewhere
+  if (site.tableau) elsewhere.push({ label: t(lang, 'link.tableau'), href: site.tableau, external: true });
+  // five groups of three or four (owner, 3 Nov 2026; was four groups of
+  // 3 / 4 / 7 / 2, the third named "Others"): Site, Index, Browse, Legal,
+  // Elsewhere. Each group is named for what it holds.
   return [
     {
       title: t(lang, 'footer.site'),
@@ -195,6 +198,7 @@ export function footerGroups(lang: Lang): FooterGroup[] {
         { label: t(lang, 'link.home'), href: route('home', lang) },
         { label: t(lang, 'link.contact'), href: contactRoute(lang) },
         { label: t(lang, 'link.language'), href: route('home', other), hreflang: other, lang: other },
+        { label: t(lang, 'link.keys'), href: keysRoute(lang), keys: true },
       ],
     },
     {
@@ -202,15 +206,19 @@ export function footerGroups(lang: Lang): FooterGroup[] {
       links: doors.map((d) => ({ label: `${d.code} ${doorLabel(d, lang)}`, href: route(d.id, lang) })),
     },
     {
-      title: t(lang, 'footer.others'),
+      title: t(lang, 'footer.browse'),
       links: [
         { label: t(lang, 'link.tags'), href: route('tags', lang) },
         { label: t(lang, 'link.sitemap'), href: absolute('/sitemap.xml') },
         { label: t(lang, 'link.rss'), href: absolute('/feed.xml') },
+      ],
+    },
+    {
+      title: t(lang, 'footer.legal'),
+      links: [
         { label: t(lang, 'link.impressum'), href: route('impressum', lang) },
         { label: t(lang, 'link.privacy'), href: route('privacy', lang) },
         { label: t(lang, 'link.accessibility'), href: route('accessibility', lang) },
-        { label: t(lang, 'link.keys'), href: keysRoute(lang), keys: true },
       ],
     },
     { title: t(lang, 'footer.elsewhere'), links: elsewhere },

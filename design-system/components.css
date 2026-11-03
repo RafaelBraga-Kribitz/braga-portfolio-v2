@@ -70,6 +70,21 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
   color: var(--ink-2); letter-spacing: 0.02em;
   padding: 0 6px; border: 1px solid var(--rule-c);
 }
+/* a row with keywords (ListingRow.astro; owner, 3 Nov 2026): the title is
+   the row's link and its ::after covers the row, so the whole row still
+   opens the project; each keyword is a link to its tag archive, above
+   that cover. The box keeps its look; the link around it adds 2px of air
+   above and below, a 24px target (the doc-tags allowance of gate G-05),
+   and the line gap shrinks by the same 4px. Keyboard focus rings the row. */
+.listing-row.lr-linked { position: relative; }
+.lr-link { display: block; color: inherit; text-decoration: none; }
+.lr-link::after { content: ""; position: absolute; inset: 0; }
+.lr-link:focus-visible { outline: none; }
+.listing-row.lr-linked:has(.lr-link:focus-visible) { outline: 2px solid var(--ink); outline-offset: 2px; }
+.lr-linked .lr-keys { gap: 2px; }
+.lr-linked .lr-key { position: relative; z-index: 1; display: inline-flex; padding: 2px 0; border: 0; text-decoration: none; }
+.lr-linked .lr-key > span { padding: 0 6px; border: 1px solid var(--rule-c); transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease); }
+.lr-linked .lr-key:hover > span { color: var(--ink); border-color: var(--ink); }
 
 /* wider titles (owner, 30 Oct 2026). From 1024 a short code (01-04) takes
    one column, so the title gains one: title 3–9, meta 10–11 (discipline
@@ -92,6 +107,12 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
   .listing.lr-keys-list .lr-meta  { grid-column: 8 / span 2; }
   .listing.lr-keys-list .lr-keys  { grid-column: 10 / span 3; grid-row: 1; padding-inline-end: 24px; }
   .listing.lr-keys-list .lr-trail { grid-row: 1; }   /* shares column 12 with the keywords: keep it on the first line */
+}
+/* the head's "Discipline / status" (168px) is wider than columns 8–9 below
+   about 1280, but the gutter before the keyword column gives it room from
+   1090: there it keeps one line (owner, 3 Nov 2026) */
+@media (min-width: 1090px) {
+  .listing.lr-keys-list .listing-head .lr-meta { white-space: nowrap; }
 }
 @media (min-width: 721px) and (max-width: 1023px) {
   .listing.lr-keys-list .listing-row .lr-title { grid-row: 1 / span 2; }
@@ -157,6 +178,7 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
   .lr-trail { grid-column: 3; align-self: end; }
   .lr-trail-word { display: none; }   /* the arrow alone says it; the word would push the meta to a second line */
   .listing-row .lr-keys { grid-column: 2; flex-direction: row; flex-wrap: wrap; gap: 6px 8px; }
+  .listing-row.lr-linked .lr-keys { gap: 2px 8px; }
   .listing-row .lr-keys-line { display: contents; }   /* on the card the boxes flow as one run */
   .listing-row.lr-child .lr-title { padding-left: var(--space-3); }
 }
