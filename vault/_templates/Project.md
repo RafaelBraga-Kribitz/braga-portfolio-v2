@@ -14,10 +14,14 @@ translationStatus: approved
 
 # {{title}}
 
+## Question
+
+One sentence: the question the project answers.
+
 > [!summary] Summary
 > One paragraph: the decision, the result, the limit.
 
-## Question
+## Background
 
 ## Data
 

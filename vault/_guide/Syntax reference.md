@@ -129,11 +129,11 @@ impressum | privacy | accessibility` gives the URL (`/de/datenschutz/`,
 
 ## 3. Document order
 
-Every project and essay follows one direction:
+Every project follows one direction:
 
-**question → data → method → result → limitations → decision**
+**question → background → data → method → result → limitations → decision**
 
-One `##` section each, in that order. Limitations are stated before the
+Every essay follows the same direction without the background section (question → data → …). A project’s `## Question` is one sentence; `## Background` carries the situation, the scope and the unit of comparison. A project’s body opens with `## Question`, then the `[!summary]` callout, then `## Background`. One `##` section each, in that order. Limitations are stated before the
 decision, never after it. Section numbers (01, 02, …) are drawn by the
 stylesheet from the order of the `##` headings: never type them. Use `###` to
 `######` for subsections. The note's first `#` heading is its title (the
@@ -204,7 +204,7 @@ stays a quotation.
 > At a 4% baseline and a 10% relative lift: **39,473** visitors per arm.
 ```
 
-**summary** · the abstract directly under the opener
+**summary** · the abstract; in a project it follows the `## Question` sentence
 ```md
 > [!summary]
 > The question, the answer and the figure that carries it, in three sentences.

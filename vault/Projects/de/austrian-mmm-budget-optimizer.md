@@ -20,12 +20,16 @@ publish: true
 
 # MMM und Budget­optimierung für Österreich
 
+## Fragestellung
+
+Welche Kanäle sollten bei gleichem Mediabudget mehr Geld bekommen und welche weniger?
+
 > [!summary] Zusammenfassung
 > Das Modell wird an einer bekannten Wahrheit validiert, bevor es etwas entscheidet, und auf Metas öffentlichem Robyn-Demodatensatz bringt dasselbe Wochenbudget, nach einer Breakeven-Regel umverteilt, im Median einen zusätzlichen Deckungsbeitrag in Höhe von 15,1 % des derzeitigen Deckungsbeitrags der Medien; keine der 500 verwendeten Ziehungen aus der A-posteriori-Verteilung zeigt einen Verlust. Die Regel verschiebt Budget zu TV und Facebook, zieht es von der Außenwerbung (Out-of-Home) ab und lässt Print und Search (Suchmaschinenwerbung), deren Intervall-Untergrenzen unter dem Breakeven liegen, unverändert.
 
-## Fragestellung
+## Hintergrund
 
-Die Frage ist jene, die jedes werbetreibende Unternehmen an seinen Mediaplan stellt: Welche Kanäle haben inkrementell beigetragen, wie weit lagen die von den Plattformen ausgewiesenen Zahlen daneben, und was bringt es tatsächlich, dasselbe Budget umzuschichten? Die Vergleichseinheit ist der Deckungsbeitrag, nicht der Umsatz. Ein Kanal, dessen Return on Ad Spend (ROAS, Umsatz je eingesetztem Werbe-Euro) unter dem Breakeven-ROAS (der Gewinnschwelle) liegt, vernichtet Marge, wie hoch sein ausgewiesener Umsatz auch erscheint.
+Diese Frage stellt jedes werbetreibende Unternehmen an seinen Mediaplan. Für die Antwort sind zuerst zwei Schritte nötig: herausfinden, welche Kanäle inkrementell beigetragen haben, und messen, wie weit die von den Plattformen ausgewiesenen Zahlen danebenlagen. Die Vergleichseinheit ist der Deckungsbeitrag, nicht der Umsatz. Ein Kanal, dessen Return on Ad Spend (ROAS, Umsatz je eingesetztem Werbe-Euro) unter dem Breakeven-ROAS (der Gewinnschwelle) liegt, vernichtet Marge, wie hoch sein ausgewiesener Umsatz auch erscheint.
 
 ## Daten
 

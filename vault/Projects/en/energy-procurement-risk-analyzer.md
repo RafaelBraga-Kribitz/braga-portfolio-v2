@@ -20,15 +20,19 @@ publish: true
 
 # Energy procurement risk analyser
 
+## Question
+
+How much does the way a Styrian manufacturer buys electricity change its cost and its risk?
+
 > [!summary] Summary
 > The ingest from four sources and a DuckDB warehouse modelled in dbt are built and tested; strategy results do not exist yet. No strategy is recommended, and by the project’s own rule no result is quoted until it appears in the auto-generated numeric source-of-truth file that arrives with the strategy simulator.
 
 > [!note] Foundation snapshot · 24 July 2026
 > This page records the foundation stage, not the current repository status. The [repository inspected on 1 Nov 2026](https://github.com/RafaelBraga-Kribitz/energy-procurement-risk-analyzer/blob/e3e115c74f58745ce8ba4592d7c6b6ec89ef5d5e/README.md) reports its first real-data run and completed strategy engines. Those newer numerical results have not been independently reproduced for this page.
 
-## Question
+## Background
 
-After the 2021–2023 European energy crisis, electricity procurement became a board-level risk for Austrian industry. What did buying electricity the wrong way cost a Styrian manufacturer using 50 GWh a year in 2021–2025, and what is the P95 cost exposure for the next twelve months under each procurement strategy? The project compares four strategies on the Austrian day-ahead market (full spot, an indexed contract, a fixed annual price and a partial hedge) for one constructed 50 GWh industrial load. The unit of comparison is the energy-price cost of that one load, in euros, under each strategy: realised on the prices of 2021–2025, and as the P95 and CVaR95 of the next twelve months on resampled prices.
+After the 2021–2023 European energy crisis, electricity procurement became a board-level risk for Austrian industry. The project takes one Styrian manufacturer using 50 GWh a year and asks two things: what buying electricity the wrong way cost in 2021–2025, and what the P95 cost exposure is for the next twelve months under each procurement strategy. It compares four strategies on the Austrian day-ahead market (full spot, an indexed contract, a fixed annual price and a partial hedge) for that one constructed load. The unit of comparison is the energy-price cost of that one load, in euros, under each strategy: realised on the prices of 2021–2025, and as the P95 and CVaR95 of the next twelve months on resampled prices.
 
 ## Data
 

@@ -21,12 +21,16 @@ publish: true
 
 # TCO humanoider Roboter im Lager
 
+## Fragestellung
+
+Wann wären humanoide Roboter die günstigste Lösung für die Arbeit im Lager?
+
 > [!summary] Zusammenfassung
 > Eine Person mit drei autonomen mobilen Robotern (AMR) hat den niedrigsten Kostenbarwert über fünf Jahre, € 453.000, und gewinnt 99,8 % der ausgewerteten Ziehungen. Humanoide Roboter werden zurückgestellt, bis sich Nachfrage, Arbeitskräfteangebot oder Schichtmodell ändern.
 
-## Fragestellung
+## Hintergrund
 
-Die Frage gilt der Wirtschaftlichkeit, nicht der technischen Fähigkeit. Bei welchem Preis, welcher Nachfrage und welcher Personalausstattung würde eine Flotte humanoider Roboter das Greifen, Bewegen und Ablegen von Waren im Lager günstiger erledigen? Das Modell bewertet sieben Besetzungsszenarien, von reinen Personalteams über Hybridvarianten mit AMR bis zu rein humanoiden Flotten. Vergleichsgröße ist der Kostenbarwert über fünf Jahre bei einem Kalkulationszinssatz von 8 %.
+Es geht um die Wirtschaftlichkeit, nicht um die technische Fähigkeit. Die Arbeit ist das Greifen, Bewegen und Ablegen von Waren, und die Antwort hängt vom Preis der Roboter, von der Nachfrage und von der Personalausstattung ab. Das Modell bewertet sieben Besetzungsszenarien, von reinen Personalteams über Hybridvarianten mit AMR bis zu rein humanoiden Flotten. Vergleichsgröße ist der Kostenbarwert über fünf Jahre bei einem Kalkulationszinssatz von 8 %.
 
 ## Daten
 

@@ -52,7 +52,7 @@ Callouts (hervorgehobene Hinweisblöcke) folgen der Syntax von Obsidian: ein Zit
 
 Ein Zitatblock ohne Markierung bleibt ein Zitat. Der Autorenleitfaden über die Reihenfolge eines Dokuments, übersetzt:
 
-> Jedes Projekt und jeder Essay folgen einer Richtung: Frage → Daten → Methode → Ergebnis → Grenzen → Entscheidung.
+> Jedes Projekt folgt einer Richtung: Frage → Hintergrund → Daten → Methode → Ergebnis → Grenzen → Entscheidung. Ein Essay folgt derselben Richtung ohne den Abschnitt „Hintergrund“.
 
 ### Breit · `[!note|wide]`
 

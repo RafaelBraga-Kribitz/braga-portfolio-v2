@@ -20,15 +20,19 @@ publish: true
 
 # Risikoanalyse für die Energie­beschaffung
 
+## Fragestellung
+
+Wie stark verändert die Art des Stromeinkaufs die Kosten und das Risiko eines steirischen Produktionsbetriebs?
+
 > [!summary] Zusammenfassung
 > Die Datenübernahme aus vier Quellen und ein in dbt modelliertes DuckDB-Warehouse sind gebaut und getestet; Ergebnisse zu den Strategien gibt es noch nicht. Empfohlen wird noch keine Strategie, und nach der projekteigenen Regel wird kein Ergebnis genannt, bevor es in der automatisch erzeugten numerischen Referenzdatei (Source of Truth) steht, die mit dem Strategiesimulator entsteht.
 
 > [!note] Stand der Grundlage · 24. Juli 2026
 > Diese Seite dokumentiert die Grundlagenphase, nicht den aktuellen Repository-Stand. Das [am 1. Nov. 2026 geprüfte Repository](https://github.com/RafaelBraga-Kribitz/energy-procurement-risk-analyzer/blob/e3e115c74f58745ce8ba4592d7c6b6ec89ef5d5e/README.md) berichtet über den ersten Lauf mit realen Daten und fertiggestellte Strategie-Engines. Deren neuere Zahlen wurden für diese Seite nicht unabhängig reproduziert.
 
-## Fragestellung
+## Hintergrund
 
-Nach der europäischen Energiekrise 2021–2023 wurde die Strombeschaffung für die österreichische Industrie zu einem Risiko auf Vorstandsebene. Was kostete es einen steirischen Produktionsbetrieb mit einem Jahresverbrauch von 50 GWh, Strom in den Jahren 2021–2025 auf die falsche Weise einzukaufen, und wie hoch ist das Kostenrisiko auf P95-Niveau (95. Perzentil) für die nächsten zwölf Monate unter jeder Beschaffungsstrategie? Das Projekt vergleicht vier Strategien am österreichischen Day-Ahead-Markt (Großhandelsmarkt für Lieferungen am Folgetag), nämlich vollständigen Spotbezug, einen Indexvertrag, einen fixen Jahrespreis und eine Teilabsicherung, für eine einzige konstruierte Industrielast von 50 GWh. Die Vergleichseinheit sind die Energiepreiskosten dieser Last in Euro je Strategie: realisiert zu den Preisen von 2021–2025 sowie als P95 und CVaR95 der nächsten zwölf Monate auf Basis neu gezogener Preise.
+Nach der europäischen Energiekrise 2021–2023 wurde die Strombeschaffung für die österreichische Industrie zu einem Risiko auf Vorstandsebene. Das Projekt nimmt einen steirischen Produktionsbetrieb mit einem Jahresverbrauch von 50 GWh und fragt zweierlei: was es kostete, Strom in den Jahren 2021–2025 auf die falsche Weise einzukaufen, und wie hoch das Kostenrisiko auf P95-Niveau (95. Perzentil) für die nächsten zwölf Monate unter jeder Beschaffungsstrategie ist. Es vergleicht vier Strategien am österreichischen Day-Ahead-Markt (Großhandelsmarkt für Lieferungen am Folgetag), nämlich vollständigen Spotbezug, einen Indexvertrag, einen fixen Jahrespreis und eine Teilabsicherung, für diese eine konstruierte Industrielast. Die Vergleichseinheit sind die Energiepreiskosten dieser Last in Euro je Strategie: realisiert zu den Preisen von 2021–2025 sowie als P95 und CVaR95 der nächsten zwölf Monate auf Basis neu gezogener Preise.
 
 ## Daten
 
