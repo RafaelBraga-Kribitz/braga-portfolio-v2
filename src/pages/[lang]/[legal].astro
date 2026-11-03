@@ -1,7 +1,7 @@
 ---
 // Impressum · Privacy · Accessibility — the utility template (Templates
 // specimen s02): one stacked article.doc with the opener inside it (trail
-// "Others → Impressum" / "Sonstiges → Datenschutz", h1, lead when set,
+// "Legal → Impressum" / "Rechtliches → Datenschutz", h1, lead when set,
 // meta: the draft mark for an unapproved file and "As of <date>" /
 // "Stand <date>"), flat prose, the end bar (§ END · ← Index).
 //
@@ -42,7 +42,7 @@ const { Content, remarkPluginFrontmatter } = await render(entry);
   <article class="doc">
     <DocOpener
       lang={lang}
-      trail={[{ label: t(lang, 'footer.others') }, { label: t(lang, `link.${id}` as ChromeKey), current: true }]}
+      trail={[{ label: t(lang, 'footer.legal') }, { label: t(lang, `link.${id}` as ChromeKey), current: true }]}
       title={d.title}
       lead={d.lead}
       meta={[{ text: `${t(lang, 'as-of')} ${formatDate(d.updated, lang)}` }]}

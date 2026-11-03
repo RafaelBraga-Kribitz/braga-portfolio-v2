@@ -23,6 +23,7 @@ export interface Site {
   github: string;
   linkedin: string;
   kaggle: string;
+  tableau: string;
 }
 
 export const site: Site = {
@@ -35,5 +36,6 @@ export const site: Site = {
   url: 'https://rafaelbragakribitz.com',
   github: 'https://github.com/RafaelBraga-Kribitz',
   linkedin: 'https://www.linkedin.com/in/rafaelbragakribitz/',
-  kaggle: '',
+  kaggle: 'https://www.kaggle.com/rafaelbragakribitz',
+  tableau: 'https://public.tableau.com/app/profile/rafael.braga.kribitz/vizzes',
 };

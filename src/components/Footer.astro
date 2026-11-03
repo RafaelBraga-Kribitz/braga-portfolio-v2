@@ -1,5 +1,6 @@
 ---
-// Site footer, Site specimen s01: four link groups (D-013) over a
+// Site footer, Site specimen s01: five link groups (D-013; five since
+// 3 Nov 2026, owner) over a
 // wordmark bar. The bar's right block is the colophon: name / location ·
 // EUR. The specimen's third line (status · year) was dropped by the owner,
 // 24 Oct 2026. Casing is the stylesheet's (the colophon and
@@ -22,7 +23,7 @@ const phrases = (line: string) => line.replace(/ · /g, '\u00a0·\u00a0').split(
   <div class="site-footer">
     <div class="grid">
       {groups.map((g) => (
-        <nav class="col-3 site-footer-group" aria-label={g.title}>
+        <nav class="site-footer-group" aria-label={g.title}>
           <p class="label">{g.title}</p>
           <ul class="site-footer-links">
             {g.links.map((l) => (

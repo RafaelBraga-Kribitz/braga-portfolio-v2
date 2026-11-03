@@ -22,7 +22,7 @@ const PERSON_ID = `${absolute('/')}#person`;
 const WEBSITE_ID = `${absolute('/')}#website`;
 
 function person(lang: Lang, image?: string): Node {
-  const sameAs = [site.github, site.linkedin, site.kaggle].filter(Boolean);
+  const sameAs = [site.github, site.linkedin, site.kaggle, site.tableau].filter(Boolean);
   return {
     '@type': 'Person',
     '@id': PERSON_ID,
