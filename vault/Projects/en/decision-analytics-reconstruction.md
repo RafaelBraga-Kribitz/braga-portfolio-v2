@@ -20,12 +20,16 @@ publish: true
 
 # Decision analytics reconstruction
 
+## Question
+
+With only public polls, census data and a fixed budget, how can a campaign follow a national race and decide where to spend?
+
 > [!summary] Summary
 > Three connected modules run end to end on 50,000 synthetic voters raked to the verified department-level anchors: on a USD 6 million envelope the allocator finds about 54.77% more linearised persuasion-proxy contacts than a department-uniform allocation, and the poll tracker’s 95% band caught the held-out poll in 3 of 6 tested waves. Each module is reported only as far as its own check reaches, so the gain stands as a solver comparison on synthetic reach, the tracking curve as a retrodiction, and nothing here claims that analytics caused the official vote lead.
 
-## Question
+## Background
 
-Given only eight public polls, census aggregates and a fixed budget, how can a campaign track a national race, allocate money across the country, and stay honest about what it actually knows? The reconstruction works from what a campaign could see in early 2018 and reasons toward a result that is public: Mario Abdo Benítez won with 1,206,067 votes against Efraín Alegre’s 1,110,464, a lead of 95,603 votes, according to [the official statistical yearbook, table 5.3.1](https://informacionpublica.paraguay.gov.py/public/7234448-AnuarioEstadistico2018pdf-AnuarioEstadistico2018.pdf). The units of comparison are linearised persuasion-proxy contacts on a fixed budget, measured against a department-uniform allocation, and, for the tracker, held-out poll waves.
+This is the 2018 Paraguay presidential election. The project uses eight public polls and census aggregates, and it also tests how honestly a campaign can state what it actually knows. The reconstruction works from what a campaign could see in early 2018 and reasons toward a result that is public: Mario Abdo Benítez won with 1,206,067 votes against Efraín Alegre’s 1,110,464, a lead of 95,603 votes, according to [the official statistical yearbook, table 5.3.1](https://informacionpublica.paraguay.gov.py/public/7234448-AnuarioEstadistico2018pdf-AnuarioEstadistico2018.pdf). The units of comparison are linearised persuasion-proxy contacts on a fixed budget, measured against a department-uniform allocation, and, for the tracker, held-out poll waves.
 
 > [!note] Historical result and modelling anchor
 > The final count is a lead of 95,603 votes: 3.88 percentage points of valid candidate votes (2,463,441), or 3.68 points of all ballots cast (2,597,989). The repository’s Series A uses +3.70 points (46.43% versus 42.73%) as its modelling anchor. That convention is not the exact final-count percentage on either denominator. This editorial correction does not refit the reconstruction.

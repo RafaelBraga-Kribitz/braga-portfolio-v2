@@ -20,15 +20,19 @@ publish: true
 
 # Austria data-job market intelligence
 
+## Question
+
+Which data jobs are advertised in Austria, where, and what do they ask for?
+
 > [!summary] Summary
 > SQL and Python lead a one-day snapshot of 720 core data-role postings, the stack is Microsoft-centred, and in the AMS “Data Scientist” class Styria is above its 2020 level. The findings feed two decision documents that score each role family against a declared skill profile; the raw collection stays a private research set.
 
 > [!note] Snapshot date
 > This page describes the snapshot of 16 Sep 2026. The repository has since moved to a snapshot of 18 Oct 2026 (release 2026-10-19.1, 699 core postings); its README carries the current figures.
 
-## Question
+## Background
 
-The questions are practical. Which data titles are advertised in Austria, where, and with which technologies, languages, education, pay and work model? How does Styria differ from Vienna? The unit is the core data-role posting in a one-day snapshot; the official series are read as their own units. The standard set for the answers: a technically competent, sceptical reader should be able to audit the method, the provenance, the limitations and the conclusions.
+The project reads each ad for its title, location, technologies, languages, education, pay and work model, and compares Styria with Vienna. The unit is the core data-role posting in a one-day snapshot; the official series are read as their own units. The standard set for the answers: a technically competent, sceptical reader should be able to audit the method, the provenance, the limitations and the conclusions.
 
 ## Data
 

@@ -21,12 +21,16 @@ publish: true
 
 # Warehouse humanoid TCO
 
+## Question
+
+When would humanoid robots become the cheapest way to run warehouse work?
+
 > [!summary] Summary
 > One person with three autonomous mobile robots (AMRs) has the lowest five-year present cost, €453,000, and wins 99.8% of the evaluated draws. Humanoids are deferred until demand, labour supply or shift patterns change.
 
-## Question
+## Background
 
-The question is unit economics, not capability. At what price, demand and staffing level would a humanoid fleet become the cheaper way to run pick, move and place work in a warehouse? The model prices seven staffing scenarios, from human-only crews through AMR hybrids to pure-humanoid fleets. The unit of comparison is five-year present cost at an 8% discount rate.
+The issue is unit economics, not capability. The work is pick, move and place, and the answer depends on humanoid price, demand and staffing level. The model prices seven staffing scenarios, from human-only crews through AMR hybrids to pure-humanoid fleets. The unit of comparison is five-year present cost at an 8% discount rate.
 
 ## Data
 

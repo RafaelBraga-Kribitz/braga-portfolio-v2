@@ -20,12 +20,16 @@ publish: true
 
 # Austrian MMM and budget optimiser
 
+## Question
+
+With the same media budget, which channels should get more money and which should get less?
+
 > [!summary] Summary
 > The model is validated against a known truth before it decides anything, and on Meta’s public Robyn demo data the same weekly budget, reallocated under a breakeven rule, gains a median 15.1% of current media contribution with no loss in any of the 500 posterior draws used. The rule moves budget toward TV and Facebook, takes it from out-of-home, and holds print and search, whose interval lower bounds fall below breakeven.
 
-## Question
+## Background
 
-The question is the one every advertiser asks of its media plan: which channels contributed incrementally, how far off were the platform-reported numbers, and what does moving the same budget actually gain? The unit of comparison is contribution profit, not revenue. A channel that returns less than its breakeven return on ad spend (ROAS) destroys margin, however large its reported revenue looks.
+Every advertiser asks this of its media plan. Answering it takes two steps first: finding which channels contributed incrementally, and measuring how far off the platform-reported numbers were. The unit of comparison is contribution profit, not revenue. A channel that returns less than its breakeven return on ad spend (ROAS) destroys margin, however large its reported revenue looks.
 
 ## Data
 

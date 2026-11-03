@@ -52,7 +52,7 @@ Obsidian syntax: a blockquote whose first line is `[!type] Title`. The title is 
 
 A blockquote without a marker stays a quotation. The authoring guide, on the order of a document:
 
-> Every project and essay follows one direction: question → data → method → result → limitations → decision.
+> Every project follows one direction: question → background → data → method → result → limitations → decision. An essay follows the same direction without the background section.
 
 ### Wide · `[!note|wide]`
 

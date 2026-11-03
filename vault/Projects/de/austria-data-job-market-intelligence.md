@@ -20,15 +20,19 @@ publish: true
 
 # Arbeitsmarkt für Datenberufe in Österreich
 
+## Fragestellung
+
+Welche Datenjobs werden in Österreich ausgeschrieben, wo, und was verlangen sie?
+
 > [!summary] Zusammenfassung
 > SQL und Python führen eine eintägige Momentaufnahme von 720 Kerninseraten für Datenrollen an, der Stack (die eingesetzten Werkzeuge) ist auf Microsoft ausgerichtet, und in der AMS-Berufsgruppe „Data Scientist“ ist die Steiermark über ihrem Niveau von 2020. Die Ergebnisse fließen in zwei Entscheidungsdokumente, die jede Rollenfamilie an einem deklarierten Kompetenzprofil bewerten; die Rohdatensammlung bleibt ein privater Forschungsdatensatz.
 
 > [!note] Stand der Daten
 > Diese Seite beschreibt die Momentaufnahme vom 16. Sep. 2026. Das Repository ist inzwischen auf die Momentaufnahme vom 18. Okt. 2026 umgestellt (Release 2026-10-19.1, 699 Kerninserate); seine README enthält die aktuellen Zahlen.
 
-## Fragestellung
+## Hintergrund
 
-Die Fragen sind praktisch. Welche Stellentitel im Datenbereich werden in Österreich ausgeschrieben, wo, und mit welchen Technologien, Sprachen, Ausbildungen, Gehältern und Arbeitsmodellen? Wie unterscheidet sich die Steiermark von Wien? Die Einheit ist das Kerninserat für eine Datenrolle in einer eintägigen Momentaufnahme; die amtlichen Reihen werden als eigene Einheiten gelesen. Der Maßstab für die Antworten: Ein technisch versiertes, skeptisches Publikum soll Methode, Datenherkunft, Grenzen und Schlussfolgerungen prüfen können.
+Das Projekt liest aus jedem Inserat Stellentitel, Ort, Technologien, Sprachen, Ausbildung, Gehalt und Arbeitsmodell und vergleicht die Steiermark mit Wien. Die Einheit ist das Kerninserat für eine Datenrolle in einer eintägigen Momentaufnahme; die amtlichen Reihen werden als eigene Einheiten gelesen. Der Maßstab für die Antworten: Ein technisch versiertes, skeptisches Publikum soll Methode, Datenherkunft, Grenzen und Schlussfolgerungen prüfen können.
 
 ## Daten
 

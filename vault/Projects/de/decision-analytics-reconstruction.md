@@ -20,12 +20,16 @@ publish: true
 
 # Rekonstruktion von Entscheidungs­analysen
 
+## Fragestellung
+
+Wie kann eine Kampagne mit nur öffentlichen Umfragen, Zensusdaten und einem festen Budget ein landesweites Rennen verfolgen und entscheiden, wo sie Geld einsetzt?
+
 > [!summary] Zusammenfassung
 > Drei verbundene Module laufen durchgängig auf 50.000 synthetischen Wahlberechtigten, die an die verifizierten Eckdaten der Departamentos angepasst sind: Bei einem Budgetrahmen von 6 Mio. USD erzielt der Allokator rund 54,77 % mehr linearisierte Proxy-Kontakte als eine über die Departamentos gleichmäßige Verteilung, und das Unsicherheitsband des Trackers zu 95 % erfasste die zurückgehaltene Umfrage in 3 von 6 getesteten Wellen. Jedes Modul wird nur so weit berichtet, wie seine eigene Prüfung reicht: Der Gewinn gilt als Solver-Vergleich auf synthetischer Reichweite, die Tracking-Kurve als Retrodiktion, und nichts hier behauptet, dass Analytik den amtlichen Stimmenvorsprung verursacht hat.
 
-## Fragestellung
+## Hintergrund
 
-Wie lässt sich mit nur acht öffentlichen Umfragen, aggregierten Zensusdaten und einem festen Budget ein landesweites Rennen verfolgen, Geld über das ganze Land verteilen und dabei ehrlich ausweisen, was tatsächlich bekannt ist? Die Rekonstruktion arbeitet mit dem, was eine Kampagne Anfang 2018 sehen konnte, und argumentiert auf ein öffentlich bekanntes Ergebnis hin: Laut dem [amtlichen statistischen Jahrbuch, Tabelle 5.3.1](https://informacionpublica.paraguay.gov.py/public/7234448-AnuarioEstadistico2018pdf-AnuarioEstadistico2018.pdf) gewann Mario Abdo Benítez mit 1.206.067 Stimmen gegenüber 1.110.464 für Efraín Alegre, ein Vorsprung von 95.603 Stimmen. Die Vergleichseinheiten sind linearisierte Proxy-Kontakte bei festem Budget, gemessen an einer über die Departamentos (Verwaltungsbezirke) gleichmäßigen Verteilung, und für den Tracker zurückgehaltene Umfragewellen.
+Es geht um die Präsidentschaftswahl 2018 in Paraguay. Das Projekt nutzt acht öffentliche Umfragen und aggregierte Zensusdaten und prüft auch, wie ehrlich eine Kampagne ausweisen kann, was tatsächlich bekannt ist. Die Rekonstruktion arbeitet mit dem, was eine Kampagne Anfang 2018 sehen konnte, und argumentiert auf ein öffentlich bekanntes Ergebnis hin: Laut dem [amtlichen statistischen Jahrbuch, Tabelle 5.3.1](https://informacionpublica.paraguay.gov.py/public/7234448-AnuarioEstadistico2018pdf-AnuarioEstadistico2018.pdf) gewann Mario Abdo Benítez mit 1.206.067 Stimmen gegenüber 1.110.464 für Efraín Alegre, ein Vorsprung von 95.603 Stimmen. Die Vergleichseinheiten sind linearisierte Proxy-Kontakte bei festem Budget, gemessen an einer über die Departamentos (Verwaltungsbezirke) gleichmäßigen Verteilung, und für den Tracker zurückgehaltene Umfragewellen.
 
 > [!note] Historisches Ergebnis und Modellanker
 > Die Endauszählung ergibt einen Vorsprung von 95.603 Stimmen: 3,88 Prozentpunkte der gültigen Kandidatenstimmen (2.463.441) oder 3,68 Prozentpunkte aller abgegebenen Stimmen (2.597.989). Serie A des Repositorys verwendet +3,70 Prozentpunkte (46,43 % gegenüber 42,73 %) als Modellanker. Diese Konvention ist bei keinem der beiden Nenner der exakte Prozentsatz der Endauszählung. Diese redaktionelle Korrektur passt das Rekonstruktionsmodell nicht neu an.

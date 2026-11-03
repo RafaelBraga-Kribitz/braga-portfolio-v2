@@ -14,20 +14,23 @@ content pipeline turns into the same DOM:
 
 1. Opener (generated from frontmatter by the page): trail `01 Work → 01-04`, h1, lead, meta row
    (domain · status mark with label · Published d Mon yyyy · Updated d Mon yyyy · Repository ↗).
-2. `> [!summary] Summary` — two sentences: the result and the decision.
-3. `> [!metrics] Key figures` — three or four figures; exactly ONE carries `==value==` (the
-   earned accent figure, the headline number).
-4. `## Question` — one paragraph; the unit of comparison stated.
-5. `## Data` — sources, counts, provenance; optional `> [!aside]`; a `> [!spec]` list of the
+2. `## Question` (projects) — one sentence, in plain English: the question the project answers, and
+   nothing else. It is the first element of the body, before the summary.
+3. `> [!summary] Summary` — two sentences: the result and the decision.
+4. `> [!metrics] Key figures` — three or four figures; exactly ONE carries `==value==` (the
+   earned accent figure, the headline number). The page generates the strip from frontmatter and
+   draws it above the body, so it is not a body block in a project.
+5. `## Background` (projects) — the situation, the scope and the unit of comparison.
+6. `## Data` — sources, counts, provenance; optional `> [!aside]`; a `> [!spec]` list of the
    model inputs ("Term — value" items).
-6. `## Method` — an ordered list of steps; optional `> [!definition] Term`; a short code block
+7. `## Method` — an ordered list of steps; optional `> [!definition] Term`; a short code block
    only where the source has one worth showing.
-7. `## Result` — an evidence figure (the `EvidenceFigure` pattern: kicker `Fig. 01-04-1 · …`,
+8. `## Result` — an evidence figure (the `EvidenceFigure` pattern: kicker `Fig. 01-04-1 · …`,
    finding as the heading, ink bars on a mid baseline, caption with n, scale, source), a table,
    a `> [!quote]` with the one-sentence result.
-8. `## Limitations` — a bullet list, honest; footnotes allowed.
-9. `## Decision` — one paragraph; optional `> [!faq]- What would reverse the decision?`.
-10. `> [!bookmark] Next` — the next project; `> [!cta]` — the repository link; the end bar
+9. `## Limitations` — a bullet list, honest; footnotes allowed.
+10. `## Decision` — one paragraph; optional `> [!faq]- What would reverse the decision?`.
+11. `> [!bookmark] Next` — the next project; `> [!cta]` — the repository link; the end bar
     (generated: § END · ← All projects · next →).
 
 Numbers: every figure in the document comes from the source MDX in
@@ -38,7 +41,7 @@ the source MDX and list the disagreement in your report for the owner. Format ev
 separators).
 
 Mapping from the source MDX (v1 structure) to v2: `<Lead>` → lead and summary; the opening
-question → Question; `Context` → Data; `Process` → Method; `Results` → Result; the
+question → Question; the opening context and the unit of comparison → Background; `Context` → Data; `Process` → Method; `Results` → Result; the
 "What this does not establish" list → Limitations; the recommendation sentence → Decision;
 `<MetricGrid>` → the metrics callout (its `accent: true` item is the `==value==`); the closing
 repository link → cta; the markdown table stays a table. Status comes from BUILD-BRIEF.md §4,
