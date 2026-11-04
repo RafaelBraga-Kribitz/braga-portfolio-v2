@@ -99,7 +99,7 @@ const {
 } = Astro.props;
 
 const sections = headings.filter((h) => h.depth === 2 && h.slug !== 'footnote-label');
-const toc = sections.map((h, i) => ({ n: String(i + 1).padStart(2, '0'), title: h.text, href: `#${h.slug}` }));
+const toc = sections.map((h, i) => ({ n: String(i + 1).padStart(2, '0'), title: h.text.replace(/^(Question|Frage): .*/, '$1'), href: `#${h.slug}` }));
 ---
 <Base lang={lang} page={page} title={title} description={description} current={current} hasCode={hasCode} noindex={noindex} ogType="article" prevDoc={prevDoc} nextDoc={nextDoc} twinPath={twinPath} seoTitle={seoTitle} seoDescription={seoDescription} canonicalUrl={canonicalUrl} ogImage={cover && { src: cover.src, alt: cover.alt }} structuredData={structuredData}>
   {!portrait && <DocOpener lang={lang} grid trail={trail} title={heading ?? title} lead={lead} keywords={keywords} meta={meta} draft={draft} />}

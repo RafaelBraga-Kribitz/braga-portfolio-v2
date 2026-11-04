@@ -17,136 +17,143 @@ repository: https://github.com/RafaelBraga-Kribitz/austria-data-job-market-intel
 translationStatus: approved
 publish: true
 ---
-
 # Arbeitsmarkt für Datenberufe in Österreich
 
-## Fragestellung
-
-Welche Datenjobs werden in Österreich ausgeschrieben, wo, und was verlangen sie?
+## Frage: Welche Datenjobs werden in Österreich ausgeschrieben, wo, und was verlangen sie?
 
 > [!summary] Zusammenfassung
-> SQL und Python führen eine eintägige Momentaufnahme von 720 Kerninseraten für Datenrollen an, der Stack (die eingesetzten Werkzeuge) ist auf Microsoft ausgerichtet, und in der AMS-Berufsgruppe „Data Scientist“ ist die Steiermark über ihrem Niveau von 2020. Die Ergebnisse fließen in zwei Entscheidungsdokumente, die jede Rollenfamilie an einem deklarierten Kompetenzprofil bewerten; die Rohdatensammlung bleibt ein privater Forschungsdatensatz.
+> SQL führt eine eintägige Momentaufnahme von 720 Kerninseraten für Datenrollen an. Unter den genannten Anbietern neigen die Inserate zu Microsoft. In der AMS-Berufsgruppe „Data Scientist“ liegt die Steiermark über ihrem Niveau von 2020. Die Rohdatensammlung bleibt ein privater Forschungsdatensatz.
 
 > [!note] Stand der Daten
-> Diese Seite beschreibt die Momentaufnahme vom 16. Sep. 2026. Das Repository ist inzwischen auf die Momentaufnahme vom 18. Okt. 2026 umgestellt (Release 2026-10-19.1, 699 Kerninserate); seine README enthält die aktuellen Zahlen.
+> Diese Seite beschreibt die Momentaufnahme vom 16. Sep. 2026. Das Repository ist inzwischen auf die Momentaufnahme vom 18. Okt. 2026 umgestellt (Release 2026-10-19.1, 699 Kerninserate). Seine README enthält die aktuellen Zahlen.
 
 ## Hintergrund
 
-Das Projekt liest aus jedem Inserat Stellentitel, Ort, Technologien, Sprachen, Ausbildung, Gehalt und Arbeitsmodell und vergleicht die Steiermark mit Wien. Die Einheit ist das Kerninserat für eine Datenrolle in einer eintägigen Momentaufnahme; die amtlichen Reihen werden als eigene Einheiten gelesen. Der Maßstab für die Antworten: Ein technisch versiertes, skeptisches Publikum soll Methode, Datenherkunft, Grenzen und Schlussfolgerungen prüfen können.
+Das Projekt liest aus jedem Inserat Stellentitel, Ort, Technologien, Sprachen, Ausbildung, Gehalt und Arbeitsmodell und vergleicht die Steiermark mit Wien. Die Einheit ist das Kerninserat für eine Datenrolle in einer eintägigen Momentaufnahme, und die amtlichen Reihen werden als eigene Einheiten gelesen. Ein technisch versiertes, skeptisches Publikum soll Methode, Datenherkunft, Grenzen und Schlussfolgerungen prüfen können.
 
 ## Daten
 
-Die Inserate wurden am 16. Sep. 2026 in einem einzigen Zeitfenster aus fünf öffentlichen Quellen erhoben, mit 45 Titel-Suchbegriffen auf Englisch und Deutsch, ohne Anmeldung und ohne Umgehung von CAPTCHA oder Paywall (Bezahlschranke). Plattformen, die die Erhebung blockierten, sind ausgeschlossen. Die amtlichen Reihen sind das AMS JobBarometer, das Online-Inserate nach Berufsgruppe und Bundesland zählt, und die vierteljährliche Statistik offener Stellen von Eurostat.
-
-Von 12.429 Rohzeilen sind 720 Kerninserate für Datenrollen, 58 davon in der Steiermark. Über die Aufnahme entscheidet der Stellentitel; ihre Präzision, gemessen an 177 händisch klassifizierten Titeln, beträgt 83 % (streng) und 95 % (großzügig). 24 % der Inserate im Untersuchungsrahmen sind Dubletten und werden per Union-Find (Zusammenführung zusammengehöriger Einträge) vereint.
-
 > [!spec] Momentaufnahme
 > - Erhoben — 16. Sep. 2026, 17:00–18:40 UTC
-> - Inseratquellen — EURES · karriere.at · LinkedIn (Stellenseiten ohne Anmeldung) · willhaben · jobs.at
+> - Inseratquellen — EURES 202 · karriere.at 134 · LinkedIn (Stellenseiten ohne Anmeldung) 300 · willhaben 26 · jobs.at 58. Kerninserate nach maßgeblicher Quelle (Tabelle T01).
+> - Zugang — Keine Anmeldung, keine Umgehung von CAPTCHA oder Paywall (Bezahlschranke)
 > - Blockiert, ausgeschlossen — StepStone · Indeed · hokify · Glassdoor
 > - Suche — 45 Titel-Suchbegriffe, Englisch und Deutsch
-> - Inserate — 12.429 Rohzeilen · 720 Kerninserate · 58 in der Steiermark
-> - Amtliche Reihen — AMS JobBarometer 2020–2025 · Eurostat, offene Stellen je Quartal
+> - Aufnahme — Nach Stellentitel. Präzision 83 % (streng) und 95 % (großzügig), gemessen an 177 händisch klassifizierten Titeln
+> - Amtliche Reihen — AMS JobBarometer 2020–2025, Online-Inserate nach Berufsgruppe und Bundesland · Eurostat, offene Stellen je Quartal
+
+> [!figure] Abb. 01-01-1 · Von den Rohzeilen zu den Kerninseraten
+> 12.429 Rohzeilen reduzieren sich auf 720 Kerninserate.
+> ![[01-01-funnel.de.svg]]
+>
+> caption: Anzahl der Zeilen. Die Bandbreite ist proportional zur Anzahl. Im Untersuchungsrahmen heißt: Kerninserate, benachbarte Rollenfamilien und deren Dubletten. Die Dublettenquote von 24 % sind 404 der 1.670 Zeilen im Untersuchungsrahmen.
+> source: Repository-Tabellen market_summary, dedupe_summary und Q04_duplicates, Commit 267b115; Momentaufnahme vom 16. Sep. 2026.
 
 ## Methode
 
-Jeder Schritt ist ein Skript, und jede Regel steht in einer Konfigurationsdatei:
+| Schritt | Feld | Regel |
+|:--|:--|:--|
+| 1 | Titel | Geordnete Regex-Regeln (reguläre Ausdrücke) ordnen Stellentitel acht Rollenfamilien zu. |
+| 2 | Region | Zuerst explizite Felder, dann NUTS-3-Codes, dann Postleitzahlen und Ortsnamen im Text. |
+| 3 | Gehalt | Gelesen aus strukturierten Feldern oder aus Text in der Nähe von Gehaltsbegriffen. Umgerechnet auf ein Jahresgehalt mit 14 Monatsgehältern. |
+| 4 | Sprache | Gelesen aus einem Fenster von 120 Zeichen beiderseits jeder Sprachnennung. |
+| 5 | Dubletten | Union-Find gruppiert Inserate über Unternehmen, Titel, Bundesland und einen Fingerabdruck der Stellenbeschreibung. |
 
-1. Stellentitel werden über geordnete Regex-Regeln (reguläre Ausdrücke) acht Rollenfamilien zugeordnet.
-2. Die Region stammt aus expliziten Feldern, dann aus NUTS-3-Codes, dann aus Postleitzahlen und Ortsnamen im Text.
-3. Gehaltsangaben werden aus strukturierten Feldern oder aus Text in der Nähe von Gehaltsbegriffen gelesen und auf ein Jahresgehalt mit 14 Monatsgehältern umgerechnet.
-4. Sprachanforderungen werden aus einem Fenster von 120 Zeichen beiderseits jeder Sprachnennung gelesen.
-5. Dubletten werden per Union-Find über Unternehmen, Titel, Bundesland und einen Fingerabdruck der Stellenbeschreibung gruppiert.
-
-Jede Tabelle speichert ihr n, und Anteile, die in eine Entscheidung einfließen, tragen Wilson-Intervalle zu 95 %. Die amtlichen Reihen werden als eigene Einheiten ausgewertet und nie mit Statistiken auf Inseratsebene vermischt. Eine Testsuite prüft das Verhalten der Regeln und die Konsistenz der Ausgaben, und ein Digest-Skript (Zusammenfassungsskript) gibt jede in den Dokumenten zitierte Zahl erneut aus den Tabellen aus.
+- Jeder Schritt ist ein Skript, und jede Regel steht in einer Konfigurationsdatei.
+- Jede Tabelle speichert ihr n. Anteile, die in eine Entscheidung einfließen, tragen Wilson-Intervalle zu 95 %.
+- Amtliche Reihen sind eigene Einheiten. Sie werden nie mit Statistiken auf Inseratsebene vermischt.
+- Eine Testsuite prüft das Verhalten der Regeln und die Konsistenz der Ausgaben.
+- Ein Digest-Skript (Zusammenfassungsskript) gibt jede in den Dokumenten zitierte Zahl erneut aus den Tabellen aus.
 
 > [!definition] Textbasierter Anteil
 > Ein Anteil, der aus dem Inseratstext gelesen wird, etwa eine Sprachanforderung. Sein Nenner sind die Inserate mit einer Beschreibung von mehr als 300 Zeichen.
 
 ## Ergebnis
 
-Die Momentaufnahme beantwortet die Frage für einen Tag; die AMS-Reihe ergänzt den Trend.
+### Kompetenzen
 
-### Technologien
-
-SQL und Python führen, und der Stack ist auf Microsoft ausgerichtet: Azure und Power BI liegen weit vor Tableau.
-
-> [!bars] Abb. 01-01-1 · Technologie-Nennungen
-> SQL und Python führen die Momentaufnahme an.
-> - SQL — 40
-> - Python — 35
-> - Azure — 19
-> - Power BI — 18
-> - Tableau — 3
+> [!figure] Abb. 01-01-2 · Nennung von Kompetenzen mit Intervallen zu 95 %
+> SQL führt mit 40 %, KI-Formulierungen und Datenvisualisierung folgen mit 38 %. Unter den genannten Anbietern führen Azure und Power BI.
+> ![[01-01-skills-top.de.svg]]
 >
-> scale: 0–100 · unit: % · centre: no
-> caption: Anteil der Inserate, die die jeweilige Technologie nennen; Skala 0–100 %. Mehrfachnennungen möglich.
-> source: Inserat-Momentaufnahme, 16. Sep. 2026. Anteile gerundet; unvollständige Abdeckung.
+> caption: Anteil der 719 Inserate mit einer Beschreibung von mehr als 300 Zeichen, die die Kompetenz nennen. Ein Inserat kann mehrere Kompetenzen nennen. Allgemeine Themen wie KI (allgemein) zählen so, wie die Taxonomie sie schreibt. Die Whisker sind Wilson-Intervalle zu 95 %.
+> source: Repository-Tabelle T05_skills_all_tech, Commit 267b115; Momentaufnahme vom 16. Sep. 2026.
+
+> [!figure] Abb. 01-01-3 · Nennung von Kompetenzen nach Rollenfamilie
+> Jede Rollenfamilie nennt ihre eigene Mischung: BI nennt Visualisierung am häufigsten (86 %), Data Science KI-Formulierungen (82 %), Data Engineering SQL (69 %).
+> ![[01-01-skills-heatmap.de.svg]]
+>
+> caption: Basis: dieselben 719 Inserate, ohne das eine Inserat zu Product Analytics. Die Zeilen zeigen 11 der 115 Kompetenzen der Taxonomie, geordnet nach ihrem Anteil an allen Inseraten. „Governance/Qualität“ enthält Governance-Schlüsselwörter, daher ist der Wert von 82 % bei Data-Governance-Inseraten teils per Definition wahr. Der dunkelste Ton ist der Höchstwert, 86 %. Marketing-Analytics hat n = 24. Stärkere Ränder markieren die Zellen des Befunds.
+> source: Repository-Tabelle T05_skills_all_tech_by_family, Commit 267b115; Momentaufnahme vom 16. Sep. 2026.
 
 ### Region
 
-Wien hält 48 % der offenen Kerninserate. Die Steiermark stellt 8,1 % der Momentaufnahme, aber 13,6 % des amtlichen Jahresvolumens, und ist in der AMS-Berufsgruppe „Data Scientist“ über ihrem Niveau von 2020.[^1]
+| Rollenfamilie | Wien | Steiermark | Übrige | Gesamt |
+|:--|--:|--:|--:|--:|
+| Data Engineering | 78 | 17 | 65 | 160 |
+| Data Science | 80 | 13 | 65 | 158 |
+| Business Analysis | 74 | 4 | 42 | 120 |
+| Data Analytics | 41 | 11 | 55 | 107 |
+| BI | 34 | 4 | 47 | 85 |
+| Data Governance | 22 | 5 | 38 | 65 |
+| Marketing- und Product-Analytics | 14 | 0 | 11 | 25 |
+| Gesamt | 343 | 54 | 323 | 720 |
 
-> [!bars] Abb. 01-01-2 · Region
-> 58 der 720 Kerninserate entfallen auf die Steiermark.
-> - Steiermark — 58
-> - Alle Inserate — 720
->
-> caption: Anzahl der Kerninserate; n = 720. Steirische Zellen sind klein, daher werden sie als Anzahlen berichtet und als vorläufig gekennzeichnet.
-> source: Inserat-Momentaufnahme, 16. Sep. 2026.
+Die Zählung nutzt das primäre Bundesland: Die Steiermark hat hier 54 und nach Ort unten 58. „Übrige“ enthält 22 Inserate ohne angegebenes Bundesland. Steirische Zellen sind klein und vorläufig. Data Engineering und Data Science machen je 22 % der Kerninserate aus. Quelle: Repository-Tabelle T03_family_by_state, n = 720.
 
-> [!bars] Abb. 01-01-3 · Jahresvolumen
-> Die Steiermark entwickelt sich gegen den Bundestrend.
-> - Österreich — −28
-> - Steiermark — +34
->
-> scale: −50–50 · unit: % · centre: yes
-> accent: Steiermark
-> caption: Veränderung gegenüber dem Niveau von 2020, AMS-Berufsgruppe „Data Scientist“, Reihe 2020–2025. Mittellinie = null; Bereich −50 % bis +50 %.
-> source: AMS JobBarometer, Online-Inserate nach Berufsgruppe und Bundesland.
+| Kennzahl | Anteil | Basis |
+|:--|--:|:--|
+| Wien, Momentaufnahme | 48 % | 345 von 720, Ortszählung |
+| Steiermark, Momentaufnahme | 8,1 % | 58 von 720, Ortszählung |
+| Steiermark, AMS-Berufsgruppe „Data Scientist“ | 13,6 % | 300 von 2.207, 2025 |
+| Steiermark, sieben AMS-Berufsgruppen für Daten zusammen | 10,9 % | 926 von 8.477, 2025 |
 
-### Rollenfamilien, Sprache und Gehalt
+Das sind verschiedene Einheiten, und sie werden nicht vermischt.
 
-Die Anteile der Rollenfamilien stammen aus den Titelregeln, die Sprachanteile aus dem Inseratstext und der Gehaltsanteil aus den ausgelesenen Gehaltsangaben.
+### AMS-Entwicklung
 
-| Befund | Wert |
-|:--|--:|
-| Rollenfamilie Data Engineering | 22 % |
-| Rollenfamilie Data Science | 22 % |
-| Titel in Marketing- und Product-Analytics | 25 von 720 |
-| Davon in der Steiermark | keine |
-| Inserate mit deutscher Sprachanforderung | 40 % |
-| Inserate auf Englisch | 24 % |
-| Davon weiterhin mit deutscher Sprachanforderung | 19 % |
-| Gehaltsangaben auf kollektivvertraglichem Mindestniveau | 81 % |
+AMS-Berufsgruppe „Data Scientist“, Online-Inserate je Jahr. Burgenland ist in jedem Jahr unter 20 zensiert und zählt daher als kein benanntes Bundesland.
 
-Data Engineering und Data Science sind die größten Rollenfamilien. Titel in Marketing- und Product-Analytics sind selten und fehlen in der Steiermark. Die meisten ausgeschriebenen Gehaltsangaben sind kollektivvertragliche Mindestgehälter: Die Inserate zeigen Untergrenzen, nicht die tatsächliche Bezahlung.
+| Jahr | Österreich gesamt | Summe der benannten Bundesländer | Ohne benanntes Bundesland | Steiermark |
+|:--|--:|--:|--:|--:|
+| 2020 | 3.049 | 1.892 | 1.157 | 224 |
+| 2022 | 5.032 | 4.430 | 602 | 423 |
+| 2024 | 2.680 | 2.403 | 277 | 271 |
+| 2025 | 2.207 | 2.008 | 199 | 300 |
 
-### Saison und Zyklus
+Die Steiermark stieg von 224 auf 300 Inserate (+34 %).[^1] Die Gesamtzahl für Österreich sank um 28 %, aber die Inserate ohne benanntes Bundesland sanken von 1.157 auf 199. Daher stieg die Summe der benannten Bundesländer um 6 %. Der Grund für die Lücke ist nicht geklärt, daher liest diese Seite die Steiermark nicht als Gegenbewegung zu einem bundesweiten Trend.
 
-Die Saisonalität ist gegenüber dem Zyklus klein: Die Eurostat-Reihen zeigen eine unterjährige Schwankungsbreite von 5–14 %, gegenüber 255–567 % zwischen den Jahren.
+### Sprache, Bezahlung und Saison
 
-> [!quote] Ergebnis · Momentaufnahme vom 16. Sep. 2026 und AMS JobBarometer
-> In Inseraten für Datenrollen in Österreich liegen SQL und Python vorn, bei einem auf Microsoft ausgerichteten Stack, und in der AMS-Berufsgruppe „Data Scientist“ ist die Steiermark über ihrem Niveau von 2020.
+| Befund | Wert | Basis |
+|:--|--:|:--|
+| Inserate mit deutscher Sprachanforderung | 40 % | Inseratstext |
+| Inserate auf Englisch | 24 % | Inseratstext |
+| Davon weiterhin mit deutscher Sprachanforderung | 19 % | Inseratstext |
+| Gehaltsangaben auf kollektivvertraglichem Mindestniveau | 81 % | Ausgelesene Gehaltsangaben |
+| Unterjährige Schwankungsbreite | 5–14 % | Eurostat |
+| Schwankungsbreite zwischen den Jahren | 255–567 % | Eurostat |
+
+Die meisten ausgeschriebenen Gehaltsangaben sind kollektivvertragliche Mindestgehälter: Die Inserate zeigen Untergrenzen, nicht die tatsächliche Bezahlung. Die Saisonalität ist gegenüber dem Zyklus klein.
 
 ## Grenzen
 
 Was diese Arbeit nicht belegt:
 
-- **Nachfrage über die Zeit.** Es ist ein eintägiger Bestand an Inseraten, kein Jahresvolumen, keine offenen Stellen und keine Einstellungen.
-- **Vollständige Abdeckung.** StepStone, Indeed und Karriereseiten von Unternehmen fehlen, und die titelbasierte Aufnahme hat eine gemessene Präzision, aber eine ungemessene Trefferquote (Recall).
-- **Steirische Details.** Steirische Zellen sind klein (n = 58), daher werden sie als Anzahlen berichtet und als vorläufig gekennzeichnet.
-- **Kausalität.** Es gibt keine Einstellungsergebnisse; keine Anforderung belegt daher, was zu einer Einstellung führt.
+- **Nachfrage über die Zeit.** Die Momentaufnahme ist ein eintägiger Bestand an Inseraten, kein Jahresvolumen, keine offenen Stellen und keine Einstellungen.
+- **Vollständige Abdeckung.** StepStone, Indeed und Karriereseiten von Unternehmen fehlen. Die titelbasierte Aufnahme hat eine gemessene Präzision, aber eine ungemessene Trefferquote (Recall).
+- **Steirische Details.** Steirische Zellen sind klein (n = 58), daher werden Anzahlen als vorläufig gekennzeichnet.
+- **Kausalität.** Es gibt keine Einstellungsergebnisse. Keine Anforderung belegt daher, was zu einer Einstellung führt.
 
 ## Entscheidung
 
-Die Momentaufnahme ist eine Evidenzbasis, kein Urteil. Ihre Ergebnisse fließen in zwei Entscheidungsdokumente, die jede Rollenfamilie an einem deklarierten Kompetenzprofil bewerten, mit offengelegten Gewichten und einer Sensitivitätsprüfung unter alternativen Gewichten. Es gibt keine verdeckte Bewertung, und jede Aussage lässt sich auf eine Tabellen-ID zurückführen.
+Die Momentaufnahme ist eine Evidenzbasis, kein Urteil, und jede Aussage lässt sich auf eine Tabellen-ID zurückführen. Zwei Entscheidungsdokumente bewerten jede Rollenfamilie an einem deklarierten Kompetenzprofil, mit offengelegten Gewichten, ohne verdeckte Bewertung und mit einer Sensitivitätsprüfung unter alternativen Gewichten.
 
 > [!faq]- Warum werden die Rohinserate nicht veröffentlicht?
-> Eine Prüfung der Nutzungsbedingungen ergab, dass alle fünf Inseratquellen die automatisierte Extraktion einschränken; die Sammlung bleibt daher ein einmaliger, privater Forschungsdatensatz. Die Erhebungsskripte und die Rohinserate werden nicht veröffentlicht; das öffentliche Repository enthält den Code, die Regeln und die aggregierten Tabellen, ohne jede Text- und URL-Spalte.
+> Eine Prüfung der Nutzungsbedingungen ergab, dass alle fünf Inseratquellen die automatisierte Extraktion einschränken. Die Sammlung bleibt daher ein einmaliger, privater Forschungsdatensatz. Das öffentliche Repository enthält den Code, die Regeln und die aggregierten Tabellen, ohne jede Text- und URL-Spalte. Die Erhebungsskripte und die Rohinserate werden nicht veröffentlicht.
 
-Code unter MIT-Lizenz; Dokumente und aggregierte Ergebnisse unter CC BY 4.0.
+Code unter MIT-Lizenz. Dokumente und aggregierte Ergebnisse unter CC BY 4.0.
 
 
 
-[^1]: Das AMS JobBarometer zählt Online-Inserate nach Berufsgruppe und Bundesland; „Data Scientist“ ist die Berufsgruppe, aus der der Trend gelesen wird.
+[^1]: Das AMS JobBarometer zählt Online-Inserate nach Berufsgruppe und Bundesland. Der Trend wird aus der Berufsgruppe „Data Scientist“ gelesen.

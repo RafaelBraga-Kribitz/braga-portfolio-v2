@@ -14,20 +14,20 @@ content pipeline turns into the same DOM:
 
 1. Opener (generated from frontmatter by the page): trail `01 Work → 01-04`, h1, lead, meta row
    (domain · status mark with label · Published d Mon yyyy · Updated d Mon yyyy · Repository ↗).
-2. `## Question` (projects) — one sentence, in plain English: the question the project answers, and
+2. `## Question: ...` (projects; DE `## Frage: ...`) — the heading holds one plain-English sentence: the question the project answers, and
    nothing else. It is the first element of the body, before the summary.
 3. `> [!summary] Summary` — two sentences: the result and the decision.
 4. `> [!metrics] Key figures` — three or four figures; exactly ONE carries `==value==` (the
    earned accent figure, the headline number). The page generates the strip from frontmatter and
    draws it above the body, so it is not a body block in a project.
 5. `## Background` (projects) — the situation, the scope and the unit of comparison.
-6. `## Data` — sources, counts, provenance; optional `> [!aside]`; a `> [!spec]` list of the
-   model inputs ("Term — value" items).
-7. `## Method` — an ordered list of steps; optional `> [!definition] Term`; a short code block
+6. `## Data` — sources, counts, provenance in a `> [!spec]` list ("Term — value" items); prose only
+   for a threat to validity the list cannot carry.
+7. `## Method` — a table or an ordered list of steps, or a mermaid diagram for a handoff; optional `> [!definition] Term`; a short code block
    only where the source has one worth showing.
 8. `## Result` — an evidence figure (the `EvidenceFigure` pattern: kicker `Fig. 01-04-1 · …`,
-   finding as the heading, ink bars on a mid baseline, caption with n, scale, source), a table,
-   a `> [!quote]` with the one-sentence result.
+   finding as the heading, ink bars on a mid baseline, caption with n, scale, source) and a table. No `> [!quote]`: the summary carries
+   the one-sentence result. A fact appears once, in its best form (Syntax reference § 3).
 9. `## Limitations` — a bullet list, honest; footnotes allowed.
 10. `## Decision` — one paragraph; optional `> [!faq]- What would reverse the decision?`.
 11. `> [!bookmark] Next` — the next project; `> [!cta]` — the repository link; the end bar

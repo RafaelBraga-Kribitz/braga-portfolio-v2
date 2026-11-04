@@ -14,20 +14,28 @@ translationStatus: approved
 
 # {{title}}
 
-## Question
-
-One sentence: the question the project answers.
+## Question: One plain-English sentence, the question the project answers?
 
 > [!summary] Summary
-> One paragraph: the decision, the result, the limit.
+> At most three short sentences: the decision, the result, the limit.
 
 ## Background
 
+At most three sentences: the situation, the scope, the unit of comparison.
+
 ## Data
+
+> [!spec] Inputs
+> - Term — value
 
 ## Method
 
+| Step | Action | Check |
+|:--|:--|:--|
+
 ## Result
+
+Lead with a table or a `[!bars]` figure. Write prose only for what they cannot carry.
 
 ## Limitations
 

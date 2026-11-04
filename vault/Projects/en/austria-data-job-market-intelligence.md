@@ -17,136 +17,143 @@ repository: https://github.com/RafaelBraga-Kribitz/austria-data-job-market-intel
 translationStatus: approved
 publish: true
 ---
-
 # Austria data-job market intelligence
 
-## Question
-
-Which data jobs are advertised in Austria, where, and what do they ask for?
+## Question: Which data jobs are advertised in Austria, where, and what do they ask for?
 
 > [!summary] Summary
-> SQL and Python lead a one-day snapshot of 720 core data-role postings, the stack is Microsoft-centred, and in the AMS “Data Scientist” class Styria is above its 2020 level. The findings feed two decision documents that score each role family against a declared skill profile; the raw collection stays a private research set.
+> SQL leads a one-day snapshot of 720 core data-role postings. Among named vendors, the postings lean to Microsoft. In the AMS “Data Scientist” class, Styria is above its 2020 level. The raw collection stays a private research set.
 
 > [!note] Snapshot date
-> This page describes the snapshot of 16 Sep 2026. The repository has since moved to a snapshot of 18 Oct 2026 (release 2026-10-19.1, 699 core postings); its README carries the current figures.
+> This page describes the snapshot of 16 Sep 2026. The repository has since moved to a snapshot of 18 Oct 2026 (release 2026-10-19.1, 699 core postings). Its README carries the current figures.
 
 ## Background
 
-The project reads each ad for its title, location, technologies, languages, education, pay and work model, and compares Styria with Vienna. The unit is the core data-role posting in a one-day snapshot; the official series are read as their own units. The standard set for the answers: a technically competent, sceptical reader should be able to audit the method, the provenance, the limitations and the conclusions.
+The project reads each ad for its title, location, technologies, languages, education, pay and work model, and compares Styria with Vienna. The unit is the core data-role posting in a one-day snapshot, and official series are read as their own units. A technically competent, sceptical reader should be able to audit the method, the provenance, the limitations and the conclusions.
 
 ## Data
 
-Postings were collected in a single window on 16 Sep 2026 from five public sources, using 45 title keywords in English and German, with no login and no CAPTCHA or paywall bypass. The boards that blocked collection are excluded. The official series are the AMS JobBarometer, which counts online ads per occupation class and federal state, and Eurostat’s quarterly job-vacancy data.
-
-Of 12,429 raw rows, 720 are core data-role postings, 58 of them in Styria. Inclusion is decided by the title; its precision, measured on 177 hand-labelled titles, is 83% strict and 95% lenient. 24% of in-scope postings are duplicates, merged by union-find.
-
 > [!spec] Snapshot
 > - Collected — 16 Sep 2026, 17:00–18:40 UTC
-> - Posting sources — EURES · karriere.at · LinkedIn (logged-out job pages) · willhaben · jobs.at
+> - Posting sources — EURES 202 · karriere.at 134 · LinkedIn (logged-out job pages) 300 · willhaben 26 · jobs.at 58. Core postings by canonical source (table T01).
+> - Access — No login, no CAPTCHA or paywall bypass
 > - Blocked, excluded — StepStone · Indeed · hokify · Glassdoor
 > - Search — 45 title keywords, English and German
-> - Postings — 12,429 raw rows · 720 core · 58 in Styria
-> - Official series — AMS JobBarometer 2020–2025 · Eurostat quarterly job vacancies
+> - Inclusion — By title. Precision 83% strict and 95% lenient, measured on 177 hand-labelled titles
+> - Official series — AMS JobBarometer 2020–2025, online ads per occupation class and federal state · Eurostat quarterly job vacancies
+
+> [!figure] Fig. 01-01-1 · From raw rows to core postings
+> 12,429 raw rows reduce to 720 core postings.
+> ![[01-01-funnel.en.svg]]
+>
+> caption: Counts of rows. Band thickness is proportional to the count. In scope means core postings, adjacent role families and their duplicates. The 24% duplicate rate is 404 of the 1,670 in-scope rows.
+> source: repository tables market_summary, dedupe_summary and Q04_duplicates, commit 267b115; snapshot of 16 Sep 2026.
 
 ## Method
 
-Every step is a script, and every rule lives in a config file:
+| Step | Field | Rule |
+|:--|:--|:--|
+| 1 | Title | Ordered regex rules sort titles into eight role families. |
+| 2 | Geography | Explicit fields first, then NUTS-3 codes, then postcodes and place names in the text. |
+| 3 | Salary | Parsed from structured fields or from text near salary words. Annualised at 14 monthly payments. |
+| 4 | Language | Read from a window of 120 characters on either side of each language mention. |
+| 5 | Duplicates | Union-find groups postings by company, title, federal state and a description fingerprint. |
 
-1. Titles are normalised by ordered regex rules into eight role families.
-2. Geography comes from explicit fields, then NUTS-3 codes, then postcodes and place names in the text.
-3. Salary figures are parsed from structured fields or from text near salary words, and annualised at 14 monthly payments.
-4. Language requirements are read from a window of 120 characters on either side of each language mention.
-5. Duplicates are grouped by union-find over company, title, federal state and a description fingerprint.
-
-Every table stores its n, and proportions that feed a decision carry Wilson 95% intervals. The official series are analysed as their own units and never merged with posting-level statistics. A test suite checks rule behaviour and output consistency, and a digest script reprints every number quoted in the documents from the tables.
+- Every step is a script, and every rule lives in a config file.
+- Every table stores its n. Proportions that feed a decision carry Wilson 95% intervals.
+- Official series are their own units. They are never merged with posting-level statistics.
+- A test suite checks rule behaviour and output consistency.
+- A digest script reprints every number quoted in the documents from the tables.
 
 > [!definition] Text-derived share
 > A share read from the ad text, such as a language requirement. Its denominator is the postings with a description longer than 300 characters.
 
 ## Result
 
-The snapshot answers the question for one day; the AMS series adds the trend.
-
 ### Skills
 
-SQL and Python lead, and the stack is Microsoft-centred: Azure and Power BI sit far above Tableau.
-
-> [!bars] Fig. 01-01-1 · Skill mentions
-> SQL and Python lead the snapshot.
-> - SQL — 40
-> - Python — 35
-> - Azure — 19
-> - Power BI — 18
-> - Tableau — 3
+> [!figure] Fig. 01-01-2 · Skill mentions with 95% intervals
+> SQL leads at 40%, with AI wording and data visualisation at 38%. Among named vendors, Azure and Power BI lead.
+> ![[01-01-skills-top.en.svg]]
 >
-> scale: 0–100 · unit: % · centre: no
-> caption: Share of postings that mention each technology; scale 0–100%. Multiple mentions allowed.
-> source: posting snapshot, 16 Sep 2026. Shares rounded; incomplete coverage.
+> caption: Share of the 719 postings with a description longer than 300 characters that mention the skill. A posting can mention several skills. Generic topics, such as AI (generic), count as written in the skill taxonomy. Whiskers are Wilson 95% intervals.
+> source: repository table T05_skills_all_tech, commit 267b115; snapshot of 16 Sep 2026.
+
+> [!figure] Fig. 01-01-3 · Skill mentions by role family
+> Each role family names its own mix: BI names visualisation most (86%), data science AI wording (82%), data engineering SQL (69%).
+> ![[01-01-skills-heatmap.en.svg]]
+>
+> caption: Base: the same 719 postings, without the one product-analytics posting. The rows show 11 of the 115 skills of the taxonomy, ordered by their share over all postings. “Governance/quality” includes governance keywords, so its 82% in data governance ads is partly true by definition. The darkest shade is the top value, 86%. Marketing analytics has n = 24. Heavier edges mark the cells in the finding.
+> source: repository table T05_skills_all_tech_by_family, commit 267b115; snapshot of 16 Sep 2026.
 
 ### Region
 
-Vienna holds 48% of open core postings. Styria is 8.1% of the snapshot but 13.6% of the official yearly flow, and above its 2020 level in the AMS “Data Scientist” class.[^1]
+| Role family | Vienna | Styria | Other | All |
+|:--|--:|--:|--:|--:|
+| Data engineering | 78 | 17 | 65 | 160 |
+| Data science | 80 | 13 | 65 | 158 |
+| Business analysis | 74 | 4 | 42 | 120 |
+| Data analytics | 41 | 11 | 55 | 107 |
+| BI | 34 | 4 | 47 | 85 |
+| Data governance | 22 | 5 | 38 | 65 |
+| Marketing and product analytics | 14 | 0 | 11 | 25 |
+| Total | 343 | 54 | 323 | 720 |
 
-> [!bars] Fig. 01-01-2 · Region
-> 58 of the 720 core postings are in Styria.
-> - Styria — 58
-> - All postings — 720
->
-> caption: Count of core postings; n = 720. Styrian cells are small, so they are reported as counts and labelled tentative.
-> source: posting snapshot, 16 Sep 2026.
+Counts use the primary state, so Styria is 54 here and 58 by location below. “Other” includes 22 postings with no stated state. Styrian cells are small and tentative. Data engineering and data science are each 22% of core postings. Source: repository table T03_family_by_state, n = 720.
 
-> [!bars] Fig. 01-01-3 · Annual flow
-> Styria moves against the national trend.
-> - Austria — −28
-> - Styria — +34
->
-> scale: −50–50 · unit: % · centre: yes
-> accent: Styria
-> caption: Change against the 2020 level, AMS “Data Scientist” class, series 2020–2025. Centre line = zero; range −50% to +50%.
-> source: AMS JobBarometer, online ads per occupation class and federal state.
+| Measure | Share | Base |
+|:--|--:|:--|
+| Vienna, snapshot | 48% | 345 of 720, location count |
+| Styria, snapshot | 8.1% | 58 of 720, location count |
+| Styria, AMS “Data Scientist” class | 13.6% | 300 of 2,207, 2025 |
+| Styria, seven AMS data classes pooled | 10.9% | 926 of 8,477, 2025 |
 
-### Role families, language and pay
+These are different units and are not merged.
 
-The family shares come from the title rules, the language shares from the ad text and the salary share from the parsed salary figures.
+### AMS trend
 
-| Finding | Figure |
-|:--|--:|
-| Data-engineering family | 22% |
-| Data-science family | 22% |
-| Marketing- and product-analytics titles | 25 of 720 |
-| Of those, in Styria | none |
-| Ads that state a German requirement | 40% |
-| Ads written in English | 24% |
-| Of those, still stating a German requirement | 19% |
-| Salary figures that are collective-agreement minimums | 81% |
+AMS “Data Scientist” class, online ads per year. Burgenland is censored below 20 in every year, so it counts as no named state.
 
-Data engineering and data science are the largest families. Marketing- and product-analytics titles are rare, and absent in Styria. Most advertised salary figures are collective-agreement minimums, so the ads show floors, not pay.
+| Year | Austria total | Sum of named states | No named state | Styria |
+|:--|--:|--:|--:|--:|
+| 2020 | 3,049 | 1,892 | 1,157 | 224 |
+| 2022 | 5,032 | 4,430 | 602 | 423 |
+| 2024 | 2,680 | 2,403 | 277 | 271 |
+| 2025 | 2,207 | 2,008 | 199 | 300 |
 
-### Season and cycle
+Styria rose from 224 to 300 ads (+34%).[^1] The Austria total fell 28%, but ads with no named state fell from 1,157 to 199, so the sum of named states rose 6%. The reason for the gap is not established, so this page does not read Styria as moving against a national trend.
 
-Seasonality is small against the cycle: the Eurostat series show a within-year amplitude of 5–14%, against 255–567% between years.
+### Language, pay and season
 
-> [!quote] Result · snapshot of 16 Sep 2026 and AMS JobBarometer
-> SQL and Python lead Austrian data-role ads, on a Microsoft-centred stack, and in the AMS “Data Scientist” class Styria is above its 2020 level.
+| Finding | Figure | Base |
+|:--|--:|:--|
+| Ads that state a German requirement | 40% | Ad text |
+| Ads written in English | 24% | Ad text |
+| Of those, still stating a German requirement | 19% | Ad text |
+| Salary figures that are collective-agreement minimums | 81% | Parsed salary figures |
+| Within-year amplitude | 5–14% | Eurostat |
+| Between-year amplitude | 255–567% | Eurostat |
+
+Most advertised salary figures are collective-agreement minimums, so the ads show floors, not pay. Seasonality is small against the cycle.
 
 ## Limitations
 
 What this does not establish:
 
-- **Demand over time.** It is a one-day stock of ads, not yearly flow, vacancies or hires.
-- **Full coverage.** StepStone, Indeed and company career pages are missing, and title-based inclusion has measured precision but unmeasured recall.
-- **Styrian detail.** Styrian cells are small (n = 58), so they are reported as counts and labelled tentative.
+- **Demand over time.** The snapshot is a one-day stock of ads, not yearly flow, vacancies or hires.
+- **Full coverage.** StepStone, Indeed and company career pages are missing. Title-based inclusion has measured precision but unmeasured recall.
+- **Styrian detail.** Styrian cells are small (n = 58), so counts are labelled tentative.
 - **Anything causal.** There are no hiring outcomes, so no requirement is evidence of what gets someone hired.
 
 ## Decision
 
-The snapshot is an evidence base, not a verdict. Its findings feed two decision documents that score each role family against a declared skill profile, with stated weights and a sensitivity check under alternative weights. There is no hidden scoring, and each statement traces to a table id.
+The snapshot is an evidence base, not a verdict, and each statement traces to a table id. Two decision documents score each role family against a declared skill profile, with stated weights, no hidden scoring and a sensitivity check under alternative weights.
 
 > [!faq]- Why are the raw ads not published?
-> A terms-of-use audit found that all five posting sources restrict automated extraction, so the collection stays a one-off private research set. The collectors and the raw ads are not published; the public repository holds the code, the rules and the aggregated tables, with every text and URL column removed.
+> A terms-of-use audit found that all five posting sources restrict automated extraction, so the collection stays a one-off private research set. The public repository holds the code, the rules and the aggregated tables, with every text and URL column removed. The collectors and the raw ads are not published.
 
-Code is under MIT; documents and aggregated outputs are under CC BY 4.0.
+Code is under MIT. Documents and aggregated outputs are under CC BY 4.0.
 
 
 
-[^1]: The AMS JobBarometer counts online ads per occupation class and federal state; “Data Scientist” is the class the trend is read from.
+[^1]: The AMS JobBarometer counts online ads per occupation class and federal state. The trend is read from the “Data Scientist” class.

@@ -133,8 +133,19 @@ Every project follows one direction:
 
 **question → background → data → method → result → limitations → decision**
 
-Every essay follows the same direction without the background section (question → data → …). A project’s `## Question` is one sentence; `## Background` carries the situation, the scope and the unit of comparison. A project’s body opens with `## Question`, then the `[!summary]` callout, then `## Background`. One `##` section each, in that order. Limitations are stated before the
-decision, never after it. Section numbers (01, 02, …) are drawn by the
+Every essay follows the same direction without the background section (question → data → …). A project’s `## Question: ...` heading (DE `## Frage: ...`) holds the one plain-English question; `## Background` carries the situation, the scope and the unit of comparison. A project’s body opens with that heading, then the `[!summary]` callout, then `## Background`. One `##` section each, in that order. Limitations are stated before the
+decision, never after it.
+
+**Density (projects).** A fact appears once, in its best form. Use a table for
+a comparison, `[!bars]` for quantities in one unit on one denominator, `[!spec]`
+for inputs, a table or a numbered list for steps, and ` ```mermaid ` for a
+handoff or a branch. Write prose only for what these cannot carry: why a number
+reads as it does, threats to validity, what changed. No prose repeats a `[!spec]`
+row or a table cell, and no `[!quote]` repeats the summary. Sentences follow
+ASD-STE100: at most 25 words, one idea, active voice, no semicolons, and every
+hedge kept.
+
+Section numbers (01, 02, …) are drawn by the
 stylesheet from the order of the `##` headings: never type them. Use `###` to
 `######` for subsections. The note's first `#` heading is its title (the
 page's only h1); a later `#` becomes `##`, and a skipped level (`##` then
@@ -204,7 +215,7 @@ stays a quotation.
 > At a 4% baseline and a 10% relative lift: **39,473** visitors per arm.
 ```
 
-**summary** · the abstract; in a project it follows the `## Question` sentence
+**summary** · the abstract; in a project it follows the `## Question: ...` heading
 ```md
 > [!summary]
 > The question, the answer and the figure that carries it, in three sentences.
@@ -297,7 +308,8 @@ caption with the source. Not a callout on the page: it becomes
 
 - The title is the kicker (`Fig. <code>-<n> · <subject>` in a project, `Fig. <n> · <subject>` in an essay); the first line
   under it is the finding, a sentence that says what the bars show.
-- One list item per bar: `label — value` (a spaced em or en dash). The
+- One list item per bar: `label — value` (a spaced em or en dash). A long
+  label wraps in its column; it is never cut. The
   value is a bare number: digits, a decimal point (`.` or `,`), a minus
   (`−` or `-`) for a negative; no grouping separators; the declared unit
   may follow it (`40%`). The build prints it in the document's language
@@ -335,6 +347,52 @@ caption with the source. Not a callout on the page: it becomes
   A centred bar adds `--x` to the fill and `<span class="ev-mid"></span>` to
   the track; the accent bar carries `data-accent`. The geometry custom
   properties are the only inline style on a page.
+
+**figure** · a designed figure: an SVG from the vault inside the same
+evidence figure as `[!bars]` (kicker, the finding as its heading, a
+caption with the source). Use it where bars cannot say it: a flow
+(Sankey), a radar, a heatmap, an interval plot, a module flow. In Obsidian it
+stays a readable callout with the picture embedded.
+```md
+> [!figure] Fig. 01-01-1 · From raw rows to core postings
+> 720 of 12,429 raw rows are core data-role postings.
+> ![[01-01-funnel.en.svg]]
+>
+> caption: Counts of rows; band thickness is proportional to the count.
+> source: repository tables market_summary and Q04, snapshot of 16 Sep 2026.
+```
+
+- The title and the finding are as in `[!bars]`. The line with the embed
+  names one `.svg` file in the vault.
+- **File naming:** `<project code>-<slug>.<lang>.svg` in
+  `vault/Attachments/figures/`, for example `01-01-funnel.en.svg` and
+  `01-01-funnel.de.svg`: one file per language. The files are drawn by
+  `npm run figures` (`scripts/figures/build.mjs`: the data tables at its top,
+  English and German strings, a check that every flow sums). Do not edit a
+  file by hand; `npm run figures -- --check` fails when a file differs.
+- Meta lines, after a blank `>` line: `caption:` and `source:` only. The
+  source is mandatory. The geometry lives in the SVG, so `scale`, `unit`,
+  `centre` and `accent` do not apply.
+- The build inlines the SVG into `<div class="diagram" tabindex="0"
+  role="group" aria-label="…">`, so its `var(--token)` colours follow the
+  light/dark toggle. The box scrolls the figure sideways when the screen is
+  narrower than the drawing (the page itself never does).
+- The `<desc>` holds the finding first, then every plotted value, so a screen
+  reader gets the data. The generator writes it from the same tables as the
+  picture, and a test checks that the page heading is the figure's finding.
+- Natural width: interval plots at most 480 units, the module flow 360 (a
+  390 px phone shows them whole). A wider figure (the funnel, the heatmap)
+  keeps its size and scrolls in its box; below 768 px the box shows the cue
+  “← Scroll sideways →” (`data-scroll` and `data-cue`, set by the callout).
+- An SVG fails the build, naming the file, when it has no `role="img"`,
+  `aria-labelledby`, `<title>` first and a `<desc>` with a digit in it; when it holds a `<script>`,
+  a `<style>`, a `style` attribute, an `on…` attribute, an external `href` or
+  a colour literal; or when an id does not start with `fig-<file name>-`. The
+  same file twice on one page, a missing file, a missing `source:` or an
+  unknown meta line fails too.
+- Colours are the tokens `--ink`, `--ink-2`, `--surface`, `--surface-2`,
+  `--rule-c`, `--accent-01`; text is 13 user units or more, in the site's sans
+  face, at most 720 units wide. Label the mark, not the text, with the accent.
 
 ## 6. Tables
 
@@ -456,7 +514,7 @@ With `footnotes: side` in a note's properties (the About page), footnotes become
 | mdast | `src/lib/remark/buildlog.mjs` | ` ```buildlog ` → the build log of the note's project (`src/lib/activity/render.mjs`) |
 | mdast | `src/lib/remark/obsidian.mjs` | the H1 title, `[[links]]`, `![[embeds]]`, `#tags`, `%%comments%%`, fields, tasks |
 | mdast | `src/lib/remark/callouts.mjs` | `==mark==`, then the callouts |
-| mdast | `src/lib/remark/callouts.mjs` | `[!bars]` → the evidence figure |
+| mdast | `src/lib/remark/callouts.mjs` | `[!bars]` → the evidence figure; `[!figure]` → the same figure around an inlined SVG (`src/lib/vault/figure-svg.mjs`) |
 | hast | Prism (Astro) | class-based highlighting |
 | hast | `src/lib/rehype/katex.mjs` | KaTeX, native MathML only |
 | hast | `src/lib/rehype/tables.mjs` | `align` attributes, `.table-scroll` |
