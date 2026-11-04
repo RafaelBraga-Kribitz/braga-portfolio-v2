@@ -95,6 +95,7 @@ const en = {
   'date': 'Date',
   'stack': 'Stack',
   'all-n-essays': 'All {n} essays',
+  'all-n-essays-one': '1 essay',
   'essays.sub': 'Newest first. The code beside the date is permanent.',
   // the notes library (owner, 25 Oct 2026)
   'notes.word': 'Notes',
@@ -259,6 +260,7 @@ const de: Record<ChromeKey, string> = {
   'date': 'Datum',
   'stack': 'Stack',
   'all-n-essays': 'Alle {n} Essays',
+  'all-n-essays-one': '1 Essay',
   'essays.sub': 'Die neuesten zuerst. Der Code neben dem Datum bleibt.',
   'notes.word': 'Notizen',
   'notes.claim': 'Eine Arbeitsbibliothek der Mathematik hinter der Analyse.',
