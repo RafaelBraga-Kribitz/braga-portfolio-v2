@@ -610,7 +610,8 @@ main > .doc:last-child, .doc-opener.grid + .grid { padding-bottom: 64px; }
    the page (under the shell) and at its foot (over the footer) the page's
    own spacing stays. A spec list is not among the openers: its label stands
    above its rule. */
-.doc > :is(.callout[data-callout="summary"], .callout[data-callout="metrics"], .callout[data-callout="bookmark"], details.callout, .metric-strip, .table-scroll, .math, .toc-compact, .doc-related)
+/* D-063: a table followed by an h2 keeps the section gap (the :not on .table-scroll below); the h2's own rule opens the section. */
+.doc > :is(.callout[data-callout="summary"], .callout[data-callout="metrics"], .callout[data-callout="bookmark"], details.callout, .metric-strip, .table-scroll:not(:has(+ h2)), .math, .toc-compact, .doc-related)
   + :is(h2, .callout[data-callout="summary"], .callout[data-callout="metrics"], .callout[data-callout="definition"], .callout[data-callout="bookmark"], details.callout, .metric-strip, .table-scroll, .math, .toc-compact, .doc-close, .doc-end, .footnotes, figure.evidence) { margin-top: 0; }
 .section:has(> .listing:last-child):has(+ .section > .section-heading:first-child) { padding-bottom: 0; }
 .bench:has(.bench-kpis:last-child) + .bench-rule { margin-top: 0; }
