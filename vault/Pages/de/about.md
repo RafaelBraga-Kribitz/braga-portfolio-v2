@@ -34,7 +34,7 @@ Die Marketinglaufbahn steuert die fachliche Hälfte der Arbeit bei: das Wissen, 
 > [!spec] Nach Kategorie
 > - Fachgebiete — Marketing Data Science · Quantitatives Marketing · Marketing Science
 > - Methoden — Kausale Inferenz · Bayessche Methoden · Prognosen · Optimierung
-> - Werkzeugkasten — Python · PyMC · DuckDB · dbt · DVC · Git · SQL · Spark
+> - Werkzeugkasten — SQL · Python · DuckDB · dbt · PyMC · DVC · Git · Spark
 > - Praxis — Experimentdesign · Entscheidungssysteme · Messung und Attribution
 > - Sprachen — Portugiesisch (Muttersprache) · Englisch (fließend) · Deutsch (A2-Zertifikat; Kurs läuft)
 

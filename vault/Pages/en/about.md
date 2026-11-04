@@ -34,7 +34,7 @@ What the marketing career adds is the domain half of the job: knowing how campai
 > [!spec] By category
 > - Domains — Marketing Data Science · Quantitative Marketing · Marketing Science
 > - Methods — Causal Inference · Bayesian Methods · Forecasting · Optimisation
-> - Toolbox — Python · PyMC · DuckDB · dbt · DVC · Git · SQL · Spark
+> - Toolbox — SQL · Python · DuckDB · dbt · PyMC · DVC · Git · Spark
 > - Practice — Experiment design · Decision systems · Measurement & attribution
 > - Languages — Portuguese (native) · English (fluent) · German (A2 certificate; course in progress)
 
