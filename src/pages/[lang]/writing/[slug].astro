@@ -80,6 +80,7 @@ const meta = [
   related={extras.related}
   structuredData={structuredData}
   prevDoc={prev && writingRoute(prev.data.slug, lang)}
+  close={{ subject: t(lang, 'contact.subject').replace('{title}', `${code} ${d.title}`), question: t(lang, 'contact.essay'), forward: { href: route('work', lang), label: t(lang, 'close.projects') } }}
 >
   <Content />
 </Document>

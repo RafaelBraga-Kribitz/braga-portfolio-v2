@@ -74,6 +74,9 @@ const en = {
   'contact.cta': 'Get in touch',
   // the close of a project page (UX pass, 22 Oct 2026): one primary action
   'contact.project': 'Questions about this project, or a role where this kind of work fits?',
+  // the close of an essay (DC-12)
+  'contact.essay': 'Written by Rafael Braga-Kribitz. Questions about this essay, or a role where this kind of work fits?',
+  'close.projects': 'See the projects',
   'contact.subject': 'About {title}',
   // section claims shared by the home Index and the section indexes
   // (Site specimen s03; home.yaml sections[02].leadParagraphs[0] with the
@@ -241,6 +244,8 @@ const de: Record<ChromeKey, string> = {
   'cover.n-essays-one': '1 Essay',
   'contact.cta': 'Kontakt aufnehmen',
   'contact.project': 'Fragen zu diesem Projekt oder eine Rolle, in die diese Art von Arbeit passt?',
+  'contact.essay': 'Geschrieben von Rafael Braga-Kribitz. Fragen zu diesem Essay oder eine Rolle, in die diese Art von Arbeit passt?',
+  'close.projects': 'Die Projekte ansehen',
   'contact.subject': 'Zu {title}',
   'work.claim': 'Eine Entscheidung. Ihre Belege.',
   'work.prose': 'Ausgewählte analytische Projekte, bei denen Frage, Ergebnis und Grenzen beisammen bleiben.',
