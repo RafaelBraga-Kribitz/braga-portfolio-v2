@@ -1,8 +1,8 @@
 ---
 slug: about
 lang: en
-summary: "Rafael Braga-Kribitz, Marketing Data Analyst: background, approach, skills, CV and contact."
-lead: "Marketing Data Analyst building the measurement and decision systems behind where marketing budget goes. The domain knowledge comes from having run the campaigns, not just modelled them."
+summary: "Rafael Braga-Kribitz, Data Analyst: background, approach, skills, CV and contact."
+lead: "Data Analyst building the measurement and decision systems behind where marketing budget goes. The domain knowledge comes from having run the campaigns, not just modelled them."
 translationStatus: approved
 publish: true
 footnotes: side
@@ -12,7 +12,7 @@ footnotes: side
 
 > [!spec] Profile
 > - Name — Rafael Braga-Kribitz
-> - Role — Marketing Data Analyst
+> - Role — Data Analyst
 > - Based in — Seiersberg, Greater Graz, Austria
 
 ## Background

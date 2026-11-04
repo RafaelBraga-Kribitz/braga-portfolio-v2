@@ -29,7 +29,7 @@ export interface Site {
 export const site: Site = {
   name: 'Rafael Braga-Kribitz',
   wordmark: 'BRAGA',
-  role: { en: 'Marketing Data Analyst', de: 'Marketing Data Analyst' },
+  role: { en: 'Data Analyst', de: 'Data Analyst' },
   email: 'hello@rafaelbragakribitz.com',
   location: { en: 'Greater Graz, Austria', de: 'Großraum Graz, Österreich' },
   address: '8054 Seiersberg, Styria, Austria',
