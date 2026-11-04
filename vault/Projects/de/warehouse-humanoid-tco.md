@@ -32,7 +32,7 @@ Es geht um die Wirtschaftlichkeit, nicht um die technische Fähigkeit. Die Antwo
 
 ## Daten
 
-Die Leistungsdaten sind Demonstrationen aus dem Haushalt, keine Lageraufgaben und keine Messungen einer im Lager eingesetzten Flotte. Das Modell nutzt ihre Grundbewegungen Greifen, Bewegen und Ablegen als Näherung, mit einem Übertragungsfaktor für die Geschwindigkeit. Diese Übertragung ist die größte Gefahr für die externe Validität.
+Die Leistungsdaten sind Demonstrationen aus dem Haushalt, keine Lageraufgaben und keine Messungen einer eingesetzten Flotte. Das Modell nutzt ihre Grundbewegungen Greifen, Bewegen und Ablegen als Näherung, mit einem Übertragungsfaktor für die Geschwindigkeit. Diese Übertragung ist die größte Gefahr für die externe Validität.
 
 > [!spec] Modelleingaben
 > - Episoden — 2.359 · fünf öffentliche UnifoLM-Datensätze, per Hash fixiert
@@ -52,7 +52,7 @@ Vier Module laufen nacheinander mit einem einzigen Befehl.
 
 | Schritt | Modul | Arbeit |
 |:--|:--|:--|
-| 1 | Extraktion der Leistungsfähigkeit | Taktzeiten und eine regelbasierte Aufgabentaxonomie aus den Episoden. |
+| 1 | Ermittlung der Leistungsdaten | Taktzeiten und eine regelbasierte Aufgabentaxonomie aus den Episoden. |
 | 2 | Ereignisdiskrete Simulation | Replikationen jedes Szenarios, nachfragebegrenzt, jedes Szenario auf die Auslastungsgrenze dimensioniert. |
 | 3 | Fünfjahreskosten mit Monte-Carlo-Simulation | Ziehungen je Szenario, One-at-a-time-Sensitivitätsanalyse (jeweils ein Parameter variiert) und Sobol-Sensitivitätsanalyse, binäre Suche nach dem Preis humanoider Roboter, bei dem die Flotte kostengleich wird (Breakeven). |
 | 4 | Berichtswesen | Grafiken für das Management, CSV-Exporte, eine Management-Zusammenfassung auf Deutsch und Englisch, eine Tableau-Public-Arbeitsmappe. |
@@ -103,10 +103,10 @@ Die Rangfolge gilt nur unter den genannten Annahmen.
 
 ## Entscheidung
 
-Unter den genannten Annahmen: die schlanke Hybridvariante am Standort validieren und die Beschaffung humanoider Roboter zurückstellen. Vor jeder Beschaffungsentscheidung Durchsatzmessungen im tatsächlichen Lager und verbindliche Lieferantenangebote einholen.
+Unter den genannten Annahmen: die schlanke Hybridvariante am Standort validieren und die Beschaffung humanoider Roboter zurückstellen. Vor jeder Beschaffungsentscheidung den im tatsächlichen Lager gemessenen Durchsatz und unterzeichnete Lieferantenangebote prüfen.
 
 > [!faq]- Wann lohnt sich eine erneute Prüfung?
-> Wenn die Nachfrage wächst, Arbeitskräfte knapp werden oder auf Mehrschichtbetrieb umgestellt wird. Bei der modellierten Nachfrage wird kein Preis humanoider Roboter im durchsuchten Bereich kostengleich.
+> Wenn die Nachfrage wächst, Arbeitskräfte knapp werden oder auf Mehrschichtbetrieb umgestellt wird. Bei der modellierten Nachfrage erreicht eine humanoide Flotte zu keinem Preis im durchsuchten Bereich Kostengleichheit.
 
 ## Entstehung
 

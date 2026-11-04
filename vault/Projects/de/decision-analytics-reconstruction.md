@@ -2,7 +2,7 @@
 code: "01-04"
 kind: case
 date: "2026-05-07"
-summary: Eine Rekonstruktion in drei Modulen. Allokationsgewinne sind Näherungswerte, keine Kampagneneffekte.
+summary: Eine Rekonstruktion in drei Modulen. Allokationsgewinne betreffen Proxy-Kontakte, keine Kampagneneffekte.
 lead: "Die Präsidentschaftswahl 2018 in Paraguay, rekonstruiert als drei verbundene Entscheidungsmodule (Wählersegmentierung, Budgetallokation und Umfrage-Tracking) aus dem, was eine Kampagne Anfang 2018 sehen konnte."
 domain: Entscheidungsanalytik
 tags: [ status/complete, wahlkampagnen, segmentierung, optimierung, bayessches-tracking ]
@@ -39,7 +39,7 @@ Diese Rekonstruktion der Präsidentschaftswahl 2018 in Paraguay nutzt, was eine 
 > - Quelle — [amtliches statistisches Jahrbuch, Tabelle 5.3.1](https://informacionpublica.paraguay.gov.py/public/7234448-AnuarioEstadistico2018pdf-AnuarioEstadistico2018.pdf)
 
 > [!note] Modellanker
-> Serie A des Repositorys verwendet +3,70 Prozentpunkte (46,43 % gegenüber 42,73 %). Diese Konvention ist bei keinem der beiden Nenner der exakte Prozentsatz der Endauszählung. Diese redaktionelle Korrektur passt das Rekonstruktionsmodell nicht neu an.
+> Serie A des Repositorys verwendet +3,70 Prozentpunkte (46,43 % gegenüber 42,73 %). Diese Konvention entspricht bei keinem der beiden Nenner dem exakten Vorsprung der Endauszählung. Diese redaktionelle Korrektur passt das Rekonstruktionsmodell nicht neu an.
 
 ## Daten
 
@@ -68,9 +68,9 @@ Jede zentrale Zahl steht in einer einzigen numerischen Referenztabelle (Source o
 
 | Modul | Methode | Belegbar | Nicht belegbar |
 |:--|:--|:--|:--|
-| A | K-Means mit sechs Segmenten, dazu eine nach Platt kalibrierte Wahlbeteiligungsneigung (Propensity). Schwellen: Silhouettenkoeffizient und Bootstrap-ARI (Adjusted Rand Index über Bootstrap-Stichproben). Brier-Score (mittlerer quadratischer Fehler der vorhergesagten Wahrscheinlichkeiten) auf einer Holdout-Stichprobe von 15.000 Wahlberechtigten. | Sechs Segmente, die beide Schwellen bestehen. Eine kalibrierte Neigung, bewertet an 15.000 zurückgehaltenen synthetischen Wahlberechtigten. | Dass das Modell generalisiert. |
+| A | K-Means mit sechs Segmenten, dazu eine nach Platt kalibrierte Wahlbeteiligungsneigung (Propensity). Prüfkriterien: Silhouettenkoeffizient und Bootstrap-ARI (Adjusted Rand Index über Bootstrap-Stichproben). Brier-Score (mittlerer quadratischer Fehler der vorhergesagten Wahrscheinlichkeiten) auf einer Holdout-Stichprobe von 15.000 Wahlberechtigten. | Sechs Segmente, die beide Prüfkriterien erfüllen. Eine kalibrierte Neigung, bewertet an 15.000 zurückgehaltenen synthetischen Wahlberechtigten. | Dass das Modell generalisiert. |
 | B | Gemischt-ganzzahliges lineares Programm (MILP, Mixed-Integer Linear Program) in PuLP, gelöst mit CBC, über 2.772 Zeilen. Budget, Reichweitenobergrenzen, eine Wechselkursebene und eine Mindestabdeckung von 80 %. Es maximiert einen linearisierten Persuasion-Proxy (eine Ersatzgröße für Überzeugungswirkung) und läuft über FastAPI. | Ein Solver-Vergleich (ein Vergleich von Ergebnissen des Optimierers) auf synthetischer Reichweite: Kontakte einer Allokation gegenüber einer anderen. | Ein historischer Effekt der Kampagne von 2018. |
-| C | Gauß’scher Random Walk (Zufallspfad) mit House Effects (der systematischen Abweichung einzelner Umfrageinstitute), in PyMC an acht Umfragen angepasst. Stratifizierte Monte-Carlo-Szenarien, standardmäßig 10.000 Ziehungen. | Eine Retrodiktion des Rennens durch die acht Umfragen. | Eine Prognose oder Prognosefähigkeit. |
+| C | Gauß’scher Random Walk (Zufallspfad) mit House Effects (der systematischen Abweichung einzelner Umfrageinstitute), in PyMC an acht Umfragen angepasst. Stratifizierte Monte-Carlo-Szenarien, standardmäßig 10.000 Ziehungen. | Eine Retrodiktion des Wahlverlaufs anhand der acht Umfragen. | Eine Prognose oder Prognosefähigkeit. |
 
 Modul A erreicht zudem eine AUC (Fläche unter der ROC-Kurve) von rund 0,89. Das Projekt hebt sie bewusst nicht hervor. Die Merkmale der Neigung teilen Kalibrierungsanker mit der Zielgröße, daher misst die AUC, wie gut das Raking wiederhergestellt wurde, nicht die Generalisierung.
 
@@ -94,10 +94,10 @@ Der Allokationswert ist ein Solver-Vergleich auf synthetischer Reichweite, kein 
 Die Neuanpassungen halten jede reale Umfragewelle zurück und schließen das Wahlergebnis nachweislich aus. Das ist die einzige echte Out-of-Sample-Prüfung (Prüfung an Daten, die nicht in die Anpassung eingehen), ungeschönt berichtet.
 
 > [!figure] Abb. 01-04-2 · Zurückgehaltene Umfragen gegenüber dem Band zu 95 %
-> Das Band zu 95 % erfasste 4 von 6 zurückgehaltenen Umfragen. Ein kalibriertes Band würde etwa 6 erfassen.
+> Das Band zu 95 % erfasste 4 von 6 zurückgehaltenen Umfragen. Ein kalibriertes Band würde etwa 6 erfassen.
 > ![[01-04-wave-intervals.de.svg]]
 >
-> caption: Beobachteter Abstand jeder realen Umfragewelle in Prozentpunkten, gegenüber dem Band zu 95 % einer Neuanpassung. Diese Neuanpassung hält die Welle zurück und schließt das Wahlergebnis aus. n = 6 Wellen. Verfehlungen sind in der Akzentfarbe gezeichnet. Voller Lauf: 4 Ketten mit je 1.000 Ziehungen, und die Sampler-Diagnose besteht in jedem Fold. Acht Wellen ergeben 6 Holdouts bei `min_train_size=2`. Der frühere schnelle Lauf erfasste 3 von 6, und eine Welle wechselte. Sechs Wellen sind zu wenige, um das eine Verbesserung zu nennen.
+> caption: Beobachteter Abstand jeder realen Umfragewelle in Prozentpunkten, gegenüber dem Band zu 95 % einer Neuanpassung. Diese Neuanpassung hält die Welle zurück und schließt das Wahlergebnis aus. n = 6 Wellen. Verfehlungen sind in der Akzentfarbe gezeichnet. Voller Lauf: 4 Ketten mit je 1.000 Ziehungen, und alle Sampler-Prüfungen sind in jedem Fold bestanden. Acht Wellen ergeben 6 Holdouts bei `min_train_size=2`. Der frühere schnelle Lauf erfasste 3 von 6, und eine Welle wechselte. Sechs Wellen sind zu wenige, um das eine Verbesserung zu nennen.
 > source: Projekt-Repository, [reports/module_c/walk_forward_loo_report.md](https://github.com/RafaelBraga-Kribitz/decision-analytics-reconstruction/blob/86f6d3b1f3e9a4312ac5320f83e3ddd08050a257/reports/module_c/walk_forward_loo_report.md).
 
 Acht Umfragen sind bei Weitem zu wenige, um Prognosefähigkeit zu beanspruchen, und das Projekt beansprucht sie nicht.

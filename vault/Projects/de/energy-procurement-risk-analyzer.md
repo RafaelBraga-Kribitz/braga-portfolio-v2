@@ -30,12 +30,12 @@ publish: true
 
 ## Hintergrund
 
-Nach der europäischen Energiekrise 2021–2023 wurde die Strombeschaffung für die österreichische Industrie zu einem Risiko auf Vorstandsebene. Das Projekt nimmt einen steirischen Produktionsbetrieb mit einem Jahresverbrauch von 50 GWh. Es fragt zweierlei. Erstens: Was kostete es, Strom in den Jahren 2021–2025 auf die falsche Weise einzukaufen? Zweitens: Wie hoch ist das Kostenrisiko auf P95-Niveau (95. Perzentil) für die nächsten zwölf Monate unter jeder Strategie? Es vergleicht vier Strategien am österreichischen Day-Ahead-Markt (Großhandelsmarkt für Lieferungen am Folgetag): vollständigen Spotbezug, einen Indexvertrag, einen fixen Jahrespreis und eine Teilabsicherung.
+Nach der europäischen Energiekrise 2021–2023 wurde die Strombeschaffung zur Risikofrage für die Vorstände der österreichischen Industrie. Das Projekt betrachtet einen steirischen Produktionsbetrieb mit einem Jahresverbrauch von 50 GWh. Es fragt zweierlei. Erstens: Was kostete es, Strom in den Jahren 2021–2025 auf die falsche Weise einzukaufen? Zweitens: Wie hoch ist das Kostenrisiko auf P95-Niveau (95. Perzentil) für die nächsten zwölf Monate unter jeder Strategie? Es vergleicht vier Strategien am österreichischen Day-Ahead-Markt (Großhandelsmarkt für Lieferungen am Folgetag): vollständigen Spotbezug, einen Indexvertrag, einen fixen Jahrespreis und eine Teilabsicherung.
 
 | Kennzahl | Einheit | Preise |
 |:--|:--|:--|
-| Realisierte Kosten | Energiepreiskosten der Last, in Euro | 2021–2025 |
-| P95 und CVaR95 (Conditional Value at Risk) | Energiepreiskosten der nächsten zwölf Monate, in Euro | Neu gezogen |
+| Realisierte Kosten | Energieanteil der Stromkosten, in Euro | 2021–2025 |
+| P95 und CVaR95 (Conditional Value at Risk) | Energieanteil der Zwölfmonatsstromkosten, in Euro | Neu gezogen |
 
 ## Daten
 
@@ -67,7 +67,7 @@ Die Marktdaten sind real. Kein Marktpreis ist synthetisch.
 | Berichtsebene | Berichtsebene | Nicht gebaut |
 
 > [!definition] P95 und CVaR95
-> P95 sind die Zwölfmonatskosten, die 95 % der neu gezogenen Ergebnisse nicht überschreiten. CVaR95 (Conditional Value at Risk) ist der Mittelwert der Kosten jenseits von P95. Er zeigt, wie schwer der Rand der Verteilung wiegt, nicht nur, wo er beginnt.
+> P95 sind die Zwölfmonatskosten, die 95 % der neu gezogenen Ergebnisse nicht überschreiten. CVaR95 (Conditional Value at Risk) ist der Mittelwert der Kosten jenseits von P95. Er beschreibt die Kostenhöhe im oberen Verteilungsschwanz, nicht nur dessen Beginn.
 
 ## Ergebnis
 

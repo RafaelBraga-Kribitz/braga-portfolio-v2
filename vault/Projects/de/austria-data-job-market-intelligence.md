@@ -22,7 +22,7 @@ publish: true
 ## Frage: Welche Datenjobs werden in Österreich ausgeschrieben, wo, und was verlangen sie?
 
 > [!summary] Zusammenfassung
-> SQL führt eine eintägige Momentaufnahme von 720 Kerninseraten für Datenrollen an. Unter den genannten Anbietern neigen die Inserate zu Microsoft. Seit 2022 ging die Zahl in der AMS-Berufsgruppe „Data Scientist“ in der Steiermark um 29 % zurück, in Österreich um 56 %. Die Rohdatensammlung bleibt ein privater Forschungsdatensatz.
+> SQL führt bei den Kompetenznennungen der eintägigen Momentaufnahme von 720 Kerninseraten für Datenrollen. Unter den genannten Anbietern zeigt sich eine Tendenz zu Microsoft. Seit 2022 ging die Zahl in der AMS-Berufsgruppe „Data Scientist“ in der Steiermark um 29 % zurück, in Österreich um 56 %. Die Rohdatensammlung bleibt ein privater Forschungsdatensatz.
 
 > [!note] Stand der Daten
 > Diese Seite beschreibt die Momentaufnahme vom 16. Sep. 2026. Das Repository ist inzwischen auf die Momentaufnahme vom 18. Okt. 2026 umgestellt (Release 2026-10-19.1, 699 Kerninserate). Seine README enthält die aktuellen Zahlen.
@@ -46,7 +46,7 @@ Das Projekt liest aus jedem Inserat Stellentitel, Ort, Technologien, Sprachen, A
 > 12.429 Rohzeilen reduzieren sich auf 720 Kerninserate.
 > ![[01-01-funnel.de.svg]]
 >
-> caption: Anzahl der Zeilen. Die Bandbreite ist proportional zur Anzahl. Im Untersuchungsrahmen heißt: Kerninserate, benachbarte Rollenfamilien und deren Dubletten. Die Dublettenquote von 24 % sind 404 der 1.670 Zeilen im Untersuchungsrahmen.
+> caption: Anzahl der Zeilen. Die Bandbreite ist proportional zur Anzahl. Im Untersuchungsrahmen heißt: Kerninserate, benachbarte Rollenfamilien und deren Dubletten. Die Dublettenquote von 24 % entspricht 404 der 1.670 Zeilen im Untersuchungsrahmen.
 > source: Repository-Tabellen market_summary, dedupe_summary und Q04_duplicates, Commit 267b115; Momentaufnahme vom 16. Sep. 2026.
 
 ## Methode
@@ -73,10 +73,10 @@ Das Projekt liest aus jedem Inserat Stellentitel, Ort, Technologien, Sprachen, A
 ### Kompetenzen
 
 > [!figure] Abb. 01-01-2 · Nennung von Kompetenzen mit Intervallen zu 95 %
-> SQL führt mit 40 %, KI-Formulierungen und Datenvisualisierung folgen mit 38 %. Unter den genannten Anbietern führen Azure und Power BI.
+> SQL führt mit 40 %, KI-Formulierungen und Datenvisualisierung folgen mit 38 %. Bei Cloud-Plattformen und BI-Werkzeugen führen Azure und Power BI.
 > ![[01-01-skills-top.de.svg]]
 >
-> caption: Anteil der 719 Inserate mit einer Beschreibung von mehr als 300 Zeichen, die die Kompetenz nennen. Ein Inserat kann mehrere Kompetenzen nennen. Allgemeine Themen wie KI (allgemein) zählen so, wie die Taxonomie sie schreibt. Die Whisker sind Wilson-Intervalle zu 95 %.
+> caption: Anteil der 719 Inserate mit einer Beschreibung von mehr als 300 Zeichen, die die Kompetenz nennen. Ein Inserat kann mehrere Kompetenzen nennen. Allgemeine Themen wie KI (allgemein) werden gemäß der Taxonomie gezählt. Die Whisker sind Wilson-Intervalle zu 95 %.
 > source: Repository-Tabelle T05_skills_all_tech, Commit 267b115; Momentaufnahme vom 16. Sep. 2026.
 
 > [!figure] Abb. 01-01-3 · Nennung von Kompetenzen nach Rollenfamilie
@@ -147,7 +147,7 @@ Was diese Arbeit nicht belegt:
 
 ## Entscheidung
 
-Die Momentaufnahme ist eine Evidenzbasis, kein Urteil, und jede Aussage lässt sich auf eine Tabellen-ID zurückführen. Zwei Entscheidungsdokumente bewerten jede Rollenfamilie an einem deklarierten Kompetenzprofil, mit offengelegten Gewichten, ohne verdeckte Bewertung und mit einer Sensitivitätsprüfung unter alternativen Gewichten.
+Die Momentaufnahme ist eine Evidenzbasis, kein Urteil, und jede Aussage lässt sich auf eine Tabellen-ID zurückführen. Zwei Entscheidungsdokumente bewerten jede Rollenfamilie anhand eines deklarierten Kompetenzprofils, mit offengelegten Gewichten, ohne verdeckte Bewertung und mit einer Sensitivitätsprüfung unter alternativen Gewichten.
 
 > [!faq]- Warum werden die Rohinserate nicht veröffentlicht?
 > Eine Prüfung der Nutzungsbedingungen ergab, dass alle fünf Inseratquellen die automatisierte Extraktion einschränken. Die Sammlung bleibt daher ein einmaliger, privater Forschungsdatensatz. Das öffentliche Repository enthält den Code, die Regeln und die aggregierten Tabellen, ohne jede Text- und URL-Spalte. Die Erhebungsskripte und die Rohinserate werden nicht veröffentlicht.

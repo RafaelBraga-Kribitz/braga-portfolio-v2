@@ -39,7 +39,7 @@ This reconstruction of the 2018 Paraguay presidential election uses what a campa
 > - Source — [official statistical yearbook, table 5.3.1](https://informacionpublica.paraguay.gov.py/public/7234448-AnuarioEstadistico2018pdf-AnuarioEstadistico2018.pdf)
 
 > [!note] Modelling anchor
-> Series A uses +3.70 points (46.43% versus 42.73%). That convention is not the exact final-count percentage on either denominator. This editorial correction does not refit the reconstruction.
+> Series A uses +3.70 points (46.43% versus 42.73%). That convention is not the exact final-count lead on either denominator. This editorial correction does not refit the reconstruction.
 
 ## Data
 
