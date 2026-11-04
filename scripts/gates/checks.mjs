@@ -68,6 +68,17 @@ export const skipped = (id, why) => ({ id, name: GATE_NAME[id] || id, status: 's
 export async function pageGates(opts = {}) {
   const win = window, doc = document;
   try { await doc.fonts.ready; } catch (e) { /* no FontFaceSet */ }
+  // Wait for the page's own settle: the shell script sets [data-ready] on the
+  // contact button after a first paint, and its Copy/Open halves then
+  // transition (opacity 1 → 0, colours, 140 ms). A gate that reads colours or
+  // opacity in that window sees a second accent that is not at rest. Only CSS
+  // transitions are awaited (never infinite animations), at most 1 s in all.
+  const settleBy = Date.now() + 1000;
+  for (let n = 0; n < 5 && Date.now() < settleBy; n++) {
+    const running = doc.getAnimations().filter((a) => typeof CSSTransition !== 'undefined' && a instanceof CSSTransition && a.playState === 'running');
+    if (!running.length) break;
+    await Promise.race([Promise.all(running.map((a) => a.finished.catch(() => {}))), new Promise((res) => win.setTimeout(res, Math.max(0, settleBy - Date.now())))]);
+  }
 
   /* ---- colour maths (checks.js) ---- */
   const canvas = doc.createElement('canvas'); canvas.width = canvas.height = 1;
