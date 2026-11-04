@@ -10,7 +10,7 @@ lang: en
 slug: decision-analytics-reconstruction
 metrics:
   - { value: "+54.77%", label: "Proxy contacts against uniform, synthetic reach, approximate", accent: true }
-  - { value: "3 of 6", label: "Held-out polls inside the 95% band" }
+  - { value: "4 of 6", label: "Held-out polls inside the 95% band" }
   - { value: "50,000", label: "Synthetic voters, 14 weeks" }
 stack: [ "Python", "PyMC", "Bayesian", "Optimisation", "scikit-learn", "FastAPI", "Streamlit", "MLflow", "Docker", "GCP", "CI/CD" ]
 repository: https://github.com/RafaelBraga-Kribitz/decision-analytics-reconstruction
@@ -85,19 +85,20 @@ Module A also reaches an area under the curve (AUC) of about 0.89. The project d
 | A | Bootstrap ARI | 0.4304 | Gate 0.40 |
 | A | Brier score, turnout propensity | 0.1185 | 15,000-voter holdout |
 | B | Linearised persuasion-proxy contacts | About +54.77% | Department-uniform allocation, USD 6 million envelope |
-| C | Brier score, sign of the margin | 0.31 | Held-out polls |
-| C | Held-out polls inside the 80% interval | 33.3% | 6 held-out waves |
+| C | Brier score, sign of the margin | 0.3225 | Held-out polls |
+| C | Log loss, sign of the margin | 1.1184 | Held-out polls |
+| C | Held-out polls inside the 80% interval | 50% | 6 held-out waves |
 
 The allocation figure is a solver comparison on synthetic reach, not a historical effect of the 2018 campaign.
 
 The refits hold out each real poll wave and provably exclude the election result. This is the one true out-of-sample check, reported unflattered.
 
 > [!figure] Fig. 01-04-2 · Held-out polls against the 95% band
-> The 95% band caught 3 of 6 held-out polls. A calibrated band would catch about 6.
+> The 95% band caught 4 of 6 held-out polls. A calibrated band would catch about 6.
 > ![[01-04-wave-intervals.en.svg]]
 >
-> caption: The chart shows the observed margin of each real poll wave, in percentage points. It is set against the 95% band of a refit that holds that wave out and excludes the election result. n = 6 waves. Misses are in the accent colour. Eight waves give 6 holdouts at `min_train_size=2`, and six waves are few. The committed report used `MC_FAST=1` and says to re-run without it for publication-grade sampling. That is not done.
-> source: project repository, reports/module_c/walk_forward_loo_report.md.
+> caption: The chart shows the observed margin of each real poll wave, in percentage points. It is set against the 95% band of a refit that holds that wave out and excludes the election result. n = 6 waves. Misses are in the accent colour. Full run: 4 chains of 1,000 draws, and the sampler diagnostics pass in every fold. Eight waves give 6 holdouts at `min_train_size=2`. The earlier fast run caught 3 of 6, and one wave moved. Six waves are too few to call that an improvement.
+> source: project repository, [reports/module_c/walk_forward_loo_report.md](https://github.com/RafaelBraga-Kribitz/decision-analytics-reconstruction/blob/86f6d3b1f3e9a4312ac5320f83e3ddd08050a257/reports/module_c/walk_forward_loo_report.md).
 
 Eight polls are far too few to claim forecasting skill, and the project does not claim it.
 

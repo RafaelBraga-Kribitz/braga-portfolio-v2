@@ -98,7 +98,7 @@ describe('figures · generator', () => {
       assert.ok(d.startsWith(findings().get(file)), `${file}: the description starts with its finding`);
     }
     assert.match(buildAll().get('01-01-skills-heatmap.en.svg'), /SQL: Data engineering 69/);
-    assert.match(buildAll().get('01-04-wave-intervals.en.svg'), /15 Mar: Observed margin −4\.50, Predictive mean 19\.40, 95% band −1\.2 to 42\.9, miss/);
+    assert.match(buildAll().get('01-04-wave-intervals.en.svg'), /15 Mar: Observed margin −4\.50, Predictive mean 20\.27, 95% band −3\.2 to 44\.7, miss/);
   });
 
   it('a page heading is the finding of its figure, in both languages', () => {

@@ -10,7 +10,7 @@ lang: de
 slug: decision-analytics-reconstruction
 metrics:
   - { value: "+54,77 %", label: "Proxy-Kontakte gegenüber Gleichverteilung, synthetische Reichweite, ungefähr", accent: true }
-  - { value: "3 von 6", label: "Zurückgehaltene Umfragen im Band zu 95 %" }
+  - { value: "4 von 6", label: "Zurückgehaltene Umfragen im Band zu 95 %" }
   - { value: "50.000", label: "Synthetische Wahlberechtigte, 14 Wochen" }
 stack: [ "Python", "PyMC", "Bayesian", "Optimisation", "scikit-learn", "FastAPI", "Streamlit", "MLflow", "Docker", "GCP", "CI/CD" ]
 repository: https://github.com/RafaelBraga-Kribitz/decision-analytics-reconstruction
@@ -85,19 +85,20 @@ Modul A erreicht zudem eine AUC (Fläche unter der ROC-Kurve) von rund 0,89. Das
 | A | Bootstrap-ARI | 0,4304 | Schwelle 0,40 |
 | A | Brier-Score, Wahlbeteiligungsneigung | 0,1185 | Holdout-Stichprobe, 15.000 Wahlberechtigte |
 | B | Linearisierte Proxy-Kontakte | Rund +54,77 % | Gleichmäßige Verteilung über die Departamentos, Budgetrahmen 6 Mio. USD |
-| C | Brier-Score, Vorzeichen des Vorsprungs | 0,31 | Zurückgehaltene Umfragen |
-| C | Zurückgehaltene Umfragen im Intervall zu 80 % | 33,3 % | 6 zurückgehaltene Wellen |
+| C | Brier-Score, Vorzeichen des Vorsprungs | 0,3225 | Zurückgehaltene Umfragen |
+| C | Log-Loss, Vorzeichen des Vorsprungs | 1,1184 | Zurückgehaltene Umfragen |
+| C | Zurückgehaltene Umfragen im Intervall zu 80 % | 50 % | 6 zurückgehaltene Wellen |
 
 Der Allokationswert ist ein Solver-Vergleich auf synthetischer Reichweite, kein historischer Effekt der Kampagne von 2018.
 
 Die Neuanpassungen halten jede reale Umfragewelle zurück und schließen das Wahlergebnis nachweislich aus. Das ist die einzige echte Out-of-Sample-Prüfung (Prüfung an Daten, die nicht in die Anpassung eingehen), ungeschönt berichtet.
 
 > [!figure] Abb. 01-04-2 · Zurückgehaltene Umfragen gegenüber dem Band zu 95 %
-> Das Band zu 95 % erfasste 3 von 6 zurückgehaltenen Umfragen. Ein kalibriertes Band würde etwa 6 erfassen.
+> Das Band zu 95 % erfasste 4 von 6 zurückgehaltenen Umfragen. Ein kalibriertes Band würde etwa 6 erfassen.
 > ![[01-04-wave-intervals.de.svg]]
 >
-> caption: Beobachteter Abstand jeder realen Umfragewelle in Prozentpunkten, gegenüber dem Band zu 95 % einer Neuanpassung. Diese Neuanpassung hält die Welle zurück und schließt das Wahlergebnis aus. n = 6 Wellen. Verfehlungen sind in der Akzentfarbe gezeichnet. Acht Wellen ergeben 6 Holdouts bei `min_train_size=2`, und sechs Wellen sind wenig. Der eingecheckte Bericht entstand mit `MC_FAST=1` und empfiehlt einen Neulauf ohne diese Option für Stichproben in Veröffentlichungsqualität. Das ist nicht erfolgt.
-> source: Projekt-Repository, reports/module_c/walk_forward_loo_report.md.
+> caption: Beobachteter Abstand jeder realen Umfragewelle in Prozentpunkten, gegenüber dem Band zu 95 % einer Neuanpassung. Diese Neuanpassung hält die Welle zurück und schließt das Wahlergebnis aus. n = 6 Wellen. Verfehlungen sind in der Akzentfarbe gezeichnet. Voller Lauf: 4 Ketten mit je 1.000 Ziehungen, und die Sampler-Diagnose besteht in jedem Fold. Acht Wellen ergeben 6 Holdouts bei `min_train_size=2`. Der frühere schnelle Lauf erfasste 3 von 6, und eine Welle wechselte. Sechs Wellen sind zu wenige, um das eine Verbesserung zu nennen.
+> source: Projekt-Repository, [reports/module_c/walk_forward_loo_report.md](https://github.com/RafaelBraga-Kribitz/decision-analytics-reconstruction/blob/86f6d3b1f3e9a4312ac5320f83e3ddd08050a257/reports/module_c/walk_forward_loo_report.md).
 
 Acht Umfragen sind bei Weitem zu wenige, um Prognosefähigkeit zu beanspruchen, und das Projekt beansprucht sie nicht.
 
