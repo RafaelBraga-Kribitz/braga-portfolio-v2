@@ -15,10 +15,12 @@
 // of scraping; it does not make it impossible (a scraper that runs CSS
 // and the script can still read it).
 
-/** Button labels by language. `failed` says how to recover. */
+/** Button labels by language. `failed` says how to recover. Each accessible
+ *  name contains its visible label (WCAG 2.5.3); the shell script adds the
+ *  address at run time (never in the HTML). */
 export const MAIL_LABELS = {
-  en: { copy: 'Copy', open: 'Open', copied: 'Copied', failed: 'Use Open', copyName: 'Copy the email address', openName: 'Write an email', fallbackName: 'Contact details' },
-  de: { copy: 'Kopieren', open: 'Öffnen', copied: 'Kopiert', failed: 'Öffnen nutzen', copyName: 'E-Mail-Adresse kopieren', openName: 'E-Mail schreiben', fallbackName: 'Kontaktdaten' },
+  en: { copy: 'Copy', open: 'Open', copied: 'Copied', failed: 'Use Open', copyName: 'Copy the email address', openName: 'Open an email', fallbackName: 'Open contact details' },
+  de: { copy: 'Kopieren', open: 'Öffnen', copied: 'Kopiert', failed: 'Öffnen nutzen', copyName: 'E-Mail-Adresse kopieren', openName: 'E-Mail öffnen', fallbackName: 'Kontaktdaten öffnen' },
 };
 
 const reverse = (s) => Array.from(s).reverse().join('');

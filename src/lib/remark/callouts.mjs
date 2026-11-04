@@ -298,6 +298,7 @@ function ctaLink(content, ctx, node) {
     el('span', { className: ['mail-split-face'], ariaHidden: 'true' }, [el('span', { className: ['mail-split-addr'], dataU: u, dataD: d }), el('span', { className: ['glyph'] }, [text('↗')])]),
     el('button', { type: 'button', className: ['mail-split-copy'], ariaLabel: w.copyName, dataLabel: w.copy, dataCopied: w.copied, dataFailed: w.failed, hidden: true }, [text(w.copy)]),
     el('a', { className: ['mail-split-open'], href: lang === 'de' ? '#kontakt' : '#contact', ariaLabel: w.fallbackName, dataOpenName: w.openName }, [text(`${w.open} `), el('span', { className: ['glyph'], ariaHidden: 'true' }, [text('↗')])]),
+    el('span', { className: ['sr-only', 'mail-split-status'], role: 'status' }, []),
   ]);
 }
 
