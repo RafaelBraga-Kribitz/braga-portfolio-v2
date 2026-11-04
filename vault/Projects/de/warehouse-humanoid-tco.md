@@ -68,7 +68,7 @@ Ein nachverfolgter Befund hat das Hauptergebnis verändert.[^1] Eine frühere Ve
 > Die schlanke Hybridvariante hat die niedrigsten Kosten im Basisfall und gewinnt 99,8 % der Ziehungen, obwohl ihre Spanne die des schlanken Teams überlappt.
 > ![[01-02-tco-range.de.svg]]
 >
-> caption: Tausend Euro, Barwert bei 8 %. Der Punkt ist der Basisfall, der gestrichelte Strich das Monte-Carlo-Mittel, die Linie das Intervall zu 90 % aus 10.000 Ziehungen. n = 7 Szenarien. Basisfall und Monte-Carlo-Mittel unterscheiden sich: Bei der rein humanoiden Flotte betragen sie 2.878 und 3.490. Im Basisfall kostet die schlanke Hybridvariante 30 % weniger als reines Personal und weniger als ein Fünftel des besten Humanoid-Falls. Die Referenz mit acht Personen ist ein Altszenario, eine gekennzeichnete Referenz für die Kosten einer Überbesetzung.
+> caption: Tausend Euro, Barwert bei 8 %. Der Punkt ist der Basisfall, der gestrichelte Strich das Monte-Carlo-Mittel, die Linie das Intervall zu 90 % aus 10.000 Ziehungen. n = 7 Szenarien. Basisfall und Monte-Carlo-Mittel unterscheiden sich: Bei der rein humanoiden Flotte betragen sie 2.878 und 3.490. Im Basisfall kostet die schlanke Hybridvariante 30 % weniger als reines Personal und weniger als ein Fünftel von Humanoid 2028, dem günstigsten modellierten Humanoid-Szenario. Die Referenz mit acht Personen ist ein Altszenario, eine gekennzeichnete Referenz für die Kosten einer Überbesetzung.
 > source: Fünfjahres-TCO-Modell, Projekt-Repository: Basisfall aus dem Szenarioexport, Monte-Carlo-Werte aus dem Sensitivitätsbericht; zuletzt aktualisiert am 16. Sep. 2026.
 
 | Szenario | Barwert, fünf Jahre | Capex | Kosten je Auftrag |
@@ -76,7 +76,7 @@ Ein nachverfolgter Befund hat das Hauptergebnis verändert.[^1] Eine frühere Ve
 | Schlanke Hybridvariante: 1 Person, 3 AMR (S-lean-hybrid-amr) | € 452.706 | € 195.000 | € 0,374 |
 | Schlankes Team: 3 Personen (S-lean-human) | € 647.401 | € 0 | € 0,543 |
 | Referenz mit acht Personen, Altszenario (S-baseline-human) | € 1.726.403 | € 0 | € 1,444 |
-| Humanoid 2028: 3 Personen, 9 Humanoide mit 1,3-fachem Durchsatz; bester Humanoid-Fall (S-future-2028) | € 2.532.753 | € 1.365.349 | € 2,120 |
+| Humanoid 2028: 3 Personen, 9 Humanoide mit 1,3-fachem Durchsatz (S-future-2028) | € 2.532.753 | € 1.365.349 | € 2,120 |
 | Nur Humanoide (S-pure-humanoid) | € 2.877.837 | € 2.051.609 | € 2,407 |
 | Humanoide + AMR + Team: 3 Personen, 11 Humanoide, 4 AMR (S-hybrid-amr) | € 3.841.113 | € 2.311.609 | € 3,244 |
 | 50/50-Hybrid (S-hybrid-5050) | € 5.251.641 | € 2.051.609 | € 4,411 |

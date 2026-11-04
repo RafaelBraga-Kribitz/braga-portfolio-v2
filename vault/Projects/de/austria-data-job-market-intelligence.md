@@ -35,7 +35,7 @@ Das Projekt liest aus jedem Inserat Stellentitel, Ort, Technologien, Sprachen, A
 
 > [!spec] Momentaufnahme
 > - Erhoben — 16. Sep. 2026, 17:00–18:40 UTC
-> - Inseratquellen — EURES 202 · karriere.at 134 · LinkedIn (Stellenseiten ohne Anmeldung) 300 · willhaben 26 · jobs.at 58. Jedes Kerninserat zählt einmal, unter seiner maßgeblichen Quelle (Tabelle T01). Die Zahlen ergeben zusammen 720.
+> - Inseratquellen — EURES 202 · karriere.at 134 · LinkedIn (Stellenseiten ohne Anmeldung) 300 · willhaben 26 · jobs.at 58. Kerninserate nach maßgeblicher Quelle (Tabelle T01).
 > - Zugang — Keine Anmeldung, keine Umgehung von CAPTCHA oder Paywall (Bezahlschranke)
 > - Blockiert, ausgeschlossen — StepStone · Indeed · hokify · Glassdoor
 > - Suche — 45 Titel-Suchbegriffe, Englisch und Deutsch
@@ -83,12 +83,10 @@ Das Projekt liest aus jedem Inserat Stellentitel, Ort, Technologien, Sprachen, A
 > Jede Rollenfamilie nennt ihre eigene Mischung: BI nennt Visualisierung am häufigsten (86 %), Data Science KI-Formulierungen (82 %), Data Engineering SQL (69 %).
 > ![[01-01-skills-heatmap.de.svg]]
 >
-> caption: Anteil der Inserate einer Familie, die die Kompetenz nennen, in %. Es sind dieselben 719 Inserate, außer einem Inserat zu Product Analytics, das ausgelassen ist. Die Zeilen zeigen 11 der 115 Kompetenzen der Taxonomie, geordnet nach ihrem Anteil an allen Inseraten. „Governance/Qualität“ enthält Governance-Schlüsselwörter, daher ist der Wert von 82 % bei Data-Governance-Inseraten teils per Definition wahr. Der dunkelste Ton ist der Höchstwert, 86 %. Ein Inserat kann mehrere Kompetenzen nennen. Marketing-Analytics hat n = 24. Stärkere Ränder markieren die Zellen, die der Befund nennt.
+> caption: Basis: dieselben 719 Inserate, ohne das eine Inserat zu Product Analytics. Die Zeilen zeigen 11 der 115 Kompetenzen der Taxonomie, geordnet nach ihrem Anteil an allen Inseraten. „Governance/Qualität“ enthält Governance-Schlüsselwörter, daher ist der Wert von 82 % bei Data-Governance-Inseraten teils per Definition wahr. Der dunkelste Ton ist der Höchstwert, 86 %. Marketing-Analytics hat n = 24. Stärkere Ränder markieren die Zellen des Befunds.
 > source: Repository-Tabelle T05_skills_all_tech_by_family, Commit 267b115; Momentaufnahme vom 16. Sep. 2026.
 
 ### Region
-
-Die 54 Inserate der Steiermark nach primärem Bundesland: Data Engineering 17, Data Science 13, Data Analytics 11.
 
 | Rollenfamilie | Wien | Steiermark | Übrige | Gesamt |
 |:--|--:|--:|--:|--:|
@@ -101,7 +99,7 @@ Die 54 Inserate der Steiermark nach primärem Bundesland: Data Engineering 17, D
 | Marketing- und Product-Analytics | 14 | 0 | 11 | 25 |
 | Gesamt | 343 | 54 | 323 | 720 |
 
-Das ist die Zählung nach primärem Bundesland (54). Die Ortszählung an anderer Stelle dieser Seite ergibt 58. „Übrige“ enthält 22 Inserate ohne angegebenes Bundesland. Steirische Zellen sind klein und vorläufig. Data Engineering und Data Science machen je 22 % der Kerninserate aus. Quelle: Repository-Tabelle T03_family_by_state, n = 720.
+Die Zählung nutzt das primäre Bundesland: Die Steiermark hat hier 54 und nach Ort unten 58. „Übrige“ enthält 22 Inserate ohne angegebenes Bundesland. Steirische Zellen sind klein und vorläufig. Data Engineering und Data Science machen je 22 % der Kerninserate aus. Quelle: Repository-Tabelle T03_family_by_state, n = 720.
 
 | Kennzahl | Anteil | Basis |
 |:--|--:|:--|

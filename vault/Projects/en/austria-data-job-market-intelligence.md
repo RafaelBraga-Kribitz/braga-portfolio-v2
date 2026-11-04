@@ -35,7 +35,7 @@ The project reads each ad for its title, location, technologies, languages, educ
 
 > [!spec] Snapshot
 > - Collected — 16 Sep 2026, 17:00–18:40 UTC
-> - Posting sources — EURES 202 · karriere.at 134 · LinkedIn (logged-out job pages) 300 · willhaben 26 · jobs.at 58. Each core posting counts once, under its canonical source (table T01). The counts sum to 720.
+> - Posting sources — EURES 202 · karriere.at 134 · LinkedIn (logged-out job pages) 300 · willhaben 26 · jobs.at 58. Core postings by canonical source (table T01).
 > - Access — No login, no CAPTCHA or paywall bypass
 > - Blocked, excluded — StepStone · Indeed · hokify · Glassdoor
 > - Search — 45 title keywords, English and German
@@ -83,12 +83,10 @@ The project reads each ad for its title, location, technologies, languages, educ
 > Each role family names its own mix: BI names visualisation most (86%), data science AI wording (82%), data engineering SQL (69%).
 > ![[01-01-skills-heatmap.en.svg]]
 >
-> caption: Share of the postings in a family that mention the skill, in %. The postings are the same 719, except one product-analytics posting, which is left out. The rows show 11 of the 115 skills of the taxonomy, ordered by their share over all postings. “Governance/quality” includes governance keywords, so its 82% in data governance ads is partly true by definition. The darkest shade is the top value, 86%. A posting can mention several skills. Marketing analytics has n = 24. Heavier edges mark the cells named in the finding.
+> caption: Base: the same 719 postings, without the one product-analytics posting. The rows show 11 of the 115 skills of the taxonomy, ordered by their share over all postings. “Governance/quality” includes governance keywords, so its 82% in data governance ads is partly true by definition. The darkest shade is the top value, 86%. Marketing analytics has n = 24. Heavier edges mark the cells in the finding.
 > source: repository table T05_skills_all_tech_by_family, commit 267b115; snapshot of 16 Sep 2026.
 
 ### Region
-
-Styria’s 54 primary-state postings: data engineering 17, data science 13, data analytics 11.
 
 | Role family | Vienna | Styria | Other | All |
 |:--|--:|--:|--:|--:|
@@ -101,7 +99,7 @@ Styria’s 54 primary-state postings: data engineering 17, data science 13, data
 | Marketing and product analytics | 14 | 0 | 11 | 25 |
 | Total | 343 | 54 | 323 | 720 |
 
-This is the primary-state count (54). The location count elsewhere on this page is 58. “Other” includes 22 postings with no stated state. Styrian cells are small and tentative. Data engineering and data science are each 22% of core postings. Source: repository table T03_family_by_state, n = 720.
+Counts use the primary state, so Styria is 54 here and 58 by location below. “Other” includes 22 postings with no stated state. Styrian cells are small and tentative. Data engineering and data science are each 22% of core postings. Source: repository table T03_family_by_state, n = 720.
 
 | Measure | Share | Base |
 |:--|--:|:--|

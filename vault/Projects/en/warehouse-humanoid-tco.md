@@ -68,7 +68,7 @@ One tracked finding changed the headline.[^1] An earlier version compared fixed 
 > The lean hybrid has the lowest base-case cost and wins 99.8% of the draws, although its range overlaps the lean crew’s.
 > ![[01-02-tco-range.en.svg]]
 >
-> caption: Thousands of euros, present value at 8%. The dot is the base case, the dashed tick the Monte Carlo mean, the line the 90% interval of 10,000 draws. n = 7 scenarios. The base case and the Monte Carlo mean differ: for the pure humanoid fleet they are 2,878 and 3,490. In the base case the lean hybrid costs 30% less than people alone and less than a fifth of the best humanoid case. The eight-person reference is legacy, a labelled reference for the cost of overstaffing.
+> caption: Thousands of euros, present value at 8%. The dot is the base case, the dashed tick the Monte Carlo mean, the line the 90% interval of 10,000 draws. n = 7 scenarios. The base case and the Monte Carlo mean differ: for the pure humanoid fleet they are 2,878 and 3,490. In the base case the lean hybrid costs 30% less than people alone and less than a fifth of Humanoid 2028, the cheapest modelled humanoid scenario. The eight-person reference is legacy, a labelled reference for the cost of overstaffing.
 > source: five-year TCO model, project repository: base case from the scenario export, Monte Carlo from the sensitivity report; last updated 16 Sep 2026.
 
 | Scenario | Five-year present cost | Capex | Cost per order |
@@ -76,7 +76,7 @@ One tracked finding changed the headline.[^1] An earlier version compared fixed 
 | Lean hybrid: 1 person, 3 AMRs (S-lean-hybrid-amr) | €452,706 | €195,000 | €0.374 |
 | Lean crew: 3 people (S-lean-human) | €647,401 | €0 | €0.543 |
 | Eight-person reference, legacy (S-baseline-human) | €1,726,403 | €0 | €1.444 |
-| Humanoid 2028: 3 people, 9 humanoids at 1.3 times throughput; best humanoid case (S-future-2028) | €2,532,753 | €1,365,349 | €2.120 |
+| Humanoid 2028: 3 people, 9 humanoids at 1.3 times throughput (S-future-2028) | €2,532,753 | €1,365,349 | €2.120 |
 | Pure humanoid (S-pure-humanoid) | €2,877,837 | €2,051,609 | €2.407 |
 | Humanoid + AMR + crew: 3 people, 11 humanoids, 4 AMRs (S-hybrid-amr) | €3,841,113 | €2,311,609 | €3.244 |
 | 50/50 hybrid (S-hybrid-5050) | €5,251,641 | €2,051,609 | €4.411 |
