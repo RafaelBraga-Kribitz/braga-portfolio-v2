@@ -50,8 +50,8 @@ What the marketing career adds is the domain half of the job: knowing how campai
 
 Open to Data Analyst and applied Data Scientist roles, with marketing and customer data as the domain – and to second opinions on hard measurement problems.
 
-> [!bookmark] Elsewhere
-> [GitHub](https://github.com/RafaelBraga-Kribitz) — github.com/RafaelBraga-Kribitz
+> [!bookmark] GitHub
+> [Rafael Braga-Kribitz](https://github.com/RafaelBraga-Kribitz) — github.com/RafaelBraga-Kribitz
 
 > [!bookmark] LinkedIn
 > [Rafael Braga-Kribitz](https://www.linkedin.com/in/rafaelbragakribitz/) — linkedin.com/in/rafaelbragakribitz
