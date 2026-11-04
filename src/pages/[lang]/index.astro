@@ -5,7 +5,7 @@
 // the listings carry no head row (four sections would repeat it) and no
 // year column; each section spends its one accent on one thing (G-15).
 //
-//   Cover       Site specimen s02: the rail (Based in · Focus), the name,
+//   Cover       Site specimen s02: the rail (Based in · Evidence), the name,
 //               the role, one sentence, the contact pair (the accent).
 //   01 Work     Site specimen s03: claim, prose and "All 5 projects" as the
 //               specimen sets them; one row per project of the language,
@@ -54,7 +54,6 @@ const copy = {
 
     titleLines: ['Data', 'Analyst'],
 
-    focus: 'Marketing · Data · Decisions',
     writing: {
       prose: 'Two registers, deliberately kept apart; everything is dated, so nothing reads as more settled than it is.',
     },
@@ -75,7 +74,6 @@ const copy = {
 
     titleLines: ['Data', 'Analyst'],
 
-    focus: 'Marketing · Daten · Entscheidungen',
     writing: {
       prose: 'Zwei Register, bewusst getrennt; alles ist datiert, damit nichts gefestigter wirkt, als es ist.',
     },
@@ -91,12 +89,18 @@ const copy = {
   },
 }[lang];
 
-const spec = [
-  { k: t(lang, 'cover.based-in'), v: site.location[lang] },
-  { k: t(lang, 'cover.focus'), v: copy.focus },
-];
 const projects = await projectsOf(lang);
 const writing = await writingOf(lang);
+// the rail's evidence row: counts of the collections, never typed
+const countOf = (n: number, one: string, many: string) => (n === 1 ? one : many.replace('{n}', String(n)));
+const evidence = [
+  projects.length > 0 && countOf(projects.length, t(lang, 'cover.n-projects-one'), t(lang, 'cover.n-projects')),
+  writing.length > 0 && countOf(writing.length, t(lang, 'cover.n-essays-one'), t(lang, 'cover.n-essays')),
+].filter(Boolean).join(' · ');
+const spec = [
+  { k: t(lang, 'cover.based-in'), v: site.location[lang] },
+  ...(evidence ? [{ k: t(lang, 'cover.evidence'), v: evidence }] : []),
+];
 // the five newest essays, counted 01–05 in the column with the permanent
 // code in the meta (owner, 1 Nov 2026), then Writing's two categories as
 // rows in code order: 02-01 all essays, 02-02 the notes library (owner,
