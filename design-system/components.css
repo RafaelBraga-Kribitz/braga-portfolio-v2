@@ -643,6 +643,12 @@ figure.fig[data-kind="diagram"] .nodeLabel, figure.fig[data-kind="diagram"] .edg
 }
 .doc tbody tr, .table-scroll tbody tr { transition: background var(--dur) var(--ease); }
 .doc tbody tr:hover, .table-scroll tbody tr:hover { background: var(--surface-2); }
+/* D-063 (DC-20): a table of four or more columns (the wrapper has data-cue, set in src/lib/rehype/tables.mjs) squeezed a value onto four lines at 390. Below 560 its text columns keep 16ch of text (the cell's 16px right padding on top, because box-sizing is border-box); number cells (right-aligned or .num-cell) keep their natural width, but the header of a number column keeps 14ch, because a header such as "Share with no named state" wrapped to five lines (12ch left one German header on four). The wrapper scrolls sideways and shows the cue, pinned at the left edge so it stays in view while the table moves. A table of one to three columns keeps its natural layout: a min-width there made the table wider than the 358px column (the About CV table reached 525px and ORGANISATION showed one letter). */
+@media (max-width: 559px) {
+  .table-scroll[data-cue] :is(th, td):not([align="right"], .num-cell) { min-width: calc(16ch + 16px); }
+  .table-scroll[data-cue] th:is([align="right"], .num-cell) { min-width: calc(14ch + 16px); }
+  .table-scroll[data-cue]::after { content: attr(data-cue); display: block; position: sticky; left: 0; width: fit-content; margin-top: 8px; font: 400 var(--t-mono-sm) / 1.4 var(--font-mono); color: var(--ink-2); }
+}
 
 /* side notes (owner, 24 Oct 2026; braga-design-system-template's .noteref /
    .sidenote): a note with `footnotes: side` (src/lib/remark/sidenotes.mjs)

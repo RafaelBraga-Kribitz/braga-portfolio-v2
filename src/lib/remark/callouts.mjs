@@ -555,7 +555,7 @@ function barsFigure(head, ctx) {
 
 /** A figure wider than this (user units) scrolls on a phone and shows a cue. */
 const PHONE_COLUMN = 360;
-const SCROLL_CUE = { en: '← Scroll sideways →', de: '← Seitlich scrollen →' };
+export const SCROLL_CUE = { en: '← Scroll sideways →', de: '← Seitlich scrollen →' };
 
 /** The document's language, en or de. @param {any} ctx */
 const langOf = (ctx) => (ctx.data && ctx.data.astro && ctx.data.astro.frontmatter && ctx.data.astro.frontmatter.lang === 'de' ? 'de' : 'en');
