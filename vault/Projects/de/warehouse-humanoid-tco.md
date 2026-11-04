@@ -24,7 +24,7 @@ publish: true
 ## Frage: Wann wären humanoide Roboter die günstigste Lösung für die Arbeit im Lager?
 
 > [!summary] Zusammenfassung
-> Eine Person mit drei autonomen mobilen Robotern (AMR) hat den niedrigsten Kostenbarwert über fünf Jahre, € 453.000, und gewinnt 99,8 % der ausgewerteten Ziehungen. Humanoide Roboter werden zurückgestellt, bis sich Nachfrage, Arbeitskräfteangebot oder Schichtmodell ändern.
+> Eine Person mit drei autonomen mobilen Robotern (AMR) hat den niedrigsten Kostenbarwert über fünf Jahre, € 453.000, und gewinnt 99,8 % der ausgewerteten Ziehungen. Die Entscheidung stellt humanoide Roboter zurück, bis sich Nachfrage, Arbeitskräfteangebot oder Schichtmodell ändern.
 
 ## Hintergrund
 
@@ -68,8 +68,8 @@ Ein nachverfolgter Befund hat das Hauptergebnis verändert.[^1] Eine frühere Ve
 > Die schlanke Hybridvariante hat die niedrigsten Kosten im Basisfall und gewinnt 99,8 % der Ziehungen, obwohl ihre Spanne die des schlanken Teams überlappt.
 > ![[01-02-tco-range.de.svg]]
 >
-> caption: Tausend Euro, Barwert bei 8 %. Der Punkt ist der Basisfall, der gestrichelte Strich das Monte-Carlo-Mittel, die Linie das Intervall zu 90 % aus 10.000 Ziehungen. n = 7 Szenarien. Basisfall und Monte-Carlo-Mittel unterscheiden sich: Bei der rein humanoiden Flotte betragen sie 2.878 und 3.490. Im Basisfall kostet die schlanke Hybridvariante 30 % weniger als reines Personal und weniger als ein Fünftel von Humanoid 2028, dem günstigsten modellierten Humanoid-Szenario. Die Referenz mit acht Personen ist ein Altszenario, eine gekennzeichnete Referenz für die Kosten einer Überbesetzung.
-> source: Fünfjahres-TCO-Modell, Projekt-Repository: Basisfall aus dem Szenarioexport, Monte-Carlo-Werte aus dem Sensitivitätsbericht; zuletzt aktualisiert am 16. Sep. 2026.
+> caption: Tausend Euro, Barwert bei 8 %. Der Punkt ist der Basisfall, der gestrichelte Strich das Monte-Carlo-Mittel, die Linie das Intervall zu 90 % aus 10.000 Ziehungen. n = 7 Szenarien. Basisfall und Monte-Carlo-Mittel unterscheiden sich: Bei der rein humanoiden Flotte betragen sie 2.878 und 3.490. Im Basisfall kostet die schlanke Hybridvariante 30 % weniger als reines Personal. Sie kostet weniger als ein Fünftel von Humanoid 2028, dem günstigsten modellierten Humanoid-Szenario. Die Referenz mit acht Personen ist ein Altszenario, eine gekennzeichnete Referenz für die Kosten einer Überbesetzung.
+> source: Fünfjahres-TCO-Modell, Projekt-Repository: Basisfall aus dem Szenarioexport, Monte-Carlo-Werte aus dem Sensitivitätsbericht. Zuletzt aktualisiert am 16. Sep. 2026.
 
 | Szenario | Barwert, fünf Jahre | Capex | Kosten je Auftrag |
 |:--|--:|--:|--:|
@@ -113,4 +113,4 @@ Unter den genannten Annahmen: die schlanke Hybridvariante am Standort validieren
 ```buildlog
 ```
 
-[^1]: Die Entwicklung folgt einem Governance-Protokoll, das in der Continuous Integration (CI, automatisierte Prüfung bei jeder Änderung) durchgesetzt wird: Jede Änderung schließt einen nachverfolgten Befund mit einem benannten Prüfskript ab, und die CI führt bei jedem Pull-Request das Skript jedes abgeschlossenen Befunds erneut aus.
+[^1]: Die Entwicklung folgt einem Governance-Protokoll, das die Continuous Integration (CI, automatisierte Prüfung bei jeder Änderung) durchsetzt. Jede Änderung schließt einen nachverfolgten Befund mit einem benannten Prüfskript ab. Die CI führt bei jedem Pull-Request das Skript jedes abgeschlossenen Befunds erneut aus.

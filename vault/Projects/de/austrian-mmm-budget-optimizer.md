@@ -23,7 +23,7 @@ publish: true
 ## Frage: Welche Kanäle sollten bei gleichem Mediabudget mehr Geld bekommen und welche weniger?
 
 > [!summary] Zusammenfassung
-> Das Modell wird an einer bekannten Wahrheit validiert, bevor es etwas entscheidet. Auf Metas öffentlichem Robyn-Demodatensatz wird dasselbe Wochenbudget nach einer Breakeven-Regel umverteilt. Bei den berichteten Priors bringt das im Median einen zusätzlichen Deckungsbeitrag von 15,1 % des derzeitigen Deckungsbeitrags der Medien. Keine der 500 verwendeten Ziehungen aus der A-posteriori-Verteilung zeigt einen Verlust. Bei vagen Priors sinkt der Median des Gewinns auf 8,7 %, und die Verschiebung zu Facebook entfällt.
+> Das Projekt validiert das Modell an einer bekannten Wahrheit, bevor das Modell etwas entscheidet. Auf Metas öffentlichem Robyn-Demodatensatz verteilt eine Breakeven-Regel dasselbe Wochenbudget um. Bei den berichteten Priors bringt das im Median einen zusätzlichen Deckungsbeitrag von 15,1 % des derzeitigen Deckungsbeitrags der Medien. Keine der 500 verwendeten Ziehungen aus der A-posteriori-Verteilung zeigt einen Verlust. Bei vagen Priors sinkt der Median des Gewinns auf 8,7 %, und die Verschiebung zu Facebook entfällt.
 
 ## Hintergrund
 
@@ -31,7 +31,7 @@ Die Vergleichseinheit ist der Deckungsbeitrag, nicht der Umsatz. Ein Kanal verni
 
 ## Daten
 
-„Für Österreich“ im Titel bezeichnet das Umfeld, nicht die Daten: Wochenraster, der österreichische Feiertagskalender als Kontrollvariable, Euro und eine Logik auf Basis des Deckungsbeitrags. Es wurden keine Daten österreichischer Kunden verwendet. Der erste Layer (Ebene) muss bestehen, bevor der zweite zählt.
+„Für Österreich“ im Titel bezeichnet das Umfeld, nicht die Daten: Wochenraster, der österreichische Feiertagskalender als Kontrollvariable, Euro und eine Logik auf Basis des Deckungsbeitrags. Das Projekt hat keine Daten österreichischer Kunden verwendet. Der erste Layer (Ebene) muss bestehen, bevor der zweite zählt.
 
 | Layer | Daten | Rolle |
 |:--|:--|:--|
@@ -44,7 +44,7 @@ Die Vergleichseinheit ist der Deckungsbeitrag, nicht der Umsatz. Ein Kanal verni
 > - Nachwirkung — geometrischer Adstock (Nachwirkung der Werbung) je Kanal, Abklingrate geschätzt
 > - Sättigung — Hill-Kurve auf die Adstock-transformierten Ausgaben
 > - Basislinie — linearer Trend · zwei jährliche Fourier-Paare · eine Kontrollvariable
-> - Priors (A-priori-Verteilungen) — schwach informativ und für alle Kanäle gleich, ohne kanalspezifische Wunschantworten. Die [Prior-Sensitivitätsprüfung](https://github.com/RafaelBraga-Kribitz/austrian-mmm-budget-optimizer/blob/108e2df2ef85fc98d22c53046b95715cda84b151/reports/PRIOR_SENSITIVITY_PUBLISHED_FIT_2026-11-04.md) ist erledigt: Sie passt Layer R mit vagen Priors im gleichen Aufbau neu an
+> - Priors (A-priori-Verteilungen) — schwach informativ und für alle Kanäle gleich, ohne kanalspezifische Wunschantworten. Die [Prior-Sensitivitätsprüfung](https://github.com/RafaelBraga-Kribitz/austrian-mmm-budget-optimizer/blob/108e2df2ef85fc98d22c53046b95715cda84b151/reports/PRIOR_SENSITIVITY_PUBLISHED_FIT_2026-11-04.md) ist erledigt. Der Bericht im Repository passt Layer R mit vagen Priors im gleichen Aufbau neu an
 > - Deckungs&shy;beitrags&shy;quote — 40 %, angenommen
 > - Breakeven-ROAS — 2,50
 
@@ -54,15 +54,15 @@ Die Validierung läuft vor jeder Entscheidung.
 
 | Schritt | Aktion | Prüfung |
 |:--|:--|:--|
-| 1 | Anpassung in PyMC, Sampling mit NUTS (No-U-Turn Sampler, nutpie): zwei Ketten, je 1.000 Tuning-Schritte und 1.000 Ziehungen, Ziel-Akzeptanzrate 0,9, nach Divergenzen über eine protokollierte Stufenfolge angehoben. Die berichteten Anpassungen liefen mit 0,95 und 2.000 Ziehungen je Kette. Ein Fit zählt nur, wenn er besteht | R-hat unter 1,01, effektive Stichprobengröße über 400, null Divergenzen. Jeder Fit legt diese Diagnosewerte neben sich ab |
-| 2 | Auf Layer P wiederherstellen, was dem Sampler vorgegeben wurde, und die plattformartige Attribution an derselben Wahrheit messen | Wiederherstellung gegenüber den offengelegten wahren Parametern |
+| 1 | Anpassung in PyMC, Sampling mit NUTS (No-U-Turn Sampler, nutpie). Zwei Ketten mit je 1.000 Tuning-Schritten und 1.000 Ziehungen, Ziel-Akzeptanzrate 0,9. Eine protokollierte Stufenfolge hebt die Ziel-Akzeptanzrate nach Divergenzen an. Die berichteten Anpassungen liefen mit 0,95 und 2.000 Ziehungen je Kette. Ein Fit zählt nur, wenn er besteht | R-hat unter 1,01, effektive Stichprobengröße über 400, null Divergenzen. Jeder Fit legt diese Diagnosewerte neben sich ab |
+| 2 | Auf Layer P die offengelegte Wahrheit wiederherstellen und die plattformartige Attribution an derselben Wahrheit messen | Wiederherstellung gegenüber den offengelegten wahren Parametern |
 | 3 | Das Modell auf beiden Layern an einem Holdout (zurückgehaltener Testzeitraum) von 26 Wochen prüfen | Ridge-Regression und saisonal naive Prognose |
-| 4 | Die A-posteriori-Verteilung aus Layer R an den Optimierer übergeben, unter einer Entscheidungsregel, die vor seinem Lauf festgelegt wird | Umverteilungsgewinn über 500 Posterior-Ziehungen |
+| 4 | Die A-posteriori-Verteilung aus Layer R an den Optimierer übergeben, unter einer Entscheidungsregel, die das Projekt vor dem Lauf des Optimierers festlegt | Umverteilungsgewinn über 500 Posterior-Ziehungen |
 
 > [!definition] Entscheidungsregel
-> Budget wird nur so lange zu einem Kanal verschoben, wie die Untergrenze seines Intervalls zu 90 % für den marginalen ROAS über dem Breakeven bleibt. Budget wird außerdem nur verschoben, wenn das 10. Perzentil des Umverteilungsgewinns positiv ist. Die Regel wird festgelegt, bevor der Optimierer läuft.
+> Verschieben Sie Budget nur so lange zu einem Kanal, wie die Untergrenze seines Intervalls zu 90 % für den marginalen ROAS über dem Breakeven bleibt. Verschieben Sie Budget außerdem nur, wenn das 10. Perzentil des Umverteilungsgewinns positiv ist. Das Projekt legt die Regel fest, bevor der Optimierer läuft.
 
-Die Zahlen in der README des Repositorys werden aus den Berichtsdateien erzeugt, und ein Test prüft, dass beide übereinstimmen.
+Ein Skript erzeugt die Zahlen in der README des Repositorys aus den Berichtsdateien, und ein Test prüft, dass beide übereinstimmen.
 
 ## Ergebnis
 
@@ -75,12 +75,12 @@ Die Zahlen in der README des Repositorys werden aus den Berichtsdateien erzeugt,
 |:--|--:|:--|
 | Kurvenabdeckung | 91 % | Wahre Reaktionskurven innerhalb des Posterior-Bands, über den beobachteten Ausgabenbereich |
 | Kurvenabdeckung TV | 56 % | Schwächster Kanal. Die aggregierte Abdeckung verdeckt das ([Validierungsübersicht des Repositorys](https://github.com/RafaelBraga-Kribitz/austrian-mmm-budget-optimizer/blob/c63e16b7f0f0f5e6452216b600c4ed619a9bdf6b/README.md)) |
-| Wahre Parameter innerhalb ihrer Intervalle zu 90 % | 26 von 28 | Die Abweichungen werden unten erklärt |
+| Wahre Parameter innerhalb ihrer Intervalle zu 90 % | 26 von 28 | Der Text unten erklärt die Abweichungen |
 | Wahrer Umsatzanteil von TV | Knapp außerhalb seines Intervalls | Derselbe schwächste Kanal |
 | Überzurechnung durch die Plattform, Paid Search | +45 % | Von der Plattform ausgewiesener gegenüber wahrem inkrementellem Umsatz |
 | Plattform-Zurechnung, Offline-Kanäle | Keine | Plattformartiger Bericht, an derselben Wahrheit gemessen |
 
-Die Abweichungen folgen einem bekannten Zielkonflikt, nicht einem Fehler. Die Mediane aller fünf Effektgrößen und aller fünf Halbsättigungspunkte liegen über den wahren Werten. Höhere, später sättigende Kurven erklären dieselben Wochen. Die Wiederherstellung wird daher an Kurven und Anteilen beurteilt, die eine Budgetentscheidung verwendet.
+Die Abweichungen folgen einem bekannten Zielkonflikt, nicht einem Fehler. Die Mediane aller fünf Effektgrößen und aller fünf Halbsättigungspunkte liegen über den wahren Werten. Höhere, später sättigende Kurven erklären dieselben Wochen. Das Projekt beurteilt die Wiederherstellung daher an Kurven und Anteilen, die eine Budgetentscheidung verwendet.
 
 ### Umverteilung auf Layer R
 
@@ -102,8 +102,8 @@ Dasselbe gesamte Wochenbudget, nach der Entscheidungsregel umverteilt, bringt im
 > TV liegt bei beiden Prior-Sätzen über der Linie von 2,50. Facebook liegt nur bei den berichteten Priors darüber. Print und Search kreuzen die Linie, und die Außenwerbung bleibt darunter.
 > ![[01-03-roas-interval.de.svg]]
 >
-> caption: Medianer marginaler ROAS bei den derzeitigen Ausgaben, mit seinem Intervall zu 90 %, auf logarithmischer Skala von 0,05 bis 50. n = 500 Posterior-Ziehungen, 5 Kanäle. Durchgezogen: berichtete Priors, Werte rechts. Gestrichelt: vage Priors. Intervalle unter 0,05 sind abgeschnitten und mit einem Winkel markiert (Außenwerbung 0,00, Search 0,03). Die Daten sind simuliert, und der Breakeven von 2,50 nimmt eine Deckungsbeitragsquote von 40 % an.
-> source: Layer R, Metas öffentliche Robyn-Demodatei; simulierte Daten. Prior-Sensitivität: [Bericht des Repositorys](https://github.com/RafaelBraga-Kribitz/austrian-mmm-budget-optimizer/blob/108e2df2ef85fc98d22c53046b95715cda84b151/reports/PRIOR_SENSITIVITY_PUBLISHED_FIT_2026-11-04.md).
+> caption: Medianer marginaler ROAS bei den derzeitigen Ausgaben, mit seinem Intervall zu 90 %, auf logarithmischer Skala von 0,05 bis 50. n = 500 Posterior-Ziehungen, 5 Kanäle. Durchgezogen: berichtete Priors, Werte rechts. Gestrichelt: vage Priors. Die Abbildung schneidet Intervalle unter 0,05 ab und markiert sie mit einem Winkel (Außenwerbung 0,00, Search 0,03). Die Daten sind simuliert, und der Breakeven von 2,50 nimmt eine Deckungsbeitragsquote von 40 % an.
+> source: Layer R, Metas öffentliche Robyn-Demodatei, simulierte Daten. Prior-Sensitivität: [Bericht des Repositorys](https://github.com/RafaelBraga-Kribitz/austrian-mmm-budget-optimizer/blob/108e2df2ef85fc98d22c53046b95715cda84b151/reports/PRIOR_SENSITIVITY_PUBLISHED_FIT_2026-11-04.md).
 
 | Lauf | Gewinn, Median | 10. Perzentil | Verschiebung nach der Regel |
 |:--|--:|--:|:--|
@@ -132,12 +132,12 @@ Der Holdout umfasst 26 Wochen. Die Zellen zeigen den mittleren absoluten prozent
 | P | 3,0 % | 4,7 % | 9,6 % | 85 % |
 | R | 7,9 % | 5,1 % | 22,3 % | 100 % |
 
-Das MMM unterlag auf Layer R der Ridge-Regression, und das wird so berichtet, wie es ausgefallen ist. Das Argument für das MMM ist, dass es mit Intervallen angibt, welcher Kanal den Umsatz erwirtschaftet hat. Das können die Vergleichsmodelle nicht. Auf Layer P waren seine Intervalle etwas zu eng, das Modell ist also etwas zu selbstsicher.
+Das MMM unterlag auf Layer R der Ridge-Regression, und diese Seite berichtet das Ergebnis so, wie es ausgefallen ist. Das Argument für das MMM ist, dass es mit Intervallen angibt, welcher Kanal den Umsatz erwirtschaftet hat. Das können die Vergleichsmodelle nicht. Auf Layer P waren seine Intervalle etwas zu eng, das Modell ist also etwas zu selbstsicher.
 
 ## Grenzen
 
-- **Echte Daten eines Werbetreibenden.** Layer R ist ein simulierter öffentlicher Datensatz in nicht benannten Geldeinheiten. Der Austausch gegen echte Daten eines werbetreibenden Unternehmens ist geplant, nicht erfolgt.
-- **Die Modellform.** Eine einzige Form wird angenommen (geometrischer Adstock, Hill-Sättigung, additive Basislinie). Die Wiederherstellung auf Layer P zeigt, dass der Sampler diese Form findet, nicht, dass die Wirklichkeit sie hat.
+- **Echte Daten eines Werbetreibenden.** Layer R ist ein simulierter öffentlicher Datensatz in nicht benannten Geldeinheiten. Das Projekt plant den Austausch gegen echte Daten eines werbetreibenden Unternehmens, hat ihn aber noch nicht durchgeführt.
+- **Die Modellform.** Das Modell nimmt eine einzige Form an (geometrischer Adstock, Hill-Sättigung, additive Basislinie). Die Wiederherstellung auf Layer P zeigt, dass der Sampler diese Form findet, nicht, dass die Wirklichkeit sie hat.
 - **Kanäle, die sich gemeinsam bewegen.** Wöchentliche nationale Daten können Kanäle mit gemeinsam laufenden Ausgaben nicht trennen, daher werden die Intervalle breiter.
 - **Verhalten bei neuen Ausgabenniveaus.** Der Optimierer nimmt an, dass die Reaktionskurven bei neuen Ausgabenniveaus gelten und dass Mitbewerber nicht reagieren.
 

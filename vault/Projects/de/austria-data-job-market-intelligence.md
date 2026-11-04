@@ -29,7 +29,7 @@ publish: true
 
 ## Hintergrund
 
-Das Projekt liest aus jedem Inserat Stellentitel, Ort, Technologien, Sprachen, Ausbildung, Gehalt und Arbeitsmodell und vergleicht die Steiermark mit Wien. Die Einheit ist das Kerninserat für eine Datenrolle in einer eintägigen Momentaufnahme, und die amtlichen Reihen werden als eigene Einheiten gelesen. Ein technisch versiertes, skeptisches Publikum soll Methode, Datenherkunft, Grenzen und Schlussfolgerungen prüfen können.
+Das Projekt liest aus jedem Inserat Stellentitel, Ort, Technologien, Sprachen, Ausbildung, Gehalt und Arbeitsmodell und vergleicht die Steiermark mit Wien. Die Einheit ist das Kerninserat für eine Datenrolle in einer eintägigen Momentaufnahme. Das Projekt liest die amtlichen Reihen als eigene Einheiten. Ein technisch versiertes, skeptisches Publikum soll Methode, Datenherkunft, Grenzen und Schlussfolgerungen prüfen können.
 
 ## Daten
 
@@ -47,7 +47,7 @@ Das Projekt liest aus jedem Inserat Stellentitel, Ort, Technologien, Sprachen, A
 > ![[01-01-funnel.de.svg]]
 >
 > caption: Anzahl der Zeilen. Die Bandbreite ist proportional zur Anzahl. Im Untersuchungsrahmen heißt: Kerninserate, benachbarte Rollenfamilien und deren Dubletten. Die Dublettenquote von 24 % entspricht 404 der 1.670 Zeilen im Untersuchungsrahmen.
-> source: Repository-Tabellen market_summary, dedupe_summary und Q04_duplicates, Commit 267b115; Momentaufnahme vom 16. Sep. 2026.
+> source: Repository-Tabellen market_summary, dedupe_summary und Q04_duplicates, Commit 267b115. Momentaufnahme vom 16. Sep. 2026.
 
 ## Methode
 
@@ -61,7 +61,7 @@ Das Projekt liest aus jedem Inserat Stellentitel, Ort, Technologien, Sprachen, A
 
 - Jeder Schritt ist ein Skript, und jede Regel steht in einer Konfigurationsdatei.
 - Jede Tabelle speichert ihr n. Anteile, die in eine Entscheidung einfließen, tragen Wilson-Intervalle zu 95 %.
-- Amtliche Reihen sind eigene Einheiten. Sie werden nie mit Statistiken auf Inseratsebene vermischt.
+- Amtliche Reihen sind eigene Einheiten. Das Projekt vermischt sie nie mit Statistiken auf Inseratsebene.
 - Eine Testsuite prüft das Verhalten der Regeln und die Konsistenz der Ausgaben.
 - Ein Digest-Skript (Zusammenfassungsskript) gibt jede in den Dokumenten zitierte Zahl erneut aus den Tabellen aus.
 
@@ -77,14 +77,14 @@ Das Projekt liest aus jedem Inserat Stellentitel, Ort, Technologien, Sprachen, A
 > ![[01-01-skills-top.de.svg]]
 >
 > caption: Anteil der 719 Inserate mit einer Beschreibung von mehr als 300 Zeichen, die die Kompetenz nennen. Ein Inserat kann mehrere Kompetenzen nennen. Allgemeine Themen wie KI (allgemein) werden gemäß der Taxonomie gezählt. Die Whisker sind Wilson-Intervalle zu 95 %.
-> source: Repository-Tabelle T05_skills_all_tech, Commit 267b115; Momentaufnahme vom 16. Sep. 2026.
+> source: Repository-Tabelle T05_skills_all_tech, Commit 267b115. Momentaufnahme vom 16. Sep. 2026.
 
 > [!figure] Abb. 01-01-3 · Nennung von Kompetenzen nach Rollenfamilie
 > Jede Rollenfamilie nennt ihre eigene Mischung: BI nennt Visualisierung am häufigsten (86 %), Data Science KI-Formulierungen (82 %), Data Engineering SQL (69 %).
 > ![[01-01-skills-heatmap.de.svg]]
 >
 > caption: Basis: dieselben 719 Inserate, ohne das eine Inserat zu Product Analytics. Die Zeilen zeigen 11 der 115 Kompetenzen der Taxonomie, geordnet nach ihrem Anteil an allen Inseraten. „Governance/Qualität“ enthält Governance-Schlüsselwörter, daher ist der Wert von 82 % bei Data-Governance-Inseraten teils per Definition wahr. Der dunkelste Ton ist der Höchstwert, 86 %. Marketing-Analytics hat n = 24. Stärkere Ränder markieren die Zellen des Befunds.
-> source: Repository-Tabelle T05_skills_all_tech_by_family, Commit 267b115; Momentaufnahme vom 16. Sep. 2026.
+> source: Repository-Tabelle T05_skills_all_tech_by_family, Commit 267b115. Momentaufnahme vom 16. Sep. 2026.
 
 ### Region
 
@@ -108,7 +108,7 @@ Die Zählung nutzt das primäre Bundesland: Die Steiermark hat hier 54 und nach 
 | Steiermark, AMS-Berufsgruppe „Data Scientist“ | 13,6 % | 300 von 2.207, 2025. Die Gesamtzahl enthält Inserate ohne benanntes Bundesland |
 | Steiermark, sieben AMS-Berufsgruppen für Daten zusammen | 10,9 % | 926 von 8.477, 2025 |
 
-Das sind verschiedene Einheiten, und sie werden nicht vermischt.
+Das sind verschiedene Einheiten, und das Projekt vermischt sie nicht.
 
 ### AMS-Entwicklung
 
@@ -142,7 +142,7 @@ Was diese Arbeit nicht belegt:
 
 - **Nachfrage über die Zeit.** Die Momentaufnahme ist ein eintägiger Bestand an Inseraten, kein Jahresvolumen, keine offenen Stellen und keine Einstellungen. Amtliche Reihen enthalten nicht zugeordnete Inserate, daher sind Änderungen je Bundesland seit 2020 unsicher.
 - **Vollständige Abdeckung.** StepStone, Indeed und Karriereseiten von Unternehmen fehlen. Die titelbasierte Aufnahme hat eine gemessene Präzision, aber eine ungemessene Trefferquote (Recall).
-- **Steirische Details.** Steirische Zellen sind klein (n = 58), daher werden Anzahlen als vorläufig gekennzeichnet.
+- **Steirische Details.** Steirische Zellen sind klein (n = 58), daher kennzeichnet die Seite Anzahlen als vorläufig.
 - **Kausalität.** Es gibt keine Einstellungsergebnisse. Keine Anforderung belegt daher, was zu einer Einstellung führt.
 
 ## Entscheidung
@@ -150,10 +150,10 @@ Was diese Arbeit nicht belegt:
 Die Momentaufnahme ist eine Evidenzbasis, kein Urteil, und jede Aussage lässt sich auf eine Tabellen-ID zurückführen. Zwei Entscheidungsdokumente bewerten jede Rollenfamilie anhand eines deklarierten Kompetenzprofils, mit offengelegten Gewichten, ohne verdeckte Bewertung und mit einer Sensitivitätsprüfung unter alternativen Gewichten.
 
 > [!faq]- Warum werden die Rohinserate nicht veröffentlicht?
-> Eine Prüfung der Nutzungsbedingungen ergab, dass alle fünf Inseratquellen die automatisierte Extraktion einschränken. Die Sammlung bleibt daher ein einmaliger, privater Forschungsdatensatz. Das öffentliche Repository enthält den Code, die Regeln und die aggregierten Tabellen, ohne jede Text- und URL-Spalte. Die Erhebungsskripte und die Rohinserate werden nicht veröffentlicht.
+> Eine Prüfung der Nutzungsbedingungen ergab, dass alle fünf Inseratquellen die automatisierte Extraktion einschränken. Die Sammlung bleibt daher ein einmaliger, privater Forschungsdatensatz. Das öffentliche Repository enthält den Code, die Regeln und die aggregierten Tabellen, ohne jede Text- und URL-Spalte. Das Projekt veröffentlicht die Erhebungsskripte und die Rohinserate nicht.
 
 Code unter MIT-Lizenz. Dokumente und aggregierte Ergebnisse unter CC BY 4.0.
 
 
 
-[^1]: Das AMS JobBarometer zählt Online-Inserate nach Berufsgruppe und Bundesland. Laut [Methodenpaper](https://jobbarometer.ams.at/dam/jcr:353f155f-0769-410e-bd8d-727ecc09d144/Methodenpaper_v1.2.pdf) (§ 3.1.6) lassen sich manche Inserate keinem Bundesland zuordnen, daher kann die Österreichsumme die Summe der Bundesländer übersteigen. Auch Inserate aus Deutschland für österreichische Grenzregionen fließen ein.
+[^1]: Das AMS JobBarometer zählt Online-Inserate nach Berufsgruppe und Bundesland. Das AMS gibt im [Methodenpaper](https://jobbarometer.ams.at/dam/jcr:353f155f-0769-410e-bd8d-727ecc09d144/Methodenpaper_v1.2.pdf) (§ 3.1.6) an, dass es manche Inserate keinem Bundesland zuordnen kann. Die Österreichsumme kann daher die Summe der Bundesländer übersteigen. Das AMS gibt außerdem an, dass die Zahlen auch Inserate aus Deutschland für österreichische Grenzregionen enthalten.

@@ -43,7 +43,7 @@ Diese Rekonstruktion der Präsidentschaftswahl 2018 in Paraguay nutzt, was eine 
 
 ## Daten
 
-Die öffentlichen Eckdaten sind verifiziert, und alle einzelnen Wählerinnen und Wähler sind synthetisch. So ist keine reale Person abgebildet, die Aggregate stimmen aber weiterhin.
+Die öffentlichen Eckdaten sind verifiziert, und alle einzelnen Wählerinnen und Wähler sind synthetisch. So bildet der Wählerdatensatz keine reale Person ab, die Aggregate stimmen aber weiterhin.
 
 > [!spec] Eingaben
 > - Öffentliche Eckdaten — Endergebnisse des TSJE · Zensusaggregate der DGEEC · Haushaltserhebung 2018 des INE zur Nutzung von Internet und WhatsApp · acht veröffentlichte Tracking-Umfragen
@@ -72,10 +72,10 @@ Jede zentrale Zahl steht in einer einzigen numerischen Referenztabelle (Source o
 | B | Gemischt-ganzzahliges lineares Programm (MILP, Mixed-Integer Linear Program) in PuLP, gelöst mit CBC, über 2.772 Zeilen. Budget, Reichweitenobergrenzen, eine Wechselkursebene und eine Mindestabdeckung von 80 %. Es maximiert einen linearisierten Persuasion-Proxy (eine Ersatzgröße für Überzeugungswirkung) und läuft über FastAPI. | Ein Solver-Vergleich (ein Vergleich von Ergebnissen des Optimierers) auf synthetischer Reichweite: Kontakte einer Allokation gegenüber einer anderen. | Ein historischer Effekt der Kampagne von 2018. |
 | C | Gauß’scher Random Walk (Zufallspfad) mit House Effects (der systematischen Abweichung einzelner Umfrageinstitute), in PyMC an acht Umfragen angepasst. Stratifizierte Monte-Carlo-Szenarien, standardmäßig 10.000 Ziehungen. | Eine Retrodiktion des Wahlverlaufs anhand der acht Umfragen. | Eine Prognose oder Prognosefähigkeit. |
 
-Modul A erreicht zudem eine AUC (Fläche unter der ROC-Kurve) von rund 0,89. Das Projekt hebt sie bewusst nicht hervor. Die Merkmale der Neigung teilen Kalibrierungsanker mit der Zielgröße, daher misst die AUC, wie gut das Raking wiederhergestellt wurde, nicht die Generalisierung.
+Modul A erreicht zudem eine AUC (Fläche unter der ROC-Kurve) von rund 0,89. Das Projekt hebt sie bewusst nicht hervor. Die Merkmale der Neigung teilen Kalibrierungsanker mit der Zielgröße, daher misst die AUC, wie gut das Modell das Raking wiederherstellt, nicht die Generalisierung.
 
 > [!definition] Retrodiktion
-> Eine Anpassung, die auf das bekannte Ergebnis konditioniert. Die Tracking-Kurve ist eine solche: Sie konditioniert auf das verifizierte Ergebnis und kann daher nicht als Prognose gelesen werden.
+> Eine Anpassung, die auf das bekannte Ergebnis konditioniert. Die Tracking-Kurve ist eine solche: Sie konditioniert auf das verifizierte Ergebnis. Sie ist daher nicht als Prognose lesbar.
 
 ## Ergebnis
 
@@ -105,15 +105,15 @@ Acht Umfragen sind bei Weitem zu wenige, um Prognosefähigkeit zu beanspruchen, 
 ## Grenzen
 
 - **Manuell gesetzte Eingaben.** Das [Datenregister des Repositorys](https://github.com/RafaelBraga-Kribitz/decision-analytics-reconstruction/blob/6a5d2cef1216f43572d073e8abfab57329daff85/README.md) kennzeichnet Wechselkurs, Wechselkursspanne, Kanalkosten je Einheit und Bevölkerungszahlen der Departamentos als manuell gesetzte, noch nicht verifizierte Eingaben. Der Gewinn von Modul B ist ein Solver-Vergleich unter diesen Annahmen.
-- **Kausaler Effekt.** Ein Vergleich mit und ohne Analytik lässt sich hier nicht verifizieren.
-- **Individuelles Verhalten.** Die aggregierte Kalibrierung synthetischer Wahlberechtigter bedeutet nicht, dass reales Verhalten wiederhergestellt wurde.
+- **Kausaler Effekt.** Dieses Projekt kann einen Vergleich mit und ohne Analytik nicht verifizieren.
+- **Individuelles Verhalten.** Die aggregierte Kalibrierung synthetischer Wahlberechtigter bedeutet nicht, dass das Modell reales Verhalten wiederhergestellt hat.
 - **Kampagnenökonomie.** Modul B optimiert linearisierte Kontakte, nicht die geprüfte Buchhaltung der Kampagne 2018 oder angepasste Wirkungskurven (Response Curves).
 - **Voller Maßstab.** Die Pipeline rechnet mit 50.000 Wahlberechtigten über 14 Wochen. Das vollständige Wählerverzeichnis mit 4,26 Mio. Personen ist eine Designreferenz.
 - **Produktiver Einsatz.** Dies ist eine Portfolio-Rekonstruktion, kein produktives Kampagnensystem.
 
 ## Entscheidung
 
-Jedes Modul wird nur so weit berichtet, wie seine eigene Prüfung reicht. Das öffentliche Ergebnis ist der Anker, und zu zeigen, was das Modell stützen kann und was nicht, ist der Zweck der Arbeit.
+Berichten Sie jedes Modul nur so weit, wie seine eigene Prüfung reicht. Das öffentliche Ergebnis ist der Anker, und zu zeigen, was das Modell stützen kann und was nicht, ist der Zweck der Arbeit.
 
 ## Entstehung
 

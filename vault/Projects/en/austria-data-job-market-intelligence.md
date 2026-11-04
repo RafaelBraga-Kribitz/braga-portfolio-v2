@@ -29,7 +29,7 @@ publish: true
 
 ## Background
 
-The project reads each ad for its title, location, technologies, languages, education, pay and work model, and compares Styria with Vienna. The unit is the core data-role posting in a one-day snapshot, and official series are read as their own units. A technically competent, sceptical reader should be able to audit the method, the provenance, the limitations and the conclusions.
+The project reads each ad for its title, location, technologies, languages, education, pay and work model, and compares Styria with Vienna. The unit is the core data-role posting in a one-day snapshot. The project reads official series as their own units. A technically competent, sceptical reader should be able to audit the method, the provenance, the limitations and the conclusions.
 
 ## Data
 
@@ -47,7 +47,7 @@ The project reads each ad for its title, location, technologies, languages, educ
 > ![[01-01-funnel.en.svg]]
 >
 > caption: Counts of rows. Band thickness is proportional to the count. In scope means core postings, adjacent role families and their duplicates. The 24% duplicate rate is 404 of the 1,670 in-scope rows.
-> source: repository tables market_summary, dedupe_summary and Q04_duplicates, commit 267b115; snapshot of 16 Sep 2026.
+> source: repository tables market_summary, dedupe_summary and Q04_duplicates, commit 267b115. Snapshot of 16 Sep 2026.
 
 ## Method
 
@@ -61,7 +61,7 @@ The project reads each ad for its title, location, technologies, languages, educ
 
 - Every step is a script, and every rule lives in a config file.
 - Every table stores its n. Proportions that feed a decision carry Wilson 95% intervals.
-- Official series are their own units. They are never merged with posting-level statistics.
+- Official series are their own units. The project never merges them with posting-level statistics.
 - A test suite checks rule behaviour and output consistency.
 - A digest script reprints every number quoted in the documents from the tables.
 
@@ -77,14 +77,14 @@ The project reads each ad for its title, location, technologies, languages, educ
 > ![[01-01-skills-top.en.svg]]
 >
 > caption: Share of the 719 postings with a description longer than 300 characters that mention the skill. A posting can mention several skills. Generic topics, such as AI (generic), count as written in the skill taxonomy. Whiskers are Wilson 95% intervals.
-> source: repository table T05_skills_all_tech, commit 267b115; snapshot of 16 Sep 2026.
+> source: repository table T05_skills_all_tech, commit 267b115. Snapshot of 16 Sep 2026.
 
 > [!figure] Fig. 01-01-3 · Skill mentions by role family
 > Each role family names its own mix: BI names visualisation most (86%), data science AI wording (82%), data engineering SQL (69%).
 > ![[01-01-skills-heatmap.en.svg]]
 >
 > caption: Base: the same 719 postings, without the one product-analytics posting. The rows show 11 of the 115 skills of the taxonomy, ordered by their share over all postings. “Governance/quality” includes governance keywords, so its 82% in data governance ads is partly true by definition. The darkest shade is the top value, 86%. Marketing analytics has n = 24. Heavier edges mark the cells in the finding.
-> source: repository table T05_skills_all_tech_by_family, commit 267b115; snapshot of 16 Sep 2026.
+> source: repository table T05_skills_all_tech_by_family, commit 267b115. Snapshot of 16 Sep 2026.
 
 ### Region
 
@@ -108,7 +108,7 @@ Counts use the primary state, so Styria is 54 here and 58 by location below. “
 | Styria, AMS “Data Scientist” class | 13.6% | 300 of 2,207, 2025. The total includes ads with no named state |
 | Styria, seven AMS data classes pooled | 10.9% | 926 of 8,477, 2025 |
 
-These are different units and are not merged.
+These are different units, and the project does not merge them.
 
 ### AMS trend
 
@@ -142,7 +142,7 @@ What this does not establish:
 
 - **Demand over time.** The snapshot is a one-day stock of ads, not yearly flow, vacancies or hires. Official series have unplaced ads, so state changes since 2020 are uncertain.
 - **Full coverage.** StepStone, Indeed and company career pages are missing. Title-based inclusion has measured precision but unmeasured recall.
-- **Styrian detail.** Styrian cells are small (n = 58), so counts are labelled tentative.
+- **Styrian detail.** Styrian cells are small (n = 58), so the page labels counts tentative.
 - **Anything causal.** There are no hiring outcomes, so no requirement is evidence of what gets someone hired.
 
 ## Decision
@@ -150,10 +150,10 @@ What this does not establish:
 The snapshot is an evidence base, not a verdict, and each statement traces to a table id. Two decision documents score each role family against a declared skill profile, with stated weights, no hidden scoring and a sensitivity check under alternative weights.
 
 > [!faq]- Why are the raw ads not published?
-> A terms-of-use audit found that all five posting sources restrict automated extraction, so the collection stays a one-off private research set. The public repository holds the code, the rules and the aggregated tables, with every text and URL column removed. The collectors and the raw ads are not published.
+> A terms-of-use audit found that all five posting sources restrict automated extraction, so the collection stays a one-off private research set. The public repository holds the code, the rules and the aggregated tables, with every text and URL column removed. The project does not publish the collectors or the raw ads.
 
 Code is under MIT. Documents and aggregated outputs are under CC BY 4.0.
 
 
 
-[^1]: The AMS JobBarometer counts online ads per occupation class and federal state. Its [Methodenpaper](https://jobbarometer.ams.at/dam/jcr:353f155f-0769-410e-bd8d-727ecc09d144/Methodenpaper_v1.2.pdf) (§ 3.1.6) says that some ads cannot be assigned to a state, so the Austria sum can exceed the sum of states, and that ads from Germany for Austrian border regions are included.
+[^1]: The AMS JobBarometer counts online ads per occupation class and federal state. In its [Methodenpaper](https://jobbarometer.ams.at/dam/jcr:353f155f-0769-410e-bd8d-727ecc09d144/Methodenpaper_v1.2.pdf) (§ 3.1.6), AMS says that it cannot assign some ads to a state. The Austria sum can therefore exceed the sum of states. AMS also says that the counts include ads from Germany for Austrian border regions.
