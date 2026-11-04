@@ -118,7 +118,7 @@ const allProjects = projects.length ? t(lang, 'all-n-projects').replace('{n}', S
     {projects.length > 0 && (
       <Listing keys>
         {projects.map((p) => (
-          <ListingRow code={p.data.code} title={p.data.title} sub={p.data.summary} meta={[p.data.domain]} status={p.data.status} keys={p.data.stack.slice(0, LISTING_KEYWORDS)} lang={lang} href={workRoute(p.data.slug, lang)} />
+          <ListingRow code={p.data.code} title={p.data.title} sub={p.data.summary} meta={[p.data.domain]} status={p.data.status} keys={p.data.stack.slice(0, LISTING_KEYWORDS)} titleLevel={3} lang={lang} href={workRoute(p.data.slug, lang)} />
         ))}
       </Listing>
     )}
@@ -130,7 +130,7 @@ const allProjects = projects.length ? t(lang, 'all-n-projects').replace('{n}', S
     {writing.length + libraryCount > 0 && (
       <Listing>
         {latest.map((e, i) => (
-          <ListingRow code={listIndex(i)} title={e.data.title} sub={e.data.summary} meta={[writingCode(e, writing), t(lang, `kind.${e.data.kind}`), formatDate(e.data.date, lang)]} lang={lang} href={writingRoute(e.data.slug, lang)} />
+          <ListingRow code={listIndex(i)} title={e.data.title} sub={e.data.summary} meta={[writingCode(e, writing), t(lang, `kind.${e.data.kind}`), formatDate(e.data.date, lang)]} titleLevel={3} lang={lang} href={writingRoute(e.data.slug, lang)} />
         ))}
         {writing.length > 0 && (
           <ListingRow register code={ESSAYS_CODE} title={t(lang, 'all-n-essays').replace('{n}', String(writing.length))} sub={t(lang, 'essays.sub')} meta={[t(lang, 'essays.word')]} lang={lang} href={`${route('writing', lang)}#essays`} />
@@ -147,7 +147,7 @@ const allProjects = projects.length ? t(lang, 'all-n-projects').replace('{n}', S
     <SectionHeading number="03" word={t(lang, 'door.tools')} claim={copy.tools.claim} prose={copy.tools.prose} link={{ href: route('tools', lang), label: t(lang, 'all-tools') }} />
     <Listing>
       {tools(lang).map((row) => (
-        <ListingRow code={row.code} title={row.title} sub={row.sub} meta={[row.domain]} status={row.status} lang={lang} trail={t(lang, 'open')} href={route(row.page, lang)} />
+        <ListingRow code={row.code} title={row.title} sub={row.sub} meta={[row.domain]} status={row.status} titleLevel={3} lang={lang} trail={t(lang, 'open')} href={route(row.page, lang)} />
       ))}
     </Listing>
     <a class="label section-forward" href={route('tools', lang)}>{t(lang, 'all-tools')} <span aria-hidden="true">→</span></a>

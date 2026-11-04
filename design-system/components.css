@@ -131,6 +131,7 @@ a.listing-row:hover, .listing-row:hover { background: var(--surface-2); }
   font-family: var(--font-display); font-weight: var(--w-display);
   font-size: var(--t-h3); letter-spacing: var(--tracking-tight);
   line-height: 1.14; color: var(--ink); text-wrap: pretty;
+  font-variant-numeric: normal;   /* a row title is a heading on some pages (titleLevel): keep the span's figures, not the heading's tabular ones */
 }
 .lr-title-sub {
   display: block;

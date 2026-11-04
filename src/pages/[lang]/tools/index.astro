@@ -42,7 +42,7 @@ const copy = {
     <SectionHeading number="03" word={t(lang, 'door.tools')} claim={copy.claim} prose={toolsProse(lang)} as="h1" />
     <Listing head={{ index: t(lang, 'index'), title: t(lang, 'tool'), meta: t(lang, 'discipline-status'), trail: t(lang, 'open') }}>
       {tools(lang).map((row) => (
-        <ListingRow code={row.code} title={row.title} sub={row.sub} meta={[row.domain]} status={row.status} lang={lang} trail={t(lang, 'open')} href={route(row.page, lang)} />
+        <ListingRow code={row.code} title={row.title} sub={row.sub} meta={[row.domain]} status={row.status} titleLevel={2} lang={lang} trail={t(lang, 'open')} href={route(row.page, lang)} />
       ))}
     </Listing>
     {isDraftLang(lang) && <div class="doc-meta"><StatusMark state="in-build" lang={lang} label={t(lang, 'draft')} /></div>}

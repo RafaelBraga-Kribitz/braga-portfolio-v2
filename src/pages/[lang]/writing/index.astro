@@ -36,7 +36,7 @@ const libraryCount = library.reduce((n, a) => n + a.rows.length, 0);
     {writing.length > 0 && (
       <Listing id="essays" head={{ index: ESSAYS_CODE, title: t(lang, 'essays.word'), meta: t(lang, 'date'), trail: '' }}>
         {writing.map((e, i) => (
-          <ListingRow code={listIndex(i)} title={e.data.title} sub={e.data.summary} meta={[writingCode(e, writing), formatDate(e.data.date, lang)]} lang={lang} href={writingRoute(e.data.slug, lang)} />
+          <ListingRow code={listIndex(i)} title={e.data.title} sub={e.data.summary} meta={[writingCode(e, writing), formatDate(e.data.date, lang)]} titleLevel={2} lang={lang} href={writingRoute(e.data.slug, lang)} />
         ))}
       </Listing>
     )}
