@@ -456,6 +456,9 @@ main > .section:first-child:has(> .doc-trail:first-child + .section-heading) { b
 .doc-trail a:hover { color: var(--ink); }
 .doc-trail b { font-weight: 400; color: var(--ink); }
 .doc-trail .glyph { color: var(--ink-3); }
+/* each arrow travels with the item after it, so a wrapped trail never leaves an arrow alone at the end of a line; the group may shrink and its text wraps (D-063) */
+.doc-trail-step { display: flex; align-items: baseline; gap: 12px; min-width: 0; }
+.doc-trail-step > :not(.glyph) { min-width: 0; }
 .doc-lead { margin: 0; font-size: var(--t-lead); line-height: 1.5; max-width: 720px; text-wrap: pretty; }
 .doc-meta {
   display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px;

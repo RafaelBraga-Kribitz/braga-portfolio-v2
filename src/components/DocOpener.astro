@@ -59,10 +59,10 @@ const hasMeta = meta.length > 0 || draft;
   <Fragment>
     <p class="doc-trail">
       {trail.map((c, i) => (
-        <Fragment>
+        <span class="doc-trail-step">
           {i > 0 && <span class="glyph" aria-hidden="true">{c.sep ?? '→'}</span>}
           {c.href ? <a href={c.href}>{c.label}</a> : c.current ? <b>{c.label}</b> : <span>{c.label}</span>}
-        </Fragment>
+        </span>
       ))}
     </p>
     {portrait && (
@@ -79,10 +79,10 @@ const hasMeta = meta.length > 0 || draft;
     <div class="col-3">
       <p class="doc-trail">
         {trail.map((c, i) => (
-          <Fragment>
+          <span class="doc-trail-step">
             {i > 0 && <span class="glyph" aria-hidden="true">{c.sep ?? '→'}</span>}
             {c.href ? <a href={c.href}>{c.label}</a> : c.current ? <b>{c.label}</b> : <span>{c.label}</span>}
-          </Fragment>
+          </span>
         ))}
       </p>
       {portrait && (
@@ -123,10 +123,10 @@ const hasMeta = meta.length > 0 || draft;
     {part !== 'main' && (
     <p class="doc-trail">
       {trail.map((c, i) => (
-        <Fragment>
+        <span class="doc-trail-step">
           {i > 0 && <span class="glyph" aria-hidden="true">{c.sep ?? '→'}</span>}
           {c.href ? <a href={c.href}>{c.label}</a> : c.current ? <b>{c.label}</b> : <span>{c.label}</span>}
-        </Fragment>
+        </span>
       ))}
     </p>
     )}
