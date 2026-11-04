@@ -36,6 +36,7 @@ What the marketing career adds is the domain half of the job: knowing how campai
 > - Methods — Causal Inference · Bayesian Methods · Forecasting · Optimisation
 > - Toolbox — Python · PyMC · DuckDB · dbt · DVC · Git · SQL · Spark
 > - Practice — Experiment design · Decision systems · Measurement & attribution
+> - Languages — Portuguese (native) · English (fluent) · German (A2 certificate; course in progress)
 
 ## CV
 

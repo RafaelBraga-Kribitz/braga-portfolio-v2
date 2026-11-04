@@ -36,6 +36,7 @@ Die Marketinglaufbahn steuert die fachliche Hälfte der Arbeit bei: das Wissen, 
 > - Methoden — Kausale Inferenz · Bayessche Methoden · Prognosen · Optimierung
 > - Werkzeugkasten — Python · PyMC · DuckDB · dbt · DVC · Git · SQL · Spark
 > - Praxis — Experimentdesign · Entscheidungssysteme · Messung und Attribution
+> - Sprachen — Portugiesisch (Muttersprache) · Englisch (fließend) · Deutsch (A2-Zertifikat; Kurs läuft)
 
 ## Lebenslauf
 
