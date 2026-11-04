@@ -599,7 +599,7 @@ export function diffAgainstDisk(dir = OUT_DIR) {
   const bad = [];
   for (const [file, svg] of built) {
     if (!existsSync(dir + file)) bad.push(`${file}: missing`);
-    else if (readFileSync(dir + file, 'utf8') !== svg) bad.push(`${file}: differs`);
+    else if (readFileSync(dir + file, 'utf8').replaceAll('\r\n', '\n') !== svg) bad.push(`${file}: differs`);
   }
   if (existsSync(dir)) for (const f of readdirSync(dir)) if (f.endsWith('.svg') && !built.has(f)) bad.push(`${f}: not drawn by this script`);
   return bad;
