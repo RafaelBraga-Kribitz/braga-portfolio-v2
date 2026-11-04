@@ -22,7 +22,7 @@ publish: true
 ## Question: Which data jobs are advertised in Austria, where, and what do they ask for?
 
 > [!summary] Summary
-> SQL leads a one-day snapshot of 720 core data-role postings. Among named vendors, the postings lean to Microsoft. In the AMS “Data Scientist” class, Styria is above its 2020 level. The raw collection stays a private research set.
+> SQL leads a one-day snapshot of 720 core data-role postings. Among named vendors, the postings lean to Microsoft. Since 2022, Styria fell 29% in the AMS “Data Scientist” class, against 56% for Austria. The raw collection stays a private research set.
 
 > [!note] Snapshot date
 > This page describes the snapshot of 16 Sep 2026. The repository has since moved to a snapshot of 18 Oct 2026 (release 2026-10-19.1, 699 core postings). Its README carries the current figures.
@@ -105,7 +105,7 @@ Counts use the primary state, so Styria is 54 here and 58 by location below. “
 |:--|--:|:--|
 | Vienna, snapshot | 48% | 345 of 720, location count |
 | Styria, snapshot | 8.1% | 58 of 720, location count |
-| Styria, AMS “Data Scientist” class | 13.6% | 300 of 2,207, 2025 |
+| Styria, AMS “Data Scientist” class | 13.6% | 300 of 2,207, 2025. The total includes ads with no named state |
 | Styria, seven AMS data classes pooled | 10.9% | 926 of 8,477, 2025 |
 
 These are different units and are not merged.
@@ -114,14 +114,14 @@ These are different units and are not merged.
 
 AMS “Data Scientist” class, online ads per year. Burgenland is censored below 20 in every year, so it counts as no named state.
 
-| Year | Austria total | Sum of named states | No named state | Styria |
-|:--|--:|--:|--:|--:|
-| 2020 | 3,049 | 1,892 | 1,157 | 224 |
-| 2022 | 5,032 | 4,430 | 602 | 423 |
-| 2024 | 2,680 | 2,403 | 277 | 271 |
-| 2025 | 2,207 | 2,008 | 199 | 300 |
+| Year | Austria total | Sum of named states | No named state | Share with no named state | Styria |
+|:--|--:|--:|--:|--:|--:|
+| 2020 | 3,049 | 1,892 | 1,157 | 37.9% | 224 |
+| 2022 | 5,032 | 4,430 | 602 | 12.0% | 423 |
+| 2024 | 2,680 | 2,403 | 277 | 10.3% | 271 |
+| 2025 | 2,207 | 2,008 | 199 | 9.0% | 300 |
 
-Styria rose from 224 to 300 ads (+34%).[^1] The Austria total fell 28%, but ads with no named state fell from 1,157 to 199, so the sum of named states rose 6%. The reason for the gap is not established, so this page does not read Styria as moving against a national trend.
+AMS says some ads have no clear state ([Methodenpaper](https://jobbarometer.ams.at/dam/jcr:353f155f-0769-410e-bd8d-727ecc09d144/Methodenpaper_v1.2.pdf), § 3.1.6), and their share fell from 38% to 9%.[^1] The fall is class-wide, from a median of 37.6% to 8.9% over 59 AMS classes, and the reason is not established. Change since 2020 is therefore uncertain: Styria +34% raw, −8.7% with proportional allocation of unplaced ads (a sensitivity reading, not a measurement). Since 2022 the reading is stable: Styria −29%, named states −55%, Austria −56%.
 
 ### Language, pay and season
 
@@ -140,7 +140,7 @@ Most advertised salary figures are collective-agreement minimums, so the ads sho
 
 What this does not establish:
 
-- **Demand over time.** The snapshot is a one-day stock of ads, not yearly flow, vacancies or hires.
+- **Demand over time.** The snapshot is a one-day stock of ads, not yearly flow, vacancies or hires. Official series have unplaced ads, so state changes since 2020 are uncertain.
 - **Full coverage.** StepStone, Indeed and company career pages are missing. Title-based inclusion has measured precision but unmeasured recall.
 - **Styrian detail.** Styrian cells are small (n = 58), so counts are labelled tentative.
 - **Anything causal.** There are no hiring outcomes, so no requirement is evidence of what gets someone hired.
@@ -156,4 +156,4 @@ Code is under MIT. Documents and aggregated outputs are under CC BY 4.0.
 
 
 
-[^1]: The AMS JobBarometer counts online ads per occupation class and federal state. The trend is read from the “Data Scientist” class.
+[^1]: The AMS JobBarometer counts online ads per occupation class and federal state. Its [Methodenpaper](https://jobbarometer.ams.at/dam/jcr:353f155f-0769-410e-bd8d-727ecc09d144/Methodenpaper_v1.2.pdf) (§ 3.1.6) says that some ads cannot be assigned to a state, so the Austria sum can exceed the sum of states, and that ads from Germany for Austrian border regions are included.

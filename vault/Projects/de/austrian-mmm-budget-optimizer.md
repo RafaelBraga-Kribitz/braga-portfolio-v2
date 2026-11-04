@@ -23,7 +23,7 @@ publish: true
 ## Frage: Welche Kanäle sollten bei gleichem Mediabudget mehr Geld bekommen und welche weniger?
 
 > [!summary] Zusammenfassung
-> Das Modell wird an einer bekannten Wahrheit validiert, bevor es etwas entscheidet. Auf Metas öffentlichem Robyn-Demodatensatz wird dasselbe Wochenbudget nach einer Breakeven-Regel umverteilt. Bei den berichteten Priors bringt das im Median einen zusätzlichen Deckungsbeitrag von 15,1 % des derzeitigen Deckungsbeitrags der Medien. Keine der 500 verwendeten Ziehungen aus der A-posteriori-Verteilung zeigt einen Verlust.
+> Das Modell wird an einer bekannten Wahrheit validiert, bevor es etwas entscheidet. Auf Metas öffentlichem Robyn-Demodatensatz wird dasselbe Wochenbudget nach einer Breakeven-Regel umverteilt. Bei den berichteten Priors bringt das im Median einen zusätzlichen Deckungsbeitrag von 15,1 % des derzeitigen Deckungsbeitrags der Medien. Keine der 500 verwendeten Ziehungen aus der A-posteriori-Verteilung zeigt einen Verlust. Bei vagen Priors sinkt der Median des Gewinns auf 8,7 %, und die Verschiebung zu Facebook entfällt.
 
 ## Hintergrund
 
@@ -44,11 +44,9 @@ Die Vergleichseinheit ist der Deckungsbeitrag, nicht der Umsatz. Ein Kanal verni
 > - Übertragung — geometrischer Adstock (Übertragungseffekt der Werbung) je Kanal, Abklingrate geschätzt
 > - Sättigung — Hill-Kurve auf die Adstock-transformierten Ausgaben
 > - Basislinie — linearer Trend · zwei jährliche Fourier-Paare · eine Kontrollvariable
-> - Priors (A-priori-Verteilungen) — schwach informativ und für alle Kanäle gleich, ohne kanalspezifische Wunschantworten
+> - Priors (A-priori-Verteilungen) — schwach informativ und für alle Kanäle gleich, ohne kanalspezifische Wunschantworten. Die [Prior-Sensitivitätsprüfung](https://github.com/RafaelBraga-Kribitz/austrian-mmm-budget-optimizer/blob/108e2df2ef85fc98d22c53046b95715cda84b151/reports/PRIOR_SENSITIVITY_PUBLISHED_FIT_2026-11-04.md) ist erledigt: Sie passt Layer R mit vagen Priors im gleichen Aufbau neu an
 > - Deckungs&shy;beitrags&shy;quote — 40 %, angenommen
 > - Breakeven-ROAS — 2,50
-
-Der [Sensitivitätsbericht des Repositorys](https://github.com/RafaelBraga-Kribitz/austrian-mmm-budget-optimizer/blob/bd547f4bf88ff103d76a53df1883cd0dbd7f70d5/reports/PRIOR_SENSITIVITY.md) passt Layer R mit vagen Priors neu an. Die Mediane bewegen sich kaum, aber die Intervalle werden breiter. Die Untergrenze von Facebook fällt von 4,06 auf 0,27, unter den Breakeven, und die von TV bleibt darüber (4,52 und 4,19).
 
 ## Methode
 
@@ -69,7 +67,7 @@ Die Zahlen in der README des Repositorys werden aus den Berichtsdateien erzeugt,
 ## Ergebnis
 
 > [!note] Geprüft am 26. Okt. 2026
-> Das Build-Log des Repositorys dokumentiert Neuberechnungen der Entscheidungsebene und der Validierung auf synthetischen Daten nach Code-Korrekturen am 30. Sep. 2026. Diese Prüfung vor der Weitergabe hat das Modell nicht neu gerechnet, die Zahlen stammen daher aus dieser Arbeit.
+> Das Build-Log des Repositorys dokumentiert Neuberechnungen der Entscheidungsebene und der Validierung auf synthetischen Daten nach Code-Korrekturen am 30. Sep. 2026. Diese Prüfung vor der Weitergabe hat das Modell nicht neu gerechnet, die Zahlen stammen daher aus dieser Arbeit. Die Prior-Sensitivitätsprüfung vom 4. Nov. 2026 steht unter Umverteilung.
 
 ### Validierung auf Layer P
 
@@ -104,10 +102,18 @@ Dasselbe gesamte Wochenbudget, nach der Entscheidungsregel umverteilt, bringt im
 > TV liegt bei beiden Prior-Sätzen über der Linie von 2,50. Facebook liegt nur bei den berichteten Priors darüber. Print und Search kreuzen die Linie, und die Außenwerbung bleibt darunter.
 > ![[01-03-roas-interval.de.svg]]
 >
-> caption: Medianer marginaler ROAS bei den derzeitigen Ausgaben, mit seinem Intervall zu 90 %, auf logarithmischer Skala von 0,05 bis 50. n = 5 Kanäle. Bei vagen Priors fällt die Untergrenze von Facebook im Sensitivitätslauf des Repositorys von 4,06 auf 0,27, ein anderer Lauf als der dargestellte (4,76). Die Untergrenze von TV bleibt bei beiden Prior-Sätzen über 2,50 (4,52 und 4,19). Die Daten sind simuliert, und der Breakeven von 2,50 nimmt eine Deckungsbeitragsquote von 40 % an.
-> source: Layer R, Metas öffentliche Robyn-Demodatei; simulierte Daten. Prior-Sensitivität: [Bericht des Repositorys](https://github.com/RafaelBraga-Kribitz/austrian-mmm-budget-optimizer/blob/bd547f4bf88ff103d76a53df1883cd0dbd7f70d5/reports/PRIOR_SENSITIVITY.md).
+> caption: Medianer marginaler ROAS bei den derzeitigen Ausgaben, mit seinem Intervall zu 90 %, auf logarithmischer Skala von 0,05 bis 50. n = 500 Posterior-Ziehungen, 5 Kanäle. Durchgezogen: berichtete Priors, Werte rechts. Gestrichelt: vage Priors. Intervalle unter 0,05 sind abgeschnitten und mit einem Winkel markiert (Außenwerbung 0,00, Search 0,03). Die Daten sind simuliert, und der Breakeven von 2,50 nimmt eine Deckungsbeitragsquote von 40 % an.
+> source: Layer R, Metas öffentliche Robyn-Demodatei; simulierte Daten. Prior-Sensitivität: [Bericht des Repositorys](https://github.com/RafaelBraga-Kribitz/austrian-mmm-budget-optimizer/blob/108e2df2ef85fc98d22c53046b95715cda84b151/reports/PRIOR_SENSITIVITY_PUBLISHED_FIT_2026-11-04.md).
 
-Die Ausgaben gelten je Woche und stehen in den eigenen Geldeinheiten des Datensatzes, nicht in Euro. Anteile, ROAS-Verhältnisse und die Breakeven-Prüfung lassen sich übertragen.
+| Lauf | Gewinn, Median | 10. Perzentil | Verschiebung nach der Regel |
+|:--|--:|--:|:--|
+| Veröffentlichter Fit, berichtete Priors | 15,1 % | 8,8 % | Außenwerbung −20 %, TV und Facebook +50 %, Print und Search unverändert |
+| Exakte Wiederholung, berichtete Priors | 14,7 % | 9,0 % | Gleiches Ergebnis |
+| Neuanpassung, vage Priors | 8,7 % | 4,0 % | Außenwerbung −17 %, TV +50 %, Facebook, Print und Search unverändert |
+
+Die exakte Wiederholung weicht vom veröffentlichten Fit ab, und die Ursache ist nicht isoliert. Der Bericht nennt Monte-Carlo-Schwankungen des Samplers von Lauf zu Lauf als wahrscheinliche Ursache. Die Untergrenze von Facebook bei den berichteten Priors wandert zwischen den Auswertungen von 3,06 bis 4,76. In keinem Lauf zeigt eine der 500 Ziehungen einen Verlust.
+
+Die Wochenbeträge darunter stehen in den eigenen Geldeinheiten des Datensatzes, nicht in Euro, und die Ergebnisse der Regel gelten für die berichteten Priors. Anteile, ROAS-Verhältnisse und die Breakeven-Prüfung lassen sich übertragen.
 
 | Kanal | Derzeit | Empfohlen | Ergebnis der Regel |
 |:--|--:|--:|:--|
@@ -137,10 +143,10 @@ Das MMM unterlag auf Layer R der Ridge-Regression, und das wird so berichtet, wi
 
 ## Entscheidung
 
-Die schriftlich festgelegte Regel verschiebt bei den berichteten Priors Budget zu TV und Facebook und zieht es von der Außenwerbung ab. Print und Search lässt sie unverändert. Die Verschiebung zu Facebook beruht ebenso auf den Priors wie auf den Daten: Vage Priors würden nur TV finanzieren. Die Entscheidung beruht außerdem auf einem simulierten öffentlichen Datensatz: siehe Grenzen.
+Die schriftlich festgelegte Regel verschiebt bei den berichteten Priors Budget zu TV und Facebook und zieht es von der Außenwerbung ab. Print und Search lässt sie unverändert. Die Verschiebung zu Facebook übersteht vage Priors nicht: Die Regel hält Facebook dann unverändert, und der Median des Gewinns sinkt auf 8,7 %. Die Entscheidung beruht außerdem auf einem simulierten öffentlichen Datensatz: siehe Grenzen.
 
 > [!faq]- Was würde die Entscheidung umkehren?
-> Die Untergrenze des Intervalls zu 90 % für den marginalen ROAS von TV oder Facebook kann bei einer Neuschätzung auf 2,50 oder darunter fallen. Tritt das ein, endet die Verschiebung zu diesem Kanal. Eine Neuanpassung mit vagen Priors setzt die Untergrenze von Facebook auf 0,27 und beendet die Verschiebung zu Facebook. Ist das 10. Perzentil des Umverteilungsgewinns nicht mehr positiv, endet die Umverteilung. Die Empfehlung beruht außerdem auf den Annahmen unter „Verhalten bei neuen Ausgabenniveaus“, die keine Prüfung belegt.
+> Die Untergrenze des Intervalls zu 90 % für den marginalen ROAS von TV oder Facebook kann bei einer Neuschätzung auf 2,50 oder darunter fallen. Tritt das ein, endet die Verschiebung zu diesem Kanal. Die Neuanpassung mit vagen Priors zeigt diesen Fall schon: Sie setzt die Untergrenze von Facebook auf 0,11, daher hält die Regel Facebook unverändert. Ist das 10. Perzentil des Umverteilungsgewinns nicht mehr positiv, endet die Umverteilung. Die Empfehlung beruht außerdem auf den Annahmen unter „Verhalten bei neuen Ausgabenniveaus“, die keine Prüfung belegt.
 
 ## Entstehung
 

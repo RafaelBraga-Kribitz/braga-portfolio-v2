@@ -22,7 +22,7 @@ publish: true
 ## Frage: Welche Datenjobs werden in Österreich ausgeschrieben, wo, und was verlangen sie?
 
 > [!summary] Zusammenfassung
-> SQL führt eine eintägige Momentaufnahme von 720 Kerninseraten für Datenrollen an. Unter den genannten Anbietern neigen die Inserate zu Microsoft. In der AMS-Berufsgruppe „Data Scientist“ liegt die Steiermark über ihrem Niveau von 2020. Die Rohdatensammlung bleibt ein privater Forschungsdatensatz.
+> SQL führt eine eintägige Momentaufnahme von 720 Kerninseraten für Datenrollen an. Unter den genannten Anbietern neigen die Inserate zu Microsoft. Seit 2022 ging die Zahl in der AMS-Berufsgruppe „Data Scientist“ in der Steiermark um 29 % zurück, in Österreich um 56 %. Die Rohdatensammlung bleibt ein privater Forschungsdatensatz.
 
 > [!note] Stand der Daten
 > Diese Seite beschreibt die Momentaufnahme vom 16. Sep. 2026. Das Repository ist inzwischen auf die Momentaufnahme vom 18. Okt. 2026 umgestellt (Release 2026-10-19.1, 699 Kerninserate). Seine README enthält die aktuellen Zahlen.
@@ -105,7 +105,7 @@ Die Zählung nutzt das primäre Bundesland: Die Steiermark hat hier 54 und nach 
 |:--|--:|:--|
 | Wien, Momentaufnahme | 48 % | 345 von 720, Ortszählung |
 | Steiermark, Momentaufnahme | 8,1 % | 58 von 720, Ortszählung |
-| Steiermark, AMS-Berufsgruppe „Data Scientist“ | 13,6 % | 300 von 2.207, 2025 |
+| Steiermark, AMS-Berufsgruppe „Data Scientist“ | 13,6 % | 300 von 2.207, 2025. Die Gesamtzahl enthält Inserate ohne benanntes Bundesland |
 | Steiermark, sieben AMS-Berufsgruppen für Daten zusammen | 10,9 % | 926 von 8.477, 2025 |
 
 Das sind verschiedene Einheiten, und sie werden nicht vermischt.
@@ -114,14 +114,14 @@ Das sind verschiedene Einheiten, und sie werden nicht vermischt.
 
 AMS-Berufsgruppe „Data Scientist“, Online-Inserate je Jahr. Burgenland ist in jedem Jahr unter 20 zensiert und zählt daher als kein benanntes Bundesland.
 
-| Jahr | Österreich gesamt | Summe der benannten Bundesländer | Ohne benanntes Bundesland | Steiermark |
-|:--|--:|--:|--:|--:|
-| 2020 | 3.049 | 1.892 | 1.157 | 224 |
-| 2022 | 5.032 | 4.430 | 602 | 423 |
-| 2024 | 2.680 | 2.403 | 277 | 271 |
-| 2025 | 2.207 | 2.008 | 199 | 300 |
+| Jahr | Österreich gesamt | Summe der benannten Bundesländer | Ohne benanntes Bundesland | Anteil ohne benanntes Bundesland | Steiermark |
+|:--|--:|--:|--:|--:|--:|
+| 2020 | 3.049 | 1.892 | 1.157 | 37,9 % | 224 |
+| 2022 | 5.032 | 4.430 | 602 | 12,0 % | 423 |
+| 2024 | 2.680 | 2.403 | 277 | 10,3 % | 271 |
+| 2025 | 2.207 | 2.008 | 199 | 9,0 % | 300 |
 
-Die Steiermark stieg von 224 auf 300 Inserate (+34 %).[^1] Die Gesamtzahl für Österreich sank um 28 %, aber die Inserate ohne benanntes Bundesland sanken von 1.157 auf 199. Daher stieg die Summe der benannten Bundesländer um 6 %. Der Grund für die Lücke ist nicht geklärt, daher liest diese Seite die Steiermark nicht als Gegenbewegung zu einem bundesweiten Trend.
+Das AMS gibt an, dass manche Inserate kein eindeutiges Bundesland haben ([Methodenpaper](https://jobbarometer.ams.at/dam/jcr:353f155f-0769-410e-bd8d-727ecc09d144/Methodenpaper_v1.2.pdf), § 3.1.6), und ihr Anteil sank von 38 % auf 9 %.[^1] Der Rückgang betrifft alle Berufsgruppen: Der Median über 59 AMS-Berufsgruppen sank von 37,6 % auf 8,9 %, und der Grund ist nicht geklärt. Die Veränderung seit 2020 ist daher unsicher: Steiermark +34 % roh, −8,7 % bei anteilsmäßiger Verteilung der nicht zugeordneten Inserate (eine Sensitivitätsrechnung, keine Messung). Seit 2022 ist das Bild stabil: Steiermark −29 %, benannte Bundesländer −55 %, Österreich −56 %.
 
 ### Sprache, Bezahlung und Saison
 
@@ -140,7 +140,7 @@ Die meisten ausgeschriebenen Gehaltsangaben sind kollektivvertragliche Mindestge
 
 Was diese Arbeit nicht belegt:
 
-- **Nachfrage über die Zeit.** Die Momentaufnahme ist ein eintägiger Bestand an Inseraten, kein Jahresvolumen, keine offenen Stellen und keine Einstellungen.
+- **Nachfrage über die Zeit.** Die Momentaufnahme ist ein eintägiger Bestand an Inseraten, kein Jahresvolumen, keine offenen Stellen und keine Einstellungen. Amtliche Reihen enthalten nicht zugeordnete Inserate, daher sind Änderungen je Bundesland seit 2020 unsicher.
 - **Vollständige Abdeckung.** StepStone, Indeed und Karriereseiten von Unternehmen fehlen. Die titelbasierte Aufnahme hat eine gemessene Präzision, aber eine ungemessene Trefferquote (Recall).
 - **Steirische Details.** Steirische Zellen sind klein (n = 58), daher werden Anzahlen als vorläufig gekennzeichnet.
 - **Kausalität.** Es gibt keine Einstellungsergebnisse. Keine Anforderung belegt daher, was zu einer Einstellung führt.
@@ -156,4 +156,4 @@ Code unter MIT-Lizenz. Dokumente und aggregierte Ergebnisse unter CC BY 4.0.
 
 
 
-[^1]: Das AMS JobBarometer zählt Online-Inserate nach Berufsgruppe und Bundesland. Der Trend wird aus der Berufsgruppe „Data Scientist“ gelesen.
+[^1]: Das AMS JobBarometer zählt Online-Inserate nach Berufsgruppe und Bundesland. Laut [Methodenpaper](https://jobbarometer.ams.at/dam/jcr:353f155f-0769-410e-bd8d-727ecc09d144/Methodenpaper_v1.2.pdf) (§ 3.1.6) lassen sich manche Inserate keinem Bundesland zuordnen, daher kann die Österreichsumme die Summe der Bundesländer übersteigen. Auch Inserate aus Deutschland für österreichische Grenzregionen fließen ein.

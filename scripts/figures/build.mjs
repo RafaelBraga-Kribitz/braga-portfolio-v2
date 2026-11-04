@@ -84,9 +84,11 @@ export const HEAT = [
 // the three cells the finding names: BI × visualisation, data science × AI, data engineering × SQL
 export const HEAT_NAMED = ['viz:bi', 'ai:ds', 'sql:de'];
 
-// 01-03 · page 01-03 itself and the repository austrian-mmm-budget-optimizer
-// (reports/exports/roas_summary.csv, recommendation_allocation.csv; commit
-// bd547f4), Layer R: marginal ROAS at current spend, median and 90% interval.
+// 01-03 · repository austrian-mmm-budget-optimizer, Layer R: marginal ROAS at
+// current spend, median and 90% interval, on the optimiser's 500-draw subset.
+// ROAS = published fit under the reported priors; ROAS_VAGUE = vague-prior refit
+// in the same setup. Source: reports/PRIOR_SENSITIVITY_PUBLISHED_FIT_2026-11-04.md,
+// merge commit 108e2df2ef85fc98d22c53046b95715cda84b151.
 // Breakeven ROAS 2.50. Order: clears, crosses, below.
 export const ROAS = [
   { id: 'tv', median: 7.26, lo: 4.38, hi: 10.72 },
@@ -95,20 +97,28 @@ export const ROAS = [
   { id: 'search', median: 7.68, lo: 0.89, hi: 25.55 },
   { id: 'ooh', median: 0.75, lo: 0.1, hi: 1.68 },
 ];
+export const ROAS_VAGUE = [
+  { id: 'tv', median: 6.88, lo: 4.27, hi: 9.78 },
+  { id: 'facebook', median: 16.75, lo: 0.11, hi: 46.24 },
+  { id: 'print', median: 5.64, lo: 0.37, hi: 15.68 },
+  { id: 'search', median: 5.36, lo: 0.03, hi: 29.63 },
+  { id: 'ooh', median: 0.59, lo: 0, hi: 1.68 },
+];
 export const BREAKEVEN = 2.5;
 export const ROAS_AXIS = { lo: 0.05, hi: 50 };
 
 // 01-04 · repository decision-analytics-reconstruction, reports/module_c/
-// walk_forward_loo_report.md (committed with MC_FAST=1): one row per held-out
+// walk_forward_loo_report.md at merge commit 86f6d3b1f3e9a4312ac5320f83e3ddd08050a257
+// (full run: 4 chains, 1,000 draws, 1,000 tune, target_accept 0.99): one row per held-out
 // poll wave of the 2018 Paraguay fixture. margin, mean, lo, hi in percentage
 // points; caught = observed margin inside the 95% HDI.
 export const WAVES = [
-  { id: '0315', day: 15, month: 3, margin: -4.5, mean: 19.4, lo: -1.2, hi: 42.9, caught: false },
-  { id: '0318', day: 18, month: 3, margin: 31.4, mean: 4.81, lo: -13.2, hi: 22.8, caught: false },
-  { id: '0326', day: 26, month: 3, margin: 26.43, mean: 13.78, lo: -2.8, hi: 29.7, caught: true },
-  { id: '0406', day: 6, month: 4, margin: 31.5, mean: 20.7, lo: -3.4, hi: 51.9, caught: true },
-  { id: '0410', day: 10, month: 4, margin: 25.11, mean: 23.85, lo: 6.6, hi: 45.0, caught: true },
-  { id: '0418', day: 18, month: 4, margin: -5.12, mean: 14.82, lo: -3.6, hi: 38.4, caught: false },
+  { id: '0315', day: 15, month: 3, margin: -4.5, mean: 20.27, lo: -3.2, hi: 44.7, caught: false },
+  { id: '0318', day: 18, month: 3, margin: 31.4, mean: 3.97, lo: -14.9, hi: 22.7, caught: false },
+  { id: '0326', day: 26, month: 3, margin: 26.43, mean: 14.68, lo: -7.6, hi: 34.6, caught: true },
+  { id: '0406', day: 6, month: 4, margin: 31.5, mean: 21.53, lo: -4.1, hi: 46.3, caught: true },
+  { id: '0410', day: 10, month: 4, margin: 25.11, mean: 22.75, lo: 0.5, hi: 44.2, caught: true },
+  { id: '0418', day: 18, month: 4, margin: -5.12, mean: 17.18, lo: -5.9, hi: 38.3, caught: true },
 ];
 export const WAVE_AXIS = { lo: -20, hi: 60 };
 
@@ -142,7 +152,8 @@ export function assertData() {
   for (const w of WAVES) {
     eq(w.caught, w.margin >= w.lo && w.margin <= w.hi, `WAVES ${w.id}: caught agrees with the interval`);
   }
-  eq(WAVES.filter((w) => w.caught).length, 3, 'WAVES caught');
+  eq(WAVES.filter((w) => w.caught).length, 4, 'WAVES caught');
+  for (const r of ROAS_VAGUE) if (!(r.lo <= r.median && r.median <= r.hi)) throw new Error(`figures: ROAS_VAGUE ${r.id}: median outside its interval`);
   for (const t of TCO) if (!(t.p5 <= t.mean && t.mean <= t.p95)) throw new Error(`figures: TCO ${t.id}: Monte Carlo mean outside p5–p95`);
 }
 
@@ -173,11 +184,12 @@ const STR = {
     roas: {
       finding: 'TV clears the 2.50 line under both prior sets. Facebook clears it only under the reported priors. Print and search cross the line, and out-of-home stays below.',
       title: 'Marginal ROAS by channel, with 90% interval',
-      breakeven: 'Breakeven 2.50', axis: 'Marginal ROAS at current spend, log scale', desc: 'Median and 90% interval of the marginal ROAS at current spend; breakeven is 2.50.',
+      breakeven: 'Breakeven 2.50', axis: 'Marginal ROAS at current spend, log scale', desc: 'Median and 90% interval of the marginal ROAS at current spend, under the reported priors and under vague priors; breakeven is 2.50.',
+      reported: 'Reported priors', vague: 'Vague priors', clip: 'Clipped at 0.05 (out-of-home 0.00, search 0.03)',
       rows: { tv: 'TV', facebook: 'Facebook', print: 'Print', search: 'Search', ooh: 'Out-of-home' },
     },
     waves: {
-      finding: 'The 95% band caught 3 of 6 held-out polls. A calibrated band would catch about 6.',
+      finding: 'The 95% band caught 4 of 6 held-out polls. A calibrated band would catch about 6.',
       title: 'Held-out polls against the 95% band',
       axis: 'Margin in percentage points (pp)', observed: 'Observed margin', mean: 'Predictive mean', band: '95% band', caught: 'caught', miss: 'miss',
       desc: 'Per held-out wave: observed margin, predictive mean and 95% interval, in percentage points.',
@@ -221,11 +233,12 @@ const STR = {
     roas: {
       finding: 'TV liegt bei beiden Prior-Sätzen über der Linie von 2,50. Facebook liegt nur bei den berichteten Priors darüber. Print und Search kreuzen die Linie, und die Außenwerbung bleibt darunter.',
       title: 'Marginaler ROAS je Kanal, mit Intervall zu 90 %',
-      breakeven: 'Breakeven 2,50', axis: 'Marginaler ROAS bei derzeitigen Ausgaben, logarithmisch', desc: 'Median und Intervall zu 90 % des marginalen ROAS bei den derzeitigen Ausgaben; der Breakeven liegt bei 2,50.',
+      breakeven: 'Breakeven 2,50', axis: 'Marginaler ROAS bei derzeitigen Ausgaben, logarithmisch', desc: 'Median und Intervall zu 90 % des marginalen ROAS bei den derzeitigen Ausgaben, bei den berichteten Priors und bei vagen Priors; der Breakeven liegt bei 2,50.',
+      reported: 'Berichtete Priors', vague: 'Vage Priors', clip: 'Bei 0,05 abgeschnitten (Außenwerbung 0,00, Search 0,03)',
       rows: { tv: 'TV', facebook: 'Facebook', print: 'Print', search: 'Search', ooh: 'Außenwerbung' },
     },
     waves: {
-      finding: 'Das Band zu 95 % erfasste 3 von 6 zurückgehaltenen Umfragen. Ein kalibriertes Band würde etwa 6 erfassen.',
+      finding: 'Das Band zu 95 % erfasste 4 von 6 zurückgehaltenen Umfragen. Ein kalibriertes Band würde etwa 6 erfassen.',
       title: 'Zurückgehaltene Umfragen gegenüber dem Band zu 95 %',
       axis: 'Abstand in Prozentpunkten (PP)', observed: 'Beobachteter Abstand', mean: 'Prognosemittel', band: 'Band zu 95 %', caught: 'erfasst', miss: 'verfehlt',
       desc: 'Je zurückgehaltener Welle: beobachteter Abstand, Prognosemittel und Intervall zu 95 %, in Prozentpunkten.',
@@ -437,8 +450,8 @@ function figRoas(lang) {
   const n2 = (v) => number(v, lang, 2);
   const { lo, hi } = ROAS_AXIS;
   const px0 = 104; const pw = 226;
-  const X = (v) => px0 + ((Math.log10(v) - Math.log10(lo)) / (Math.log10(hi) - Math.log10(lo))) * pw;
-  const top = 58; const pitch = 46;
+  const X = (v) => px0 + ((Math.log10(Math.max(v, lo)) - Math.log10(lo)) / (Math.log10(hi) - Math.log10(lo))) * pw;
+  const top = 58; const pitch = 46; const dy = 8;
   const bottom = top + ROAS.length * pitch;
   let body = '';
   for (const t of [0.1, 1, 2.5, 10, 50]) {
@@ -449,18 +462,33 @@ function figRoas(lang) {
   body += text(0, bottom + 46, s.axis, { fill: INK2 });
   const desc = [];
   ROAS.forEach((r, i) => {
-    const y = top + i * pitch + pitch / 2;
-    body += text(0, y + 4.5, s.rows[r.id], { weight: 600 });
+    const y0 = top + i * pitch + pitch / 2;
+    body += text(0, y0 + 4.5, s.rows[r.id], { weight: 600 });
+    // reported priors: solid, above
+    const y = y0 - dy;
     body += el('line', { x1: X(r.lo), y1: y, x2: X(r.hi), y2: y, stroke: INK, 'stroke-width': 2 });
     for (const e of [r.lo, r.hi]) body += el('line', { x1: X(e), y1: y - 6, x2: X(e), y2: y + 6, stroke: INK, 'stroke-width': 2 });
     body += el('circle', { cx: X(r.median), cy: y, r: 6, fill: INK, stroke: SURFACE, 'stroke-width': 2 });
     const label = `${n2(r.median)} (${n2(r.lo)}–${n2(r.hi)})`;
     body += text(px0 + pw + 12, y + 4.5, label);
-    desc.push(`${s.rows[r.id]} ${label}`);
+    // vague priors: dashed, lighter, below; a left chevron marks a lower bound clipped at the axis minimum
+    const v = ROAS_VAGUE.find((q) => q.id === r.id);
+    const yv = y0 + dy; const clipped = v.lo < lo;
+    body += el('line', { x1: X(v.lo), y1: yv, x2: X(v.hi), y2: yv, stroke: INK2, 'stroke-width': 2, 'stroke-dasharray': '4 3' });
+    body += clipped ? el('path', { d: `M${X(v.lo) + 5},${yv - 5} L${X(v.lo)},${yv} L${X(v.lo) + 5},${yv + 5}`, fill: 'none', stroke: INK2, 'stroke-width': 2 })
+      : el('line', { x1: X(v.lo), y1: yv - 5, x2: X(v.lo), y2: yv + 5, stroke: INK2, 'stroke-width': 2 });
+    body += el('line', { x1: X(v.hi), y1: yv - 5, x2: X(v.hi), y2: yv + 5, stroke: INK2, 'stroke-width': 2 });
+    body += el('circle', { cx: X(v.median), cy: yv, r: 4, fill: SURFACE, stroke: INK2, 'stroke-width': 2 });
+    desc.push(`${s.rows[r.id]} ${s.reported} ${label}; ${s.vague} ${n2(v.median)} (${n2(v.lo)}–${n2(v.hi)})`);
   });
   body += el('line', { x1: X(BREAKEVEN), y1: top - 12, x2: X(BREAKEVEN), y2: bottom, stroke: ACCENT, 'stroke-width': 2.5 });
   body += text(X(BREAKEVEN) + 8, top - 18, s.breakeven, { weight: 600 });
-  return svgDoc({ name: '01-03-roas-interval', lang, w: 480, h: bottom + 60, title: s.title, desc: `${s.finding} ${s.desc} ${desc.join('; ')}.`, body });
+  // legend
+  const ly = bottom + 72;
+  body += el('line', { x1: 0, y1: ly - 4, x2: 24, y2: ly - 4, stroke: INK, 'stroke-width': 2 }) + el('circle', { cx: 12, cy: ly - 4, r: 5, fill: INK, stroke: SURFACE, 'stroke-width': 2 }) + text(32, ly, s.reported);
+  body += el('line', { x1: 190, y1: ly - 4, x2: 214, y2: ly - 4, stroke: INK2, 'stroke-width': 2, 'stroke-dasharray': '4 3' }) + el('circle', { cx: 202, cy: ly - 4, r: 4, fill: SURFACE, stroke: INK2, 'stroke-width': 2 }) + text(222, ly, s.vague);
+  body += el('path', { d: `M5,${ly + 17} L0,${ly + 22} L5,${ly + 27}`, fill: 'none', stroke: INK2, 'stroke-width': 2 }) + text(32, ly + 26, s.clip);
+  return svgDoc({ name: '01-03-roas-interval', lang, w: 480, h: ly + 40, title: s.title, desc: `${s.finding} ${s.desc} ${desc.join('; ')}.`, body });
 }
 
 /* ---------------------------------------------------------------------------

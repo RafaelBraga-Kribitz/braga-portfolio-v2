@@ -23,7 +23,7 @@ publish: true
 ## Question: With the same media budget, which channels should get more money and which should get less?
 
 > [!summary] Summary
-> The model is validated against a known truth before it decides anything. On Meta’s public Robyn demo data, the same weekly budget is reallocated under a breakeven rule. Under the reported priors, this gains a median 15.1% of current media contribution. No loss appears in any of the 500 posterior draws used.
+> The model is validated against a known truth before it decides anything. On Meta’s public Robyn demo data, the same weekly budget is reallocated under a breakeven rule. Under the reported priors, this gains a median 15.1% of current media contribution. No loss appears in any of the 500 posterior draws used. Under vague priors the median gain falls to 8.7%, and the Facebook move drops out.
 
 ## Background
 
@@ -44,11 +44,9 @@ The unit of comparison is contribution profit, not revenue. A channel below its 
 > - Carry-over — geometric adstock per channel, decay estimated
 > - Saturation — Hill curve on the adstocked spend
 > - Baseline — linear trend · two yearly Fourier pairs · one control
-> - Priors — weakly informative and identical across channels, so no channel has a preferred answer
+> - Priors — weakly informative and identical across channels, so no channel has a preferred answer. The [prior-sensitivity check](https://github.com/RafaelBraga-Kribitz/austrian-mmm-budget-optimizer/blob/108e2df2ef85fc98d22c53046b95715cda84b151/reports/PRIOR_SENSITIVITY_PUBLISHED_FIT_2026-11-04.md) is done: it refits Layer R with vague priors in the same setup
 > - Contribution margin — 40%, assumed
 > - Breakeven ROAS — 2.50
-
-The [repository’s prior-sensitivity report](https://github.com/RafaelBraga-Kribitz/austrian-mmm-budget-optimizer/blob/bd547f4bf88ff103d76a53df1883cd0dbd7f70d5/reports/PRIOR_SENSITIVITY.md) refits Layer R with vague priors. The medians barely move, but the intervals widen. Facebook’s lower bound falls from 4.06 to 0.27, below breakeven, and TV’s stays above it (4.52 and 4.19).
 
 ## Method
 
@@ -69,7 +67,7 @@ Numbers in the repository README are rendered from the report files, and a test 
 ## Result
 
 > [!note] Reviewed on 26 Oct 2026
-> The repository’s build log records reruns of the decision layer and synthetic-data validation after code fixes on 30 Sep 2026. This sharing review did not rerun the model, so the figures are reported from that work.
+> The repository’s build log records reruns of the decision layer and synthetic-data validation after code fixes on 30 Sep 2026. This sharing review did not rerun the model, so the figures are reported from that work. The prior-sensitivity rerun of 4 Nov 2026 is reported under Reallocation.
 
 ### Validation on Layer P
 
@@ -104,10 +102,18 @@ The same total weekly budget, reallocated under the decision rule, gains a media
 > TV clears the 2.50 line under both prior sets. Facebook clears it only under the reported priors. Print and search cross the line, and out-of-home stays below.
 > ![[01-03-roas-interval.en.svg]]
 >
-> caption: Median marginal ROAS at current spend, with its 90% interval, on a log scale from 0.05 to 50. n = 5 channels. Under vague priors Facebook’s lower bound falls from 4.06 to 0.27 in the repository’s prior-sensitivity fit, a different fit from the plotted one (4.76). TV’s lower bound stays above 2.50 under both prior sets (4.52 and 4.19). The data are simulated, and the breakeven of 2.50 assumes a 40% contribution margin.
-> source: Layer R, Meta’s public Robyn demo file; simulated data. Prior sensitivity: [repository report](https://github.com/RafaelBraga-Kribitz/austrian-mmm-budget-optimizer/blob/bd547f4bf88ff103d76a53df1883cd0dbd7f70d5/reports/PRIOR_SENSITIVITY.md).
+> caption: Median marginal ROAS at current spend, with its 90% interval, on a log scale from 0.05 to 50. n = 500 posterior draws, 5 channels. Solid: reported priors, values at the right. Dashed: vague priors. Intervals below 0.05 are clipped and marked with a chevron (out-of-home 0.00, search 0.03). The data are simulated, and the breakeven of 2.50 assumes a 40% contribution margin.
+> source: Layer R, Meta’s public Robyn demo file; simulated data. Prior sensitivity: [repository report](https://github.com/RafaelBraga-Kribitz/austrian-mmm-budget-optimizer/blob/108e2df2ef85fc98d22c53046b95715cda84b151/reports/PRIOR_SENSITIVITY_PUBLISHED_FIT_2026-11-04.md).
 
-Spend is weekly, in the dataset’s own money units, not euros. Shares, ROAS ratios and the breakeven test carry over.
+| Run | Median gain | 10th percentile | Move under the rule |
+|:--|--:|--:|:--|
+| Published fit, reported priors | 15.1% | 8.8% | Out-of-home −20%, TV and Facebook +50%, print and search held |
+| Exact rerun, reported priors | 14.7% | 9.0% | Same outcome |
+| Refit, vague priors | 8.7% | 4.0% | Out-of-home −17%, TV +50%, Facebook, print and search held |
+
+The exact rerun differs from the published fit, and the cause is not isolated. The report names run-to-run Monte Carlo variation in the sampler as the likely cause. Facebook’s lower bound under the reported priors moves between readings, from 3.06 to 4.76. None of the 500 draws shows a loss in any run.
+
+Weekly amounts below are in the dataset’s own money units, not euros, and the rule outcomes use the reported priors. Shares, ROAS ratios and the breakeven test carry over.
 
 | Channel | Spend now | Recommended | Rule outcome |
 |:--|--:|--:|:--|
@@ -137,10 +143,10 @@ The MMM lost to ridge regression on Layer R, and that is reported as it came out
 
 ## Decision
 
-Under the written rule and the reported priors, move budget toward TV and Facebook, take it from out-of-home, and hold print and search. The Facebook move rests on the priors as much as on the data: vague priors would fund TV alone. The decision also rests on a simulated public dataset: see Limitations.
+Under the written rule and the reported priors, move budget toward TV and Facebook, take it from out-of-home, and hold print and search. The Facebook move does not survive vague priors: the rule then holds Facebook, and the median gain falls to 8.7%. The decision also rests on a simulated public dataset: see Limitations.
 
 > [!faq]- What would reverse the decision?
-> A re-estimate in which the lower bound of TV’s or Facebook’s marginal-ROAS 90% interval falls to 2.50 or below stops the move toward that channel. A refit with vague priors puts Facebook’s lower bound at 0.27 and stops the move toward Facebook. A 10th percentile of the reallocation gain that is no longer positive stops the reallocation. The recommendation also rests on the assumptions under “Behaviour at new spend levels”, which no check establishes.
+> A re-estimate in which the lower bound of TV’s or Facebook’s marginal-ROAS 90% interval falls to 2.50 or below stops the move toward that channel. The vague-prior refit already shows this case: it puts Facebook’s lower bound at 0.11, so the rule holds Facebook. A 10th percentile of the reallocation gain that is no longer positive stops the reallocation. The recommendation also rests on the assumptions under “Behaviour at new spend levels”, which no check establishes.
 
 ## Build log
 
