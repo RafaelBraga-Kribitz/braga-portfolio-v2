@@ -168,9 +168,9 @@ const STR = {
       raw: 'Raw rows', out: 'Out of scope', inScope: 'In scope', core: 'Core postings', adjacent: 'Adjacent families', duplicates: 'Duplicates removed',
     },
     skills: {
-      finding: 'SQL leads at 40%, with AI wording and data visualisation at 38%. Among named vendors, Azure and Power BI lead.',
+      finding: 'SQL leads at 40%, with AI wording and data visualisation at 38%. Among cloud platforms and BI tools, Azure and Power BI lead.',
       title: 'Skill mentions with 95% intervals',
-      groups: { top: 'Top skills', cloud: 'Cloud vendors', bi: 'BI tools' },
+      groups: { top: 'Top skills', cloud: 'Cloud platforms', bi: 'BI tools' },
       names: { sql: 'SQL', ai: 'AI (generic)', viz: 'Data visualisation', python: 'Python', quality: 'Governance/quality', azure: 'Azure', aws: 'AWS', gcp: 'GCP', powerbi: 'Power BI', tableau: 'Tableau', qlik: 'Qlik' },
       axis: 'Share of postings that mention the skill', desc: 'Dot is the share, line the Wilson 95% interval, n = 719 postings.',
     },
@@ -208,6 +208,9 @@ const STR = {
       inA: ['Voter file', '50,000 synthetic', 'records'], inB: ['2,772 rows,', 'USD 6 million'], inC: ['Eight published', 'polls and the', 'verified outcome'],
       a: ['Module A', 'Segmentation, turnout', 'Check: silhouette,', 'ARI, Brier'], b: ['Module B', 'Allocation (MILP)', 'Check: solver', 'comparison'], c: ['Module C', 'Poll tracking', 'Check: held-out', 'polls'],
       handoff: 'Handoff',
+      // the subjects of the <desc>, with the number of each: the verb agrees with it
+      subjects: [['Voter file, 50,000 synthetic records', false], ['2,772 rows and USD 6 million', true], ['Eight published polls and the verified outcome', true]],
+      feeds: ['feeds', 'feed'],
     },
   },
   de: {
@@ -217,38 +220,38 @@ const STR = {
       raw: 'Rohzeilen', out: 'Außerhalb des Untersuchungsrahmens', inScope: 'Im Untersuchungsrahmen', core: 'Kerninserate', adjacent: 'Benachbarte Familien', duplicates: 'Entfernte Dubletten',
     },
     skills: {
-      finding: 'SQL führt mit 40 %, KI-Formulierungen und Datenvisualisierung folgen mit 38 %. Unter den genannten Anbietern führen Azure und Power BI.',
-      title: 'Nennung von Kompetenzen mit Intervallen zu 95 %',
-      groups: { top: 'Häufigste Kompetenzen', cloud: 'Cloud-Anbieter', bi: 'BI-Werkzeuge' },
+      finding: 'SQL führt mit 40 %, KI-Formulierungen und Datenvisualisierung folgen mit 38 %. Bei Cloud-Plattformen und BI-Werkzeugen führen Azure und Power BI.',
+      title: 'Nennung von Kompetenzen mit Intervallen zu 95 %',
+      groups: { top: 'Häufigste Kompetenzen', cloud: 'Cloud-Plattformen', bi: 'BI-Werkzeuge' },
       names: { sql: 'SQL', ai: 'KI (allgemein)', viz: 'Datenvisualisierung', python: 'Python', quality: 'Governance/Qualität', azure: 'Azure', aws: 'AWS', gcp: 'GCP', powerbi: 'Power BI', tableau: 'Tableau', qlik: 'Qlik' },
-      axis: 'Anteil der Inserate, die die Kompetenz nennen', desc: 'Der Punkt ist der Anteil, die Linie das Wilson-Intervall zu 95 %, n = 719 Inserate.',
+      axis: 'Anteil der Inserate, die die Kompetenz nennen', desc: 'Der Punkt ist der Anteil, die Linie das Wilson-Intervall zu 95 %, n = 719 Inserate.',
     },
     heat: {
-      finding: 'Jede Rollenfamilie nennt ihre eigene Mischung: BI nennt Visualisierung am häufigsten (86 %), Data Science KI-Formulierungen (82 %), Data Engineering SQL (69 %).',
+      finding: 'Jede Rollenfamilie nennt ihre eigene Mischung: BI nennt Visualisierung am häufigsten (86 %), Data Science KI-Formulierungen (82 %), Data Engineering SQL (69 %).',
       title: 'Nennung von Kompetenzen nach Rollenfamilie',
-      unit: 'Anteil der Inserate, die die Kompetenz nennen, in %', desc: 'Anteil in % der Inserate jeder Rollenfamilie.',
+      unit: 'Anteil der Inserate, die die Kompetenz nennen, in %', desc: 'Anteil in % der Inserate jeder Rollenfamilie.',
       cols: { de: ['Data', 'Engineering'], ds: ['Data', 'Science'], ba: ['Business', 'Analysis'], da: ['Data', 'Analytics'], bi: ['BI'], dg: ['Data', 'Governance'], ma: ['Marketing-', 'Analytics'] },
       rows: { sql: 'SQL', ai: 'KI (allgemein)', viz: 'Datenvisualisierung', python: 'Python', quality: 'Governance/Qualität', cloud: 'Cloud (allgemein)', etl: 'ETL/ELT', azure: 'Azure', powerbi: 'Power BI', excel: 'Excel', statistics: 'Statistik' },
     },
     roas: {
       finding: 'TV liegt bei beiden Prior-Sätzen über der Linie von 2,50. Facebook liegt nur bei den berichteten Priors darüber. Print und Search kreuzen die Linie, und die Außenwerbung bleibt darunter.',
-      title: 'Marginaler ROAS je Kanal, mit Intervall zu 90 %',
-      breakeven: 'Breakeven 2,50', axis: 'Marginaler ROAS bei derzeitigen Ausgaben, logarithmisch', desc: 'Median und Intervall zu 90 % des marginalen ROAS bei den derzeitigen Ausgaben, bei den berichteten Priors und bei vagen Priors; der Breakeven liegt bei 2,50.',
+      title: 'Marginaler ROAS je Kanal, mit Intervall zu 90 %',
+      breakeven: 'Breakeven 2,50', axis: 'Marginaler ROAS bei derzeitigen Ausgaben, logarithmisch', desc: 'Median und Intervall zu 90 % des marginalen ROAS bei den derzeitigen Ausgaben, bei den berichteten Priors und bei vagen Priors; der Breakeven liegt bei 2,50.',
       reported: 'Berichtete Priors', vague: 'Vage Priors', clip: 'Bei 0,05 abgeschnitten (Außenwerbung 0,00, Search 0,03)',
       rows: { tv: 'TV', facebook: 'Facebook', print: 'Print', search: 'Search', ooh: 'Außenwerbung' },
     },
     waves: {
-      finding: 'Das Band zu 95 % erfasste 4 von 6 zurückgehaltenen Umfragen. Ein kalibriertes Band würde etwa 6 erfassen.',
-      title: 'Zurückgehaltene Umfragen gegenüber dem Band zu 95 %',
-      axis: 'Abstand in Prozentpunkten (PP)', observed: 'Beobachteter Abstand', mean: 'Prognosemittel', band: 'Band zu 95 %', caught: 'erfasst', miss: 'verfehlt',
-      desc: 'Je zurückgehaltener Welle: beobachteter Abstand, Prognosemittel und Intervall zu 95 %, in Prozentpunkten.',
+      finding: 'Das Band zu 95 % erfasste 4 von 6 zurückgehaltenen Umfragen. Ein kalibriertes Band würde etwa 6 erfassen.',
+      title: 'Zurückgehaltene Umfragen gegenüber dem Band zu 95 %',
+      axis: 'Abstand in Prozentpunkten (PP)', observed: 'Beobachteter Abstand', mean: 'Prognosemittel', band: 'Band zu 95 %', caught: 'erfasst', miss: 'verfehlt',
+      desc: 'Je zurückgehaltener Welle: beobachteter Abstand, Prognosemittel und Intervall zu 95 %, in Prozentpunkten.',
       date: (w) => `${w.day}.${NBSP}${w.month === 3 ? 'März' : 'Apr.'}`,
     },
     tco: {
-      finding: 'Die schlanke Hybridvariante hat die niedrigsten Kosten im Basisfall und gewinnt 99,8 % der Ziehungen, obwohl ihre Spanne die des schlanken Teams überlappt.',
+      finding: 'Die schlanke Hybridvariante hat die niedrigsten Kosten im Basisfall und gewinnt 99,8 % der Ziehungen, obwohl ihre Spanne die des schlanken Teams überlappt.',
       title: 'Kostenbarwert über fünf Jahre nach Szenario',
-      axis: 'Tausend Euro', base: 'Basisfall', mean: 'Monte-Carlo-Mittel', band: 'Intervall zu 90 %',
-      desc: 'Basisfall, Monte-Carlo-Mittel und Intervall zu 90 % des Kostenbarwerts über fünf Jahre, in Tausend Euro.',
+      axis: 'Tausend Euro', base: 'Basisfall', mean: 'Monte-Carlo-Mittel', band: 'Intervall zu 90 %',
+      desc: 'Basisfall, Monte-Carlo-Mittel und Intervall zu 90 % des Kostenbarwerts über fünf Jahre, in Tausend Euro.',
       rows: { 'lean-hybrid': 'Person + 3 AMR', 'lean-crew': 'Schlankes Team', baseline: 'Referenz acht Personen', 'future-2028': 'Humanoid 2028', 'pure-humanoid': 'Nur Humanoide', 'hybrid-amr': 'Humanoide + AMR + Team', 'hybrid-5050': '50/50-Hybrid' },
     },
     flow: {
@@ -257,6 +260,8 @@ const STR = {
       inA: ['Wählerdatensatz', '50.000 synthetische', 'Einträge'], inB: ['2.772 Zeilen,', '6 Mio. USD'], inC: ['Acht veröffentlichte', 'Umfragen und das', 'verifizierte Ergebnis'],
       a: ['Modul A', 'Segmentierung,', 'Wahlbeteiligung', 'Prüfung: Silhouette,', 'ARI, Brier'], b: ['Modul B', 'Allokation (MILP)', 'Prüfung:', 'Solver-Vergleich'], c: ['Modul C', 'Umfrage-Tracking', 'Prüfung: zurück-', 'gehaltene Umfragen'],
       handoff: 'Übergabe',
+      subjects: [['Wählerdatensatz, 50.000 synthetische Einträge', false], ['2.772 Zeilen und 6 Mio. USD', true], ['Acht veröffentlichte Umfragen und das verifizierte Ergebnis', true]],
+      feeds: ['speist', 'speisen'],
     },
   },
 };
@@ -270,6 +275,9 @@ const SURFACE = 'var(--surface)';
 const SURFACE2 = 'var(--surface-2)';
 const RULE = 'var(--rule-c)';
 const ACCENT = 'var(--accent-01)';
+
+/** The name of a label that is wrapped over several lines: a line that ends in a hyphen and goes on in lower case was a split word (zurück-/gehaltene), so the hyphen goes; a hyphen before a capital stays (Marketing-/Analytics). */
+const unwrap = (lines) => lines.reduce((a, t) => (a === '' ? t : /-$/.test(a) ? (/^\p{Ll}/u.test(t) ? a.slice(0, -1) + t : a + t) : a + ' ' + t), '');
 
 const r2 = (n) => Math.round(n * 100) / 100;
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -433,7 +441,7 @@ function figHeat(lang) {
       if (v > 0) body += el('rect', { x, y, width: cw, height: chh, fill: INK, 'fill-opacity': heatOpacity(v, max) });
       body += text(x + cw / 2, y + chh / 2 + 4.5, number(Math.round(v), lang), { anchor: 'middle' });
       if (HEAT_NAMED.includes(`${r.id}:${f}`)) edge += el('rect', { x: x + 1, y: y + 1, width: cw - 2, height: chh - 2, fill: 'none', stroke: INK, 'stroke-width': 2 });
-      cells.push(`${s.cols[f].join(' ')} ${number(Math.round(v), lang)}`);
+      cells.push(`${unwrap(s.cols[f])} ${number(Math.round(v), lang)}`);
     });
     desc.push(`${s.rows[r.id]}: ${cells.join(', ')}`);
   });
@@ -586,7 +594,8 @@ function figFlow(lang) {
     body += arrow(iw, cy, mx - 2, cy);
     body += box(0, cy - ih / 2, iw, ih, inp.map((t, j) => [t, { weight: j === 0 ? 600 : undefined }]));
     body += box(mx, y, mw, mh, mod.map((t, j) => [t, { weight: j === 0 ? 600 : undefined, fill: j > 1 ? INK2 : undefined }]));
-    desc.push(`${inp.join(' ')} ${lang === 'de' ? 'speist' : 'feeds'} ${mod.join(' ')}`);
+    const [subject, plural] = s.subjects[i];
+    desc.push(`${subject} ${s.feeds[plural ? 1 : 0]} ${unwrap(mod)}`);
   });
   // the connectors run between module boxes: draw them behind the boxes (arrows first in the markup would need a second pass)
   return svgDoc({ name: '01-04-module-flow', lang, w: W, h: 3 * mh + 2 * vgap, title: s.title, desc: `${s.finding} ${desc.join('. ')}.`, defs: arrowDefs(id), body });

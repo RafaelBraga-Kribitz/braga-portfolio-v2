@@ -73,7 +73,7 @@ The project reads each ad for its title, location, technologies, languages, educ
 ### Skills
 
 > [!figure] Fig. 01-01-2 · Skill mentions with 95% intervals
-> SQL leads at 40%, with AI wording and data visualisation at 38%. Among named vendors, Azure and Power BI lead.
+> SQL leads at 40%, with AI wording and data visualisation at 38%. Among cloud platforms and BI tools, Azure and Power BI lead.
 > ![[01-01-skills-top.en.svg]]
 >
 > caption: Share of the 719 postings with a description longer than 300 characters that mention the skill. A posting can mention several skills. Generic topics, such as AI (generic), count as written in the skill taxonomy. Whiskers are Wilson 95% intervals.

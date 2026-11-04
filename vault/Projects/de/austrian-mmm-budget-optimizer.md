@@ -35,13 +35,13 @@ Die Vergleichseinheit ist der Deckungsbeitrag, nicht der Umsatz. Ein Kanal verni
 
 | Layer | Daten | Rolle |
 |:--|:--|:--|
-| P | Generiertes werbetreibendes Unternehmen mit offengelegten wahren Parametern: 156 Wochen, fünf Kanäle (TV, Radio, Print, Paid Search und Paid Social, also bezahlte Such- und Social-Media-Werbung) | Muss zuerst bestehen |
+| P | Synthetische Daten eines Werbetreibenden mit offengelegten wahren Parametern: 156 Wochen, fünf Kanäle (TV, Radio, Print, Paid Search und Paid Social, also bezahlte Such- und Social-Media-Werbung) | Muss zuerst bestehen |
 | R | Metas öffentliche Robyn-Demodatei (MIT-Lizenz): simulierte Wochendaten, fünf benannte Kanäle, Umsatz in den eigenen Geldeinheiten der Datei, Umsätze der Mitbewerber als Kontrollvariable | Zählt erst, wenn P besteht |
 | D | A-posteriori-Verteilung (Posterior) aus Layer R, übergeben an den Budgetoptimierer | Schriftlich festgelegte Entscheidungsregel |
 
 > [!spec] Modelleingaben
 > - Raster — wöchentlich
-> - Übertragung — geometrischer Adstock (Übertragungseffekt der Werbung) je Kanal, Abklingrate geschätzt
+> - Nachwirkung — geometrischer Adstock (Nachwirkung der Werbung) je Kanal, Abklingrate geschätzt
 > - Sättigung — Hill-Kurve auf die Adstock-transformierten Ausgaben
 > - Basislinie — linearer Trend · zwei jährliche Fourier-Paare · eine Kontrollvariable
 > - Priors (A-priori-Verteilungen) — schwach informativ und für alle Kanäle gleich, ohne kanalspezifische Wunschantworten. Die [Prior-Sensitivitätsprüfung](https://github.com/RafaelBraga-Kribitz/austrian-mmm-budget-optimizer/blob/108e2df2ef85fc98d22c53046b95715cda84b151/reports/PRIOR_SENSITIVITY_PUBLISHED_FIT_2026-11-04.md) ist erledigt: Sie passt Layer R mit vagen Priors im gleichen Aufbau neu an
@@ -80,7 +80,7 @@ Die Zahlen in der README des Repositorys werden aus den Berichtsdateien erzeugt,
 | Überzurechnung durch die Plattform, Paid Search | +45 % | Von der Plattform ausgewiesener gegenüber wahrem inkrementellem Umsatz |
 | Plattform-Zurechnung, Offline-Kanäle | Keine | Plattformartiger Bericht, an derselben Wahrheit gemessen |
 
-Die Abweichungen folgen einem bekannten Zielkonflikt, nicht einem Fehler. Alle fünf Effektgrößen und alle fünf Halbsättigungspunkte haben Mediane über der Wahrheit, weil eine Kurve, die höher steigt, aber später sättigt, dieselben Wochen erklärt. Die Wiederherstellung wird daher an Kurven und Anteilen beurteilt, die eine Budgetentscheidung verwendet.
+Die Abweichungen folgen einem bekannten Zielkonflikt, nicht einem Fehler. Die Mediane aller fünf Effektgrößen und aller fünf Halbsättigungspunkte liegen über den wahren Werten. Höhere, später sättigende Kurven erklären dieselben Wochen. Die Wiederherstellung wird daher an Kurven und Anteilen beurteilt, die eine Budgetentscheidung verwendet.
 
 ### Umverteilung auf Layer R
 
