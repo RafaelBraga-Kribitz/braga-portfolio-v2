@@ -14,7 +14,7 @@ metrics:
   - { value: "24 %", label: Dublettenquote }
 stack: [ "Python", "Power BI", "DAX", "pandas", "scikit-learn", "Clustering", "CI/CD" ]
 repository: https://github.com/RafaelBraga-Kribitz/austria-data-job-market-intelligence
-translationStatus: draft
+translationStatus: approved
 publish: true
 ---
 # Arbeitsmarkt für Datenberufe in Österreich

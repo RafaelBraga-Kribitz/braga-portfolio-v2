@@ -15,7 +15,7 @@ metrics:
   - { value: "99,8 %", label: Ziehungen zugunsten der Hybridvariante }
 stack: [ "SQL", "Python", "Polars", "DuckDB", "dbt", "Docker", "CI/CD" ]
 repository: https://github.com/RafaelBraga-Kribitz/warehouse_humanoid_tco
-translationStatus: draft
+translationStatus: approved
 publish: true
 ---
 
