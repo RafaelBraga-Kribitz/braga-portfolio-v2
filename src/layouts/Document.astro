@@ -86,8 +86,10 @@ interface Props {
   related?: { href: string; title: string; sub?: string }[];
   /** A portrait in the opener's left column (About). */
   portrait?: { src?: string; alt: string; caption: string; empty: string };
-  /** The close of a project: the mail subject and the repository link. */
-  close?: { subject: string; repository?: string };
+  /** The close of a project or an essay: the mail subject, the question
+      above the button (default: the project question), a forward link and
+      the repository link. */
+  close?: { subject: string; question?: string; forward?: Link; repository?: string };
   /** schema.org nodes for the head (Base.astro, src/lib/structured-data.ts). */
   structuredData?: Record<string, unknown>[];
 }
@@ -138,8 +140,9 @@ const toc = sections.map((h, i) => ({ n: String(i + 1).padStart(2, '0'), title: 
       )}
       {close && (
         <div class="doc-close" lang={bodyLang && bodyLang !== lang ? lang : undefined}>
-          <p>{t(lang, 'contact.project')}</p>
+          <p>{close.question ?? t(lang, 'contact.project')}</p>
           <ContactActions lang={lang} subject={close.subject} />
+          {close.forward && <p class="link-line"><a href={close.forward.href}>{close.forward.label} <span class="glyph" aria-hidden="true">→</span></a></p>}
           {close.repository && <p class="link-line"><a href={close.repository}>{t(lang, 'open-repository')} <span class="glyph" aria-hidden="true">↗</span></a></p>}
         </div>
       )}

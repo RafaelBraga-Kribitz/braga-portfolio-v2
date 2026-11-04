@@ -42,8 +42,8 @@ const CHROMIUM = val('--chromium', process.env.ASSETS_CHROMIUM || '/opt/pw-brows
 // imported outside Vite). Sources, verbatim:
 const COPY = {
   kicker: '00 / Portfolio',                                      // i18n.ts 'cover.kicker' (en)
-  line: 'Marketing experience, translated into analytical work.', // src/pages/[lang]/index.astro, copy.en.lead, first sentence
-  evidence: 'Evidence before claims',                             // i18n.ts 'cover.evidence' (en)
+  line: 'Applied analytics for marketing and customer decisions.', // src/pages/[lang]/index.astro, copy.en.lead, first sentence
+  evidence: 'Evidence before claims',                             // the card's own foot line (not an i18n key)
 };
 
 const ORIGIN = 'http://assets.local';

@@ -267,6 +267,28 @@ German first?** If English only, items 3.1–3.6 can wait, but 3.7 and 3.8 canno
   these are the final manuscript edition and that publishing them is intended;
   a 15 MB tap on a phone is a decision in itself.
 
+- [ ] **4.14 [Owner] O1: German wording on About.** The language row reads
+  "German (A2 certificate; course in progress)" (DE "Deutsch (A2-Zertifikat;
+  Kurs läuft)"). The course reviews A2 first, so "B1 course in progress"
+  would be early. Confirm or change in `vault/Pages/{en,de}/about.md`
+  (change DC-05). The CV file and CV rows stay open (4.1).
+- [ ] **4.15 [Owner] O2: Spark in the toolbox.** Removal is recommended; it is
+  unchanged (change DC-06 only reordered the list). Power BI is not added:
+  no proof is linked yet.
+- [ ] **4.16 [Owner] O3: approve the new copy of 4 Nov 2026.** Agent-written:
+  the home lead sentence and the role in titles, the two contact sentences,
+  the About language row, "See the {n} projects", "Evidence" and the counts,
+  the essay close ("Written by Rafael Braga-Kribitz. Questions about this
+  essay, or a role where this kind of work fits?", "See the projects"), the
+  contact-button names ("Open an email", "Open contact details"), "1 essay".
+  Every German twin needs a native-speaker check. The share-card line in 4.9
+  is now "Applied analytics for marketing and customer decisions."
+- [ ] **4.17 [Owner] O4: footer "· EUR" and the Tableau link.** Removal is
+  recommended; both are unchanged.
+- [ ] **4.18 [Owner] O5: MMM note "Reviewed on 26 Oct 2026"**
+  (`vault/Projects/en/austrian-mmm-budget-optimizer.md`) against the 4 Nov
+  report. Decide the text. Items 4.6 and 4.7 stay open.
+
 ## 5. Should fix before sharing: open UX and design items (critique of 1 Nov 2026)
 
 Each was re-checked against the current tree; "done" items are not listed.

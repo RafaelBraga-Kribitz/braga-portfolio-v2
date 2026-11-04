@@ -1,8 +1,8 @@
 ---
 slug: about
 lang: de
-summary: "Rafael Braga-Kribitz, Marketing Data Analyst: Hintergrund, Arbeitsweise, Kenntnisse, Lebenslauf und Kontakt."
-lead: "Marketing Data Analyst; baut die Mess- und Entscheidungssysteme hinter der Frage, wohin das Marketingbudget fließt. Das Fachwissen stammt aus selbst geführten Kampagnen, nicht nur aus ihrer Modellierung."
+summary: "Rafael Braga-Kribitz, Data Analyst: Hintergrund, Arbeitsweise, Kenntnisse, Lebenslauf und Kontakt."
+lead: "Data Analyst; baut die Mess- und Entscheidungssysteme hinter der Frage, wohin das Marketingbudget fließt. Das Fachwissen stammt aus selbst geführten Kampagnen, nicht nur aus ihrer Modellierung."
 translationStatus: approved
 publish: true
 footnotes: side
@@ -12,7 +12,7 @@ footnotes: side
 
 > [!spec] Profil
 > - Name — Rafael Braga-Kribitz
-> - Rolle — Marketing Data Analyst
+> - Rolle — Data Analyst
 > - Standort — Seiersberg, Großraum Graz, Österreich
 
 ## Hintergrund
@@ -34,8 +34,9 @@ Die Marketinglaufbahn steuert die fachliche Hälfte der Arbeit bei: das Wissen, 
 > [!spec] Nach Kategorie
 > - Fachgebiete — Marketing Data Science · Quantitatives Marketing · Marketing Science
 > - Methoden — Kausale Inferenz · Bayessche Methoden · Prognosen · Optimierung
-> - Werkzeugkasten — Python · PyMC · DuckDB · dbt · DVC · Git · SQL · Spark
+> - Werkzeugkasten — SQL · Python · DuckDB · dbt · PyMC · DVC · Git · Spark
 > - Praxis — Experimentdesign · Entscheidungssysteme · Messung und Attribution
+> - Sprachen — Portugiesisch (Muttersprache) · Englisch (fließend) · Deutsch (A2-Zertifikat; Kurs läuft)
 
 ## Lebenslauf
 
@@ -47,10 +48,10 @@ Die Marketinglaufbahn steuert die fachliche Hälfte der Arbeit bei: das Wissen, 
 
 ## Kontakt
 
-Offen für Rollen als Marketing Data Analyst – und für eine zweite Meinung zu schwierigen Messproblemen.
+Offen für Rollen als Data Analyst und Applied Data Scientist, mit Marketing- und Kundendaten als Fachgebiet – und für eine zweite Meinung zu schwierigen Messproblemen.
 
-> [!bookmark] Anderswo
-> [GitHub](https://github.com/RafaelBraga-Kribitz) — github.com/RafaelBraga-Kribitz
+> [!bookmark] GitHub
+> [Rafael Braga-Kribitz](https://github.com/RafaelBraga-Kribitz) — github.com/RafaelBraga-Kribitz
 
 > [!bookmark] LinkedIn
 > [Rafael Braga-Kribitz](https://www.linkedin.com/in/rafaelbragakribitz/) — linkedin.com/in/rafaelbragakribitz

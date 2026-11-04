@@ -30,7 +30,7 @@ Each entry names what the handoff says, what v2.1 says, and where the rule lives
 | **D-042** Section heading and indentation · 23 Oct | Kicker on 3 columns, claim on 7, forward link on 2. | **Hierarchy by indentation**: number on column 1, word and claim from column 2 (to 9), link on 10–12. Listing rows are the second level: code on 2–3, title from 4. | layout.css 5, components.css 1 |
 | **D-043** Listing · 22–24 Oct | Head row and a Year column. | **No year column; no head rows on the home page.** Below 720 a row is a card: meta on one line under the title, status first, arrow at the line's end, its word "Open" hidden. Below 230 the code takes its own line. | components.css 1 |
 | **D-044** Rules open, never close · 24 Oct | Blocks close with their own rule (last row, last table row, summary callout, metric strip…). | **A rule opens the block that follows it; no block closes with one.** The next block's opening rule takes the dropped one's place with no space added. The first block under the shell has no rule (the shell's hairline opens the page). Rules between items and a table head's underline stay; a split rule (spec list) keeps its last row. | components.css 1, 3, 6; layout.css 4, 8; bench.css; gate G-16 |
-| **D-045** Targets · 23 Oct | ≥ 44px below 768 (P-02). | ≥ 44px below 768 **except** footer links (32px rows) and a document's tag row (24px at every width): the space between two rows is no larger than the text. | base.css 3.7, layout.css 3, last section |
+| **D-045** Targets · 23 Oct | ≥ 44px below 768 (P-02). | ≥ 44px below 768 **except** footer links (32px rows) and a document's tag row (24px at every width): the space between two rows is no larger than the text. **Amended 4 Nov (D-063):** footer links are 44px too; only the tag row (and stack keywords) keep 24px. | base.css 3.7, layout.css 3, last section |
 | **D-046** Narrow widths · 24 Oct | Header below 768: two rows; compact strip below 360 (D-028). | Also: **below 327 one row** (wordmark, language toggle, theme square): Contact leaves the header, the language link shows the current code only; below 240 the door strip drops its gap. | layout.css 2, Shell.astro |
 | **D-047** Cover · 24 Oct | `.cover` with 64px top padding. | **The home cover fills the viewport under the shell**: rows `minmax(32px, 4fr) auto minmax(64px, 9fr)`, so the rule that opens 01 Work stands at the screen's bottom edge; below 768 the body comes before the rail. | layout.css 4 |
 | **D-048** Mathematics · 21 Oct | v1 `MathBlock`: KaTeX, maths in the accent. | **Native MathML only** (`.math > .math-body[tabindex=0] > math`), in the reader's maths face; script sizes floored at 12px. **Amended 29 Oct (owner):** every formula, block and inline, is set in `--accent-01` and bold; mathematics is exempt from G-15 like code panels. | components.css 6, src/lib/rehype/katex.mjs |
@@ -88,6 +88,54 @@ on 1 Nov and was reverted on 2 Nov at the owner's request as a regression. The o
 email address hidden from HTML. Its no-JavaScript screen-reader limitation
 must be disclosed, not counted as an accessibility pass. The readiness review
 keeps the established PP unit abbreviation and the About label Über.
+
+### D-063 · Design critique of 4 Nov 2026: refinement · 4 Nov 2026
+
+Source: `.impeccable/critique/2026-11-04T11-53-38Z__src-pages.md` (25/36).
+The visual system is unchanged. Each change below is its own commit
+`[DC-NN]` and can be reverted alone; see
+`docs/editorial/2026-11-04-change-catalog.md`. This entry is a dated record
+and is not reverted with a commit. After a removal, add a dated note here.
+
+- **D-045 amended (DC-16).** Footer links are 44px below 768, like every
+  target. The tag row and a listing row's stack keywords stay 24px (WCAG 2.5.8;
+  44px would lengthen mobile rows of 8 to 12 lines). Gate G-05 drops the
+  footer's 32px allowance; the gate fixture carries a 32px footer link that
+  must fail.
+- **D-044 family (DC-08).** A table followed by an h2 keeps the section gap
+  (`--flow-section`); the dropped-rule rule still holds for a table before a
+  callout, a metric strip or another table.
+- **D-044 at the top of a page (DC-17).** A tag folder archive opens with its
+  trail, so its `.section` kept a top rule one pixel under the shell's
+  hairline. It is dropped; the heading's rule under the trail stays.
+- **Cover (DC-09, DC-10).** The rail's second row is "Evidence", counted from
+  the collections, and a quiet link to the projects sits under the button.
+  D-047 holds: at 1440 × 900 the rule that opens 01 Work is within 2px of the
+  bottom edge. D-036 holds: the button is the cover's one accent.
+- **Essay close (DC-11, DC-12).** An essay shows its author in the opener and
+  ends with the project close pattern (contact action, link to Work); one
+  accent (D-036).
+- **Headings (DC-14).** Home rows are h3 under each section's h2; Work,
+  Writing and Tools index rows are h2 under the page's h1. Register, tag and
+  notes rows stay spans.
+- **Contact button (DC-13).** Accessible names contain the visible label
+  (WCAG 2.5.3) and, from the script, the address; a status node announces the
+  copy result. D-062 holds: the built HTML has no plain address.
+- **Trails (DC-19) and tables (DC-20).** An arrow travels with the item after
+  it. A table of four or more columns keeps 16ch of text plus the cell's 16px
+  padding in each text column below 560px, scrolls sideways and shows the
+  scroll cue (the plan named 12ch; 12ch left nine cells of up to 50 characters
+  on four or five lines; plain 16ch left one, a German cell of 33 characters in
+  a mono column). Number cells keep their natural width; the header of a number
+  column keeps 14ch (12ch left a German header on four lines). A table of one to
+  three columns keeps its natural layout: the first version gave every table
+  the minimum and made the About CV table 525px wide in a 358px column. A
+  three-column table can again wrap a short value to four lines; this is the
+  accepted trade-off. Gate G-15 (DC-21) waits until the page's CSS transitions end: the
+  contact button's halves fade after the shell script runs, and a run inside
+  that window saw a half-faded second accent (a race on the base too).
+- **Title (DC-01 to DC-04).** The role is "Data Analyst"; contact sentences
+  name Data Analyst and applied Data Scientist roles (owner, 4 Nov 2026).
 
 ## 3. The system outside the site
 

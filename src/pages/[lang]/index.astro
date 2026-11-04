@@ -5,7 +5,7 @@
 // the listings carry no head row (four sections would repeat it) and no
 // year column; each section spends its one accent on one thing (G-15).
 //
-//   Cover       Site specimen s02: the rail (Based in · Focus), the name,
+//   Cover       Site specimen s02: the rail (Based in · Evidence), the name,
 //               the role, one sentence, the contact pair (the accent).
 //   01 Work     Site specimen s03: claim, prose and "All 5 projects" as the
 //               specimen sets them; one row per project of the language,
@@ -48,17 +48,19 @@ const lang = Astro.params.lang as Lang;
 // the v2 role (D-001).
 const copy = {
   en: {
-    title: 'Marketing Data Analyst',
-    lead: 'Marketing experience, translated into analytical work. Questions about demand, allocation and cost, answered with data and explicit limits.',
-    titleLines: ['Marketing', 'Data Analyst'],
-    focus: 'Marketing · Data · Decisions',
+    title: 'Data Analyst',
+
+    lead: 'Applied analytics for marketing and customer decisions. Questions about demand, allocation and cost, answered with data and explicit limits.',
+
+    titleLines: ['Data', 'Analyst'],
+
     writing: {
       prose: 'Two registers, deliberately kept apart; everything is dated, so nothing reads as more settled than it is.',
     },
     about: {
       claim: 'The work sits where a marketing decision meets the evidence for it.',
       prose: 'Most of it is measurement that has to survive a budget meeting, with the uncertainty carried through to the decision rather than rounded away.',
-      contact: 'Email is the direct line, and it is answered. Worth writing about: a Marketing Data Analyst role, a measurement setup that looks misspecified, or a model whose numbers have stopped agreeing with the business.',
+      contact: 'Email is the direct line, and it is answered. Worth writing about: a Data Analyst or applied Data Scientist role, a measurement setup that looks misspecified, or a model whose numbers have stopped agreeing with the business.',
     },
     tools: {
       claim: 'Some arguments are easier to make with a control than with a paragraph.',
@@ -66,17 +68,19 @@ const copy = {
     },
   },
   de: {
-    title: 'Marketing Data Analyst',
-    lead: 'Marketing-Erfahrung, übersetzt in analytische Arbeit. Fragen zu Nachfrage, Allokation und Kosten, beantwortet mit Daten und ausdrücklich genannten Grenzen.',
-    titleLines: ['Marketing', 'Data Analyst'],
-    focus: 'Marketing · Daten · Entscheidungen',
+    title: 'Data Analyst',
+
+    lead: 'Angewandte Analytik für Marketing- und Kundenentscheidungen. Fragen zu Nachfrage, Allokation und Kosten, beantwortet mit Daten und ausdrücklich genannten Grenzen.',
+
+    titleLines: ['Data', 'Analyst'],
+
     writing: {
       prose: 'Zwei Register, bewusst getrennt; alles ist datiert, damit nichts gefestigter wirkt, als es ist.',
     },
     about: {
       claim: 'Die Arbeit liegt dort, wo eine Marketingentscheidung auf ihre Belege trifft.',
       prose: 'Meist sind es Messungen, die eine Budgetbesprechung überstehen müssen, wobei die Unsicherheit bis zur Entscheidung mitgeführt statt weggerundet wird.',
-      contact: 'E-Mail ist der direkte Weg, und sie wird beantwortet. Anlässe zum Schreiben: eine Rolle als Marketing Data Analyst, ein Messaufbau, der fehlspezifiziert wirkt, oder ein Modell, dessen Zahlen nicht mehr zum Geschäft passen.',
+      contact: 'E-Mail ist der direkte Weg, und sie wird beantwortet. Anlässe zum Schreiben: eine Rolle als Data Analyst oder Applied Data Scientist, ein Messaufbau, der fehlspezifiziert wirkt, oder ein Modell, dessen Zahlen nicht mehr zum Geschäft passen.',
     },
     tools: {
       claim: 'Manche Argumente lassen sich mit einem Regler leichter führen als mit einem Absatz.',
@@ -85,12 +89,18 @@ const copy = {
   },
 }[lang];
 
-const spec = [
-  { k: t(lang, 'cover.based-in'), v: site.location[lang] },
-  { k: t(lang, 'cover.focus'), v: copy.focus },
-];
 const projects = await projectsOf(lang);
 const writing = await writingOf(lang);
+// the rail's evidence row: counts of the collections, never typed
+const countOf = (n: number, one: string, many: string) => (n === 1 ? one : many.replace('{n}', String(n)));
+const evidence = [
+  projects.length > 0 && countOf(projects.length, t(lang, 'cover.n-projects-one'), t(lang, 'cover.n-projects')),
+  writing.length > 0 && countOf(writing.length, t(lang, 'cover.n-essays-one'), t(lang, 'cover.n-essays')),
+].filter(Boolean).join(' · ');
+const spec = [
+  { k: t(lang, 'cover.based-in'), v: site.location[lang] },
+  ...(evidence ? [{ k: t(lang, 'cover.evidence'), v: evidence }] : []),
+];
 // the five newest essays, counted 01–05 in the column with the permanent
 // code in the meta (owner, 1 Nov 2026), then Writing's two categories as
 // rows in code order: 02-01 all essays, 02-02 the notes library (owner,
@@ -101,14 +111,14 @@ const libraryCount = library.reduce((n, a) => n + a.rows.length, 0);
 const allProjects = projects.length ? t(lang, 'all-n-projects').replace('{n}', String(projects.length)) : t(lang, 'all-projects');
 ---
 <Base lang={lang} page="home" title={copy.title} description={copy.lead} structuredData={homeGraph(lang, copy.lead)}>
-  <Cover lang={lang} spec={spec} titleLines={copy.titleLines} lead={copy.lead} draft={isDraftLang(lang)} />
+  <Cover lang={lang} spec={spec} titleLines={copy.titleLines} lead={copy.lead} draft={isDraftLang(lang)} forward={projects.length > 0 ? { href: '#work', label: t(lang, 'cover.projects').replace('{n}', String(projects.length)) } : undefined} />
 
   <section class="section" id="work">
     <SectionHeading number="01" word={t(lang, 'door.work')} claim={t(lang, 'work.claim')} prose={t(lang, 'work.prose')} link={{ href: route('work', lang), label: allProjects }} />
     {projects.length > 0 && (
       <Listing keys>
         {projects.map((p) => (
-          <ListingRow code={p.data.code} title={p.data.title} sub={p.data.summary} meta={[p.data.domain]} status={p.data.status} keys={p.data.stack.slice(0, LISTING_KEYWORDS)} lang={lang} href={workRoute(p.data.slug, lang)} />
+          <ListingRow code={p.data.code} title={p.data.title} sub={p.data.summary} meta={[p.data.domain]} status={p.data.status} keys={p.data.stack.slice(0, LISTING_KEYWORDS)} titleLevel={3} lang={lang} href={workRoute(p.data.slug, lang)} />
         ))}
       </Listing>
     )}
@@ -120,10 +130,10 @@ const allProjects = projects.length ? t(lang, 'all-n-projects').replace('{n}', S
     {writing.length + libraryCount > 0 && (
       <Listing>
         {latest.map((e, i) => (
-          <ListingRow code={listIndex(i)} title={e.data.title} sub={e.data.summary} meta={[writingCode(e, writing), t(lang, `kind.${e.data.kind}`), formatDate(e.data.date, lang)]} lang={lang} href={writingRoute(e.data.slug, lang)} />
+          <ListingRow code={listIndex(i)} title={e.data.title} sub={e.data.summary} meta={[writingCode(e, writing), t(lang, `kind.${e.data.kind}`), formatDate(e.data.date, lang)]} titleLevel={3} lang={lang} href={writingRoute(e.data.slug, lang)} />
         ))}
         {writing.length > 0 && (
-          <ListingRow register code={ESSAYS_CODE} title={t(lang, 'all-n-essays').replace('{n}', String(writing.length))} sub={t(lang, 'essays.sub')} meta={[t(lang, 'essays.word')]} lang={lang} href={`${route('writing', lang)}#essays`} />
+          <ListingRow register code={ESSAYS_CODE} title={writing.length === 1 ? t(lang, 'all-n-essays-one') : t(lang, 'all-n-essays').replace('{n}', String(writing.length))} sub={t(lang, 'essays.sub')} meta={[t(lang, 'essays.word')]} lang={lang} href={`${route('writing', lang)}#essays`} />
         )}
         {libraryCount > 0 && (
           <ListingRow register code={NOTES_CODE} title={t(lang, 'notes.word')} sub={`${lang === 'de' ? 'Notizen auf Englisch · ' : ''}${library.map((a) => a.title).join(' · ')}`} meta={[t(lang, 'kind.library'), t(lang, 'notes.count').replace('{n}', String(libraryCount))]} lang={lang} href={route('notes', lang)} />
@@ -137,7 +147,7 @@ const allProjects = projects.length ? t(lang, 'all-n-projects').replace('{n}', S
     <SectionHeading number="03" word={t(lang, 'door.tools')} claim={copy.tools.claim} prose={copy.tools.prose} link={{ href: route('tools', lang), label: t(lang, 'all-tools') }} />
     <Listing>
       {tools(lang).map((row) => (
-        <ListingRow code={row.code} title={row.title} sub={row.sub} meta={[row.domain]} status={row.status} lang={lang} trail={t(lang, 'open')} href={route(row.page, lang)} />
+        <ListingRow code={row.code} title={row.title} sub={row.sub} meta={[row.domain]} status={row.status} titleLevel={3} lang={lang} trail={t(lang, 'open')} href={route(row.page, lang)} />
       ))}
     </Listing>
     <a class="label section-forward" href={route('tools', lang)}>{t(lang, 'all-tools')} <span aria-hidden="true">→</span></a>

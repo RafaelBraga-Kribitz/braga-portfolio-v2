@@ -79,8 +79,9 @@ const childLabel = node?.kind === 'area' ? t(lang, 'tags.topics') : t(lang, 'tag
 ---
 <Base lang={lang} page="tags" path={pagedRoute(base, page)} twinPath={twin} title={`${name ?? `#${tag}`}${page > 1 ? ` · ${page}` : ''}`} seoTitle={archiveSeoTitle(tag, name ?? `#${tag}`, page)} description={prose} noindex={total < 2} current={folder ? '02' : undefined}>
   <section class="section">
-    {folder && <nav class="doc-trail" aria-label={t(lang, 'notes.word')}><a href={route('writing', lang)}>02 {t(lang, 'door.writing')}</a> → <a href={route('notes', lang)}>{NOTES_CODE} {t(lang, 'notes.word')}</a> → <span aria-current="page">{name}</span></nav>}
-    <SectionHeading number={folder ? NOTES_CODE : '#'} word={t(lang, folder ? 'notes.word' : 'tags.word')} claim={claim} prose={prose} link={folder ? { href: route('notes', lang), label: t(lang, 'notes.word') } : { href: withBase(`/${lang}/tags/`), label: t(lang, 'tags.title') }} as="h1" />
+    {folder && <nav class="doc-trail" aria-label={t(lang, 'notes.word')}><span class="doc-trail-step"><a href={route('writing', lang)}>02 {t(lang, 'door.writing')}</a></span><span class="doc-trail-step"><span class="glyph" aria-hidden="true">→</span><a href={route('notes', lang)}>{NOTES_CODE} {t(lang, 'notes.word')}</a></span><span class="doc-trail-step"><span class="glyph" aria-hidden="true">→</span><span aria-current="page">{name}</span></span></nav>}
+
+    <SectionHeading number={folder ? NOTES_CODE : '#'} word={t(lang, folder ? 'notes.word' : 'tags.word')} claim={claim} prose={prose} link={folder ? undefined : { href: withBase(`/${lang}/tags/`), label: t(lang, 'tags.title') }} as="h1" />
     {children.length > 0 && <TagChips items={children} lang={lang} label={childLabel} />}
     <Listing class="lr-long-code">
       {rows.map((r) => <ListingRow code={r.code} title={r.title} sub={r.sub} meta={r.meta} status={r.status} lang={lang} href={r.href} />)}
