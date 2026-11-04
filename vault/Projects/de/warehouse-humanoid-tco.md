@@ -3,8 +3,8 @@ code: "01-02"
 kind: case
 date: "2026-05-21"
 updated: "2026-09-16"
-summary: "€ 453.000 über fünf Jahre. Eine Person mit drei mobilen Robotern führt das Modell an."
-lead: "Bei der modellierten Nachfrage schlagen humanoide Roboter die schlanke Hybridvariante noch nicht. Ein Fünfjahres-Kostenmodell für das Greifen, Bewegen und Ablegen von Waren im Lager."
+summary: "Der Kostenbarwert über fünf Jahre beträgt € 453.000. Eine Person mit drei mobilen Robotern führt das Modell an."
+lead: "Bei der modellierten Nachfrage schlagen humanoide Roboter die schlanke Hybridvariante noch nicht. Das Projekt enthält ein Fünfjahres-Kostenmodell für das Greifen, Bewegen und Ablegen von Waren im Lager."
 domain: Betrieb
 tags: [ status/complete, intralogistik, gesamtbetriebskosten, simulation ]
 lang: de
@@ -24,15 +24,15 @@ publish: true
 ## Frage: Wann wären humanoide Roboter die günstigste Lösung für die Arbeit im Lager?
 
 > [!summary] Zusammenfassung
-> Eine Person mit drei autonomen mobilen Robotern (AMR) hat den niedrigsten Kostenbarwert über fünf Jahre, € 453.000, und gewinnt 99,8 % der ausgewerteten Ziehungen. Humanoide Roboter werden zurückgestellt, bis sich Nachfrage, Arbeitskräfteangebot oder Schichtmodell ändern.
+> Eine Person mit drei autonomen mobilen Robotern (AMR) hat den niedrigsten Kostenbarwert über fünf Jahre, € 453.000, und gewinnt 99,8 % der ausgewerteten Ziehungen. Die Entscheidung stellt humanoide Roboter zurück, bis sich Nachfrage, Arbeitskräfteangebot oder Schichtmodell ändern.
 
 ## Hintergrund
 
-Es geht um die Wirtschaftlichkeit, nicht um die technische Fähigkeit. Die Antwort hängt von Roboterpreis, Nachfrage und Personalausstattung ab, und Vergleichsgröße ist der Kostenbarwert über fünf Jahre bei einem Kalkulationszinssatz von 8 %.
+Es geht um die Wirtschaftlichkeit, nicht um die technische Fähigkeit. Die Antwort hängt von Roboterpreis, Nachfrage und Personalausstattung ab. Die Vergleichsgröße ist der Kostenbarwert über fünf Jahre bei einem Kalkulationszinssatz von 8 %.
 
 ## Daten
 
-Die Leistungsdaten sind Demonstrationen aus dem Haushalt, keine Lageraufgaben und keine Messungen einer eingesetzten Flotte. Das Modell nutzt ihre Grundbewegungen Greifen, Bewegen und Ablegen als Näherung, mit einem Übertragungsfaktor für die Geschwindigkeit. Diese Übertragung ist die größte Gefahr für die externe Validität.
+Die Leistungsdaten sind Demonstrationen aus dem Haushalt, keine Lageraufgaben und keine Messungen einer eingesetzten Flotte. Das Modell nutzt als Näherung die Grundbewegungen der Demonstrationen (Greifen, Bewegen und Ablegen) mit einem Übertragungsfaktor für die Geschwindigkeit. Diese Übertragung ist die größte Gefahr für die externe Validität.
 
 > [!spec] Modelleingaben
 > - Episoden — 2.359 · fünf öffentliche UnifoLM-Datensätze, per Hash fixiert
@@ -58,20 +58,20 @@ Vier Module laufen nacheinander mit einem einzigen Befehl.
 | 4 | Berichtswesen | Grafiken für das Management, CSV-Exporte, eine Management-Zusammenfassung auf Deutsch und Englisch, eine Tableau-Public-Arbeitsmappe. |
 
 > [!definition] Kostenbarwert
-> Künftige Zahlungen, mit dem angegebenen Zinssatz auf heute abgezinst, sodass Kosten aus verschiedenen Jahren addiert werden können. Hier 8 % pro Jahr über fünf Jahre.
+> Künftige Zahlungen, mit dem angegebenen Zinssatz auf heute abgezinst, sodass Kosten aus verschiedenen Jahren addierbar sind. Hier gelten 8 % pro Jahr über fünf Jahre.
 
-Ein nachverfolgter Befund hat das Hauptergebnis verändert.[^1] Eine frühere Version verglich feste Teams unterschiedlicher Größe, acht Personen gegen sechs AMR-Hybrideinheiten. Daher vermischte ihre „günstigste Option“ ein kleineres Team mit einer Technologiewahl. Derselbe Optimierer dimensioniert nun jedes Szenario außer dem Altszenario auf die geringsten Fünfjahreskosten unter der Auslastungsgrenze. Das Team aus acht Personen bleibt als gekennzeichnete Referenz für die Kosten einer Überbesetzung.
+Ein nachverfolgter Befund hat das Hauptergebnis verändert.[^1] Eine frühere Version hat feste Teams unterschiedlicher Größe verglichen, acht Personen gegen sechs AMR-Hybrideinheiten. Ihre „günstigste Option“ hat daher ein kleineres Team mit einer Technologiewahl vermischt. Derselbe Optimierer dimensioniert nun jedes Szenario außer dem Altszenario auf die geringsten Fünfjahreskosten unter der Auslastungsgrenze. Das Team aus acht Personen bleibt als gekennzeichnete Referenz für die Kosten einer Überbesetzung.
 
 ## Ergebnis
 
 > [!figure] Abb. 01-02-1 · Kostenbarwert über fünf Jahre nach Szenario
-> Die schlanke Hybridvariante hat die niedrigsten Kosten im Basisfall und gewinnt 99,8 % der Ziehungen, obwohl ihre Spanne die des schlanken Teams überlappt.
+> Die schlanke Hybridvariante hat die niedrigsten Kosten im Basisfall und gewinnt 99,8 % der Ziehungen, obwohl ihr Intervall das des schlanken Teams überlappt.
 > ![[01-02-tco-range.de.svg]]
 >
-> caption: Tausend Euro, Barwert bei 8 %. Der Punkt ist der Basisfall, der gestrichelte Strich das Monte-Carlo-Mittel, die Linie das Intervall zu 90 % aus 10.000 Ziehungen. n = 7 Szenarien. Basisfall und Monte-Carlo-Mittel unterscheiden sich: Bei der rein humanoiden Flotte betragen sie 2.878 und 3.490. Im Basisfall kostet die schlanke Hybridvariante 30 % weniger als reines Personal und weniger als ein Fünftel von Humanoid 2028, dem günstigsten modellierten Humanoid-Szenario. Die Referenz mit acht Personen ist ein Altszenario, eine gekennzeichnete Referenz für die Kosten einer Überbesetzung.
-> source: Fünfjahres-TCO-Modell, Projekt-Repository: Basisfall aus dem Szenarioexport, Monte-Carlo-Werte aus dem Sensitivitätsbericht; zuletzt aktualisiert am 16. Sep. 2026.
+> caption: Tausend Euro, Kostenbarwert bei 8 %. Der Punkt ist der Basisfall, der gestrichelte Strich das Monte-Carlo-Mittel, die Linie das Intervall zu 90 % aus 10.000 Ziehungen. n = 7 Szenarien. Basisfall und Monte-Carlo-Mittel unterscheiden sich. Bei der rein humanoiden Flotte betragen sie 2.878 und 3.490. Im Basisfall kostet die schlanke Hybridvariante 30 % weniger als reines Personal. Die schlanke Hybridvariante kostet weniger als ein Fünftel von Humanoid 2028, dem günstigsten modellierten Humanoid-Szenario. Die Referenz mit acht Personen ist ein Altszenario. Sie ist als Referenz für die Kosten einer Überbesetzung gekennzeichnet.
+> source: Fünfjahres-TCO-Modell, Projekt-Repository: Basisfall aus dem Szenarioexport, Monte-Carlo-Werte aus dem Sensitivitätsbericht. Zuletzt aktualisiert am 16. Sep. 2026.
 
-| Szenario | Barwert, fünf Jahre | Capex | Kosten je Auftrag |
+| Szenario | Kostenbarwert, fünf Jahre | Capex | Kosten je Auftrag |
 |:--|--:|--:|--:|
 | Schlanke Hybridvariante: 1 Person, 3 AMR (S-lean-hybrid-amr) | € 452.706 | € 195.000 | € 0,374 |
 | Schlankes Team: 3 Personen (S-lean-human) | € 647.401 | € 0 | € 0,543 |
@@ -87,7 +87,7 @@ Ein nachverfolgter Befund hat das Hauptergebnis verändert.[^1] Eine frühere Ve
 > - 90-%-Intervall — € 394.658–€ 537.549
 > - Gewonnene Ziehungen — 99,8 % der ausgewerteten Ziehungen
 
-Die Breakeven-Suche deckte Investitionskosten humanoider Roboter von € 10.000 bis € 500.000 je Einheit ab. Sie fand keinen Preis, bei dem eine rein humanoide Flotte die Kosten je Auftrag der schlanken Hybridvariante bei 120 Aufträgen pro Stunde erreicht. Daher sind die Investitionskosten nicht der begrenzende Faktor.
+Die Breakeven-Suche hat Investitionskosten humanoider Roboter von € 10.000 bis € 500.000 je Einheit abgedeckt. Bei 120 Aufträgen pro Stunde erreicht eine rein humanoide Flotte bei keinem Preis dieses Bereichs die Kosten je Auftrag der schlanken Hybridvariante. Daher sind die Investitionskosten nicht der begrenzende Faktor.
 
 ## Grenzen
 
@@ -103,14 +103,14 @@ Die Rangfolge gilt nur unter den genannten Annahmen.
 
 ## Entscheidung
 
-Unter den genannten Annahmen: die schlanke Hybridvariante am Standort validieren und die Beschaffung humanoider Roboter zurückstellen. Vor jeder Beschaffungsentscheidung den im tatsächlichen Lager gemessenen Durchsatz und unterzeichnete Lieferantenangebote prüfen.
+Wenn die genannten Annahmen gelten, validieren Sie die schlanke Hybridvariante am Standort. Stellen Sie die Beschaffung humanoider Roboter zurück. Prüfen Sie vor jeder Beschaffungsentscheidung den im tatsächlichen Lager gemessenen Durchsatz und unterzeichnete Lieferantenangebote.
 
 > [!faq]- Wann lohnt sich eine erneute Prüfung?
-> Wenn die Nachfrage wächst, Arbeitskräfte knapp werden oder auf Mehrschichtbetrieb umgestellt wird. Bei der modellierten Nachfrage erreicht eine humanoide Flotte zu keinem Preis im durchsuchten Bereich Kostengleichheit.
+> Eine erneute Prüfung lohnt sich bei wachsender Nachfrage, bei knappen Arbeitskräften oder bei Mehrschichtbetrieb. Bei der modellierten Nachfrage erreicht eine humanoide Flotte zu keinem Preis im durchsuchten Bereich Kostengleichheit.
 
 ## Entstehung
 
 ```buildlog
 ```
 
-[^1]: Die Entwicklung folgt einem Governance-Protokoll, das in der Continuous Integration (CI, automatisierte Prüfung bei jeder Änderung) durchgesetzt wird: Jede Änderung schließt einen nachverfolgten Befund mit einem benannten Prüfskript ab, und die CI führt bei jedem Pull-Request das Skript jedes abgeschlossenen Befunds erneut aus.
+[^1]: Die Entwicklung folgt einem Governance-Protokoll, das die kontinuierliche Integration (CI, automatisierte Prüfung bei jeder Änderung) durchsetzt. Jede Änderung schließt einen nachverfolgten Befund mit einem benannten Prüfskript ab. Bei jedem Pull-Request startet die CI das Skript jedes abgeschlossenen Befunds erneut.

@@ -24,7 +24,7 @@ publish: true
 ## Question: When would humanoid robots become the cheapest way to run warehouse work?
 
 > [!summary] Summary
-> One person with three autonomous mobile robots (AMRs) has the lowest five-year present cost, €453,000, and wins 99.8% of the evaluated draws. Humanoids are deferred until demand, labour supply or shift patterns change.
+> One person with three autonomous mobile robots (AMRs) has the lowest five-year present cost, €453,000, and wins 99.8% of the evaluated draws. The decision defers humanoids until demand, labour supply or shift patterns change.
 
 ## Background
 
@@ -68,8 +68,8 @@ One tracked finding changed the headline.[^1] An earlier version compared fixed 
 > The lean hybrid has the lowest base-case cost and wins 99.8% of the draws, although its range overlaps the lean crew’s.
 > ![[01-02-tco-range.en.svg]]
 >
-> caption: Thousands of euros, present value at 8%. The dot is the base case, the dashed tick the Monte Carlo mean, the line the 90% interval of 10,000 draws. n = 7 scenarios. The base case and the Monte Carlo mean differ: for the pure humanoid fleet they are 2,878 and 3,490. In the base case the lean hybrid costs 30% less than people alone and less than a fifth of Humanoid 2028, the cheapest modelled humanoid scenario. The eight-person reference is legacy, a labelled reference for the cost of overstaffing.
-> source: five-year TCO model, project repository: base case from the scenario export, Monte Carlo from the sensitivity report; last updated 16 Sep 2026.
+> caption: Thousands of euros, present value at 8%. The dot is the base case, the dashed tick the Monte Carlo mean, the line the 90% interval of 10,000 draws. n = 7 scenarios. The base case and the Monte Carlo mean differ: for the pure humanoid fleet they are 2,878 and 3,490. In the base case the lean hybrid costs 30% less than people alone. It costs less than a fifth of Humanoid 2028, the cheapest modelled humanoid scenario. The eight-person reference is legacy, a labelled reference for the cost of overstaffing.
+> source: five-year TCO model, project repository: base case from the scenario export, Monte Carlo from the sensitivity report. Last updated 16 Sep 2026.
 
 | Scenario | Five-year present cost | Capex | Cost per order |
 |:--|--:|--:|--:|
@@ -113,4 +113,4 @@ Under the stated assumptions, take the lean hybrid forward for site validation a
 ```buildlog
 ```
 
-[^1]: The build runs under a governance protocol enforced in continuous integration (CI): every change closes a tracked finding with a named verification script, and CI re-runs the script of every closed finding on each pull request.
+[^1]: The build runs under a governance protocol that continuous integration (CI) enforces. Every change closes a tracked finding with a named verification script. CI re-runs the script of every closed finding on each pull request.

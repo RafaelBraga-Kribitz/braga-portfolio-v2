@@ -3,7 +3,7 @@ code: "01-05"
 kind: brief
 date: "2026-07-24"
 summary: From electricity-price records to a cost-risk decision. In build.
-lead: "Full spot, indexed, fixed or partly hedged: four ways to buy electricity for one Styrian manufacturer. The data warehouse is built; the answer in euros is not yet."
+lead: "Full spot, indexed, fixed or partly hedged: four ways to buy electricity for one Styrian manufacturer. The data warehouse is built. The answer in euros is not yet."
 domain: Energy
 tags: [ status/in-build, energy-procurement, risk-analysis, data-warehouse ]
 lang: en
@@ -23,7 +23,7 @@ publish: true
 ## Question: How much does the way a Styrian manufacturer buys electricity change its cost and its risk?
 
 > [!summary] Summary
-> The ingest from four sources and a DuckDB warehouse modelled in dbt are built and tested. Strategy results do not exist yet, and no strategy is recommended.
+> The project built and tested the ingest from four sources and a DuckDB warehouse modelled in dbt. Strategy results do not exist yet, and the project recommends no strategy.
 
 > [!note] Foundation snapshot · 24 July 2026
 > This page records the foundation stage, not the current repository status. The [repository inspected on 1 Nov 2026](https://github.com/RafaelBraga-Kribitz/energy-procurement-risk-analyzer/blob/e3e115c74f58745ce8ba4592d7c6b6ec89ef5d5e/README.md) reports its first real-data run and completed strategy engines. Those newer numerical results have not been independently reproduced for this page.
@@ -58,7 +58,7 @@ The market data is real, and no market price is synthetic.
 |:--|:--|:--|
 | ENTSO-E ingest | All four sources, fetched with retries and caching, into raw Parquet | Built |
 | Weather, index and calendar sources | Temperature, ÖSPI and public holidays | Built |
-| Validation gates and dbt tests | Gates check hour coverage (including 23- and 25-hour daylight-saving days), price and load plausibility, the Austria–Germany join and the presence of negative prices, so a plausible-looking file cannot pass silently. The dbt tests check the mart schema contract, daylight-saving adjacency, a price reconciliation for August 2022 and gaps in the month spine | Built |
+| Validation gates and dbt tests | Gates check hour coverage (including 23- and 25-hour daylight-saving days), price and load plausibility, the Austria–Germany join and the presence of negative prices. A plausible-looking file therefore cannot pass silently. The dbt tests check the mart schema contract, daylight-saving adjacency, a price reconciliation for August 2022 and gaps in the month spine | Built |
 | DuckDB warehouse | dbt models from staging to marts | Built |
 | Continuous integration | Lint, tests and a network-free dbt build against a fixture warehouse | Built |
 | Load profile | Constructed load shape of 50 GWh a year | Not built |
@@ -71,7 +71,7 @@ The market data is real, and no market price is synthetic.
 
 ## Result
 
-None yet. Until the last four components are built, their commands fail loudly and name their milestone. Every published number must first appear, with its epistemic tag, in an auto-generated numeric source-of-truth file that arrives with the strategy simulator. Until then this page quotes no result:
+None yet. Until the project builds the last four components, their commands fail loudly and name their milestone. Every published number must first appear, with its epistemic tag, in an auto-generated numeric source-of-truth file that arrives with the strategy simulator. Until then this page quotes no result:
 
 - No strategy cost for 2021–2025.
 - No P95.
@@ -85,11 +85,11 @@ What this does not establish:
 - **A measured load.** The load shape is constructed, not measured. It is one industrial load of 50 GWh a year.
 - **Contract and forward prices.** ÖSPI stands in for them. This is an assumption, tagged as one.
 - **The full cost of electricity.** Grid fees, taxes and levies are out of scope. The analysis isolates the energy-price lever.
-- **A price forecast.** None is planned. Strategies are scored on realised prices and on resampling them.
+- **A price forecast.** The project plans none. It scores strategies on realised prices and on resampling them.
 
 ## Decision
 
-No strategy is recommended yet: the cost-risk decision between the four strategies waits for the strategy simulator and its source-of-truth file.
+The project recommends no strategy yet. The cost-risk decision between the four strategies waits for the strategy simulator and its source-of-truth file.
 
 ## Build log
 

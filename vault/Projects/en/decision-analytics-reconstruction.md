@@ -43,7 +43,7 @@ This reconstruction of the 2018 Paraguay presidential election uses what a campa
 
 ## Data
 
-The public anchors are verified and every individual voter is synthetic, so no real person is represented while the aggregates still hold.
+The public anchors are verified and every individual voter is synthetic, so the voter file represents no real person while the aggregates still hold.
 
 > [!spec] Inputs
 > - Public anchors — TSJE final results · DGEEC census aggregates · INE 2018 household survey · eight published tracking polls
@@ -72,10 +72,10 @@ Every headline number lives in one numeric source-of-truth table that continuous
 | B | Mixed-integer linear program (MILP) in PuLP, solved with CBC, over 2,772 rows. Budget, reach caps, an exchange-rate layer and an 80% coverage floor. It maximises a linearised persuasion proxy and runs through FastAPI. | A solver comparison on synthetic reach: contacts of one allocation against another. | A historical effect of the 2018 campaign. |
 | C | Gaussian random walk with house effects (the systematic lean of each polling firm), fitted in PyMC to eight polls. Stratified Monte Carlo scenarios, 10,000 draws by default. | A retrodiction of the race through the eight polls. | A forecast, or forecasting skill. |
 
-Module A also reaches an area under the curve (AUC) of about 0.89. The project does not headline it. The propensity features share calibration anchors with the target, so the AUC measures how well the raking was recovered, not generalisation.
+Module A also reaches an area under the curve (AUC) of about 0.89. The project does not headline it. The propensity features share calibration anchors with the target, so the AUC measures how well the model recovers the raking, not generalisation.
 
 > [!definition] Retrodiction
-> A fit that conditions on the known outcome. The tracking curve is one: it conditions on the verified result, so it cannot be read as a forecast.
+> A fit that conditions on the known outcome. The tracking curve is one: it conditions on the verified result, so readers cannot read it as a forecast.
 
 ## Result
 
@@ -97,7 +97,7 @@ The refits hold out each real poll wave and provably exclude the election result
 > The 95% band caught 4 of 6 held-out polls. A calibrated band would catch about 6.
 > ![[01-04-wave-intervals.en.svg]]
 >
-> caption: The chart shows the observed margin of each real poll wave, in percentage points. It is set against the 95% band of a refit that holds that wave out and excludes the election result. n = 6 waves. Misses are in the accent colour. Full run: 4 chains of 1,000 draws, and the sampler diagnostics pass in every fold. Eight waves give 6 holdouts at `min_train_size=2`. The earlier fast run caught 3 of 6, and one wave moved. Six waves are too few to call that an improvement.
+> caption: The chart shows the observed margin of each real poll wave, in percentage points. The chart sets it against the 95% band of a refit that holds that wave out and excludes the election result. n = 6 waves. Misses are in the accent colour. Full run: 4 chains of 1,000 draws, and the sampler diagnostics pass in every fold. Eight waves give 6 holdouts at `min_train_size=2`. The earlier fast run caught 3 of 6, and one wave moved. Six waves are too few to call that an improvement.
 > source: project repository, [reports/module_c/walk_forward_loo_report.md](https://github.com/RafaelBraga-Kribitz/decision-analytics-reconstruction/blob/86f6d3b1f3e9a4312ac5320f83e3ddd08050a257/reports/module_c/walk_forward_loo_report.md).
 
 Eight polls are far too few to claim forecasting skill, and the project does not claim it.
@@ -105,8 +105,8 @@ Eight polls are far too few to claim forecasting skill, and the project does not
 ## Limitations
 
 - **Hand-set inputs.** The [repository’s data register](https://github.com/RafaelBraga-Kribitz/decision-analytics-reconstruction/blob/6a5d2cef1216f43572d073e8abfab57329daff85/README.md) lists exchange-rate, exchange-rate spread, channel-unit-cost and department-population inputs as hand-set and not yet verified. The Module B gain is a solver comparison under those assumptions.
-- **A causal effect.** A with-and-without-analytics counterfactual cannot be verified here.
-- **Individual behaviour.** Aggregate calibration of synthetic voters does not mean real behaviour was recovered.
+- **A causal effect.** This project cannot verify a with-and-without-analytics counterfactual.
+- **Individual behaviour.** Aggregate calibration of synthetic voters does not mean that the model recovered real behaviour.
 - **Campaign economics.** Module B optimises linearised contacts, not audited 2018 campaign accounting or fitted response curves.
 - **Full scale.** The pipeline runs 50,000 voters over 14 weeks. The full roll of 4.26 million voters is a design reference.
 - **Production use.** This is a portfolio reconstruction, not a production campaign system.

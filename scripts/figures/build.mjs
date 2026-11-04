@@ -236,19 +236,19 @@ const STR = {
     roas: {
       finding: 'TV liegt bei beiden Prior-Sätzen über der Linie von 2,50. Facebook liegt nur bei den berichteten Priors darüber. Print und Search kreuzen die Linie, und die Außenwerbung bleibt darunter.',
       title: 'Marginaler ROAS je Kanal, mit Intervall zu 90 %',
-      breakeven: 'Breakeven 2,50', axis: 'Marginaler ROAS bei derzeitigen Ausgaben, logarithmisch', desc: 'Median und Intervall zu 90 % des marginalen ROAS bei den derzeitigen Ausgaben, bei den berichteten Priors und bei vagen Priors; der Breakeven liegt bei 2,50.',
+      breakeven: 'Breakeven 2,50', axis: 'Marginaler ROAS bei derzeitigen Ausgaben, logarithmisch', desc: 'Median und Intervall zu 90 % des marginalen ROAS bei den derzeitigen Ausgaben, bei den berichteten Priors und bei vagen Priors. Der Breakeven liegt bei 2,50.',
       reported: 'Berichtete Priors', vague: 'Vage Priors', clip: 'Bei 0,05 abgeschnitten (Außenwerbung 0,00, Search 0,03)',
       rows: { tv: 'TV', facebook: 'Facebook', print: 'Print', search: 'Search', ooh: 'Außenwerbung' },
     },
     waves: {
-      finding: 'Das Band zu 95 % erfasste 4 von 6 zurückgehaltenen Umfragen. Ein kalibriertes Band würde etwa 6 erfassen.',
-      title: 'Zurückgehaltene Umfragen gegenüber dem Band zu 95 %',
-      axis: 'Abstand in Prozentpunkten (PP)', observed: 'Beobachteter Abstand', mean: 'Prognosemittel', band: 'Band zu 95 %', caught: 'erfasst', miss: 'verfehlt',
+      finding: 'Das Intervall zu 95 % hat 4 von 6 zurückgehaltenen Umfragen erfasst. Ein kalibriertes Intervall würde etwa 6 erfassen.',
+      title: 'Zurückgehaltene Umfragen gegenüber dem Intervall zu 95 %',
+      axis: 'Abstand in Prozentpunkten (PP)', observed: 'Beobachteter Abstand', mean: 'Prognosemittel', band: 'Intervall zu 95 %', caught: 'erfasst', miss: 'verfehlt',
       desc: 'Je zurückgehaltener Welle: beobachteter Abstand, Prognosemittel und Intervall zu 95 %, in Prozentpunkten.',
       date: (w) => `${w.day}.${NBSP}${w.month === 3 ? 'März' : 'Apr.'}`,
     },
     tco: {
-      finding: 'Die schlanke Hybridvariante hat die niedrigsten Kosten im Basisfall und gewinnt 99,8 % der Ziehungen, obwohl ihre Spanne die des schlanken Teams überlappt.',
+      finding: 'Die schlanke Hybridvariante hat die niedrigsten Kosten im Basisfall und gewinnt 99,8 % der Ziehungen, obwohl ihr Intervall das des schlanken Teams überlappt.',
       title: 'Kostenbarwert über fünf Jahre nach Szenario',
       axis: 'Tausend Euro', base: 'Basisfall', mean: 'Monte-Carlo-Mittel', band: 'Intervall zu 90 %',
       desc: 'Basisfall, Monte-Carlo-Mittel und Intervall zu 90 % des Kostenbarwerts über fünf Jahre, in Tausend Euro.',
@@ -409,7 +409,7 @@ function figSkills(lang) {
     desc.push(`${s.names[r.id]} ${label}`);
   });
   const h = axisY + 54;
-  return svgDoc({ name: '01-01-skills-top', lang, w: 460, h, title: s.title, desc: `${s.finding} ${s.desc} ${desc.join('; ')}.`, body });
+  return svgDoc({ name: '01-01-skills-top', lang, w: 460, h, title: s.title, desc: `${s.finding} ${s.desc} ${desc.join(lang === 'de' ? '. ' : '; ')}.`, body });
 }
 
 /* ---------------------------------------------------------------------------
@@ -487,7 +487,7 @@ function figRoas(lang) {
       : el('line', { x1: X(v.lo), y1: yv - 5, x2: X(v.lo), y2: yv + 5, stroke: INK2, 'stroke-width': 2 });
     body += el('line', { x1: X(v.hi), y1: yv - 5, x2: X(v.hi), y2: yv + 5, stroke: INK2, 'stroke-width': 2 });
     body += el('circle', { cx: X(v.median), cy: yv, r: 4, fill: SURFACE, stroke: INK2, 'stroke-width': 2 });
-    desc.push(`${s.rows[r.id]} ${s.reported} ${label}; ${s.vague} ${n2(v.median)} (${n2(v.lo)}–${n2(v.hi)})`);
+    desc.push(`${s.rows[r.id]} ${s.reported} ${label}${lang === 'de' ? '.' : ';'} ${s.vague} ${n2(v.median)} (${n2(v.lo)}–${n2(v.hi)})`);
   });
   body += el('line', { x1: X(BREAKEVEN), y1: top - 12, x2: X(BREAKEVEN), y2: bottom, stroke: ACCENT, 'stroke-width': 2.5 });
   body += text(X(BREAKEVEN) + 8, top - 18, s.breakeven, { weight: 600 });
@@ -496,7 +496,7 @@ function figRoas(lang) {
   body += el('line', { x1: 0, y1: ly - 4, x2: 24, y2: ly - 4, stroke: INK, 'stroke-width': 2 }) + el('circle', { cx: 12, cy: ly - 4, r: 5, fill: INK, stroke: SURFACE, 'stroke-width': 2 }) + text(32, ly, s.reported);
   body += el('line', { x1: 190, y1: ly - 4, x2: 214, y2: ly - 4, stroke: INK2, 'stroke-width': 2, 'stroke-dasharray': '4 3' }) + el('circle', { cx: 202, cy: ly - 4, r: 4, fill: SURFACE, stroke: INK2, 'stroke-width': 2 }) + text(222, ly, s.vague);
   body += el('path', { d: `M5,${ly + 17} L0,${ly + 22} L5,${ly + 27}`, fill: 'none', stroke: INK2, 'stroke-width': 2 }) + text(32, ly + 26, s.clip);
-  return svgDoc({ name: '01-03-roas-interval', lang, w: 480, h: ly + 40, title: s.title, desc: `${s.finding} ${s.desc} ${desc.join('; ')}.`, body });
+  return svgDoc({ name: '01-03-roas-interval', lang, w: 480, h: ly + 40, title: s.title, desc: `${s.finding} ${s.desc} ${desc.join(lang === 'de' ? '. ' : '; ')}.`, body });
 }
 
 /* ---------------------------------------------------------------------------
