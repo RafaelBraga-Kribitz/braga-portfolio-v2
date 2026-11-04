@@ -26,9 +26,11 @@ interface Props {
   lead: string;
   /** Show the draft mark under the cover's footer. */
   draft?: boolean;
+  /** A quiet link under the contact button (the home page: down to the work). */
+  forward?: { href: string; label: string };
 }
 
-const { lang, spec, kicker, titleLines, lead, draft = false } = Astro.props;
+const { lang, spec, kicker, titleLines, lead, draft = false, forward } = Astro.props;
 const lines = titleLines ?? [site.role[lang]];
 ---
 <section class="cover">
@@ -44,6 +46,7 @@ const lines = titleLines ?? [site.role[lang]];
     <p class="prose cover-lead">{lead}</p>
     <div class="cover-foot">
       <ContactActions lang={lang} />
+      {forward && <p class="link-line"><a href={forward.href}>{forward.label} <span class="glyph" aria-hidden="true">→</span></a></p>}
     </div>
     {draft && <p class="label"><StatusMark state="in-build" lang={lang} label={t(lang, 'draft')} /></p>}
   </div>

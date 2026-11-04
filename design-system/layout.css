@@ -330,6 +330,7 @@ main > .section:first-child > .section-heading:first-child { padding-top: 0; }
 }
 .cover-lead { margin: 32px 0 0; font-size: var(--t-lead); line-height: 1.5; }
 .cover-foot { margin-top: 32px; border-top: var(--rule); padding-block: 24px 16px; }
+.cover-foot > .link-line { margin-top: 16px; }   /* the quiet link under the button: ink, no accent (G-15) */
 @media (max-width: 767px) {
   .cover { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(32px, 4fr) auto auto minmax(64px, 9fr); }
   .cover-rail, .cover-body { grid-column: 1 / -1; }

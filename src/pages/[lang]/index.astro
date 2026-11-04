@@ -107,7 +107,7 @@ const libraryCount = library.reduce((n, a) => n + a.rows.length, 0);
 const allProjects = projects.length ? t(lang, 'all-n-projects').replace('{n}', String(projects.length)) : t(lang, 'all-projects');
 ---
 <Base lang={lang} page="home" title={copy.title} description={copy.lead} structuredData={homeGraph(lang, copy.lead)}>
-  <Cover lang={lang} spec={spec} titleLines={copy.titleLines} lead={copy.lead} draft={isDraftLang(lang)} />
+  <Cover lang={lang} spec={spec} titleLines={copy.titleLines} lead={copy.lead} draft={isDraftLang(lang)} forward={projects.length > 0 ? { href: '#work', label: t(lang, 'cover.projects').replace('{n}', String(projects.length)) } : undefined} />
 
   <section class="section" id="work">
     <SectionHeading number="01" word={t(lang, 'door.work')} claim={t(lang, 'work.claim')} prose={t(lang, 'work.prose')} link={{ href: route('work', lang), label: allProjects }} />

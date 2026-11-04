@@ -81,6 +81,8 @@ const en = {
   // listings
   'all-projects': 'All projects',
   'all-n-projects': 'All {n} projects',
+  // the quiet link under the home cover's contact button (DC-09)
+  'cover.projects': 'See the {n} projects',
   'all-writing': 'All writing',
   'essays.word': 'Essays',
   'date': 'Date',
@@ -238,6 +240,7 @@ const de: Record<ChromeKey, string> = {
   'writing.prose': 'Zwei Register, bewusst getrennt. Essays sind fertige Argumente\u00A0– eine Position, bezogen, verteidigt und abgeschlossen. Notizen sind die Arbeitsfläche, an Ort und Stelle überarbeitet, während das Denken sich bewegt.',
   'all-projects': 'Alle Projekte',
   'all-n-projects': 'Alle {n} Projekte',
+  'cover.projects': 'Die {n} Projekte ansehen',
   'all-writing': 'Alle Texte',
   'essays.word': 'Essays',
   'date': 'Datum',
