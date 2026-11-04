@@ -18,6 +18,8 @@
 //   > [!cta] Call to action    → <a href>text <span class="glyph">↗</span></a>
 //   > [!bars] Fig. 01-01-1 · … → the evidence figure of the Site specimen
 //                                (pattern 05), not a callout: see "bars" below
+//   > [!figure] Fig. 01-01-1 · … → a designed figure: an SVG from the vault
+//                                inlined in the evidence figure; see "figure"
 //   > [!download] Get the book → one button for several files, not a
 //                                callout: see "download" below
 //   ==text== in a paragraph    → <mark>text</mark> (list items and table
@@ -31,6 +33,9 @@
 // class is invented here).
 import { number, percent, currency, unit as withUnit } from '../format.mjs';
 import { MAIL_LABELS, mailParts, mailtoAddress } from '../contact.mjs';
+import { readFileSync, existsSync } from 'node:fs';
+import { vaultIndex, resolveAttachment } from '../vault/index.mjs';
+import { inlineSvg } from '../vault/figure-svg.mjs';
 
 /** Inline node types a text node may sit inside and still be "in a paragraph". */
 const INLINE = new Set(['emphasis', 'strong', 'delete', 'link', 'linkReference', 'superscript', 'subscript']);
@@ -379,6 +384,36 @@ function parseNumber(s) {
 }
 
 /**
+ * The meta lines of an evidence figure: "caption:" and "source:" take the
+ * rest of the line (inline nodes kept); `pairKeys` (scale, unit, centre,
+ * accent) may share a line, joined by the middle dot. Any other line fails.
+ * @param {any[][]} metaLines @param {string[]} pairKeys @param {(msg: string) => never} fail
+ * @returns {{ meta: Record<string, string>, rich: Record<'caption' | 'source', any[]> }}
+ */
+function readMeta(metaLines, pairKeys, fail) {
+  /** @type {Record<string, string>} */
+  const meta = {};
+  /** @type {Record<'caption' | 'source', any[]>} */
+  const rich = { caption: [], source: [] };
+  const keys = [...pairKeys, 'caption', 'source'];
+  for (const line of metaLines) {
+    const first = plain(line);
+    const m = META_KEY.exec(first);
+    const key = m ? m[1].toLowerCase().replace('center', 'centre') : '';
+    if (!m || !keys.includes(key)) fail(`a line is not one of ${keys.join(', ')}: “${first.trim()}”`);
+    if (key === 'caption' || key === 'source') { rich[key] = dropChars(line, m[0].length); continue; }
+    // "scale: 0–100 · unit: % · centre: no": key: value pairs joined by the middle dot
+    for (const pair of first.split('·')) {
+      const p = /^\s*([a-z]+)\s*:\s*(.*?)\s*$/i.exec(pair);
+      const k = p ? p[1].toLowerCase().replace('center', 'centre') : '';
+      if (!p || !pairKeys.includes(k)) fail(`“${pair.trim()}” is not one of ${pairKeys.join(', ')}`);
+      meta[k] = p[2];
+    }
+  }
+  return { meta, rich };
+}
+
+/**
  * The evidence figure for a [!bars] callout.
  * @param {{ title: any[], content: any[] }} head @param {any} ctx
  */
@@ -420,24 +455,7 @@ function barsFigure(head, ctx) {
   }
   if (!items.length) fail('the list has no items');
 
-  /** @type {Record<string, string>} */
-  const meta = {};
-  /** @type {Record<'caption' | 'source', any[]>} */
-  const rich = { caption: [], source: [] };
-  for (const line of metaLines) {
-    const first = plain(line);
-    const m = META_KEY.exec(first);
-    if (!m) fail(`a line is not one of scale, unit, centre, accent, caption, source: “${first.trim()}”`);
-    const key = m[1].toLowerCase();
-    if (key === 'caption' || key === 'source') { rich[key] = dropChars(line, m[0].length); continue; }
-    // "scale: 0–100 · unit: % · centre: no": key: value pairs joined by the middle dot
-    for (const pair of first.split('·')) {
-      const p = /^\s*([a-z]+)\s*:\s*(.*?)\s*$/i.exec(pair);
-      const k = p ? p[1].toLowerCase() : '';
-      if (!p || !['scale', 'unit', 'centre', 'center', 'accent'].includes(k)) fail(`“${pair.trim()}” is not scale, unit, centre or accent`);
-      meta[k === 'center' ? 'centre' : k] = p[2];
-    }
-  }
+  const { meta, rich } = readMeta(metaLines, ['scale', 'unit', 'centre', 'accent'], fail);
 
   const u = (meta.unit ?? '').trim();
   const centreRaw = (meta.centre ?? 'no').trim().toLowerCase();
@@ -514,6 +532,85 @@ function barsFigure(head, ctx) {
 }
 
 /* ---------------------------------------------------------------------------
+   figure · a designed figure (the evidence figure around an inlined SVG)
+
+     > [!figure] Fig. 01-01-1 · From raw rows to core postings   ← kicker
+     > 720 of 12,429 raw rows are core data-role postings.       ← finding
+     > ![[01-01-funnel.en.svg]]                                   ← the SVG
+     >
+     > caption: …
+     > source: …
+
+   becomes <figure class="evidence" data-width="wide"> with the kicker, the
+   finding as its heading and the caption as in [!bars], and between them
+   <div class="diagram" tabindex="0" role="group" aria-label="finding"> that
+   holds the vault file inlined, so its var(--token) colours follow the
+   theme. The SVG is drawn by scripts/figures/build.mjs and checked by
+   src/lib/vault/figure-svg.mjs. A missing file, a missing source, an unknown
+   meta line, a file that breaks the SVG rules or the same file twice on one
+   page fails the build, naming the file. caption and source only: the
+   geometry is in the SVG.
+   ------------------------------------------------------------------------- */
+
+/** A figure wider than this (user units) scrolls on a phone and shows a cue. */
+const PHONE_COLUMN = 360;
+const SCROLL_CUE = { en: '← Scroll sideways →', de: '← Seitlich scrollen →' };
+
+/** The document's language, en or de. @param {any} ctx */
+const langOf = (ctx) => (ctx.data && ctx.data.astro && ctx.data.astro.frontmatter && ctx.data.astro.frontmatter.lang === 'de' ? 'de' : 'en');
+
+/**
+ * The evidence figure for a [!figure] callout.
+ * @param {{ title: any[], content: any[] }} head @param {any} ctx
+ */
+function figureBlock(head, ctx) {
+  const where = ctx.fileURL ? ctx.fileURL.pathname : 'markdown';
+  /** @param {string} msg @returns {never} */
+  const fail = (msg) => { throw new Error(`figure callout in ${where}: ${msg}`); };
+  if (!head.title.length) fail('the title line is empty (Fig. <code>-<n> · <subject>)');
+  const first = head.content[0];
+  if (!first || first.type !== 'paragraph') fail('no finding and no ![[figure.svg]] embed');
+  const lines = splitLines(first.children);
+  const at = lines.findIndex((l) => l.some((n) => n.type === 'link' && /^\/media\/.+\.svg$/i.test(n.url)));
+  if (at < 0) {
+    const last = lines.length ? plain(lines[lines.length - 1]).trim() : '';
+    fail(`no ![[figure.svg]] embed, or the file is not in the vault${last ? ` (last line: “${last}”)` : ''}`);
+  }
+  const link = lines[at].find((n) => n.type === 'link');
+  const name = decodeURIComponent(link.url.replace(/^\/media\//, ''));
+  const att = resolveAttachment(vaultIndex(), name);
+  if (!att || !existsSync(att.abs)) fail(`the figure file “${name}” is not in the vault`);
+  const file = name.split('/').pop();
+  const used = ctx.data.bkFigures || (ctx.data.bkFigures = new Set());
+  if (used.has(att.rel)) fail(`the file “${file}” is embedded twice on one page (its ids would collide)`);
+  used.add(att.rel);
+  let svg = '';
+  try { svg = inlineSvg(readFileSync(att.abs, 'utf8'), file); } catch (e) { fail(e.message); }
+
+  const heading = [];
+  for (const l of lines.slice(0, at)) { if (heading.length) heading.push(text(' ')); heading.push(...l); }
+  if (!heading.length) fail('no finding: write one sentence between the title and the embed');
+  const metaLines = [...lines.slice(at + 1)];
+  for (const b of head.content.slice(1)) {
+    if (b.type !== 'paragraph') fail(`unexpected ${b.type} after the embed`);
+    metaLines.push(...splitLines(b.children));
+  }
+  const { rich } = readMeta(metaLines, [], fail);
+  if (!rich.source.length) fail('source: is missing (the evidence figure makes the source mandatory)');
+
+  const width = Number((/viewBox="0 0 ([\d.]+)/.exec(svg) || [])[1] || 0);
+  const caption = [];
+  if (rich.caption.length) caption.push(...rich.caption, el('br', {}, []));
+  caption.push(el('b', {}, [text(`${SOURCE[langOf(ctx)]}:`)]), text(' '), ...rich.source);
+  return el('figure', { className: ['evidence'], dataWidth: 'wide' }, [
+    el('p', { className: ['label'] }, head.title),
+    el('p', { className: ['evidence-heading', 'display'] }, heading),
+    el('div', { className: ['diagram'], tabIndex: 0, role: 'group', ariaLabel: plain(heading).replace(/\s+/g, ' ').trim(), ...(width > PHONE_COLUMN ? { dataScroll: '', dataCue: SCROLL_CUE[langOf(ctx)] } : {}) }, [{ type: 'html', value: svg }]),
+    el('figcaption', {}, caption),
+  ]);
+}
+
+/* ---------------------------------------------------------------------------
    download · one button for one thing in several files (owner, 30 Oct 2026)
 
      > [!download] Download the book            ← the face of the button
@@ -573,6 +670,7 @@ function build(blocks, ctx, node) {
   const head = parseHead(blocks);
   if (!head) return null;
   if (head.type === 'bars') return barsFigure(head, ctx);
+  if (head.type === 'figure') return figureBlock(head, ctx);
   const { type, metadata, fold } = head;
   const content = head.content;
   nest(content, ctx, node);

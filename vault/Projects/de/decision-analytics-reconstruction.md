@@ -9,130 +9,110 @@ tags: [ status/complete, wahlkampagnen, segmentierung, optimierung, bayessches-t
 lang: de
 slug: decision-analytics-reconstruction
 metrics:
-  - { value: "95.603", label: "Amtlicher Stimmenvorsprung", accent: true }
-  - { value: "61,25 %", label: "Wahlbeteiligung, TSJE" }
+  - { value: "+54,77 %", label: "Proxy-Kontakte gegenüber Gleichverteilung, synthetische Reichweite, ungefähr", accent: true }
+  - { value: "3 von 6", label: "Zurückgehaltene Umfragen im Band zu 95 %" }
   - { value: "50.000", label: "Synthetische Wahlberechtigte, 14 Wochen" }
 stack: [ "Python", "PyMC", "Bayesian", "Optimisation", "scikit-learn", "FastAPI", "Streamlit", "MLflow", "Docker", "GCP", "CI/CD" ]
 repository: https://github.com/RafaelBraga-Kribitz/decision-analytics-reconstruction
-translationStatus: approved
+translationStatus: draft
 publish: true
 ---
 
 # Rekonstruktion von Entscheidungs­analysen
 
-## Fragestellung
-
-Wie kann eine Kampagne mit nur öffentlichen Umfragen, Zensusdaten und einem festen Budget ein landesweites Rennen verfolgen und entscheiden, wo sie Geld einsetzt?
+## Frage: Wie kann eine Kampagne mit nur öffentlichen Umfragen, Zensusdaten und einem festen Budget ein landesweites Rennen verfolgen und entscheiden, wo sie Geld einsetzt?
 
 > [!summary] Zusammenfassung
-> Drei verbundene Module laufen durchgängig auf 50.000 synthetischen Wahlberechtigten, die an die verifizierten Eckdaten der Departamentos angepasst sind: Bei einem Budgetrahmen von 6 Mio. USD erzielt der Allokator rund 54,77 % mehr linearisierte Proxy-Kontakte als eine über die Departamentos gleichmäßige Verteilung, und das Unsicherheitsband des Trackers zu 95 % erfasste die zurückgehaltene Umfrage in 3 von 6 getesteten Wellen. Jedes Modul wird nur so weit berichtet, wie seine eigene Prüfung reicht: Der Gewinn gilt als Solver-Vergleich auf synthetischer Reichweite, die Tracking-Kurve als Retrodiktion, und nichts hier behauptet, dass Analytik den amtlichen Stimmenvorsprung verursacht hat.
+> Drei Module laufen durchgängig auf 50.000 synthetischen Wahlberechtigten, angepasst an verifizierte Eckdaten der Departamentos (Verwaltungsbezirke). Bei einem Budgetrahmen von 6 Mio. USD erzielt der Allokator rund 54,77 % mehr linearisierte Proxy-Kontakte als eine über die Departamentos gleichmäßige Verteilung. Dieser Gewinn ist ein Solver-Vergleich auf synthetischer Reichweite, die Tracking-Kurve ist eine Retrodiktion, und nichts hier behauptet, dass Analytik den amtlichen Vorsprung verursacht hat.
 
 ## Hintergrund
 
-Es geht um die Präsidentschaftswahl 2018 in Paraguay. Das Projekt nutzt acht öffentliche Umfragen und aggregierte Zensusdaten und prüft auch, wie ehrlich eine Kampagne ausweisen kann, was tatsächlich bekannt ist. Die Rekonstruktion arbeitet mit dem, was eine Kampagne Anfang 2018 sehen konnte, und argumentiert auf ein öffentlich bekanntes Ergebnis hin: Laut dem [amtlichen statistischen Jahrbuch, Tabelle 5.3.1](https://informacionpublica.paraguay.gov.py/public/7234448-AnuarioEstadistico2018pdf-AnuarioEstadistico2018.pdf) gewann Mario Abdo Benítez mit 1.206.067 Stimmen gegenüber 1.110.464 für Efraín Alegre, ein Vorsprung von 95.603 Stimmen. Die Vergleichseinheiten sind linearisierte Proxy-Kontakte bei festem Budget, gemessen an einer über die Departamentos (Verwaltungsbezirke) gleichmäßigen Verteilung, und für den Tracker zurückgehaltene Umfragewellen.
+Diese Rekonstruktion der Präsidentschaftswahl 2018 in Paraguay nutzt, was eine Kampagne Anfang 2018 sehen konnte: acht öffentliche Umfragen und aggregierte Zensusdaten. Sie prüft, wie ehrlich eine Kampagne ausweisen kann, was sie weiß, und vergleicht Proxy-Kontakte mit einer Gleichverteilung und den Tracker mit zurückgehaltenen Umfragen.
 
-> [!note] Historisches Ergebnis und Modellanker
-> Die Endauszählung ergibt einen Vorsprung von 95.603 Stimmen: 3,88 Prozentpunkte der gültigen Kandidatenstimmen (2.463.441) oder 3,68 Prozentpunkte aller abgegebenen Stimmen (2.597.989). Serie A des Repositorys verwendet +3,70 Prozentpunkte (46,43 % gegenüber 42,73 %) als Modellanker. Diese Konvention ist bei keinem der beiden Nenner der exakte Prozentsatz der Endauszählung. Diese redaktionelle Korrektur passt das Rekonstruktionsmodell nicht neu an.
+> [!spec] Amtliches Ergebnis 2018
+> - Mario Abdo Benítez — 1.206.067 Stimmen
+> - Efraín Alegre — 1.110.464 Stimmen
+> - Vorsprung — 95.603 Stimmen
+> - Anteil der gültigen Kandidatenstimmen — 3,88 Prozentpunkte von 2.463.441
+> - Anteil aller abgegebenen Stimmen — 3,68 Prozentpunkte von 2.597.989
+> - Wahlbeteiligung — 61,25 %, TSJE
+> - Quelle — [amtliches statistisches Jahrbuch, Tabelle 5.3.1](https://informacionpublica.paraguay.gov.py/public/7234448-AnuarioEstadistico2018pdf-AnuarioEstadistico2018.pdf)
+
+> [!note] Modellanker
+> Serie A des Repositorys verwendet +3,70 Prozentpunkte (46,43 % gegenüber 42,73 %). Diese Konvention ist bei keinem der beiden Nenner der exakte Prozentsatz der Endauszählung. Diese redaktionelle Korrektur passt das Rekonstruktionsmodell nicht neu an.
 
 ## Daten
 
-Die öffentlichen Eckdaten sind verifiziert: die Wahlergebnisse des TSJE, aggregierte Zensusdaten der DGEEC, die Haushaltserhebung 2018 des INE zur Nutzung von Internet und WhatsApp sowie acht veröffentlichte Tracking-Umfragen. Alle einzelnen Wählerinnen und Wähler sind synthetisch. Ein Wählerdatensatz mit 50.000 Einträgen wird per Raking (iterative Gewichtung an vorgegebene Randverteilungen) an die verifizierten Eckdaten der Departamentos angepasst (Wahlbeteiligung, Geschlecht, ländlicher Anteil, Sprache), sodass keine reale Person abgebildet ist, die Aggregate aber weiterhin stimmen.
+Die öffentlichen Eckdaten sind verifiziert, und alle einzelnen Wählerinnen und Wähler sind synthetisch. So ist keine reale Person abgebildet, die Aggregate stimmen aber weiterhin.
 
 > [!spec] Eingaben
-> - Öffentliche Eckdaten — Endergebnisse des TSJE · Zensusaggregate der DGEEC · Haushaltserhebung 2018 des INE · acht veröffentlichte Tracking-Umfragen
-> - Wählerdatensatz — 50.000 synthetische Einträge, angepasst an Wahlbeteiligung, Geschlecht, ländlichen Anteil und Sprache je Departamento
+> - Öffentliche Eckdaten — Endergebnisse des TSJE · Zensusaggregate der DGEEC · Haushaltserhebung 2018 des INE zur Nutzung von Internet und WhatsApp · acht veröffentlichte Tracking-Umfragen
+> - Wählerdatensatz — 50.000 synthetische Einträge, per Raking (iterative Gewichtung an vorgegebene Randverteilungen) angepasst an Wahlbeteiligung, Geschlecht, ländlichen Anteil und Sprache je Departamento
 > - Zeitfenster — 14 Wochen · Seed 42 (Startwert des Zufallsgenerators)
-> - Modul A — der synthetische Wählerdatensatz · eine Holdout-Stichprobe von 15.000 Wahlberechtigten
+> - Modul A — der synthetische Wählerdatensatz · eine Holdout-Stichprobe (zurückgehaltene Testmenge) von 15.000 Wahlberechtigten
 > - Modul B — 2.772 Zeilen: 18 Departamentos × 11 Kanäle × 14 Wochen · ein Budgetrahmen von 6 Mio. USD
 > - Modul C — die acht veröffentlichten Umfragen · das verifizierte Ergebnis
 
-Jedes Artefakt trägt ein epistemisches Etikett (verifiziert, kalibriert, simuliert oder illustrativ), und das Register dieser Etiketten ist Teil des Repositorys. Das Etikett wandert mit der Zahl.
+Jedes Artefakt trägt ein epistemisches Etikett (verifiziert, kalibriert, simuliert oder illustrativ). Das Repository enthält das Register der Etiketten, und das Etikett wandert mit der Zahl.
 
 ## Methode
 
-Die drei Module laufen als eine Pipeline, von A über B zu C, mit einer erzwungenen Übergabe der Allokation zwischen ihnen:
+Jede zentrale Zahl steht in einer einzigen numerischen Referenztabelle (Source of Truth), die die kontinuierliche Integration prüft. Die Pipeline erzwingt die Übergabe der Allokation zwischen den Modulen.
 
-1. **Modul A, Segmentierung und Wahlbeteiligung.** Die synthetischen Wahlberechtigten werden in Segmente gruppiert, und ihre Wahlbeteiligungsneigung wird geschätzt.
-2. **Modul B, Allokation.** Ein gemischt-ganzzahliges lineares Programm verteilt das Budget auf Departamentos, Kanäle und Wochen.
-3. **Modul C, Umfrage-Tracking.** An die acht Umfragen wird eine Tracking-Kurve angepasst, aus der anschließend Szenarien gerechnet werden.
+> [!figure] Abb. 01-04-1 · Drei Module, eine Pipeline
+> Drei Module laufen nacheinander, und jedes endet in einer eigenen Prüfung.
+> ![[01-04-module-flow.de.svg]]
+>
+> caption: Modul A liest den Wählerdatensatz, Modul B seine 2.772 Zeilen und den Budgetrahmen von 6 Mio. USD, Modul C die acht Umfragen und das verifizierte Ergebnis. Die Pipeline erzwingt die Übergabe der Allokation.
+> source: Projekt-Repository, Pipeline und Prüfungen wie unter Daten aufgeführt.
 
-Bei jedem Modul steht, was es belegen kann und was nicht.
+| Modul | Methode | Belegbar | Nicht belegbar |
+|:--|:--|:--|:--|
+| A | K-Means mit sechs Segmenten, dazu eine nach Platt kalibrierte Wahlbeteiligungsneigung (Propensity). Schwellen: Silhouettenkoeffizient und Bootstrap-ARI (Adjusted Rand Index über Bootstrap-Stichproben). Brier-Score (mittlerer quadratischer Fehler der vorhergesagten Wahrscheinlichkeiten) auf einer Holdout-Stichprobe von 15.000 Wahlberechtigten. | Sechs Segmente, die beide Schwellen bestehen. Eine kalibrierte Neigung, bewertet an 15.000 zurückgehaltenen synthetischen Wahlberechtigten. | Dass das Modell generalisiert. |
+| B | Gemischt-ganzzahliges lineares Programm (MILP, Mixed-Integer Linear Program) in PuLP, gelöst mit CBC, über 2.772 Zeilen. Budget, Reichweitenobergrenzen, eine Wechselkursebene und eine Mindestabdeckung von 80 %. Es maximiert einen linearisierten Persuasion-Proxy (eine Ersatzgröße für Überzeugungswirkung) und läuft über FastAPI. | Ein Solver-Vergleich (ein Vergleich von Ergebnissen des Optimierers) auf synthetischer Reichweite: Kontakte einer Allokation gegenüber einer anderen. | Ein historischer Effekt der Kampagne von 2018. |
+| C | Gauß’scher Random Walk (Zufallspfad) mit House Effects (der systematischen Abweichung einzelner Umfrageinstitute), in PyMC an acht Umfragen angepasst. Stratifizierte Monte-Carlo-Szenarien, standardmäßig 10.000 Ziehungen. | Eine Retrodiktion des Rennens durch die acht Umfragen. | Eine Prognose oder Prognosefähigkeit. |
 
-### Modul A: Segmentierung und Wahlbeteiligung
-
-K-Means mit sechs Segmenten auf der synthetischen Population, ergänzt um eine nach Platt kalibrierte Wahlbeteiligungsneigung (Propensity). Die Segmente müssen zwei Schwellen bestehen, den Silhouettenkoeffizienten und den Bootstrap-ARI (Adjusted Rand Index über Bootstrap-Stichproben); die Neigung wird über ihren Brier-Score (den mittleren quadratischen Fehler der vorhergesagten Wahrscheinlichkeiten) auf einer Holdout-Stichprobe (zurückgehaltenen Testmenge) von 15.000 Wahlberechtigten bewertet.
-
-- **Belegbar.** Sechs Segmente, die beide Schwellen bestehen, und eine nach Platt kalibrierte Wahlbeteiligungsneigung, bewertet an 15.000 zurückgehaltenen synthetischen Wahlberechtigten.
-- **Nicht belegbar.** Dass das Modell generalisiert. Es erreicht zudem eine AUC (Fläche unter der ROC-Kurve) von rund 0,89, die bewusst nicht hervorgehoben wird: Die Merkmale der Neigung teilen Kalibrierungsanker mit der Zielgröße, daher misst die AUC, wie gut das Raking wiederhergestellt wurde, nicht, wie gut das Modell generalisiert.
-
-### Modul B: Allokation
-
-Ein gemischt-ganzzahliges lineares Programm (MILP, Mixed-Integer Linear Program), formuliert in PuLP und gelöst mit CBC, über 2.772 Zeilen: 18 Departamentos × 11 Kanäle × 14 Wochen. Es rechnet unter einem Budget, Reichweitenobergrenzen, einer Wechselkursebene und einer Mindestabdeckung von 80 %, maximiert einen linearisierten Persuasion-Proxy (eine Ersatzgröße für Überzeugungswirkung) und wird über eine FastAPI-Anwendung bereitgestellt.
-
-- **Belegbar.** Ein Solver-Vergleich (ein Vergleich von Ergebnissen des Optimierers) auf synthetischer Reichweite: wie viele linearisierte Proxy-Kontakte eine Allokation gegenüber einer anderen erzeugt.
-- **Nicht belegbar.** Ein historischer Effekt der Kampagne von 2018.
-
-### Modul C: Umfrage-Tracking
-
-Ein Gauß’scher Random Walk (Zufallspfad) mit House Effects (der systematischen Abweichung einzelner Umfrageinstitute), in PyMC an die acht Umfragen angepasst, danach stratifizierte Monte-Carlo-Szenarien mit standardmäßig 10.000 Ziehungen.
+Modul A erreicht zudem eine AUC (Fläche unter der ROC-Kurve) von rund 0,89. Das Projekt hebt sie bewusst nicht hervor. Die Merkmale der Neigung teilen Kalibrierungsanker mit der Zielgröße, daher misst die AUC, wie gut das Raking wiederhergestellt wurde, nicht die Generalisierung.
 
 > [!definition] Retrodiktion
 > Eine Anpassung, die auf das bekannte Ergebnis konditioniert. Die Tracking-Kurve ist eine solche: Sie konditioniert auf das verifizierte Ergebnis und kann daher nicht als Prognose gelesen werden.
 
-- **Belegbar.** Eine Retrodiktion des Rennens durch die acht Umfragen.
-- **Nicht belegbar.** Eine Prognose oder Prognosefähigkeit.
-
 ## Ergebnis
 
-Jede zentrale Zahl steht in einer einzigen numerischen Referenztabelle (Source of Truth), die die kontinuierliche Integration (CI) prüft. Die Ergebnisse folgen Modul für Modul.
+| Modul | Maß | Wert | Schwelle oder Vergleichswert |
+|:--|:--|--:|:--|
+| A | Silhouettenkoeffizient | 0,2562 | Schwelle 0,22 |
+| A | Bootstrap-ARI | 0,4304 | Schwelle 0,40 |
+| A | Brier-Score, Wahlbeteiligungsneigung | 0,1185 | Holdout-Stichprobe, 15.000 Wahlberechtigte |
+| B | Linearisierte Proxy-Kontakte | Rund +54,77 % | Gleichmäßige Verteilung über die Departamentos, Budgetrahmen 6 Mio. USD |
+| C | Brier-Score, Vorzeichen des Vorsprungs | 0,31 | Zurückgehaltene Umfragen |
+| C | Zurückgehaltene Umfragen im Intervall zu 80 % | 33,3 % | 6 zurückgehaltene Wellen |
 
-### Segmentierung
+Der Allokationswert ist ein Solver-Vergleich auf synthetischer Reichweite, kein historischer Effekt der Kampagne von 2018.
 
-Beide Schwellen werden bestanden, und die Wahlbeteiligungsneigung erreicht auf der Holdout-Stichprobe von 15.000 Wahlberechtigten einen Brier-Score von 0,1185.
+Die Neuanpassungen halten jede reale Umfragewelle zurück und schließen das Wahlergebnis nachweislich aus. Das ist die einzige echte Out-of-Sample-Prüfung (Prüfung an Daten, die nicht in die Anpassung eingehen), ungeschönt berichtet.
 
-| Maß | Wert | Schwelle |
-|:--|--:|--:|
-| Silhouettenkoeffizient | 0,2562 | 0,22 |
-| Bootstrap-ARI | 0,4304 | 0,40 |
-
-### Allokation
-
-Bei einem Budgetrahmen von 6 Mio. USD erzeugt das MILP rund 54,77 % mehr linearisierte Proxy-Kontakte als eine über die Departamentos gleichmäßige Verteilung. Das ist ein Solver-Vergleich auf synthetischer Reichweite, kein historischer Effekt der Kampagne von 2018.
-
-### Tracking
-
-Die einzige echte Out-of-Sample-Prüfung (Prüfung an Daten, die nicht in die Anpassung eingehen) wird ungeschönt berichtet. Wird der Tracker mit jeweils einer zurückgehaltenen realen Umfragewelle neu angepasst und das Wahlergebnis nachweislich ausgeschlossen, erfasste das Band zu 95 % die zurückgehaltene Umfrage in 3 von 6 getesteten Wellen, bei einem Brier-Score von 0,31 für das Vorzeichen des Vorsprungs.
-
-> [!bars] Abb. 01-04-1 · Out-of-Sample-Prüfung
-> Das Band zu 95 % erfasste die zurückgehaltene Umfrage in 3 von 6 Wellen.
-> - Getestet — 6
-> - Erfasst — 3
+> [!figure] Abb. 01-04-2 · Zurückgehaltene Umfragen gegenüber dem Band zu 95 %
+> Das Band zu 95 % erfasste 3 von 6 zurückgehaltenen Umfragen. Ein kalibriertes Band würde etwa 6 erfassen.
+> ![[01-04-wave-intervals.de.svg]]
 >
-> scale: 0–6
-> caption: Anzahl realer Umfragewellen auf einer Skala von 0–6, jede Welle einzeln zurückgehalten, bei ausgeschlossenem Wahlergebnis; n = 6 getestete Wellen.
-> source: Neuanpassungen von Modul C, Projekt-Repository.
+> caption: Beobachteter Abstand jeder realen Umfragewelle in Prozentpunkten, gegenüber dem Band zu 95 % einer Neuanpassung. Diese Neuanpassung hält die Welle zurück und schließt das Wahlergebnis aus. n = 6 Wellen. Verfehlungen sind in der Akzentfarbe gezeichnet. Acht Wellen ergeben 6 Holdouts bei `min_train_size=2`, und sechs Wellen sind wenig. Der eingecheckte Bericht entstand mit `MC_FAST=1` und empfiehlt einen Neulauf ohne diese Option für Stichproben in Veröffentlichungsqualität. Das ist nicht erfolgt.
+> source: Projekt-Repository, reports/module_c/walk_forward_loo_report.md.
 
 Acht Umfragen sind bei Weitem zu wenige, um Prognosefähigkeit zu beanspruchen, und das Projekt beansprucht sie nicht.
 
-> [!quote] Ergebnis · Solver-Vergleich in Modul B, Neuanpassungen in Modul C
-> Die drei Module laufen durchgängig; der Allokationsgewinn von rund 54,77 % ist ein Solver-Vergleich auf synthetischer Reichweite, und das Band des Trackers zu 95 % erfasste die zurückgehaltene Umfrage in 3 von 6 getesteten Wellen.
-
 ## Grenzen
 
-Das [Datenregister des Repositorys](https://github.com/RafaelBraga-Kribitz/decision-analytics-reconstruction/blob/6a5d2cef1216f43572d073e8abfab57329daff85/README.md) kennzeichnet Wechselkurs, Wechselkursspanne, Kanalkosten je Einheit und Bevölkerungszahlen der Departamentos als manuell gesetzte, noch nicht verifizierte Eingaben. Der Gewinn von Modul B ist ein Solver-Vergleich unter diesen Annahmen.
-
-Was diese Arbeit nicht belegt:
-
+- **Manuell gesetzte Eingaben.** Das [Datenregister des Repositorys](https://github.com/RafaelBraga-Kribitz/decision-analytics-reconstruction/blob/6a5d2cef1216f43572d073e8abfab57329daff85/README.md) kennzeichnet Wechselkurs, Wechselkursspanne, Kanalkosten je Einheit und Bevölkerungszahlen der Departamentos als manuell gesetzte, noch nicht verifizierte Eingaben. Der Gewinn von Modul B ist ein Solver-Vergleich unter diesen Annahmen.
 - **Kausaler Effekt.** Ein Vergleich mit und ohne Analytik lässt sich hier nicht verifizieren.
 - **Individuelles Verhalten.** Die aggregierte Kalibrierung synthetischer Wahlberechtigter bedeutet nicht, dass reales Verhalten wiederhergestellt wurde.
 - **Kampagnenökonomie.** Modul B optimiert linearisierte Kontakte, nicht die geprüfte Buchhaltung der Kampagne 2018 oder angepasste Wirkungskurven (Response Curves).
-- **Voller Maßstab.** Die Pipeline rechnet mit 50.000 Wahlberechtigten über 14 Wochen; das vollständige Wählerverzeichnis mit 4,26 Mio. Personen ist eine Designreferenz.
+- **Voller Maßstab.** Die Pipeline rechnet mit 50.000 Wahlberechtigten über 14 Wochen. Das vollständige Wählerverzeichnis mit 4,26 Mio. Personen ist eine Designreferenz.
+- **Produktiver Einsatz.** Dies ist eine Portfolio-Rekonstruktion, kein produktives Kampagnensystem.
 
 ## Entscheidung
 
-Jedes Modul wird nur so weit berichtet, wie seine eigene Prüfung reicht: die Segmente als Anpassung an synthetische Wahlberechtigte, der Allokationsgewinn als Solver-Vergleich auf synthetischer Reichweite und die Tracking-Kurve als Retrodiktion. Die Rekonstruktion behauptet nicht, dass Analytik den amtlichen Stimmenvorsprung verursacht hat. Das öffentliche Ergebnis ist der Anker; zu zeigen, was das Modell stützen kann und was nicht, ist der Zweck der Arbeit.
-
-Abgeschlossen: Die drei Module laufen durchgängig. Es ist eine Portfolio-Rekonstruktion, kein produktives Kampagnensystem. Das Repository enthält den Code, die Fallstudie und die Validierungsprüfungen (Gates).
+Jedes Modul wird nur so weit berichtet, wie seine eigene Prüfung reicht. Das öffentliche Ergebnis ist der Anker, und zu zeigen, was das Modell stützen kann und was nicht, ist der Zweck der Arbeit.
 
 ## Entstehung
 

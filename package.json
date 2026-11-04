@@ -20,7 +20,8 @@
     "assets": "node scripts/assets/build-assets.mjs",
     "vault:check": "node scripts/vault/check.mjs",
     "activity": "node scripts/activity/snapshot.mjs",
-    "vault:sync": "node scripts/vault/sync-obsidian.mjs"
+    "vault:sync": "node scripts/vault/sync-obsidian.mjs",
+    "figures": "node scripts/figures/build.mjs"
   },
   "dependencies": {
     "@astrojs/check": "0.9.11",
