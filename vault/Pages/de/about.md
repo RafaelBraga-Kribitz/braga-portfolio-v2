@@ -47,7 +47,7 @@ Die Marketinglaufbahn steuert die fachliche Hälfte der Arbeit bei: das Wissen, 
 
 ## Kontakt
 
-Offen für Rollen als Marketing Data Analyst – und für eine zweite Meinung zu schwierigen Messproblemen.
+Offen für Rollen als Data Analyst und Applied Data Scientist, mit Marketing- und Kundendaten als Fachgebiet – und für eine zweite Meinung zu schwierigen Messproblemen.
 
 > [!bookmark] Anderswo
 > [GitHub](https://github.com/RafaelBraga-Kribitz) — github.com/RafaelBraga-Kribitz

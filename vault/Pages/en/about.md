@@ -47,7 +47,7 @@ What the marketing career adds is the domain half of the job: knowing how campai
 
 ## Contact
 
-Open to Marketing Data Analyst roles – and to second opinions on hard measurement problems.
+Open to Data Analyst and applied Data Scientist roles, with marketing and customer data as the domain – and to second opinions on hard measurement problems.
 
 > [!bookmark] Elsewhere
 > [GitHub](https://github.com/RafaelBraga-Kribitz) — github.com/RafaelBraga-Kribitz
