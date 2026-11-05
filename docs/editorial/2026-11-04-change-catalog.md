@@ -211,6 +211,14 @@ Rules:
 - **Depends on:** nothing. It only changes the strings `link.tableau` in `src/lib/i18n.ts`. It reads best with DC-22, whose row 3 it shortens.
 - **After removal:** the label reads "Tableau Public" again, and row 3 takes two rows at 390 px again.
 
+### DC-24 Footer columns at 768 to 857 px
+
+- **Visitor sees:** in English, from 768 to 857 px width, the first footer column is wider than the other four (22 px at 768, none at 857). "Keyboard shortcuts" stays on one line; before, it wrapped to two lines and the footer was 401 px high instead of 383 px. German and widths from 858 px do not change. The trade-off: in this range the five columns are not equal. The first and last columns still start and end on the page grid's outer lines. Owner approval of 5 Nov 2026; decision D-064.
+- **Look at:** `/en/` at 768 px, 800 px and 857 px.
+- **Remove:** `--grep='^\[DC-24\]'`
+- **Depends on:** nothing.
+- **After removal:** "Keyboard shortcuts" wraps to two lines from 768 to 857 px in English.
+
 ## Links between changes
 
 No change needs another change to work. These pairs read best together:

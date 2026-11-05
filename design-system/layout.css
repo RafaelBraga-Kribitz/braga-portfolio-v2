@@ -265,6 +265,15 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
   .site-footer .site-footer-links a { min-height: 44px; white-space: nowrap; }
   .site-footer .site-footer-bar { margin-top: 0; }   /* the bar's own margin comes later in the file */
 }
+/* 768 to 857 (owner, 5 Nov 2026; D-064): five equal columns are 115 to 133px
+   wide, and "Keyboard shortcuts" (133px) wraps to two lines up to 857 in
+   English. The first column takes the width of its longest link and no less
+   than its equal share; the other four share the rest (at least 110px, so
+   "Barrierefreiheit" at 101px still fits). Both outer lines stay on the page
+   grid. Above 857 the equal share is wide enough and nothing changes. */
+@media (min-width: 768px) and (max-width: 857px) {
+  .site-footer > .grid { grid-template-columns: minmax(max-content, 1fr) repeat(4, minmax(0, 1fr)); }
+}
 .site-footer-bar {
   margin-top: 48px; border-top: var(--rule); padding-top: 24px;
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px;

@@ -154,10 +154,19 @@ has the four doors at every width), Home (the wordmark), Deutsch / English
 keyboard). Contact stays because the header drops its Contact link below
 327px (D-046), so the footer is the only route to it. Link rows stay 44px
 with `white-space: nowrap` (D-045 as amended in D-063; gate G-05 unchanged).
-From 768 the footer is as before: five columns, all links. CSS only
+From 768 the footer keeps five columns and all links (see the 768 to 857px
+rule below). CSS only
 (`layout.css` section 3); the markup is unchanged, so the rules pick the
 links by position (group 1 link 2, groups 2, 4, 5) and need a look if the
 groups or their order change. Change catalog entry `[DC-22]`.
+
+At 768 to 857px (`[DC-24]`) the English "Keyboard shortcuts" (133px) wrapped
+to two lines in a column of 115 to 133px. In that range the first column now
+takes the width of its longest link and no less than its equal share, and the
+other four share the rest (110px or more; the longest German link needs 101px).
+The trade-off: the first column is up to 22px wider than the others at 768, and
+the two outer lines stay on the page grid. From 858px and in German nothing
+changes; at 1280 the footer is identical.
 
 ## 3. The system outside the site
 
