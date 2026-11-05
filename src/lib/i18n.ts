@@ -48,7 +48,7 @@ const en = {
   'link.github': 'GitHub',
   'link.linkedin': 'LinkedIn',
   'link.kaggle': 'Kaggle',
-  'link.tableau': 'Tableau Public',
+  'link.tableau': 'Tableau',
   // the colophon's third line (Site specimen s01, "PRIVATE REVIEW · COPY
   // AWAITING APPROVAL · 2026"), stating the status of this build; the
   // year follows it. Change it when the owner approves the copy.
@@ -226,7 +226,7 @@ const de: Record<ChromeKey, string> = {
   'link.github': 'GitHub',
   'link.linkedin': 'LinkedIn',
   'link.kaggle': 'Kaggle',
-  'link.tableau': 'Tableau Public',
+  'link.tableau': 'Tableau',
   'status.complete': 'Abgeschlossen',
   'status.functional': 'Funktionsfähig',
   'status.under-revision': 'In Überarbeitung',

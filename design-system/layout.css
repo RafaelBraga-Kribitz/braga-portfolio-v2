@@ -239,7 +239,8 @@ button.door { font: 400 17px / 1 var(--font-body); padding: 0; border: 0; backgr
 .site-footer-group a { font-size: var(--t-small); line-height: 1.4; color: var(--ink); text-decoration: none; gap: 6px; }   /* gap: the space before ↗ in a flex link */
 /* below 768 the footer is reduced (owner, 5 Nov 2026: the ledger of the same
    day still filled most of a phone screen; D-064). Three rows and no labels
-   (each nav keeps its aria-label): Contact + Browse, Legal, Elsewhere.
+   (each nav keeps its aria-label): Contact + Browse, Legal, Elsewhere (the
+   last wraps to a second row below about 348px).
    Hidden with display:none, so out of the tab order too:
    - Index: the header carries the four doors at every width.
    - Home: the wordmark in the header is the home link.

@@ -144,7 +144,9 @@ The owner asked on 5 Nov 2026 for a more elegant mobile footer. A ledger
 tall and chose a reduced footer. Below 768 the footer shows three rows and no
 group labels (each nav keeps its aria-label): Contact with Tags, Sitemap and
 RSS; then Impressum, Privacy and Accessibility; then GitHub, LinkedIn, Kaggle
-and Tableau Public; then the bar. One hairline opens Legal and one opens
+and Tableau (the label was "Tableau Public" until the owner shortened it on
+5 Nov 2026, `[DC-23]`; Elsewhere then fits one row from 348px up and wraps
+to two rows below that); then the bar. One hairline opens Legal and one opens
 Elsewhere; the bar's rule closes the list. Hidden with `display:none` (out
 of the tab order and the accessibility tree): the Index group (the header
 has the four doors at every width), Home (the wordmark), Deutsch / English

@@ -197,11 +197,19 @@ Rules:
 
 ### DC-22 Reduced mobile footer
 
-- **Visitor sees:** on a phone (below 768 px) the footer has three rows and no group labels. Row 1: Contact, Tags, Sitemap, RSS. Row 2: Impressum, Privacy, Accessibility. Row 3: GitHub, LinkedIn, Kaggle, Tableau Public. Then the BRAGA bar. These links are hidden on a phone: the Index group (the header has the doors), Home (the header wordmark), Deutsch / English (the header's language link) and Keyboard shortcuts (a phone has no keyboard). Contact stays, because the header hides its Contact link below 327 px. Link rows stay 44 px high. From 768 px the footer does not change. Owner request of 5 Nov 2026; decision D-064.
+- **Visitor sees:** on a phone (below 768 px) the footer has three rows and no group labels. Row 1: Contact, Tags, Sitemap, RSS. Row 2: Impressum, Privacy, Accessibility. Row 3: GitHub, LinkedIn, Kaggle, Tableau (the label was "Tableau Public" before DC-23; row 3 wraps to two rows below 348 px, a measurement with the current fonts). Then the BRAGA bar. These links are hidden on a phone: the Index group (the header has the doors), Home (the header wordmark), Deutsch / English (the header's language link) and Keyboard shortcuts (a phone has no keyboard). Contact stays, because the header hides its Contact link below 327 px. Link rows stay 44 px high. From 768 px the footer does not change. Owner request of 5 Nov 2026; decision D-064.
 - **Look at:** the footer of any page at 390 px and 320 px width, in English and German.
 - **Remove:** `--grep='^\[DC-22\]'`
 - **Depends on:** nothing to work. It rewrites the CSS lines that DC-16 set, so remove DC-22 before DC-16 if you want both gone; reverting DC-16 alone can conflict.
 - **After removal:** the five labelled groups sit two by two again, as after DC-16.
+
+### DC-23 Footer link "Tableau"
+
+- **Visitor sees:** the footer link to the Tableau Public profile reads "Tableau" with its arrow, in English and German, at every width. The link target does not change. Prose that names the product "Tableau Public" (the warehouse TCO project page) does not change. Owner request of 5 Nov 2026. With this label the four Elsewhere links sit on one row on a phone from 348 px width up; at 320 to 347 px they take two rows.
+- **Look at:** the footer of any page at 390 px, 320 px and 1280 px.
+- **Remove:** `--grep='^\[DC-23\]'`
+- **Depends on:** nothing. It only changes the strings `link.tableau` in `src/lib/i18n.ts`. It reads best with DC-22, whose row 3 it shortens.
+- **After removal:** the label reads "Tableau Public" again, and row 3 takes two rows at 390 px again.
 
 ## Links between changes
 
