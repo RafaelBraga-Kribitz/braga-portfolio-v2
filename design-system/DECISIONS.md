@@ -137,6 +137,44 @@ and is not reverted with a commit. After a removal, add a dated note here.
 - **Title (DC-01 to DC-04).** The role is "Data Analyst"; contact sentences
   name Data Analyst and applied Data Scientist roles (owner, 4 Nov 2026).
 
+### D-064 · Reduced mobile footer · 5 Nov 2026
+
+The owner asked on 5 Nov 2026 for a more elegant mobile footer. A ledger
+(label left, links right) was built the same day; he judged it still too
+tall and chose a reduced footer. Below 768 the footer shows three rows and no
+group labels (each nav keeps its aria-label): Contact with Tags, Sitemap and
+RSS; then Impressum, Privacy and Accessibility; then GitHub, LinkedIn, Kaggle
+and Tableau (the label was "Tableau Public" until the owner shortened it on
+5 Nov 2026, `[DC-23]`; Elsewhere then fits one row from 348px up and wraps
+to two rows below that); then the bar. One hairline opens Legal and one opens
+Elsewhere; the bar's rule closes the list. Hidden with `display:none` (out
+of the tab order and the accessibility tree): the Index group (the header
+has the four doors at every width), Home (the wordmark), Deutsch / English
+(the header's language link) and Keyboard shortcuts (a phone has no
+keyboard). Contact stays because the header drops its Contact link below
+327px (D-046), so the footer is the only route to it. Link rows stay 44px
+with `white-space: nowrap` (D-045 as amended in D-063; gate G-05 unchanged).
+From 768 the footer keeps five columns and all links (see the 768 to 857px
+rule below). CSS only
+(`layout.css` section 3); the markup is unchanged, so the rules pick the
+links by position (group 1 link 2, groups 2, 4, 5) and need a look if the
+groups or their order change. Change catalog entry `[DC-22]`.
+
+At 768 to 857px (`[DC-24]`) the English "Keyboard shortcuts" (133px) wrapped
+to two lines in a column of 115 to 133px. In that range the first column now
+takes the width of its longest link and no less than its equal share, and the
+other four share the rest (110px or more; the longest German link needs 101px).
+The trade-off: the first column is up to 22px wider than the others at 768, and
+the two outer lines stay on the page grid. From 858px and in German nothing
+changes; at 1280 the footer is identical.
+
+Contact is guarded by gate G-18 (`[DC-26]`): on a page with a header contact
+link, some visible link to the same address must exist in every tested
+width, so at 320px the footer's Contact must show. The owner decided on
+5 Nov 2026 to keep `vault/Legal/en/accessibility.md` and its German twin
+as they are. They say that "Keyboard shortcuts" in the footer opens the list;
+below 768 that footer link is hidden (the `?` key still opens it).
+
 ## 3. The system outside the site
 
 Everything published under the owner's name follows the same tokens. Consumers read

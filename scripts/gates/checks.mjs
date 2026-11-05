@@ -6,7 +6,7 @@
 // failing on tests/gates/fixtures/bad/ (see tests/gates/README.md).
 //
 // Three kinds of function:
-//   pageGates(opts)   G-01…G-17. Runs INSIDE the page (page.evaluate), so it
+//   pageGates(opts)   G-01…G-18. Runs INSIDE the page (page.evaluate), so it
 //                     is self-contained: no closure over this module.
 //   pageFacts(html)   runs inside a blank page; parses the raw HTML file with
 //                     DOMParser (no script runs) and returns plain data for
@@ -39,6 +39,7 @@ export const GATES = [
   ['G-15', 'One accent per section'],
   ['G-16', 'Rules open, never close'],
   ['G-17', 'Formulas fit their column'],
+  ['G-18', 'Contact stays reachable'],
   ['L-01', 'Internal links resolve'],
   ['L-02', 'hreflang pairs'],
   ['L-03', 'Scripts policy'],
@@ -62,7 +63,7 @@ export function result(id, offenders, total, noteOk, noteFail, extra) {
 export const skipped = (id, why) => ({ id, name: GATE_NAME[id] || id, status: 'skip', count: 0, total: 0, summary: why, offenders: [] });
 
 /* ================================================================
-   G-01 … G-17 — inside the page. Keep this function self-contained.
+   G-01 … G-18 — inside the page. Keep this function self-contained.
    opts: { foreign: string[] }   third-party requests seen on the wire
    ================================================================ */
 export async function pageGates(opts = {}) {
@@ -507,6 +508,21 @@ export async function pageGates(opts = {}) {
     return `${desc(el)} · ${el.scrollWidth}px in ${el.clientWidth}px${tex ? ` · ${tex}` : ''}`;
   });
   out.push(result('G-17', 'Formulas fit their column', tooWide, formulas.length, `${formulas.length} display formulas, each inside its column`, '%n display formulas are wider than their column'));
+
+  // G-18 · contact stays reachable (owner, 5 Nov 2026; D-064). The header
+  // drops its contact link below 327px (layout.css 2) and the mobile footer
+  // hides most of its links by position (layout.css 3), so some visible
+  // link to the same address must remain. On a page with a header contact
+  // link (.shell-contact): at least one rendered link with its href is
+  // visible in this context. At 320px that can only be the footer's.
+  const hc = doc.querySelector('.shell-contact');
+  const cOff = [];
+  if (hc) {
+    const href = hc.getAttribute('href');
+    const seen = Array.from(doc.querySelectorAll('a')).filter((a) => a.getAttribute('href') === href && visible(a) && !skip(a));
+    if (!seen.length) cOff.push(`no visible link to ${href} · ${desc(hc)} is ${visible(hc) ? 'visible' : 'hidden'} · ${Array.from(doc.querySelectorAll('footer a')).filter((a) => a.getAttribute('href') === href).length} footer link(s) with that href, none visible`);
+  }
+  out.push(result('G-18', 'Contact stays reachable', cOff, hc ? 1 : 0, hc ? 'the contact link is visible (header or footer)' : 'no header contact link on this page, nothing to keep reachable', '%n page lost every visible contact link'));
 
   return { results: out, theme: doc.documentElement.dataset.theme || '', vw, elements: all.length };
 }

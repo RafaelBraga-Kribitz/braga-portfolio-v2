@@ -195,6 +195,46 @@ Rules:
 - **Depends on:** nothing.
 - **After removal:** `npm run test:gates` can fail on `/de/about/` G-15 about once in 1000 runs.
 
+### DC-22 Reduced mobile footer
+
+- **Visitor sees:** on a phone (below 768 px) the footer has three rows and no group labels. Row 1: Contact, Tags, Sitemap, RSS. Row 2: Impressum, Privacy, Accessibility. Row 3: GitHub, LinkedIn, Kaggle, Tableau (the label was "Tableau Public" before DC-23; row 3 wraps to two rows below 348 px, a measurement with the current fonts). Then the BRAGA bar. These links are hidden on a phone: the Index group (the header has the doors), Home (the header wordmark), Deutsch / English (the header's language link) and Keyboard shortcuts (a phone has no keyboard). Contact stays, because the header hides its Contact link below 327 px. Link rows stay 44 px high. From 768 px the footer does not change. Owner request of 5 Nov 2026; decision D-064.
+- **Look at:** the footer of any page at 390 px and 320 px width, in English and German.
+- **Remove:** `--grep='^\[DC-22\]'`
+- **Depends on:** nothing to work. It rewrites the CSS lines that DC-16 set, so remove DC-22 before DC-16 if you want both gone; reverting DC-16 alone can conflict.
+- **After removal:** the five labelled groups sit two by two again, as after DC-16.
+
+### DC-23 Footer link "Tableau"
+
+- **Visitor sees:** the footer link to the Tableau Public profile reads "Tableau" with its arrow, in English and German, at every width. The link target does not change. Prose that names the product "Tableau Public" (the warehouse TCO project page) does not change. Owner request of 5 Nov 2026. With this label the four Elsewhere links sit on one row on a phone from 348 px width up; at 320 to 347 px they take two rows.
+- **Look at:** the footer of any page at 390 px, 320 px and 1280 px.
+- **Remove:** `--grep='^\[DC-23\]'`
+- **Depends on:** nothing. It only changes the strings `link.tableau` in `src/lib/i18n.ts`. It reads best with DC-22, whose row 3 it shortens.
+- **After removal:** the label reads "Tableau Public" again, and row 3 takes two rows at 390 px again.
+
+### DC-24 Footer columns at 768 to 857 px
+
+- **Visitor sees:** in English, from 768 to 857 px width, the first footer column is wider than the other four (22 px at 768, none at 857). "Keyboard shortcuts" stays on one line; before, it wrapped to two lines and the footer was 401 px high instead of 383 px. German and widths from 858 px do not change. The trade-off: in this range the five columns are not equal. The first and last columns still start and end on the page grid's outer lines. Owner approval of 5 Nov 2026; decision D-064.
+- **Look at:** `/en/` at 768 px, 800 px and 857 px.
+- **Remove:** `--grep='^\[DC-24\]'`
+- **Depends on:** nothing.
+- **After removal:** "Keyboard shortcuts" wraps to two lines from 768 to 857 px in English.
+
+### DC-25 Gate server follows symlink stubs
+
+- **Visitor sees:** nothing. This is a test change. On a Windows checkout without symlink rights, git writes the fixtures' two symlinks (`tests/gates/fixtures/tokens.css` and `fonts`) as one-line text files. The gate server now follows such a file. Before, `npm run test:gates:self` saw no tokens and no fonts there and reported 11 mismatches (G-11 and G-12 failing on the clean fixture, and G-03, G-04, G-08, G-15, G-16 not failing on the bad one). On Linux nothing changes.
+- **Look at:** nothing on the site. Run `npm run test:gates:self` and `node --test tests/unit/gates-server.test.mjs`.
+- **Remove:** `--grep='^\[DC-25\]'`
+- **Depends on:** nothing.
+- **After removal:** on a checkout without symlinks, the self-test shows the 11 mismatches again.
+
+### DC-26 Gate G-18: Contact stays reachable
+
+- **Visitor sees:** nothing. This is a test change. New gate G-18: on a page with a header contact link, at least one visible link to the same address must exist in every tested width. At 320 px the header hides its Contact link, so the footer's Contact must be visible there. The gate has a bad fixture (the header link hidden below 327 px, no other link to its address) and an entry in `expect.json`.
+- **Look at:** nothing on the site. Run `npm run test:gates` and `npm run test:gates:self`.
+- **Remove:** `--grep='^\[DC-26\]'`
+- **Depends on:** nothing to work. It guards DC-22.
+- **After removal:** nothing stops a change to the footer from hiding Contact on a phone.
+
 ## Links between changes
 
 No change needs another change to work. These pairs read best together:
