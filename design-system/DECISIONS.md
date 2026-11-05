@@ -168,6 +168,13 @@ The trade-off: the first column is up to 22px wider than the others at 768, and
 the two outer lines stay on the page grid. From 858px and in German nothing
 changes; at 1280 the footer is identical.
 
+Contact is guarded by gate G-18 (`[DC-26]`): on a page with a header contact
+link, some visible link to the same address must exist in every tested
+width, so at 320px the footer's Contact must show. The owner decided on
+5 Nov 2026 to keep `vault/Legal/en/accessibility.md` and its German twin
+as they are. They say that "Keyboard shortcuts" in the footer opens the list;
+below 768 that footer link is hidden (the `?` key still opens it).
+
 ## 3. The system outside the site
 
 Everything published under the owner's name follows the same tokens. Consumers read

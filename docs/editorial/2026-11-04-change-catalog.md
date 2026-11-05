@@ -227,6 +227,14 @@ Rules:
 - **Depends on:** nothing.
 - **After removal:** on a checkout without symlinks, the self-test shows the 11 mismatches again.
 
+### DC-26 Gate G-18: Contact stays reachable
+
+- **Visitor sees:** nothing. This is a test change. New gate G-18: on a page with a header contact link, at least one visible link to the same address must exist in every tested width. At 320 px the header hides its Contact link, so the footer's Contact must be visible there. The gate has a bad fixture (the header link hidden below 327 px, no other link to its address) and an entry in `expect.json`.
+- **Look at:** nothing on the site. Run `npm run test:gates` and `npm run test:gates:self`.
+- **Remove:** `--grep='^\[DC-26\]'`
+- **Depends on:** nothing to work. It guards DC-22.
+- **After removal:** nothing stops a change to the footer from hiding Contact on a phone.
+
 ## Links between changes
 
 No change needs another change to work. These pairs read best together:
