@@ -137,6 +137,26 @@ and is not reverted with a commit. After a removal, add a dated note here.
 - **Title (DC-01 to DC-04).** The role is "Data Analyst"; contact sentences
   name Data Analyst and applied Data Scientist roles (owner, 4 Nov 2026).
 
+### D-064 · Reduced mobile footer · 5 Nov 2026
+
+The owner asked on 5 Nov 2026 for a more elegant mobile footer. A ledger
+(label left, links right) was built the same day; he judged it still too
+tall and chose a reduced footer. Below 768 the footer shows three rows and no
+group labels (each nav keeps its aria-label): Contact with Tags, Sitemap and
+RSS; then Impressum, Privacy and Accessibility; then GitHub, LinkedIn, Kaggle
+and Tableau Public; then the bar. One hairline opens Legal and one opens
+Elsewhere; the bar's rule closes the list. Hidden with `display:none` (out
+of the tab order and the accessibility tree): the Index group (the header
+has the four doors at every width), Home (the wordmark), Deutsch / English
+(the header's language link) and Keyboard shortcuts (a phone has no
+keyboard). Contact stays because the header drops its Contact link below
+327px (D-046), so the footer is the only route to it. Link rows stay 44px
+with `white-space: nowrap` (D-045 as amended in D-063; gate G-05 unchanged).
+From 768 the footer is as before: five columns, all links. CSS only
+(`layout.css` section 3); the markup is unchanged, so the rules pick the
+links by position (group 1 link 2, groups 2, 4, 5) and need a look if the
+groups or their order change. Change catalog entry `[DC-22]`.
+
 ## 3. The system outside the site
 
 Everything published under the owner's name follows the same tokens. Consumers read
