@@ -16,7 +16,10 @@
 //   miss         → 404.html at the root with status 404 (plain text if absent)
 //   query/hash   → ignored; paths are percent-decoded; nothing outside the
 //                  served directory is reachable (symlinks inside it are
-//                  followed, which the fixtures use for /fonts/ and tokens.css)
+//                  followed, which the fixtures use for /fonts/ and tokens.css;
+//                  a Windows checkout without symlink rights holds each symlink
+//                  as a one-line text file naming its target, and that stub is
+//                  followed too)
 //   base         → with { base: '/repo/' } the directory is served under
 //                  /repo/ as GitHub Pages serves a project site; a request
 //                  outside the base is a miss (404.html, status 404)
@@ -26,8 +29,8 @@
 //   node scripts/gates/server.mjs --dir dist [--port 4321] [--base /repo/]
 // ============================================================
 import { createServer } from 'node:http';
-import { createReadStream, statSync } from 'node:fs';
-import { join, resolve, sep, extname } from 'node:path';
+import { createReadStream, readFileSync, statSync } from 'node:fs';
+import { dirname, join, resolve, sep, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const TYPES = {
@@ -63,6 +66,30 @@ export const TYPES = {
 
 const typeOf = (file) => TYPES[extname(file).toLowerCase()] || 'application/octet-stream';
 const statOrNull = (p) => { try { return statSync(p); } catch { return null; } };
+
+/**
+ * Follow git symlinks that a checkout without symlink rights (core.symlinks
+ * false, the Windows default) wrote as plain files: a file of under 256 bytes
+ * holding one line that starts with ./ or ../ is the path of its target,
+ * relative to the file. The gate fixtures link /fonts/ and /tokens.css to the
+ * real design system this way; unfollowed, the self-test sees no fonts and no
+ * tokens. Walks the path part by part, so a stub may stand for a directory.
+ * @param {string} root @param {string} pathname
+ */
+export const followStubs = (root, pathname) => {
+  let cur = root;
+  for (const part of pathname.split('/').filter(Boolean)) {
+    const next = join(cur, part);
+    const st = statOrNull(next);
+    let stub = null;
+    if (st?.isFile() && st.size < 256) {
+      const t = readFileSync(next, 'utf8').trim();
+      if (/^\.{1,2}\//.test(t) && !/[\r\n]/.test(t)) stub = resolve(dirname(next), t);
+    }
+    cur = stub && statOrNull(stub) ? stub : next;
+  }
+  return cur;
+};
 
 /** '' | 'x' | '/x' | '/x/' → '' | '/x' (no trailing slash). @param {string | undefined} base */
 export const basePrefix = (base) => {
@@ -115,9 +142,10 @@ export function serve(dir, { port = 0, host = '127.0.0.1', base = '' } = {}) {
     const pathname = prefix ? requested.slice(prefix.length) || '/' : requested;
     const target = resolve(join(root, pathname));
     if (target !== root && !target.startsWith(root + sep)) return notFound(req, res, pathname);
-    const st = statOrNull(target);
+    const real = followStubs(root, pathname);
+    const st = statOrNull(real);
     if (st?.isDirectory()) {
-      const index = join(target, 'index.html');
+      const index = join(real, 'index.html');
       if (!statOrNull(index)?.isFile()) return notFound(req, res, pathname);
       if (!requested.endsWith('/')) {
         const q = (req.url || '').includes('?') ? (req.url || '').slice((req.url || '').indexOf('?')) : '';
@@ -126,7 +154,7 @@ export function serve(dir, { port = 0, host = '127.0.0.1', base = '' } = {}) {
       }
       return send(req, res, 200, index);
     }
-    if (st?.isFile()) return send(req, res, 200, target);
+    if (st?.isFile()) return send(req, res, 200, real);
     return notFound(req, res, pathname);
   });
 

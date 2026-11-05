@@ -219,6 +219,14 @@ Rules:
 - **Depends on:** nothing.
 - **After removal:** "Keyboard shortcuts" wraps to two lines from 768 to 857 px in English.
 
+### DC-25 Gate server follows symlink stubs
+
+- **Visitor sees:** nothing. This is a test change. On a Windows checkout without symlink rights, git writes the fixtures' two symlinks (`tests/gates/fixtures/tokens.css` and `fonts`) as one-line text files. The gate server now follows such a file. Before, `npm run test:gates:self` saw no tokens and no fonts there and reported 11 mismatches (G-11 and G-12 failing on the clean fixture, and G-03, G-04, G-08, G-15, G-16 not failing on the bad one). On Linux nothing changes.
+- **Look at:** nothing on the site. Run `npm run test:gates:self` and `node --test tests/unit/gates-server.test.mjs`.
+- **Remove:** `--grep='^\[DC-25\]'`
+- **Depends on:** nothing.
+- **After removal:** on a checkout without symlinks, the self-test shows the 11 mismatches again.
+
 ## Links between changes
 
 No change needs another change to work. These pairs read best together:
