@@ -281,8 +281,8 @@ German first?** If English only, items 3.1–3.6 can wait, but 3.7 and 3.8 canno
   the essay close ("Written by Rafael Braga-Kribitz. Questions about this
   essay, or a role where this kind of work fits?", "See the projects"), the
   contact-button names ("Open an email", "Open contact details"), "1 essay".
-  Every German twin needs a native-speaker check. The share-card line in 4.9
-  is now "Applied analytics for marketing and customer decisions."
+  German twins: native-speaker check done on 2026-11-09, no comments.
+  The share-card line in 4.9 is now "Applied analytics for marketing and customer decisions."
 - [ ] **4.17 [Owner] O4: footer "· EUR" and the Tableau link.** Removal is
   recommended; both are unchanged.
 - [ ] **4.18 [Owner] O5: MMM note "Reviewed on 26 Oct 2026"**
