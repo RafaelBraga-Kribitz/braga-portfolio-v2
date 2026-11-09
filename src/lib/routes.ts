@@ -155,13 +155,13 @@ export function absolute(path: string): string {
 
 export interface Alternate { hreflang: 'en' | 'de' | 'x-default'; href: string }
 
-/** hreflang alternates: en, de, and x-default pointing at English. */
+/** hreflang alternates: en, de, and x-default pointing at English; the home pair's x-default is the language chooser at "/". */
 export function alternates(pageId: PageId): Alternate[] {
   const pair = routePair(pageId);
   return [
     { hreflang: 'en', href: absolute(pair.en) },
     { hreflang: 'de', href: absolute(pair.de) },
-    { hreflang: 'x-default', href: absolute(pair.en) },
+    { hreflang: 'x-default', href: absolute(pageId === 'home' ? '/' : pair.en) },
   ];
 }
 
