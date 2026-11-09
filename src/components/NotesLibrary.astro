@@ -26,9 +26,10 @@ const rows = ownRows.length ? ownRows : await notesOf('en');
 const areas = await libraryOf(textLang);
 const catalogue = await tagCatalogue(lang);
 const count = (n: number) => (n === 1 ? t(lang, 'notes.count-one') : t(lang, 'notes.count').replace('{n}', String(n)));
+const meta = t(lang, 'notes.meta').replace('{n}', String(rows.length)).replace('{k}', String(areas.length));
 const prose = t(lang, 'notes.prose').replace('{n}', String(rows.length)).replace('{k}', String(areas.length));
 ---
-<Base lang={lang} page="notes" title={t(lang, 'notes.word')} description={prose} current="02">
+<Base lang={lang} page="notes" title={t(lang, 'notes.word')} description={meta} current="02">
   <section class="section">
     <SectionHeading number={NOTES_CODE} word={t(lang, 'notes.word')} claim={t(lang, 'notes.claim')} prose={prose} link={{ href: route('writing', lang), label: t(lang, 'all-writing') }} as="h1" />
     {areas.length > 0 && (

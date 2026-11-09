@@ -3,6 +3,7 @@ code: "01-01"
 kind: case
 date: "2026-09-16"
 summary: "Das Projekt nutzt fünf öffentliche Jobbörsen und eine getestete Python-Pipeline. Es führt Dubletten zusammen und prüft die Titelregeln an 177 händisch klassifizierten Titeln. Jede Zahl ist bis zur Quelle nachvollziehbar."
+seo_description: "Fünf öffentliche Jobbörsen, eine getestete Python-Pipeline. Dubletten zusammengeführt, Titelregeln an 177 Titeln geprüft, jede Zahl bis zur Quelle belegt."
 lead: "Das Projekt liefert eine Evidenzbasis für Berufsentscheidungen im Datenbereich in Österreich, mit Schwerpunkt Steiermark und Graz. Sie stützt sich auf eine eintägige Momentaufnahme von 720 Kerninseraten für Datenrollen aus fünf öffentlichen Quellen. Dazu kommen das AMS JobBarometer 2020–2025 und die Saisonalität offener Stellen laut Eurostat."
 domain: Arbeitsmarkt
 tags: [ status/complete, arbeitsmarkt, datenpipeline, deskriptive-statistik ]

@@ -8,6 +8,7 @@ tags: [ book-review, marketing-science, measurement, customer-value, decision-an
 lang: en
 slug: from-littles-law-to-marketing-science-review
 seo_title: "Little’s Law and marketing science: review"
+seo_description: "A review of the John Little Festschrift, fifteen chapters on making marketing models managers use, and an opinionated 2027 update to its metrics chapter."
 translationStatus: approved
 publish: true
 ---

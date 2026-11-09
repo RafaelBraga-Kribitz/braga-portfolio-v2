@@ -120,7 +120,8 @@ const fieldKey = (k) => k.trim().toLowerCase().replace(/\s+/g, '-');
 
 /**
  * A plain-text excerpt: the first paragraph of prose that reads as a
- * sentence, about `max` characters, cut at a word. It stands in for a
+ * sentence, at most `max` characters (+ "…"; 154 keeps the meta
+ * description under Google's ~160), cut at a word. It stands in for a
  * missing `summary`, so it is the meta description, the feed item and the
  * line under a related note (website audit, SEO-007). Two kinds of
  * paragraph are passed over when a later one reads better: a fragment
@@ -130,7 +131,7 @@ const fieldKey = (k) => k.trim().toLowerCase().replace(/\s+/g, '-');
  * not part of the sentence. Inline maths reads as text (texText), and only
  * real Markdown emphasis is removed: an "=" or "_" inside maths stays.
  */
-export function excerpt(body, max = 180) {
+export function excerpt(body, max = 154) {
   const texts = proseOnly(body).split(/\n\s*\n/).map((p) => p.trim())
     .filter((p) => p && !/^(#|>|\||- |\* |\d+\. |!\[|<|---|\$\$|[\p{L}\p{N}_ -]+::)/u.test(p))
     .map(plainText).filter(Boolean);

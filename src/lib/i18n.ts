@@ -84,6 +84,7 @@ const en = {
   'work.claim': 'A decision. Its evidence.',
   'work.prose': 'Selected analytical projects, with the question, result and limits kept together.',
   'writing.claim': 'Finished arguments and working notes.',
+  'writing.meta': 'Two registers, kept apart: essays are finished arguments, notes are the working surface, revised in place as the thinking moves.',
   'writing.prose': 'Two registers, deliberately kept apart. Essays are finished arguments\u00A0– a position taken, defended, and closed. Notes are the working surface, revised in place as the thinking moves.',
   // listings
   'all-projects': 'All projects',
@@ -100,6 +101,7 @@ const en = {
   // the notes library (owner, 25 Oct 2026)
   'notes.word': 'Notes',
   'notes.claim': 'A working library of the mathematics behind the analysis.',
+  'notes.meta': '{n} notes in {k} areas, from notation to machine learning. Each takes one formula: what it says, a worked example, and code that runs. Revised in place.',
   'notes.prose': '{n} notes in {k} areas, from notation to machine learning. Each takes one formula: what it says, a small worked example, and code that runs. Revised in place.',
   'notes.areas': 'Areas',
   'notes.all': 'All notes',
@@ -251,6 +253,7 @@ const de: Record<ChromeKey, string> = {
   'work.claim': 'Eine Entscheidung. Ihre Belege.',
   'work.prose': 'Ausgewählte analytische Projekte, bei denen Frage, Ergebnis und Grenzen beisammen bleiben.',
   'writing.claim': 'Fertige Argumente und Arbeitsnotizen.',
+  'writing.meta': 'Zwei Register, bewusst getrennt: Essays sind fertige Argumente, Notizen die Arbeitsfläche, an Ort und Stelle überarbeitet.',
   'writing.prose': 'Zwei Register, bewusst getrennt. Essays sind fertige Argumente\u00A0– eine Position, bezogen, verteidigt und abgeschlossen. Notizen sind die Arbeitsfläche, an Ort und Stelle überarbeitet, während das Denken sich bewegt.',
   'all-projects': 'Alle Projekte',
   'all-n-projects': 'Alle {n} Projekte',
@@ -264,6 +267,7 @@ const de: Record<ChromeKey, string> = {
   'essays.sub': 'Die neuesten zuerst. Der Code neben dem Datum bleibt.',
   'notes.word': 'Notizen',
   'notes.claim': 'Eine Arbeitsbibliothek der Mathematik hinter der Analyse.',
+  'notes.meta': '{n} Notizen in {k} Bereichen, von der Notation bis zum maschinellen Lernen, auf Englisch. Jede behandelt eine Formel, mit Rechenbeispiel und laufendem Code.',
   'notes.prose': '{n} Notizen in {k} Bereichen, von der Notation bis zum maschinellen Lernen, auf Englisch. Jede behandelt eine Formel: was sie aussagt, ein kleines Rechenbeispiel und Code, der läuft. An Ort und Stelle überarbeitet.',
   'notes.areas': 'Bereiche',
   'notes.all': 'Alle Notizen',

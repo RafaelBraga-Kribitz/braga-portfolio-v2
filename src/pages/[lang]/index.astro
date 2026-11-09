@@ -51,6 +51,7 @@ const copy = {
     title: 'Data Analyst',
 
     lead: 'Applied analytics for marketing and customer decisions. Questions about demand, allocation and cost, answered with data and explicit limits.',
+    seo: 'Applied analytics for marketing and customer decisions. Questions about demand, allocation and cost, answered with data and explicit limits.',
 
     titleLines: ['Data', 'Analyst'],
 
@@ -71,6 +72,7 @@ const copy = {
     title: 'Data Analyst',
 
     lead: 'Angewandte Analytik für Marketing- und Kundenentscheidungen. Fragen zu Nachfrage, Allokation und Kosten, beantwortet mit Daten und ausdrücklich genannten Grenzen.',
+    seo: 'Angewandte Analytik für Marketing- und Kundenentscheidungen: Fragen zu Nachfrage, Allokation und Kosten, mit Daten beantwortet und mit klaren Grenzen.',
 
     titleLines: ['Data', 'Analyst'],
 
@@ -110,7 +112,7 @@ const library = (await libraryOf(lang)).length ? await libraryOf(lang) : await l
 const libraryCount = library.reduce((n, a) => n + a.rows.length, 0);
 const allProjects = projects.length ? t(lang, 'all-n-projects').replace('{n}', String(projects.length)) : t(lang, 'all-projects');
 ---
-<Base lang={lang} page="home" title={copy.title} description={copy.lead} structuredData={homeGraph(lang, copy.lead)}>
+<Base lang={lang} page="home" title={copy.title} description={copy.seo} structuredData={homeGraph(lang, copy.lead)}>
   <Cover lang={lang} spec={spec} titleLines={copy.titleLines} lead={copy.lead} draft={isDraftLang(lang)} forward={projects.length > 0 ? { href: '#work', label: t(lang, 'cover.projects').replace('{n}', String(projects.length)) } : undefined} />
 
   <section class="section" id="work">

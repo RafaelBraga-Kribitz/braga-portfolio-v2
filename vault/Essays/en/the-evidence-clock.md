@@ -8,6 +8,7 @@ tags: [ quantitative-growth, b2b-saas, experimentation, survival-analysis ]
 lang: en
 slug: the-evidence-clock
 seo_title: "The evidence has its own clock"
+seo_description: "A reporting period can end before its outcomes have had time to occur. Cohort age, competing outcomes and statistical resolution decide what a result means."
 translationStatus: approved
 publish: true
 ---
