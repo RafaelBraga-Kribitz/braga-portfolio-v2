@@ -109,7 +109,7 @@ const hasMeta = meta.length > 0 || draft;
             'status' in m ? (
               <StatusMark state={m.status} lang={lang} label={m.label} />
             ) : m.href ? (
-              <a href={m.href}>{m.text}{m.external && <Fragment> <span class="glyph" aria-hidden="true">↗</span></Fragment>}</a>
+              <a href={m.href} target={m.external ? "_blank" : undefined} rel={m.external ? "noopener noreferrer" : undefined}>{m.text}{m.external && <Fragment> <span class="glyph" aria-hidden="true">↗</span></Fragment>}</a>
             ) : (
               <span>{m.text}</span>
             ),
@@ -143,7 +143,7 @@ const hasMeta = meta.length > 0 || draft;
           'status' in m ? (
             <StatusMark state={m.status} lang={lang} label={m.label} />
           ) : m.href ? (
-            <a href={m.href}>{m.text}{m.external && <Fragment> <span class="glyph" aria-hidden="true">↗</span></Fragment>}</a>
+            <a href={m.href} target={m.external ? "_blank" : undefined} rel={m.external ? "noopener noreferrer" : undefined}>{m.text}{m.external && <Fragment> <span class="glyph" aria-hidden="true">↗</span></Fragment>}</a>
           ) : (
             <span>{m.text}</span>
           ),
