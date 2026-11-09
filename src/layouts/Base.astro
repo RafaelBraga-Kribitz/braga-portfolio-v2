@@ -82,12 +82,14 @@ interface Props {
   seoTitle?: string;
   seoDescription?: string;
   canonicalUrl?: string;
+  /** Replaces the page's hreflang set (the language chooser at "/", whose x-default is itself). */
+  alternateLinks?: { hreflang: string; href: string }[];
   ogImage?: { src: string; alt: string };
   /** schema.org nodes for the head's JSON-LD graph (src/lib/structured-data.ts). */
   structuredData?: Record<string, unknown>[];
 }
 
-const { lang, page, title: pageTitle, description: pageDescription, current, hasCode = false, hasSearch = false, noindex = false, ogType = 'website', prevDoc, nextDoc, path, twinPath, seoTitle, seoDescription, canonicalUrl, ogImage, structuredData } = Astro.props;
+const { lang, page, title: pageTitle, description: pageDescription, current, hasCode = false, hasSearch = false, noindex = false, ogType = 'website', prevDoc, nextDoc, path, twinPath, seoTitle, seoDescription, canonicalUrl, alternateLinks, ogImage, structuredData } = Astro.props;
 const title = seoTitle ?? pageTitle;
 const description = seoDescription ?? pageDescription;
 // the shortcut panel (owner, 23 Oct 2026): rows of keys and what they do
@@ -109,7 +111,8 @@ const canonical = canonicalUrl ?? absolute(ownPath);
 // an English page would be false.
 const other = otherLang(lang);
 // a page without a twin declares only itself (L-02); a given twin pairs with it
-const alts = page === 'notfound' ? []
+const alts = alternateLinks ? alternateLinks
+  : page === 'notfound' ? []
   : twinPath === null ? [{ hreflang: lang, href: absolute(ownPath) }, { hreflang: 'x-default', href: absolute(ownPath) }]
   : twinPath !== undefined ? [{ hreflang: lang, href: absolute(ownPath) }, { hreflang: other, href: absolute(twinPath) }, { hreflang: 'x-default', href: absolute(lang === 'en' ? ownPath : twinPath) }]
   : alternates(page);
