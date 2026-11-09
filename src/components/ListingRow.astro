@@ -47,13 +47,13 @@ const Wrap = heading ? 'div' : 'span';
 {keyLines.length > 0 ? (
   <div class:list={["listing-row", "lr-linked", register && "lr-register"]}>
     <span class="lr-index lr-code">{code}</span>
-    <a class="lr-title lr-link" href={href} lang={textLang && textLang !== lang ? textLang : undefined}><Main class="lr-title-main">{title}</Main>{sub && <span class="lr-title-sub">{sub}</span>}</a>
+    <a class="lr-title lr-link" href={href} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined} lang={textLang && textLang !== lang ? textLang : undefined}><Main class="lr-title-main">{title}</Main>{sub && <span class="lr-title-sub">{sub}</span>}</a>
     <span class="lr-meta">{meta.map((m) => <span class="lr-mono">{m}</span>)}{status && <StatusMark state={status} lang={lang} />}</span>
     <span class="lr-keys">{keyLines.map((line) => <span class="lr-keys-line">{line.map((k) => <a class="lr-key" href={withBase(tagPath(stackTag(k), lang))}><span>{k}</span></a>)}</span>)}</span>
     <span class="lr-trail lr-year">{trail && <span class="lr-trail-word">{trail} </span>}<span class="lr-arrow" aria-hidden="true">{external ? '↗' : '→'}</span></span>
   </div>
 ) : (
-  <a class:list={["listing-row", register && "lr-register"]} href={href}>
+  <a class:list={["listing-row", register && "lr-register"]} href={href} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined}>
     <span class="lr-index lr-code">{code}</span>
     <Wrap class="lr-title" lang={textLang && textLang !== lang ? textLang : undefined}><Main class="lr-title-main">{title}</Main>{sub && <span class="lr-title-sub">{sub}</span>}</Wrap>
     <span class="lr-meta">{meta.map((m) => <span class="lr-mono">{m}</span>)}{status && <StatusMark state={status} lang={lang} />}</span>

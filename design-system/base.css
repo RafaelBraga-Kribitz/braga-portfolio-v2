@@ -284,3 +284,26 @@ td, th, dd, output, input, .num { font-variant-numeric: var(--num); }
 .doc p { hyphenate-limit-chars: 8 4 4; }
 /* Short numeric references must not inherit prose's emergency wrapping. */
 .text-nowrap { white-space: nowrap; overflow-wrap: normal; hyphens: manual; }
+
+/* ---------- scrollbar (owner, 9 Nov 2026) ----------
+   One quiet scrollbar for the page and for every scroller inside it:
+   a slim track on the canvas, a thumb in --ink-3 that darkens to --ink-2
+   on hover and to the accent while dragged, with a canvas-coloured inset
+   so the thumb reads as a slim square bar (the system has no rounded corners, G-07). Colours are tokens, so light, dark and
+   the theme toggle follow without a second rule. Firefox gets the
+   standard properties; Chromium and Safari the ::-webkit pseudo-elements
+   (the standard properties are left to Firefox so that they do not
+   switch the WebKit ones off). */
+@supports not selector(::-webkit-scrollbar) {
+  * { scrollbar-width: thin; scrollbar-color: var(--ink-3) var(--surface); }
+}
+::-webkit-scrollbar { width: 12px; height: 12px; background: var(--surface); }
+::-webkit-scrollbar-track { background: var(--surface); border-left: 1px solid var(--surface-3); }
+::-webkit-scrollbar-thumb {
+  background: var(--ink-3);
+  border: 3px solid var(--surface);
+  min-height: 48px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--ink-2); }
+::-webkit-scrollbar-thumb:active { background: var(--accent-01); }
+::-webkit-scrollbar-corner { background: var(--surface); }

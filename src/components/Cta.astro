@@ -8,4 +8,4 @@ interface Props {
 
 const { href, label, external = false } = Astro.props;
 ---
-<a class="cta" href={href}>{label}<span class="glyph" aria-hidden="true">{external ? '↗' : '→'}</span></a>
+<a class="cta" href={href} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined}>{label}<span class="glyph" aria-hidden="true">{external ? '↗' : '→'}</span></a>
