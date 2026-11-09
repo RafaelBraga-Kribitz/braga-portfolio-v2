@@ -240,7 +240,7 @@ Rules:
 - **Visitor sees:** nothing on the page. Search results and share cards show a shorter description. Google no longer cuts it.
 - **Look at:** the `<meta name="description">`, `og:description` and `twitter:description` of `/de/`, `/de/writing/`, `/en/writing/`, `/de/notes/`, `/de/tools/confusion-matrix/`, `/en/tools/confusion-matrix/`, `/de/work/austria-data-job-market-intelligence/`, three English essays, and every `/en/notes/*` page.
 - **What changed:** the note excerpt (the fallback description for a note without `summary`) now stops at 154 characters plus an ellipsis (it was 180). New `seo_description` or `seo` fields hold the shorter text for the pages above. The visible text on those pages is the same as before.
-- **Remove:** this change has no commit yet. When it is committed, put `[DC-27]` at the start of the subject and use `--grep='^\[DC-27\]'`.
+- **Remove:** `--grep='^\[DC-27\]'`
 - **After removal:** the old long descriptions return (up to 220 characters).
 
 ## Links between changes
