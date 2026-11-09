@@ -30,7 +30,7 @@ const writing = await writingOf(lang);
 const library = (await libraryOf(lang)).length ? await libraryOf(lang) : await libraryOf('en');
 const libraryCount = library.reduce((n, a) => n + a.rows.length, 0);
 ---
-<Base lang={lang} page="writing" title={t(lang, 'door.writing')} description={t(lang, 'writing.prose')} current="02">
+<Base lang={lang} page="writing" title={t(lang, 'door.writing')} description={t(lang, 'writing.meta')} current="02">
   <section class="section">
     <SectionHeading number="02" word={t(lang, 'door.writing')} claim={t(lang, 'writing.claim')} prose={t(lang, 'writing.prose')} as="h1" />
     {writing.length > 0 && (

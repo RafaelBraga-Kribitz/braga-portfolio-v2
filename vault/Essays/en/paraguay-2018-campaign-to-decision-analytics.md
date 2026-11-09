@@ -8,7 +8,7 @@ tags: [ election-campaigns, decision-analytics, optimisation, measurement, uncer
 lang: en
 slug: paraguay-2018-campaign-to-decision-analytics
 seo_title: "Paraguay 2018: decision analytics"
-seo_description: "What a presidential campaign in Paraguay taught me about resource allocation under uncertainty, and what a reproducible 2026 reconstruction can and cannot prove."
+seo_description: "What a Paraguayan presidential campaign taught me about allocation under uncertainty, and what a reproducible 2026 reconstruction can and cannot prove."
 translationStatus: approved
 publish: true
 ---
