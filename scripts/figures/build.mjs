@@ -2,11 +2,11 @@
 // ============================================================
 // figures — the designed figures of the project pages
 //
-//   npm run figures              writes vault/Attachments/figures/<name>.<lang>.svg
+//   npm run figures              writes website_vault/Attachments/figures/<name>.<lang>.svg
 //   npm run figures -- --check   exits 1 when a file on disk differs from what
 //                                this script draws (tests/unit/figures.test.mjs)
 //
-// A page embeds a figure with the [!figure] callout (vault/_guide/Syntax
+// A page embeds a figure with the [!figure] callout (website_vault/_guide/Syntax
 // reference.md § 5); the build inlines the SVG, so var(--token) follows the
 // light/dark toggle. Every number in a figure comes from the tables below and
 // from nowhere else. Every table has its provenance in the comment above it,
@@ -28,7 +28,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { number, percent, NBSP } from '../../src/lib/format.mjs';
 
 const ROOT = fileURLToPath(new URL('../../', import.meta.url));
-export const OUT_DIR = `${ROOT}vault/Attachments/figures/`;
+export const OUT_DIR = `${ROOT}website_vault/Attachments/figures/`;
 
 /* ---------------------------------------------------------------------------
    DATA. Numbers in figures come from these tables only.
@@ -671,7 +671,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
       mkdirSync(OUT_DIR, { recursive: true });
       for (const [file, svg] of built) writeFileSync(OUT_DIR + file, svg);
       for (const f of readdirSync(OUT_DIR)) if (f.endsWith('.svg') && !built.has(f)) { /* a figure no longer drawn: remove it by hand */ console.warn(`figures: ${f} is not drawn any more; delete it`); }
-      console.log(`figures: wrote ${built.size} files to vault/Attachments/figures/`);
+      console.log(`figures: wrote ${built.size} files to website_vault/Attachments/figures/`);
     }
   } catch (e) { console.error(e.message); process.exit(1); }
 }

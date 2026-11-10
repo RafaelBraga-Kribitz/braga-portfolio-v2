@@ -6,7 +6,9 @@
 //          properties a published note needs, an unknown #status/ tag, two
 //          published notes on one URL, a folder/lang mismatch, an embed of
 //          a file that is not in the vault, a Dataview query that does not
-//          parse, the Obsidian CSS snippets out of date (npm run vault:sync)
+//          parse, the Obsidian CSS snippets out of date (npm run vault:sync),
+//          a note of the site's own copy (Site/) missing or with an empty
+//          property
 //   warn   it works, but not as written: a [[link]] to a note that does
 //          not exist, a skipped heading level, a second # heading
 //   info   worth knowing: links to unpublished notes (plain text on the
@@ -21,13 +23,14 @@ import { STATUS_TAGS, proseOnly, isScheduled } from '../../src/lib/vault/meta.mj
 import { parseQuery } from '../../src/lib/vault/dataview.mjs';
 import { mermaidCached } from '../../src/lib/vault/mermaid.mjs';
 import { SNIPPETS } from './sync-obsidian.mjs';
+import { copyFaults, COPY_FOLDER } from '../../src/lib/vault/copy.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const index = vaultIndex();
 const ACTIVITY = fileURLToPath(new URL('../../src/data/activity.json', import.meta.url));
 const activity = existsSync(ACTIVITY) ? JSON.parse(readFileSync(ACTIVITY, 'utf8')) : { projects: {} };
 const out = [];
-const say = (level, note, line, msg) => out.push({ level, where: `vault/${note?.rel ?? note}${line ? `:${line}` : ''}`, msg });
+const say = (level, note, line, msg) => out.push({ level, where: `website_vault/${note?.rel ?? note}${line ? `:${line}` : ''}`, msg });
 
 /** Line number of an offset in the body, counting the properties block. */
 const lineOf = (note, offset) => {
@@ -37,6 +40,10 @@ const lineOf = (note, offset) => {
 };
 
 for (const e of index.errors) say('error', e.rel, 0, e.message);
+
+// the site's own copy: Site/Identity.md and Site/<lang>/*.md (src/lib/vault/copy.mjs)
+const faults = copyFaults();
+for (const f of faults) say('error', f.rel, 0, f.message);
 
 const ISO = /^\d{4}-\d{2}-\d{2}$/;
 const dateOk = (v) => typeof v === 'string' && ISO.test(v) && !Number.isNaN(new Date(`${v}T00:00:00Z`).getTime());
@@ -66,7 +73,7 @@ for (const note of index.notes) {
   if (note.place.collection === 'projects' && d.code && !/^\d{2}-\d{2}$/.test(String(d.code))) say('error', note, 0, `code "${d.code}" is not like 01-05`);
   if (note.place.collection === 'pages' && !['about', 'system'].includes(d.slug)) say('error', note, 0, `a page's slug is about or system, not ${d.slug}`);
   const key = `${note.url}`;
-  if (seen.has(key)) say('error', note, 0, `same address ${note.url} as vault/${seen.get(key).rel}`);
+  if (seen.has(key)) say('error', note, 0, `same address ${note.url} as website_vault/${seen.get(key).rel}`);
   else seen.set(key, note);
 
   // headings
@@ -115,7 +122,7 @@ for (const note of index.notes) {
 
 // the Obsidian look
 for (const [from, to] of SNIPPETS) {
-  if (!existsSync(root + to) || readFileSync(root + from, 'utf8') !== readFileSync(root + to, 'utf8')) say('error', to.replace(/^vault\//, ''), 0, `differs from ${from}: run npm run vault:sync`);
+  if (!existsSync(root + to) || readFileSync(root + from, 'utf8') !== readFileSync(root + to, 'utf8')) say('error', to.replace(/^website_vault\//, ''), 0, `differs from ${from}: run npm run vault:sync`);
 }
 
 const order = { error: 0, warn: 1, info: 2 };
@@ -123,5 +130,6 @@ out.sort((a, b) => order[a.level] - order[b.level] || a.where.localeCompare(b.wh
 for (const o of out) console.log(`${o.level.padEnd(5)}  ${o.where}  ${o.msg}`);
 const n = (l) => out.filter((o) => o.level === l).length;
 const live = index.notes.filter((x) => x.live).length;
-console.log(`\nvault:check · ${index.notes.length} notes, ${live} published, ${index.attachments.size ? new Set([...index.attachments.values()].map((a) => a.rel)).size : 0} files · ${n('error')} errors, ${n('warn')} warnings, ${n('info')} notes`);
+const copyNotes = index.notes.filter((x) => x.rel.startsWith(`${COPY_FOLDER}/`)).length;
+console.log(`\nvault:check · ${index.notes.length} notes, ${live} published, ${copyNotes} of site copy, ${index.attachments.size ? new Set([...index.attachments.values()].map((a) => a.rel)).size : 0} files · ${n('error')} errors, ${n('warn')} warnings, ${n('info')} notes`);
 process.exit(n('error') ? 1 : 0);

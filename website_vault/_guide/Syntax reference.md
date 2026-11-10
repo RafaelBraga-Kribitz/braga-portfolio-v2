@@ -16,6 +16,7 @@ Markdown pipeline in `astro.config.mjs`.
 | `Notes/{en,de}/` | note of the library, per language | `/<lang>/notes/<slug>/`, listed on `/<lang>/notes/` by its folders |
 | `Pages/{en,de}/` | About (`about.md`) and the kitchen sink (`system.md`) | `/<lang>/about/`, `/<lang>/system/` |
 | `Legal/{en,de}/` | legal page, per language | by `page`: see below |
+| `Site/`, `Site/{en,de}/` | laid-out page (home, indexes, tools, 404) and the identity | never a page itself: its properties are that page's words ([[Start here]]) |
 | `Attachments/` | images, video, audio, files | `/media/…`, only when a published note uses them |
 | `_templates/`, `_guide/`, any `_folder` | nothing: never published | — |
 
@@ -365,7 +366,7 @@ stays a readable callout with the picture embedded.
 - The title and the finding are as in `[!bars]`. The line with the embed
   names one `.svg` file in the vault.
 - **File naming:** `<project code>-<slug>.<lang>.svg` in
-  `vault/Attachments/figures/`, for example `01-01-funnel.en.svg` and
+  `website_vault/Attachments/figures/`, for example `01-01-funnel.en.svg` and
   `01-01-funnel.de.svg`: one file per language. The files are drawn by
   `npm run figures` (`scripts/figures/build.mjs`: the data tables at its top,
   English and German strings, a check that every flow sums). Do not edit a

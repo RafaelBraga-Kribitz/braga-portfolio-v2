@@ -23,6 +23,13 @@ export default function vaultMedia(opts = {}) {
     name: 'vault-media',
     hooks: {
       'astro:server:setup': ({ server }) => {
+        // the site's own copy (website_vault/Site/, src/lib/vault/copy.mjs) is
+        // read at render time, outside Vite's module graph: reload the page
+        // when a note there is saved in Obsidian
+        const copyDir = join(VAULT_DIR, 'Site');
+        server.watcher.add(copyDir);
+        const reload = (file) => { if (normalize(file).startsWith(copyDir)) server.ws.send({ type: 'full-reload' }); };
+        server.watcher.on('change', reload).on('add', reload).on('unlink', reload);
         server.middlewares.use((req, res, next) => {
           const url = decodeURIComponent((req.url ?? '').split('?')[0]);
           const prefix = `${base}/media/`;

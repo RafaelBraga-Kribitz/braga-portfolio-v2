@@ -11,19 +11,18 @@
 //               specimen sets them; one row per project of the language,
 //               by code (the projects collection: title, summary as the
 //               sub line, domain, status).
-//   02 Writing  the claim the Writing index shares (i18n); one sentence of
-//               prose from home.yaml sections[02]; the writing collection.
-//   04 About    claim and prose from home.yaml sections[03], the forward
-//               link to the profile, then one block instead of a row per
-//               About heading: the contact line (home.yaml's Contact
-//               subNode) and the contact pair.
-//   03 Tools    claim and prose from home.yaml sections[04]; the two
-//               benches (src/lib/catalogue.ts, shared with the index).
+//   02 Writing  the claim the Writing index shares; one sentence of prose
+//               (Home.md, writing_prose); the writing collection.
+//   04 About    claim and prose (Home.md), the forward link to the
+//               profile, then one block instead of a row per About
+//               heading: the contact line and the contact pair.
+//   03 Tools    claim and prose (Home.md); the two benches
+//               (src/lib/catalogue.ts, shared with the index).
 //
 // Rows come from src/lib/collections.ts, which the section indexes and the
 // sitemap read too; while a collection is empty its section shows the
-// heading without a listing. Home-only copy lives here; the Work and
-// Writing claims are i18n keys shared with the indexes. Language draft
+// heading without a listing. The copy is the vault's (website_vault/Site/);
+// the Work and Writing claims are shared with the indexes. Language draft
 // marks follow isDraftLang; German was reviewed on 1 Nov 2026.
 import Base from '@/layouts/Base.astro';
 import Cover from '@/components/Cover.astro';
@@ -35,6 +34,7 @@ import { t, formatDate, isDraftLang, type Lang } from '@/lib/i18n';
 import { route, workRoute, writingRoute } from '@/lib/routes';
 import { LANGS, site } from '@/lib/site';
 import { tools } from '@/lib/catalogue';
+import { copyOf } from '@/lib/vault/copy.mjs';
 import { projectsOf, writingOf, writingCode, listIndex, libraryOf, ESSAYS_CODE, NOTES_CODE, HOME_ESSAYS, LISTING_KEYWORDS } from '@/lib/collections';
 import { homeGraph } from '@/lib/structured-data';
 
@@ -44,52 +44,19 @@ export function getStaticPaths() {
 
 const lang = Astro.params.lang as Lang;
 
-// about.contact: home.yaml sections[03].subNodes, the Contact line, with
-// the v2 role (D-001).
+// Every sentence of this page is a property of website_vault/Site/<lang>/
+// Home.md (and Work.md, Writing.md for the claims the indexes share): the
+// page holds no copy of its own (owner, 10 Nov 2026).
+const home = copyOf('Home', lang);
 const copy = {
-  en: {
-    title: 'Data Analyst',
-
-    lead: 'Applied analytics for marketing and customer decisions. Questions about demand, allocation and cost, answered with data and explicit limits.',
-    seo: 'Applied analytics for marketing and customer decisions. Questions about demand, allocation and cost, answered with data and explicit limits.',
-
-    titleLines: ['Data', 'Analyst'],
-
-    writing: {
-      prose: 'Two registers, deliberately kept apart; everything is dated, so nothing reads as more settled than it is.',
-    },
-    about: {
-      claim: 'The work sits where a marketing decision meets the evidence for it.',
-      prose: 'Most of it is measurement that has to survive a budget meeting, with the uncertainty carried through to the decision rather than rounded away.',
-      contact: 'Email is the direct line, and it is answered. Worth writing about: a Data Analyst or applied Data Scientist role, a measurement setup that looks misspecified, or a model whose numbers have stopped agreeing with the business.',
-    },
-    tools: {
-      claim: 'Some arguments are easier to make with a control than with a paragraph.',
-      prose: 'Small, self-contained instruments: nothing to install, no account, and no data leaving the browser.',
-    },
-  },
-  de: {
-    title: 'Data Analyst',
-
-    lead: 'Angewandte Analytik für Marketing- und Kundenentscheidungen. Fragen zu Nachfrage, Allokation und Kosten, beantwortet mit Daten und ausdrücklich genannten Grenzen.',
-    seo: 'Angewandte Analytik für Marketing- und Kundenentscheidungen: Fragen zu Nachfrage, Allokation und Kosten, mit Daten beantwortet und mit klaren Grenzen.',
-
-    titleLines: ['Data', 'Analyst'],
-
-    writing: {
-      prose: 'Zwei Register, bewusst getrennt; alles ist datiert, damit nichts gefestigter wirkt, als es ist.',
-    },
-    about: {
-      claim: 'Die Arbeit liegt dort, wo eine Marketingentscheidung auf ihre Belege trifft.',
-      prose: 'Meist sind es Messungen, die eine Budgetbesprechung überstehen müssen, wobei die Unsicherheit bis zur Entscheidung mitgeführt statt weggerundet wird.',
-      contact: 'E-Mail ist der direkte Weg, und sie wird beantwortet. Anlässe zum Schreiben: eine Rolle als Data Analyst oder Applied Data Scientist, ein Messaufbau, der fehlspezifiziert wirkt, oder ein Modell, dessen Zahlen nicht mehr zum Geschäft passen.',
-    },
-    tools: {
-      claim: 'Manche Argumente lassen sich mit einem Regler leichter führen als mit einem Absatz.',
-      prose: 'Kleine, in sich geschlossene Instrumente: nichts zu installieren, kein Konto, keine Daten, die den Browser verlassen.',
-    },
-  },
-}[lang];
+  title: site.role[lang],
+  lead: home.lead as string,
+  seo: home.seo_description as string,
+  titleLines: home.title_lines as string[],
+  writing: { prose: home.writing_prose as string },
+  about: { claim: home.about_claim as string, prose: home.about_prose as string, contact: home.contact as string },
+  tools: { claim: home.tools_claim as string, prose: home.tools_prose as string },
+};
 
 const projects = await projectsOf(lang);
 const writing = await writingOf(lang);

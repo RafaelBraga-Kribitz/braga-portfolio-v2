@@ -1,8 +1,11 @@
-// Chrome strings, EN and DE. German language and translation parity were
+// Chrome strings, EN and DE: the interface's labels (doors, buttons, table
+// heads, counts, the shortcut panel). Sentences that are content live in
+// the vault, website_vault/Site/ (VAULT_COPY below). German language and translation parity were
 // adversarially reviewed on 1 Nov 2026. Legal, factual and publication
 // approval remain separate. t() throws on a missing key.
 
-import type { Lang } from './site';
+import { site, type Lang } from './site';
+import { copyOf, fillIn } from './vault/copy.mjs';
 import { date } from './format.mjs';
 export type { Lang } from './site';
 
@@ -72,20 +75,8 @@ const en = {
   'cover.n-essays': '{n} essays',
   'cover.n-essays-one': '1 essay',
   'contact.cta': 'Get in touch',
-  // the close of a project page (UX pass, 22 Oct 2026): one primary action
-  'contact.project': 'Questions about this project, or a role where this kind of work fits?',
-  // the close of an essay (DC-12)
-  'contact.essay': 'Written by Rafael Braga-Kribitz. Questions about this essay, or a role where this kind of work fits?',
   'close.projects': 'See the projects',
   'contact.subject': 'About {title}',
-  // section claims shared by the home Index and the section indexes
-  // (Site specimen s03; home.yaml sections[02].leadParagraphs[0] with the
-  // spaced en dash of O-03, NBSP before it)
-  'work.claim': 'A decision. Its evidence.',
-  'work.prose': 'Selected analytical projects, with the question, result and limits kept together.',
-  'writing.claim': 'Finished arguments and working notes.',
-  'writing.meta': 'Two registers, kept apart: essays are finished arguments, notes are the working surface, revised in place as the thinking moves.',
-  'writing.prose': 'Two registers, deliberately kept apart. Essays are finished arguments\u00A0– a position taken, defended, and closed. Notes are the working surface, revised in place as the thinking moves.',
   // listings
   'all-projects': 'All projects',
   'all-n-projects': 'All {n} projects',
@@ -97,12 +88,8 @@ const en = {
   'stack': 'Stack',
   'all-n-essays': 'All {n} essays',
   'all-n-essays-one': '1 essay',
-  'essays.sub': 'Newest first. The code beside the date is permanent.',
   // the notes library (owner, 25 Oct 2026)
   'notes.word': 'Notes',
-  'notes.claim': 'A working library of the mathematics behind the analysis.',
-  'notes.meta': '{n} notes in {k} areas, from notation to machine learning. Each takes one formula: what it says, a worked example, and code that runs. Revised in place.',
-  'notes.prose': '{n} notes in {k} areas, from notation to machine learning. Each takes one formula: what it says, a small worked example, and code that runs. Revised in place.',
   'notes.areas': 'Areas',
   'notes.all': 'All notes',
   'notes.topic': 'Topic',
@@ -201,9 +188,31 @@ const en = {
   'tool.nojs': 'Without JavaScript the default scenario is shown; the controls need JavaScript.',
 } as const;
 
-export type ChromeKey = keyof typeof en;
+type LabelKey = keyof typeof en;
 
-const de: Record<ChromeKey, string> = {
+/**
+ * Copy, not labels: sentences a reader reads as content. They are properties
+ * of the notes in website_vault/Site/<lang>/ (src/lib/vault/copy.mjs) and
+ * are read through t() like any other key, so the pages do not care where
+ * a string lives. Edit them in Obsidian, never here.
+ */
+const VAULT_COPY = {
+  'work.claim': ['Work', 'claim'],
+  'work.prose': ['Work', 'prose'],
+  'contact.project': ['Work', 'contact'],
+  'writing.claim': ['Writing', 'claim'],
+  'writing.prose': ['Writing', 'prose'],
+  'writing.meta': ['Writing', 'seo_description'],
+  'essays.sub': ['Writing', 'essays_note'],
+  'contact.essay': ['Writing', 'contact'],
+  'notes.claim': ['Notes', 'claim'],
+  'notes.prose': ['Notes', 'prose'],
+  'notes.meta': ['Notes', 'seo_description'],
+} as const;
+
+export type ChromeKey = LabelKey | keyof typeof VAULT_COPY;
+
+const de: Record<LabelKey, string> = {
   'door.work': 'Arbeit',
   'door.writing': 'Schreiben',
   'door.about': 'Über',
@@ -246,15 +255,8 @@ const de: Record<ChromeKey, string> = {
   'cover.n-essays': '{n} Essays',
   'cover.n-essays-one': '1 Essay',
   'contact.cta': 'Kontakt aufnehmen',
-  'contact.project': 'Fragen zu diesem Projekt oder eine Rolle, in die diese Art von Arbeit passt?',
-  'contact.essay': 'Geschrieben von Rafael Braga-Kribitz. Fragen zu diesem Essay oder eine Rolle, in die diese Art von Arbeit passt?',
   'close.projects': 'Die Projekte ansehen',
   'contact.subject': 'Zu {title}',
-  'work.claim': 'Eine Entscheidung. Ihre Belege.',
-  'work.prose': 'Ausgewählte analytische Projekte, bei denen Frage, Ergebnis und Grenzen beisammen bleiben.',
-  'writing.claim': 'Fertige Argumente und Arbeitsnotizen.',
-  'writing.meta': 'Zwei Register, bewusst getrennt: Essays sind fertige Argumente, Notizen die Arbeitsfläche, an Ort und Stelle überarbeitet.',
-  'writing.prose': 'Zwei Register, bewusst getrennt. Essays sind fertige Argumente\u00A0– eine Position, bezogen, verteidigt und abgeschlossen. Notizen sind die Arbeitsfläche, an Ort und Stelle überarbeitet, während das Denken sich bewegt.',
   'all-projects': 'Alle Projekte',
   'all-n-projects': 'Alle {n} Projekte',
   'cover.projects': 'Die {n} Projekte ansehen',
@@ -264,11 +266,7 @@ const de: Record<ChromeKey, string> = {
   'stack': 'Stack',
   'all-n-essays': 'Alle {n} Essays',
   'all-n-essays-one': '1 Essay',
-  'essays.sub': 'Die neuesten zuerst. Der Code neben dem Datum bleibt.',
   'notes.word': 'Notizen',
-  'notes.claim': 'Eine Arbeitsbibliothek der Mathematik hinter der Analyse.',
-  'notes.meta': '{n} Notizen in {k} Bereichen, von der Notation bis zum maschinellen Lernen, auf Englisch. Jede behandelt eine Formel, mit Rechenbeispiel und laufendem Code.',
-  'notes.prose': '{n} Notizen in {k} Bereichen, von der Notation bis zum maschinellen Lernen, auf Englisch. Jede behandelt eine Formel: was sie aussagt, ein kleines Rechenbeispiel und Code, der läuft. An Ort und Stelle überarbeitet.',
   'notes.areas': 'Bereiche',
   'notes.all': 'Alle Notizen',
   'notes.topic': 'Thema',
@@ -361,12 +359,16 @@ const de: Record<ChromeKey, string> = {
   'tool.nojs': 'Ohne JavaScript wird das Standardszenario gezeigt; die Regler brauchen JavaScript.',
 };
 
-export const dictionaries: Record<Lang, Record<ChromeKey, string>> = { en, de };
+export const dictionaries: Record<Lang, Record<LabelKey, string>> = { en, de };
 
 /** Chrome string for a language. Throws at build time on a missing key. */
 export function t(lang: Lang, key: ChromeKey): string {
   const dict = dictionaries[lang];
   if (!dict) throw new Error(`i18n: unknown language "${lang}"`);
+  if (key in VAULT_COPY) {
+    const [note, prop] = VAULT_COPY[key as keyof typeof VAULT_COPY];
+    return fillIn(copyOf(note, lang)[prop], { name: site.name });
+  }
   const value = (dict as Record<string, string>)[key];
   if (value === undefined) throw new Error(`i18n: missing key "${key}" for "${lang}"`);
   return value;

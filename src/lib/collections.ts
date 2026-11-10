@@ -6,7 +6,7 @@
 
 import { getCollection, type CollectionEntry } from 'astro:content';
 import type { Lang } from './site';
-import { vaultIndex, resolveAttachment, mediaPath } from './vault/index.mjs';
+import { vaultIndex, resolveAttachment, mediaPath, VAULT_NAME } from './vault/index.mjs';
 import { related } from './vault/related.mjs';
 import { folderTitle, folderTag, folderTagNames } from './vault/folders.mjs';
 import { slugify } from './vault/meta.mjs';
@@ -125,7 +125,7 @@ export async function slugLanguages(collection: 'projects' | 'writing' | 'notes'
 }
 
 /* ---------- the notes library (owner, 25–26 Oct 2026) ----------
-   vault/Notes/<lang>/<area>/<topic>/<subtopic>/<note>.md, imported from the
+   website_vault/Notes/<lang>/<area>/<topic>/<subtopic>/<note>.md, imported from the
    owner's maths vault. On the site the library is flat and tagged, as
    Ghost publishes: one list of every note, 24 a page, each coded by its
    place in it under Writing's second register (02 Writing, 02-02 Notes,
@@ -230,7 +230,7 @@ export const tagPath = (tag: string, lang: Lang) => `/${lang}/tags/${tag.split('
 
 export function vaultExtras(entry: { filePath?: string; data: { tags?: string[]; cover?: string; cover_alt?: string; title: string } }, lang: Lang): VaultExtras {
   const index = vaultIndex();
-  const rel = (entry.filePath ?? '').replace(/^vault\//, '');
+  const rel = (entry.filePath ?? '').replace(`${VAULT_NAME}/`, '');
   const note = index.notes.find((n: { rel: string }) => n.rel === rel);
   let cover: VaultExtras['cover'];
   if (entry.data.cover) {

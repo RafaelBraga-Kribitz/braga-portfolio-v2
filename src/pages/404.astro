@@ -1,6 +1,11 @@
 ---
 import Base from '@/layouts/Base.astro';
 import { route } from '@/lib/routes';
+import { copyOf } from '@/lib/vault/copy.mjs';
+
+// the page's words: website_vault/Site/{en,de}/Not found.md
+const copy = copyOf('Not found', 'en');
+const copyDe = copyOf('Not found', 'de');
 
 const home = route('home', 'en');
 const homeDe = route('home', 'de');
@@ -12,16 +17,16 @@ const observations = [
   [186, 271], [230, 249], [272, 218], [318, 191], [361, 164],
 ];
 ---
-<Base lang="en" page="notfound" title="404 — Out of distribution" description="This page is outside the training distribution. Return to known data." noindex>
+<Base lang="en" page="notfound" title={copy.title} description={copy.seo_description} noindex>
   <article class="notfound" aria-labelledby="nf-title">
     <div class="nf-kicker"><span>ERROR / 404</span><span>OBSERVATION 01 — OUTLIER DETECTED</span></div>
     <div class="nf-layout">
       <header class="nf-copy">
         <p class="nf-number" aria-hidden="true">404.</p>
-        <h1 id="nf-title">Outside the<br />training distribution.</h1>
-        <p class="nf-lead">I couldn't find a page at this address.</p>
-        <p class="nf-explain">The link may be out of date, or the address may contain a typo.</p>
-        <a class="nf-return" href={home}>← <span>Return to known data</span></a>
+        <h1 id="nf-title">{(copy.heading_lines as string[]).map((line, i) => <Fragment>{i > 0 && <br />}{line}</Fragment>)}</h1>
+        <p class="nf-lead">{copy.lead}</p>
+        <p class="nf-explain">{copy.explain}</p>
+        <a class="nf-return" href={home}>← <span>{copy.return_label}</span></a>
       </header>
       <figure class="nf-figure">
         <div class="nf-plot-head"><span>FIG. 404—01</span><span>ANOMALY DETECTION / ILLUSTRATIVE</span></div>
@@ -48,7 +53,7 @@ const observations = [
       </figure>
     </div>
     <div class="nf-bottom"><span>PAGE STATUS / NOT FOUND</span><span>RETURN TO MY PORTFOLIO ABOVE.</span></div>
-    <p class="nf-de" lang="de">Ich konnte unter dieser Adresse keine Seite finden. <a href={homeDe} hreflang="de">Zur deutschen Startseite →</a></p>
+    <p class="nf-de" lang="de">{copyDe.lead} <a href={homeDe} hreflang="de">{copyDe.return_label} →</a></p>
   </article>
 </Base>
 

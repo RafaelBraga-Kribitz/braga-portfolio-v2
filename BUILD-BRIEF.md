@@ -143,7 +143,7 @@ Doherty, Von Restorff, serial position, peak-end, …). The theme toggle stays a
 
 ## 6b. The vault (owner, 23 Oct 2026)
 
-The content is an Obsidian vault, `vault/`, in this repository. Open that folder in Obsidian; push, and the site rebuilds.
+The content is an Obsidian vault, `website_vault/`, in this repository. Open that folder in Obsidian; push, and the site rebuilds.
 
 1. **Site folders**: `Projects/`, `Essays/`, `Notes/`, `Pages/`, `Legal/`, each with `en/` and `de/`. The German twin has the same file name or the same `slug`. Folders starting with `_` (`_templates/`, `_guide/`) and `Attachments/` are never pages.
 2. **A note is public only with `publish: true`** (and not `draft: true` or `#draft`). A future `date` schedules it: the Pages workflow builds daily at 04:43 UTC.
@@ -166,7 +166,7 @@ The content is an Obsidian vault, `vault/`, in this repository. Open that folder
 |---|---|---|
 | A design-system | `design-system/{tokens,base,layout,components,charts,print,obsidian-snippet}.css`, `design-system/README.md`, `src/styles/global.css` (imports in order) | a node script that checks: no hex outside tokens.css, no font-size below 12px, every contract class present, contrast ratios of the token pairs |
 | B chrome | `src/layouts/Base.astro`, `src/components/{Shell,Footer,StatusMark,Listing,ListingRow,SectionHeading,Cover,MetricStrip,EvidenceFigure,DocOpener,DocEnd,Toc,Callout,Cta}.astro`, `src/lib/{i18n,routes,site}.ts`, `public/scripts/theme-toggle.js` is NOT a file: the toggle is inline in Base.astro | `npx astro check`; a temporary `src/pages/zz-smoke.astro` built with `--outDir` into the scratchpad, then deleted |
-| C pipeline | `astro.config.mjs` (markdown block only), `src/lib/remark/*.mjs`, `src/lib/rehype/*.mjs`, `src/content.config.ts`, `src/lib/format.mjs` (+ `format.d.ts` if needed), `tests/unit/format.test.mjs`, `scripts/lint/no-inline-style.mjs`, `public/scripts/code.js`, `vault/_guide/Syntax reference.md` (authoring guide: frontmatter, callout syntax) | `npm run test:unit`, `npm run lint:style`, a temporary markdown fixture page built with `--outDir` into the scratchpad, DOM checked, then deleted |
+| C pipeline | `astro.config.mjs` (markdown block only), `src/lib/remark/*.mjs`, `src/lib/rehype/*.mjs`, `src/content.config.ts`, `src/lib/format.mjs` (+ `format.d.ts` if needed), `tests/unit/format.test.mjs`, `scripts/lint/no-inline-style.mjs`, `public/scripts/code.js`, `website_vault/_guide/Syntax reference.md` (authoring guide: frontmatter, callout syntax) | `npm run test:unit`, `npm run lint:style`, a temporary markdown fixture page built with `--outDir` into the scratchpad, DOM checked, then deleted |
 | D tools | `src/lib/tools/{confusion-matrix,ab-sample-size}.mjs`, `tests/unit/tools.test.mjs`, `src/components/tools/{AbSampleSizeBench,ConfusionMatrixBench}.tsx`, `design-system/bench.css` (bench, segmented, range, button — A does not write these), `src/pages/[lang]/tools/{index,ab-sample-size,confusion-matrix}.astro` | `npm run test:unit`; `npx astro check` on the islands; pages are built in the integration step (Base.astro arrives from B) |
 | E gates | `scripts/gates/{run,checks,server}.mjs`, `tests/gates/README.md`, `tests/gates/fixtures/` (a tiny dist with deliberate violations the runner must catch) | the fixture run: every deliberate violation is reported, the clean page passes |
 

@@ -68,7 +68,7 @@ def check_input_domains(namespace, errors, location):
 def validate(root=ROOT):
     errors = []
     syntax_count = runtime_count = domain_rejections = 0
-    for path in sorted((root / "vault/Notes").rglob("*.md")):
+    for path in sorted((root / "website_vault/Notes").rglob("*.md")):
         source = path.read_text()
         for match in FENCE.finditer(source):
             language, code = match.groups()
@@ -101,7 +101,7 @@ def validate(root=ROOT):
     # Syntax cannot catch a Jacobian assignment accidentally moved outside a loop.
     try:
         import numpy as np
-        path = next((root / "vault/Notes").rglob("jacobian_matrix.md"))
+        path = next((root / "website_vault/Notes").rglob("jacobian_matrix.md"))
         namespaces = []
         for match in FENCE.finditer(path.read_text()):
             if match[1].strip() == "python":

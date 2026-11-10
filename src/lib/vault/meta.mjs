@@ -4,7 +4,7 @@
 // pipeline (src/lib/remark/obsidian.mjs), the vault index and
 // `npm run vault:check`. Tested in tests/unit/vault.test.mjs.
 //
-// The vault is the folder vault/ at the top of the repository (owner,
+// The vault is the folder website_vault/ at the top of the repository (owner,
 // 23 Oct 2026). Its site folders, each split by language:
 //
 //   Projects/{en,de}/…   → /<lang>/work/<slug>/        (collection projects)
@@ -12,6 +12,9 @@
 //   Notes/{en,de}/…      → /<lang>/notes/<slug>/       (notes, the library)
 //   Pages/{en,de}/…      → /<lang>/about/, /<lang>/system/
 //   Legal/{en,de}/…      → the Impressum, privacy and accessibility pages
+//
+//   Site/…               never a page: the copy of the laid-out pages,
+//                        read as properties (copy.mjs)
 //
 // Everything else in the vault (Attachments/, _templates/, _guide/, any
 // private folder) is never a page. A note in a site folder is published

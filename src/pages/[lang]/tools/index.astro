@@ -1,9 +1,8 @@
 ---
 // 03 · Tools index — Site pattern 03 (Index): section heading + listing.
-// Two rows, 03-01 and 03-02 (BUILD-BRIEF §4). The lead keeps the
-// owner's copy from handoff/source-content/content/data/home.yaml
-// (tools.leadParagraphs[0]) with the brief's spaced en dash (O-03,
-// format.dash: NBSP before it so no line starts with the dash).
+// Two rows, 03-01 and 03-02 (BUILD-BRIEF §4). The lead is the owner's
+// copy (Tools.md, prose) with the brief's spaced en dash (O-03: a no-break
+// space before it, written &nbsp;, so no line starts with the dash).
 // Language draft marks follow isDraftLang; German was reviewed on 1 Nov 2026.
 import Base from '@/layouts/Base.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
@@ -13,7 +12,7 @@ import StatusMark from '@/components/StatusMark.astro';
 import { t, isDraftLang, type Lang } from '@/lib/i18n';
 import { route } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
-import { tools, toolsProse } from '@/lib/catalogue';
+import { tools, toolsIndexCopy } from '@/lib/catalogue';
 
 export function getStaticPaths() {
   return LANGS.map((lang) => ({ params: { lang } }));
@@ -22,24 +21,14 @@ export function getStaticPaths() {
 const lang = Astro.params.lang as Lang;
 
 // One <h1> per page (BUILD-BRIEF §6 rule 6): the claim is this page's
-// title. The rows and the prose come from src/lib/catalogue.ts, which the
-// home page's 03 Tools section shares.
-const copy = {
-  en: {
-    title: 'Tools',
-    description: 'Two small instruments: a confusion matrix with a cost per error, and an A/B sample-size bench with an eight-week ceiling.',
-    claim: 'Change an assumption.',
-  },
-  de: {
-    title: 'Werkzeuge',
-    description: 'Zwei kleine Instrumente: eine Konfusionsmatrix mit Kosten je Fehler und einen A/B-Stichprobenrechner mit Acht-Wochen-Grenze.',
-    claim: 'Eine Annahme ändern.',
-  },
-}[lang];
+// title. The words are website_vault/Site/<lang>/Tools.md and the rows the
+// two tool notes beside it (src/lib/catalogue.ts), which the home page's
+// 03 Tools section shares.
+const copy = toolsIndexCopy(lang);
 ---
 <Base lang={lang} page="tools" title={copy.title} description={copy.description} current="03">
   <section class="section">
-    <SectionHeading number="03" word={t(lang, 'door.tools')} claim={copy.claim} prose={toolsProse(lang)} as="h1" />
+    <SectionHeading number="03" word={t(lang, 'door.tools')} claim={copy.claim} prose={copy.prose} as="h1" />
     <Listing head={{ index: t(lang, 'index'), title: t(lang, 'tool'), meta: t(lang, 'discipline-status'), trail: t(lang, 'open') }}>
       {tools(lang).map((row) => (
         <ListingRow code={row.code} title={row.title} sub={row.sub} meta={[row.domain]} status={row.status} titleLevel={2} lang={lang} trail={t(lang, 'open')} href={route(row.page, lang)} />

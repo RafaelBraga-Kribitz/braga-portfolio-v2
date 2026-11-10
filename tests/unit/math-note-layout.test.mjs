@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 // Normalise CRLF: a Windows checkout (core.autocrlf) must test the same text as CI.
-const note = (path) => readFileSync(new URL(`../../vault/Notes/en/${path}`, import.meta.url), 'utf8').replace(/\r\n/g, '\n');
+const note = (path) => readFileSync(new URL(`../../website_vault/Notes/en/${path}`, import.meta.url), 'utf8').replace(/\r\n/g, '\n');
 const graph = note('06_ml_math/network_analysis_graph_theory/graph_foundations_and_the_laplace_matrix/graph_definition.md');
 const schedule = note('04_calculus_optimization/continuous_optimization/advanced_optimizers_stochastic_and_adaptive/learning_rate_schedules.md');
 

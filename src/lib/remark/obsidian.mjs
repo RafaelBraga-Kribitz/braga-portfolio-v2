@@ -1,7 +1,7 @@
 // src/lib/remark/obsidian.mjs — Obsidian's Markdown on the site (owner,
 // 23 Oct 2026). A Sätteri mdast pass that runs first, so the passes after
 // it (callouts, bars) see ordinary links and nodes. The syntax reference
-// is vault/_guide/Syntax reference.md.
+// is website_vault/_guide/Syntax reference.md.
 //
 //   # Title                the note's first H1 is its title: the page
 //                          template sets it as the page's h1, so it is

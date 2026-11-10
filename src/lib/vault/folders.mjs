@@ -1,5 +1,5 @@
 // src/lib/vault/folders.mjs — the notes library's folders as tags (owner,
-// 26 Oct 2026, Ghost style). vault/Notes/<lang>/<area>/<topic>/<subtopic>/
+// 26 Oct 2026, Ghost style). website_vault/Notes/<lang>/<area>/<topic>/<subtopic>/
 // stays the owner's filing system in Obsidian; on the site every folder a
 // note sits in is a tag of that note (its archive page /<lang>/tags/<tag>/
 // lists it), next to the tags it carries itself. Folder names read as
