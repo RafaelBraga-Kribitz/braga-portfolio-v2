@@ -38,11 +38,12 @@ const val = (n, d) => { const i = argv.indexOf(n); return i >= 0 && argv[i + 1] 
 const OUT = resolve(val('--out', join(ROOT, 'public')));
 const CHROMIUM = val('--chromium', process.env.ASSETS_CHROMIUM || '/opt/pw-browsers/chromium');
 
-// Copy that is not in site.ts (src/lib/i18n.ts and the home page cannot be
-// imported outside Vite). Sources, verbatim:
+// The card's line is the first sentence of the home page's lead, read from
+// the vault (website_vault/Site/en/Home.md) like the page reads it.
+const { copyOf } = await import(pathToFileURL(join(ROOT, 'src/lib/vault/copy.mjs')).href);
 const COPY = {
   kicker: '00 / Portfolio',                                      // i18n.ts 'cover.kicker' (en)
-  line: 'Applied analytics for marketing and customer decisions.', // src/pages/[lang]/index.astro, copy.en.lead, first sentence
+  line: String(copyOf('Home', 'en').lead).match(/^.*?[.!?](?=\s|$)/)?.[0] ?? copyOf('Home', 'en').lead,
   evidence: 'Evidence before claims',                             // the card's own foot line (not an i18n key)
 };
 

@@ -26,7 +26,7 @@ import { parse } from 'yaml';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const CACHE = join(root, '.cache/activity');
 const OUT = join(root, 'src/data/activity.json');
-const VAULT = join(root, 'vault/Projects');
+const VAULT = join(root, 'website_vault/Projects');
 const TZ = 'Europe/Vienna';
 const BOTS = /\[bot\]$|^governance-sync-bot$|^github-actions$|^dependabot$/i;
 const offline = process.argv.includes('--offline');

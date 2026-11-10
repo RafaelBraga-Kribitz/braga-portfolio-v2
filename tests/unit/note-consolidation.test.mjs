@@ -13,7 +13,7 @@ const merged = [
 ];
 
 test('consolidated note names resolve to published canonical notes', () => {
-  const index = vaultIndex(`${root}vault/`);
+  const index = vaultIndex(`${root}website_vault/`);
   for (const [oldName, canonical] of merged) {
     const result = resolveNote(index, oldName, { lang: 'en' });
     assert.ok(result?.live, `${oldName} must resolve to a published note`);

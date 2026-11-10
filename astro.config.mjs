@@ -5,7 +5,7 @@ import mdx from '@astrojs/mdx';
 // markdown pipeline (content-pipeline step) ----------------------------------
 // Astro 7 renders Markdown with Sätteri; remark/rehype (unified) plugins only
 // run on @astrojs/markdown-remark, which is not installed. The plugins below
-// are Sätteri mdast/hast visitors doing the same jobs (vault/_guide/Syntax reference.md).
+// are Sätteri mdast/hast visitors doing the same jobs (website_vault/_guide/Syntax reference.md).
 import { satteri } from '@astrojs/markdown-satteri';
 import nowrap from './src/lib/remark/nowrap.mjs';
 import mathGuard from './src/lib/remark/math.mjs';

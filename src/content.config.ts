@@ -1,17 +1,21 @@
 // src/content.config.ts — the four content collections (Astro 7 content
-// layer), read from the Obsidian vault at vault/ (owner, 23 Oct 2026).
+// layer), read from the Obsidian vault at website_vault/ (owner, 23 Oct 2026).
 // The vault conventions (folders, the H1 as title, #status/… tags,
 // `publish: true`) live in src/lib/vault/meta.mjs; the writing guide is
-// vault/_guide/Start here.md.
+// website_vault/_guide/Start here.md.
 //
-//   projects  vault/Projects/{en,de}/**.md         → /<lang>/work/<slug>/
-//   writing   vault/Essays/{en,de}/**.md           → /<lang>/writing/<slug>/
-//   notes     vault/Notes/{en,de}/**.md            → /<lang>/notes/<slug>/, the
+//   projects  website_vault/Projects/{en,de}/**.md         → /<lang>/work/<slug>/
+//   writing   website_vault/Essays/{en,de}/**.md           → /<lang>/writing/<slug>/
+//   notes     website_vault/Notes/{en,de}/**.md            → /<lang>/notes/<slug>/, the
 //             library, indexed by its folder tree (owner, 25 Oct 2026)
-//   pages     vault/Pages/{en,de}/*.md             → about, system
-//   legal     vault/Legal/{en,de}/*.md             → impressum, privacy,
+//   pages     website_vault/Pages/{en,de}/*.md             → about, system
+//   legal     website_vault/Legal/{en,de}/*.md             → impressum, privacy,
 //             accessibility, by the `page` key (the German URLs differ:
 //             /de/datenschutz/, /de/barrierefreiheit/; src/lib/routes.ts)
+//
+// The pages that are not documents (home, indexes, tools, 404) take their
+// words from website_vault/Site/ through src/lib/vault/copy.mjs, not from a
+// collection.
 //
 // A note becomes an entry only with `publish: true` (and not dated in the
 // future: scheduled publishing). Everything else in a site folder stays in

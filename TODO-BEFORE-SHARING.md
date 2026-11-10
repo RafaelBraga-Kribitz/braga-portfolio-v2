@@ -82,7 +82,7 @@ Tick the box when the item is done *and* verified the way the item says.
 
 ## 2. Blockers: the legal pages (live on the site with drafting notes)
 
-All six pages (`vault/Legal/{de,en}/{impressum,privacy,accessibility}.md`) are
+All six pages (`website_vault/Legal/{de,en}/{impressum,privacy,accessibility}.md`) are
 published and still carry text written for *before* publication. Edit the German
 originals first, then the English translations, then set
 `translationStatus: approved` on both.
@@ -139,15 +139,15 @@ German first?** If English only, items 3.1–3.6 can wait, but 3.7 and 3.8 canno
 - [ ] **3.1 [Owner] German editing pass on the content**, one file at a time,
   side by side with the English (meaning and every figure identical; Austrian
   forms; „ “ quotes; de-AT numbers and dates; compounds that break at 320px):
-  - [ ] `vault/Projects/de/austria-data-job-market-intelligence.md`
-  - [ ] `vault/Projects/de/decision-analytics-reconstruction.md`
-  - [ ] `vault/Projects/de/austrian-mmm-budget-optimizer.md`
-  - [ ] `vault/Projects/de/energy-procurement-risk-analyzer.md`
-  - [ ] `vault/Projects/de/warehouse-humanoid-tco.md`
-  - [ ] `vault/Essays/de/ai-prospecting-vendor-3x-lift.md`
-  - [ ] `vault/Pages/de/about.md` (also decide "Über" versus "Über mich" as the h1)
-  - [ ] `vault/Pages/de/system.md` (noindex, lower priority)
-  - [ ] the three `vault/Legal/de/*.md` (with section 2)
+  - [ ] `website_vault/Projects/de/austria-data-job-market-intelligence.md`
+  - [ ] `website_vault/Projects/de/decision-analytics-reconstruction.md`
+  - [ ] `website_vault/Projects/de/austrian-mmm-budget-optimizer.md`
+  - [ ] `website_vault/Projects/de/energy-procurement-risk-analyzer.md`
+  - [ ] `website_vault/Projects/de/warehouse-humanoid-tco.md`
+  - [ ] `website_vault/Essays/de/ai-prospecting-vendor-3x-lift.md`
+  - [ ] `website_vault/Pages/de/about.md` (also decide "Über" versus "Über mich" as the h1)
+  - [ ] `website_vault/Pages/de/system.md` (noindex, lower priority)
+  - [ ] the three `website_vault/Legal/de/*.md` (with section 2)
 - [ ] **3.2 [Owner] German chrome strings:** the `de` block of
   `src/lib/i18n.ts` (about 140 keys: doors, footer groups "Index / Seite /
   Anderswo / Sonstiges", status words, the keys dialog, notes and tags
@@ -191,7 +191,7 @@ German first?** If English only, items 3.1–3.6 can wait, but 3.7 and 3.8 canno
   timeline. Supply dated rows (ventures, the 2018 campaign, education; the
   source `handoff/ds-update/cv/braga-cv.tex` exists) **or** a CV download via
   a `[!download]` callout (the `.file-split` pattern, D-057) **or** retitle
-  the block "Recent role". Edit `vault/Pages/en/about.md` and the DE twin.
+  the block "Recent role". Edit `website_vault/Pages/en/about.md` and the DE twin.
 - [ ] **4.2 [Owner] Confirm the BioSynCare dates 2023–2026 and the past tense**
   ("I worked as …"). The end year comes from a note of 6 Oct 2026, not from
   any source file.
@@ -203,9 +203,9 @@ German first?** If English only, items 3.1–3.6 can wait, but 3.7 and 3.8 canno
   audit (MA-03) notes these match the TSJE *preliminary* count, while the
   final tally of valid votes is usually cited as 48.96% v 45.08%. Check the
   TSJE source once, then use one label everywhere ("preliminary count (TSJE)"
-  or the final figures). Files: `vault/Pages/{en,de}/about.md`,
-  `vault/Projects/{en,de}/decision-analytics-reconstruction.md`,
-  `vault/Essays/en/paraguay-2018-campaign-to-decision-analytics.md`.
+  or the final figures). Files: `website_vault/Pages/{en,de}/about.md`,
+  `website_vault/Projects/{en,de}/decision-analytics-reconstruction.md`,
+  `website_vault/Essays/en/paraguay-2018-campaign-to-decision-analytics.md`.
   Execution update: official-yearbook inspection resolves the historical
   denominator distinction; see `docs/audit/2026-11-01-election-denominators.md`.
   About/project copy and the essay chart now separate the official 95,603-vote
@@ -233,7 +233,7 @@ German first?** If English only, items 3.1–3.6 can wait, but 3.7 and 3.8 canno
 - [ ] **4.7 [Owner] Essay dates: six of seven essays carry `date: 2026-10-30`**
   (the bulk upload date). "Newest first" is then unverifiable and the archive
   reads as one dump. Set the real written dates in `date:`, or add an
-  `updated:`/written field and show it. Files: `vault/Essays/en/*.md`
+  `updated:`/written field and show it. Files: `website_vault/Essays/en/*.md`
   (RSS `pubDate` and JSON-LD `datePublished` follow automatically).
 - [ ] **4.8 [Owner] Tools status:** both benches are listed "Functional"
   (`src/lib/catalogue.ts`). Confirm, or choose "Complete".
@@ -249,7 +249,7 @@ German first?** If English only, items 3.1–3.6 can wait, but 3.7 and 3.8 canno
     where this kind of work fits?" and the mail subject "About {title}"
     (`src/lib/i18n.ts` `contact.*`)
   - [ ] "Copy" / "Copied" / "Use Open" on the contact button (`src/lib/contact.mjs`)
-  - [ ] the kitchen-sink page summaries (`vault/Pages/en/system.md`, noindex)
+  - [ ] the kitchen-sink page summaries (`website_vault/Pages/en/system.md`, noindex)
   - [ ] the Writing index sub line "Newest first. The code beside the date is permanent."
 - [ ] **4.10 [Owner] Metric-strip accents:** MMM spends its accent on "+45%"
   (platform over-credit) rather than the 15.1% gain; Energy (in build) shows
@@ -262,7 +262,7 @@ German first?** If English only, items 3.1–3.6 can wait, but 3.7 and 3.8 canno
   `src/assets/portrait.webp` is yours to publish; add a photographer credit on
   the About page if someone else took it. Check the `alt` text on
   `/en/about/`.
-- [ ] **4.13 [Owner] Book download** (`vault/Attachments/b2b-saas-funnel-book.pdf`
+- [ ] **4.13 [Owner] Book download** (`website_vault/Attachments/b2b-saas-funnel-book.pdf`
   15 MB, `.epub` 5.9 MB, linked from the Quantitative growth Part 4): confirm
   these are the final manuscript edition and that publishing them is intended;
   a 15 MB tap on a phone is a decision in itself.
@@ -270,7 +270,7 @@ German first?** If English only, items 3.1–3.6 can wait, but 3.7 and 3.8 canno
 - [ ] **4.14 [Owner] O1: German wording on About.** The language row reads
   "German (A2 certificate; course in progress)" (DE "Deutsch (A2-Zertifikat;
   Kurs läuft)"). The course reviews A2 first, so "B1 course in progress"
-  would be early. Confirm or change in `vault/Pages/{en,de}/about.md`
+  would be early. Confirm or change in `website_vault/Pages/{en,de}/about.md`
   (change DC-05). The CV file and CV rows stay open (4.1).
 - [ ] **4.15 [Owner] O2: Spark in the toolbox.** Removal is recommended; it is
   unchanged (change DC-06 only reordered the list). Power BI is not added:
@@ -286,7 +286,7 @@ German first?** If English only, items 3.1–3.6 can wait, but 3.7 and 3.8 canno
 - [ ] **4.17 [Owner] O4: footer "· EUR" and the Tableau link.** Removal is
   recommended; both are unchanged.
 - [ ] **4.18 [Owner] O5: MMM note "Reviewed on 26 Oct 2026"**
-  (`vault/Projects/en/austrian-mmm-budget-optimizer.md`) against the 4 Nov
+  (`website_vault/Projects/en/austrian-mmm-budget-optimizer.md`) against the 4 Nov
   report. Decide the text. Items 4.6 and 4.7 stay open.
 
 ## 5. Should fix before sharing: open UX and design items (critique of 1 Nov 2026)
@@ -356,7 +356,7 @@ Each was re-checked against the current tree; "done" items are not listed.
 - [ ] **5.14 [Owner] Formulas are set bold in the accent** (D-048) and inside a
   table read as links. Keep (owner's rule of 29 Oct) or soften in tables only.
 - [ ] **5.15 [Eng] Near-duplicate notes with bad slugs:**
-  `vault/Notes/en/…/arithmetic_n_th_term.md`, `arithmetic_n_th_term_2.md` and
+  `website_vault/Notes/en/…/arithmetic_n_th_term.md`, `arithmetic_n_th_term_2.md` and
   `arithmetic_hmtbcth_term.md` ("hmtbcth" is a garbled title);
   `jacobian_matrix` / `jacobian_matrix_f`; `unemployment_rate` /
   `unemployment_rate_delta_ue`. Merge or retitle so each slug is a real name.
@@ -385,7 +385,7 @@ Each was re-checked against the current tree; "done" items are not listed.
   correction to `design-system/DECISIONS.md` or `HANDOFF.md` §2 and fix the
   BUILD-BRIEF line.
 - [ ] **6.4 [Eng] `docs/superpowers/plans/2026-10-21-portfolio-completion.md`**
-  refers to `src/content/**` (moved to `vault/`) and to decisions since taken.
+  refers to `src/content/**` (moved to `website_vault/`) and to decisions since taken.
   Mark it historical at the top, or delete it.
 - [ ] **6.5 [Eng] `docs/handoff/agent-open-items.md`:** many "Owner" items are
   resolved; add a line at the top naming this file as the current list.

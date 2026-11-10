@@ -34,7 +34,7 @@ npx playwright install chromium
 | `npm run lint` | No inline styles; no hex outside tokens, 12px floor, class contract, contrast table; `tokens.json` in step with `tokens.css` |
 | `npm run test:unit` | Number/date formatting cases, the tool maths and the typed-input parser, with hand-computed references |
 | `npm run test:gates` | Sixteen design gates (one accent per section and rules open, never close among them), links, hreflang, scripts policy and axe on every built page, at six widths in both themes |
-| `npm run vault:check` | Audits the vault: broken links and embeds, missing translations, bad properties, Dataview queries that do not parse |
+| `npm run vault:check` | Audits the vault: broken links and embeds, missing translations, bad properties, Dataview queries that do not parse, and the site's own copy in `Site/` (a missing note, an empty property) |
 | `npm run tokens:export` | Writes `design-system/tokens.json` from `tokens.css` |
 | `npm run vault:sync` | Copies the design-system CSS into the vault's Obsidian snippets |
 | `npm run activity` | Refreshes the project build logs' data (`src/data/activity.json`) from each project repository's git history; a ```` ```buildlog ```` fence in a project note draws it |
@@ -55,13 +55,17 @@ Jacobian reference checks. It does not execute every pre-existing example.
 | Path | Holds |
 |---|---|
 | `design-system/` | The design system of record (v2.1): the stylesheets, `tokens.json` for tools outside the site, and `DECISIONS.md` (what changed since the handoff, and the rules for README banners, diagrams and charts). Start with its README. |
-| `vault/` | The content as an Obsidian vault: projects, essays, notes, pages and legal pages (EN and DE), attachments, templates. Open it in Obsidian; start with `vault/_guide/Start here.md`. Only notes with `publish: true` reach the site. |
+| `website_vault/` | The content as an Obsidian vault: projects, essays, notes, pages and legal pages (EN and DE), attachments, templates. Open it in Obsidian; start with `website_vault/_guide/Start here.md`. Only notes with `publish: true` reach the site. Its `Site/` folder holds the words of the pages that are not notes (home, indexes, tools, 404) and the site identity, as note properties. |
 | `src/pages/` | Routes for both language trees (`/en/`, `/de/`). |
 | `src/components/`, `src/layouts/` | The site patterns (shell, cover, listing, document, evidence figure, bench) and the base layout. |
 | `src/lib/` | Routes, chrome strings (i18n), formatting by language, the Markdown pipeline, tool maths. |
 | `scripts/gates/`, `scripts/lint/` | The gates runner and the lint rules. |
 | `handoff/` | The design handoff as received: decisions, audit, specimens, v2 tokens, source content. Read-only; superseded where `design-system/DECISIONS.md` says otherwise. |
 | `BUILD-BRIEF.md`, `docs/PAGE-BRIEF.md` | The working briefs the build follows. |
+
+## The vault is the content
+
+Every sentence a reader reads comes from `website_vault/`: documents are notes, and the copy of the laid-out pages is the properties of the notes in `website_vault/Site/` (contract: `src/lib/vault/copy.mjs`). `src/` holds templates, styles and interface labels (`src/lib/i18n.ts`), never copy; `tests/unit/site-copy.test.mjs` fails when a page grows a per-language block of sentences. To change what the site says, change the vault. `CLAUDE.md` states the rule for agent sessions.
 
 ## How work flows between the cloud session and this repository
 

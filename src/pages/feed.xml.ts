@@ -7,12 +7,13 @@ import type { APIRoute } from 'astro';
 import { site } from '../lib/site';
 import { writingRoute, route, absolute } from '../lib/routes';
 import { writingOf } from '../lib/collections';
+import { copyOf } from '../lib/vault/copy.mjs';
 
 export const GET: APIRoute = async () => {
   const entries = (await writingOf('en')).sort((a, b) => b.data.date.localeCompare(a.data.date));
   return rss({
     title: `${site.name} · Writing`,
-    description: 'Essays and notes on marketing measurement and decisions.',
+    description: copyOf('Writing', 'en').feed_description,
     site: absolute(route('home', 'en')),
     items: entries.map((e) => ({
       title: e.data.title,

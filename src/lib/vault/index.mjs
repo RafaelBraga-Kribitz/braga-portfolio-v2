@@ -10,7 +10,9 @@ import { join, relative, sep, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readNote, pathOf, baseName, slugify, isScheduled } from './meta.mjs';
 
-export const VAULT_DIR = fileURLToPath(new URL('../../../vault/', import.meta.url));
+/** The vault's folder at the top of the repository: the one place its name is written in code. */
+export const VAULT_NAME = 'website_vault';
+export const VAULT_DIR = fileURLToPath(new URL(`../../../${VAULT_NAME}/`, import.meta.url));
 
 /** File types an embed may point at, by extension. */
 export const MEDIA = {

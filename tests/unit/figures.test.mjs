@@ -104,8 +104,8 @@ describe('figures · generator', () => {
   it('a page heading is the finding of its figure, in both languages', () => {
     const f = findings();
     let checked = 0;
-    for (const lang of ['en', 'de']) for (const file of readdirSync(`${root}vault/Projects/${lang}`)) {
-      const md = readFileSync(`${root}vault/Projects/${lang}/${file}`, 'utf8').replace(/\r\n/g, '\n');
+    for (const lang of ['en', 'de']) for (const file of readdirSync(`${root}website_vault/Projects/${lang}`)) {
+      const md = readFileSync(`${root}website_vault/Projects/${lang}/${file}`, 'utf8').replace(/\r\n/g, '\n');
       for (const m of md.matchAll(/> \[!figure\] [^\n]*\n((?:> [^\n]*\n)*?)> !\[\[([^\]]+\.svg)\]\]/g)) {
         const heading = m[1].replace(/^> /gm, '').replace(/\n/g, ' ').trim().replace(/\u00A0/g, ' ');
         assert.equal(heading, f.get(m[2]).replace(/\u00A0/g, ' '), `${lang}/${file} · ${m[2]}`);
@@ -195,6 +195,6 @@ describe('figures · the [!figure] callout', async () => {
   it('leaves [!bars] as it was, and the files named in the figure notes exist', async () => {
     const html = await render('> [!bars] Fig. 1 · Bars\n> Finding.\n> - A — 40\n>\n> scale: 0–100 · unit: %\n> source: s\n');
     assert.match(html, /<div class="ev-bar">/);
-    for (const f of ['01-01-funnel.en.svg', '01-04-module-flow.de.svg']) assert.ok(readFileSync(`${root}vault/Attachments/figures/${f}`, 'utf8').startsWith('<svg'));
+    for (const f of ['01-01-funnel.en.svg', '01-04-module-flow.de.svg']) assert.ok(readFileSync(`${root}website_vault/Attachments/figures/${f}`, 'utf8').startsWith('<svg'));
   });
 });

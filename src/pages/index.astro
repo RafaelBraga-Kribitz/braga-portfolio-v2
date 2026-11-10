@@ -8,11 +8,15 @@
 import Base from '../layouts/Base.astro';
 import { site } from '../lib/site';
 import { absolute, route } from '../lib/routes';
+import { copyOf, fillIn } from '../lib/vault/copy.mjs';
 
 const en = route('home', 'en');
 const de = route('home', 'de');
 const self = absolute('/');
-const description = 'Portfolio of Rafael Braga-Kribitz, Data Analyst. English and German.';
+// the page's words: website_vault/Site/en/Language chooser.md
+const copy = copyOf('Language chooser', 'en');
+const who = { name: site.name, role: site.role.en };
+const description = fillIn(copy.seo_description, who);
 const alternateLinks = [
   { hreflang: 'en', href: absolute(en) },
   { hreflang: 'de', href: absolute(de) },
@@ -22,7 +26,7 @@ const alternateLinks = [
 <Base lang="en" page="home" title={site.role.en} description={description} canonicalUrl={self} alternateLinks={alternateLinks}>
   <article class="doc section">
     <h1>{site.name}</h1>
-    <p>{site.name} is a {site.role.en}. This portfolio is available in English and German; choose a language to continue.</p>
+    <p>{fillIn(copy.text, who)}</p>
     <p><a href={en} hreflang="en">English <span class="glyph" aria-hidden="true">→</span></a> · <a href={de} hreflang="de" lang="de">Deutsch <span class="glyph" aria-hidden="true">→</span></a></p>
   </article>
 </Base>

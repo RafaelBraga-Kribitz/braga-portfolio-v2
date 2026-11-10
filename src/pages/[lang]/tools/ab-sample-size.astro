@@ -10,6 +10,7 @@ import AbSampleSizeBench from '@/components/tools/AbSampleSizeBench';
 import { t, isDraftLang, type Lang } from '@/lib/i18n';
 import { route } from '@/lib/routes';
 import { LANGS } from '@/lib/site';
+import { toolCopy } from '@/lib/catalogue';
 
 export function getStaticPaths() {
   return LANGS.map((lang) => ({ params: { lang } }));
@@ -17,26 +18,15 @@ export function getStaticPaths() {
 
 const lang = Astro.params.lang as Lang;
 
-const copy = {
-  en: {
-    title: 'A/B sample size',
-    h1: 'A/B sample size',
-    lead: 'How many visitors each arm needs before a lift of a given size can be seen, and whether that fits in eight weeks at the traffic available.',
-    meta: ['Two-proportion z-test', 'Power 80 or 90'],
-  },
-  de: {
-    title: 'A/B-Stichprobengröße',
-    h1: 'A/B-Stichproben\u00ADgröße',   // soft hyphen: one word is wider than the 320px line at --t-h1
-    lead: 'Wie viele Besucher jeder Arm braucht, bevor ein Lift einer gegebenen Größe sichtbar wird, und ob das beim verfügbaren Traffic in acht Wochen passt.',
-    meta: ['Zwei-Anteile-z-Test', 'Power 80 oder 90'],
-  },
-}[lang];
+// the page's words: website_vault/Site/<lang>/ (the tool's note; a soft
+// hyphen in the German heading is written &shy; there)
+const copy = toolCopy('tools.ab-sample-size', lang);
 ---
-<Base lang={lang} page="tools.ab-sample-size" title={copy.title} description={copy.lead} current="03">
+<Base lang={lang} page="tools.ab-sample-size" title={copy.title} description={copy.seo} current="03">
   <DocOpener
     lang={lang}
     grid
-    trail={[{ label: `03 ${t(lang, 'door.tools')}`, href: route('tools', lang) }, { label: '03-02', current: true }]}
+    trail={[{ label: `03 ${t(lang, 'door.tools')}`, href: route('tools', lang) }, { label: copy.code, current: true }]}
     title={copy.h1}
     lead={copy.lead}
     meta={copy.meta.map((text) => ({ text }))}

@@ -11,7 +11,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readNote, isScheduled } from './meta.mjs';
-import { VAULT_DIR } from './index.mjs';
+import { VAULT_DIR, VAULT_NAME } from './index.mjs';
 
 /** Not on the site: no `publish: true`, a draft, or dated after today (scheduled). */
 export const offline = (data) => data.publish !== true || data.draft === true || isScheduled(data);
@@ -35,7 +35,7 @@ const buildlogSalt = () => createHash('sha1').update(BUILDLOG_INPUTS.map((f) => 
  */
 export function vaultLoader(glob, { name, folders, filePattern, generateId }) {
   const pattern = [...folders.map((f) => `${f}/{en,de}/${filePattern}`), '!**/_*/**', '!**/_*.md'];
-  const inner = glob({ pattern, base: './vault', generateId });
+  const inner = glob({ pattern, base: `./${VAULT_NAME}`, generateId });
   return {
     name: `vault-${name}`,
     /** @param {any} ctx */

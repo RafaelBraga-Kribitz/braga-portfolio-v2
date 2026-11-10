@@ -1,6 +1,6 @@
 // src/lib/vault/figure-svg.mjs — the SVG a [!figure] callout inlines
 // (src/lib/remark/callouts.mjs). A figure is drawn by scripts/figures/
-// build.mjs into vault/Attachments/figures/; the page inlines the file so
+// build.mjs into website_vault/Attachments/figures/; the page inlines the file so
 // that its var(--token) colours follow the light/dark toggle. Whatever is
 // inlined is checked here first, and a file that breaks a rule fails the
 // build naming the file:
