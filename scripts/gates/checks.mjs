@@ -725,6 +725,18 @@ export function staticGates(pagePath, f, ctx) {
   const tree = /^\/(en|de)\//.exec(pagePath);
   if (redirect) out.push(skipped('L-02', 'redirect page'));
   else if (!tree && !f.alternates.length) out.push(skipped('L-02', 'not under /en/ or /de/ and declares no alternates'));
+  else if (pagePath === '/' && f.alternates.length) {
+    // the language chooser: en and de alternates exist, x-default is the page itself
+    const hOff = [];
+    const by = {};
+    for (const a of f.alternates) (by[a.hreflang] ||= []).push(a.href);
+    for (const h of ['en', 'de', 'x-default']) {
+      if (!by[h]) hOff.push(`no hreflang="${h}" alternate`);
+      else if (by[h].length > 1) hOff.push(`${by[h].length} hreflang="${h}" alternates`);
+      else { const lp = classifyRef(by[h][0], pagePath, site, base); const p = lp.kind === 'local' && !lp.outside ? normPath(lp.path) : null; if (!p || !fileFor(ctx.dir, p)) hOff.push(`hreflang="${h}" ${by[h][0]} does not exist on this site`); else if (h === 'x-default' && p !== pagePath) hOff.push(`hreflang="x-default" points to ${p}, not to this page`); }
+    }
+    out.push(result('L-02', hOff, 3, 'en, de present; x-default is the chooser itself', '%n hreflang problems'));
+  }
   else {
     const hOff = [];
     const own = tree ? tree[1] : (f.lang || '').slice(0, 2).toLowerCase();

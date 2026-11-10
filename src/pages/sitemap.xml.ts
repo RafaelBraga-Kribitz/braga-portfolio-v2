@@ -34,7 +34,7 @@ export const GET: APIRoute = async () => {
     const pair = routePair(id);
     const alts = [
       ...langs.map((l) => ({ hreflang: l, href: absolute(pair[l]) })),
-      ...(langs.includes('en') ? [{ hreflang: 'x-default', href: absolute(pair.en) }] : []),
+      ...(langs.includes('en') ? [{ hreflang: 'x-default', href: absolute(id === 'home' ? '/' : pair.en) }] : []),
     ];
     const links = alts.map((a) => `    <xhtml:link rel="alternate" hreflang="${a.hreflang}" href="${esc(a.href)}"/>`).join('\n');
     return langs.map((lang) => `  <url>\n    <loc>${esc(absolute(pair[lang]))}</loc>\n${links}\n  </url>`);

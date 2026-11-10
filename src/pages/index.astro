@@ -1,68 +1,28 @@
 ---
-// Root: a static redirect page to /en/ (BUILD-BRIEF §4). A meta refresh
-// of 0 does the work, the canonical names /en/, and a plain pair of links
-// serves a browser that does not follow the refresh. It still carries what
-// every page carries (skip link, one main, one h1, the two theme-color
-// metas, the hreflang pair, and the pre-paint script: a reader with a
-// stored dark choice sees no light frame before /en/), so it reads as part
-// of the site for the moment it is seen. A browser follows a meta refresh
-// only once the page has loaded (its stylesheet and fonts included), so a
-// second script, location.replace, leaves at once; the refresh stays for
-// a reader without JavaScript.
-import '../styles/global.css';
+// Root: the language chooser, a real page at "/" (BUILD-BRIEF §4). GitHub
+// Pages cannot send an HTTP 301/302, and a meta refresh is what SEO tools
+// flag, so the root does not redirect: it is the hreflang x-default page.
+// It names the person and the role in running text (the h1's words appear
+// in the body), links to both languages, is its own canonical, and its
+// hreflang set includes itself (x-default → "/").
+import Base from '../layouts/Base.astro';
 import { site } from '../lib/site';
-import { absolute, alternates, route, withBase } from '../lib/routes';
-import { themeColor, PREPAINT } from '../lib/theme';
+import { absolute, route } from '../lib/routes';
 
 const en = route('home', 'en');
 const de = route('home', 'de');
-// The bare address is the one people paste into a post, and LinkedIn does
-// not follow a meta refresh: the stub carries the share tags of the home
-// page itself (same card as Base.astro), pointed at /en/.
+const self = absolute('/');
 const description = 'Portfolio of Rafael Braga-Kribitz, Data Analyst. English and German.';
-const shareTitle = `${site.role.en} · ${site.name}`;
-const shareCard = absolute('/share-card.png');
-const shareAlt = `${site.wordmark} · ${site.name} · ${site.role.en}`;
+const alternateLinks = [
+  { hreflang: 'en', href: absolute(en) },
+  { hreflang: 'de', href: absolute(de) },
+  { hreflang: 'x-default', href: self },
+];
 ---
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content={themeColor.light}>
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content={themeColor.dark}>
-    <script is:inline set:html={PREPAINT}></script>
-    <script is:inline set:html={`location.replace(${JSON.stringify(en)})`}></script>
-    <meta http-equiv="refresh" content={`0; url=${en}`}>
-    <title>{site.name}</title>
-    <meta name="description" content={description}>
-    <link rel="canonical" href={absolute(en)}>
-    {alternates('home').map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
-    <link rel="icon" type="image/png" sizes="32x32" href={withBase('/favicon-32.png')}>
-    <link rel="apple-touch-icon" sizes="180x180" href={withBase('/favicon-180.png')}>
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content={site.name}>
-    <meta property="og:title" content={shareTitle}>
-    <meta property="og:description" content={description}>
-    <meta property="og:url" content={absolute(en)}>
-    <meta property="og:image" content={shareCard}>
-    <meta property="og:image:type" content="image/png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content={shareAlt}>
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content={shareTitle}>
-    <meta name="twitter:description" content={description}>
-    <meta name="twitter:image" content={shareCard}>
-    <meta name="twitter:image:alt" content={shareAlt}>
-  </head>
-  <body>
-    <a class="skip" href="#main">Skip to content</a>
-    <main id="main" class="grid-container">
-      <article class="doc section">
-        <h1>{site.name}</h1>
-        <p><a href={en} hreflang="en">English <span class="glyph" aria-hidden="true">→</span></a> · <a href={de} hreflang="de" lang="de">Deutsch <span class="glyph" aria-hidden="true">→</span></a></p>
-      </article>
-    </main>
-  </body>
-</html>
+<Base lang="en" page="home" title={site.role.en} description={description} canonicalUrl={self} alternateLinks={alternateLinks}>
+  <article class="doc section">
+    <h1>{site.name}</h1>
+    <p>{site.name} is a {site.role.en}. This portfolio is available in English and German; choose a language to continue.</p>
+    <p><a href={en} hreflang="en">English <span class="glyph" aria-hidden="true">→</span></a> · <a href={de} hreflang="de" lang="de">Deutsch <span class="glyph" aria-hidden="true">→</span></a></p>
+  </article>
+</Base>
